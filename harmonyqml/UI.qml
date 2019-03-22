@@ -8,6 +8,9 @@ RowLayout {
     RoomPane {}
 
     StackView {
+        function show_page(componentName) {
+            pageStack.replace(componentName + ".qml")
+        }
         function show_room(room_obj) {
             pageStack.replace("ChatPage.qml", { room: room_obj })
         }

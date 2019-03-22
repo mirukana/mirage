@@ -8,14 +8,20 @@ Rectangle {
     Layout.fillHeight: true
     color: "gray"
 
-    ListView {
-        id: roomListView
+    Column {
         anchors.fill: parent
-        model: Backend.roomsModel
-        delegate: RoomDelegate {}
-        //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
+        ListView {
+            width: parent.width
+            height: parent.height - actionBar.height
+            id: roomListView
+            model: Backend.roomsModel
+            delegate: RoomDelegate {}
+            //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
 
-        section.property: "account_id"
-        section.delegate: AccountDelegate {}
+            section.property: "account_id"
+            section.delegate: AccountDelegate {}
+        }
+
+        ActionBar { id: "actionBar" }
     }
 }
