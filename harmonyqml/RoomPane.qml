@@ -4,12 +4,17 @@ import QtQuick.Layouts 1.4
 
 Rectangle {
     id: roomPane
-    Layout.preferredWidth: 150
+    width: 180
+    Layout.minimumWidth: 48
     Layout.fillHeight: true
     color: "gray"
+    clip: true  // Avoid artifacts when resizing pane width to minimum
 
     Column {
-        anchors.fill: parent
+        x: parent.x
+        y: parent.y - 48 / 2
+        width: parent.width
+        height: parent.height + 48 / 2
         ListView {
             width: parent.width
             height: parent.height - actionBar.height

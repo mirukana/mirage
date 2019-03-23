@@ -1,9 +1,9 @@
+import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 
-RowLayout {
+Controls1.SplitView {
     anchors.fill: parent
-    spacing: 0
 
     RoomPane {}
 
