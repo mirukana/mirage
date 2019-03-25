@@ -2,10 +2,14 @@ import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 
+//https://doc.qt.io/qt-5/qml-qtquick-controls-splitview.html
 Controls1.SplitView {
     anchors.fill: parent
 
-    RoomPane {}
+    RoomPane {
+        Layout.minimumWidth: 32
+        width: 180
+    }
 
     StackView {
         function show_page(componentName) {
@@ -16,9 +20,6 @@ Controls1.SplitView {
         }
 
         id: "pageStack"
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        //initialItem: HomePage {}
         initialItem: ChatPage { room: Backend.roomsModel.get(0) }
 
         onCurrentItemChanged: currentItem.forceActiveFocus()

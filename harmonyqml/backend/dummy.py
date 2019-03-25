@@ -18,7 +18,8 @@ class DummyBackend(Backend):
         self.rooms.extend([
             Room("@renko:matrix.org", "!test:matrix.org", "Test", "Test room"),
             Room("@renko:matrix.org", "!mary:matrix.org", "Mary",
-                 "Lorem ipsum sit dolor amet", 2),
+                 "Lorem ipsum sit dolor amet this is a long text to test "
+                 "wrapping of room subtitle etc 1234 example foo bar abc", 2),
             Room("@renko:matrix.org", "!foo:matrix.org", "Another room"),
 
             Room("@mary:matrix.org", "!test:matrix.org", "Test", "Test room"),

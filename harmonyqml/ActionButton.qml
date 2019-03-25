@@ -7,12 +7,20 @@ ToolButton {
     property string iconName: ""
     property string targetPage: ""
 
-    id: "root"
-    width: parent.width / parent.children.length
-    height: parent.height
+    function toolBarIsBig() {
+        return roomPane.width >
+               Layout.minimumWidth * (toolBar.children.length - 2)
+    }
+
+    id: "button"
     display: ToolButton.IconOnly
     icon.source: "icons/" + iconName + ".svg"
     background: Rectangle { color: "transparent" }
+
+    visible: toolBarIsBig()
+    Layout.fillHeight: true
+    Layout.fillWidth: true
+    Layout.minimumWidth: height
 
     onClicked: { toolTip.hide(); pageStack.show_page(targetPage) }
 
@@ -28,7 +36,7 @@ ToolButton {
         hoverEnabled: true
         acceptedButtons: Qt.NoButton  // Make button receive clicks normally
 
-        onEntered: root.background.color = "#656565"
-        onExited: root.background.color = "transparent"
+        onEntered: button.background.color = "#656565"
+        onExited: button.background.color = "transparent"
     }
 }

@@ -4,21 +4,21 @@ import QtQuick.Layouts 1.4
 
 Rectangle {
     id: roomPane
-    width: 180
-    Layout.minimumWidth: 48
-    Layout.fillHeight: true
     color: "gray"
     clip: true  // Avoid artifacts when resizing pane width to minimum
 
-    Column {
-        x: parent.x
-        y: parent.y - 48 / 2
-        width: parent.width
-        height: parent.height + 48 / 2
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 0
+
+        TopBar {}
+
         ListView {
-            width: parent.width
-            height: parent.height - actionBar.height
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             id: roomListView
+            spacing: 0
             model: Backend.roomsModel
             delegate: RoomDelegate {}
             //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
@@ -26,7 +26,5 @@ Rectangle {
             section.property: "account_id"
             section.delegate: AccountDelegate {}
         }
-
-        ActionBar { id: "actionBar" }
     }
 }

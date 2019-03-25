@@ -7,7 +7,8 @@ Rectangle {
 
     id: "root"
     Layout.fillWidth: true
-    Layout.minimumHeight: textArea.implicitHeight
+    Layout.minimumHeight: 32
+    Layout.preferredHeight: textArea.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2
     color: "#BBB"
