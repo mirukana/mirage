@@ -1,6 +1,7 @@
 import QtQuick 2.7
+import "../base" as Base
 
-PlainLabel {
+Base.HLabel {
     text: date_time.toLocaleDateString()
     width: rootCol.width
     horizontalAlignment: Text.AlignHCenter

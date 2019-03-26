@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 RowLayout {
     id: "toolBar"
@@ -8,28 +9,28 @@ RowLayout {
     Layout.maximumHeight: 32
     spacing: 0
 
-    ActionButton {
+    HToolButton {
         visible: ! toolBarIsBig()
         iconName: "reduced_menu"
         tooltip: "Menu"
     }
 
-    ActionButton {
+    HToolButton {
         iconName: "settings"
         tooltip: "Settings"
     }
 
-    ActionButton {
+    HToolButton {
         iconName: "add_account"
         tooltip: "Add new account"
     }
 
-    ActionButton {
+    HToolButton {
         iconName: "set_status"
         tooltip: "Set status for all accounts"
     }
 
-    ActionButton {
+    HToolButton {
         iconName: "search"
         tooltip: "Filter rooms"
     }

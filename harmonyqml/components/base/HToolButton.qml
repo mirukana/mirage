@@ -8,7 +8,7 @@ ToolButton {
 
     id: "button"
     display: ToolButton.IconOnly
-    icon.source: "icons/" + iconName + ".svg"
+    icon.source: "../../icons/" + iconName + ".svg"
     background: Rectangle { color: "transparent" }
 
     onClicked: toolTip.hide()

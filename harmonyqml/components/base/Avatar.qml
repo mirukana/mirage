@@ -18,7 +18,7 @@ Item {
         visible: ! invisible && imageSource === null
         color: Qt.hsla(Backend.hueFromString(username), 0.22, 0.5, 1)
 
-        PlainLabel {
+        HLabel {
             anchors.centerIn: parent
             text: username.charAt(0)
             color: "white"

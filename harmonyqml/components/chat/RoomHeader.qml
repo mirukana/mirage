@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 Rectangle {
     id: root
@@ -14,14 +15,14 @@ Rectangle {
         spacing: 12
         anchors.fill: parent
 
-        Avatar {
+        Base.Avatar {
             id: "avatar"
             Layout.alignment: Qt.AlignTop
             dimmension: root.Layout.minimumHeight
             username: chatPage.room.display_name
         }
 
-        PlainLabel {
+        Base.HLabel {
             id: "roomName"
             text: chatPage.room.display_name
             font.pixelSize: bigSize
@@ -30,13 +31,17 @@ Rectangle {
             Layout.maximumWidth: row.width - row.spacing * (row.children.length - 1) - avatar.width
         }
 
-        PlainLabel {
+        Base.HLabel {
             id: "roomSubtitle"
             text: chatPage.room.subtitle
             font.pixelSize: smallSize
             elide: Text.ElideRight
             maximumLineCount: 1
-            Layout.maximumWidth: row.width - row.spacing * (row.children.length - 1) - avatar.width - roomName.width
+            Layout.maximumWidth:
+                row.width -
+                row.spacing * (row.children.length - 1) -
+                avatar.width -
+                roomName.width
         }
 
         Item { Layout.fillWidth: true }

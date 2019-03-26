@@ -1,7 +1,8 @@
 import QtQuick 2.7
+import "../base" as Base
 
 Rectangle {
-    PlainLabel {
+    Base.HLabel {
         anchors.centerIn: parent
         text: "Home page"
     }

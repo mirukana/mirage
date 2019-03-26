@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 Column {
     id: rootCol
@@ -46,7 +47,7 @@ Column {
         combine ? standardSpacing / 2 :
         standardSpacing * 1.2
 
-    DaybreakDelegate { visible: dayBreak }
+    Daybreak { visible: dayBreak }
 
 
     Row {
@@ -55,12 +56,12 @@ Column {
         layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
         anchors.right: isOwn ? parent.right : undefined
 
-        Avatar { id: avatar; invisible: combine; username: displayName }
+        Base.Avatar { id: avatar; invisible: combine; username: displayName }
 
         ColumnLayout {
             spacing: 0
 
-            PlainLabel {
+            Base.HLabel {
                 visible: ! combine
                 id: nameLabel
                 text: displayName
@@ -76,7 +77,7 @@ Column {
                 topPadding: verticalPadding
             }
 
-            PlainLabel {
+            Base.HLabel {
                 id: contentLabel
                 //text: (isOwn ? "" : content + "&nbsp;&nbsp;") +
                       //"<font size=" + smallSize + "px color=gray>" +

@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 ColumnLayout {
     id: "accountDelegate"
@@ -11,14 +12,14 @@ ColumnLayout {
         id: "row"
         spacing: 0
 
-        Avatar { id: "avatar"; username: display_name; dimmension: 36 }
+        Base.Avatar { id: "avatar"; username: display_name; dimmension: 36 }
 
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
 
-            PlainLabel {
+            Base.HLabel {
                 id: "accountLabel"
                 text: display_name
                 elide: Text.ElideRight
@@ -49,7 +50,7 @@ ColumnLayout {
             }
         }
 
-        HButton {
+        Base.HToolButton {
             id: "toggleExpand"
             iconName: roomList.visible ? "up" : "down"
             Layout.maximumWidth: 28

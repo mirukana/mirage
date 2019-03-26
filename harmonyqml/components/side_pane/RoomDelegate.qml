@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 MouseArea {
     id: "root"
@@ -17,12 +18,12 @@ MouseArea {
         id: row
         spacing: 1
 
-        Avatar { id: avatar; username: display_name; dimmension: 36 }
+        Base.Avatar { id: avatar; username: display_name; dimmension: 36 }
 
         ColumnLayout {
             spacing: 0
 
-            PlainLabel {
+            Base.HLabel {
                 id: roomLabel
                 text: display_name
                 elide: Text.ElideRight
@@ -35,7 +36,7 @@ MouseArea {
                 leftPadding: 5
                 rightPadding: leftPadding
             }
-            PlainLabel {
+            Base.HLabel {
                 id: subtitleLabel
                 visible: text !== ""
                 text: subtitle

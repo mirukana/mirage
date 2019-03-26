@@ -11,6 +11,6 @@ ColumnLayout {
     onFocusChanged: sendBox.setFocus()
 
     RoomHeader {}
-    MessageDisplay {}
+    MessageList {}
     SendBox { id: sendBox }
 }
