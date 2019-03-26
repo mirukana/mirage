@@ -13,7 +13,7 @@ Column {
         Backend.getUser(sender_id).display_name
 
     readonly property bool isOwn:
-        chatPage.room.account_id === sender_id
+        chatPage.user.user_id === sender_id
 
     readonly property var previousData:
         index > 0 ? messageListView.model.get(index - 1) : null

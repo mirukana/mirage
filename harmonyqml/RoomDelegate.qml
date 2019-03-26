@@ -2,17 +2,22 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 
-Item {
+MouseArea {
     id: "root"
-    width: roomListView.width
+    width: roomList.width
     height: Math.max(roomLabel.height + subtitleLabel.height, avatar.height)
+
+    onClicked: pageStack.show_room(
+        roomList.user,
+        roomList.model.get(index)
+    )
 
     RowLayout {
         anchors.fill: parent
         id: row
         spacing: 1
 
-        Avatar { id: avatar; username: display_name; dimmension: 32 }
+        Avatar { id: avatar; username: display_name; dimmension: 36 }
 
         ColumnLayout {
             spacing: 0
@@ -47,10 +52,5 @@ Item {
         }
 
         Item { Layout.fillWidth: true }
-    }
-
-    HMouseArea {
-        anchors.fill: parent
-        onClicked: pageStack.show_room(roomListView.model.get(index))
     }
 }

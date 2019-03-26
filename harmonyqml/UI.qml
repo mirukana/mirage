@@ -6,21 +6,26 @@ import QtQuick.Layouts 1.4
 Controls1.SplitView {
     anchors.fill: parent
 
-    RoomPane {
-        Layout.minimumWidth: 32
-        width: 180
+    SidePane {
+        Layout.minimumWidth: 36
+        width: 200
     }
 
     StackView {
         function show_page(componentName) {
             pageStack.replace(componentName + ".qml")
         }
-        function show_room(room_obj) {
-            pageStack.replace("ChatPage.qml", { room: room_obj })
+        function show_room(user_obj, room_obj) {
+            pageStack.replace(
+                "ChatPage.qml", { user: user_obj, room: room_obj }
+            )
         }
 
         id: "pageStack"
-        initialItem: ChatPage { room: Backend.roomsModel.get(0) }
+        initialItem: ChatPage {
+            user: Backend.accountsModel.get(0)
+            room: Backend.roomsModel[Backend.accountsModel.get(0).user_id].get(0)
+        }
 
         onCurrentItemChanged: currentItem.forceActiveFocus()
 

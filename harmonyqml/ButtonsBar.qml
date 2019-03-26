@@ -17,13 +17,11 @@ RowLayout {
     ActionButton {
         iconName: "settings"
         tooltip: "Settings"
-        targetPage: "SettingsPage"
     }
 
     ActionButton {
         iconName: "add_account"
         tooltip: "Add new account"
-        targetPage: "AddAccountPage"
     }
 
     ActionButton {
@@ -33,7 +31,7 @@ RowLayout {
 
     ActionButton {
         iconName: "search"
-        tooltip: "Filter rooms and people"
+        tooltip: "Filter rooms"
     }
 
 

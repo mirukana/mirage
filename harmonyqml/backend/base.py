@@ -11,13 +11,13 @@ from .list_model import ListModel, _QtListModel
 
 
 class User(NamedTuple):
-    user_id:      str
-    display_name: str
-    avatar_url:   Optional[str] = None
+    user_id:        str
+    display_name:   str
+    avatar_url:     Optional[str] = None
+    status_message: Optional[str] = None
 
 
 class Room(NamedTuple):
-    account_id:                 str
     room_id:                    str
     display_name:               str
     subtitle:                   str           = ""
@@ -41,13 +41,19 @@ class Backend(QObject):
         super().__init__()
         self._known_users: Dict[str, User] = {}
 
-        self.rooms:    ListModel                   = ListModel()
+        self.accounts: ListModel                   = ListModel()
+        self.rooms:    DefaultDict[str, ListModel] = DefaultDict(ListModel)
         self.messages: DefaultDict[str, ListModel] = DefaultDict(ListModel)
 
 
     @pyqtProperty(_QtListModel, constant=True)
-    def roomsModel(self) -> _QtListModel:
-        return self.rooms.qt_model
+    def accountsModel(self) -> _QtListModel:
+        return self.accounts.qt_model
+
+
+    @pyqtProperty("QVariantMap", constant=True)
+    def roomsModel(self) -> Dict[str, _QtListModel]:
+        return {account_id: l.qt_model for account_id, l in self.rooms.items()}
 
 
     @pyqtProperty("QVariantMap", constant=True)
@@ -73,6 +79,10 @@ class Backend(QObject):
 
     @pyqtSlot(str, result="QVariantMap")
     def getUser(self, user_id: str) -> Dict[str, Any]:
+        for user in self.accounts:
+            if user.user_id == user_id:
+                return user._asdict()
+
         try:
             return self._known_users[user_id]._asdict()
         except KeyError:
@@ -87,3 +97,13 @@ class Backend(QObject):
         # pylint: disable=no-self-use
         md5 = hashlib.md5(bytes(string, "utf-8")).hexdigest()
         return float("0.%s" % int(md5[-10:], 16))
+
+
+    @pyqtSlot(str, str)
+    def setStatusMessage(self, user_id: str, to: str) -> None:
+        for user in self.accounts:
+            if user.user_id == user_id:
+                user.status_message = to
+                break
+        else:
+            raise ValueError(f"{user_id} not found in Backend.accounts")

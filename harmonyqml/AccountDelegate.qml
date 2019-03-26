@@ -2,53 +2,83 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 
-Row {
-    readonly property string displayName:
-        Backend.getUser(section).display_name
+ColumnLayout {
+    id: "accountDelegate"
+    spacing: 0
+    width: parent.width
 
-    id: row
-    width: roomListView.width
-    height: Math.max(accountLabel.height + statusEdit.height, avatar.height)
+    RowLayout {
+        id: "row"
+        spacing: 0
 
-    Avatar { id: avatar; username: displayName; dimmension: 32 }
-
-    Rectangle {
-        color: "#111"
-        width: parent.width - avatar.width
-        height: parent.height
+        Avatar { id: "avatar"; username: display_name; dimmension: 36 }
 
         ColumnLayout {
-            anchors.fill: parent
-            spacing: 1
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
 
             PlainLabel {
-                id: accountLabel
-                text: displayName
-                color: "#CCC"
+                id: "accountLabel"
+                text: display_name
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true
-
-                topPadding: -2
-                bottomPadding: -2
-                leftPadding: 5
-                rightPadding: 5
+                leftPadding: 6
+                rightPadding: leftPadding
             }
+
             TextField {
-                id: statusEdit
+                id: "statusEdit"
+                text: status_message || ""
                 placeholderText: qsTr("Set status message")
-                background: Rectangle { color: "#333" }
-                color: "#CCC"
+                background: null
+                color: "black"
                 selectByMouse: true
                 font.family: "Roboto"
                 font.pixelSize: 12
                 Layout.fillWidth: true
+                padding: 0
+                leftPadding: accountLabel.leftPadding
+                rightPadding: leftPadding
 
-                topPadding: 0
-                bottomPadding: 0
-                leftPadding: 5
-                rightPadding: 5
+                onEditingFinished: {
+                    Backend.setStatusMessage(user_id, text)
+                    pageStack.forceActiveFocus()
+                }
             }
         }
+
+        HButton {
+            id: "toggleExpand"
+            iconName: roomList.visible ? "up" : "down"
+            Layout.maximumWidth: 28
+            Layout.maximumHeight: Layout.maximumWidth
+
+            onClicked: {
+                toggleExpand.ToolTip.hide()
+                roomList.visible = ! roomList.visible
+            }
+        }
+    }
+
+    RoomList {
+        id: "roomList"
+        visible: true
+        user: Backend.getUser(user_id)
+
+        Layout.minimumHeight:
+            roomList.visible ?
+            roomList.contentHeight + roomList.anchors.margins * 2 :
+            0
+        Layout.maximumHeight: Layout.minimumHeight
+
+        Layout.minimumWidth: parent.width - Layout.leftMargin * 2
+        Layout.maximumWidth: Layout.minimumWidth
+
+        Layout.margins: accountList.spacing
+        Layout.leftMargin:
+            sidePane.width < 36 + Layout.margins ? 0 : Layout.margins
+        Layout.rightMargin: Layout.leftMargin
     }
 }

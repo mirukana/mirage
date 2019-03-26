@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QDateTime, Qt
 
-from .base import Backend, Message, Room
+from .base import Backend, Message, Room, User
 
 
 class DummyBackend(Backend):
@@ -15,16 +15,22 @@ class DummyBackend(Backend):
         db = lambda t: QDateTime.fromString(f"2019-03-20T{t}.456",
                                             Qt.ISODateWithMs)
 
-        self.rooms.extend([
-            Room("@renko:matrix.org", "!test:matrix.org", "Test", "Test room"),
-            Room("@renko:matrix.org", "!mary:matrix.org", "Mary",
+        self.accounts.extend([
+            User("@renko:matrix.org", "Renko", None, "Sleeping, zzz..."),
+            User("@mary:matrix.org", "Mary"),
+        ])
+
+        self.rooms["@renko:matrix.org"].extend([
+            Room("!test:matrix.org", "Test", "Test room"),
+            Room("!mary:matrix.org", "Mary",
                  "Lorem ipsum sit dolor amet this is a long text to test "
                  "wrapping of room subtitle etc 1234 example foo bar abc", 2),
-            Room("@renko:matrix.org", "!foo:matrix.org", "Another room"),
+            Room("!foo:matrix.org", "Another room"),
+        ])
 
-            Room("@mary:matrix.org", "!test:matrix.org", "Test", "Test room"),
-            Room("@mary:matrix.org", "!mary:matrix.org", "Renko",
-                 "Lorem ipsum sit dolor amet"),
+        self.rooms["@mary:matrix.org"].extend([
+            Room("!test:matrix.org", "Test", "Test room"),
+            Room("!mary:matrix.org", "Renko", "Lorem ipsum sit dolor amet"),
         ])
 
         self.messages["!test:matrix.org"].extend([

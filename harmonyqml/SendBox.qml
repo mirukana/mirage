@@ -19,9 +19,10 @@ Rectangle {
 
         Avatar {
             id: "avatar"
-            username: Backend.getUser(chatPage.room.account_id).display_name
+            username: chatPage.user.display_name
             dimmension: root.Layout.minimumHeight
-            visible: textArea.text === ""
+            //visible: textArea.text === ""
+            visible: textArea.height <= root.Layout.minimumHeight
         }
 
         ScrollView {
@@ -49,7 +50,7 @@ Rectangle {
                         return
                     }
 
-                    Backend.sendMessage(chatPage.room.account_id,
+                    Backend.sendMessage(chatPage.user.user_id,
                                         chatPage.room.room_id,
                                         textArea.text)
                     textArea.clear()

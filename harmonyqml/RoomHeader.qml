@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.4
 Rectangle {
     id: root
     Layout.fillWidth: true
-    Layout.minimumHeight: 32
+    Layout.minimumHeight: 36
     Layout.maximumHeight: Layout.minimumHeight
     color: "#BBB"
 
