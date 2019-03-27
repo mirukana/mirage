@@ -51,6 +51,8 @@ Rectangle {
                         return
                     }
 
+                    if (textArea.text === "") { return }
+
                     Backend.sendMessage(chatPage.user.user_id,
                                         chatPage.room.room_id,
                                         textArea.text)
