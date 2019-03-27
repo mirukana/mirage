@@ -4,7 +4,7 @@
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Generator, Optional
 
 from PyQt5.QtCore import QFileSystemWatcher, QObject, QTimer
 from PyQt5.QtGui import QGuiApplication
@@ -17,8 +17,10 @@ from .backend import DummyBackend
 
 
 class Engine(QQmlApplicationEngine):
-    def __init__(self, app: QGuiApplication, parent: Optional[QObject] = None
-                ) -> None:
+    def __init__(self,
+                 app: QGuiApplication,
+                 debug:  bool              = False,
+                 parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
         self.app     = app
         self.backend = DummyBackend()
@@ -37,9 +39,13 @@ class Engine(QQmlApplicationEngine):
         self._sigint_timer.start(100)
 
         # Setup UI live-reloading when a file is edited
-        self.file_watcher = QFileSystemWatcher()
-        self.file_watcher.directoryChanged.connect(lambda _: self.reload_qml())
-        self.file_watcher.addPath(str(self.app_dir / "components"))
+        if debug:
+            self._watcher = QFileSystemWatcher()
+            self._watcher.directoryChanged.connect(lambda _: self.reload_qml())
+            self._watcher.addPath(str(self.app_dir))
+
+            for _dir in list(self._recursive_dirs_in(self.app_dir)):
+                self._watcher.addPath(str(_dir))
 
         # Load QML page and show window
         self.load(str(self.app_dir / "components" / "Window.qml"))
@@ -48,6 +54,13 @@ class Engine(QQmlApplicationEngine):
     def show_window(self) -> None:
         self.rootObjects()[0].show()
         sys.exit(self.app.exec())
+
+
+    def _recursive_dirs_in(self, path: Path) -> Generator[Path, None, None]:
+        for item in path.iterdir():
+            if item.is_dir() and item.name != "__pycache__":
+                yield item
+                yield from self._recursive_dirs_in(item)
 
 
     def reload_qml(self) -> None:

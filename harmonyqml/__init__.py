@@ -11,6 +11,12 @@ from .engine import Engine
 
 
 def run() -> None:
+    try:
+        sys.argv.index("--debug")
+        debug = True
+    except ValueError:
+        debug = False
+
     app    = QGuiApplication(sys.argv)
-    engine = Engine(app)
+    engine = Engine(app, debug=debug)
     engine.show_window()
