@@ -56,7 +56,7 @@ Column {
         layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
         anchors.right: isOwn ? parent.right : undefined
 
-        Base.Avatar { id: avatar; invisible: combine; username: displayName }
+        Base.Avatar { id: avatar; invisible: combine; name: displayName }
 
         ColumnLayout {
             spacing: 0

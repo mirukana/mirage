@@ -4,30 +4,30 @@ import QtQuick.Layouts 1.4
 
 Item {
     property bool invisible: false
-    property string username: "?"
+    property string name: "?"
     property var imageSource: null
     property int dimmension: 48
 
-    id: root
+    id: "root"
     width: dimmension
     height: invisible ? 1 : dimmension
 
     Rectangle {
-        id: letterRectangle
+        id: "letterRectangle"
         anchors.fill: parent
         visible: ! invisible && imageSource === null
-        color: Qt.hsla(Backend.hueFromString(username), 0.22, 0.5, 1)
+        color: Qt.hsla(Backend.hueFromString(name), 0.22, 0.5, 1)
 
         HLabel {
             anchors.centerIn: parent
-            text: username.charAt(0)
+            text: name.charAt(0)
             color: "white"
             font.pixelSize: letterRectangle.height / 1.4
         }
     }
 
     Image {
-        id: avatarImage
+        id: "avatarImage"
         anchors.fill: parent
         visible: ! invisible && imageSource !== null
 

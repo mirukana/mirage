@@ -12,7 +12,7 @@ ColumnLayout {
         id: "row"
         spacing: 0
 
-        Base.Avatar { id: "avatar"; username: display_name; dimmension: 36 }
+        Base.Avatar { id: "avatar"; name: display_name; dimmension: 36 }
 
         ColumnLayout {
             Layout.fillWidth: true

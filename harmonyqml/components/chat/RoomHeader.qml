@@ -19,7 +19,7 @@ Rectangle {
             id: "avatar"
             Layout.alignment: Qt.AlignTop
             dimmension: root.Layout.minimumHeight
-            username: chatPage.room.display_name
+            name: chatPage.room.display_name
         }
 
         Base.HLabel {
