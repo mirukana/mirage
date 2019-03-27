@@ -66,6 +66,7 @@ ColumnLayout {
     RoomList {
         id: "roomList"
         visible: true
+        interactive: false  // no scrolling
         user: Backend.getUser(user_id)
 
         Layout.minimumHeight:
