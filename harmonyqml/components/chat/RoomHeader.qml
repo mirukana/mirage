@@ -32,8 +32,8 @@ Rectangle {
         }
 
         Base.HLabel {
-            id: "roomSubtitle"
-            text: chatPage.room.subtitle
+            id: "roomDescription"
+            text: chatPage.room.description
             font.pixelSize: smallSize
             elide: Text.ElideRight
             maximumLineCount: 1

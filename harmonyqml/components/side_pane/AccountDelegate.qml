@@ -75,12 +75,13 @@ ColumnLayout {
             0
         Layout.maximumHeight: Layout.minimumHeight
 
-        Layout.minimumWidth: parent.width - Layout.leftMargin * 2
+        Layout.minimumWidth:
+            parent.width - Layout.leftMargin - Layout.rightMargin
         Layout.maximumWidth: Layout.minimumWidth
 
         Layout.margins: accountList.spacing
         Layout.leftMargin:
             sidePane.width < 36 + Layout.margins ? 0 : Layout.margins
-        Layout.rightMargin: Layout.leftMargin
+        Layout.rightMargin: 0
     }
 }

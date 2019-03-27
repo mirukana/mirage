@@ -37,9 +37,25 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
+                function get_text() {
+                    var msgs = Backend.messagesModel[room_id]
+                    if (msgs.count < 1) { return "" }
+
+                    var msg = msgs.get(-1)
+                    var color_ = (msg.sender_id === roomList.user.user_id ?
+                                  "darkblue" : "purple")
+
+                    return "<font color=\"" + color_ + "\">" +
+                           Backend.getUser(msg.sender_id).display_name +
+                           ":</font> " +
+                           msg.content
+                }
+
                 id: subtitleLabel
                 visible: text !== ""
-                text: subtitle
+                text: Backend.messagesModel[room_id].reloadThis, get_text()
+                textFormat: Text.StyledText
+
                 font.pixelSize: smallSize
                 elide: Text.ElideRight
                 maximumLineCount: 1
