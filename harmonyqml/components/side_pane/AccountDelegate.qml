@@ -54,7 +54,7 @@ ColumnLayout {
             id: "toggleExpand"
             iconName: roomList.visible ? "up" : "down"
             Layout.maximumWidth: 28
-            Layout.maximumHeight: Layout.maximumWidth
+            Layout.minimumHeight: row.height
 
             onClicked: {
                 toggleExpand.ToolTip.hide()
