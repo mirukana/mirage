@@ -4,27 +4,18 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 from namedlist import namedlist
 from PyQt5.QtCore import (
-    QAbstractListModel, QModelIndex, Qt, pyqtProperty, pyqtSlot, pyqtSignal
+    QAbstractListModel, QModelIndex, Qt, pyqtProperty, pyqtSlot
 )
 
 NewValue = Union[Mapping[str, Any], Sequence]
 
 
 class _QtListModel(QAbstractListModel):
-    updated = pyqtSignal()
-
     def __init__(self) -> None:
         super().__init__()
         self._ref_namedlist          = None
         self._roles: Tuple[str, ...] = ()
         self._list:  list            = []
-
-        self._update_counter: int = 0
-
-        for sig in (self.dataChanged, self.layoutChanged, self.modelReset,
-                    self.rowsInserted, self.rowsMoved, self.rowsRemoved):
-            sig.connect(self.updated.emit)
-
 
     def roleNames(self) -> Dict[int, bytes]:
         return {Qt.UserRole + i: bytes(f, "utf-8")
@@ -70,7 +61,7 @@ class _QtListModel(QAbstractListModel):
 
 
     @pyqtSlot(int, result="QVariantMap")
-    def get(self, index: int) -> Optional[Dict[str, Any]]:
+    def get(self, index: int) -> Dict[str, Any]:
         return self._list[index]._asdict()
 
 
@@ -82,7 +73,7 @@ class _QtListModel(QAbstractListModel):
         self.endInsertRows()
 
 
-    @pyqtProperty(int, constant=True)
+    @pyqtProperty(int)
     def count(self) -> int:
         return self.rowCount()
 
@@ -149,13 +140,6 @@ class _QtListModel(QAbstractListModel):
         self.beginRemoveRows(QModelIndex(), 0, self.rowCount())
         self._list.clear()
         self.endRemoveRows()
-
-
-    @pyqtProperty(int, notify=updated)
-    def reloadThis(self) -> int:
-        # http://www.mardy.it/blog/2016/11/qml-trick-force-re-evaluation-of.html
-        self._update_counter += 1
-        return self._update_counter
 
 
 class ListModel(MutableSequence):

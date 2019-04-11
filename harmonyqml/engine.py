@@ -7,23 +7,23 @@ from pathlib import Path
 from typing import Generator, Optional
 
 from PyQt5.QtCore import QFileSystemWatcher, QObject, QTimer
-from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
 
 from .__about__ import __doc__
-from .backend import DummyBackend
+from .app import Application
+from .backend.matrix_nio.backend import MatrixNioBackend as CurrentBackend
 
 # logging.basicConfig(level=logging.INFO)
 
 
 class Engine(QQmlApplicationEngine):
     def __init__(self,
-                 app: QGuiApplication,
+                 app:    Application,
                  debug:  bool              = False,
                  parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
         self.app     = app
-        self.backend = DummyBackend()
+        self.backend = CurrentBackend()
         self.app_dir = Path(sys.argv[0]).resolve().parent
 
         # Set QML properties
