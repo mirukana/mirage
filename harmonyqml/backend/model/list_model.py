@@ -65,6 +65,16 @@ class _QtListModel(QAbstractListModel):
         return self._list[index]._asdict()
 
 
+    @pyqtSlot(str, "QVariant", result=int)
+    def indexWhere(self, prop: str, is_value: Any) -> int:
+        for i, item in enumerate(self._list):
+            if getattr(item, prop) == is_value:
+                return i
+
+        raise ValueError(f"No {type(self._ref_namedlist)} in list with "
+                         f"property {prop!r} set to {is_value!r}.")
+
+
     @pyqtSlot(int, list)
     def insert(self, index: int, value: NewValue) -> None:
         value = self._convert_new_value(value)
@@ -174,6 +184,10 @@ class ListModel(MutableSequence):
 
     def insert(self, index: int, value: NewValue) -> None:
         self.qt_model.insert(index, value)
+
+
+    def indexWhere(self, prop: str, is_value: Any) -> int:
+        return self.qt_model.indexWhere(prop, is_value)
 
 
     def setProperty(self, index: int, prop: str, value: Any) -> None:

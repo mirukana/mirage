@@ -6,11 +6,12 @@ import json
 import os
 import platform
 import threading
-from concurrent.futures import Future
 from typing import Dict, Optional
 
 from atomicfile import AtomicFile
-from PyQt5.QtCore import QObject, QStandardPaths, pyqtProperty, pyqtSlot
+from PyQt5.QtCore import (
+    QObject, QStandardPaths, pyqtProperty, pyqtSignal, pyqtSlot
+)
 
 from harmonyqml import __about__
 
@@ -23,6 +24,10 @@ _CONFIG_LOCK   = threading.Lock()
 
 
 class ClientManager(QObject):
+    clientAdded   = pyqtSignal(Client)
+    clientDeleted = pyqtSignal(str)
+
+
     def __init__(self) -> None:
         super().__init__()
         self._clients: Dict[str, Client] = {}
@@ -32,7 +37,7 @@ class ClientManager(QObject):
         return f"{type(self).__name__}(clients={self.clients!r})"
 
 
-    @pyqtProperty("QVariantMap")
+    @pyqtProperty("QVariantMap", constant=True)
     def clients(self):
         return self._clients
 
@@ -40,13 +45,9 @@ class ClientManager(QObject):
     @pyqtSlot()
     def configLoad(self) -> None:
         for user_id, info in self.configAccounts().items():
-            cli = Client(info["hostname"], user_id)
-
-            def on_done(_: Future, cli=cli) -> None:
-                self._clients[cli.nio.user_id] = cli
-
-            cli.resumeSession(user_id, info["token"], info["device_id"])\
-               .add_done_callback(on_done)
+            client = Client(info["hostname"], user_id)
+            client.resumeSession(user_id, info["token"], info["device_id"])\
+                  .add_done_callback(lambda _, c=client: self._on_connected(c))
 
 
     @pyqtSlot(str, str, str)
@@ -54,22 +55,25 @@ class ClientManager(QObject):
     def new(self, hostname: str, username: str, password: str,
             device_id: str = "") -> None:
 
-        cli = Client(hostname, username, device_id)
+        client = Client(hostname, username, device_id)
+        client.login(password, self.defaultDeviceName)\
+              .add_done_callback(lambda _: self._on_connected(client))
 
-        def on_done(_: Future, cli=cli) -> None:
-            self._clients[cli.nio.user_id] = cli
 
-        cli.login(password, self.defaultDeviceName).add_done_callback(on_done)
+    def _on_connected(self, client: Client) -> None:
+        self.clients[client.nio.user_id] = client
+        self.clientAdded.emit(client)
 
 
     @pyqtSlot(str)
     def delete(self, user_id: str) -> None:
-        client = self._clients.pop(user_id, None)
+        client = self.clients.pop(user_id, None)
         if client:
+            self.clientDeleted.emit(user_id)
             client.logout()
 
 
-    @pyqtProperty(str)
+    @pyqtProperty(str, constant=True)
     def defaultDeviceName(self) -> str:  # pylint: disable=no-self-use
         os_ = f" on {platform.system()}".rstrip()
         os_ = f"{os_} {platform.release()}".rstrip() if os_ != " on" else ""

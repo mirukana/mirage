@@ -4,12 +4,14 @@
 import functools
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event
-from typing import Callable, DefaultDict
+from typing import Callable, DefaultDict, Dict
 
 from PyQt5.QtCore import QObject, pyqtSlot
 
 import nio
 import nio.responses as nr
+
+from .model.items import User
 
 # One pool per hostname/remote server;
 # multiple Client for different accounts on the same server can exist.
@@ -38,7 +40,7 @@ class Client(QObject):
 
         self.pool: ThreadPoolExecutor = _POOLS[self.host]
 
-        from .net import NetworkManager
+        from .network_manager import NetworkManager
         self.net: NetworkManager = NetworkManager(self)
 
         self._stop_sync: Event = Event()
@@ -75,11 +77,25 @@ class Client(QObject):
         self.net.write(self.nio.disconnect())
 
 
+    @pyqtSlot()
     @futurize
     def startSyncing(self) -> None:
         while True:
-            print(self, self.net.talk(self.nio.sync, timeout=10))
+            self.net.talk(self.nio.sync, timeout=10)
 
             if self._stop_sync.is_set():
                 self._stop_sync.clear()
                 break
+
+
+    @pyqtSlot(str, str, result="QVariantMap")
+    def getUser(self, room_id: str, user_id: str) -> Dict[str, str]:
+        try:
+            name = self.nio.rooms[room_id].user_name(user_id)
+        except KeyError:
+            name = None
+
+        return User(
+            user_id      = user_id,
+            display_name = name or user_id,
+        )._asdict()

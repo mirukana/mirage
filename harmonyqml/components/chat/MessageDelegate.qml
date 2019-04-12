@@ -11,7 +11,7 @@ Column {
     }
 
     readonly property string displayName:
-        Backend.getUser(sender_id).display_name
+        Backend.getUser(chatPage.room.room_id, sender_id).display_name
 
     readonly property bool isOwn:
         chatPage.user.user_id === sender_id

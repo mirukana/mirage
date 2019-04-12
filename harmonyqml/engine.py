@@ -11,7 +11,7 @@ from PyQt5.QtQml import QQmlApplicationEngine
 
 from .__about__ import __doc__
 from .app import Application
-from .backend.matrix_nio.backend import MatrixNioBackend as CurrentBackend
+from .backend.backend import Backend
 
 # logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +23,7 @@ class Engine(QQmlApplicationEngine):
                  parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
         self.app     = app
-        self.backend = CurrentBackend()
+        self.backend = Backend()
         self.app_dir = Path(sys.argv[0]).resolve().parent
 
         # Set QML properties
