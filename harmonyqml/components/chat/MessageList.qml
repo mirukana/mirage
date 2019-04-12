@@ -13,7 +13,7 @@ Rectangle {
     ListView {
         id: messageListView
         anchors.fill: parent
-        model: Backend.models.messages[chatPage.room.room_id]
+        model: Backend.models.messages.get(chatPage.room.room_id)
         delegate: MessageDelegate {}
         //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
 

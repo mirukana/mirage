@@ -6,7 +6,7 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event
 from typing import Callable, DefaultDict, Dict
 
-from PyQt5.QtCore import QObject, pyqtSlot
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 import nio
 import nio.responses as nr
@@ -27,6 +27,11 @@ def futurize(func: Callable) -> Callable:
 
 
 class Client(QObject):
+    roomInvited = pyqtSignal(str)
+    roomJoined  = pyqtSignal(str)
+    roomLeft    = pyqtSignal(str)
+
+
     def __init__(self, hostname: str, username: str, device_id: str = ""
                 ) -> None:
         super().__init__()
@@ -48,7 +53,12 @@ class Client(QObject):
 
     def __repr__(self) -> str:
         return "%s(host=%r, port=%r, user_id=%r)" % \
-            (type(self).__name__, self.host, self.port, self.nio.user_id)
+            (type(self).__name__, self.host, self.port, self.userID)
+
+
+    @pyqtProperty(str, constant=True)
+    def userID(self) -> str:
+        return self.nio.user_id
 
 
     @pyqtSlot(str)
@@ -81,11 +91,22 @@ class Client(QObject):
     @futurize
     def startSyncing(self) -> None:
         while True:
-            self.net.talk(self.nio.sync, timeout=10)
+            self._on_sync(self.net.talk(self.nio.sync, timeout=10))
 
             if self._stop_sync.is_set():
                 self._stop_sync.clear()
                 break
+
+
+    def _on_sync(self, response: nr.SyncResponse) -> None:
+        for room_id in response.rooms.invite:
+            self.roomInvited.emit(room_id)
+
+        for room_id in response.rooms.join:
+            self.roomJoined.emit(room_id)
+
+        for room_id in response.rooms.left:
+            self.roomLeft.emit(room_id)
 
 
     @pyqtSlot(str, str, result="QVariantMap")

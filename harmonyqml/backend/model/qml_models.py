@@ -1,31 +1,33 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-from typing import DefaultDict, Dict
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
-from PyQt5.QtCore import QObject, pyqtProperty
-
-from .list_model import ListModel, _QtListModel
+from .list_model import ListModel
+from .list_model_map import ListModelMap
 
 
 class QMLModels(QObject):
+    roomsChanged = pyqtSignal()
+
+
     def __init__(self) -> None:
         super().__init__()
-        self._accounts: ListModel                   = ListModel()
-        self._rooms:    DefaultDict[str, ListModel] = DefaultDict(ListModel)
-        self._messages: DefaultDict[str, ListModel] = DefaultDict(ListModel)
+        self._accounts: ListModel    = ListModel()
+        self._rooms:    ListModelMap = ListModelMap()
+        self._messages: ListModelMap = ListModelMap()
 
 
-    @pyqtProperty(_QtListModel, constant=True)
-    def accounts(self) -> _QtListModel:
-        return self._accounts.qt_model
+    @pyqtProperty(ListModel, constant=True)
+    def accounts(self):
+        return self._accounts
 
 
-    @pyqtProperty("QVariantMap", constant=True)
-    def rooms(self) -> Dict[str, _QtListModel]:
-        return {user_id: l.qt_model for user_id, l in self._rooms.items()}
+    @pyqtProperty("QVariant", notify=roomsChanged)
+    def rooms(self):
+        return self._rooms
 
 
-    @pyqtProperty("QVariantMap", constant=True)
-    def messages(self) -> Dict[str, _QtListModel]:
-        return {room_id: l.qt_model for room_id, l in self._messages.items()}
+    @pyqtProperty("QVariant", constant=True)
+    def messages(self):
+        return self._messages
