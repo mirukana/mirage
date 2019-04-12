@@ -23,6 +23,9 @@ class NioErrorResponse(Exception):
 
 
 class NetworkManager:
+    http_retry_codes = {408, 429, 500, 502, 503, 504, 507}
+
+
     def __init__(self, client: Client) -> None:
         self.client = client
         self._ssl_context: ssl.SSLContext = ssl.create_default_context()
@@ -80,12 +83,15 @@ class NetworkManager:
                 response = self.read(sock)
 
             except NioErrorResponse as err:
-                logging.error("read bad response: %s", err)
+                logging.error("read bad response for %s: %s", nio_func, err)
                 self._close_socket(sock)
+                if self._should_abort_talk(err):
+                    logging.error("aborting talk")
+                    break
                 time.sleep(10)
 
             except Exception as err:
-                logging.error("talk exception: %r", err)
+                logging.error("talk exception for %s: %r", nio_func, err)
                 break
 
             else:
@@ -93,3 +99,9 @@ class NetworkManager:
 
         self._close_socket(sock)
         return response
+
+
+    def _should_abort_talk(self, err: NioErrorResponse) -> bool:
+        if err.response.status_code in self.http_retry_codes:
+            return False
+        return True
