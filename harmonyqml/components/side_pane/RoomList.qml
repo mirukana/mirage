@@ -9,7 +9,7 @@ ListView {
     property int contentHeight: 0
 
     onCountChanged: {
-        var children = roomList.children
+        var children = roomList.contentItem.children
         var childrenHeight = 0
 
         for (var i = 0; i < children.length; i++) {

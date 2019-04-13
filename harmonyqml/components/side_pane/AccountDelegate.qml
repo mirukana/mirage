@@ -71,7 +71,7 @@ ColumnLayout {
 
         Layout.minimumHeight:
             roomList.visible ?
-            800 :
+            roomList.contentHeight :
             0
         Layout.maximumHeight: Layout.minimumHeight
 
