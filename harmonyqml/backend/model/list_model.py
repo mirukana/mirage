@@ -5,15 +5,17 @@ from typing import (
 
 from namedlist import namedlist
 from PyQt5.QtCore import (
-    QAbstractListModel, QModelIndex, Qt, pyqtProperty, pyqtSlot
+    QAbstractListModel, QModelIndex, QObject, Qt, pyqtProperty, pyqtSlot
 )
 
 NewValue = Union[Mapping[str, Any], Sequence]
 
 
 class ListModel(QAbstractListModel):
-    def __init__(self, initial_data: Optional[List[NewValue]] = None) -> None:
-        super().__init__()
+    def __init__(self,
+                 initial_data: Optional[List[NewValue]] = None,
+                 parent:       Optional[QObject]        = None) -> None:
+        super().__init__(parent)
         self._ref_namedlist          = None
         self._roles: Tuple[str, ...] = ()
         self._list:  list            = []

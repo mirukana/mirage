@@ -8,7 +8,10 @@ from .list_model import ListModel
 class ListModelMap(QObject):
     def __init__(self) -> None:
         super().__init__()
-        self.dict: DefaultDict[Any, ListModel] = DefaultDict(ListModel)
+
+        # Set the parent to prevent item garbage-collection on the C++ side
+        self.dict: DefaultDict[Any, ListModel] = \
+            DefaultDict(lambda: ListModel(parent=self))
 
 
     @pyqtSlot(str, result="QVariant")
@@ -21,6 +24,7 @@ class ListModelMap(QObject):
 
 
     def __setitem__(self, key, value: ListModel) -> None:
+        value.setParent(self)
         self.dict[key] = value
 
 
