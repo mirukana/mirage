@@ -2,8 +2,11 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 import functools
+import logging
+import sys
+import traceback
 from concurrent.futures import Future, ThreadPoolExecutor
-from threading import Event
+from threading import Event, currentThread
 from typing import Callable, DefaultDict, Dict
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
@@ -22,7 +25,16 @@ _POOLS: DefaultDict[str, ThreadPoolExecutor] = \
 def futurize(func: Callable) -> Callable:
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Future:
-        return args[0].pool.submit(func, *args, **kwargs)  # args[0] = self
+        def run_and_catch_errs():
+            # Without this, exceptions are silently ignored
+            try:
+                func(*args, **kwargs)
+            except Exception:
+                traceback.print_exc()
+                logging.error("Exiting %s due to exception.", currentThread())
+                sys.exit(1)
+
+        return args[0].pool.submit(run_and_catch_errs)  # args[0] = self
     return wrapper
 
 
@@ -91,7 +103,7 @@ class Client(QObject):
     @futurize
     def startSyncing(self) -> None:
         while True:
-            self._on_sync(self.net.talk(self.nio.sync, timeout=10))
+            self._on_sync(self.net.talk(self.nio.sync, timeout=10_000))
 
             if self._stop_sync.is_set():
                 self._stop_sync.clear()
@@ -105,7 +117,7 @@ class Client(QObject):
         for room_id in response.rooms.join:
             self.roomJoined.emit(room_id)
 
-        for room_id in response.rooms.left:
+        for room_id in response.rooms.leave:
             self.roomLeft.emit(room_id)
 
 

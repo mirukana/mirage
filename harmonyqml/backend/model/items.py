@@ -17,7 +17,7 @@ class User(NamedTuple):
 
 class Room(NamedTuple):
     room_id:                    str
-    display_name:               str
+    display_name:               Optional[str]
     description:                str           = ""
     unread_messages:            int           = 0
     presence:                   Presence      = Presence.none

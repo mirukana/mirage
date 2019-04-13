@@ -6,17 +6,12 @@ import "../base" as Base
 ListView {
     property var for_user_id: null
 
+    property int childrenHeight: 36
     property int contentHeight: 0
 
     onCountChanged: {
-        var children = roomList.contentItem.children
-        var childrenHeight = 0
-
-        for (var i = 0; i < children.length; i++) {
-            childrenHeight += children[i].height
-        }
-
-        contentHeight = childrenHeight + spacing * (children.length - 1)
+        contentHeight = childrenHeight * model.count +
+                        spacing * (model.count - 1)
     }
 
     id: "roomList"

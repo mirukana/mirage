@@ -1,11 +1,13 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+from typing import Optional
+
 from PyQt5.QtCore import QObject
 
 from .backend import Backend
 from .client import Client
-from .model.items import User, Room
+from .model.items import Room, User
 
 
 class SignalManager(QObject):
@@ -43,14 +45,25 @@ class SignalManager(QObject):
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
-        room = client.nio.rooms[room_id]
-        name = room.name or room.canonical_alias or room.group_name()
+        model = self.backend.models.rooms[client.userID]
+        room  = client.nio.rooms[room_id]
 
-        self.backend.models.rooms[client.userID].append(Room(
+        def group_name() -> Optional[str]:
+            name = room.group_name()
+            return None if name == "Empty room?" else name
+
+        item = Room(
             room_id      = room_id,
-            display_name = name,
+            display_name = room.name or room.canonical_alias or group_name(),
             description  = getattr(room, "topic", ""),  # FIXME: outside init
-        ))
+        )
+
+        try:
+            index = model.indexWhere("room_id", room_id)
+        except ValueError:
+            model.append(item)
+        else:
+            model[index] = item
 
 
     def onRoomLeft(self, client: Client, room_id: str) -> None:

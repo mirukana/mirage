@@ -85,14 +85,12 @@ class NetworkManager:
             except NioErrorResponse as err:
                 logging.error("read bad response for %s: %s", nio_func, err)
                 self._close_socket(sock)
+
                 if self._should_abort_talk(err):
                     logging.error("aborting talk")
                     break
-                time.sleep(10)
 
-            except Exception as err:
-                logging.error("talk exception for %s: %r", nio_func, err)
-                break
+                time.sleep(10)
 
             else:
                 break

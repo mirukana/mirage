@@ -6,7 +6,7 @@ import "../base" as Base
 MouseArea {
     id: "root"
     width: roomList.width
-    height: Math.max(roomLabel.height + subtitleLabel.height, avatar.height)
+    height: roomList.childrenHeight
 
     onClicked: pageStack.show_room(
         roomList.user_id,
@@ -18,14 +18,15 @@ MouseArea {
         id: row
         spacing: 1
 
-        Base.Avatar { id: avatar; name: display_name; dimmension: 36 }
+        Base.Avatar { id: avatar; name: display_name; dimmension: root.height }
 
         ColumnLayout {
             spacing: 0
 
             Base.HLabel {
                 id: roomLabel
-                text: display_name
+                text: display_name ? display_name : "<i>Empty room</i>"
+                textFormat: Text.StyledText
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.maximumWidth: row.width - row.spacing - avatar.width
@@ -37,11 +38,12 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
-                function get_text() {
-                    var msgs = Backend.models.messages.get(room_id)
-                    if (! msgs || msgs.count < 1) { return "" }
+                property var msgModel: Backend.models.messages.get(room_id)
 
-                    var msg = msgs.get(-1)
+                function get_text() {
+                    if (msgModel.count < 1) { return "" }
+
+                    var msg = msgModel.get(-1)
                     var color_ = (msg.sender_id === roomList.user_id ?
                                   "darkblue" : "purple")
                     var client = Backend.clientManager.clients[RoomList.for_user_id]
@@ -54,7 +56,7 @@ MouseArea {
 
                 id: subtitleLabel
                 visible: text !== ""
-                text: Backend.models.messages.get(room_id).reloadThis, get_text()
+                text: msgModel.reloadThis, get_text()
                 textFormat: Text.StyledText
 
                 font.pixelSize: smallSize

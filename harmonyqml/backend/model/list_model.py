@@ -129,7 +129,7 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot(int, list)
     def set(self, index: int, value: NewValue) -> None:
-        qidx              = QAbstractListModel.index(index, 0)
+        qidx              = QAbstractListModel.index(self, index, 0)
         value             = self._convert_new_value(value)
         self._list[index] = value
         self.dataChanged.emit(qidx, qidx, self.roleNames())
@@ -139,7 +139,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int, str, "QVariant")
     def setProperty(self, index: int, prop: str, value: Any) -> None:
         self._list[index][self._roles.index(prop)] = value
-        qidx = QAbstractListModel.index(index, 0)
+        qidx = QAbstractListModel.index(self, index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self._update_count += 1
 
