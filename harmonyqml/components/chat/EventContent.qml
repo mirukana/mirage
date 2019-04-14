@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 import "utils.js" as ChatJS
 
-Row {
+RowLayout {
     id: row
     spacing: standardSpacing
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
