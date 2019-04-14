@@ -9,7 +9,7 @@ MouseArea {
     height: roomList.childrenHeight
 
     onClicked: pageStack.show_room(
-        roomList.user_id,
+        roomList.for_user_id,
         roomList.model.get(index)
     )
 
@@ -38,7 +38,7 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
-                property var msgModel: Backend.models.messages.get(room_id)
+                property var msgModel: Backend.models.roomEvents.get(room_id)
 
                 function get_text() {
                     if (msgModel.count < 1) { return "" }
@@ -46,17 +46,16 @@ MouseArea {
                     var msg = msgModel.get(-1)
                     var color_ = (msg.sender_id === roomList.user_id ?
                                   "darkblue" : "purple")
-                    var client = Backend.clientManager.clients[RoomList.for_user_id]
 
                     return "<font color=\"" + color_ + "\">" +
-                           client.getUser(room_id, msg.sender_id).display_name +
+                           Backend.getUser(msg.sender_id).display_name +
                            ":</font> " +
                            msg.content
                 }
 
                 id: subtitleLabel
                 visible: text !== ""
-                text: msgModel.reloadThis, get_text()
+                //text: msgModel.reloadThis, get_text()
                 textFormat: Text.StyledText
 
                 font.pixelSize: smallSize

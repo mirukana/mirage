@@ -1,11 +1,11 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-from typing import NamedTuple, Optional
+from typing import Dict, NamedTuple, Optional
 
 from PyQt5.QtCore import QDateTime
 
-from .enums import Activity, MessageKind, Presence
+from .enums import Activity, Presence
 
 
 class User(NamedTuple):
@@ -26,9 +26,7 @@ class Room(NamedTuple):
     avatar_url:                 Optional[str] = None
 
 
-class Message(NamedTuple):
-    sender_id:     str
-    date_time:     QDateTime
-    content:       str
-    kind:          MessageKind   = MessageKind.text
-    sender_avatar: Optional[str] = None
+class RoomEvent(NamedTuple):
+    type:      str
+    date_time: QDateTime
+    dict:      Dict[str, str]

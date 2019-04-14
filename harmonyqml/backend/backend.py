@@ -2,10 +2,12 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 import hashlib
+from typing import Dict
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 from .client_manager import ClientManager
+from .model.items import User
 from .model.qml_models import QMLModels
 
 
@@ -33,6 +35,18 @@ class Backend(QObject):
     @pyqtProperty("QVariant", constant=True)
     def models(self):
         return self._models
+
+
+    @pyqtSlot(str, result="QVariantMap")
+    def getUser(self, user_id: str) -> Dict[str, str]:
+        for client in self.clientManager.clients.values():
+            for room in client.nio.rooms.values():
+
+                name = room.user_name(user_id)
+                if name:
+                    return User(user_id=user_id, display_name=name)._asdict()
+
+        return User(user_id=user_id, display_name=user_id)._asdict()
 
 
     @pyqtSlot(str, result=float)

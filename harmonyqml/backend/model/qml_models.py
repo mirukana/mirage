@@ -13,9 +13,9 @@ class QMLModels(QObject):
 
     def __init__(self) -> None:
         super().__init__()
-        self._accounts: ListModel    = ListModel()
-        self._rooms:    ListModelMap = ListModelMap()
-        self._messages: ListModelMap = ListModelMap()
+        self._accounts:    ListModel    = ListModel()
+        self._rooms:       ListModelMap = ListModelMap()
+        self._room_events: ListModelMap = ListModelMap()
 
 
     @pyqtProperty(ListModel, constant=True)
@@ -29,5 +29,5 @@ class QMLModels(QObject):
 
 
     @pyqtProperty("QVariant", constant=True)
-    def messages(self):
-        return self._messages
+    def roomEvents(self):
+        return self._room_events

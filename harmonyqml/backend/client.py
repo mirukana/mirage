@@ -7,14 +7,12 @@ import sys
 import traceback
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Event, currentThread
-from typing import Callable, DefaultDict, Dict
+from typing import Callable, DefaultDict
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 import nio
 import nio.responses as nr
-
-from .model.items import User
 
 # One pool per hostname/remote server;
 # multiple Client for different accounts on the same server can exist.
@@ -39,9 +37,10 @@ def futurize(func: Callable) -> Callable:
 
 
 class Client(QObject):
-    roomInvited = pyqtSignal(str)
-    roomJoined  = pyqtSignal(str)
-    roomLeft    = pyqtSignal(str)
+    roomInvited       = pyqtSignal(str)
+    roomJoined        = pyqtSignal(str)
+    roomLeft          = pyqtSignal(str)
+    roomEventReceived = pyqtSignal(str, str, dict)
 
 
     def __init__(self, hostname: str, username: str, device_id: str = ""
@@ -114,21 +113,13 @@ class Client(QObject):
         for room_id in response.rooms.invite:
             self.roomInvited.emit(room_id)
 
-        for room_id in response.rooms.join:
+        for room_id, room_info in response.rooms.join.items():
             self.roomJoined.emit(room_id)
+
+            for ev in room_info.timeline.events:
+                self.roomEventReceived.emit(
+                    room_id, type(ev).__name__, ev.__dict__
+                )
 
         for room_id in response.rooms.leave:
             self.roomLeft.emit(room_id)
-
-
-    @pyqtSlot(str, str, result="QVariantMap")
-    def getUser(self, room_id: str, user_id: str) -> Dict[str, str]:
-        try:
-            name = self.nio.rooms[room_id].user_name(user_id)
-        except KeyError:
-            name = None
-
-        return User(
-            user_id      = user_id,
-            display_name = name or user_id,
-        )._asdict()

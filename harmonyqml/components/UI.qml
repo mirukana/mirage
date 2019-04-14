@@ -17,9 +17,9 @@ Controls1.SplitView {
         function show_page(componentName) {
             pageStack.replace(componentName + ".qml")
         }
-        function show_room(user_obj, room_obj) {
+        function show_room(user_id, room_obj) {
             pageStack.replace(
-                "chat/Root.qml", { user: user_obj, room: room_obj }
+                "chat/Root.qml", { user_id: user_id, room: room_obj }
             )
         }
 

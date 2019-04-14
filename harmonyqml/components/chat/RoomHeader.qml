@@ -33,7 +33,7 @@ Rectangle {
 
         Base.HLabel {
             id: "roomDescription"
-            text: chatPage.room.description
+            text: chatPage.room.description || ""
             font.pixelSize: smallSize
             elide: Text.ElideRight
             maximumLineCount: 1

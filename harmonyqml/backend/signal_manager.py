@@ -1,18 +1,18 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
 from .backend import Backend
 from .client import Client
-from .model.items import Room, User
+from .model.items import Room, RoomEvent, User
 
 
 class SignalManager(QObject):
     def __init__(self, backend: Backend) -> None:
-        super().__init__()
+        super().__init__(parent=backend)
         self.backend = backend
 
         cm = self.backend.clientManager
@@ -34,10 +34,15 @@ class SignalManager(QObject):
 
 
     def connectClient(self, client: Client) -> None:
-        for sig_name in ("roomInvited", "roomJoined", "roomLeft"):
-            sig    = getattr(client, sig_name)
-            on_sig = getattr(self, f"on{sig_name[0].upper()}{sig_name[1:]}")
-            sig.connect(lambda room_id, o=on_sig, c=client: o(c, room_id))
+        for name in dir(client):
+            attr = getattr(client, name)
+
+            if isinstance(attr, pyqtBoundSignal):
+                def onSignal(*args, name=name) -> None:
+                    func = getattr(self, f"on{name[0].upper()}{name[1:]}")
+                    func(client, *args)
+
+                attr.connect(onSignal)
 
 
     def onRoomInvited(self, client: Client, room_id: str) -> None:
@@ -69,3 +74,25 @@ class SignalManager(QObject):
     def onRoomLeft(self, client: Client, room_id: str) -> None:
         rooms = self.backend.models.rooms[client.userID]
         del rooms[rooms.indexWhere("room_id", room_id)]
+
+
+    def onRoomEventReceived(
+            self, _: Client, room_id: str, etype: str, edict: Dict[str, Any]
+        ) -> None:
+        model     = self.backend.models.roomEvents[room_id]
+        date_time = QDateTime.fromMSecsSinceEpoch(edict["server_timestamp"])
+        new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
+
+        # Insert event in model at the right position, based on timestamps
+        # to keep them sorted by date of arrival.
+        # Iterate in reverse, since a new event is more likely to be appended,
+        # but events can arrive out of order.
+        if not model or model[-1].date_time < new_event.date_time:
+            model.append(new_event)
+        else:
+            for i, event in enumerate(reversed(model)):
+                if event.date_time < new_event.date_time:
+                    model.insert(-i, new_event)
+                    break
+            else:
+                model.insert(0, new_event)
