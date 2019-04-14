@@ -124,3 +124,21 @@ function get_member_event_text(dict) {
 
     return ""
 }
+
+
+function get_typing_users_text(account_id, room_id) {
+    var names = []
+    var room  = Backend.models.rooms.get(account_id)
+                .getWhere("room_id", room_id)
+
+    for (var i = 0; i < room.typing_users.length; i++) {
+        names.push(Backend.getUser(room.typing_users[i]).display_name)
+    }
+
+    if (names.length < 1) { return "" }
+
+    return "🖋 " +
+           [names.slice(0, -1).join(", "), names.slice(-1)[0]]
+           .join(names.length < 2 ? "" : " and ") +
+           (names.length > 1 ? " are" : " is") + " typing…"
+}

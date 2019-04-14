@@ -20,3 +20,5 @@
 - Load previous events on scroll up
 
 - Migrate more JS functions to their own files
+
+- Accept room\_id arg for getUser

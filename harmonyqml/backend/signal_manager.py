@@ -2,7 +2,7 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 from threading import Lock
-from typing import Any, Deque, Dict, Optional
+from typing import Any, Deque, Dict, List, Optional
 
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
@@ -109,3 +109,11 @@ class SignalManager(QObject):
                     break
             else:
                 model.insert(0, new_event)
+
+
+    def onRoomTypingUsersUpdated(
+            self, client: Client, room_id: str, users: List[str]
+        ) -> None:
+
+        rooms = self.backend.models.rooms[client.userID]
+        rooms[rooms.indexWhere("room_id", room_id)].typing_users = users

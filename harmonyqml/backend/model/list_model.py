@@ -10,6 +10,7 @@ from PyQt5.QtCore import (
 )
 
 NewValue = Union[Mapping[str, Any], Sequence]
+ReturnItem = Dict[str, Any]
 
 
 class ListModel(QAbstractListModel):
@@ -96,7 +97,7 @@ class ListModel(QAbstractListModel):
 
 
     @pyqtSlot(int, result="QVariantMap")
-    def get(self, index: int) -> Dict[str, Any]:
+    def get(self, index: int) -> ReturnItem:
         return self._list[index]._asdict()
 
 
@@ -108,6 +109,11 @@ class ListModel(QAbstractListModel):
 
         raise ValueError(f"No {type(self._ref_namedlist)} in list with "
                          f"property {prop!r} set to {is_value!r}.")
+
+
+    @pyqtSlot(str, "QVariant", result="QVariantMap")
+    def getWhere(self, prop: str, is_value: Any) -> ReturnItem:
+        return self.get(self.indexWhere(prop, is_value))
 
 
     @pyqtSlot(int, list)

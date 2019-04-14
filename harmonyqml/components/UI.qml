@@ -24,10 +24,6 @@ Controls1.SplitView {
         }
 
         id: "pageStack"
-//        initialItem: Chat.Root {
-            //user: Backend.accountsModel.get(0)
-            //room: Backend.roomsModel[Backend.accountsModel.get(0).user_id].get(0)
-        //}
 
         onCurrentItemChanged: currentItem.forceActiveFocus()
 

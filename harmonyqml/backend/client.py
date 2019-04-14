@@ -37,10 +37,11 @@ def futurize(func: Callable) -> Callable:
 
 
 class Client(QObject):
-    roomInvited       = pyqtSignal(str)
-    roomJoined        = pyqtSignal(str)
-    roomLeft          = pyqtSignal(str)
-    roomEventReceived = pyqtSignal(str, str, dict)
+    roomInvited            = pyqtSignal(str)
+    roomJoined             = pyqtSignal(str)
+    roomLeft               = pyqtSignal(str)
+    roomEventReceived      = pyqtSignal(str, str, dict)
+    roomTypingUsersUpdated = pyqtSignal(str, list)
 
 
     def __init__(self, hostname: str, username: str, device_id: str = ""
@@ -120,6 +121,12 @@ class Client(QObject):
                 self.roomEventReceived.emit(
                     room_id, type(ev).__name__, ev.__dict__
                 )
+
+            for ev in room_info.ephemeral:
+                if isinstance(ev, nr.TypingNoticeEvent):
+                    self.roomTypingUsersUpdated.emit(room_id, ev.users)
+                else:
+                    print("ephemeral event: ", ev)
 
         for room_id in response.rooms.leave:
             self.roomLeft.emit(room_id)
