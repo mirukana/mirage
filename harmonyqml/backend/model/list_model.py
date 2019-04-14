@@ -5,13 +5,16 @@ from typing import (
 
 from namedlist import namedlist
 from PyQt5.QtCore import (
-    QAbstractListModel, QModelIndex, QObject, Qt, pyqtProperty, pyqtSlot
+    QAbstractListModel, QModelIndex, QObject, Qt, pyqtProperty, pyqtSignal,
+    pyqtSlot
 )
 
 NewValue = Union[Mapping[str, Any], Sequence]
 
 
 class ListModel(QAbstractListModel):
+    changed = pyqtSignal()
+
     def __init__(self,
                  initial_data: Optional[List[NewValue]] = None,
                  parent:       Optional[QObject]        = None) -> None:
@@ -19,8 +22,6 @@ class ListModel(QAbstractListModel):
         self._ref_namedlist          = None
         self._roles: Tuple[str, ...] = ()
         self._list:  list            = []
-
-        self._update_count: int = 0
 
         if initial_data:
             self.extend(initial_data)
@@ -115,7 +116,7 @@ class ListModel(QAbstractListModel):
         self.beginInsertRows(QModelIndex(), index, index)
         self._list.insert(index, value)
         self.endInsertRows()
-        self._update_count += 1
+        self.changed.emit()
 
 
     @pyqtSlot(list)
@@ -135,7 +136,7 @@ class ListModel(QAbstractListModel):
         value             = self._convert_new_value(value)
         self._list[index] = value
         self.dataChanged.emit(qidx, qidx, self.roleNames())
-        self._update_count += 1
+        self.changed.emit()
 
 
     @pyqtSlot(int, str, "QVariant")
@@ -143,7 +144,7 @@ class ListModel(QAbstractListModel):
         self._list[index][self._roles.index(prop)] = value
         qidx = QAbstractListModel.index(self, index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
-        self._update_count += 1
+        self.changed.emit()
 
 
     # pylint: disable=invalid-name
@@ -173,7 +174,7 @@ class ListModel(QAbstractListModel):
         self._list[to:to] = cut
 
         self.endMoveRows()
-        self._update_count += 1
+        self.changed.emit()
 
 
     @pyqtSlot(int)
@@ -181,7 +182,7 @@ class ListModel(QAbstractListModel):
         self.beginRemoveRows(QModelIndex(), index, index)
         del self._list[index]
         self.endRemoveRows()
-        self._update_count += 1
+        self.changed.emit()
 
 
     @pyqtSlot()
@@ -190,9 +191,4 @@ class ListModel(QAbstractListModel):
         self.beginRemoveRows(QModelIndex(), 0, self.rowCount())
         self._list.clear()
         self.endRemoveRows()
-        self._update_count += 1
-
-
-    @pyqtProperty(int, constant=True)
-    def reloadThis(self):
-        return self._update_count
+        self.changed.emit()

@@ -39,10 +39,18 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
+                function get_text() {
+                    return SidePaneJS.get_last_room_event_text(room_id)
+                }
+
+                Connections {
+                    target: Backend.models.roomEvents.get(room_id)
+                    onChanged: subtitleLabel.text = subtitleLabel.get_text()
+                }
+
                 id: subtitleLabel
                 visible: text !== ""
-                text: Backend.models.roomEvents.get(room_id).reloadThis,
-                      SidePaneJS.get_last_room_event_text(room_id)
+                text: get_text()
                 textFormat: Text.StyledText
 
                 font.pixelSize: smallSize
