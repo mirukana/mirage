@@ -25,7 +25,7 @@ RowLayout {
         text: "<font color='" +
               (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
               displayName + " " + contentText +
-              "&nbsp;&nbsp;<font size=" + smallSize + "px>" +
+              "&nbsp;&nbsp;<font size=" + smallSize + "px color='gray'>" +
               Qt.formatDateTime(date_time, "hh:mm:ss") +
               "</font></font>"
         textFormat: Text.RichText
