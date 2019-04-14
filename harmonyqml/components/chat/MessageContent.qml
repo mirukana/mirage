@@ -38,9 +38,7 @@ Row {
                   //"</font>" +
             //      (isOwn ? "&nbsp;&nbsp;" + content : "")
 
-            text: (isUndecryptableEvent ?
-                   "<font color=darkred>Missing decryption keys for this message.</font>" :
-                   dict.formatted_body || dict.body) +
+            text: (dict.formatted_body || dict.body) +
                   "&nbsp;&nbsp;<font size=" + smallSize + "px color=gray>" +
                   Qt.formatDateTime(date_time, "hh:mm:ss") +
                   "</font>"

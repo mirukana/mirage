@@ -18,3 +18,5 @@
 - Better names and organization for the Message components
 
 - Load previous events on scroll up
+
+- Migrate more JS functions to their own files

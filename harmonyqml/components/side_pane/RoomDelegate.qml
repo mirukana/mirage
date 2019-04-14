@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 import "../base" as Base
+import "utils.js" as SidePaneJS
 
 MouseArea {
     id: "root"
@@ -38,24 +39,10 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
-                property var msgModel: Backend.models.roomEvents.get(room_id)
-
-                function get_text() {
-                    if (msgModel.count < 1) { return "" }
-
-                    var msg = msgModel.get(-1)
-                    var color_ = (msg.sender_id === roomList.user_id ?
-                                  "darkblue" : "purple")
-
-                    return "<font color=\"" + color_ + "\">" +
-                           Backend.getUser(msg.sender_id).display_name +
-                           ":</font> " +
-                           msg.content
-                }
-
                 id: subtitleLabel
                 visible: text !== ""
-                //text: msgModel.reloadThis, get_text()
+                text: Backend.models.roomEvents.get(room_id).reloadThis,
+                      SidePaneJS.get_last_room_event_text(room_id)
                 textFormat: Text.StyledText
 
                 font.pixelSize: smallSize

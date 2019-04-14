@@ -45,6 +45,10 @@ function get_event_text(type, dict) {
             return "turned on encryption for this room."
             break
 
+        case "OlmEvent":
+        case "MegolmEvent":
+            return "hasn't sent your device the keys to decrypt this message."
+
         default:
             console.log(type + "\n" + JSON.stringify(dict, null, 4) + "\n")
             return "did something this client does not understand."

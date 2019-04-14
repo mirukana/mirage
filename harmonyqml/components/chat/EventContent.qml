@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 import "../base" as Base
-import "get_event_text.js" as GetEventTextJS
+import "utils.js" as ChatJS
 
 Row {
     id: row
@@ -11,9 +11,7 @@ Row {
     anchors.right: isOwn ? parent.right : undefined
 
     readonly property string contentText:
-        (isMessage || isUndecryptableEvent) ?
-        "" :
-        GetEventTextJS.get_event_text(type, dict)
+        isMessage ?  "" : ChatJS.get_event_text(type, dict)
 
     Base.Avatar {
         id: avatar
@@ -24,7 +22,8 @@ Row {
 
     Base.HLabel {
         id: contentLabel
-        text: "<font color=gray>" +
+        text: "<font color='" +
+              (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
               displayName + " " + contentText +
               "&nbsp;&nbsp;<font size=" + smallSize + "px>" +
               Qt.formatDateTime(date_time, "hh:mm:ss") +

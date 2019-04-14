@@ -55,7 +55,7 @@ Column {
 
     Daybreak { visible: dayBreak }
 
-    MessageContent { visible: isMessage || isUndecryptableEvent }
+    MessageContent { visible: isMessage }
 
-    EventContent { visible: ! (isMessage || isUndecryptableEvent) }
+    EventContent { visible: ! isMessage }
 }
