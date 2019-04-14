@@ -1,7 +1,8 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-from typing import Any, Dict, Optional
+from threading import Lock
+from typing import Any, Deque, Dict, Optional
 
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
@@ -11,9 +12,13 @@ from .model.items import Room, RoomEvent, User
 
 
 class SignalManager(QObject):
+    _duplicate_check_lock: Lock = Lock()
+
     def __init__(self, backend: Backend) -> None:
         super().__init__(parent=backend)
         self.backend = backend
+
+        self.last_room_events: Deque[str] = Deque(maxlen=1000)
 
         cm = self.backend.clientManager
         cm.clientAdded.connect(self.onClientAdded)
@@ -79,6 +84,14 @@ class SignalManager(QObject):
     def onRoomEventReceived(
             self, _: Client, room_id: str, etype: str, edict: Dict[str, Any]
         ) -> None:
+
+        # Prevent duplicate events in models due to multiple accounts
+        with self._duplicate_check_lock:
+            if edict["event_id"] in self.last_room_events:
+                return
+
+            self.last_room_events.appendleft(edict["event_id"])
+
         model     = self.backend.models.roomEvents[room_id]
         date_time = QDateTime.fromMSecsSinceEpoch(edict["server_timestamp"])
         new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
