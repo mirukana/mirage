@@ -52,7 +52,7 @@ class HtmlFilter(QObject):
         for el in tree.iter("a"):
             el = self._append_img_to_a(el)
 
-        return str(etree.tostring(tree[0][0], encoding="utf-8"), "utf-8")
+        return str(etree.tostring(tree, encoding="utf-8"), "utf-8")
 
 
     @pyqtProperty("QVariant")
@@ -140,6 +140,7 @@ class HtmlFilter(QObject):
         for _ in el.iter("img"):  # if the <a> already has an <img> child
             return el
 
+        el.append(etree.Element("br"))
         el.append(etree.Element("img", src=link, width="256", height="256"))
         return el
 

@@ -24,5 +24,7 @@ Rectangle {
         // Keep x scroll pages cached, to limit images having to be
         // reloaded from network.
         cacheBuffer: height * 6
+
+        //Component.onCompleted: positionViewAtEnd()
     }
 }

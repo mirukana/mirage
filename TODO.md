@@ -30,3 +30,5 @@
 - Make links in room subtitle clickable, formatting?
 
 - Push instead of replacing in stack view
+
+- QQuickImageProvider, matrix preview API
