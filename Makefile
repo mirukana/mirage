@@ -22,6 +22,7 @@ clean:
 	find . -name '__pycache__' -exec rm -Rfv {} +
 	find . -name '*.pyc'       -exec rm -Rfv {} +
 	find . -name '*.qmlc'      -exec rm -Rfv {} +
+	find . -name '*.jsc'       -exec rm -Rfv {} +
 	find . -name '*.egg-info'  -exec rm -Rfv {} +
 	rm -Rfv build dist
 
