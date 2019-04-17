@@ -39,7 +39,7 @@ Row {
             //      (isOwn ? "&nbsp;&nbsp;" + content : "")
 
             text: (dict.formatted_body ?
-                   Backend.htmlFilter.sanitize(dict.formatted_body) :
+                   Backend.htmlFilter.filter(dict.formatted_body) :
                    dict.body) +
                   "&nbsp;&nbsp;<font size=" + smallSize + "px color=gray>" +
                   Qt.formatDateTime(date_time, "hh:mm:ss") +

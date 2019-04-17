@@ -4,7 +4,7 @@
 import re
 
 import html_sanitizer.sanitizer as sanitizer
-from lxml.html import HtmlElement
+from lxml.html import HtmlElement, etree
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 
@@ -39,8 +39,20 @@ class HtmlFilter(QObject):
 
 
     @pyqtSlot(str, result=str)
-    def sanitize(self, html: str) -> str:
-        return self._sanitizer.sanitize(html)
+    def filter(self, html: str) -> str:
+        html = self._sanitizer.sanitize(html)
+        if not html:
+            return ""
+
+        tree = etree.fromstring(html, parser=etree.HTMLParser())
+
+        for el in tree.iter("img"):
+            el = self._wrap_img_in_a(el)
+
+        for el in tree.iter("a"):
+            el = self._append_img_to_a(el)
+
+        return str(etree.tostring(tree[0][0], encoding="utf-8"), "utf-8")
 
 
     @pyqtProperty("QVariant")
@@ -73,7 +85,7 @@ class HtmlFilter(QObject):
                 "link_regexes": self.link_regexes,
                 "avoid_hosts": [],
             },
-            "sanitize_href": sanitizer.sanitize_href,
+            "sanitize_href": lambda href: href,
             "element_preprocessors": [
                 sanitizer.bold_span_to_strong,
                 sanitizer.italic_span_to_em,
@@ -101,3 +113,39 @@ class HtmlFilter(QObject):
             el.clear()
 
         return el
+
+
+    def _wrap_img_in_a(self, el: HtmlElement) -> HtmlElement:
+        link   = el.attrib.get("src", "")
+        width  = el.attrib.get("width", "256")
+        height = el.attrib.get("height", "256")
+
+        if el.getparent().tag == "a" or el.tag != "img" or \
+           not self._is_image_path(link):
+            return el
+
+        el.tag    = "a"
+        el.attrib.clear()
+        el.attrib["href"] = link
+        el.append(etree.Element("img", src=link, width=width, height=height))
+        return el
+
+
+    def _append_img_to_a(self, el: HtmlElement) -> HtmlElement:
+        link = el.attrib.get("href", "")
+
+        if not (el.tag == "a" and self._is_image_path(link)):
+            return el
+
+        for _ in el.iter("img"):  # if the <a> already has an <img> child
+            return el
+
+        el.append(etree.Element("img", src=link, width="256", height="256"))
+        return el
+
+
+    @staticmethod
+    def _is_image_path(link: str) -> bool:
+        return bool(re.match(
+            r".+\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$", link, re.IGNORECASE
+        ))

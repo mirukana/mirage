@@ -28,3 +28,5 @@
 - `<pre>` scrollbar on overflow
 
 - Make links in room subtitle clickable, formatting?
+
+- Push instead of replacing in stack view
