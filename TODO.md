@@ -26,3 +26,5 @@
 - Set Qt parents for all QObject
 
 - `<pre>` scrollbar on overflow
+
+- Make links in room subtitle clickable, formatting?

@@ -1,12 +1,23 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+import re
+
 import html_sanitizer.sanitizer as sanitizer
 from lxml.html import HtmlElement
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 
 class HtmlFilter(QObject):
+    link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+        (r"(?P<body>.+://(?P<host>[a-z0-9._-]+)(?:/[/\-_.,a-z0-9%&?;=~]*)?"
+         r"(?:\([/\-_.,a-z0-9%&?;=~]*\))?)"),
+        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9_.-]+[a-z]))",
+        r"tel:(?P<body>[0-9+-]+)(?P<host>)",
+        r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
+    ]]
+
+
     def __init__(self) -> None:
         super().__init__()
         self._sanitizer = sanitizer.Sanitizer(self.sanitizer_settings)
@@ -14,6 +25,13 @@ class HtmlFilter(QObject):
         # The whitespace remover doesn't take <pre> into account
         sanitizer.normalize_overall_whitespace         = lambda html: html
         sanitizer.normalize_whitespace_in_text_or_tail = lambda el: el
+
+        # See FIXME note in sanitizer_settings
+        autolink_func = sanitizer.lxml.html.clean.autolink
+        sanitizer.lxml.html.clean.autolink = \
+            lambda el, **kw: autolink_func(
+                el, **self.sanitizer_settings["autolink"]
+            )
 
         # Prevent custom attributes from being removed
         sanitizer.lxml.html.clean.Cleaner.safe_attrs |= \
@@ -51,7 +69,10 @@ class HtmlFilter(QObject):
             },
             "whitespace": {},
             "add_nofollow": False,
-            "autolink": True,
+            "autolink": {  # FIXME: arg dict not working
+                "link_regexes": self.link_regexes,
+                "avoid_hosts": [],
+            },
             "sanitize_href": sanitizer.sanitize_href,
             "element_preprocessors": [
                 sanitizer.bold_span_to_strong,
