@@ -30,7 +30,7 @@ Row {
             topPadding: verticalPadding
         }
 
-        Base.HLabel {
+        Base.RichLabel {
             id: contentLabel
             //text: (isOwn ? "" : content + "&nbsp;&nbsp;") +
                   //"<font size=" + smallSize + "px color=gray>" +
