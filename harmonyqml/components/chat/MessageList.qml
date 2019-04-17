@@ -13,18 +13,27 @@ Rectangle {
     ListView {
         id: messageListView
         anchors.fill: parent
-        model: Backend.models.roomEvents.get(chatPage.room.room_id)
         delegate: MessageDelegate {}
+        model: Backend.models.roomEvents.get(chatPage.room.room_id)
         //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
 
         clip: true
         topMargin: space
         bottomMargin: space
+        verticalLayoutDirection: ListView.BottomToTop
 
         // Keep x scroll pages cached, to limit images having to be
         // reloaded from network.
         cacheBuffer: height * 6
 
-        //Component.onCompleted: positionViewAtEnd()
+        function goToEnd() {
+            messageListView.positionViewAtEnd()
+            //messageListView.flick(0, -messageListView.bottomMargin * 100)
+        }
+
+        //Connections {
+            //target: messageListView.model
+            //onChanged: goToEnd()
+        //}
     }
 }

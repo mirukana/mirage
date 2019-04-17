@@ -96,19 +96,17 @@ class SignalManager(QObject):
         date_time = QDateTime.fromMSecsSinceEpoch(edict["server_timestamp"])
         new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
 
-        # Insert event in model at the right position, based on timestamps
-        # to keep them sorted by date of arrival.
-        # Iterate in reverse, since a new event is more likely to be appended,
-        # but events can arrive out of order.
-        if not model or model[-1].date_time < new_event.date_time:
+        # Model is sorted from newest to oldest message
+        insert_at = None
+        for i, event in enumerate(model):
+            if new_event.date_time > event.date_time:
+                insert_at = i
+                break
+
+        if insert_at is None:
             model.append(new_event)
         else:
-            for i, event in enumerate(reversed(model)):
-                if event.date_time < new_event.date_time:
-                    model.insert(-i, new_event)
-                    break
-            else:
-                model.insert(0, new_event)
+            model.insert(insert_at, new_event)
 
 
     def onRoomTypingUsersUpdated(

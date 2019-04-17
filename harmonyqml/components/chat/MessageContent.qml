@@ -50,6 +50,7 @@ Row {
 
             leftPadding: horizontalPadding
             rightPadding: horizontalPadding
+            topPadding: nameLabel.visible ? 0 : verticalPadding
             bottomPadding: verticalPadding
 
             Layout.minimumWidth: nameLabel.implicitWidth

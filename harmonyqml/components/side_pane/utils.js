@@ -4,7 +4,7 @@
 function get_last_room_event_text(room_id) {
     var eventsModel = Backend.models.roomEvents.get(room_id)
 
-    for (var i = -1; i >= -eventsModel.count; i--) {
+    for (var i = 0; i < eventsModel.count; i++) {
         var ev = eventsModel.get(i)
 
         if (ev.type !== "RoomMemberEvent") {
