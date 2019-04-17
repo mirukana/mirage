@@ -7,7 +7,6 @@ Column {
     id: "rootCol"
 
     function mins_between(date1, date2) {
-        console.log(Math.round((((date2 - date1) % 86400000) % 3600000) / 60000))
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
     }
 
@@ -58,8 +57,6 @@ Column {
         talkBreak ? standardSpacing * 3 :
         combine ? standardSpacing / 4 :
         standardSpacing
-
-    //Text { text: rootCol.topPadding }
 
     Daybreak { visible: dayBreak }
 

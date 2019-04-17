@@ -1,6 +1,8 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+from typing import Deque
+
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
 from .list_model import ListModel
@@ -15,7 +17,7 @@ class QMLModels(QObject):
         super().__init__()
         self._accounts:    ListModel    = ListModel()
         self._rooms:       ListModelMap = ListModelMap()
-        self._room_events: ListModelMap = ListModelMap()
+        self._room_events: ListModelMap = ListModelMap(models_container=Deque)
 
 
     @pyqtProperty(ListModel, constant=True)
