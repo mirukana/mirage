@@ -9,6 +9,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 from .client_manager import ClientManager
 from .model.items import User
 from .model.qml_models import QMLModels
+from .html_filter import HtmlFilter
 
 
 class Backend(QObject):
@@ -16,13 +17,11 @@ class Backend(QObject):
         super().__init__()
         self._client_manager: ClientManager = ClientManager()
         self._models:         QMLModels     = QMLModels()
+        self._html_filter:    HtmlFilter    = HtmlFilter()
+        # a = self._client_manager; m = self._models
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
-
-        # a = self._client_manager; m = self._models
-        # from PyQt5.QtCore import pyqtRemoveInputHook as PRI
-        # import pdb; PRI(); pdb.set_trace()
 
         self.clientManager.configLoad()
 
@@ -31,10 +30,13 @@ class Backend(QObject):
     def clientManager(self):
         return self._client_manager
 
-
     @pyqtProperty("QVariant", constant=True)
     def models(self):
         return self._models
+
+    @pyqtProperty("QVariant", constant=True)
+    def htmlFilter(self):
+        return self._html_filter
 
 
     @pyqtSlot(str, result="QVariantMap")

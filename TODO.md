@@ -22,3 +22,7 @@
 - Migrate more JS functions to their own files
 
 - Accept room\_id arg for getUser
+
+- Set Qt parents for all QObject
+
+- `<pre>` scrollbar on overflow
