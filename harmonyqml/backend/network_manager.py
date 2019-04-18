@@ -49,7 +49,10 @@ class NetworkManager:
 
     @staticmethod
     def _close_socket(sock: socket.socket) -> None:
-        sock.shutdown(how=socket.SHUT_RDWR)
+        try:
+            sock.shutdown(how=socket.SHUT_RDWR)
+        except OSError:  # Already closer by server
+            pass
         sock.close()
 
 

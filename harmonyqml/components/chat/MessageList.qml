@@ -30,7 +30,6 @@ Rectangle {
         property real yPos: visibleArea.yPosition
 
         onYPosChanged: {
-            console.log(yPos)
             if (yPos <= 0.1) {
                 Backend.loadPastEvents(chatPage.room.room_id)
             }

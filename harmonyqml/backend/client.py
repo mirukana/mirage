@@ -185,3 +185,15 @@ class Client(QObject):
             self.roomEventReceived.emit(
                 room_id, type(ev).__name__, ev.__dict__
             )
+
+
+    @pyqtSlot(str, str)
+    @futurize
+    def sendMessage(self, room_id: str, text: str) -> None:
+        content = {
+            "body": text,
+            "formatted_body": text,
+            "format": "org.matrix.custom.html",
+            "msgtype": "m.text",
+        }
+        self.net.talk(self.nio.room_send, room_id, "m.room.message", content)

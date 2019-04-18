@@ -53,9 +53,8 @@ Rectangle {
 
                     if (textArea.text === "") { return }
 
-                    Backend.sendMessage(chatPage.user.user_id,
-                                        chatPage.room.room_id,
-                                        textArea.text)
+                    Backend.clientManager.clients[chatPage.user_id]
+                           .sendMessage(chatPage.room.room_id, textArea.text)
                     textArea.clear()
                 }
                 Keys.onEnterPressed: Keys.onReturnPressed(event)  // numpad enter
