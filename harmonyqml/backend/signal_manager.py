@@ -6,19 +6,22 @@ from typing import Any, Deque, Dict, List, Optional
 
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
+import nio
+
 from .backend import Backend
 from .client import Client
 from .model.items import Room, RoomEvent, User
 
 
 class SignalManager(QObject):
-    _duplicate_check_lock: Lock = Lock()
+    _event_handling_lock: Lock = Lock()
 
     def __init__(self, backend: Backend) -> None:
         super().__init__(parent=backend)
         self.backend = backend
 
         self.last_room_events: Deque[str] = Deque(maxlen=1000)
+        self._events_in_transfer:     int        = 0
 
         cm = self.backend.clientManager
         cm.clientAdded.connect(self.onClientAdded)
@@ -103,28 +106,53 @@ class SignalManager(QObject):
             self, _: Client, room_id: str, etype: str, edict: Dict[str, Any]
         ) -> None:
 
-        # Prevent duplicate events in models due to multiple accounts
-        with self._duplicate_check_lock:
+        with self._event_handling_lock:
+            # Prevent duplicate events in models due to multiple accounts
             if edict["event_id"] in self.last_room_events:
                 return
 
             self.last_room_events.appendleft(edict["event_id"])
 
-        model     = self.backend.models.roomEvents[room_id]
-        date_time = QDateTime.fromMSecsSinceEpoch(edict["server_timestamp"])
-        new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
+            model     = self.backend.models.roomEvents[room_id]
+            date_time = QDateTime\
+                        .fromMSecsSinceEpoch(edict["server_timestamp"])
+            new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
 
-        # Model is sorted from newest to oldest message
-        insert_at = None
-        for i, event in enumerate(model):
-            if new_event.date_time > event.date_time:
-                insert_at = i
-                break
+            if self._events_in_transfer:
+                local_echoes_met: int           = 0
+                replace_at:       Optional[int] = None
 
-        if insert_at is None:
+                # Find if any locally echoed event corresponds to new_event
+                for i, event in enumerate(model):
+                    if not event.is_local_echo:
+                        continue
+
+                    sb     = (event.dict["sender"], event.dict["body"])
+                    new_sb = (new_event.dict["sender"], new_event.dict["body"])
+
+                    if sb == new_sb:
+                        # The oldest matching local echo shall be replaced
+                        replace_at = max(replace_at or 0, i)
+
+                    local_echoes_met += 1
+                    if local_echoes_met >= self._events_in_transfer:
+                        break
+
+                if replace_at is not None:
+                    model[replace_at] = new_event
+                    self._events_in_transfer -= 1
+                    return
+
+            for i, event in enumerate(model):
+                if event.is_local_echo:
+                    continue
+
+                # Model is sorted from newest to oldest message
+                if new_event.date_time > event.date_time:
+                    model.insert(i, new_event)
+                    return
+
             model.append(new_event)
-        else:
-            model.insert(insert_at, new_event)
 
 
     def onRoomTypingUsersUpdated(
@@ -133,3 +161,25 @@ class SignalManager(QObject):
 
         rooms = self.backend.models.rooms[client.userID]
         rooms[rooms.indexWhere("room_id", room_id)].typing_users = users
+
+
+    def onMessageAboutToBeSent(
+            self, client: Client, room_id: str, content: Dict[str, str]
+        ) -> None:
+        with self._event_handling_lock:
+            timestamp = QDateTime.currentMSecsSinceEpoch()
+            model     = self.backend.models.roomEvents[room_id]
+            nio_event = nio.events.RoomMessage.parse_event({
+                "event_id":         "",
+                "sender":           client.userID,
+                "origin_server_ts": timestamp,
+                "content":          content,
+            })
+            event = RoomEvent(
+                type          = type(nio_event).__name__,
+                date_time     = QDateTime.fromMSecsSinceEpoch(timestamp),
+                dict          = nio_event.__dict__,
+                is_local_echo = True,
+            )
+            model.insert(0, event)
+            self._events_in_transfer += 1

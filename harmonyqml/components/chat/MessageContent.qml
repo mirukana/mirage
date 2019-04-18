@@ -37,13 +37,15 @@ Row {
                   //Qt.formatDateTime(date_time, "hh:mm:ss") +
                   //"</font>" +
             //      (isOwn ? "&nbsp;&nbsp;" + content : "")
-
+            //
             text: (dict.formatted_body ?
                    Backend.htmlFilter.filter(dict.formatted_body) :
                    dict.body) +
                   "&nbsp;&nbsp;<font size=" + smallSize + "px color=gray>" +
                   Qt.formatDateTime(date_time, "hh:mm:ss") +
-                  "</font>"
+                  "</font>" +
+                  (is_local_echo ?
+                   "&nbsp;<font size=" + smallSize + "px>⏳</font>" : "")
             textFormat: Text.RichText
             background: Rectangle {color: "#DDD"}
             wrapMode: Text.Wrap

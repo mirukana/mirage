@@ -21,6 +21,7 @@ class Room(NamedTuple):
 
 
 class RoomEvent(NamedTuple):
-    type:      str
-    date_time: QDateTime
-    dict:      Dict[str, str]
+    type:          str
+    date_time:     QDateTime
+    dict:          Dict[str, str]
+    is_local_echo: bool = False

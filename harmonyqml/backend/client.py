@@ -46,6 +46,7 @@ class Client(QObject):
     roomPastPrevBatchTokenReceived = pyqtSignal(str, str)
     roomEventReceived              = pyqtSignal(str, str, dict)
     roomTypingUsersUpdated         = pyqtSignal(str, list)
+    messageAboutToBeSent           = pyqtSignal(str, dict)
 
 
     def __init__(self,
@@ -171,7 +172,6 @@ class Client(QObject):
             return
         self._loading = True
 
-        print("load", limit)
         self._on_past_events(
             room_id,
             self.net.talk(
@@ -201,4 +201,11 @@ class Client(QObject):
             "format": "org.matrix.custom.html",
             "msgtype": "m.text",
         }
-        self.net.talk(self.nio.room_send, room_id, "m.room.message", content)
+        self.messageAboutToBeSent.emit(room_id, content)
+
+        self.net.talk(
+            self.nio.room_send,
+            room_id      = room_id,
+            message_type = "m.room.message",
+            content      = content,
+        )

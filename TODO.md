@@ -36,3 +36,6 @@
 - nio: org.matrix.room.preview\_urls, m.room.aliases
 
 - Markdown: don't turn #things into title (space), disable __ syntax
+- ![A picture](https://picsum.photos/256/256) not clickable?
+
+- On sync, check messages API, if a limited sync timeline was received
