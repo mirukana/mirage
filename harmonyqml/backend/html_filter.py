@@ -61,7 +61,10 @@ class HtmlFilter(QObject):
         for el in tree.iter("a"):
             el = self._append_img_to_a(el)
 
-        return str(etree.tostring(tree, encoding="utf-8"), "utf-8")
+        result = b"".join((etree.tostring(el, encoding="utf-8")
+                           for el in tree[0].iterchildren()))
+
+        return str(result, "utf-8")
 
 
     @pyqtProperty("QVariant")
