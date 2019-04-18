@@ -15,6 +15,7 @@ from PyQt5.QtCore import (
 
 from harmonyqml import __about__
 
+from .backend import Backend
 from .client import Client
 
 AccountConfig = Dict[str, Dict[str, str]]
@@ -28,8 +29,9 @@ class ClientManager(QObject):
     clientDeleted = pyqtSignal(str)
 
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, backend: Backend) -> None:
+        super().__init__(backend)
+        self.backend = backend
         self._clients: Dict[str, Client] = {}
 
 
@@ -45,7 +47,7 @@ class ClientManager(QObject):
     @pyqtSlot()
     def configLoad(self) -> None:
         for user_id, info in self.configAccounts().items():
-            client = Client(info["hostname"], user_id)
+            client = Client(self, info["hostname"], user_id)
             client.resumeSession(user_id, info["token"], info["device_id"])\
                   .add_done_callback(lambda _, c=client: self._on_connected(c))
 
@@ -55,7 +57,7 @@ class ClientManager(QObject):
     def new(self, hostname: str, username: str, password: str,
             device_id: str = "") -> None:
 
-        client = Client(hostname, username, device_id)
+        client = Client(self, hostname, username, device_id)
         client.login(password, self.defaultDeviceName)\
               .add_done_callback(lambda _: self._on_connected(client))
 

@@ -6,7 +6,6 @@ from typing import Dict, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
-from .client_manager import ClientManager
 from .html_filter import HtmlFilter
 from .model.items import User
 from .model.qml_models import QMLModels
@@ -18,7 +17,8 @@ class Backend(QObject):
         self.past_tokens:        Dict[str, str] = {}
         self.fully_loaded_rooms: Set[str]       = set()
 
-        self._client_manager: ClientManager = ClientManager()
+        from .client_manager import ClientManager
+        self._client_manager: ClientManager = ClientManager(self)
         self._models:         QMLModels     = QMLModels()
         self._html_filter:    HtmlFilter    = HtmlFilter()
         # a = self._client_manager; m = self._models

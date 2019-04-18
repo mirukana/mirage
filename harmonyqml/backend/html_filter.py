@@ -4,6 +4,7 @@
 import re
 
 import html_sanitizer.sanitizer as sanitizer
+import mistune
 from lxml.html import HtmlElement, etree
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
@@ -36,6 +37,14 @@ class HtmlFilter(QObject):
         # Prevent custom attributes from being removed
         sanitizer.lxml.html.clean.Cleaner.safe_attrs |= \
             self.sanitizer_settings["attributes"]["font"]
+
+        # hard_wrap: convert all \n to <br> without required two spaces
+        self._markdown_to_html = mistune.Markdown(hard_wrap=True)
+
+
+    @pyqtSlot(str, result=str)
+    def fromMarkdown(self, text: str) -> str:
+        return self.filter(self._markdown_to_html(text))
 
 
     @pyqtSlot(str, result=str)

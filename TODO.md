@@ -34,3 +34,5 @@
 - Spinner when loading past room events or images
 
 - nio: org.matrix.room.preview\_urls, m.room.aliases
+
+- Markdown: don't turn #things into title (space), disable __ syntax

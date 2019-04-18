@@ -48,9 +48,13 @@ class Client(QObject):
     roomTypingUsersUpdated         = pyqtSignal(str, list)
 
 
-    def __init__(self, hostname: str, username: str, device_id: str = ""
-                ) -> None:
-        super().__init__()
+    def __init__(self,
+                 manager,
+                 hostname:  str,
+                 username:  str,
+                 device_id: str = "") -> None:
+        super().__init__(manager)
+        self.manager = manager
 
         host, *port    = hostname.split(":")
         self.host: str = host
@@ -189,10 +193,11 @@ class Client(QObject):
 
     @pyqtSlot(str, str)
     @futurize
-    def sendMessage(self, room_id: str, text: str) -> None:
+    def sendMarkdown(self, room_id: str, text: str) -> None:
+        html = self.manager.backend.htmlFilter.fromMarkdown(text)
         content = {
             "body": text,
-            "formatted_body": text,
+            "formatted_body": html,
             "format": "org.matrix.custom.html",
             "msgtype": "m.text",
         }
