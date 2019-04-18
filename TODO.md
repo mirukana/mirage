@@ -30,3 +30,7 @@
 - Push instead of replacing in stack view
 
 - QQuickImageProvider, matrix preview API
+
+- Spinner when loading past room events or images
+
+- nio: org.matrix.room.preview\_urls, m.room.aliases

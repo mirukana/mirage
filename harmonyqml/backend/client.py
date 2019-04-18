@@ -69,6 +69,8 @@ class Client(QObject):
         self.net      = NetworkManager(self.host, self.port, self.nio)
         self.net_sync = NetworkManager(self.host, self.port, self.nio_sync)
 
+        self._loading: bool = False
+
         self._stop_sync: Event = Event()
 
 
@@ -157,14 +159,22 @@ class Client(QObject):
 
 
     @futurize
-    def loadPastEvents(self, room_id: str, start_token: str) -> None:
+    def loadPastEvents(self, room_id: str, start_token: str, limit: int = 100
+                      ) -> None:
         # From QML, use Backend.loastPastEvents instead
+
+        if self._loading:
+            return
+        self._loading = True
+
+        print("load", limit)
         self._on_past_events(
             room_id,
             self.net.talk(
-                self.nio.room_messages, room_id, start=start_token, limit=100
+                self.nio.room_messages, room_id, start=start_token, limit=limit
             )
         )
+        self._loading = False
 
 
     def _on_past_events(self, room_id: str, response: nr.RoomMessagesResponse

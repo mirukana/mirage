@@ -2,20 +2,21 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 import hashlib
-from typing import Dict
+from typing import Dict, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 from .client_manager import ClientManager
+from .html_filter import HtmlFilter
 from .model.items import User
 from .model.qml_models import QMLModels
-from .html_filter import HtmlFilter
 
 
 class Backend(QObject):
     def __init__(self) -> None:
         super().__init__()
-        self.past_tokens: Dict[str, str] = {}
+        self.past_tokens:        Dict[str, str] = {}
+        self.fully_loaded_rooms: Set[str]       = set()
 
         self._client_manager: ClientManager = ClientManager()
         self._models:         QMLModels     = QMLModels()
@@ -61,13 +62,19 @@ class Backend(QObject):
 
 
     @pyqtSlot(str)
-    def loadPastEvents(self, room_id: str) -> None:
+    @pyqtSlot(str, int)
+    def loadPastEvents(self, room_id: str, limit: int = 100) -> None:
         if not room_id in self.past_tokens:
             return  # Initial sync not done yet
 
+        if room_id in self.fully_loaded_rooms:
+            return
+
         for client in self.clientManager.clients.values():
             if room_id in client.nio.rooms:
-                client.loadPastEvents(room_id, self.past_tokens[room_id])
+                client.loadPastEvents(
+                    room_id, self.past_tokens[room_id], limit
+                )
                 break
         else:
             raise ValueError(f"Room not found in any client: {room_id}")

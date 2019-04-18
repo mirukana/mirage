@@ -26,8 +26,14 @@ Rectangle {
         // reloaded from network.
         cacheBuffer: height * 6
 
-        onMovementEnded: if (atYBeginning) {
-            Backend.loadPastEvents(chatPage.room.room_id)
+        // Declaring this "alias" provides the on... signal
+        property real yPos: visibleArea.yPosition
+
+        onYPosChanged: {
+            console.log(yPos)
+            if (yPos <= 0.1) {
+                Backend.loadPastEvents(chatPage.room.room_id)
+            }
         }
     }
 }

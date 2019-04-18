@@ -93,6 +93,9 @@ class SignalManager(QObject):
             self, _: Client, room_id: str, token: str
         ) -> None:
 
+        if self.backend.past_tokens[room_id] == token:
+            self.backend.fully_loaded_rooms.add(room_id)
+
         self.backend.past_tokens[room_id] = token
 
 
