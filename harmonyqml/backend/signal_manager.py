@@ -81,6 +81,21 @@ class SignalManager(QObject):
         del rooms[rooms.indexWhere("room_id", room_id)]
 
 
+    def onRoomSyncPrevBatchTokenReceived(
+            self, _: Client, room_id: str, token: str
+        ) -> None:
+
+        if room_id not in self.backend.past_tokens:
+            self.backend.past_tokens[room_id] = token
+
+
+    def onRoomPastPrevBatchTokenReceived(
+            self, _: Client, room_id: str, token: str
+        ) -> None:
+
+        self.backend.past_tokens[room_id] = token
+
+
     def onRoomEventReceived(
             self, _: Client, room_id: str, etype: str, edict: Dict[str, Any]
         ) -> None:

@@ -41,10 +41,10 @@ class HtmlFilter(QObject):
     @pyqtSlot(str, result=str)
     def filter(self, html: str) -> str:
         html = self._sanitizer.sanitize(html)
-        if not html:
-            return ""
-
         tree = etree.fromstring(html, parser=etree.HTMLParser())
+
+        if tree is None:
+            return ""
 
         for el in tree.iter("img"):
             el = self._wrap_img_in_a(el)

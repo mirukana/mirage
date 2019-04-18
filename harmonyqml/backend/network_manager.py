@@ -5,12 +5,12 @@ import logging
 import socket
 import ssl
 import time
+from threading import Lock
 from typing import Callable, Optional, Tuple
 from uuid import UUID
 
+import nio
 import nio.responses as nr
-
-from .client import Client
 
 OptSock        = Optional[ssl.SSLSocket]
 NioRequestFunc = Callable[..., Tuple[UUID, bytes]]
@@ -26,16 +26,21 @@ class NetworkManager:
     http_retry_codes = {408, 429, 500, 502, 503, 504, 507}
 
 
-    def __init__(self, client: Client) -> None:
-        self.client = client
+    def __init__(self, host: str, port: int, nio_client: nio.client.HttpClient
+                ) -> None:
+        self.host = host
+        self.port = port
+        self.nio  = nio_client
+
         self._ssl_context: ssl.SSLContext = ssl.create_default_context()
         self._ssl_session: Optional[ssl.SSLSession] = None
+        self._lock: Lock = Lock()
 
 
     def _get_socket(self) -> ssl.SSLSocket:
         sock = self._ssl_context.wrap_socket(  # type: ignore
-            socket.create_connection((self.client.host, self.client.port)),
-            server_hostname = self.client.host,
+            socket.create_connection((self.host, self.port)),
+            server_hostname = self.host,
             session         = self._ssl_session,
         )
         self._ssl_session = self._ssl_session or sock.session
@@ -53,8 +58,12 @@ class NetworkManager:
 
         response = None
         while not response:
-            self.client.nio.receive(sock.recv(4096))
-            response = self.client.nio.next_response()
+            left_to_send = self.nio.data_to_send()
+            if left_to_send:
+                self.write(left_to_send, sock)
+
+            self.nio.receive(sock.recv(4096))
+            response = self.nio.next_response()
 
         if isinstance(response, nr.ErrorResponse):
             raise NioErrorResponse(response)
@@ -66,6 +75,9 @@ class NetworkManager:
 
 
     def write(self, data: bytes, with_sock: OptSock = None) -> None:
+        if not data:
+            return
+
         sock = with_sock or self._get_socket()
         sock.sendall(data)
 
@@ -74,29 +86,30 @@ class NetworkManager:
 
 
     def talk(self, nio_func: NioRequestFunc, *args, **kwargs) -> nr.Response:
-        while True:
-            to_send = nio_func(*args, **kwargs)[1]
-            sock    = self._get_socket()
+        with self._lock:
+            while True:
+                to_send = nio_func(*args, **kwargs)[1]
+                sock    = self._get_socket()
 
-            try:
-                self.write(to_send, sock)
-                response = self.read(sock)
+                try:
+                    self.write(to_send, sock)
+                    response = self.read(sock)
 
-            except NioErrorResponse as err:
-                logging.error("read bad response for %s: %s", nio_func, err)
-                self._close_socket(sock)
+                except NioErrorResponse as err:
+                    logging.error("bad read for %s: %s", nio_func, err)
+                    self._close_socket(sock)
 
-                if self._should_abort_talk(err):
-                    logging.error("aborting talk")
+                    if self._should_abort_talk(err):
+                        logging.error("aborting talk")
+                        break
+
+                    time.sleep(10)
+
+                else:
                     break
 
-                time.sleep(10)
-
-            else:
-                break
-
-        self._close_socket(sock)
-        return response
+            self._close_socket(sock)
+            return response
 
 
     def _should_abort_talk(self, err: NioErrorResponse) -> bool:

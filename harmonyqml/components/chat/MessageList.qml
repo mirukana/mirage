@@ -26,14 +26,8 @@ Rectangle {
         // reloaded from network.
         cacheBuffer: height * 6
 
-        function goToEnd() {
-            messageListView.positionViewAtEnd()
-            //messageListView.flick(0, -messageListView.bottomMargin * 100)
+        onMovementEnded: if (atYBeginning) {
+            Backend.loadPastEvents(chatPage.room.room_id)
         }
-
-        //Connections {
-            //target: messageListView.model
-            //onChanged: goToEnd()
-        //}
     }
 }

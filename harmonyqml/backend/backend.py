@@ -15,6 +15,8 @@ from .html_filter import HtmlFilter
 class Backend(QObject):
     def __init__(self) -> None:
         super().__init__()
+        self.past_tokens: Dict[str, str] = {}
+
         self._client_manager: ClientManager = ClientManager()
         self._models:         QMLModels     = QMLModels()
         self._html_filter:    HtmlFilter    = HtmlFilter()
@@ -56,3 +58,16 @@ class Backend(QObject):
       # pylint:disable=no-self-use
         md5 = hashlib.md5(bytes(string, "utf-8")).hexdigest()
         return float("0.%s" % int(md5[-10:], 16))
+
+
+    @pyqtSlot(str)
+    def loadPastEvents(self, room_id: str) -> None:
+        if not room_id in self.past_tokens:
+            return  # Initial sync not done yet
+
+        for client in self.clientManager.clients.values():
+            if room_id in client.nio.rooms:
+                client.loadPastEvents(room_id, self.past_tokens[room_id])
+                break
+        else:
+            raise ValueError(f"Room not found in any client: {room_id}")
