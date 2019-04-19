@@ -183,7 +183,6 @@ class Client(QObject):
 
         self._last_typing_set[room_id] = (typing, time.time())
 
-        print("send", typing)
         self.net.talk(
             self.nio.room_typing,
             room_id        = room_id,
@@ -193,7 +192,6 @@ class Client(QObject):
 
 
     @pyqtSlot(str, str)
-    @futurize()
     def sendMarkdown(self, room_id: str, text: str) -> None:
         html = self.manager.backend.htmlFilter.fromMarkdown(text)
         content = {
@@ -204,9 +202,16 @@ class Client(QObject):
         }
         self.messageAboutToBeSent.emit(room_id, content)
 
-        self.net.talk(
-            self.nio.room_send,
-            room_id      = room_id,
-            message_type = "m.room.message",
-            content      = content,
-        )
+        # If the thread pool workers are all occupied, and @futurize
+        # wrapped sendMarkdown, the messageAboutToBeSent signal neccessary
+        # for local echoes would not be sent until a thread is free.
+        @futurize()
+        def send(self):
+            return self.net.talk(
+                self.nio.room_send,
+                room_id      = room_id,
+                message_type = "m.room.message",
+                content      = content,
+            )
+
+        return send(self)
