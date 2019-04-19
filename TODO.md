@@ -38,3 +38,7 @@
 - On sync, check messages API, if a limited sync timeline was received
 
 - Graphic bug when resizing window vertically for side pane?
+
+- Verify E2E working
+
+- Multiaccount aliases

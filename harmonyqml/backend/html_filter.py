@@ -27,13 +27,6 @@ class HtmlFilter(QObject):
         sanitizer.normalize_overall_whitespace         = lambda html: html
         sanitizer.normalize_whitespace_in_text_or_tail = lambda el: el
 
-        # See FIXME note in sanitizer_settings
-        autolink_func = sanitizer.lxml.html.clean.autolink
-        sanitizer.lxml.html.clean.autolink = \
-            lambda el, **kw: autolink_func(
-                el, **self.sanitizer_settings["autolink"]
-            )
-
         # Prevent custom attributes from being removed
         sanitizer.lxml.html.clean.Cleaner.safe_attrs |= \
             self.sanitizer_settings["attributes"]["font"]
