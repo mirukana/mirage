@@ -5,9 +5,8 @@ import functools
 import logging
 import sys
 import traceback
-from concurrent.futures import Future
-from threading import currentThread
-from typing import Callable, Optional, Union
+from concurrent.futures import Executor, Future
+from typing import Callable, List, Optional, Tuple, Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
@@ -63,17 +62,33 @@ class PyQtFuture(QObject):
         self.future.add_done_callback(fn)
 
 
-def futurize(func: Callable) -> Callable:
-    @functools.wraps(func)
-    def wrapper(self, *args, **kwargs) -> PyQtFuture:
-        def run_and_catch_errs():
-            # Without this, exceptions are silently ignored
-            try:
-                return func(self, *args, **kwargs)
-            except Exception:
-                traceback.print_exc()
-                logging.error("Exiting %s due to exception.", currentThread())
-                sys.exit(1)
+_RUNNING: List[Tuple[Executor, Callable, tuple, dict]] = []
 
-        return PyQtFuture(self.pool.submit(run_and_catch_errs), self)
-    return wrapper
+
+def futurize(max_instances: Optional[int] = None) -> Callable:
+
+    def decorator(func: Callable) -> Callable:
+
+        @functools.wraps(func)
+        def wrapper(self, *args, **kws) -> Optional[PyQtFuture]:
+            def run_and_catch_errs():
+                # Without this, exceptions are silently ignored
+                try:
+                    return func(self, *args, **kws)
+                except Exception:
+                    traceback.print_exc()
+                    logging.error("Exiting thread due to exception.")
+                    sys.exit(1)
+                finally:
+                    del _RUNNING[_RUNNING.index((self.pool, func, args, kws))]
+
+            if max_instances is not None and \
+               _RUNNING.count((self.pool, func, args, kws)) >= max_instances:
+                return None
+
+            _RUNNING.append((self.pool, func, args, kws))
+            return PyQtFuture(self.pool.submit(run_and_catch_errs), self)
+
+        return wrapper
+
+    return decorator

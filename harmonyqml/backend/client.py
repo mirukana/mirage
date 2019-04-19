@@ -77,14 +77,14 @@ class Client(QObject):
 
     @pyqtSlot(str)
     @pyqtSlot(str, str)
-    @futurize
+    @futurize()
     def login(self, password: str, device_name: str = "") -> None:
         response = self.net.talk(self.nio.login, password, device_name)
         self.nio_sync.receive_response(response)
 
 
     @pyqtSlot(str, str, str)
-    @futurize
+    @futurize()
     def resumeSession(self, user_id: str, token: str, device_id: str
                      ) -> None:
         response = nr.LoginResponse(user_id, device_id, token)
@@ -93,7 +93,7 @@ class Client(QObject):
 
 
     @pyqtSlot()
-    @futurize
+    @futurize()
     def logout(self) -> None:
         self._stop_sync.set()
         self.net.http_disconnect()
@@ -101,7 +101,7 @@ class Client(QObject):
 
 
     @pyqtSlot()
-    @futurize
+    @futurize()
     def startSyncing(self) -> None:
         while True:
             self._on_sync(self.net_sync.talk(
@@ -141,7 +141,7 @@ class Client(QObject):
             self.roomLeft.emit(room_id)
 
 
-    @futurize
+    @futurize()
     def loadPastEvents(self, room_id: str, start_token: str, limit: int = 100
                       ) -> None:
         # From QML, use Backend.loastPastEvents instead
@@ -170,7 +170,7 @@ class Client(QObject):
 
 
     @pyqtSlot(str, bool)
-    @futurize
+    @futurize(max_instances=1)
     def setTypingState(self, room_id: str, typing: bool) -> None:
         set_for_secs        = 5
         last_set, last_time = self._last_typing_set[room_id]
@@ -183,6 +183,7 @@ class Client(QObject):
 
         self._last_typing_set[room_id] = (typing, time.time())
 
+        print("send", typing)
         self.net.talk(
             self.nio.room_typing,
             room_id        = room_id,
@@ -192,7 +193,7 @@ class Client(QObject):
 
 
     @pyqtSlot(str, str)
-    @futurize
+    @futurize()
     def sendMarkdown(self, room_id: str, text: str) -> None:
         html = self.manager.backend.htmlFilter.fromMarkdown(text)
         content = {
