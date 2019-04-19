@@ -33,6 +33,8 @@ Rectangle {
             clip: true
 
             TextArea {
+                property string typedText: text
+
                 id: textArea
                 placeholderText: qsTr("Type a message...")
                 wrapMode: TextEdit.Wrap
@@ -40,6 +42,14 @@ Rectangle {
                 font.family: "Roboto"
                 font.pixelSize: 16
                 focus: true
+
+                function set_typing(typing) {
+                    Backend.clientManager.clients[chatPage.user_id]
+                           .setTypingState(chatPage.room.room_id, typing)
+                }
+
+                onTypedTextChanged: set_typing(Boolean(text))
+                onEditingFinished: set_typing(false)  // when lost focus
 
                 Keys.onReturnPressed: {
                     event.accepted = true
@@ -57,6 +67,7 @@ Rectangle {
                            .sendMarkdown(chatPage.room.room_id, textArea.text)
                     textArea.clear()
                 }
+
                 Keys.onEnterPressed: Keys.onReturnPressed(event)  // numpad enter
             }
         }

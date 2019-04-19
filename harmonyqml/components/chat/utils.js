@@ -133,7 +133,10 @@ function get_typing_users_text(account_id, room_id) {
                 .getWhere("room_id", room_id)
 
     for (var i = 0; i < room.typing_users.length; i++) {
-        names.push(Backend.getUser(room.typing_users[i]).display_name)
+        if (room.typing_users[i] !== account_id) {
+            names.push(Backend.getUserDisplayName(room.typing_users[i], false)
+                       .result())
+        }
     }
 
     if (names.length < 1) { return "" }

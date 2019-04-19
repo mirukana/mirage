@@ -1,9 +1,10 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Event
-from typing import DefaultDict
+from typing import DefaultDict, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
@@ -58,6 +59,10 @@ class Client(QObject):
         self._loading: bool = False
 
         self._stop_sync: Event = Event()
+
+        # {room_id: (was_typing, at_timestamp_secs)}
+        self._last_typing_set: DefaultDict[str, Tuple[bool, float]] = \
+            DefaultDict(lambda: (False, 0))
 
 
     def __repr__(self) -> str:
@@ -168,6 +173,33 @@ class Client(QObject):
             self.roomEventReceived.emit(
                 room_id, type(ev).__name__, ev.__dict__
             )
+
+
+    @pyqtSlot(str, bool)
+    @futurize
+    def setTypingState(self, room_id: str, typing: bool) -> None:
+        set_for_secs        = 5
+        last_set, last_time = self._last_typing_set[room_id]
+
+        print(last_set, last_time)
+
+        if not typing and last_set is False:
+            print("ignore 1")
+            return
+
+        if typing and time.time() - last_time < set_for_secs - 1:
+            print("ignore 2")
+            return
+
+        print("SET", typing)
+        self._last_typing_set[room_id] = (typing, time.time())
+
+        self.net.talk(
+            self.nio.room_typing,
+            room_id      = room_id,
+            typing_state = typing,
+            timeout      = set_for_secs * 1000,
+        )
 
 
     @pyqtSlot(str, str)
