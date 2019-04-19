@@ -91,8 +91,9 @@ function get_member_event_text(dict) {
                 break
 
             case "invite":
-                var name = Backend.getUser(dict.state_key).display_name
-                var name = name === dict.state_key ? info.displayname : name
+                var name = Backend.getUserDisplayName(dict.state_key, false)
+                var name = name === dict.state_key ?
+                           info.displayname : name.result()
                 return "invited " + name + " to the room."
                 break
 

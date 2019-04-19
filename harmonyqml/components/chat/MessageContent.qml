@@ -17,7 +17,7 @@ Row {
         Base.HLabel {
             visible: ! combine
             id: nameLabel
-            text: displayName
+            text: displayName.value || dict.sender
             background: Rectangle {color: "#DDD"}
             color: isOwn ? "teal" : "purple"
             elide: Text.ElideRight

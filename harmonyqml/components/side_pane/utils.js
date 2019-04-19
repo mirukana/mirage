@@ -15,7 +15,7 @@ function get_last_room_event_text(room_id) {
 
     if (! found) { return "" }
 
-    var name          = Backend.getUser(ev.dict.sender).display_name
+    var name = Backend.getUserDisplayName(ev.dict.sender, false).result()
     var undecryptable = ev.type === "OlmEvent" || ev.type === "MegolmEvent"
 
     if (undecryptable || ev.type.startsWith("RoomMessage")) {

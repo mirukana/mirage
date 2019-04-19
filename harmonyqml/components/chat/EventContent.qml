@@ -6,7 +6,7 @@ import "utils.js" as ChatJS
 
 RowLayout {
     id: row
-    spacing: standardSpacing
+    spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
     anchors.right: isOwn ? parent.right : undefined
 
@@ -24,7 +24,7 @@ RowLayout {
         id: contentLabel
         text: "<font color='" +
               (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
-              displayName + " " + contentText +
+              (displayName.value || dict.sender) + " " + contentText +
               "&nbsp;&nbsp;<font size=" + smallSize + "px color='gray'>" +
               Qt.formatDateTime(date_time, "hh:mm:ss") +
               "</font></font>"

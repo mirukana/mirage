@@ -21,7 +21,7 @@ ColumnLayout {
 
             Base.HLabel {
                 id: "accountLabel"
-                text: display_name
+                text: display_name.value || user_id
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true

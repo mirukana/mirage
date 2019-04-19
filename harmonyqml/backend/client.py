@@ -1,13 +1,9 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-import functools
-import logging
-import sys
-import traceback
-from concurrent.futures import Future, ThreadPoolExecutor
-from threading import Event, currentThread
-from typing import Callable, DefaultDict
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
+from typing import DefaultDict
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
@@ -15,27 +11,12 @@ import nio
 import nio.responses as nr
 
 from .network_manager import NetworkManager
+from .pyqt_future import futurize
 
 # One pool per hostname/remote server;
 # multiple Client for different accounts on the same server can exist.
 _POOLS: DefaultDict[str, ThreadPoolExecutor] = \
     DefaultDict(lambda: ThreadPoolExecutor(max_workers=6))
-
-
-def futurize(func: Callable) -> Callable:
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs) -> Future:
-        def run_and_catch_errs():
-            # Without this, exceptions are silently ignored
-            try:
-                func(*args, **kwargs)
-            except Exception:
-                traceback.print_exc()
-                logging.error("Exiting %s due to exception.", currentThread())
-                sys.exit(1)
-
-        return args[0].pool.submit(run_and_catch_errs)  # args[0] = self
-    return wrapper
 
 
 class Client(QObject):
@@ -98,7 +79,6 @@ class Client(QObject):
 
         self.net_sync.write(self.nio_sync.connect())
         self.nio_sync.receive_response(response)
-        self.startSyncing()
 
 
     @pyqtSlot(str, str, str)
@@ -111,7 +91,6 @@ class Client(QObject):
 
         self.net_sync.write(self.nio_sync.connect())
         self.nio_sync.receive_response(response)
-        self.startSyncing()
 
 
     @pyqtSlot()

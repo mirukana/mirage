@@ -20,7 +20,7 @@ Rectangle {
 
         Base.Avatar {
             id: "avatar"
-            name: Backend.getUser(chatPage.user_id).display_name
+            name: Backend.getUserDisplayName(chatPage.user_id)
             dimmension: root.Layout.minimumHeight
             //visible: textArea.text === ""
             visible: textArea.height <= root.Layout.minimumHeight

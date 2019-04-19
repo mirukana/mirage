@@ -65,6 +65,7 @@ class ClientManager(QObject):
     def _on_connected(self, client: Client) -> None:
         self.clients[client.userID] = client
         self.clientAdded.emit(client)
+        client.startSyncing()
 
 
     @pyqtSlot(str)

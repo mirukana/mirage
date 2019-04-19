@@ -2,18 +2,23 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 import hashlib
+from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 from .html_filter import HtmlFilter
-from .model.items import User
 from .model.qml_models import QMLModels
+from .pyqt_future import futurize
 
 
 class Backend(QObject):
     def __init__(self) -> None:
         super().__init__()
+        self.pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=6)
+
+        self._queried_displaynames: Dict[str, str] = {}
+
         self.past_tokens:        Dict[str, str] = {}
         self.fully_loaded_rooms: Set[str]       = set()
 
@@ -21,7 +26,6 @@ class Backend(QObject):
         self._client_manager: ClientManager = ClientManager(self)
         self._models:         QMLModels     = QMLModels()
         self._html_filter:    HtmlFilter    = HtmlFilter()
-        # a = self._client_manager; m = self._models
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
@@ -42,16 +46,30 @@ class Backend(QObject):
         return self._html_filter
 
 
-    @pyqtSlot(str, result="QVariantMap")
-    def getUser(self, user_id: str) -> Dict[str, str]:
+    @pyqtSlot(str, result="QVariant")
+    @pyqtSlot(str, bool, result="QVariant")
+    @futurize
+    def getUserDisplayName(self, user_id: str, can_block: bool = True) -> str:
+        if user_id in self._queried_displaynames:
+            return self._queried_displaynames[user_id]
+
         for client in self.clientManager.clients.values():
             for room in client.nio.rooms.values():
+                displayname = room.user_name(user_id)
 
-                name = room.user_name(user_id)
-                if name:
-                    return User(user_id=user_id, display_name=name)._asdict()
+                if displayname:
+                    return displayname
 
-        return User(user_id=user_id, display_name=user_id)._asdict()
+        return self._query_user_displayname(user_id) if can_block else user_id
+
+
+    def _query_user_displayname(self, user_id: str) -> str:
+        client      = next(iter(self.clientManager.clients.values()))
+        response    = client.net.talk(client.nio.get_displayname, user_id)
+        displayname = getattr(response, "displayname", "") or user_id
+
+        self._queried_displaynames[user_id] = displayname
+        return displayname
 
 
     @pyqtSlot(str, result=float)

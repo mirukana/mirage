@@ -2,7 +2,6 @@
 - Invited → Accept/Deny dialog
 - Keep the room header name and topic updated
 - Merge login page
-- Show actual display name for AccountDelegate
 
 - When inviting someone to direct chat, room is "Empty room" until accepted,
   it should be the peer's display name instead.
@@ -18,8 +17,6 @@
 - Better names and organization for the Message components
 
 - Migrate more JS functions to their own files
-
-- Accept room\_id arg for getUser
 
 - Set Qt parents for all QObject
 
@@ -39,3 +36,5 @@
 - ![A picture](https://picsum.photos/256/256) not clickable?
 
 - On sync, check messages API, if a limited sync timeline was received
+
+- Graphic bug when resizing window vertically for side pane?

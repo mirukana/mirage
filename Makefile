@@ -3,14 +3,16 @@
 
 PKG_DIR = harmonyqml
 
-PYTHON = python3
-PIP    = pip3
-PYLINT = pylint
-CLOC   = cloc
+PYTHON  = python3
+PIP     = pip3
+PYLINT  = pylint
+VULTURE = vulture
+CLOC    = cloc
 
 ARCHIVE_FORMATS = gztar
 INSTALL_FLAGS   = --user --editable
 PYLINT_FLAGS    = --output-format colorized
+VULTURE_FLAGS   = --min-confidence 100
 CLOC_FLAGS      = --ignore-whitespace
 
 .PHONY: all clean dist install upload test
@@ -44,5 +46,7 @@ upload: dist
 
 test:
 	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR} *.py
+	@echo
+	- ${VULTURE} ${PKG_DIR} ${VULTURE_FLAGS}
 	@echo
 	${CLOC} ${CLOC_FLAGS} ${PKG_DIR}

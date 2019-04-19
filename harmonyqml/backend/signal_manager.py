@@ -32,7 +32,7 @@ class SignalManager(QObject):
         self.connectClient(client)
         self.backend.models.accounts.append(User(
             user_id      = client.userID,
-            display_name = client.userID.lstrip("@").split(":")[0],
+            display_name = self.backend.getUserDisplayName(client.userID),
         ))
 
 
@@ -68,7 +68,7 @@ class SignalManager(QObject):
         item = Room(
             room_id      = room_id,
             display_name = room.name or room.canonical_alias or group_name(),
-            description  = getattr(room, "topic", ""),  # FIXME: outside init
+            description  = room.topic,
         )
 
         try:

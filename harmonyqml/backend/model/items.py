@@ -5,10 +5,12 @@ from typing import Dict, List, NamedTuple, Optional
 
 from PyQt5.QtCore import QDateTime
 
+from ..pyqt_future import PyQtFuture
+
 
 class User(NamedTuple):
     user_id:        str
-    display_name:   str
+    display_name:   PyQtFuture
     avatar_url:     Optional[str] = None
     status_message: Optional[str] = None
 

@@ -4,9 +4,14 @@ import QtQuick.Layouts 1.4
 
 Item {
     property bool invisible: false
-    property var name: null
+    property var name: null  // null, string or PyQtFuture
     property var imageSource: null
     property int dimmension: 48
+
+    readonly property string resolved_name:
+        ! name ? "?" :
+        typeof(name) == "string" ? name :
+        (name.value ? name.value : "?")
 
     id: "root"
     width: dimmension
@@ -16,13 +21,13 @@ Item {
         id: "letterRectangle"
         anchors.fill: parent
         visible: ! invisible && imageSource === null
-        color: name ?
-               Qt.hsla(Backend.hueFromString(name), 0.22, 0.5, 1) :
-               Qt.hsla(0, 0, 0.22, 1)
+        color: resolved_name === "?" ?
+               Qt.hsla(0, 0, 0.22, 1) :
+               Qt.hsla(Backend.hueFromString(resolved_name), 0.22, 0.5, 1)
 
         HLabel {
             anchors.centerIn: parent
-            text: name ? name.charAt(0) : "?"
+            text: resolved_name.charAt(0)
             color: "white"
             font.pixelSize: letterRectangle.height / 1.4
         }
