@@ -7,8 +7,6 @@
   it should be the peer's display name instead.
 - Support "Empty room (was ...)" after peer left
 
-- Catch network errors in socket operations
-
 - Proper logoff when closing client
 
 - Handle cases where an avatar char is # or @ (#alias room, @user\_id)

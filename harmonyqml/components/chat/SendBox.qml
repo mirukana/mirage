@@ -62,7 +62,6 @@ Rectangle {
                     }
 
                     if (textArea.text === "") { return }
-
                     Backend.clientManager.clients[chatPage.user_id]
                            .sendMarkdown(chatPage.room.room_id, textArea.text)
                     textArea.clear()

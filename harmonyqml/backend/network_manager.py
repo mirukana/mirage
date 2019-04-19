@@ -11,6 +11,7 @@ from uuid import UUID
 
 import nio
 import nio.responses as nr
+from nio.exceptions import RemoteTransportError
 
 OptSock        = Optional[ssl.SSLSocket]
 NioRequestFunc = Callable[..., Tuple[UUID, bytes]]
@@ -48,12 +49,23 @@ class NetworkManager:
 
 
     @staticmethod
-    def _close_socket(sock: socket.socket) -> None:
+    def _close_socket(sock: Optional[socket.socket]) -> None:
+        if not sock:
+            return
+
         try:
             sock.shutdown(how=socket.SHUT_RDWR)
         except OSError:  # Already closer by server
             pass
         sock.close()
+
+
+    def http_disconnect(self) -> None:
+        data = self.nio.disconnect()
+        try:
+            self.write(data)
+        except (OSError, RemoteTransportError):
+            pass
 
 
     def read(self, with_sock: OptSock = None) -> nr.Response:
@@ -78,9 +90,6 @@ class NetworkManager:
 
 
     def write(self, data: bytes, with_sock: OptSock = None) -> None:
-        if not data:
-            return
-
         sock = with_sock or self._get_socket()
         sock.sendall(data)
 
@@ -88,34 +97,47 @@ class NetworkManager:
             self._close_socket(sock)
 
 
-    def talk(self, nio_func: NioRequestFunc, *args, **kwargs) -> nr.Response:
+    def talk(self,
+             nio_func: NioRequestFunc,
+             *args,
+             **kwargs) -> nr.Response:
         with self._lock:
             while True:
-                to_send = nio_func(*args, **kwargs)[1]
-                sock    = self._get_socket()
+                sock = None
 
                 try:
+                    sock = self._get_socket()
+
+                    if not self.nio.connection:
+                        # Establish HTTP protocol connection:
+                        self.write(self.nio.connect(), sock)
+
+                    to_send = nio_func(*args, **kwargs)[1]
                     self.write(to_send, sock)
                     response = self.read(sock)
 
+                except OSError as err:
+                    logging.error("Socket error for %s: %s",
+                                  nio_func.__name__, err.strerror)
+                    self._close_socket(sock)
+                    time.sleep(2)
+
+                except RemoteTransportError as err:
+                    logging.error("HTTP transport error for %s: %s",
+                                  nio_func.__name__, err)
+                    self._close_socket(sock)
+                    self.http_disconnect()
+                    time.sleep(2)
+
                 except NioErrorResponse as err:
-                    logging.error("bad read for %s: %s", nio_func, err)
+                    logging.error("Nio response error for %s: %s",
+                                  nio_func.__name__, err)
                     self._close_socket(sock)
 
-                    if self._should_abort_talk(err):
-                        logging.error("aborting talk")
-                        break
+                    if err.response.status_code in self.http_retry_codes:
+                        return response
 
-                    time.sleep(10)
+                    time.sleep(2)
 
                 else:
-                    break
-
-            self._close_socket(sock)
-            return response
-
-
-    def _should_abort_talk(self, err: NioErrorResponse) -> bool:
-        if err.response.status_code in self.http_retry_codes:
-            return False
-        return True
+                    return response

@@ -79,10 +79,7 @@ class Client(QObject):
     @pyqtSlot(str, str)
     @futurize
     def login(self, password: str, device_name: str = "") -> None:
-        self.net.write(self.nio.connect())
         response = self.net.talk(self.nio.login, password, device_name)
-
-        self.net_sync.write(self.nio_sync.connect())
         self.nio_sync.receive_response(response)
 
 
@@ -90,11 +87,8 @@ class Client(QObject):
     @futurize
     def resumeSession(self, user_id: str, token: str, device_id: str
                      ) -> None:
-        self.net.write(self.nio.connect())
         response = nr.LoginResponse(user_id, device_id, token)
         self.nio.receive_response(response)
-
-        self.net_sync.write(self.nio_sync.connect())
         self.nio_sync.receive_response(response)
 
 
@@ -102,8 +96,8 @@ class Client(QObject):
     @futurize
     def logout(self) -> None:
         self._stop_sync.set()
-        self.net.write(self.nio.disconnect())
-        self.net_sync.write(self.nio_sync.disconnect())
+        self.net.http_disconnect()
+        self.net_sync.http_disconnect()
 
 
     @pyqtSlot()
@@ -181,24 +175,19 @@ class Client(QObject):
         set_for_secs        = 5
         last_set, last_time = self._last_typing_set[room_id]
 
-        print(last_set, last_time)
-
         if not typing and last_set is False:
-            print("ignore 1")
             return
 
         if typing and time.time() - last_time < set_for_secs - 1:
-            print("ignore 2")
             return
 
-        print("SET", typing)
         self._last_typing_set[room_id] = (typing, time.time())
 
         self.net.talk(
             self.nio.room_typing,
-            room_id      = room_id,
-            typing_state = typing,
-            timeout      = set_for_secs * 1000,
+            room_id        = room_id,
+            typing_state   = typing,
+            timeout        = set_for_secs * 1000,
         )
 
 

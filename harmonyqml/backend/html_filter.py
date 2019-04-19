@@ -3,10 +3,11 @@
 
 import re
 
-import html_sanitizer.sanitizer as sanitizer
 import mistune
 from lxml.html import HtmlElement, etree
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
+
+import html_sanitizer.sanitizer as sanitizer
 
 
 class HtmlFilter(QObject):
