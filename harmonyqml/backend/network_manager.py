@@ -23,6 +23,21 @@ class NioErrorResponse(Exception):
         super().__init__(str(response))
 
 
+class RetrySleeper:
+    def __init__(self) -> None:
+        self.current_time: float = 0
+        self.tries:        int = 0
+
+
+    def sleep(self, max_time: float) -> None:
+        self.current_time = max(
+            0, min((max_time / 10) * (2 ^ (self.tries - 1)), max_time)
+        )
+        print("sleeping", self.current_time)
+        time.sleep(self.current_time)
+        self.tries += 1
+
+
 class NetworkManager:
     http_retry_codes = {408, 429, 500, 502, 503, 504, 507}
 
@@ -102,10 +117,13 @@ class NetworkManager:
              *args,
              **kwargs) -> nr.Response:
         with self._lock:
+            retry = RetrySleeper()
+
             while True:
                 sock = None
 
                 try:
+                    print("Try for", nio_func.__name__)
                     sock = self._get_socket()
 
                     if not self.nio.connection:
@@ -120,14 +138,14 @@ class NetworkManager:
                     logging.error("Socket error for %s: %s",
                                   nio_func.__name__, err.strerror)
                     self._close_socket(sock)
-                    time.sleep(2)
+                    retry.sleep(max_time=2)
 
                 except RemoteTransportError as err:
                     logging.error("HTTP transport error for %s: %s",
                                   nio_func.__name__, err)
                     self._close_socket(sock)
                     self.http_disconnect()
-                    time.sleep(2)
+                    retry.sleep(max_time=2)
 
                 except NioErrorResponse as err:
                     logging.error("Nio response error for %s: %s",
@@ -137,7 +155,7 @@ class NetworkManager:
                     if err.response.status_code in self.http_retry_codes:
                         return response
 
-                    time.sleep(2)
+                    retry.sleep(max_time=10)
 
                 else:
                     return response
