@@ -105,7 +105,7 @@ class Client(QObject):
     def startSyncing(self) -> None:
         while True:
             self._on_sync(self.net_sync.talk(
-                self.nio_sync.sync, timeout=10_000
+                self.nio_sync.sync, timeout=8000
             ))
 
             if self._stop_sync.is_set():

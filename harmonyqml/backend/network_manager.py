@@ -11,7 +11,7 @@ from uuid import UUID
 
 import nio
 import nio.responses as nr
-from nio.exceptions import RemoteTransportError
+from nio.exceptions import ProtocolError, RemoteTransportError
 
 OptSock        = Optional[ssl.SSLSocket]
 NioRequestFunc = Callable[..., Tuple[UUID, bytes]]
@@ -33,7 +33,6 @@ class RetrySleeper:
         self.current_time = max(
             0, min((max_time / 10) * (2 ^ (self.tries - 1)), max_time)
         )
-        print("sleeping", self.current_time)
         time.sleep(self.current_time)
         self.tries += 1
 
@@ -55,7 +54,7 @@ class NetworkManager:
 
     def _get_socket(self) -> ssl.SSLSocket:
         sock = self._ssl_context.wrap_socket(  # type: ignore
-            socket.create_connection((self.host, self.port)),
+            socket.create_connection((self.host, self.port), timeout=16),
             server_hostname = self.host,
             session         = self._ssl_session,
         )
@@ -76,10 +75,9 @@ class NetworkManager:
 
 
     def http_disconnect(self) -> None:
-        data = self.nio.disconnect()
         try:
-            self.write(data)
-        except (OSError, RemoteTransportError):
+            self.write(self.nio.disconnect())
+        except (OSError, ProtocolError):
             pass
 
 
@@ -123,7 +121,6 @@ class NetworkManager:
                 sock = None
 
                 try:
-                    print("Try for", nio_func.__name__)
                     sock = self._get_socket()
 
                     if not self.nio.connection:
@@ -134,15 +131,9 @@ class NetworkManager:
                     self.write(to_send, sock)
                     response = self.read(sock)
 
-                except OSError as err:
-                    logging.error("Socket error for %s: %s",
-                                  nio_func.__name__, err.strerror)
-                    self._close_socket(sock)
-                    retry.sleep(max_time=2)
-
-                except RemoteTransportError as err:
-                    logging.error("HTTP transport error for %s: %s",
-                                  nio_func.__name__, err)
+                except (OSError, RemoteTransportError) as err:
+                    logging.error("Connection error for %s: %s",
+                                  nio_func.__name__, str(err))
                     self._close_socket(sock)
                     self.http_disconnect()
                     retry.sleep(max_time=2)
