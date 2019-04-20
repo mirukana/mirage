@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.4
 
 Avatar {
     Image {
-        id: "status"
+        id: status
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         source: "../../icons/status.svg"

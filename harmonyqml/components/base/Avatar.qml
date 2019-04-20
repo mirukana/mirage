@@ -13,12 +13,12 @@ Item {
         typeof(name) == "string" ? name :
         (name.value ? name.value : "?")
 
-    id: "root"
+    id: root
     width: dimmension
     height: invisible ? 1 : dimmension
 
     Rectangle {
-        id: "letterRectangle"
+        id: letterRectangle
         anchors.fill: parent
         visible: ! invisible && imageSource === null
         color: resolvedName === "?" ?
@@ -34,7 +34,7 @@ Item {
     }
 
     Image {
-        id: "avatarImage"
+        id: avatarImage
         anchors.fill: parent
         visible: ! invisible && imageSource !== null
 

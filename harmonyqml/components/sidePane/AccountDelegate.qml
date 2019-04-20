@@ -4,15 +4,15 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 ColumnLayout {
-    id: "accountDelegate"
+    id: accountDelegate
     spacing: 0
     width: parent.width
 
     RowLayout {
-        id: "row"
+        id: row
         spacing: 0
 
-        Base.Avatar { id: "avatar"; name: displayName; dimmension: 36 }
+        Base.Avatar { id: avatar; name: displayName; dimmension: 36 }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -20,7 +20,7 @@ ColumnLayout {
             spacing: 0
 
             Base.HLabel {
-                id: "accountLabel"
+                id: accountLabel
                 text: displayName.value || userId
                 elide: Text.ElideRight
                 maximumLineCount: 1
@@ -30,7 +30,7 @@ ColumnLayout {
             }
 
             TextField {
-                id: "statusEdit"
+                id: statusEdit
                 text: statusMessage || ""
                 placeholderText: qsTr("Set status message")
                 background: null
@@ -51,7 +51,7 @@ ColumnLayout {
         }
 
         Base.HToolButton {
-            id: "toggleExpand"
+            id: toggleExpand
             iconName: roomList.visible ? "up" : "down"
             Layout.maximumWidth: 28
             Layout.minimumHeight: row.height
@@ -64,7 +64,7 @@ ColumnLayout {
     }
 
     RoomList {
-        id: "roomList"
+        id: roomList
         visible: true
         interactive: false  // no scrolling
         forUserId: userId

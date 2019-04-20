@@ -14,7 +14,7 @@ ListView {
                         spacing * (model.count - 1)
     }
 
-    id: "roomList"
+    id: roomList
     spacing: 8
     model: Backend.models.rooms.get(forUserId)
     delegate: RoomDelegate {}

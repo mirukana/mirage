@@ -6,7 +6,7 @@ ToolButton {
     property string tooltip: ""
     property string iconName: ""
 
-    id: "button"
+    id: button
     display: ToolButton.IconOnly
     icon.source: "../../icons/" + iconName + ".svg"
     background: Rectangle { color: "transparent" }
@@ -20,7 +20,7 @@ ToolButton {
         visible: text ? toolTipZone.containsMouse : false
     }
     MouseArea {
-        id: "toolTipZone"
+        id: toolTipZone
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.NoButton  // Make button receive clicks normally

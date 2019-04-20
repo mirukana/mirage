@@ -2,11 +2,11 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 
 HLabel {
-    id: "label"
+    id: label
     textFormat: Text.RichText
 
     MouseArea {
-        id: "mouseArea"
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
 

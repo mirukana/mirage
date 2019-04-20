@@ -7,26 +7,26 @@ Rectangle {
     property string displayName: ""
     property string topic: ""
 
-    id: "root"
+    id: root
     Layout.fillWidth: true
     Layout.minimumHeight: 36
     Layout.maximumHeight: Layout.minimumHeight
     color: "#BBB"
 
     RowLayout {
-        id: "row"
+        id: row
         spacing: 12
         anchors.fill: parent
 
         Base.Avatar {
-            id: "avatar"
+            id: avatar
             Layout.alignment: Qt.AlignTop
             dimmension: root.Layout.minimumHeight
             name: displayName
         }
 
         Base.HLabel {
-            id: "roomName"
+            id: roomName
             text: displayName
             font.pixelSize: bigSize
             elide: Text.ElideRight
@@ -37,7 +37,7 @@ Rectangle {
         }
 
         Base.HLabel {
-            id: "roomTopic"
+            id: roomTopic
             text: topic
             font.pixelSize: smallSize
             elide: Text.ElideRight

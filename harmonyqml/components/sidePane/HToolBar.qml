@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 RowLayout {
-    id: "toolBar"
+    id: toolBar
     Layout.fillWidth: true
     Layout.maximumHeight: 32
     spacing: 0

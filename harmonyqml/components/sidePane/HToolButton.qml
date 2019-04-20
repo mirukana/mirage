@@ -9,7 +9,7 @@ Base.HToolButton {
                Layout.minimumWidth * (toolBar.children.length - 2)
     }
 
-    id: "button"
+    id: button
     visible: toolBarIsBig()
     Layout.fillHeight: true
     Layout.fillWidth: true

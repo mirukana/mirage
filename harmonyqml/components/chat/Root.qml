@@ -9,17 +9,17 @@ ColumnLayout {
     property var roomInfo:
         Backend.models.rooms.get(userId).getWhere("roomId", roomId)
 
-    id: "chatPage"
+    id: chatPage
     spacing: 0
     onFocusChanged: sendBox.setFocus()
 
     RoomHeader {
-        id: "roomHeader"
+        id: roomHeader
         displayName: roomInfo.displayName
         topic: roomInfo.topic
     }
 
     MessageList {}
     TypingUsersBar {}
-    SendBox { id: "sendBox" }
+    SendBox { id: sendBox }
 }

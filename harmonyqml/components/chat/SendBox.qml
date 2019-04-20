@@ -6,7 +6,7 @@ import "../base" as Base
 Rectangle {
     function setFocus() { textArea.forceActiveFocus() }
 
-    id: "root"
+    id: root
     Layout.fillWidth: true
     Layout.minimumHeight: 32
     Layout.preferredHeight: textArea.implicitHeight
@@ -19,7 +19,7 @@ Rectangle {
         spacing: 0
 
         Base.Avatar {
-            id: "avatar"
+            id: avatar
             name: Backend.getUserDisplayName(chatPage.userId)
             dimmension: root.Layout.minimumHeight
             //visible: textArea.text === ""

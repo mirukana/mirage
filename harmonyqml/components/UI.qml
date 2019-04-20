@@ -22,7 +22,7 @@ Controls1.SplitView {
             console.log("replaced")
         }
 
-        id: "pageStack"
+        id: pageStack
 
         onCurrentItemChanged: currentItem.forceActiveFocus()
 

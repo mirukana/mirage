@@ -5,7 +5,7 @@ import "../base" as Base
 import "utils.js" as ChatJS
 
 Column {
-    id: "messageDelegate"
+    id: messageDelegate
 
     function minsBetween(date1, date2) {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)

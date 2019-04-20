@@ -14,7 +14,7 @@ Rectangle {
     property var typingUsers: chatPage.roomInfo.typingUsers
 
     Base.HLabel {
-        id: "usersLabel"
+        id: usersLabel
         anchors.fill: parent
         text: ChatJS.getTypingUsersText(typingUsers, chatPage.userId)
 

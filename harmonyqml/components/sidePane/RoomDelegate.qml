@@ -5,7 +5,7 @@ import "../base" as Base
 import "utils.js" as SidePaneJS
 
 MouseArea {
-    id: "root"
+    id: root
     width: roomList.width
     height: roomList.childrenHeight
 
