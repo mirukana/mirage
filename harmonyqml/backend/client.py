@@ -67,11 +67,11 @@ class Client(QObject):
 
     def __repr__(self) -> str:
         return "%s(host=%r, port=%r, user_id=%r)" % \
-            (type(self).__name__, self.host, self.port, self.userID)
+            (type(self).__name__, self.host, self.port, self.userId)
 
 
     @pyqtProperty(str, constant=True)
-    def userID(self) -> str:
+    def userId(self) -> str:
         return self.nio.user_id
 
 

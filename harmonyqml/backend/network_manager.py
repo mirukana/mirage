@@ -132,8 +132,6 @@ class NetworkManager:
                     response = self.read(sock)
 
                 except (OSError, RemoteTransportError) as err:
-                    logging.error("Connection error for %s: %s",
-                                  nio_func.__name__, str(err))
                     self._close_socket(sock)
                     self.http_disconnect()
                     retry.sleep(max_time=2)

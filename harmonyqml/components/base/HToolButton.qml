@@ -14,7 +14,7 @@ ToolButton {
     onClicked: toolTip.hide()
 
     ToolTip {
-        id: "toolTip"
+        id: toolTip
         text: tooltip
         delay: Qt.styleHints.mousePressAndHoldInterval
         visible: text ? toolTipZone.containsMouse : false

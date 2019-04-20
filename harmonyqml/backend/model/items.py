@@ -1,29 +1,83 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under GPLv3.
+from typing import Any, Callable, Optional, Tuple, Union
 
-from typing import Dict, List, NamedTuple, Optional
-
-from PyQt5.QtCore import QDateTime
-
-from ..pyqt_future import PyQtFuture
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
 
-class User(NamedTuple):
-    user_id:        str
-    display_name:   PyQtFuture
-    avatar_url:     Optional[str] = None
-    status_message: Optional[str] = None
+class ListItem(QObject):
+    roles: Tuple[str, ...] = ()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+        for role, value in zip(self.roles, args):
+            setattr(self, role, value)
+
+        for role, value in kwargs.items():
+            setattr(self, role, value)
 
 
-class Room(NamedTuple):
-    room_id:      str
-    display_name: Optional[str]
-    description:  str       = ""
-    typing_users: List[str] = []
+    def __repr__(self) -> str:
+        return "%s(%s)" % (
+            type(self).__name__,
+            ", ".join((f"{r}={getattr(self, r)!r}" for r in self.roles)),
+        )
 
 
-class RoomEvent(NamedTuple):
-    type:          str
-    date_time:     QDateTime
-    dict:          Dict[str, str]
-    is_local_echo: bool = False
+    @pyqtProperty(str, constant=True)
+    def repr(self) -> str:
+        return repr(self)
+
+
+def prop(qt_type:       Union[str, Callable],
+         name:          str,
+         signal:        Optional[pyqtSignal] = None,
+         default_value: Any                  = None) -> pyqtProperty:
+
+    def fget(self, name=name, default_value=default_value):
+        if not hasattr(self, f"_{name}"):
+            setattr(self, f"_{name}", default_value)
+        return getattr(self, f"_{name}")
+
+    def fset(self, value, name=name, signal=signal):
+        setattr(self, f"_{name}", value)
+        if signal:
+            getattr(self, f"{name}Changed").emit(value)
+
+    kws = {"notify": signal} if signal else {"constant": True}
+
+    return pyqtProperty(qt_type, fget=fget, fset=fset, **kws)
+
+
+class User(ListItem):
+    roles = ("userId", "displayName", "avatarUrl", "statusMessage")
+
+    displayNameChanged   = pyqtSignal("QVariant")
+    avatarUrlChanged     = pyqtSignal("QVariant")
+    statusMessageChanged = pyqtSignal(str)
+
+    userId        = prop(str, "userId")
+    displayName   = prop("QVariant", "displayName", displayNameChanged)
+    avatarUrl     = prop(str, "avatarUrl", avatarUrlChanged)
+    statusMessage = prop(str, "statusMessage", statusMessageChanged, "")
+
+
+class Room(ListItem):
+    roles = ("roomId", "displayName", "topic", "typingUsers")
+
+    displayNameChanged = pyqtSignal("QVariant")
+    topicChanged       = pyqtSignal(str)
+    typingUsersChanged = pyqtSignal("QVariantList")
+
+    roomId      = prop(str, "roomId")
+    displayName = prop(str, "displayName", displayNameChanged)
+    topic       = prop(str, "topic", topicChanged, "")
+    typingUsers = prop(list, "typingUsers", typingUsersChanged, [])
+
+
+class RoomEvent(ListItem):
+    roles = ("type", "dateTime", "dict", "isLocalEcho")
+
+    type        = prop(str, "type")
+    dateTime    = prop("QVariant", "dateTime")
+    dict        = prop("QVariantMap", "dict")
+    isLocalEcho = prop(bool, "isLocalEcho", None, False)

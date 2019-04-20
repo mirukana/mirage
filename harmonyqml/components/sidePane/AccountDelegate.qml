@@ -12,7 +12,7 @@ ColumnLayout {
         id: "row"
         spacing: 0
 
-        Base.Avatar { id: "avatar"; name: display_name; dimmension: 36 }
+        Base.Avatar { id: "avatar"; name: displayName; dimmension: 36 }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -21,7 +21,7 @@ ColumnLayout {
 
             Base.HLabel {
                 id: "accountLabel"
-                text: display_name.value || user_id
+                text: displayName.value || userId
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true
@@ -31,7 +31,7 @@ ColumnLayout {
 
             TextField {
                 id: "statusEdit"
-                text: status_message || ""
+                text: statusMessage || ""
                 placeholderText: qsTr("Set status message")
                 background: null
                 color: "black"
@@ -44,7 +44,7 @@ ColumnLayout {
                 rightPadding: leftPadding
 
                 onEditingFinished: {
-                    Backend.setStatusMessage(user_id, text)
+                    Backend.setStatusMessage(userId, text)
                     pageStack.forceActiveFocus()
                 }
             }
@@ -67,7 +67,7 @@ ColumnLayout {
         id: "roomList"
         visible: true
         interactive: false  // no scrolling
-        for_user_id: user_id
+        forUserId: userId
 
         Layout.minimumHeight:
             roomList.visible ?

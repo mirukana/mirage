@@ -4,27 +4,25 @@ from typing import (
     Sequence, Tuple, Union
 )
 
-from namedlist import namedlist
 from PyQt5.QtCore import (
     QAbstractListModel, QModelIndex, QObject, Qt, pyqtProperty, pyqtSignal,
     pyqtSlot
 )
 
-NewValue = Union[Mapping[str, Any], Sequence]
-ReturnItem = Dict[str, Any]
+from .items import ListItem
+
+NewItem = Union[ListItem, Mapping[str, Any], Sequence]
 
 
 class ListModel(QAbstractListModel):
     changed = pyqtSignal()
 
     def __init__(self,
-                 initial_data: Optional[List[NewValue]]        = None,
+                 initial_data: Optional[List[NewItem]]        = None,
                  container:    Callable[..., MutableSequence]  = list,
                  parent:       Optional[QObject]               = None) -> None:
         super().__init__(parent)
-        self._ref_namedlist             = None
-        self._roles: Tuple[str, ...]    = ()
-        self._data:  MutableSequence    = container()
+        self._data: MutableSequence[ListItem] = container()
 
         if initial_data:
             self.extend(initial_data)
@@ -50,57 +48,64 @@ class ListModel(QAbstractListModel):
         return self.rowCount()
 
 
+    @pyqtProperty(list)
+    def roles(self) -> Tuple[str, ...]:
+        return self._data[0].roles if self._data else ()  # type: ignore
+
+
     def roleNames(self) -> Dict[int, bytes]:
         return {Qt.UserRole + i: bytes(f, "utf-8")
-                for i, f in enumerate(self._roles, 1)}
+                for i, f in enumerate(self.roles, 1)} \
+                if self._data else {}
 
 
     def data(self, index: QModelIndex, role: int = Qt.DisplayRole) -> Any:
         if role <= Qt.UserRole:
             return None
 
-        return self._data[index.row()][role - Qt.UserRole - 1]
+        return getattr(self._data[index.row()],
+                       str(self.roleNames()[role], "utf8"))
 
 
     def rowCount(self, _: QModelIndex = QModelIndex()) -> int:
         return len(self._data)
 
 
-    def _convert_new_value(self, value: NewValue) -> Any:
-        if isinstance(value, Mapping):
-            if not self._ref_namedlist:
-                self._ref_namedlist = namedlist("ListItem", value.keys())
-                self._roles         = tuple(value.keys())
+    def _convert_new_value(self, value: NewItem) -> ListItem:
+        def convert() -> ListItem:
+            if self._data and isinstance(value, Mapping):
+                assert set(value.keys()) <= set(self.roles), \
+                       f"{value}: must have all these keys: {self.roles}"
 
-            return self._ref_namedlist(**value)  # type: ignore
+                return type(self._data[0])(**value)
 
-        if isinstance(value, Sequence):
-            if not self._ref_namedlist:
-                try:
-                    self._ref_namedlist = namedlist(
-                        value.__class__.__name__, value._fields  # type: ignore
-                    )
-                    self._roles = tuple(value._fields)  # type: ignore
-                except AttributeError:
-                    raise TypeError(
-                        "Need a mapping/dict, namedtuple or namedlist as "
-                        "first value to set allowed keys/fields."
-                    )
+            if not self._data and isinstance(value, Mapping):
+                raise NotImplementedError("First item must be set from Python")
 
-            return self._ref_namedlist(*value)  # type: ignore
+            if self._data and isinstance(value, type(self._data[0])):
+                return value
 
+            if not self._data and isinstance(value, ListItem):
+                return value
 
-        raise TypeError("Value must be a mapping or sequence.")
+            raise TypeError("%r: must be mapping or %s" % (
+                value,
+                type(self._data[0]).__name__ if self._data else "ListItem"
+            ))
+
+        value = convert()
+        value.setParent(self)
+        return value
 
 
     @pyqtProperty(int, constant=True)
-    def count(self) -> int:  # pylint: disable=arguments-differ
+    def count(self) -> int:
         return self.rowCount()
 
 
-    @pyqtSlot(int, result="QVariantMap")
-    def get(self, index: int) -> ReturnItem:
-        return self._data[index]._asdict()
+    @pyqtSlot(int, result="QVariant")
+    def get(self, index: int) -> ListItem:
+        return self._data[index]
 
 
     @pyqtSlot(str, "QVariant", result=int)
@@ -109,17 +114,17 @@ class ListModel(QAbstractListModel):
             if getattr(item, prop) == is_value:
                 return i
 
-        raise ValueError(f"No {type(self._ref_namedlist)} in list with "
+        raise ValueError(f"No item in model data with "
                          f"property {prop!r} set to {is_value!r}.")
 
 
-    @pyqtSlot(str, "QVariant", result="QVariantMap")
-    def getWhere(self, prop: str, is_value: Any) -> ReturnItem:
+    @pyqtSlot(str, "QVariant", result="QVariant")
+    def getWhere(self, prop: str, is_value: Any) -> ListItem:
         return self.get(self.indexWhere(prop, is_value))
 
 
-    @pyqtSlot(int, list)
-    def insert(self, index: int, value: NewValue) -> None:
+    @pyqtSlot(int, "QVariantMap")
+    def insert(self, index: int, value: NewItem) -> None:
         value = self._convert_new_value(value)
         self.beginInsertRows(QModelIndex(), index, index)
         self._data.insert(index, value)
@@ -127,19 +132,44 @@ class ListModel(QAbstractListModel):
         self.changed.emit()
 
 
-    @pyqtSlot(list)
-    def append(self, value: NewValue) -> None:
+    @pyqtSlot("QVariantMap")
+    def append(self, value: NewItem) -> None:
         self.insert(self.rowCount(), value)
 
 
     @pyqtSlot(list)
-    def extend(self, values: Iterable[NewValue]) -> None:
+    def extend(self, values: Iterable[NewItem]) -> None:
         for val in values:
             self.append(val)
 
 
+    @pyqtSlot("QVariantMap")
+    def update(self, index: int, value: NewItem) -> None:
+        value = self._convert_new_value(value)
+
+        for role in self.roles:
+            setattr(self._data[index], role, getattr(value, role))
+
+        qidx = QAbstractListModel.index(self, index, 0)
+        self.dataChanged.emit(qidx, qidx, self.roleNames())
+        self.changed.emit()
+
+
+    @pyqtSlot(str, "QVariant", "QVariantMap")
+    def updateOrAppendWhere(
+            self, prop: str, is_value: Any, update_with: NewItem
+    ) -> None:
+        try:
+            index = self.indexWhere(prop, is_value)
+            self.update(index, update_with)
+        except ValueError:
+            index = self.rowCount()
+            self.append(update_with)
+
+
+
     @pyqtSlot(int, list)
-    def set(self, index: int, value: NewValue) -> None:
+    def set(self, index: int, value: NewItem) -> None:
         qidx              = QAbstractListModel.index(self, index, 0)
         value             = self._convert_new_value(value)
         self._data[index] = value
@@ -149,16 +179,16 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot(int, str, "QVariant")
     def setProperty(self, index: int, prop: str, value: Any) -> None:
-        self._data[index][self._roles.index(prop)] = value
+        setattr(self._data[index], prop, value)
         qidx = QAbstractListModel.index(self, index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
 
 
-    # pylint: disable=invalid-name
     @pyqtSlot(int, int)
     @pyqtSlot(int, int, int)
     def move(self, from_: int, to: int, n: int = 1) -> None:
+        # pylint: disable=invalid-name
         qlast = from_ + n - 1
 
         if (n <= 0) or (from_ == to) or (qlast == to) or \
@@ -186,7 +216,7 @@ class ListModel(QAbstractListModel):
 
 
     @pyqtSlot(int)
-    def remove(self, index: int) -> None:  # pylint: disable=arguments-differ
+    def remove(self, index: int) -> None:
         self.beginRemoveRows(QModelIndex(), index, index)
         del self._data[index]
         self.endRemoveRows()

@@ -14,8 +14,7 @@ Rectangle {
         id: messageListView
         anchors.fill: parent
         delegate: MessageDelegate {}
-        model: Backend.models.roomEvents.get(chatPage.room.room_id)
-        //highlight: Rectangle {color: "lightsteelblue"; radius: 5}
+        model: Backend.models.roomEvents.get(chatPage.roomId)
 
         clip: true
         topMargin: space
@@ -31,7 +30,7 @@ Rectangle {
 
         onYPosChanged: {
             if (yPos <= 0.1) {
-                Backend.loadPastEvents(chatPage.room.room_id)
+                Backend.loadPastEvents(chatPage.roomId)
             }
         }
     }

@@ -20,7 +20,7 @@ Rectangle {
 
         Base.Avatar {
             id: "avatar"
-            name: Backend.getUserDisplayName(chatPage.user_id)
+            name: Backend.getUserDisplayName(chatPage.userId)
             dimmension: root.Layout.minimumHeight
             //visible: textArea.text === ""
             visible: textArea.height <= root.Layout.minimumHeight
@@ -43,13 +43,13 @@ Rectangle {
                 font.pixelSize: 16
                 focus: true
 
-                function set_typing(typing) {
-                    Backend.clientManager.clients[chatPage.user_id]
-                           .setTypingState(chatPage.room.room_id, typing)
+                function setTyping(typing) {
+                    Backend.clientManager.clients[chatPage.userId]
+                           .setTypingState(chatPage.roomId, typing)
                 }
 
-                onTypedTextChanged: set_typing(Boolean(text))
-                onEditingFinished: set_typing(false)  // when lost focus
+                onTypedTextChanged: setTyping(Boolean(text))
+                onEditingFinished: setTyping(false)  // when lost focus
 
                 Keys.onReturnPressed: {
                     event.accepted = true
@@ -62,8 +62,8 @@ Rectangle {
                     }
 
                     if (textArea.text === "") { return }
-                    Backend.clientManager.clients[chatPage.user_id]
-                           .sendMarkdown(chatPage.room.room_id, textArea.text)
+                    Backend.clientManager.clients[chatPage.userId]
+                           .sendMarkdown(chatPage.roomId, textArea.text)
                     textArea.clear()
                 }
 

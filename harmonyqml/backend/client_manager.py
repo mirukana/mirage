@@ -63,7 +63,7 @@ class ClientManager(QObject):
 
 
     def _on_connected(self, client: Client) -> None:
-        self.clients[client.userID] = client
+        self.clients[client.userId] = client
         self.clientAdded.emit(client)
         client.startSyncing()
 
@@ -130,7 +130,7 @@ class ClientManager(QObject):
     def configAdd(self, client: Client) -> None:
         self._write_config({
             **self.configAccounts(),
-            **{client.userID: {
+            **{client.userId: {
                 "hostname": client.nio.host,
                 "token": client.nio.access_token,
                 "device_id": client.nio.device_id,

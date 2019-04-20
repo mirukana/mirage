@@ -4,7 +4,10 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 Rectangle {
-    id: root
+    property string displayName: ""
+    property string topic: ""
+
+    id: "root"
     Layout.fillWidth: true
     Layout.minimumHeight: 36
     Layout.maximumHeight: Layout.minimumHeight
@@ -19,21 +22,23 @@ Rectangle {
             id: "avatar"
             Layout.alignment: Qt.AlignTop
             dimmension: root.Layout.minimumHeight
-            name: chatPage.room.display_name
+            name: displayName
         }
 
         Base.HLabel {
             id: "roomName"
-            text: chatPage.room.display_name
+            text: displayName
             font.pixelSize: bigSize
             elide: Text.ElideRight
             maximumLineCount: 1
-            Layout.maximumWidth: row.width - row.spacing * (row.children.length - 1) - avatar.width
+            Layout.maximumWidth:
+                row.width - row.spacing * (row.children.length - 1) -
+                avatar.width
         }
 
         Base.HLabel {
-            id: "roomDescription"
-            text: chatPage.room.description || ""
+            id: "roomTopic"
+            text: topic
             font.pixelSize: smallSize
             elide: Text.ElideRight
             maximumLineCount: 1

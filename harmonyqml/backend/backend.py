@@ -3,7 +3,7 @@
 
 import hashlib
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, Set
+from typing import Dict, Sequence, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
@@ -96,3 +96,15 @@ class Backend(QObject):
                 break
         else:
             raise ValueError(f"Room not found in any client: {room_id}")
+
+
+    @pyqtSlot()
+    @pyqtSlot(list)
+    def pdb(self, additional_data: Sequence = ()) -> None:
+        # pylint: disable=all
+        ad = additional_data
+        re = self.models.roomEvents.get(ad[1])
+        import pdb
+        from PyQt5.QtCore import pyqtRemoveInputHook
+        pyqtRemoveInputHook()
+        pdb.set_trace()

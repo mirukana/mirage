@@ -11,19 +11,12 @@ Rectangle {
     Layout.maximumHeight: Layout.minimumHeight
     color: "#BBB"
 
+    property var typingUsers: chatPage.roomInfo.typingUsers
+
     Base.HLabel {
         id: "usersLabel"
         anchors.fill: parent
-
-        Timer {
-            interval: 500
-            repeat: true
-            running: true
-            triggeredOnStart: true
-            onTriggered: usersLabel.text = ChatJS.get_typing_users_text(
-                chatPage.user_id, chatPage.room.room_id
-            )
-        }
+        text: ChatJS.getTypingUsersText(typingUsers, chatPage.userId)
 
         elide: Text.ElideMiddle
         maximumLineCount: 1

@@ -1,8 +1,8 @@
 .import "../chat/utils.js" as ChatJS
 
 
-function get_last_room_event_text(room_id) {
-    var eventsModel = Backend.models.roomEvents.get(room_id)
+function getLastRoomEventText(roomId) {
+    var eventsModel = Backend.models.roomEvents.get(roomId)
 
     for (var i = 0; i < eventsModel.count; i++) {
         var ev = eventsModel.get(i)
@@ -19,7 +19,7 @@ function get_last_room_event_text(room_id) {
     var undecryptable = ev.type === "OlmEvent" || ev.type === "MegolmEvent"
 
     if (undecryptable || ev.type.startsWith("RoomMessage")) {
-        var color = ev.dict.sender === roomList.for_user_id ?
+        var color = ev.dict.sender === roomList.forUserId ?
                     "darkblue" : "purple"
 
         return "<font color='" +
@@ -36,7 +36,7 @@ function get_last_room_event_text(room_id) {
               "'>" +
               name +
               " " +
-              ChatJS.get_event_text(ev.type, ev.dict) +
+              ChatJS.getEventText(ev.type, ev.dict) +
               "</font>"
    }
 }

@@ -11,7 +11,7 @@ RowLayout {
     anchors.right: isOwn ? parent.right : undefined
 
     readonly property string contentText:
-        isMessage ?  "" : ChatJS.get_event_text(type, dict)
+        isMessage ?  "" : ChatJS.getEventText(type, dict)
 
     Base.Avatar {
         id: avatar
@@ -26,7 +26,7 @@ RowLayout {
               (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
               (displayName.value || dict.sender) + " " + contentText +
               "&nbsp;&nbsp;<font size=" + smallSize + "px color='gray'>" +
-              Qt.formatDateTime(date_time, "hh:mm:ss") +
+              Qt.formatDateTime(dateTime, "hh:mm:ss") +
               "</font></font>"
         textFormat: Text.RichText
         background: Rectangle {color: "#DDD"}

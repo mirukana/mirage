@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 ListView {
-    property var for_user_id: null
+    property var forUserId: null
 
     property int childrenHeight: 36
     property int contentHeight: 0
@@ -16,6 +16,6 @@ ListView {
 
     id: "roomList"
     spacing: 8
-    model: Backend.models.rooms.get(for_user_id)
+    model: Backend.models.rooms.get(forUserId)
     delegate: RoomDelegate {}
 }

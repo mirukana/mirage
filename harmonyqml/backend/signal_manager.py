@@ -31,14 +31,14 @@ class SignalManager(QObject):
     def onClientAdded(self, client: Client) -> None:
         self.connectClient(client)
         self.backend.models.accounts.append(User(
-            user_id      = client.userID,
-            display_name = self.backend.getUserDisplayName(client.userID),
+            userId      = client.userId,
+            displayName = self.backend.getUserDisplayName(client.userId),
         ))
 
 
     def onClientDeleted(self, user_id: str) -> None:
         accs = self.backend.models.accounts
-        del accs[accs.indexWhere("user_id", user_id)]
+        del accs[accs.indexWhere("userId", user_id)]
 
 
     def connectClient(self, client: Client) -> None:
@@ -58,7 +58,7 @@ class SignalManager(QObject):
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
-        model = self.backend.models.rooms[client.userID]
+        model = self.backend.models.rooms[client.userId]
         room  = client.nio.rooms[room_id]
 
         def group_name() -> Optional[str]:
@@ -66,22 +66,17 @@ class SignalManager(QObject):
             return None if name == "Empty room?" else name
 
         item = Room(
-            room_id      = room_id,
-            display_name = room.name or room.canonical_alias or group_name(),
-            description  = room.topic,
+            roomId      = room_id,
+            displayName = room.name or room.canonical_alias or group_name(),
+            topic       = room.topic,
         )
 
-        try:
-            index = model.indexWhere("room_id", room_id)
-        except ValueError:
-            model.append(item)
-        else:
-            model[index] = item
+        model.updateOrAppendWhere("roomId", room_id, item)
 
 
     def onRoomLeft(self, client: Client, room_id: str) -> None:
-        rooms = self.backend.models.rooms[client.userID]
-        del rooms[rooms.indexWhere("room_id", room_id)]
+        rooms = self.backend.models.rooms[client.userId]
+        del rooms[rooms.indexWhere("roomId", room_id)]
 
 
     def onRoomSyncPrevBatchTokenReceived(
@@ -116,15 +111,15 @@ class SignalManager(QObject):
             model     = self.backend.models.roomEvents[room_id]
             date_time = QDateTime\
                         .fromMSecsSinceEpoch(edict["server_timestamp"])
-            new_event = RoomEvent(type=etype, date_time=date_time, dict=edict)
+            new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
 
             if self._events_in_transfer:
                 local_echoes_met: int           = 0
-                replace_at:       Optional[int] = None
+                update_at:       Optional[int] = None
 
                 # Find if any locally echoed event corresponds to new_event
                 for i, event in enumerate(model):
-                    if not event.is_local_echo:
+                    if not event.isLocalEcho:
                         continue
 
                     sb     = (event.dict["sender"], event.dict["body"])
@@ -132,23 +127,23 @@ class SignalManager(QObject):
 
                     if sb == new_sb:
                         # The oldest matching local echo shall be replaced
-                        replace_at = max(replace_at or 0, i)
+                        update_at = max(update_at or 0, i)
 
                     local_echoes_met += 1
                     if local_echoes_met >= self._events_in_transfer:
                         break
 
-                if replace_at is not None:
-                    model[replace_at] = new_event
+                if update_at is not None:
+                    model.update(update_at, new_event)
                     self._events_in_transfer -= 1
                     return
 
             for i, event in enumerate(model):
-                if event.is_local_echo:
+                if event.isLocalEcho:
                     continue
 
                 # Model is sorted from newest to oldest message
-                if new_event.date_time > event.date_time:
+                if new_event.dateTime > event.dateTime:
                     model.insert(i, new_event)
                     return
 
@@ -159,8 +154,8 @@ class SignalManager(QObject):
             self, client: Client, room_id: str, users: List[str]
         ) -> None:
 
-        rooms = self.backend.models.rooms[client.userID]
-        rooms[rooms.indexWhere("room_id", room_id)].typing_users = users
+        rooms = self.backend.models.rooms[client.userId]
+        rooms[rooms.indexWhere("roomId", room_id)].typingUsers = users
 
 
     def onMessageAboutToBeSent(
@@ -171,15 +166,15 @@ class SignalManager(QObject):
             model     = self.backend.models.roomEvents[room_id]
             nio_event = nio.events.RoomMessage.parse_event({
                 "event_id":         "",
-                "sender":           client.userID,
+                "sender":           client.userId,
                 "origin_server_ts": timestamp,
                 "content":          content,
             })
             event = RoomEvent(
-                type          = type(nio_event).__name__,
-                date_time     = QDateTime.fromMSecsSinceEpoch(timestamp),
-                dict          = nio_event.__dict__,
-                is_local_echo = True,
+                type        = type(nio_event).__name__,
+                dateTime    = QDateTime.fromMSecsSinceEpoch(timestamp),
+                dict        = nio_event.__dict__,
+                isLocalEcho = True,
             )
             model.insert(0, event)
             self._events_in_transfer += 1

@@ -8,7 +8,7 @@ Item {
     property var imageSource: null
     property int dimmension: 48
 
-    readonly property string resolved_name:
+    readonly property string resolvedName:
         ! name ? "?" :
         typeof(name) == "string" ? name :
         (name.value ? name.value : "?")
@@ -21,13 +21,13 @@ Item {
         id: "letterRectangle"
         anchors.fill: parent
         visible: ! invisible && imageSource === null
-        color: resolved_name === "?" ?
+        color: resolvedName === "?" ?
                Qt.hsla(0, 0, 0.22, 1) :
-               Qt.hsla(Backend.hueFromString(resolved_name), 0.22, 0.5, 1)
+               Qt.hsla(Backend.hueFromString(resolvedName), 0.22, 0.5, 1)
 
         HLabel {
             anchors.centerIn: parent
-            text: resolved_name.charAt(0)
+            text: resolvedName.charAt(0)
             color: "white"
             font.pixelSize: letterRectangle.height / 1.4
         }

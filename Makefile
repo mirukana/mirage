@@ -6,12 +6,14 @@ PKG_DIR = harmonyqml
 PYTHON  = python3
 PIP     = pip3
 PYLINT  = pylint
+MYPY    = mypy
 VULTURE = vulture
 CLOC    = cloc
 
 ARCHIVE_FORMATS = gztar
 INSTALL_FLAGS   = --user --editable
 PYLINT_FLAGS    = --output-format colorized
+MYPY_FLAGS      = --ignore-missing-imports
 VULTURE_FLAGS   = --min-confidence 100
 CLOC_FLAGS      = --ignore-whitespace
 
@@ -46,6 +48,8 @@ upload: dist
 
 test:
 	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR} *.py
+	@echo
+	- ${MYPY} ${PKG_DIR} ${MYPY_FLAGS}
 	@echo
 	- ${VULTURE} ${PKG_DIR} ${VULTURE_FLAGS}
 	@echo

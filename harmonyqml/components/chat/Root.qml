@@ -3,16 +3,23 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 
 ColumnLayout {
-    property var user_id: null
-    property var room: null
+    property var userId: null
+    property var roomId: null
 
+    property var roomInfo:
+        Backend.models.rooms.get(userId).getWhere("roomId", roomId)
 
-    id: chatPage
+    id: "chatPage"
     spacing: 0
     onFocusChanged: sendBox.setFocus()
 
-    RoomHeader {}
+    RoomHeader {
+        id: "roomHeader"
+        displayName: roomInfo.displayName
+        topic: roomInfo.topic
+    }
+
     MessageList {}
     TypingUsersBar {}
-    SendBox { id: sendBox }
+    SendBox { id: "sendBox" }
 }

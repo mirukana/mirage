@@ -9,24 +9,21 @@ MouseArea {
     width: roomList.width
     height: roomList.childrenHeight
 
-    onClicked: pageStack.show_room(
-        roomList.for_user_id,
-        roomList.model.get(index)
-    )
+    onClicked: pageStack.showRoom(roomList.forUserId, roomId)
 
     RowLayout {
         anchors.fill: parent
         id: row
         spacing: 1
 
-        Base.Avatar { id: avatar; name: display_name; dimmension: root.height }
+        Base.Avatar { id: avatar; name: displayName; dimmension: root.height }
 
         ColumnLayout {
             spacing: 0
 
             Base.HLabel {
                 id: roomLabel
-                text: display_name ? display_name : "<i>Empty room</i>"
+                text: displayName ? displayName : "<i>Empty room</i>"
                 textFormat: Text.StyledText
                 elide: Text.ElideRight
                 maximumLineCount: 1
@@ -39,18 +36,18 @@ MouseArea {
                 rightPadding: leftPadding
             }
             Base.HLabel {
-                function get_text() {
-                    return SidePaneJS.get_last_room_event_text(room_id)
+                function getText() {
+                    return SidePaneJS.getLastRoomEventText(roomId)
                 }
 
                 Connections {
-                    target: Backend.models.roomEvents.get(room_id)
-                    onChanged: subtitleLabel.text = subtitleLabel.get_text()
+                    target: Backend.models.roomEvents.get(roomId)
+                    onChanged: subtitleLabel.text = subtitleLabel.getText()
                 }
 
                 id: subtitleLabel
                 visible: text !== ""
-                text: get_text()
+                text: getText()
                 textFormat: Text.StyledText
 
                 font.pixelSize: smallSize

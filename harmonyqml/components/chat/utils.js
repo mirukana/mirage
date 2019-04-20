@@ -1,4 +1,4 @@
-function get_event_text(type, dict) {
+function getEventText(type, dict) {
     switch (type) {
         case "RoomCreateEvent":
             return (dict.federate ? "allowed" : "blocked") +
@@ -18,14 +18,14 @@ function get_event_text(type, dict) {
             break
 
         case "RoomHistoryVisibilityEvent":
-            return get_history_visibility_event_text(dict)
+            return getHistoryVisibilityEventText(dict)
             break
 
         case "PowerLevelsEvent":
             return "changed the room's permissions."
 
         case "RoomMemberEvent":
-            return get_member_event_text(dict)
+            return getMemberEventText(dict)
             break
 
         case "RoomAliasEvent":
@@ -58,7 +58,7 @@ function get_event_text(type, dict) {
 }
 
 
-function get_history_visibility_event_text(dict) {
+function getHistoryVisibilityEventText(dict) {
     switch (dict.history_visibility) {
         case "shared":
             var end = "all room members."
@@ -81,7 +81,7 @@ function get_history_visibility_event_text(dict) {
 }
 
 
-function get_member_event_text(dict) {
+function getMemberEventText(dict) {
     var info = dict.content, prev = dict.prev_content
 
     if (! prev || (info.membership != prev.membership)) {
@@ -127,15 +127,12 @@ function get_member_event_text(dict) {
 }
 
 
-function get_typing_users_text(account_id, room_id) {
+function getTypingUsersText(users, ourAccountId) {
     var names = []
-    var room  = Backend.models.rooms.get(account_id)
-                .getWhere("room_id", room_id)
 
-    for (var i = 0; i < room.typing_users.length; i++) {
-        if (room.typing_users[i] !== account_id) {
-            names.push(Backend.getUserDisplayName(room.typing_users[i], false)
-                       .result())
+    for (var i = 0; i < users.length; i++) {
+        if (users[i] !== ourAccountId) {
+            names.push(Backend.getUserDisplayName(users[i], false).result())
         }
     }
 

@@ -7,22 +7,22 @@ import "utils.js" as ChatJS
 Column {
     id: "messageDelegate"
 
-    function mins_between(date1, date2) {
+    function minsBetween(date1, date2) {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
     }
 
-    function is_message(type_) { return type_.startsWith("RoomMessage") }
+    function getIsMessage(type_) { return type_.startsWith("RoomMessage") }
 
-    function get_previous_item() {
+    function getPreviousItem() {
         return index < messageListView.model.count - 1 ?
                 messageListView.model.get(index + 1) : null
     }
 
-    property var previousItem: get_previous_item()
+    property var previousItem: getPreviousItem()
     signal reloadPreviousItem()
-    onReloadPreviousItem: previousItem = get_previous_item()
+    onReloadPreviousItem: previousItem = getPreviousItem()
 
-    readonly property bool isMessage: is_message(type)
+    readonly property bool isMessage: getIsMessage(type)
 
     readonly property bool isUndecryptableEvent:
         type === "OlmEvent" || type === "MegolmEvent"
@@ -31,7 +31,7 @@ Column {
         Backend.getUserDisplayName(dict.sender)
 
     readonly property bool isOwn:
-        chatPage.user_id === dict.sender
+        chatPage.userId === dict.sender
 
     readonly property bool isFirstEvent: type == "RoomCreateEvent"
 
@@ -39,19 +39,19 @@ Column {
         previousItem &&
         ! talkBreak &&
         ! dayBreak &&
-        is_message(previousItem.type) === isMessage &&
+        getIsMessage(previousItem.type) === isMessage &&
         previousItem.dict.sender === dict.sender &&
-        mins_between(previousItem.date_time, date_time) <= 5
+        minsBetween(previousItem.dateTime, dateTime) <= 5
 
     readonly property bool dayBreak:
         isFirstEvent ||
         previousItem &&
-        date_time.getDay() != previousItem.date_time.getDay()
+        dateTime.getDay() != previousItem.dateTime.getDay()
 
     readonly property bool talkBreak:
         previousItem &&
         ! dayBreak &&
-        mins_between(previousItem.date_time, date_time) >= 20
+        minsBetween(previousItem.dateTime, dateTime) >= 20
 
 
     property int standardSpacing: 16
@@ -59,8 +59,8 @@ Column {
     property int verticalPadding: 5
 
     ListView.onAdd: {
-        var next_delegate = messageListView.contentItem.children[index]
-        if (next_delegate) { next_delegate.reloadPreviousItem() }
+        var nextDelegate = messageListView.contentItem.children[index]
+        if (nextDelegate) { nextDelegate.reloadPreviousItem() }
     }
 
     width: parent.width

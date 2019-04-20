@@ -1,6 +1,5 @@
 - Separate categories for invited, group and direct rooms
 - Invited → Accept/Deny dialog
-- Keep the room header name and topic updated
 - Merge login page
 
 - When inviting someone to direct chat, room is "Empty room" until accepted,
@@ -14,7 +13,7 @@
 - Use Loader? for MessageDelegate to show sub-components based on condition
 - Better names and organization for the Message components
 
-- Migrate more JS functions to their own files
+- Migrate more JS functions to their own files / Implement in Python instead
 
 - Set Qt parents for all QObject
 
@@ -40,3 +39,5 @@
 - Verify E2E working
 
 - Multiaccount aliases
+
+- Fix tooltip hide()
