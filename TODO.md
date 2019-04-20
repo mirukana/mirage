@@ -1,43 +1,48 @@
-- Separate categories for invited, group and direct rooms
-- Invited → Accept/Deny dialog
-- Merge login page
+- Current focus
+  - Separate categories for invited, group and direct rooms
+    - Invited → Accept/Deny dialog
+  - Merge login page
 
-- When inviting someone to direct chat, room is "Empty room" until accepted,
-  it should be the peer's display name instead.
-- Support "Empty room (was ...)" after peer left
+- Refactoring
+  - Set Qt parents for all QObject
+  - Migrate more JS functions to their own files / Implement in Python instead
+  - Don't bake in size properties for components
+  - Better names and organization for the Message components
 
-- Proper logoff when closing client
+- Bug fixes
+  - Graphic bug when resizing window vertically for side pane?
+  - Fix tooltip hide()
+  - ![A picture](https://picsum.photos/256/256) not clickable?
 
-- Handle cases where an avatar char is # or @ (#alias room, @user\_id)
+- UI
+  - Reorganize SidePane
+  - Proper theme, with components taking their colors from theme settings
+  - Settings page
+    - Multiaccount aliases
 
-- Use Loader? for MessageDelegate to show sub-components based on condition
-- Better names and organization for the Message components
+- Major features
+  - E2E
+  - Uploads
+  - Links preview
+  - QQuickImageProvider
+  - Read receipts
+  - Status message and presence
 
-- Migrate more JS functions to their own files / Implement in Python instead
+- Client improvements
+  - On sync, check messages API, if a limited sync timeline was received
+  - Markdown: don't turn #things into title (space), disable __ syntax
+  - Spinner when loading past room events or images
+  - Push instead of replacing in stack view
+  - Make links in room subtitle clickable, formatting?
+  - `<pre>` scrollbar on overflow
+  - Use Loader? for MessageDelegate to show sub-components based on condition
+  - Handle cases where an avatar char is # or @ (#alias room, @user\_id)
+  - Proper logoff when closing client
+  - When inviting someone to direct chat, room is "Empty room" until accepted,
+    it should be the peer's display name instead.
 
-- Set Qt parents for all QObject
-
-- `<pre>` scrollbar on overflow
-
-- Make links in room subtitle clickable, formatting?
-
-- Push instead of replacing in stack view
-
-- QQuickImageProvider, matrix preview API
-
-- Spinner when loading past room events or images
-
-- nio: org.matrix.room.preview\_urls, m.room.aliases
-
-- Markdown: don't turn #things into title (space), disable __ syntax
-- ![A picture](https://picsum.photos/256/256) not clickable?
-
-- On sync, check messages API, if a limited sync timeline was received
-
-- Graphic bug when resizing window vertically for side pane?
-
-- Verify E2E working
-
-- Multiaccount aliases
-
-- Fix tooltip hide()
+- Missing nio support
+  - `org.matrix.room.preview_urls` event
+  - `m.room.aliases` event
+  - Avatars
+  - Support "Empty room (was ...)" after peer left
