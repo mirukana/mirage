@@ -2,9 +2,10 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 import "../base" as Base
+import "utils.js" as ChatJS
 
 Column {
-    id: "rootCol"
+    id: "messageDelegate"
 
     function mins_between(date1, date2) {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
@@ -12,9 +13,14 @@ Column {
 
     function is_message(type_) { return type_.startsWith("RoomMessage") }
 
-    readonly property var previousItem:
-        index < messageListView.model.count - 1 ?
-        messageListView.model.get(index + 1) : null
+    function get_previous_item() {
+        return index < messageListView.model.count - 1 ?
+                messageListView.model.get(index + 1) : null
+    }
+
+    property var previousItem: get_previous_item()
+    signal reloadPreviousItem()
+    onReloadPreviousItem: previousItem = get_previous_item()
 
     readonly property bool isMessage: is_message(type)
 
@@ -27,10 +33,10 @@ Column {
     readonly property bool isOwn:
         chatPage.user_id === dict.sender
 
-    readonly property bool isFirstMessage: ! previousItem
+    readonly property bool isFirstEvent: type == "RoomCreateEvent"
 
     readonly property bool combine:
-        ! isFirstMessage &&
+        previousItem &&
         ! talkBreak &&
         ! dayBreak &&
         is_message(previousItem.type) === isMessage &&
@@ -38,11 +44,12 @@ Column {
         mins_between(previousItem.date_time, date_time) <= 5
 
     readonly property bool dayBreak:
-        isFirstMessage ||
+        isFirstEvent ||
+        previousItem &&
         date_time.getDay() != previousItem.date_time.getDay()
 
     readonly property bool talkBreak:
-        ! isFirstMessage &&
+        previousItem &&
         ! dayBreak &&
         mins_between(previousItem.date_time, date_time) >= 20
 
@@ -51,9 +58,15 @@ Column {
     property int horizontalPadding: 7
     property int verticalPadding: 5
 
+    ListView.onAdd: {
+        var next_delegate = messageListView.contentItem.children[index]
+        if (next_delegate) { next_delegate.reloadPreviousItem() }
+    }
+
     width: parent.width
+
     topPadding:
-        ! previousItem ? 0 :
+        isFirstEvent ? 0 :
         talkBreak ? standardSpacing * 3 :
         combine ? standardSpacing / 4 :
         standardSpacing

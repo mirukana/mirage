@@ -21,6 +21,7 @@ Controls1.SplitView {
             pageStack.replace(
                 "chat/Root.qml", { user_id: user_id, room: room_obj }
             )
+            console.log("replaced")
         }
 
         id: "pageStack"
