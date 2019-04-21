@@ -12,11 +12,6 @@ Banner {
 
     buttonModel: [
         {
-            text: "Rejoin",
-            iconName: "join",
-            iconColor: Qt.hsla(0.13, 0.9, 0.35, 1),
-        },
-        {
             text: "Forget",
             iconName: "trash_can",
             iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),

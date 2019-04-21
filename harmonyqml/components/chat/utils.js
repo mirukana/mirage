@@ -162,7 +162,7 @@ function getLeftBannerText(leftEvent) {
 
     if (leftEvent.state_key === leftEvent.sender) {
         return (prev && prev.membership === "invite" ?
-                "You declined to join this room." : "You left the room.") +
+                "You declined to join the room." : "You left the room.") +
                reason
     }
 
