@@ -80,6 +80,10 @@ Rectangle {
                     icon.width: 32
                     display: bannerButtons.displayMode
 
+                    onClicked:
+                        Backend.clientManager.clients[chatPage.userId].
+                        call(modelData.clientFunction, modelData.clientArgs)
+
                     Layout.maximumWidth: bannerButtons.compact ? height : -1
                     Layout.fillHeight: true
                 }

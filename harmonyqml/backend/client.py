@@ -4,13 +4,13 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Event
-from typing import DefaultDict, Tuple
+from typing import Any, DefaultDict, Dict, Optional, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 import nio
-import nio.responses as nr
 import nio.events as ne
+import nio.responses as nr
 
 from .network_manager import NetworkManager
 from .pyqt_future import futurize
@@ -76,6 +76,16 @@ class Client(QObject):
     @pyqtProperty(str, constant=True)
     def userId(self) -> str:
         return self.nio.user_id
+
+
+    @pyqtSlot(str, result="QVariant")
+    @pyqtSlot(str, list, result="QVariant")
+    @pyqtSlot(str, list, "QVariantMap", result="QVariant")
+    def call(self,
+             method: str,
+             args:   Optional[list]           = None,
+             kwargs: Optional[Dict[str, Any]] = None) -> Any:
+        return getattr(self, method)(*args or [], **kwargs or {})
 
 
     @pyqtSlot(str)
@@ -232,3 +242,21 @@ class Client(QObject):
             )
 
         return send(self)
+
+
+    @pyqtSlot(str)
+    @futurize()
+    def joinRoom(self, room_id: str) -> None:
+        return self.net.talk(self.nio.join, room_id=room_id)
+
+
+    @pyqtSlot(str)
+    @futurize()
+    def leaveRoom(self, room_id: str) -> None:
+        return self.net.talk(self.nio.room_leave, room_id=room_id)
+
+
+    @pyqtSlot(str)
+    @futurize()
+    def forgetRoom(self, room_id: str) -> None:
+        raise NotImplementedError()
