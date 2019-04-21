@@ -9,20 +9,24 @@ Rectangle {
     Layout.preferredHeight: 32
     color: "#BBB"
 
+    property var inviter: null
+
     Base.HRowLayout {
         id: inviteRow
         anchors.fill: parent
 
         Base.Avatar {
             id: inviteAvatar
-            name: ""
+            name: inviter ? inviter.displayname : ""
             dimmension: inviteOffer.Layout.preferredHeight
+            //imageSource: inviter ? inviter.avatar_url : ""
         }
 
         Base.HLabel {
             id: inviteLabel
-            text: "<b>" + "Person" + "</b> " +
-                  qsTr("invited you to join the room.")
+            text: (inviter ?
+                   ("<b>" + inviter.displayname + "</b>") : qsTr("Someone")) +
+                  " " + qsTr("invited you to join the room.")
             textFormat: Text.StyledText
             maximumLineCount: 1
             elide: Text.ElideRight

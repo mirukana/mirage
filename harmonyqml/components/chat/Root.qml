@@ -28,6 +28,7 @@ ColumnLayout {
 
     InviteOffer {
         visible: isInvite
+        inviter: roomInfo.inviter
     }
 
     SendBox {

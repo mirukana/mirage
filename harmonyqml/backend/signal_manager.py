@@ -13,6 +13,8 @@ from .backend import Backend
 from .client import Client
 from .model.items import Room, RoomEvent, User
 
+Inviter = Optional[Dict[str, str]]
+
 
 class SignalManager(QObject):
     _event_handling_lock: Lock = Lock()
@@ -54,16 +56,24 @@ class SignalManager(QObject):
                 attr.connect(onSignal)
 
 
-    def onRoomInvited(self, client: Client, room_id: str) -> None:
-        self._add_room(client, client.nio.invited_rooms[room_id], "Invites")
+    def onRoomInvited(self,
+                      client:  Client,
+                      room_id: str,
+                      inviter: Inviter = None) -> None:
+        self._add_room(
+            client, client.nio.invited_rooms[room_id], "Invites", inviter
+        )
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
         self._add_room(client, client.nio.rooms[room_id], "Rooms")
 
 
-    def _add_room(self, client: Client, room: MatrixRoom, category: str
-                 ) -> None:
+    def _add_room(self,
+                  client:   Client,
+                  room:     MatrixRoom,
+                  category: str,
+                  inviter:  Inviter = None) -> None:
         model = self.backend.models.rooms[client.userId]
 
         def group_name() -> Optional[str]:
@@ -75,6 +85,7 @@ class SignalManager(QObject):
             category    = category,
             displayName = room.name or room.canonical_alias or group_name(),
             topic       = room.topic,
+            inviter     = inviter,
         )
 
         model.updateOrAppendWhere("roomId", room.room_id, item)

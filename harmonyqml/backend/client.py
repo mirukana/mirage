@@ -10,6 +10,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 import nio
 import nio.responses as nr
+import nio.events as ne
 
 from .network_manager import NetworkManager
 from .pyqt_future import futurize
@@ -22,6 +23,7 @@ _POOLS: DefaultDict[str, ThreadPoolExecutor] = \
 
 class Client(QObject):
     roomInvited                    = pyqtSignal(str)
+    roomInvited                    = pyqtSignal(str, dict)
     roomJoined                     = pyqtSignal(str)
     roomLeft                       = pyqtSignal(str)
     roomSyncPrevBatchTokenReceived = pyqtSignal(str, str)
@@ -117,7 +119,14 @@ class Client(QObject):
         self.nio.receive_response(response)
 
         for room_id, room_info in response.rooms.invite.items():
-            self.roomInvited.emit(room_id)
+            for ev in room_info.invite_state:
+                member_event = isinstance(ev, ne.InviteMemberEvent)
+
+                if member_event and ev.content["membership"] == "join":
+                    self.roomInvited.emit(room_id, ev.content)
+                    break
+            else:
+                self.roomInvited.emit(room_id)
 
         for room_id, room_info in response.rooms.join.items():
             self.roomJoined.emit(room_id)
