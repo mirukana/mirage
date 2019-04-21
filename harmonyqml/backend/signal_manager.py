@@ -93,7 +93,12 @@ class SignalManager(QObject):
 
     def onRoomLeft(self, client: Client, room_id: str) -> None:
         rooms = self.backend.models.rooms[client.userId]
-        del rooms[rooms.indexWhere("roomId", room_id)]
+        try:
+            index = rooms.indexWhere("roomId", room_id)
+        except ValueError:
+            pass
+        else:
+            del rooms[index]
 
 
     def onRoomSyncPrevBatchTokenReceived(

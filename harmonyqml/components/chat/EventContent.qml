@@ -24,7 +24,9 @@ RowLayout {
         id: contentLabel
         text: "<font color='" +
               (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
-              (displayName.value || dict.sender) + " " + contentText +
+              (displayName.value || dict.sender) +
+              (contentText.startsWith("'s ") ? "" : " ") +
+              contentText +
               "&nbsp;&nbsp;<font size=" + smallSize + "px color='gray'>" +
               Qt.formatDateTime(dateTime, "hh:mm:ss") +
               "</font></font>"

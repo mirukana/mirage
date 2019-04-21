@@ -69,11 +69,11 @@ function getHistoryVisibilityEventText(dict) {
             break
 
         case "joined":
-            var end = "all room members since they joined."
+            var end = "all room members, since the point they joined."
             break
 
         case "invited":
-            var end = "all room members since they were invited."
+            var end = "all room members, since the point they were invited."
             break
         }
 
@@ -81,28 +81,52 @@ function getHistoryVisibilityEventText(dict) {
 }
 
 
+function getStateDisplayName(dict) {
+    // The dict.content.displayname may be outdated, prefer
+    // retrieving it fresh
+    var name = Backend.getUserDisplayName(dict.state_key, false)
+    return name === dict.state_key ?
+           dict.content.displayname : name.result()
+}
+
+
 function getMemberEventText(dict) {
     var info = dict.content, prev = dict.prev_content
 
     if (! prev || (info.membership != prev.membership)) {
+        var reason = info.reason ? (" Reason: " + info.reason) : ""
+
         switch (info.membership) {
             case "join":
-                return "joined the room."
+                return prev && prev.membership === "invite" ?
+                       "accepted the invitation." : "joined the room."
                 break
 
             case "invite":
-                var name = Backend.getUserDisplayName(dict.state_key, false)
-                var name = name === dict.state_key ?
-                           info.displayname : name.result()
-                return "invited " + name + " to the room."
+                return "invited " + getStateDisplayName(dict) + " to the room."
                 break
 
             case "leave":
-                return "left the room."
+                if (dict.state_key === dict.sender) {
+                    return (prev && prev.membership === "invite" ?
+                            "declined the invitation." : "left the room.") +
+                           reason
+                }
+
+                var name = getStateDisplayName(dict)
+                return (prev && prev.membership === "invite" ?
+                        "withdrew " + name + "'s invitation." :
+
+                        prev && prev.membership == "ban" ?
+                        "unbanned " + name + " from the room." :
+
+                        "kicked out " + name  + " from the room.") +
+                       reason
                 break
 
             case "ban":
-                return "was banned from the room."
+                var name = getStateDisplayName(dict)
+                return "banned " + name + " from the room." + reason
                 break
         }
     }
