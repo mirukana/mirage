@@ -115,6 +115,14 @@ class SignalManager(QObject):
         )
 
         model.updateOrAppendWhere("roomId", room_id, item)
+        index = model.indexWhere("roomId", room_id)
+
+        if category == "Invites":
+            model.move(index, 0)
+
+        elif category == "Left":
+            model.move(index, len(model))
+
 
 
     def onRoomSyncPrevBatchTokenReceived(

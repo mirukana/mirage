@@ -197,7 +197,6 @@ class ListModel(QAbstractListModel):
         if (n <= 0) or (from_ == to) or (qlast == to) or \
            not (self.rowCount() > qlast >= 0) or \
            not self.rowCount() >= to >= 0:
-            logging.warning("No need for move or out of range")
             return
 
         qidx  = QModelIndex()

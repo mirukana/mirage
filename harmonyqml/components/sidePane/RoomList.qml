@@ -8,9 +8,9 @@ ListView {
 
     property int childrenHeight: 36
     property int sectionHeight: 16 + spacing
-    property int contentHeight: 0
+    property int contentHeight: getContentHeight()
 
-    onCountChanged: {
+    function getContentHeight() {
         var sections = []
 
         for (var i = 0; i < model.count; i++) {
@@ -22,6 +22,11 @@ ListView {
             childrenHeight * model.count +
             spacing * Math.max(0, (model.count - 1)) +
             sectionHeight * sections.length
+    }
+
+    Connections {
+        target: model
+        onChanged: getContentHeight()
     }
 
     id: roomList
