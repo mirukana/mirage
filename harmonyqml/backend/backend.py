@@ -103,7 +103,6 @@ class Backend(QObject):
     def pdb(self, additional_data: Sequence = ()) -> None:
         # pylint: disable=all
         ad = additional_data
-        re = self.models.roomEvents.get(ad[1])
         import pdb
         from PyQt5.QtCore import pyqtRemoveInputHook
         pyqtRemoveInputHook()
