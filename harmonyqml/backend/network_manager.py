@@ -141,8 +141,8 @@ class NetworkManager:
                                   nio_func.__name__, err)
                     self._close_socket(sock)
 
-                    if err.response.status_code in self.http_retry_codes:
-                        return response
+                    if err.response.status_code not in self.http_retry_codes:
+                        raise
 
                     retry.sleep(max_time=10)
 
