@@ -15,6 +15,8 @@
   - ![A picture](https://picsum.photos/256/256) not clickable?
 
 - UI
+  - One line label componant
+  - Collapsible roomList sections, + button
   - Reorganize SidePane
   - Proper theme, with components taking their colors from theme settings
   - Settings page

@@ -7,6 +7,7 @@ from typing import Any, Deque, Dict, List, Optional
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
 import nio
+from nio.rooms import MatrixRoom
 
 from .backend import Backend
 from .client import Client
@@ -54,24 +55,29 @@ class SignalManager(QObject):
 
 
     def onRoomInvited(self, client: Client, room_id: str) -> None:
-        pass  # TODO
+        self._add_room(client, client.nio.invited_rooms[room_id], "Invites")
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
+        self._add_room(client, client.nio.rooms[room_id], "Rooms")
+
+
+    def _add_room(self, client: Client, room: MatrixRoom, category: str
+                 ) -> None:
         model = self.backend.models.rooms[client.userId]
-        room  = client.nio.rooms[room_id]
 
         def group_name() -> Optional[str]:
             name = room.group_name()
             return None if name == "Empty room?" else name
 
         item = Room(
-            roomId      = room_id,
+            roomId      = room.room_id,
+            category    = category,
             displayName = room.name or room.canonical_alias or group_name(),
             topic       = room.topic,
         )
 
-        model.updateOrAppendWhere("roomId", room_id, item)
+        model.updateOrAppendWhere("roomId", room.room_id, item)
 
 
     def onRoomLeft(self, client: Client, room_id: str) -> None:

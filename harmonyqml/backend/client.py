@@ -116,7 +116,7 @@ class Client(QObject):
     def _on_sync(self, response: nr.SyncResponse) -> None:
         self.nio.receive_response(response)
 
-        for room_id in response.rooms.invite:
+        for room_id, room_info in response.rooms.invite.items():
             self.roomInvited.emit(room_id)
 
         for room_id, room_info in response.rooms.join.items():

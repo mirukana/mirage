@@ -62,13 +62,15 @@ class User(ListItem):
 
 
 class Room(ListItem):
-    roles = ("roomId", "displayName", "topic", "typingUsers")
+    roles = ("roomId", "category", "displayName", "topic", "typingUsers")
 
+    categoryChanged    = pyqtSignal(str)
     displayNameChanged = pyqtSignal("QVariant")
     topicChanged       = pyqtSignal(str)
     typingUsersChanged = pyqtSignal("QVariantList")
 
     roomId      = prop(str, "roomId")
+    category    = prop(str, "category")
     displayName = prop(str, "displayName", displayNameChanged)
     topic       = prop(str, "topic", topicChanged, "")
     typingUsers = prop(list, "typingUsers", typingUsersChanged, [])

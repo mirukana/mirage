@@ -18,4 +18,7 @@ ListView {
     spacing: 8
     model: Backend.models.rooms.get(forUserId)
     delegate: RoomDelegate {}
+
+    section.property: "category"
+    section.delegate: RoomCategoryDelegate {}
 }
