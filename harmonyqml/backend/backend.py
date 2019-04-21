@@ -103,6 +103,12 @@ class Backend(QObject):
     def pdb(self, additional_data: Sequence = ()) -> None:
         # pylint: disable=all
         ad = additional_data
+        cm = self.clientManager
+        cl = self.clientManager.clients
+        m  = self.models
+
+        tcl = lambda user: cl[f"@test_{user}:matrix.org"]
+
         import pdb
         from PyQt5.QtCore import pyqtRemoveInputHook
         pyqtRemoveInputHook()

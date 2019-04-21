@@ -39,6 +39,7 @@ Rectangle {
                 placeholderText: qsTr("Type a message...")
                 wrapMode: TextEdit.Wrap
                 selectByMouse: true
+                readOnly: ! visible
                 font.family: "Roboto"
                 font.pixelSize: 16
                 focus: true

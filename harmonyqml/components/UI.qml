@@ -15,7 +15,7 @@ Controls1.SplitView {
     }
 
     StackView {
-        function showRoom(userId, roomId) {
+        function showRoom(userId, roomId, isInvite) {
             pageStack.replace(
                 "chat/Root.qml", { userId: userId, roomId: roomId }
             )
@@ -26,9 +26,9 @@ Controls1.SplitView {
 
         onCurrentItemChanged: currentItem.forceActiveFocus()
 
-        initialItem: MouseArea {  // TODO: (test, remove)
-            onClicked: pageStack.showRoom(
-                "@test_mary:matrix.org", "!VDSsFIzQnXARSCVNxS:matrix.org"
+        initialItem: Item {  // TODO: (test, remove)
+            Keys.onPressed: pageStack.showRoom(
+                "@test_mary:matrix.org", "!TSXGsbBbdwsdylIOJZ:matrix.org"
             )
         }
 

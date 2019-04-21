@@ -15,8 +15,12 @@
   - ![A picture](https://picsum.photos/256/256) not clickable?
 
 - UI
+  - Use HRowLayout and its totalSpacing wherever possible
+  - Spacer component
   - One line label componant
+  - Proper button background componant
   - Collapsible roomList sections, + button
+  - Prevent using the SendBox if no permission (power levels)
   - Reorganize SidePane
   - Proper theme, with components taking their colors from theme settings
   - Settings page
