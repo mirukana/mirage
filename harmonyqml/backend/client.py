@@ -22,15 +22,16 @@ _POOLS: DefaultDict[str, ThreadPoolExecutor] = \
 
 
 class Client(QObject):
-    roomInvited                    = pyqtSignal(str)
-    roomInvited                    = pyqtSignal(str, dict)
-    roomJoined                     = pyqtSignal(str)
-    roomLeft                       = pyqtSignal(str)
+    roomInvited = pyqtSignal([str, dict], [str])
+    roomJoined  = pyqtSignal(str)
+    roomLeft    = pyqtSignal([str, dict], [str])
+
     roomSyncPrevBatchTokenReceived = pyqtSignal(str, str)
     roomPastPrevBatchTokenReceived = pyqtSignal(str, str)
     roomEventReceived              = pyqtSignal(str, str, dict)
     roomTypingUsersUpdated         = pyqtSignal(str, list)
-    messageAboutToBeSent           = pyqtSignal(str, dict)
+
+    messageAboutToBeSent = pyqtSignal(str, dict)
 
 
     def __init__(self,
@@ -120,13 +121,13 @@ class Client(QObject):
 
         for room_id, room_info in response.rooms.invite.items():
             for ev in room_info.invite_state:
-                member_event = isinstance(ev, ne.InviteMemberEvent)
+                member_ev = isinstance(ev, ne.InviteMemberEvent)
 
-                if member_event and ev.content["membership"] == "join":
+                if member_ev and ev.content["membership"] == "join":
                     self.roomInvited.emit(room_id, ev.content)
                     break
             else:
-                self.roomInvited.emit(room_id)
+                self.roomInvited[str].emit(room_id)
 
         for room_id, room_info in response.rooms.join.items():
             self.roomJoined.emit(room_id)
@@ -146,8 +147,15 @@ class Client(QObject):
                 else:
                     print("ephemeral event: ", ev)
 
-        for room_id in response.rooms.leave:
-            self.roomLeft.emit(room_id)
+        for room_id, room_info in response.rooms.leave.items():
+            for ev in room_info.timeline.events:
+                member_ev = isinstance(ev, ne.RoomMemberEvent)
+
+                if member_ev and ev.content["membership"] in ("leave", "ban"):
+                    self.roomLeft.emit(room_id, ev.__dict__)
+                    break
+            else:
+                self.roomLeft[str].emit(room_id)
 
 
     @futurize()

@@ -15,7 +15,7 @@ Controls1.SplitView {
     }
 
     StackView {
-        function showRoom(userId, roomId, isInvite) {
+        function showRoom(userId, roomId) {
             pageStack.replace(
                 "chat/Root.qml", { userId: userId, roomId: roomId }
             )
@@ -29,6 +29,7 @@ Controls1.SplitView {
         initialItem: Item {  // TODO: (test, remove)
             Keys.onPressed: pageStack.showRoom(
                 "@test_mary:matrix.org", "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                //"@test_mary:matrix.org", "!TEXkdeErtVCMqClNfb:matrix.org"
             )
         }
 

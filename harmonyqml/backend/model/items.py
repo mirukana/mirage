@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Sequence, Tuple, Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -6,8 +6,9 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 class ListItem(QObject):
     roles: Tuple[str, ...] = ()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, no_update: Sequence[str] = (), **kwargs):
         super().__init__()
+        self.no_update = no_update
 
         for role, value in zip(self.roles, args):
             setattr(self, role, value)
@@ -17,8 +18,9 @@ class ListItem(QObject):
 
 
     def __repr__(self) -> str:
-        return "%s(%s)" % (
+        return "%s(no_update=%s, %s)" % (
             type(self).__name__,
+            self.no_update,
             ", ".join((f"{r}={getattr(self, r)!r}" for r in self.roles)),
         )
 
@@ -63,7 +65,7 @@ class User(ListItem):
 
 class Room(ListItem):
     roles = ("roomId", "category", "displayName", "topic", "typingUsers",
-             "inviter")
+             "inviter", "leftEvent")
 
     categoryChanged    = pyqtSignal(str)
     displayNameChanged = pyqtSignal("QVariant")
@@ -75,7 +77,8 @@ class Room(ListItem):
     displayName = prop(str, "displayName", displayNameChanged)
     topic       = prop(str, "topic", topicChanged, "")
     typingUsers = prop(list, "typingUsers", typingUsersChanged, [])
-    inviter     = prop("QVariantMap", "inviter")
+    inviter     = prop("QVariant", "inviter")
+    leftEvent   = prop("QVariant", "leftEvent")
 
 
 class RoomEvent(ListItem):

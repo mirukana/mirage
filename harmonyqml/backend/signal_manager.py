@@ -13,7 +13,8 @@ from .backend import Backend
 from .client import Client
 from .model.items import Room, RoomEvent, User
 
-Inviter = Optional[Dict[str, str]]
+Inviter   = Optional[Dict[str, str]]
+LeftEvent = Optional[Dict[str, str]]
 
 
 class SignalManager(QObject):
@@ -23,8 +24,8 @@ class SignalManager(QObject):
         super().__init__(parent=backend)
         self.backend = backend
 
-        self.last_room_events: Deque[str] = Deque(maxlen=1000)
-        self._events_in_transfer:     int        = 0
+        self.last_room_events:    Deque[str] = Deque(maxlen=1000)
+        self._events_in_transfer: int        = 0
 
         cm = self.backend.clientManager
         cm.clientAdded.connect(self.onClientAdded)
@@ -60,45 +61,60 @@ class SignalManager(QObject):
                       client:  Client,
                       room_id: str,
                       inviter: Inviter = None) -> None:
-        self._add_room(
-            client, client.nio.invited_rooms[room_id], "Invites", inviter
-        )
+
+        self._add_room(client, room_id, client.nio.invited_rooms[room_id],
+                       "Invites", inviter=inviter)
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
-        self._add_room(client, client.nio.rooms[room_id], "Rooms")
+        self._add_room(client, room_id, client.nio.rooms[room_id], "Rooms")
+
+
+    def onRoomLeft(self,
+                   client:     Client,
+                   room_id:    str,
+                   left_event: LeftEvent = None) -> None:
+
+        self._add_room(client, room_id, client.nio.rooms.get(room_id), "Left",
+                       left_event=left_event)
 
 
     def _add_room(self,
-                  client:   Client,
-                  room:     MatrixRoom,
-                  category: str,
-                  inviter:  Inviter = None) -> None:
-        model = self.backend.models.rooms[client.userId]
+                  client:     Client,
+                  room_id:    str,
+                  room:       MatrixRoom,
+                  category:   str,
+                  inviter:    Inviter   = None,
+                  left_event: LeftEvent = None) -> None:
 
-        def group_name() -> Optional[str]:
+        assert not (inviter and left_event)
+
+        model     = self.backend.models.rooms[client.userId]
+        no_update = []
+
+        def get_displayname() -> Optional[str]:
+            if not room:
+                no_update.append("displayName")
+                return room_id
+
+            name = room.name or room.canonical_alias
+            if name:
+                return name
+
             name = room.group_name()
             return None if name == "Empty room?" else name
 
         item = Room(
-            roomId      = room.room_id,
+            roomId      = room_id,
             category    = category,
-            displayName = room.name or room.canonical_alias or group_name(),
-            topic       = room.topic,
+            displayName = get_displayname(),
+            topic       = room.topic if room else "",
             inviter     = inviter,
+            leftEvent   = left_event,
+            no_update   = no_update,
         )
 
-        model.updateOrAppendWhere("roomId", room.room_id, item)
-
-
-    def onRoomLeft(self, client: Client, room_id: str) -> None:
-        rooms = self.backend.models.rooms[client.userId]
-        try:
-            index = rooms.indexWhere("roomId", room_id)
-        except ValueError:
-            pass
-        else:
-            del rooms[index]
+        model.updateOrAppendWhere("roomId", room_id, item)
 
 
     def onRoomSyncPrevBatchTokenReceived(

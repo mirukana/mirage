@@ -9,8 +9,6 @@ ColumnLayout {
     readonly property var roomInfo:
         Backend.models.rooms.get(userId).getWhere("roomId", roomId)
 
-    property bool isInvite: roomInfo.category === "Invites"
-
     id: chatPage
     spacing: 0
     onFocusChanged: sendBox.setFocus()
@@ -20,19 +18,22 @@ ColumnLayout {
         topic: roomInfo.topic
     }
 
-
     MessageList {}
-
 
     TypingUsersBar {}
 
-    InviteOffer {
-        visible: isInvite
+    InviteBanner {
+        visible: roomInfo.category === "Invites"
         inviter: roomInfo.inviter
     }
 
     SendBox {
         id: sendBox
-        visible: ! isInvite
+        visible: roomInfo.category === "Rooms"
+    }
+
+    LeftBanner {
+        visible: roomInfo.category === "Left"
+        leftEvent: roomInfo.leftEvent
     }
 }

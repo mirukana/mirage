@@ -13,6 +13,7 @@
   - Graphic bug when resizing window vertically for side pane?
   - Fix tooltip hide()
   - ![A picture](https://picsum.photos/256/256) not clickable?
+  - Icons aren't reloaded
 
 - UI
   - Use HRowLayout and its totalSpacing wherever possible
@@ -48,6 +49,7 @@
     it should be the peer's display name instead.
 
 - Missing nio support
+  - Left room events
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event
   - Avatars

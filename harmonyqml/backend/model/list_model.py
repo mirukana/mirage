@@ -148,6 +148,9 @@ class ListModel(QAbstractListModel):
         value = self._convert_new_value(value)
 
         for role in self.roles:
+            if role in value.no_update:
+                continue
+
             setattr(self._data[index], role, getattr(value, role))
 
         qidx = QAbstractListModel.index(self, index, 0)
