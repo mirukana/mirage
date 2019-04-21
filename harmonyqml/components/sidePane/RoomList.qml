@@ -7,11 +7,21 @@ ListView {
     property var forUserId: null
 
     property int childrenHeight: 36
+    property int sectionHeight: 16 + spacing
     property int contentHeight: 0
 
     onCountChanged: {
-        contentHeight = childrenHeight * model.count +
-                        spacing * (model.count - 1)
+        var sections = []
+
+        for (var i = 0; i < model.count; i++) {
+            var categ = model.get(i).category
+            if (sections.indexOf(categ) == -1) { sections.push(categ) }
+        }
+
+        contentHeight =
+            childrenHeight * model.count +
+            spacing * Math.max(0, (model.count - 1)) +
+            sectionHeight * sections.length
     }
 
     id: roomList
@@ -20,5 +30,5 @@ ListView {
     delegate: RoomDelegate {}
 
     section.property: "category"
-    section.delegate: RoomCategoryDelegate {}
+    section.delegate: RoomCategoryDelegate { height: sectionHeight }
 }

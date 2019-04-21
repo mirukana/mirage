@@ -3,7 +3,6 @@ import "../base" as Base
 
 Base.HLabel {
     width: roomList.width
-    height: text.height
 
     // topPadding is provided by the roomList spacing
     bottomPadding: roomList.spacing
