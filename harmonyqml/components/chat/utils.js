@@ -156,8 +156,6 @@ function getLeftBannerText(leftEvent) {
         return "You are not member of this room."
     }
 
-    console.log(JSON.stringify(leftEvent, null, 4))
-
     var info   = leftEvent.content
     var prev   = leftEvent.prev_content
     var reason = info.reason ? (" Reason: " + info.reason) : ""

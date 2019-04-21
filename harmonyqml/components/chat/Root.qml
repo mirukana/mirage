@@ -9,6 +9,7 @@ ColumnLayout {
     readonly property var roomInfo:
         Backend.models.rooms.get(userId).getWhere("roomId", roomId)
 
+
     id: chatPage
     spacing: 0
     onFocusChanged: sendBox.setFocus()

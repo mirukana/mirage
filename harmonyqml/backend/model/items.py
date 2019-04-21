@@ -71,14 +71,16 @@ class Room(ListItem):
     displayNameChanged = pyqtSignal("QVariant")
     topicChanged       = pyqtSignal(str)
     typingUsersChanged = pyqtSignal("QVariantList")
+    inviterChanged     = pyqtSignal("QVariant")
+    leftEventChanged   = pyqtSignal("QVariant")
 
     roomId      = prop(str, "roomId")
-    category    = prop(str, "category")
+    category    = prop(str, "category", categoryChanged)
     displayName = prop(str, "displayName", displayNameChanged)
     topic       = prop(str, "topic", topicChanged, "")
     typingUsers = prop(list, "typingUsers", typingUsersChanged, [])
-    inviter     = prop("QVariant", "inviter")
-    leftEvent   = prop("QVariant", "leftEvent")
+    inviter     = prop("QVariant", "inviter", inviterChanged)
+    leftEvent   = prop("QVariant", "leftEvent", leftEventChanged)
 
 
 class RoomEvent(ListItem):
