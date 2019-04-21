@@ -22,6 +22,7 @@
   - Proper button background componant
   - Collapsible roomList sections, + button
   - Prevent using the SendBox if no permission (power levels)
+  - Spinner when loading past room events, images or clicking buttons
   - Reorganize SidePane
   - Proper theme, with components taking their colors from theme settings
   - Settings page
@@ -38,7 +39,6 @@
 - Client improvements
   - On sync, check messages API, if a limited sync timeline was received
   - Markdown: don't turn #things into title (space), disable __ syntax
-  - Spinner when loading past room events or images
   - Push instead of replacing in stack view
   - Make links in room subtitle clickable, formatting?
   - `<pre>` scrollbar on overflow
@@ -49,6 +49,7 @@
     it should be the peer's display name instead.
 
 - Missing nio support
+  - Forget room
   - Left room events
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event

@@ -12,14 +12,16 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 
 class PyQtFuture(QObject):
-    gotResult = pyqtSignal()
+    gotResult = pyqtSignal("QVariant")
 
     def __init__(self, future: Future, parent: QObject) -> None:
         super().__init__(parent)
         self.future  = future
         self._result = None
 
-        self.future.add_done_callback(lambda _: self.gotResult.emit())
+        self.future.add_done_callback(
+            lambda future: self.gotResult.emit(future.result())
+        )
 
 
     def __repr__(self) -> str:

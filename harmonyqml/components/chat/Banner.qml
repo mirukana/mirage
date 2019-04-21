@@ -73,16 +73,29 @@ Rectangle {
                 model: []
 
                 Base.HButton {
-                    id: declineButton
+                    property bool alreadyClicked: false
+
                     text: modelData.text
                     iconName: modelData.iconName
                     icon.color: modelData.iconColor
                     icon.width: 32
                     display: bannerButtons.displayMode
 
-                    onClicked:
-                        Backend.clientManager.clients[chatPage.userId].
-                        call(modelData.clientFunction, modelData.clientArgs)
+                    onClicked: {
+                        if (alreadyClicked) { console.log("all"); return }
+
+                        iconName       = "hourglass"
+                        alreadyClicked = true
+
+                        var future =
+                            Backend.clientManager.clients[chatPage.userId].
+                            call(modelData.clientFunction,
+                                 modelData.clientArgs)
+
+                        future.onGotResult.connect(
+                            function() { iconName = modelData.iconName }
+                        )
+                    }
 
                     Layout.maximumWidth: bannerButtons.compact ? height : -1
                     Layout.fillHeight: true
