@@ -1,7 +1,6 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-import hashlib
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, Sequence, Set
 
@@ -75,9 +74,8 @@ class Backend(QObject):
 
     @pyqtSlot(str, result=float)
     def hueFromString(self, string: str) -> float:
-      # pylint:disable=no-self-use
-        md5 = hashlib.md5(bytes(string, "utf-8")).hexdigest()
-        return float("0.%s" % int(md5[-10:], 16))
+        # pylint:disable=no-self-use
+        return sum((ord(char) * 99 for char in string)) % 360 / 360
 
 
     @pyqtSlot(str)
