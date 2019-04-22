@@ -10,11 +10,12 @@ from .list_model_map import ListModelMap
 
 
 class QMLModels(QObject):
-    def __init__(self) -> None:
-        super().__init__()
-        self._accounts:    ListModel    = ListModel()
-        self._rooms:       ListModelMap = ListModelMap()
-        self._room_events: ListModelMap = ListModelMap(models_container=Deque)
+    def __init__(self, parent: QObject) -> None:
+        super().__init__(parent)
+        self._accounts:    ListModel    = ListModel(parent)
+        self._rooms:       ListModelMap = ListModelMap(parent)
+        self._room_events: ListModelMap = ListModelMap(parent,
+                                                       models_container=Deque)
 
 
     @pyqtProperty(ListModel, constant=True)

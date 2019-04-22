@@ -9,6 +9,8 @@ ColumnLayout {
     readonly property var roomInfo:
         Backend.models.rooms.get(userId).getWhere("roomId", roomId)
 
+    Component.onCompleted: console.log("replaced")
+
 
     id: chatPage
     spacing: 0

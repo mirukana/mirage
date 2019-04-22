@@ -13,8 +13,8 @@ from .pyqt_future import futurize
 
 
 class Backend(QObject):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, parent: QObject) -> None:
+        super().__init__(parent)
         self.pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=6)
 
         self._queried_displaynames: Dict[str, str] = {}
@@ -24,8 +24,8 @@ class Backend(QObject):
 
         from .client_manager import ClientManager
         self._client_manager: ClientManager = ClientManager(self)
-        self._models:         QMLModels     = QMLModels()
-        self._html_filter:    HtmlFilter    = HtmlFilter()
+        self._models:         QMLModels     = QMLModels(self)
+        self._html_filter:    HtmlFilter    = HtmlFilter(self)
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)

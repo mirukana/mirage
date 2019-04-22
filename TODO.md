@@ -2,16 +2,15 @@
   - Merge login page
 
 - Refactoring
-  - Set Qt parents for all QObject
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
   - Better names and organization for the Message components
 
 - Bug fixes
-  - Graphic bug when resizing window vertically for side pane?
   - Fix tooltip hide()
   - ![A picture](https://picsum.photos/256/256) not clickable?
   - Icons aren't reloaded
+  - Bug when resizing window being tiled (i3), can't figure it out
 
 - UI
   - Use HRowLayout and its totalSpacing wherever possible

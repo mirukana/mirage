@@ -1,7 +1,6 @@
 # Copyright 2018 miruka
 # This file is part of harmonyqt, licensed under GPLv3.
 
-import hashlib
 import json
 import os
 import platform

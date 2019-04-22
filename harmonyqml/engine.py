@@ -4,12 +4,11 @@
 import logging
 import sys
 from pathlib import Path
-from typing import Generator, Optional
+from typing import Generator
 
 from PyQt5.QtCore import QFileSystemWatcher, QObject, QTimer
 from PyQt5.QtQml import QQmlApplicationEngine
 
-from .__about__ import __doc__
 from .app import Application
 from .backend.backend import Backend
 
@@ -19,11 +18,10 @@ from .backend.backend import Backend
 class Engine(QQmlApplicationEngine):
     def __init__(self,
                  app:    Application,
-                 debug:  bool              = False,
-                 parent: Optional[QObject] = None) -> None:
-        super().__init__(parent)
+                 debug:  bool = False) -> None:
+        super().__init__(app)
         self.app     = app
-        self.backend = Backend()
+        self.backend = Backend(self)
         self.app_dir = Path(sys.argv[0]).resolve().parent
 
         # Set QML properties

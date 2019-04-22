@@ -19,7 +19,6 @@ Controls1.SplitView {
             pageStack.replace(
                 "chat/Root.qml", { userId: userId, roomId: roomId }
             )
-            console.log("replaced")
         }
 
         id: pageStack

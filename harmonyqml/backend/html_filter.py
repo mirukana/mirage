@@ -20,8 +20,8 @@ class HtmlFilter(QObject):
     ]]
 
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, parent: QObject) -> None:
+        super().__init__(parent)
         self._sanitizer = sanitizer.Sanitizer(self.sanitizer_settings)
 
         # The whitespace remover doesn't take <pre> into account

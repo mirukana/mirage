@@ -19,9 +19,9 @@ class ListModel(QAbstractListModel):
     countChanged = pyqtSignal(int)
 
     def __init__(self,
+                 parent:       QObject,
                  initial_data: Optional[List[NewItem]]        = None,
-                 container:    Callable[..., MutableSequence]  = list,
-                 parent:       Optional[QObject]               = None) -> None:
+                 container:    Callable[..., MutableSequence]  = list) -> None:
         super().__init__(parent)
         self._data: MutableSequence[ListItem] = container()
 

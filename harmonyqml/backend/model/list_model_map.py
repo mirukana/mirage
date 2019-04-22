@@ -6,9 +6,11 @@ from .list_model import ListModel
 
 
 class ListModelMap(QObject):
-    def __init__(self, models_container: Callable[..., MutableSequence] = list
+    def __init__(self,
+                 parent:           QObject,
+                 models_container: Callable[..., MutableSequence] = list
                 ) -> None:
-        super().__init__()
+        super().__init__(parent)
 
         # Set the parent to prevent item garbage-collection on the C++ side
         self.dict: DefaultDict[Any, ListModel] = \
