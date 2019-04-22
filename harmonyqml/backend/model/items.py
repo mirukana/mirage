@@ -26,7 +26,7 @@ class ListItem(QObject):
 
 
     @pyqtProperty(str, constant=True)
-    def repr(self) -> str:
+    def _repr(self) -> str:
         return repr(self)
 
 

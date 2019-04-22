@@ -3,16 +3,13 @@
 
 from typing import Deque
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtProperty
 
 from .list_model import ListModel
 from .list_model_map import ListModelMap
 
 
 class QMLModels(QObject):
-    roomsChanged = pyqtSignal()
-
-
     def __init__(self) -> None:
         super().__init__()
         self._accounts:    ListModel    = ListModel()
@@ -25,7 +22,7 @@ class QMLModels(QObject):
         return self._accounts
 
 
-    @pyqtProperty("QVariant", notify=roomsChanged)
+    @pyqtProperty("QVariant", constant=True)
     def rooms(self):
         return self._rooms
 
