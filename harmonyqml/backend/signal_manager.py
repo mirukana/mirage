@@ -2,7 +2,7 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 from threading import Lock
-from typing import Any, Deque, Dict, List, Optional
+from typing import Any, Deque, Dict, List, Optional, Sequence
 
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
@@ -18,7 +18,7 @@ LeftEvent = Optional[Dict[str, str]]
 
 
 class SignalManager(QObject):
-    _event_handling_lock: Lock = Lock()
+    _lock: Lock = Lock()
 
     def __init__(self, backend: Backend) -> None:
         super().__init__(parent=backend)
@@ -79,6 +79,43 @@ class SignalManager(QObject):
                        left_event=left_event)
 
 
+    def _move_room(self, account_id: str, room_id: str) -> None:
+        def get_newest_event_date_time(room_id: str) -> QDateTime:
+            for ev in self.backend.models.roomEvents[room_id]:
+                if not self.backend.EventIsOurProfileChanged(ev, account_id):
+                    return ev.dateTime
+
+            return QDateTime.fromMSecsSinceEpoch(0)
+
+        rooms_model = self.backend.models.rooms[account_id]
+        room_index  = rooms_model.indexWhere("roomId", room_id)
+        category    = rooms_model[room_index].category
+        timestamp   = get_newest_event_date_time(room_id)
+
+        def get_index(put_before_categories: Sequence[str],
+                      put_after_categories: Sequence[str]) -> int:
+            for i, room in enumerate(rooms_model):
+                if room.category not in put_after_categories and \
+                   (room.category in put_before_categories or
+                    timestamp >= get_newest_event_date_time(room.roomId)):
+                    return i
+
+            return len(rooms_model) - 1
+
+        to = 0
+
+        if category == "Invites":
+            to = get_index(["Rooms", "Left"], [])
+
+        if category == "Rooms":
+            to = get_index(["Left"], ["Invites"])
+
+        elif category == "Left":
+            to = get_index([], ["Invites", "Rooms", "Left"])
+
+        rooms_model.move(room_index, to)
+
+
     def _add_room(self,
                   client:     Client,
                   room_id:    str,
@@ -115,27 +152,23 @@ class SignalManager(QObject):
         )
 
         model.updateOrAppendWhere("roomId", room_id, item)
-        index = model.indexWhere("roomId", room_id)
-
-        if category == "Invites":
-            model.move(index, 0)
-
-        elif category == "Left":
-            model.move(index, len(model))
+        with self._lock:
+            self._move_room(client.userId, room_id)
 
 
-
-    def onRoomSyncPrevBatchTokenReceived(
-            self, _: Client, room_id: str, token: str
-        ) -> None:
+    def onRoomSyncPrevBatchTokenReceived(self,
+                                         _:       Client,
+                                         room_id: str,
+                                         token:   str) -> None:
 
         if room_id not in self.backend.past_tokens:
             self.backend.past_tokens[room_id] = token
 
 
-    def onRoomPastPrevBatchTokenReceived(
-            self, _: Client, room_id: str, token: str
-        ) -> None:
+    def onRoomPastPrevBatchTokenReceived(self,
+                                         _:       Client,
+                                         room_id: str,
+                                         token:   str) -> None:
 
         if self.backend.past_tokens[room_id] == token:
             self.backend.fully_loaded_rooms.add(room_id)
@@ -143,11 +176,12 @@ class SignalManager(QObject):
         self.backend.past_tokens[room_id] = token
 
 
-    def onRoomEventReceived(
-            self, _: Client, room_id: str, etype: str, edict: Dict[str, Any]
-        ) -> None:
-
-        with self._event_handling_lock:
+    def onRoomEventReceived(self,
+                            client:  Client,
+                            room_id: str,
+                            etype:   str,
+                            edict:   Dict[str, Any]) -> None:
+        def process() -> None:
             # Prevent duplicate events in models due to multiple accounts
             if edict["event_id"] in self.last_room_events:
                 return
@@ -195,19 +229,26 @@ class SignalManager(QObject):
 
             model.append(new_event)
 
+        with self._lock:
+            process()
+            self._move_room(client.userId, room_id)
 
-    def onRoomTypingUsersUpdated(
-            self, client: Client, room_id: str, users: List[str]
-        ) -> None:
+
+    def onRoomTypingUsersUpdated(self,
+                                 client:  Client,
+                                 room_id: str,
+                                 users:   List[str]) -> None:
 
         rooms = self.backend.models.rooms[client.userId]
         rooms[rooms.indexWhere("roomId", room_id)].typingUsers = users
 
 
-    def onMessageAboutToBeSent(
-            self, client: Client, room_id: str, content: Dict[str, str]
-        ) -> None:
-        with self._event_handling_lock:
+    def onMessageAboutToBeSent(self,
+                               client:  Client,
+                               room_id: str,
+                               content: Dict[str, str]) -> None:
+
+        with self._lock:
             timestamp = QDateTime.currentMSecsSinceEpoch()
             model     = self.backend.models.roomEvents[room_id]
             nio_event = nio.events.RoomMessage.parse_event({
@@ -224,3 +265,5 @@ class SignalManager(QObject):
             )
             model.insert(0, event)
             self._events_in_transfer += 1
+
+            self._move_room(client.userId, room_id)

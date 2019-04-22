@@ -48,6 +48,10 @@ class ListModel(QAbstractListModel):
         return self.rowCount()
 
 
+    def __iter__(self):
+        return iter(self._data)
+
+
     @pyqtProperty(list)
     def roles(self) -> Tuple[str, ...]:
         return self._data[0].roles if self._data else ()  # type: ignore
@@ -205,7 +209,7 @@ class ListModel(QAbstractListModel):
         valid = self.beginMoveRows(qidx, from_, qlast, qidx, qto)
 
         if not valid:
-            logging.warning("Invalid move operation")
+            logging.warning("Invalid move operation - %r", locals())
             return
 
         last = from_ + n

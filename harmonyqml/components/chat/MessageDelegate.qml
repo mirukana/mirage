@@ -46,7 +46,7 @@ Column {
     readonly property bool dayBreak:
         isFirstEvent ||
         previousItem &&
-        dateTime.getDay() != previousItem.dateTime.getDay()
+        dateTime.getDate() != previousItem.dateTime.getDate()
 
     readonly property bool talkBreak:
         previousItem &&

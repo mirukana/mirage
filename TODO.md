@@ -1,6 +1,6 @@
 - Current focus
-  - Separate categories for invited, group and direct rooms
-    - Invited → Accept/Deny dialog
+  - When clicking on invited room but no multiaccount broadcasting events
+  - Sort accounts
   - Merge login page
 
 - Refactoring

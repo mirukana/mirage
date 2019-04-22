@@ -37,7 +37,9 @@ MouseArea {
             }
             Base.HLabel {
                 function getText() {
-                    return SidePaneJS.getLastRoomEventText(roomId)
+                    return SidePaneJS.getLastRoomEventText(
+                        roomId, roomList.forUserId
+                    )
                 }
 
                 Connections {

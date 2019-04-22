@@ -1,13 +1,13 @@
 .import "../chat/utils.js" as ChatJS
 
 
-function getLastRoomEventText(roomId) {
+function getLastRoomEventText(roomId, accountId) {
     var eventsModel = Backend.models.roomEvents.get(roomId)
 
     for (var i = 0; i < eventsModel.count; i++) {
         var ev = eventsModel.get(i)
 
-        if (ev.type !== "RoomMemberEvent") {
+        if (! Backend.EventIsOurProfileChanged(ev, accountId)) {
             var found = true
             break
         }
