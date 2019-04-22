@@ -8,14 +8,21 @@ PIP     = pip3
 PYLINT  = pylint
 MYPY    = mypy
 VULTURE = vulture
+BANDIT  = bandit
+PYCYLE  = pycycle
 CLOC    = cloc
 
 ARCHIVE_FORMATS = gztar
 INSTALL_FLAGS   = --user --editable
 PYLINT_FLAGS    = --output-format colorized
 MYPY_FLAGS      = --ignore-missing-imports
-VULTURE_FLAGS   = --min-confidence 100
+VULTURE_FLAGS   = --min-confidence 70
+BANDIT_FLAGS    =
+PYCYLE_FLAGS    =
 CLOC_FLAGS      = --ignore-whitespace
+
+LINE = "\033[35m―――――――――――――――――――――――――――――――――――――――――――――――――――――――\033[0m"
+
 
 .PHONY: all clean dist install upload test
 
@@ -47,10 +54,27 @@ upload: dist
 
 
 test:
-	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR} *.py
+	@echo
+	@echo pycycle ${LINE}
+	@echo
+	- ${PYCYLE} --source ${PKG_DIR} ${PYCYLE_FLAGS}
+	@echo
+	@echo mypy ${LINE}
 	@echo
 	- ${MYPY} ${PKG_DIR} ${MYPY_FLAGS}
 	@echo
+	@echo vulture ${LINE}
+	@echo
 	- ${VULTURE} ${PKG_DIR} ${VULTURE_FLAGS}
 	@echo
-	${CLOC} ${CLOC_FLAGS} ${PKG_DIR}
+	@echo bandit ${LINE}
+	@echo
+	- ${BANDIT} ${PKG_DIR} --recursive ${BANDIT_FLAGS}
+	@echo
+	@echo pylint ${LINE}
+	@echo
+	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR} *.py
+	@echo
+	@echo cloc ${LINE}
+	@echo
+	- ${CLOC} ${CLOC_FLAGS} ${PKG_DIR}

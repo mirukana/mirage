@@ -1,6 +1,5 @@
 - Current focus
   - When clicking on invited room but no multiaccount broadcasting events
-  - Sort accounts
   - Merge login page
 
 - Refactoring
@@ -37,6 +36,7 @@
   - Status message and presence
 
 - Client improvements
+  - Direct chats category
   - On sync, check messages API, if a limited sync timeline was received
   - Markdown: don't turn #things into title (space), disable __ syntax
   - Push instead of replacing in stack view
@@ -47,6 +47,7 @@
   - Proper logoff when closing client
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
+  - Keep an accounts order
 
 - Missing nio support
   - Forget room

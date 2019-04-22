@@ -82,7 +82,7 @@ Rectangle {
                     display: bannerButtons.displayMode
 
                     onClicked: {
-                        if (alreadyClicked) { console.log("all"); return }
+                        if (alreadyClicked) { return }
 
                         iconName       = "hourglass"
                         alreadyClicked = true
