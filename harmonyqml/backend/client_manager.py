@@ -20,8 +20,7 @@ from .client import Client
 
 AccountConfig = Dict[str, Dict[str, str]]
 
-_CONFIG_LOCK   = threading.Lock()
-# _CRYPT_DB_LOCK = threading.Lock()
+_CONFIG_LOCK = threading.Lock()
 
 
 class ClientManager(QObject):
@@ -109,13 +108,6 @@ class ClientManager(QObject):
     def getAccountConfigPath(self) -> str:
         return self._get_standard_path(
             QStandardPaths.AppConfigLocation, "accounts.json", "[]"
-        )
-
-
-    def getCryptDBPath(self, user_id: str) -> str:
-        safe_filename = hashlib.md5(user_id.encode("utf-8")).hexdigest()
-        return self._get_standard_path(
-            QStandardPaths.AppDataLocation, f"encryption/{safe_filename}.db"
         )
 
 
