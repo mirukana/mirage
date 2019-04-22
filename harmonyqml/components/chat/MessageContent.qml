@@ -19,7 +19,7 @@ Row {
             id: nameLabel
             text: displayName.value || dict.sender
             background: Rectangle {color: "#DDD"}
-            color: isOwn ? "teal" : "purple"
+            color: Qt.hsla(Backend.hueFromString(text), 0.22, 0.4, 1)
             elide: Text.ElideRight
             maximumLineCount: 1
             Layout.preferredWidth: contentLabel.width
