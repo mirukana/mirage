@@ -1,5 +1,4 @@
 - Current focus
-  - When clicking on invited room but no multiaccount broadcasting events
   - Merge login page
 
 - Refactoring

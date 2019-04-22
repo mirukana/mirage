@@ -15,7 +15,8 @@ NewItem = Union[ListItem, Mapping[str, Any], Sequence]
 
 
 class ListModel(QAbstractListModel):
-    changed = pyqtSignal()
+    changed      = pyqtSignal()
+    countChanged = pyqtSignal(int)
 
     def __init__(self,
                  initial_data: Optional[List[NewItem]]        = None,
@@ -45,14 +46,14 @@ class ListModel(QAbstractListModel):
 
 
     def __len__(self) -> int:
-        return self.rowCount()
+        return len(self._data)
 
 
     def __iter__(self):
         return iter(self._data)
 
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, constant=True)
     def roles(self) -> Tuple[str, ...]:
         return self._data[0].roles if self._data else ()  # type: ignore
 
@@ -72,7 +73,7 @@ class ListModel(QAbstractListModel):
 
 
     def rowCount(self, _: QModelIndex = QModelIndex()) -> int:
-        return len(self._data)
+        return len(self)
 
 
     def _convert_new_value(self, value: NewItem) -> ListItem:
@@ -104,9 +105,9 @@ class ListModel(QAbstractListModel):
         return value
 
 
-    @pyqtProperty(int, constant=True)
+    @pyqtProperty(int, notify=countChanged)
     def count(self) -> int:
-        return self.rowCount()
+        return len(self)
 
 
     @pyqtSlot(int, result="QVariant")
@@ -135,12 +136,14 @@ class ListModel(QAbstractListModel):
         self.beginInsertRows(QModelIndex(), index, index)
         self._data.insert(index, value)
         self.endInsertRows()
+
+        self.countChanged.emit(len(self))
         self.changed.emit()
 
 
     @pyqtSlot("QVariantMap")
     def append(self, value: NewItem) -> None:
-        self.insert(self.rowCount(), value)
+        self.insert(len(self), value)
 
 
     @pyqtSlot(list)
@@ -172,7 +175,7 @@ class ListModel(QAbstractListModel):
             index = self.indexWhere(prop, is_value)
             self.update(index, update_with)
         except ValueError:
-            index = self.rowCount()
+            index = len(self)
             self.append(update_with)
 
 
@@ -201,12 +204,12 @@ class ListModel(QAbstractListModel):
         qlast = from_ + n - 1
 
         if (n <= 0) or (from_ == to) or (qlast == to) or \
-           not (self.rowCount() > qlast >= 0) or \
-           not self.rowCount() >= to >= 0:
+           not (len(self) > qlast >= 0) or \
+           not len(self) >= to >= 0:
             return
 
         qidx  = QModelIndex()
-        qto   = min(self.rowCount(), to + n if to > from_ else to)
+        qto   = min(len(self), to + n if to > from_ else to)
         # print(f"self.beginMoveRows(qidx, {from_}, {qlast}, qidx, {qto})")
         valid = self.beginMoveRows(qidx, from_, qlast, qidx, qto)
 
@@ -228,13 +231,17 @@ class ListModel(QAbstractListModel):
         self.beginRemoveRows(QModelIndex(), index, index)
         del self._data[index]
         self.endRemoveRows()
+
+        self.countChanged.emit(len(self))
         self.changed.emit()
 
 
     @pyqtSlot()
     def clear(self) -> None:
         # Reimplemented for performance reasons (begin/endRemoveRows)
-        self.beginRemoveRows(QModelIndex(), 0, self.rowCount())
+        self.beginRemoveRows(QModelIndex(), 0, len(self))
         self._data.clear()
         self.endRemoveRows()
+
+        self.countChanged.emit(len(self))
         self.changed.emit()

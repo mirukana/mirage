@@ -4,7 +4,7 @@
 import re
 
 import mistune
-from lxml.html import HtmlElement, etree
+from lxml.html import HtmlElement, etree  # nosec
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 import html_sanitizer.sanitizer as sanitizer
