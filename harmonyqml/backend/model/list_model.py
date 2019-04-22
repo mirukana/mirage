@@ -78,8 +78,10 @@ class ListModel(QAbstractListModel):
     def _convert_new_value(self, value: NewItem) -> ListItem:
         def convert() -> ListItem:
             if self._data and isinstance(value, Mapping):
-                assert set(value.keys()) <= set(self.roles), \
-                       f"{value}: must have all these keys: {self.roles}"
+                if not set(value.keys()) <= set(self.roles):
+                    raise ValueError(
+                        f"{value}: must have all these keys: {self.roles}"
+                    )
 
                 return type(self._data[0])(**value)
 

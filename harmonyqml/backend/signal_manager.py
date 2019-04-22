@@ -124,7 +124,8 @@ class SignalManager(QObject):
                   inviter:    Inviter   = None,
                   left_event: LeftEvent = None) -> None:
 
-        assert not (inviter and left_event)
+        if (inviter and left_event):
+            raise ValueError()
 
         model     = self.backend.models.rooms[client.userId]
         no_update = []
