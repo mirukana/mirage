@@ -27,7 +27,7 @@ Controls1.SplitView {
         onCurrentItemChanged: currentItem.forceActiveFocus()
 
         initialItem: Item {  // TODO: (test, remove)
-            Keys.onPressed: pageStack.showRoom(
+            Keys.onEnterPressed: pageStack.showRoom(
                 "@test_mary:matrix.org", "!TSXGsbBbdwsdylIOJZ:matrix.org"
                 //"@test_mary:matrix.org", "!TEXkdeErtVCMqClNfb:matrix.org"
             )
