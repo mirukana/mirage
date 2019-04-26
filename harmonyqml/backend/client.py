@@ -115,8 +115,7 @@ class Client(QObject):
         self.net_sync.http_disconnect()
 
 
-    @pyqtSlot()
-    @futurize()
+    @futurize(pyqt=False)
     def startSyncing(self) -> None:
         while True:
             self._on_sync(self.net_sync.talk(

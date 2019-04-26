@@ -61,7 +61,7 @@ class ClientManager(QObject):
 
 
     @pyqtSlot(str, str, str)
-    @pyqtSlot(str, str, str)
+    @pyqtSlot(str, str, str, str)
     def new(self, hostname: str, username: str, password: str,
             device_id: str = "") -> None:
 

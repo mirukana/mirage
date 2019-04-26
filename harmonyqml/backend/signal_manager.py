@@ -33,6 +33,7 @@ class SignalManager(QObject):
 
 
     def onClientAdded(self, client: Client) -> None:
+        print(client)
         self.connectClient(client)
         self.backend.models.accounts.append(User(
             userId      = client.userId,

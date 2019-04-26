@@ -67,7 +67,8 @@ class PyQtFuture(QObject):
 _RUNNING: List[Tuple[Executor, Callable, tuple, dict]] = []
 
 
-def futurize(max_instances: Optional[int] = None) -> Callable:
+def futurize(max_instances: Optional[int] = None, pyqt: bool = True
+            ) -> Callable:
 
     def decorator(func: Callable) -> Callable:
 
@@ -89,7 +90,8 @@ def futurize(max_instances: Optional[int] = None) -> Callable:
                 return None
 
             _RUNNING.append((self.pool, func, args, kws))
-            return PyQtFuture(self.pool.submit(run_and_catch_errs), self)
+            future = self.pool.submit(run_and_catch_errs)
+            return PyQtFuture(future, self) if pyqt else future
 
         return wrapper
 

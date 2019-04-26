@@ -1,6 +1,7 @@
 - Current focus
   - Merge login page
   - Just import nio?
+  - TextInput.accepted() for SendBox
 
 - Refactoring
   - Migrate more JS functions to their own files / Implement in Python instead

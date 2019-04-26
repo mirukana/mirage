@@ -10,6 +10,12 @@ Image {
     cache: false
     source: "../../images/login_background.jpg"
 
+    function login() {
+        Backend.clientManager.new(
+            "matrix.org", identifierField.text, passwordField.text
+        )
+    }
+
     Rectangle {
         color: Qt.hsla(1, 1, 1, 0.3)
 
@@ -80,11 +86,14 @@ Image {
             }
 
             Base.HTextField {
+                id: identifierField
                 placeholderText: qsTr(
                     loginWithEmailButton.checked ? "Email" :
                     loginWithPhoneButton.checked ? "Phone" :
                     "Username"
                 )
+                onAccepted: login()
+                Component.onCompleted: forceActiveFocus()
 
                 Layout.fillWidth: true
                 Layout.margins: mainColumn.hMargin
@@ -93,7 +102,10 @@ Image {
             }
 
             Base.HTextField {
+                id: passwordField
                 placeholderText: qsTr("Password")
+                echoMode: TextField.Password
+                onAccepted: login()
 
                 Layout.fillWidth: true
                 Layout.margins: mainColumn.hMargin
@@ -112,6 +124,10 @@ Image {
                     text: qsTr("Login")
                     Layout.fillWidth: true
 
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: login()
+                    }
                 }
                 Base.HButton {
                     text: qsTr("Forgot?")
