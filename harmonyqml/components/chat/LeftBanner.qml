@@ -7,14 +7,20 @@ import "utils.js" as ChatJS
 Banner {
     property var leftEvent: null
 
+    onButtonClicked: if (signalId === "forget") {
+        chatPage.canLoadPastEvents = false
+        pageStack.clear()
+    }
+
     avatarName: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
     labelText: ChatJS.getLeftBannerText(leftEvent)
 
     buttonModel: [
         {
+            signalId: "forget",
             text: "Forget",
-            iconName: "trash_can",
-            iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
+            iconName: "forget_room",
+            //iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
             clientFunction: "forgetRoom",
             clientArgs: [chatPage.roomId],
         }

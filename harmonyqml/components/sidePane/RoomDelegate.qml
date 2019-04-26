@@ -52,7 +52,7 @@ MouseArea {
                 text: getText()
                 textFormat: Text.StyledText
 
-                font.pixelSize: smallSize
+                font.pixelSize: Base.HStyle.fontSize.small
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.maximumWidth: roomLabel.Layout.maximumWidth

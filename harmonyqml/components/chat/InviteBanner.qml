@@ -17,15 +17,15 @@ Banner {
     buttonModel: [
         {
             text: "Accept",
-            iconName: "accept",
-            iconColor: Qt.hsla(0.45, 0.9, 0.3, 1),
+            iconName: "invite_accept",
+            //iconColor: Qt.hsla(0.45, 0.9, 0.3, 1),
             clientFunction: "joinRoom",
             clientArgs: [chatPage.roomId],
         },
         {
             text: "Decline",
-            iconName: "decline",
-            iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
+            iconName: "invite_decline",
+            //iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
             clientFunction: "leaveRoom",
             clientArgs: [chatPage.roomId],
         }

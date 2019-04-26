@@ -25,7 +25,7 @@ _CONFIG_LOCK = threading.Lock()
 class ClientManager(QObject):
     clientAdded        = pyqtSignal(Client)
     clientDeleted      = pyqtSignal(str)
-    _clientsUpdate     = pyqtSignal()
+    clientCountChanged = pyqtSignal(int)
 
 
     def __init__(self, backend: Backend) -> None:
@@ -33,17 +33,23 @@ class ClientManager(QObject):
         self.backend = backend
         self._clients: Dict[str, Client] = {}
 
-        self.clientAdded.connect(self._clientsUpdate.emit)
-        self.clientDeleted.connect(self._clientsUpdate.emit)
+        func = lambda: self.clientCountChanged.emit(len(self.clients))
+        self.clientAdded.connect(func)
+        self.clientDeleted.connect(func)
 
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(clients={self.clients!r})"
 
 
-    @pyqtProperty("QVariantMap", notify=_clientsUpdate)
+    @pyqtProperty("QVariantMap", notify=clientCountChanged)
     def clients(self):
         return self._clients
+
+
+    @pyqtProperty(int, notify=clientCountChanged)
+    def clientCount(self):
+        return len(self.clients)
 
 
     @pyqtSlot()

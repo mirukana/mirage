@@ -35,11 +35,13 @@ Row {
             text: (dict.formatted_body ?
                    Backend.htmlFilter.filter(dict.formatted_body) :
                    dict.body) +
-                  "&nbsp;&nbsp;<font size=" + smallSize + "px color=gray>" +
+                  "&nbsp;&nbsp;<font size=" + Base.HStyle.fontSize.small +
+                  "px color=gray>" +
                   Qt.formatDateTime(dateTime, "hh:mm:ss") +
                   "</font>" +
                   (isLocalEcho ?
-                   "&nbsp;<font size=" + smallSize + "px>⏳</font>" : "")
+                   "&nbsp;<font size=" + Base.HStyle.fontSize.small +
+                   "px>⏳</font>" : "")
             textFormat: Text.RichText
             background: Rectangle {color: "#DDD"}
             wrapMode: Text.Wrap

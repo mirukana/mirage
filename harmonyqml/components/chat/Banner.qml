@@ -9,6 +9,8 @@ Rectangle {
     Layout.preferredHeight: 32
     color: "#BBB"
 
+    signal buttonClicked(string signalId)
+
     property alias avatarName: bannerAvatar.name
     property alias avatarSource: bannerAvatar.imageSource
     property alias labelText: bannerLabel.text
@@ -77,8 +79,6 @@ Rectangle {
 
                     text: modelData.text
                     iconName: modelData.iconName
-                    icon.color: modelData.iconColor
-                    icon.width: 32
                     display: bannerButtons.displayMode
 
                     onClicked: {
@@ -87,14 +87,20 @@ Rectangle {
                         iconName       = "hourglass"
                         alreadyClicked = true
 
+                        // modelData might become undefined after Backend call
+                        var signalId  = modelData.signalId
+                        var iconName_ = modelData.iconName
+
                         var future =
                             Backend.clientManager.clients[chatPage.userId].
                             call(modelData.clientFunction,
                                  modelData.clientArgs)
 
-                        future.onGotResult.connect(
-                            function() { iconName = modelData.iconName }
-                        )
+                        future.onGotResult.connect(function() {
+                            iconName = iconName_
+                        })
+
+                        if (signalId) { buttonClicked(signalId) }
                     }
 
                     Layout.maximumWidth: bannerButtons.compact ? height : -1

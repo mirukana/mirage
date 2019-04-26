@@ -1,5 +1,6 @@
 - Current focus
   - Merge login page
+  - Just import nio?
 
 - Refactoring
   - Migrate more JS functions to their own files / Implement in Python instead
@@ -13,6 +14,8 @@
   - Bug when resizing window being tiled (i3), can't figure it out
 
 - UI
+  - Leave room
+  - Forget room warning popup
   - Use HRowLayout and its totalSpacing wherever possible
   - Spacer component
   - One line label componant
@@ -34,6 +37,8 @@
   - Status message and presence
 
 - Client improvements
+  - HTTP/2
+  - `retry_after_ms` when rate-limited
   - Direct chats category
   - On sync, check messages API, if a limited sync timeline was received
   - Markdown: don't turn #things into title (space), disable __ syntax
@@ -46,11 +51,21 @@
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Keep an accounts order
+  - See `Qt.callLater()` potential usages
+  - Banner name color instead of bold
 
 - Missing nio support
-  - Forget room
   - Left room events
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event
-  - Avatars
   - Support "Empty room (was ...)" after peer left
+
+- Waiting for approval/release
+  - nio avatars
+  - olm/olm-devel 0.3.1 in void repos
+  - html-sanitizer allowed attributes fix pypi release
+
+- Distribution
+  - Review setup.py, add dependencies
+  - REAMDE.md
+  - Remove initial test room switch

@@ -27,7 +27,8 @@ RowLayout {
               (displayName.value || dict.sender) +
               (contentText.startsWith("'s ") ? "" : " ") +
               contentText +
-              "&nbsp;&nbsp;<font size=" + smallSize + "px color='gray'>" +
+              "&nbsp;&nbsp;<font size=" + Base.HStyle.fontSize.small +
+              "px color='gray'>" +
               Qt.formatDateTime(dateTime, "hh:mm:ss") +
               "</font></font>"
         textFormat: Text.RichText

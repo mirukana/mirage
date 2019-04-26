@@ -268,3 +268,11 @@ class SignalManager(QObject):
             self._events_in_transfer += 1
 
             self._move_room(client.userId, room_id)
+
+
+    def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:
+        with self._lock:
+            rooms = self.backend.models.rooms[client.userId]
+            del rooms[rooms.indexWhere("roomId", room_id)]
+
+            self.backend.models.roomEvents[room_id].clear()

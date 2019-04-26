@@ -2,8 +2,8 @@ import QtQuick 2.7
 import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "sidePane" as SidePane
-import "chat" as Chat
+import "../sidePane" as SidePane
+import "../chat" as Chat
 
 //https://doc.qt.io/qt-5/qml-qtquick-controls-splitview.html
 Controls1.SplitView {
@@ -17,13 +17,15 @@ Controls1.SplitView {
     StackView {
         function showRoom(userId, roomId) {
             pageStack.replace(
-                "chat/Root.qml", { userId: userId, roomId: roomId }
+                "../chat/Root.qml", { userId: userId, roomId: roomId }
             )
         }
 
         id: pageStack
 
-        onCurrentItemChanged: currentItem.forceActiveFocus()
+        onCurrentItemChanged: if (currentItem) {
+            currentItem.forceActiveFocus()
+        }
 
         initialItem: Item {  // TODO: (test, remove)
             Keys.onEnterPressed: pageStack.showRoom(

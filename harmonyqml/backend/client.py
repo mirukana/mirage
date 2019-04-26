@@ -26,6 +26,8 @@ class Client(QObject):
     roomJoined  = pyqtSignal(str)
     roomLeft    = pyqtSignal([str, dict], [str])
 
+    roomAboutToBeForgotten = pyqtSignal(str)
+
     roomSyncPrevBatchTokenReceived = pyqtSignal(str, str)
     roomPastPrevBatchTokenReceived = pyqtSignal(str, str)
     roomEventReceived              = pyqtSignal(str, str, dict)
@@ -259,4 +261,5 @@ class Client(QObject):
     @pyqtSlot(str)
     @futurize()
     def forgetRoom(self, room_id: str) -> None:
-        raise NotImplementedError()
+        self.roomAboutToBeForgotten.emit(room_id)
+        return self.net.talk(self.nio.room_forget, room_id=room_id)

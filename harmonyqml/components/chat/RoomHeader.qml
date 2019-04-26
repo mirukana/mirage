@@ -28,7 +28,7 @@ Rectangle {
         Base.HLabel {
             id: roomName
             text: displayName
-            font.pixelSize: bigSize
+            font.pixelSize: Base.HStyle.fontSize.big
             elide: Text.ElideRight
             maximumLineCount: 1
             Layout.maximumWidth:
@@ -39,7 +39,7 @@ Rectangle {
         Base.HLabel {
             id: roomTopic
             text: topic
-            font.pixelSize: smallSize
+            font.pixelSize: Base.HStyle.fontSize.small
             elide: Text.ElideRight
             maximumLineCount: 1
             Layout.maximumWidth:

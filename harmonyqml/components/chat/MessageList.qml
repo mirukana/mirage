@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 Rectangle {
+    property bool canLoadPastEvents: true
     property int space: 8
 
     Layout.fillWidth: true
@@ -30,7 +31,7 @@ Rectangle {
         property real yPos: visibleArea.yPosition
 
         onYPosChanged: {
-            if (yPos <= 0.1) {
+            if (chatPage.canLoadPastEvents && yPos <= 0.1) {
                 Backend.loadPastEvents(chatPage.roomId)
             }
         }

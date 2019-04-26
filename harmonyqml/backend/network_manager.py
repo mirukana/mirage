@@ -114,6 +114,7 @@ class NetworkManager:
              nio_func: NioRequestFunc,
              *args,
              **kwargs) -> nr.Response:
+
         with self._lock:
             retry = RetrySleeper()
 

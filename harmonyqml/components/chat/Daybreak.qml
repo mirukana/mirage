@@ -16,6 +16,6 @@ Base.HLabel {
 
     text: dateTime.toLocaleDateString() + (isToday ? qsTr(" (Today)") : "")
     horizontalAlignment: Text.AlignHCenter
-    font.pixelSize: normalSize * 1.1
+    font.pixelSize: Base.HStyle.fontSize.big
     color: "darkolivegreen"
 }
