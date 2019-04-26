@@ -60,6 +60,7 @@ Button {
     }
 
     MouseArea {
+        z: 101
         anchors.fill: parent
         hoverEnabled: true
         propagateComposedEvents: true

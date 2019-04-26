@@ -81,26 +81,33 @@ Rectangle {
                     iconName: modelData.iconName
                     display: bannerButtons.displayMode
 
-                    onClicked: {
-                        if (alreadyClicked) { return }
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: {
+                            if (alreadyClicked) { return }
 
-                        iconName       = "hourglass"
-                        alreadyClicked = true
+                            iconName       = "hourglass"
+                            alreadyClicked = true
 
-                        // modelData might become undefined after Backend call
-                        var signalId  = modelData.signalId
-                        var iconName_ = modelData.iconName
+                            // modelData might be undefined after Backend call
+                            var signalId = modelData.signalId
+                            var isForget =
+                                modelData.clientFunction === "forgetRoom"
 
-                        var future =
-                            Backend.clientManager.clients[chatPage.userId].
-                            call(modelData.clientFunction,
-                                 modelData.clientArgs)
+                            var future =
+                                Backend.clientManager.clients[chatPage.userId].
+                                call(modelData.clientFunction,
+                                     modelData.clientArgs)
 
-                        future.onGotResult.connect(function() {
-                            iconName = iconName_
-                        })
+                            if (! isForget) {
+                                future.onGotResult.connect(function() {
+                                    iconName = modelData.iconName
+                                })
+                            }
 
-                        if (signalId) { buttonClicked(signalId) }
+                            if (signalId) { buttonClicked(signalId) }
+                        }
                     }
 
                     Layout.maximumWidth: bannerButtons.compact ? height : -1

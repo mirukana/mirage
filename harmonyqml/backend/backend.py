@@ -93,8 +93,6 @@ class Backend(QObject):
                     room_id, self.past_tokens[room_id], limit
                 )
                 break
-        else:
-            raise ValueError(f"Room not found in any client: {room_id}")
 
 
     @pyqtSlot()

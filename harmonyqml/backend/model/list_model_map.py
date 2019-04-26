@@ -23,6 +23,11 @@ class ListModelMap(QObject):
         return self.dict[key]
 
 
+    @pyqtSlot(str, result=bool)
+    def has(self, key) -> bool:
+        return key in self.dict
+
+
     def __getitem__(self, key) -> ListModel:
         return self.dict[key]
 

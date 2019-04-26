@@ -194,6 +194,10 @@ class SignalManager(QObject):
                         .fromMSecsSinceEpoch(edict["server_timestamp"])
             new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
 
+            if etype == "RoomCreateEvent":
+                print(room_id, "ff")
+                self.backend.fully_loaded_rooms.add(room_id)
+
             if self._events_in_transfer:
                 local_echoes_met: int           = 0
                 update_at:       Optional[int] = None

@@ -111,6 +111,7 @@ Image {
                 Base.HButton {
                     text: qsTr("Login")
                     Layout.fillWidth: true
+
                 }
                 Base.HButton {
                     text: qsTr("Forgot?")
