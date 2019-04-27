@@ -11,9 +11,9 @@ Image {
     source: "../../images/login_background.jpg"
 
     function login() {
-        Backend.clientManager.new(
+        loginButton.loadingUntilFutureDone(Backend.clientManager.new(
             "matrix.org", identifierField.text, passwordField.text
-        )
+        ))
     }
 
     Rectangle {
@@ -119,10 +119,13 @@ Image {
                 Base.HButton {
                     text: qsTr("Register")
                     Layout.fillWidth: true
+                    Layout.preferredHeight: 32
                 }
                 Base.HButton {
+                    id: loginButton
                     text: qsTr("Login")
                     Layout.fillWidth: true
+                    Layout.preferredHeight: 32
 
                     MouseArea {
                         anchors.fill: parent
@@ -132,6 +135,7 @@ Image {
                 Base.HButton {
                     text: qsTr("Forgot?")
                     Layout.fillWidth: true
+                    Layout.preferredHeight: 32
                 }
             }
         }

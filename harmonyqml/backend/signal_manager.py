@@ -33,7 +33,6 @@ class SignalManager(QObject):
 
 
     def onClientAdded(self, client: Client) -> None:
-        print(client)
         self.connectClient(client)
         self.backend.models.accounts.append(User(
             userId      = client.userId,
@@ -196,7 +195,6 @@ class SignalManager(QObject):
             new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
 
             if etype == "RoomCreateEvent":
-                print(room_id, "ff")
                 self.backend.fully_loaded_rooms.add(room_id)
 
             if self._events_in_transfer:

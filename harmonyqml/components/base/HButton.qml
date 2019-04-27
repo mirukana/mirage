@@ -3,11 +3,19 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 
 Button {
-    property alias fontSize: buttonLabel.font.pixelSize
+    property int fontSize: HStyle.fontSize.normal
     property color backgroundColor: "lightgray"
     property alias overlayOpacity: buttonBackgroundOverlay.opacity
     property string iconName: ""
     property bool circle: false
+    property bool loading: false
+
+    property int contentWidth: 0
+
+    function loadingUntilFutureDone(future) {
+        loading = true
+        future.onGotResult.connect(function() { loading = false })
+    }
 
     id: button
     display: Button.TextBesideIcon
@@ -26,37 +34,44 @@ Button {
         }
     }
 
-    contentItem: HRowLayout {
-        spacing: button.text && iconName ? 5 : 0
+    Component {
+        id: buttonContent
 
-        Component {
-            id: buttonIcon
-            Image {
-                cache: true
-                mipmap: true
-                source: "../../icons/" + iconName + ".svg"
-                fillMode: Image.PreserveAspectFit
-                width: button.text ? 20 : 24
-                height: width
+        HRowLayout {
+            id: contentLayout
+            spacing: button.text && iconName ? 5 : 0
+            Component.onCompleted: contentWidth = implicitWidth
+
+            HIcon {
+                svgName: loading ? "hourglass" : iconName
+                dimension: contentLayout.height
+            }
+
+            HLabel {
+                text: button.text
+                font.pixelSize: fontSize
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
         }
-        Loader {
-            sourceComponent: iconName ? buttonIcon : undefined
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+    }
+
+    Component {
+        id: loadingOverlay
+        HRowLayout {
+            HIcon {
+                svgName: "hourglass"
+                Layout.preferredWidth: contentWidth || -1
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
         }
+    }
 
-        HLabel {
-            id: buttonLabel
-
-            text: button.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            elide: Text.ElideRight
-            maximumLineCount: 1
-            Layout.maximumWidth: button.width - buttonIcon.width
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        }
+    contentItem: Loader {
+        sourceComponent:
+            loading && ! iconName ? loadingOverlay : buttonContent
     }
 
     MouseArea {

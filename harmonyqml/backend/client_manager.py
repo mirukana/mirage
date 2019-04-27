@@ -60,14 +60,15 @@ class ClientManager(QObject):
                   .add_done_callback(lambda _, c=client: self._on_connected(c))
 
 
-    @pyqtSlot(str, str, str)
-    @pyqtSlot(str, str, str, str)
+    @pyqtSlot(str, str, str, result="QVariant")
+    @pyqtSlot(str, str, str, str, result="QVariant")
     def new(self, hostname: str, username: str, password: str,
             device_id: str = "") -> None:
 
         client = Client(self, hostname, username, device_id)
-        client.login(password, self.defaultDeviceName)\
-              .add_done_callback(lambda _: self._on_connected(client))
+        future = client.login(password, self.defaultDeviceName)
+        future.add_done_callback(lambda _: self._on_connected(client))
+        return future
 
 
     def _on_connected(self, client: Client) -> None:
