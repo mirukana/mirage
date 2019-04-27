@@ -10,7 +10,7 @@ ApplicationWindow {
     Loader {
         anchors.fill: parent
         source: Backend.clientManager.clientCount < 1 ?
-                "pages/LoginPage.qml" : "pages/MainUI.qml"
+                "pages/LoginPage/LoginPage.qml" : "pages/MainUI.qml"
         objectName: "UILoader"
     }
 }

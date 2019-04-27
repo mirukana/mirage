@@ -12,6 +12,15 @@ Button {
 
     property int contentWidth: 0
 
+    signal canceled
+    signal clicked
+    signal doubleClicked
+    signal entered
+    signal exited
+    signal pressAndHold
+    signal pressed
+    signal released
+
     function loadingUntilFutureDone(future) {
         loading = true
         future.onGotResult.connect(function() { loading = false })
@@ -75,17 +84,29 @@ Button {
     }
 
     MouseArea {
-        z: 101
         anchors.fill: parent
         hoverEnabled: true
-        propagateComposedEvents: true
 
-        onEntered: overlayOpacity = checked ? 0 : 0.3
-        onExited: overlayOpacity = 0
-        onPressed: overlayOpacity += 0.3
+        onCanceled: button.canceled()
+        onClicked: button.clicked()
+        onDoubleClicked: button.doubleClicked()
+        onEntered: {
+            overlayOpacity = checked ? 0 : 0.3
+            button.entered()
+        }
+        onExited: {
+            overlayOpacity = 0
+            button.exited()
+        }
+        onPressAndHold: button.pressAndHold()
+        onPressed: {
+            overlayOpacity += 0.3
+            button.pressed()
+        }
         onReleased: {
             if (checkable) { checked = ! checked }
             overlayOpacity = checked ? 0 : 0.3
+            button.released()
         }
     }
 }

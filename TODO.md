@@ -1,6 +1,7 @@
 - Current focus
-  - Merge login page
+  - Remember account dialog
   - Just import nio?
+  - Use new H\* components everywhere
   - TextInput.accepted() for SendBox
 
 - Refactoring
