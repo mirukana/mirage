@@ -1,22 +1,19 @@
-- Current focus
-  - Remember account dialog
-  - Just import nio?
+- Refactoring
   - Use new H\* components everywhere
   - TextInput.accepted() for SendBox
-
-- Refactoring
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
   - Better names and organization for the Message components
 
 - Bug fixes
   - Fix tooltip hide()
-  - ![A picture](https://picsum.photos/256/256) not clickable?
+  - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons aren't reloaded
   - Bug when resizing window being tiled (i3), can't figure it out
   - HStyle singleton isn't reloaded
 
 - UI
+  - Register/Forgot? for SignIn dialog
   - Test HGlassRectangle elements when no effects are available
   - Leave room
   - Forget room warning popup
@@ -72,4 +69,3 @@
 - Distribution
   - Review setup.py, add dependencies
   - REAMDE.md
-  - Remove initial test room switch

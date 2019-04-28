@@ -10,15 +10,13 @@ from typing import Callable, Optional, Tuple
 from uuid import UUID
 
 import nio
-import nio.responses as nr
-from nio.exceptions import ProtocolError, RemoteTransportError
 
 OptSock        = Optional[ssl.SSLSocket]
 NioRequestFunc = Callable[..., Tuple[UUID, bytes]]
 
 
 class NioErrorResponse(Exception):
-    def __init__(self, response: nr.ErrorResponse) -> None:
+    def __init__(self, response: nio.ErrorResponse) -> None:
         self.response = response
         super().__init__(str(response))
 
@@ -77,11 +75,11 @@ class NetworkManager:
     def http_disconnect(self) -> None:
         try:
             self.write(self.nio.disconnect())
-        except (OSError, ProtocolError):
+        except (OSError, nio.ProtocolError):
             pass
 
 
-    def read(self, with_sock: OptSock = None) -> nr.Response:
+    def read(self, with_sock: OptSock = None) -> nio.Response:
         sock = with_sock or self._get_socket()
 
         response = None
@@ -93,7 +91,7 @@ class NetworkManager:
             self.nio.receive(sock.recv(4096))
             response = self.nio.next_response()
 
-        if isinstance(response, nr.ErrorResponse):
+        if isinstance(response, nio.ErrorResponse):
             raise NioErrorResponse(response)
 
         if not with_sock:
@@ -113,7 +111,7 @@ class NetworkManager:
     def talk(self,
              nio_func: NioRequestFunc,
              *args,
-             **kwargs) -> nr.Response:
+             **kwargs) -> nio.Response:
 
         with self._lock:
             retry = RetrySleeper()
@@ -132,7 +130,7 @@ class NetworkManager:
                     self.write(to_send, sock)
                     response = self.read(sock)
 
-                except (OSError, RemoteTransportError) as err:
+                except (OSError, nio.RemoteTransportError) as err:
                     self._close_socket(sock)
                     self.http_disconnect()
                     retry.sleep(max_time=2)

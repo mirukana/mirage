@@ -9,8 +9,6 @@ from typing import Any, DefaultDict, Dict, Optional, Tuple
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 import nio
-import nio.events as ne
-import nio.responses as nr
 
 from .network_manager import NetworkManager
 from .pyqt_future import futurize
@@ -103,7 +101,7 @@ class Client(QObject):
     @futurize()
     def resumeSession(self, user_id: str, token: str, device_id: str
                      ) -> "Client":
-        response = nr.LoginResponse(user_id, device_id, token)
+        response = nio.LoginResponse(user_id, device_id, token)
         self.nio.receive_response(response)
         self.nio_sync.receive_response(response)
         return self
@@ -130,12 +128,12 @@ class Client(QObject):
                 break
 
 
-    def _on_sync(self, response: nr.SyncResponse) -> None:
+    def _on_sync(self, response: nio.SyncResponse) -> None:
         self.nio.receive_response(response)
 
         for room_id, room_info in response.rooms.invite.items():
             for ev in room_info.invite_state:
-                member_ev = isinstance(ev, ne.InviteMemberEvent)
+                member_ev = isinstance(ev, nio.InviteMemberEvent)
 
                 if member_ev and ev.content["membership"] == "join":
                     self.roomInvited.emit(room_id, ev.content)
@@ -156,14 +154,14 @@ class Client(QObject):
                 )
 
             for ev in room_info.ephemeral:
-                if isinstance(ev, nr.TypingNoticeEvent):
+                if isinstance(ev, nio.TypingNoticeEvent):
                     self.roomTypingUsersUpdated.emit(room_id, ev.users)
                 else:
                     print("ephemeral event: ", ev)
 
         for room_id, room_info in response.rooms.leave.items():
             for ev in room_info.timeline.events:
-                member_ev = isinstance(ev, ne.RoomMemberEvent)
+                member_ev = isinstance(ev, nio.RoomMemberEvent)
 
                 if member_ev and ev.content["membership"] in ("leave", "ban"):
                     self.roomLeft.emit(room_id, ev.__dict__)
@@ -190,7 +188,7 @@ class Client(QObject):
         self._loading = False
 
 
-    def _on_past_events(self, room_id: str, response: nr.RoomMessagesResponse
+    def _on_past_events(self, room_id: str, response: nio.RoomMessagesResponse
                        ) -> None:
         self.roomPastPrevBatchTokenReceived.emit(room_id, response.end)
 

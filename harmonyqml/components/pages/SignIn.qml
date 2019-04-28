@@ -67,7 +67,6 @@ Item {
                 loginWith === "phone" ? "Phone" :
                 "Username"
             )
-            text: "test_mary"
             onAccepted: signInBox.clickEnterButtonTarget()
 
             Layout.fillWidth: true
@@ -75,7 +74,6 @@ Item {
         }
 
         Base.HTextField {
-            text: "1234"
             id: passwordField
             placeholderText: qsTr("Password")
             echoMode: TextField.Password
