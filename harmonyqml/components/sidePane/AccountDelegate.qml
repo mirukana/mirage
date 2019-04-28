@@ -50,16 +50,14 @@ ColumnLayout {
             }
         }
 
-        Base.HToolButton {
+        Base.HButton {
             id: toggleExpand
             iconName: roomList.visible ? "up" : "down"
-            Layout.maximumWidth: 28
-            Layout.minimumHeight: row.height
+            iconDimension: 16
+            backgroundColor: "transparent"
+            onClicked: roomList.visible = ! roomList.visible
 
-            onClicked: {
-                toggleExpand.ToolTip.hide()
-                roomList.visible = ! roomList.visible
-            }
+            Layout.preferredHeight: row.height
         }
     }
 

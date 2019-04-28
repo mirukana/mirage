@@ -7,7 +7,6 @@
 
 - Bug fixes
   - 100% CPU usage when hitting top edge to trigger messages loading
-  - Fix tooltip hide()
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons aren't reloaded
   - Bug when resizing window being tiled (i3), can't figure it out

@@ -3,11 +3,14 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 
 Button {
+    property string iconName: ""
+    property var iconDimension: null
+    property bool circle: false
+
     property int fontSize: HStyle.fontSize.normal
     property color backgroundColor: "lightgray"
     property alias overlayOpacity: buttonBackgroundOverlay.opacity
-    property string iconName: ""
-    property bool circle: false
+
     property bool loading: false
 
     property int contentWidth: 0
@@ -53,7 +56,7 @@ Button {
 
             HIcon {
                 svgName: loading ? "hourglass" : iconName
-                dimension: contentLayout.height
+                dimension: iconDimension || contentLayout.height
             }
 
             HLabel {
