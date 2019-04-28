@@ -22,8 +22,6 @@ Base.HGlassRectangle {
             id: avatar
             name: Backend.getUserDisplayName(chatPage.userId)
             dimmension: root.Layout.minimumHeight
-            //visible: textArea.text === ""
-            visible: textArea.height <= root.Layout.minimumHeight
         }
 
         ScrollView {
