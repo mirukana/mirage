@@ -25,11 +25,16 @@ Item {
             "register": function(button) {},
 
             "login": function(button) {
-                button.loadingUntilFutureDone(
-                    Backend.clientManager.new(
-                        "matrix.org", identifierField.text, passwordField.text
-                    )
+                var future = Backend.clientManager.new(
+                    "matrix.org", identifierField.text, passwordField.text
                 )
+                button.loadingUntilFutureDone(future)
+                future.onGotResult.connect(function(client) {
+                    pageStack.showPage(
+                        "RememberAccount",
+                        {"loginWith": loginWith, "client": client}
+                    )
+                })
             },
 
             "forgot": function(button) {}
@@ -60,6 +65,7 @@ Item {
                 loginWith === "phone" ? "Phone" :
                 "Username"
             )
+            text: "test_mary"
             onAccepted: signInBox.clickEnterButtonTarget()
 
             Layout.fillWidth: true
@@ -67,6 +73,7 @@ Item {
         }
 
         Base.HTextField {
+            text: "1234"
             id: passwordField
             placeholderText: qsTr("Password")
             echoMode: TextField.Password

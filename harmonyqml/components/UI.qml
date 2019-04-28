@@ -7,7 +7,7 @@ import "sidePane" as SidePane
 import "chat" as Chat
 
 Base.HImage {
-    id: loginPage
+    id: mainUI
     fillMode: Image.PreserveAspectCrop
     source: "../images/login_background.jpg"
     anchors.fill: parent
@@ -25,8 +25,8 @@ Base.HImage {
         }
 
         StackView {
-            function showPage(path, properties) {
-                pageStack.replace(path, properties || {})
+            function showPage(name, properties) {
+                pageStack.replace("pages/" + name + ".qml", properties || {})
             }
 
             function showRoom(userId, roomId) {
@@ -36,7 +36,9 @@ Base.HImage {
             }
 
             id: pageStack
-            initialItem: accountsLoggedIn ? undefined : "pages/SignIn.qml"
+            Component.onCompleted: showPage(
+                accountsLoggedIn ? "Default" : "SignIn"
+            )
 
             onCurrentItemChanged: if (currentItem) {
                 currentItem.forceActiveFocus()

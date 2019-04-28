@@ -90,29 +90,32 @@ class Client(QObject):
         return getattr(self, method)(*args or [], **kwargs or {})
 
 
-    @pyqtSlot(str)
-    @pyqtSlot(str, str)
+    @pyqtSlot(str, result="QVariant")
+    @pyqtSlot(str, str, result="QVariant")
     @futurize()
-    def login(self, password: str, device_name: str = "") -> None:
+    def login(self, password: str, device_name: str = "") -> "Client":
         response = self.net.talk(self.nio.login, password, device_name)
         self.nio_sync.receive_response(response)
+        return self
 
 
-    @pyqtSlot(str, str, str)
+    @pyqtSlot(str, str, str, result="QVariant")
     @futurize()
     def resumeSession(self, user_id: str, token: str, device_id: str
-                     ) -> None:
+                     ) -> "Client":
         response = nr.LoginResponse(user_id, device_id, token)
         self.nio.receive_response(response)
         self.nio_sync.receive_response(response)
+        return self
 
 
-    @pyqtSlot()
+    @pyqtSlot(result="QVariant")
     @futurize()
-    def logout(self) -> None:
+    def logout(self) -> "Client":
         self._stop_sync.set()
         self.net.http_disconnect()
         self.net_sync.http_disconnect()
+        return self
 
 
     @futurize(pyqt=False)

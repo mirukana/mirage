@@ -33,7 +33,11 @@ HScalingBox {
             }
         }
 
+        Item { Layout.fillHeight: true }
+
         ColumnLayout { id: interfaceBody }
+
+        Item { Layout.fillHeight: true }
 
         HRowLayout {
             Repeater {

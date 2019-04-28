@@ -128,8 +128,8 @@ class ClientManager(QObject):
             return json.loads(file.read().strip()) or {}
 
 
-    @pyqtSlot(Client)
-    def configAdd(self, client: Client) -> None:
+    @pyqtSlot("QVariant")
+    def remember(self, client: Client) -> None:
         self._write_config({
             **self.configAccounts(),
             **{client.userId: {
@@ -141,7 +141,7 @@ class ClientManager(QObject):
 
 
     @pyqtSlot(str)
-    def configDelete(self, user_id: str) -> None:
+    def forget(self, user_id: str) -> None:
         self._write_config({
             uid: info
             for uid, info in self.configAccounts().items() if uid != user_id
