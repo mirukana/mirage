@@ -102,7 +102,7 @@ QtObject {
     }
 
     readonly property QtObject box: QtObject {
-        property color background: colors.background1
+        property color background: colors.background0
         property int radius: style.radius
     }
 
