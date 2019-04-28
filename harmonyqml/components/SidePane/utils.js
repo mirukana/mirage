@@ -1,4 +1,4 @@
-.import "../chat/utils.js" as ChatJS
+.import "../Chat/utils.js" as ChatJS
 
 
 function getLastRoomEventText(roomId, accountId) {

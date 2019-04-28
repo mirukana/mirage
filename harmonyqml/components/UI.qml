@@ -1,9 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "base" as Base
+import "Base" as Base
 import "SidePane" as SidePane
-import "chat" as Chat
+import "Chat" as Chat
 
 Item {
     id: mainUI
@@ -33,12 +33,12 @@ Item {
             property bool initialPageSet: false
 
             function showPage(name, properties) {
-                pageStack.replace("pages/" + name + ".qml", properties || {})
+                pageStack.replace("Pages/" + name + ".qml", properties || {})
             }
 
             function showRoom(userId, roomId) {
                 pageStack.replace(
-                    "chat/Root.qml", { userId: userId, roomId: roomId }
+                    "Chat/Root.qml", { userId: userId, roomId: roomId }
                 )
             }
 

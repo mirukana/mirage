@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import "../base" as Base
+import "../Base" as Base
 
 Base.HLabel {
     width: roomList.width
