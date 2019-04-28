@@ -7,6 +7,8 @@ import "utils.js" as ChatJS
 Banner {
     property var leftEvent: null
 
+    color: Base.HStyle.chat.leftBanner.background
+
     onButtonClicked: if (signalId === "forget") {
         chatPage.canLoadPastEvents = false
         pageStack.clear()

@@ -23,16 +23,23 @@ RowLayout {
     Base.HLabel {
         id: contentLabel
         text: "<font color='" +
-              (isUndecryptableEvent ? "darkred" : "gray") + "'>" +
-              (displayName.value || dict.sender) +
-              (contentText.startsWith("'s ") ? "" : " ") +
+              Qt.hsla(Backend.hueFromString(displayName.value || dict.sender),
+                      Base.HStyle.chat.event.saturation,
+                      Base.HStyle.chat.event.lightness,
+                      1) +
+              "'>" +
+              (displayName.value || dict.sender) + " " +
               contentText +
-              "&nbsp;&nbsp;<font size=" + Base.HStyle.fontSize.small +
-              "px color='gray'>" +
+
+              "&nbsp;&nbsp;" +
+              "<font size=" + Base.HStyle.fontSize.small + "px " +
+              "color=" + Base.HStyle.chat.event.date + ">" +
               Qt.formatDateTime(dateTime, "hh:mm:ss") +
-              "</font></font>"
+              "</font> " +
+              "</font>"
+
         textFormat: Text.RichText
-        background: Rectangle {color: "#DDD"}
+        background: Rectangle {color: Base.HStyle.chat.event.background}
         wrapMode: Text.Wrap
 
         leftPadding: horizontalPadding

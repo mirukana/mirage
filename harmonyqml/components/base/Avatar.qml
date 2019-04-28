@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
+import "../base" as Base
 
 Item {
     property bool invisible: false
@@ -22,13 +23,18 @@ Item {
         anchors.fill: parent
         visible: ! invisible && imageSource === null
         color: resolvedName === "?" ?
-               Qt.hsla(0, 0, 0.22, 1) :
-               Qt.hsla(Backend.hueFromString(resolvedName), 0.22, 0.5, 1)
+               Base.HStyle.avatar.background.unknown :
+               Qt.hsla(
+                   Backend.hueFromString(resolvedName),
+                   Base.HStyle.avatar.background.saturation,
+                   Base.HStyle.avatar.background.lightness,
+                   Base.HStyle.avatar.background.alpha
+                )
 
         HLabel {
             anchors.centerIn: parent
             text: resolvedName.charAt(0)
-            color: "white"
+            color: Base.HStyle.avatar.letter
             font.pixelSize: letterRectangle.height / 1.4
         }
     }

@@ -6,6 +6,7 @@
   - Better names and organization for the Message components
 
 - Bug fixes
+  - 100% CPU usage when hitting top edge to trigger messages loading
   - Fix tooltip hide()
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons aren't reloaded
@@ -13,7 +14,10 @@
   - HStyle singleton isn't reloaded
 
 - UI
+  - Server selection
   - Register/Forgot? for SignIn dialog
+  - Scaling
+    - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
   - Test HGlassRectangle elements when no effects are available
   - Leave room
   - Forget room warning popup

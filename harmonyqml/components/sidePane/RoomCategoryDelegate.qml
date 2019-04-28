@@ -11,5 +11,5 @@ Base.HLabel {
     elide: Text.ElideRight
     maximumLineCount: 1
 
-    font.bold: true
+    font.weight: Font.DemiBold
 }

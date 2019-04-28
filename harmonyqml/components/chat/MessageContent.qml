@@ -18,8 +18,11 @@ Row {
             visible: ! combine
             id: nameLabel
             text: displayName.value || dict.sender
-            background: Rectangle {color: "#DDD"}
-            color: Qt.hsla(Backend.hueFromString(text), 0.22, 0.4, 1)
+            background: Rectangle {color: Base.HStyle.chat.message.background}
+            color: Qt.hsla(Backend.hueFromString(text),
+                           Base.HStyle.displayName.saturation,
+                           Base.HStyle.displayName.lightness,
+                           1)
             elide: Text.ElideRight
             maximumLineCount: 1
             Layout.preferredWidth: contentLabel.width
@@ -36,14 +39,15 @@ Row {
                    Backend.htmlFilter.filter(dict.formatted_body) :
                    dict.body) +
                   "&nbsp;&nbsp;<font size=" + Base.HStyle.fontSize.small +
-                  "px color=gray>" +
+                  "px color=" + Base.HStyle.chat.message.date + ">" +
                   Qt.formatDateTime(dateTime, "hh:mm:ss") +
                   "</font>" +
                   (isLocalEcho ?
                    "&nbsp;<font size=" + Base.HStyle.fontSize.small +
                    "px>⏳</font>" : "")
             textFormat: Text.RichText
-            background: Rectangle {color: "#DDD"}
+            background: Rectangle {color: Base.HStyle.chat.message.background}
+            color: Base.HStyle.chat.message.body
             wrapMode: Text.Wrap
 
             leftPadding: horizontalPadding

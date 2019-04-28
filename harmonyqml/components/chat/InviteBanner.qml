@@ -6,6 +6,8 @@ import "../base" as Base
 Banner {
     property var inviter: null
 
+    color: Base.HStyle.chat.inviteBanner.background
+
     avatarName: inviter ? inviter.displayname : ""
     //avatarSource: inviter ? inviter.avatar_url : ""
 

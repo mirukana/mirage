@@ -3,11 +3,10 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import "../base" as Base
 
-Rectangle {
+Base.HGlassRectangle {
     id: banner
     Layout.fillWidth: true
     Layout.preferredHeight: 32
-    color: "#BBB"
 
     signal buttonClicked(string signalId)
 

@@ -19,21 +19,16 @@ function getLastRoomEventText(roomId, accountId) {
     var undecryptable = ev.type === "OlmEvent" || ev.type === "MegolmEvent"
 
     if (undecryptable || ev.type.startsWith("RoomMessage")) {
-        var color = ev.dict.sender === roomList.forUserId ?
-                    "darkblue" : "purple"
+        var color = Qt.hsla(Backend.hueFromString(name), 0.32, 0.3, 1)
 
-        return "<font color='" +
-               color +
-               "'>" +
+        return "<font color='" + color + "'>" +
                name +
                ":</font> " +
                (undecryptable ?
-                "<font color='darkred'>Undecryptable<font>" :
+                "<font color='darkred'>" + qsTr("Undecryptable") + "<font>" :
                 ev.dict.body)
    } else {
-       return "<font color='" +
-              (undecryptable ? "darkred" : "#444") +
-              "'>" +
+       return "<font color='" + (undecryptable ? "darkred" : "#444") + "'>" +
               name +
               " " +
               ChatJS.getEventText(ev.type, ev.dict) +

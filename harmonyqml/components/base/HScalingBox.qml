@@ -8,7 +8,7 @@ HGlassRectangle {
     readonly property int baseWidth: baseHeight * widthForHeight
     readonly property int margins: baseHeight * 0.03
 
-    color: HStyle.boxes.background
+    color: HStyle.box.background
     height: Math.min(parent.height, baseHeight)
     width: Math.min(parent.width, baseWidth)
     scale: Math.max(1, parent.height / startScalingUpAboveHeight)

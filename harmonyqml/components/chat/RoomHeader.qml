@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import "../base" as Base
 
-Rectangle {
+Base.HGlassRectangle {
     property string displayName: ""
     property string topic: ""
 
@@ -11,7 +11,7 @@ Rectangle {
     Layout.fillWidth: true
     Layout.minimumHeight: 36
     Layout.maximumHeight: Layout.minimumHeight
-    color: "#BBB"
+    color: Base.HStyle.chat.roomHeader.background
 
     RowLayout {
         id: row

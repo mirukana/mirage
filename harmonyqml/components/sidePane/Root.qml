@@ -8,6 +8,8 @@ Base.HGlassRectangle {
     id: sidePane
     clip: true  // Avoid artifacts when resizing pane width to minimum
 
+    isPageStackDescendant: false
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0

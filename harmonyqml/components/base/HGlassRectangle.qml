@@ -2,6 +2,8 @@ import QtQuick 2.7
 import QtGraphicalEffects 1.0
 
 Item {
+    property bool isPageStackDescendant: true
+
     default property alias children: rectangle.children
     property alias color: rectangle.color
     property alias gradient: rectangle.gradient
@@ -14,16 +16,18 @@ Item {
         sourceItem: mainUIBackground
         anchors.fill: parent
         sourceRect: Qt.rect(
-            pageStack.x + parent.x, pageStack.y + parent.y, width, height
+            (isPageStackDescendant ? pageStack.x : 0) + parent.x,
+            (isPageStackDescendant ? pageStack.y : 0) + parent.y,
+            width,
+            height
         )
     }
 
     FastBlur {
         id: fastBlur
-        cached: true
         anchors.fill: effectSource
         source: effectSource
-        radius: 8
+        radius: rectangle.color == "#00000000" ? 0 : 8
     }
 
     Rectangle {

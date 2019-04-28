@@ -67,11 +67,18 @@ Column {
 
     topPadding:
         isFirstEvent ? 0 :
+        dayBreak ? standardSpacing * 2 :
         talkBreak ? standardSpacing * 3 :
         combine ? standardSpacing / 4 :
         standardSpacing
 
     Daybreak { visible: dayBreak }
+
+    Item {
+        visible: dayBreak
+        width: parent.width
+        height: topPadding
+    }
 
     MessageContent { visible: isMessage }
 
