@@ -19,7 +19,7 @@ HScalingBox {
         }
     }
 
-    ColumnLayout {
+    HColumnLayout {
         anchors.fill: parent
         id: mainColumn
 
@@ -35,7 +35,7 @@ HScalingBox {
 
         Item { Layout.fillHeight: true }
 
-        ColumnLayout { id: interfaceBody }
+        HColumnLayout { id: interfaceBody }
 
         Item { Layout.fillHeight: true }
 
