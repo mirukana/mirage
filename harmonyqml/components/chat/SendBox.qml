@@ -14,7 +14,7 @@ Base.HGlassRectangle {
     Layout.maximumHeight: pageStack.height / 2
     color: Base.HStyle.chat.sendBox.background
 
-    RowLayout {
+    Base.HRowLayout {
         anchors.fill: parent
         spacing: 0
 
@@ -24,50 +24,39 @@ Base.HGlassRectangle {
             dimension: root.Layout.minimumHeight
         }
 
-        ScrollView {
+        Base.HScrollableTextArea {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            id: sendBoxScrollView
-            clip: true
 
-            TextArea {
-                property string typedText: text
+            id: textArea
+            placeholderText: qsTr("Type a message...")
+            area.focus: true
 
-                id: textArea
-                placeholderText: qsTr("Type a message...")
-                wrapMode: TextEdit.Wrap
-                selectByMouse: true
-                readOnly: ! visible
-                font.family: "Roboto"
-                font.pixelSize: 16
-                focus: true
-
-                function setTyping(typing) {
-                    Backend.clientManager.clients[chatPage.userId]
-                           .setTypingState(chatPage.roomId, typing)
-                }
-
-                onTypedTextChanged: setTyping(Boolean(text))
-                onEditingFinished: setTyping(false)  // when lost focus
-
-                Keys.onReturnPressed: {
-                    event.accepted = true
-
-                    if (event.modifiers & Qt.ShiftModifier ||
-                        event.modifiers & Qt.ControlModifier ||
-                        event.modifiers & Qt.AltModifier) {
-                        textArea.insert(textArea.cursorPosition, "\n")
-                        return
-                    }
-
-                    if (textArea.text === "") { return }
-                    Backend.clientManager.clients[chatPage.userId]
-                           .sendMarkdown(chatPage.roomId, textArea.text)
-                    textArea.clear()
-                }
-
-                Keys.onEnterPressed: Keys.onReturnPressed(event)  // numpad enter
+            function setTyping(typing) {
+                Backend.clientManager.clients[chatPage.userId]
+                       .setTypingState(chatPage.roomId, typing)
             }
+
+            onTextChanged: setTyping(Boolean(text))
+            area.onEditingFinished: setTyping(false)  // when lost focus
+
+            Keys.onReturnPressed: {
+                event.accepted = true
+
+                if (event.modifiers & Qt.ShiftModifier ||
+                    event.modifiers & Qt.ControlModifier ||
+                    event.modifiers & Qt.AltModifier) {
+                    textArea.insert(textArea.cursorPosition, "\n")
+                    return
+                }
+
+                if (textArea.text === "") { return }
+                Backend.clientManager.clients[chatPage.userId]
+                       .sendMarkdown(chatPage.roomId, textArea.text)
+                textArea.clear()
+            }
+
+            Keys.onEnterPressed: Keys.onReturnPressed(event)  // numpad enter
         }
     }
 }
