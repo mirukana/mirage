@@ -6,9 +6,11 @@ ListView {
     clip: true
 
     spacing: 8
-    Layout.leftMargin: spacing
     topMargin: spacing
     bottomMargin: topMargin
+    Layout.leftMargin:
+        sidePane.width <= (sidePane.Layout.minimumWidth + spacing) ?
+        0 : spacing
 
     model: Backend.models.accounts
     delegate: AccountDelegate {}

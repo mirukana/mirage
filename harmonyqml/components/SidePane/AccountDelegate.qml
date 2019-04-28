@@ -68,8 +68,9 @@ HColumnLayout {
             parent.width - Layout.leftMargin - Layout.rightMargin
 
         Layout.margins: accountList.spacing
-        Layout.leftMargin:
-            sidePane.width < 36 + Layout.margins ? 0 : Layout.margins
         Layout.rightMargin: 0
+        Layout.leftMargin:
+            sidePane.width <= (sidePane.Layout.minimumWidth + Layout.margins) ?
+            0 : Layout.margins
     }
 }

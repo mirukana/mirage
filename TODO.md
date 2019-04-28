@@ -3,7 +3,6 @@
   - Don't bake in size properties for components
 
 - Bug fixes
-  - SidePane indent at min size
   - The damn remember account dialog
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
@@ -14,6 +13,7 @@
 
 - UI
   - Use nested listview for categories instead of section property
+  - Improve SidePane appearance when at min width
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Scaling
