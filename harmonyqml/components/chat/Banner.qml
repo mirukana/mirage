@@ -21,7 +21,7 @@ Base.HGlassRectangle {
 
         Base.HAvatar {
             id: bannerAvatar
-            dimmension: banner.Layout.preferredHeight
+            dimension: banner.Layout.preferredHeight
         }
 
         Base.HLabel {

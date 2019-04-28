@@ -21,7 +21,7 @@ Base.HGlassRectangle {
         Base.HAvatar {
             id: avatar
             name: Backend.getUserDisplayName(chatPage.userId)
-            dimmension: root.Layout.minimumHeight
+            dimension: root.Layout.minimumHeight
         }
 
         ScrollView {

@@ -16,8 +16,8 @@ RowLayout {
     Base.HAvatar {
         id: avatar
         name: displayName
-        invisible: combine
-        dimmension: 28
+        hidden: combine
+        dimension: 28
     }
 
     Base.HLabel {

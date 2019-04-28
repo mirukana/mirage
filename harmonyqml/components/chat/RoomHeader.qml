@@ -21,7 +21,7 @@ Base.HGlassRectangle {
         Base.HAvatar {
             id: avatar
             Layout.alignment: Qt.AlignTop
-            dimmension: root.Layout.minimumHeight
+            dimension: root.Layout.minimumHeight
             name: displayName
         }
 

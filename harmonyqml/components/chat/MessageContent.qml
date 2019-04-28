@@ -9,7 +9,7 @@ Row {
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
     anchors.right: isOwn ? parent.right : undefined
 
-    Base.HAvatar { id: avatar; invisible: combine; name: displayName }
+    Base.HAvatar { id: avatar; hidden: combine; name: displayName }
 
     ColumnLayout {
         spacing: 0
