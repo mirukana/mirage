@@ -3,6 +3,7 @@
   - Don't bake in size properties for components
 
 - Bug fixes
+  - SidePane indent at min size
   - The damn remember account dialog
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?

@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.3
 import "../../Base"
 
 Row {
@@ -55,7 +55,7 @@ Row {
 
             Layout.minimumWidth: nameLabel.implicitWidth
             Layout.maximumWidth: Math.min(
-                600, roomEventListView.width - avatar.width - row.totalSpacing
+                600, roomEventListView.width - avatar.width - row.spacing
             )
         }
     }

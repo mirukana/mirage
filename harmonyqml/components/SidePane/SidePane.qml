@@ -1,4 +1,4 @@
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import "../Base"
 

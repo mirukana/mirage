@@ -1,4 +1,4 @@
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.3
 import "../Base"
 
 HColumnLayout {
