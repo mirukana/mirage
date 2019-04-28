@@ -9,7 +9,7 @@ Row {
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
     anchors.right: isOwn ? parent.right : undefined
 
-    Base.Avatar { id: avatar; invisible: combine; name: displayName }
+    Base.HAvatar { id: avatar; invisible: combine; name: displayName }
 
     ColumnLayout {
         spacing: 0
@@ -33,7 +33,7 @@ Row {
             topPadding: verticalPadding
         }
 
-        Base.RichLabel {
+        Base.HRichLabel {
             id: contentLabel
             text: (dict.formatted_body ?
                    Backend.htmlFilter.filter(dict.formatted_body) :

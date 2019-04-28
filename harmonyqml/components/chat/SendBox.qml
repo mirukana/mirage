@@ -18,7 +18,7 @@ Base.HGlassRectangle {
         anchors.fill: parent
         spacing: 0
 
-        Base.Avatar {
+        Base.HAvatar {
             id: avatar
             name: Backend.getUserDisplayName(chatPage.userId)
             dimmension: root.Layout.minimumHeight

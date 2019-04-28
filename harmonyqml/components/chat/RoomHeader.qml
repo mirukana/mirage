@@ -18,7 +18,7 @@ Base.HGlassRectangle {
         spacing: 12
         anchors.fill: parent
 
-        Base.Avatar {
+        Base.HAvatar {
             id: avatar
             Layout.alignment: Qt.AlignTop
             dimmension: root.Layout.minimumHeight

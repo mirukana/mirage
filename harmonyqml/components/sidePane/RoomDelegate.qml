@@ -16,7 +16,7 @@ MouseArea {
         id: row
         spacing: 1
 
-        Base.Avatar { id: avatar; name: displayName; dimmension: root.height }
+        Base.HAvatar { id: avatar; name: displayName; dimmension: root.height }
 
         ColumnLayout {
             spacing: 0

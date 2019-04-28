@@ -19,7 +19,7 @@ Base.HGlassRectangle {
         id: bannerRow
         anchors.fill: parent
 
-        Base.Avatar {
+        Base.HAvatar {
             id: bannerAvatar
             dimmension: banner.Layout.preferredHeight
         }

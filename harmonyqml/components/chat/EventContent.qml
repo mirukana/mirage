@@ -13,7 +13,7 @@ RowLayout {
     readonly property string contentText:
         isMessage ?  "" : ChatJS.getEventText(type, dict)
 
-    Base.Avatar {
+    Base.HAvatar {
         id: avatar
         name: displayName
         invisible: combine
