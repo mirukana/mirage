@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
 Rectangle {
     property bool hidden: false
@@ -23,12 +23,12 @@ Rectangle {
     opacity: hidden ? 0 : 1
 
     color: resolvedName === "?" ?
-           Base.HStyle.avatar.background.unknown :
+           HStyle.avatar.background.unknown :
            Qt.hsla(
                Backend.hueFromString(resolvedName),
-               Base.HStyle.avatar.background.saturation,
-               Base.HStyle.avatar.background.lightness,
-               Base.HStyle.avatar.background.alpha
+               HStyle.avatar.background.saturation,
+               HStyle.avatar.background.lightness,
+               HStyle.avatar.background.alpha
             )
 
     HLabel {
@@ -37,7 +37,7 @@ Rectangle {
         visible: ! hidden
 
         text: resolvedName.charAt(0)
-        color: Base.HStyle.avatar.letter
+        color: HStyle.avatar.letter
         font.pixelSize: parent.height / 1.4
     }
 

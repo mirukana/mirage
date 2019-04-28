@@ -1,9 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
-Base.HGlassRectangle {
+HGlassRectangle {
     function setFocus() { textArea.forceActiveFocus() }
 
     id: root
@@ -12,18 +12,18 @@ Base.HGlassRectangle {
     Layout.preferredHeight: textArea.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2
-    color: Base.HStyle.chat.sendBox.background
+    color: HStyle.chat.sendBox.background
 
-    Base.HRowLayout {
+    HRowLayout {
         anchors.fill: parent
 
-        Base.HAvatar {
+        HAvatar {
             id: avatar
             name: Backend.getUserDisplayName(chatPage.userId)
             dimension: root.Layout.minimumHeight
         }
 
-        Base.HScrollableTextArea {
+        HScrollableTextArea {
             Layout.fillHeight: true
             Layout.fillWidth: true
 

@@ -2,15 +2,15 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import QtGraphicalEffects 1.0
-import "../Base" as Base
+import "../Base"
 
-Base.HGlassRectangle {
+HGlassRectangle {
     id: sidePane
     clip: true  // Avoid artifacts when resizing pane width to minimum
 
     isPageStackDescendant: false
 
-    Base.HColumnLayout {
+    HColumnLayout {
         anchors.fill: parent
 
         AccountList {

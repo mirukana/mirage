@@ -1,14 +1,13 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "Base" as Base
-import "SidePane" as SidePane
-import "Chat" as Chat
+import "Base"
+import "SidePane"
 
 Item {
     id: mainUI
 
-    Base.HImage {
+    HImage {
         id: mainUIBackground
         fillMode: Image.PreserveAspectCrop
         source: "../images/login_background.jpg"
@@ -17,10 +16,10 @@ Item {
 
     property bool accountsLoggedIn: Backend.clientManager.clientCount > 0
 
-    Base.HSplitView {
+    HSplitView {
         anchors.fill: parent
 
-        SidePane.SidePane {
+        SidePane {
             property int parentWidth: parent.width
             onParentWidthChanged: width = Math.min(parent.width * 0.3, 300)
 

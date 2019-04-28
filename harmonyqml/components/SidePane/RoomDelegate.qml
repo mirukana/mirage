@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 import "utils.js" as SidePaneJS
 
 MouseArea {
@@ -11,19 +11,19 @@ MouseArea {
 
     onClicked: pageStack.showRoom(roomList.userId, roomId)
 
-    Base.HRowLayout {
+    HRowLayout {
         anchors.fill: parent
         id: row
         spacing: 1
 
-        Base.HAvatar {
+        HAvatar {
             id: roomAvatar
             name: displayName
             dimension: roomDelegate.height
         }
 
-        Base.HColumnLayout {
-            Base.HLabel {
+        HColumnLayout {
+            HLabel {
                 id: roomLabel
                 text: displayName ? displayName : "<i>Empty room</i>"
                 textFormat: Text.StyledText
@@ -39,7 +39,7 @@ MouseArea {
                 rightPadding: leftPadding
             }
 
-            Base.HLabel {
+            HLabel {
                 function getText() {
                     return SidePaneJS.getLastRoomEventText(
                         roomId, roomList.userId
@@ -56,7 +56,7 @@ MouseArea {
                 text: getText()
                 textFormat: Text.StyledText
 
-                font.pixelSize: Base.HStyle.fontSize.small
+                font.pixelSize: HStyle.fontSize.small
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 Layout.maximumWidth: roomLabel.Layout.maximumWidth

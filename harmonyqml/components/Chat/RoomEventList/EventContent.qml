@@ -1,41 +1,41 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../../Base" as Base
+import "../../Base"
 import "../utils.js" as ChatJS
 
-Base.HRowLayout {
+HRowLayout {
     id: eventContent
     spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
 
-    Base.HAvatar {
+    HAvatar {
         id: avatar
         name: displayName
         hidden: combine
         dimension: 28
     }
 
-    Base.HLabel {
+    HLabel {
         id: contentLabel
         text: "<font color='" +
               Qt.hsla(Backend.hueFromString(displayName.value || dict.sender),
-                      Base.HStyle.chat.event.saturation,
-                      Base.HStyle.chat.event.lightness,
+                      HStyle.chat.event.saturation,
+                      HStyle.chat.event.lightness,
                       1) +
               "'>" +
               (displayName.value || dict.sender) + " " +
               ChatJS.getEventText(type, dict) +
 
               "&nbsp;&nbsp;" +
-              "<font size=" + Base.HStyle.fontSize.small + "px " +
-              "color=" + Base.HStyle.chat.event.date + ">" +
+              "<font size=" + HStyle.fontSize.small + "px " +
+              "color=" + HStyle.chat.event.date + ">" +
               Qt.formatDateTime(dateTime, "hh:mm:ss") +
               "</font> " +
               "</font>"
 
         textFormat: Text.RichText
-        background: Rectangle {color: Base.HStyle.chat.event.background}
+        background: Rectangle {color: HStyle.chat.event.background}
         wrapMode: Text.Wrap
 
         leftPadding: horizontalPadding

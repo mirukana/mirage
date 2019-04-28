@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
 Item {
     property string loginWith: "username"
@@ -10,7 +10,7 @@ Item {
     property int wi: x
     onWiChanged: console.log("loginI", wi)
 
-    Base.HInterfaceBox {
+    HInterfaceBox {
         id: signInBox
         title: "Sign in"
         anchors.centerIn: parent
@@ -42,7 +42,7 @@ Item {
             "forgot": function(button) {}
         }
 
-        Base.HRowLayout {
+        HRowLayout {
             spacing: signInBox.margins * 1.25
             Layout.margins: signInBox.margins
             Layout.alignment: Qt.AlignHCenter
@@ -50,7 +50,7 @@ Item {
             Repeater {
                 model: ["username", "email", "phone"]
 
-                Base.HButton {
+                HButton {
                     iconName: modelData
                     circle: true
                     checked: loginWith == modelData
@@ -60,7 +60,7 @@ Item {
             }
         }
 
-        Base.HTextField {
+        HTextField {
             id: identifierField
             placeholderText: qsTr(
                 loginWith === "email" ? "Email" :
@@ -73,7 +73,7 @@ Item {
             Layout.margins: signInBox.margins
         }
 
-        Base.HTextField {
+        HTextField {
             id: passwordField
             placeholderText: qsTr("Password")
             echoMode: TextField.Password

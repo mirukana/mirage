@@ -1,13 +1,13 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../../Base" as Base
+import "../../Base"
 import "../utils.js" as ChatJS
 
 Banner {
     property var leftEvent: null
 
-    color: Base.HStyle.chat.leftBanner.background
+    color: HStyle.chat.leftBanner.background
 
     avatarName: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
     labelText: ChatJS.getLeftBannerText(leftEvent)

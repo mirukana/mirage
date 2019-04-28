@@ -1,13 +1,13 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../../Base" as Base
+import "../../Base"
 
-Base.HGlassRectangle {
+HGlassRectangle {
     property bool canLoadPastEvents: true
     property int space: 8
 
-    color: Base.HStyle.chat.roomEventList.background
+    color: HStyle.chat.roomEventList.background
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -40,7 +40,7 @@ Base.HGlassRectangle {
         }
     }
 
-    Base.HNoticeLabel {
+    HNoticeLabel {
         text: qsTr("Nothing to show here yet...")
 
         visible: roomEventListView.model.count < 1

@@ -1,16 +1,16 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
-Base.HRowLayout {
+HRowLayout {
     property alias text: noticeLabel.text
     property alias color: noticeLabel.color
     property alias font: noticeLabel.font
     property alias backgroundColor: noticeLabelBackground.color
     property alias radius: noticeLabelBackground.radius
 
-    Base.HLabel {
+    HLabel {
         id: noticeLabel
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
@@ -24,8 +24,8 @@ Base.HRowLayout {
 
         background: Rectangle {
             id: noticeLabelBackground
-            color: Base.HStyle.box.background
-            radius: Base.HStyle.box.radius
+            color: HStyle.box.background
+            radius: HStyle.box.radius
         }
     }
 }

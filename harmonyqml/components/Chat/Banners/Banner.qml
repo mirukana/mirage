@@ -1,9 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../../Base" as Base
+import "../../Base"
 
-Base.HGlassRectangle {
+HGlassRectangle {
     id: banner
     Layout.fillWidth: true
     Layout.preferredHeight: 32
@@ -14,16 +14,16 @@ Base.HGlassRectangle {
     property alias buttonModel: bannerRepeater.model
     property var buttonCallbacks: []
 
-    Base.HRowLayout {
+    HRowLayout {
         id: bannerRow
         anchors.fill: parent
 
-        Base.HAvatar {
+        HAvatar {
             id: bannerAvatar
             dimension: banner.Layout.preferredHeight
         }
 
-        Base.HLabel {
+        HLabel {
             id: bannerLabel
             textFormat: Text.StyledText
             maximumLineCount: 1
@@ -43,7 +43,7 @@ Base.HGlassRectangle {
 
         Item { Layout.fillWidth: true }
 
-        Base.HRowLayout {
+        HRowLayout {
             id: bannerButtons
 
             function getButtonsWidth() {
@@ -68,7 +68,7 @@ Base.HGlassRectangle {
                 id: bannerRepeater
                 model: []
 
-                Base.HButton {
+                HButton {
                     id: button
                     text: modelData.text
                     iconName: modelData.iconName

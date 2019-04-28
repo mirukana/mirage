@@ -1,13 +1,13 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
 Item {
     property string loginWith: "username"
     property var client: null
 
-    Base.HInterfaceBox {
+    HInterfaceBox {
         id: rememberBox
         title: "Sign in"
         anchors.centerIn: parent
@@ -27,7 +27,7 @@ Item {
             "no": function(button) { pageStack.showPage("Default") },
         }
 
-        Base.HLabel {
+        HLabel {
             text: qsTr(
                 "Do you want to remember this account?\n\n" +
                 "If yes, the " + loginWith + " and an access token will be " +

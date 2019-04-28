@@ -1,7 +1,7 @@
 import QtQuick 2.7
-import "../Base" as Base
+import "../Base"
 
-Base.HLabel {
+HLabel {
     width: roomList.width
 
     // topPadding is provided by the roomList spacing

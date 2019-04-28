@@ -6,9 +6,9 @@
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons aren't reloaded
-  - Bug when resizing window being tiled (i3), can't figure it out
   - HStyle singleton isn't reloaded
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
+  - Bug when resizing window being tiled (i3), can't figure it out
 
 - UI
   - Use nested listview for categories instead of section property
@@ -17,17 +17,13 @@
   - Scaling
     - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
   - Test HGlassRectangle elements when no effects are available
+  - Add room
   - Leave room
   - Forget room warning popup
-  - Use HRowLayout and its totalSpacing wherever possible
   - Spacer component
-  - One line label componant
-  - Proper button background componant
-  - Collapsible roomList sections, + button
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
-  - Reorganize SidePane
-  - Proper theme, with components taking their colors from theme settings
+  - Better theming/styling system
   - Settings page
     - Multiaccount aliases
 
@@ -69,4 +65,4 @@
 
 - Distribution
   - Review setup.py, add dependencies
-  - REAMDE.md
+  - README.md

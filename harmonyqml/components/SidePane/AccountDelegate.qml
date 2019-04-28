@@ -1,24 +1,24 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../Base" as Base
+import "../Base"
 
-Base.HColumnLayout {
+HColumnLayout {
     id: accountDelegate
     width: parent.width
 
     property string roomListUserId: userId
 
-    Base.HRowLayout {
+    HRowLayout {
         id: row
 
-        Base.HAvatar { id: avatar; name: displayName; dimension: 36 }
+        HAvatar { id: avatar; name: displayName; dimension: 36 }
 
-        Base.HColumnLayout {
+        HColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Base.HLabel {
+            HLabel {
                 id: accountLabel
                 text: displayName.value || userId
                 elide: Text.ElideRight
@@ -28,11 +28,11 @@ Base.HColumnLayout {
                 rightPadding: leftPadding
             }
 
-            Base.HTextField {
+            HTextField {
                 id: statusEdit
                 text: statusMessage || ""
                 placeholderText: qsTr("Set status message")
-                font.pixelSize: Base.HStyle.fontSize.small
+                font.pixelSize: HStyle.fontSize.small
                 background: null
 
                 padding: 0
@@ -47,7 +47,7 @@ Base.HColumnLayout {
             }
         }
 
-        Base.HButton {
+        HButton {
             id: toggleExpand
             iconName: roomList.visible ? "up" : "down"
             iconDimension: 16
