@@ -1,8 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../Base" as Base
-import "utils.js" as ChatJS
+import "../../Base" as Base
+import "../utils.js" as ChatJS
 
 RowLayout {
     id: row
@@ -48,7 +48,7 @@ RowLayout {
         bottomPadding: verticalPadding
 
         Layout.maximumWidth: Math.min(
-            600, messageListView.width - avatar.width - row.spacing
+            600, roomEventListView.width - avatar.width - row.spacing
         )
     }
 }

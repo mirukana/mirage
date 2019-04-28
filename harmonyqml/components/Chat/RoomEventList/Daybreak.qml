@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import "../Base" as Base
+import "../../Base" as Base
 
 Base.HNoticeLabel {
     text: dateTime.toLocaleDateString()
@@ -7,5 +7,5 @@ Base.HNoticeLabel {
     backgroundColor: Base.HStyle.chat.daybreak.background
     radius: Base.HStyle.chat.daybreak.radius
 
-    width: messageDelegate.width
+    width: roomEventDelegate.width
 }

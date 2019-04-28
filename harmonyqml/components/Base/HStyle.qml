@@ -39,7 +39,7 @@ QtObject {
             property color background: colors.background1
         }
 
-        readonly property QtObject messageList: QtObject {
+        readonly property QtObject roomEventList: QtObject {
             property color background: "transparent"
         }
 

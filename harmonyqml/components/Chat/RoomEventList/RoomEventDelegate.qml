@@ -1,11 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
-import "../Base" as Base
-import "utils.js" as ChatJS
+import "../../Base" as Base
+import "../utils.js" as ChatJS
 
 Column {
-    id: messageDelegate
+    id: roomEventDelegate
 
     function minsBetween(date1, date2) {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
@@ -14,8 +14,8 @@ Column {
     function getIsMessage(type_) { return type_.startsWith("RoomMessage") }
 
     function getPreviousItem() {
-        return index < messageListView.model.count - 1 ?
-                messageListView.model.get(index + 1) : null
+        return index < roomEventListView.model.count - 1 ?
+                roomEventListView.model.get(index + 1) : null
     }
 
     property var previousItem: getPreviousItem()
@@ -59,7 +59,7 @@ Column {
     property int verticalPadding: 5
 
     ListView.onAdd: {
-        var nextDelegate = messageListView.contentItem.children[index]
+        var nextDelegate = roomEventListView.contentItem.children[index]
         if (nextDelegate) { nextDelegate.reloadPreviousItem() }
     }
 
