@@ -1,9 +1,7 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import "."
+import QtQuick.Controls 2.2
 
 Label {
     font.family: HStyle.fontFamily.sans
     font.pixelSize: HStyle.fontSize.normal
-    textFormat: Text.PlainText
+    textFormat: Label.PlainText
 }

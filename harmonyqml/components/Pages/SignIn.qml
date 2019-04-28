@@ -1,6 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.4
+import QtQuick.Layouts 1.0
 import "../Base"
 
 Item {
@@ -76,7 +75,7 @@ Item {
         HTextField {
             id: passwordField
             placeholderText: qsTr("Password")
-            echoMode: TextField.Password
+            echoMode: HTextField.Password
             onAccepted: signInBox.clickEnterButtonTarget()
 
             Layout.fillWidth: true

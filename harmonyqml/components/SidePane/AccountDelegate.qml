@@ -1,6 +1,4 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.4
+import QtQuick.Layouts 1.0
 import "../Base"
 
 HColumnLayout {
@@ -21,7 +19,7 @@ HColumnLayout {
             HLabel {
                 id: accountLabel
                 text: displayName.value || userId
-                elide: Text.ElideRight
+                elide: HLabel.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true
                 leftPadding: 6
