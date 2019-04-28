@@ -10,7 +10,7 @@ Row {
 
     Base.HAvatar { id: avatar; hidden: combine; name: displayName }
 
-    ColumnLayout {
+    Base.HColumnLayout {
         spacing: 0
 
         Base.HLabel {
@@ -56,7 +56,7 @@ Row {
 
             Layout.minimumWidth: nameLabel.implicitWidth
             Layout.maximumWidth: Math.min(
-                600, roomEventListView.width - avatar.width - row.spacing
+                600, roomEventListView.width - avatar.width - row.totalSpacing
             )
         }
     }

@@ -16,7 +16,6 @@ Base.HGlassRectangle {
 
     Base.HRowLayout {
         anchors.fill: parent
-        spacing: 0
 
         Base.HAvatar {
             id: avatar

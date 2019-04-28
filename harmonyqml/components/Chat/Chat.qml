@@ -1,10 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
+import "../Base" as Base
 import "Banners"
 import "RoomEventList"
 
-ColumnLayout {
+Base.HColumnLayout {
     property string userId: ""
     property string roomId: ""
 
@@ -16,7 +17,6 @@ ColumnLayout {
     Component.onCompleted: console.log("replaced")
 
     id: chatPage
-    spacing: 0
     onFocusChanged: sendBox.setFocus()
 
     RoomHeader {

@@ -45,7 +45,6 @@ Base.HGlassRectangle {
 
         Base.HRowLayout {
             id: bannerButtons
-            spacing: 0
 
             function getButtonsWidth() {
                 var total = 0

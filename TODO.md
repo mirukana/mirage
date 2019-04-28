@@ -1,5 +1,4 @@
 - Refactoring
-  - Use totalSpacing everywhere
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
 
@@ -49,7 +48,6 @@
   - Push instead of replacing in stack view
   - Make links in room subtitle clickable, formatting?
   - `<pre>` scrollbar on overflow
-  - Use Loader? for MessageDelegate to show sub-components based on condition
   - Handle cases where an avatar char is # or @ (#alias room, @user\_id)
   - Proper logoff when closing client
   - When inviting someone to direct chat, room is "Empty room" until accepted,

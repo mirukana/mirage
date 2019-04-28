@@ -5,7 +5,6 @@ import "../Base" as Base
 
 Base.HRowLayout {
     id: toolBar
-    spacing: 0
 
     Layout.fillWidth: true
     Layout.preferredHeight: 32
