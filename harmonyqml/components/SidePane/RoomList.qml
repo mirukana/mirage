@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.4
 import "../base" as Base
 
 ListView {
-    property var forUserId: null
+    property var userId: null
 
     property int childrenHeight: 36
     property int sectionHeight: 16 + spacing
@@ -31,7 +31,7 @@ ListView {
 
     id: roomList
     spacing: 8
-    model: Backend.models.rooms.get(forUserId)
+    model: Backend.models.rooms.get(userId)
     delegate: RoomDelegate {}
 
     section.property: "category"

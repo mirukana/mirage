@@ -4,8 +4,13 @@ import QtQuick.Layouts 1.4
 
 ListView {
     id: accountList
-    spacing: 8
-    model:  Backend.models.accounts
-    delegate: AccountDelegate {}
     clip: true
+
+    spacing: 8
+    Layout.leftMargin: spacing
+    topMargin: spacing
+    bottomMargin: spacing
+
+    model: Backend.models.accounts
+    delegate: AccountDelegate {}
 }

@@ -3,21 +3,20 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 import "../base" as Base
 
-ColumnLayout {
+Base.HColumnLayout {
     id: accountDelegate
-    spacing: 0
     width: parent.width
 
-    RowLayout {
+    property string roomListUserId: userId
+
+    Base.HRowLayout {
         id: row
-        spacing: 0
 
         Base.HAvatar { id: avatar; name: displayName; dimension: 36 }
 
-        ColumnLayout {
+        Base.HColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 0
 
             Base.HLabel {
                 id: accountLabel
@@ -29,22 +28,20 @@ ColumnLayout {
                 rightPadding: leftPadding
             }
 
-            TextField {
+            Base.HTextField {
                 id: statusEdit
                 text: statusMessage || ""
                 placeholderText: qsTr("Set status message")
+                font.pixelSize: Base.HStyle.fontSize.small
                 background: null
-                color: "black"
-                selectByMouse: true
-                font.family: "Roboto"
-                font.pixelSize: 12
-                Layout.fillWidth: true
+
                 padding: 0
                 leftPadding: accountLabel.leftPadding
                 rightPadding: leftPadding
+                Layout.fillWidth: true
 
                 onEditingFinished: {
-                    Backend.setStatusMessage(userId, text)
+                    //Backend.setStatusMessage(userId, text)
                     pageStack.forceActiveFocus()
                 }
             }
@@ -65,17 +62,12 @@ ColumnLayout {
         id: roomList
         visible: true
         interactive: false  // no scrolling
-        forUserId: userId
+        userId: roomListUserId
 
-        Layout.minimumHeight:
-            roomList.visible ?
-            roomList.contentHeight :
-            0
-        Layout.maximumHeight: Layout.minimumHeight
+        Layout.preferredHeight: roomList.visible ? roomList.contentHeight : 0
 
-        Layout.minimumWidth:
+        Layout.preferredWidth:
             parent.width - Layout.leftMargin - Layout.rightMargin
-        Layout.maximumWidth: Layout.minimumWidth
 
         Layout.margins: accountList.spacing
         Layout.leftMargin:

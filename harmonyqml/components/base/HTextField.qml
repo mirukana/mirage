@@ -4,6 +4,7 @@ import QtQuick.Controls 2.0
 TextField {
     font.family: HStyle.fontFamily.sans
     font.pixelSize: HStyle.fontSize.normal
+    color: HStyle.colors.foreground
 
     selectByMouse: true
 }

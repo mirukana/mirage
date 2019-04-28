@@ -5,29 +5,32 @@ import "../base" as Base
 import "utils.js" as SidePaneJS
 
 MouseArea {
-    id: root
+    id: roomDelegate
     width: roomList.width
     height: roomList.childrenHeight
 
-    onClicked: pageStack.showRoom(roomList.forUserId, roomId)
+    onClicked: pageStack.showRoom(roomList.userId, roomId)
 
-    RowLayout {
+    Base.HRowLayout {
         anchors.fill: parent
         id: row
         spacing: 1
 
-        Base.HAvatar { id: avatar; name: displayName; dimension: root.height }
+        Base.HAvatar {
+            id: roomAvatar
+            name: displayName
+            dimension: roomDelegate.height
+        }
 
-        ColumnLayout {
-            spacing: 0
-
+        Base.HColumnLayout {
             Base.HLabel {
                 id: roomLabel
                 text: displayName ? displayName : "<i>Empty room</i>"
                 textFormat: Text.StyledText
                 elide: Text.ElideRight
                 maximumLineCount: 1
-                Layout.maximumWidth: row.width - row.spacing - avatar.width
+                Layout.maximumWidth:
+                    row.width - row.totalSpacing - roomAvatar.width
                 verticalAlignment: Qt.AlignVCenter
 
                 topPadding: -2
@@ -35,10 +38,11 @@ MouseArea {
                 leftPadding: 5
                 rightPadding: leftPadding
             }
+
             Base.HLabel {
                 function getText() {
                     return SidePaneJS.getLastRoomEventText(
-                        roomId, roomList.forUserId
+                        roomId, roomList.userId
                     )
                 }
 

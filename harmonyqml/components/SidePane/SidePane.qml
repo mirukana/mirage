@@ -10,15 +10,14 @@ Base.HGlassRectangle {
 
     isPageStackDescendant: false
 
-    ColumnLayout {
+    Base.HColumnLayout {
         anchors.fill: parent
-        spacing: 0
 
         AccountList {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
-        HToolBar {}
+        PaneToolBar {}
     }
 }
