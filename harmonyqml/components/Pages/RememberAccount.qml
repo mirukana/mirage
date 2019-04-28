@@ -39,6 +39,6 @@ Item {
             Layout.maximumWidth: rememberBox.width - Layout.margins * 2
         }
 
-        Item { Layout.fillHeight: true }
+        HSpacer {}
     }
 }

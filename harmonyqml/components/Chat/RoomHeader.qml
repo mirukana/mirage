@@ -44,6 +44,6 @@ HGlassRectangle {
                 row.width - row.totalSpacing - avatar.width - roomName.width
         }
 
-        Item { Layout.fillWidth: true }
+        HSpacer {}
     }
 }

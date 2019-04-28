@@ -68,6 +68,6 @@ MouseArea {
             }
         }
 
-        Item { Layout.fillWidth: true }
+        HSpacer {}
     }
 }

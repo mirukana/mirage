@@ -41,7 +41,7 @@ HGlassRectangle {
             Layout.rightMargin: Layout.leftMargin
         }
 
-        Item { Layout.fillWidth: true }
+        HSpacer {}
 
         HRowLayout {
             id: bannerButtons
