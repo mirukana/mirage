@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import "base" as Base
-import "sidePane" as SidePane
+import "SidePane" as SidePane
 import "chat" as Chat
 
 Item {
@@ -20,9 +20,10 @@ Item {
     Base.HSplitView {
         anchors.fill: parent
 
-        SidePane.Root {
+        SidePane.SidePane {
             Layout.minimumWidth: 36
-            width: 200
+            width: Math.min(parent.width * 0.33, 300)
+            Layout.maximumWidth: parent.width
             visible: accountsLoggedIn
         }
 
