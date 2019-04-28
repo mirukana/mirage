@@ -3,12 +3,11 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.4
 
 HAvatar {
-    Image {
+    HImage {
         id: status
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         source: "../../icons/status.svg"
-        asynchronous: true
         sourceSize.width: 12
     }
 }
