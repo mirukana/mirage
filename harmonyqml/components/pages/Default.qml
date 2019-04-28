@@ -16,7 +16,8 @@ Base.HRowLayout {
         Layout.maximumWidth: parent.width - Layout.margins * 2
 
         background: Rectangle {
-            color: Qt.hsla(1, 1, 1, 0.3)
+            color: Base.HStyle.boxes.background
+            radius: Base.HStyle.boxes.radius
         }
     }
 }

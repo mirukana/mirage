@@ -62,9 +62,9 @@ class Engine(QQmlApplicationEngine):
 
 
     def reload_qml(self) -> None:
-        self.clearComponentCache()
         loader = self.rootObjects()[0].findChild(QObject, "UILoader")
         source = loader.property("source")
         loader.setProperty("source", None)
+        self.clearComponentCache()
         loader.setProperty("source", source)
         logging.info("Reloaded: %s", source)

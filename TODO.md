@@ -14,8 +14,10 @@
   - ![A picture](https://picsum.photos/256/256) not clickable?
   - Icons aren't reloaded
   - Bug when resizing window being tiled (i3), can't figure it out
+  - HStyle singleton isn't reloaded
 
 - UI
+  - Test HGlassRectangle elements when no effects are available
   - Leave room
   - Forget room warning popup
   - Use HRowLayout and its totalSpacing wherever possible

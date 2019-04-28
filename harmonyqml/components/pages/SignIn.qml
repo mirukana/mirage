@@ -5,8 +5,10 @@ import "../base" as Base
 
 Item {
     property string loginWith: "username"
-
     onFocusChanged: identifierField.forceActiveFocus()
+
+    property int wi: x
+    onWiChanged: console.log("loginI", wi)
 
     Base.HInterfaceBox {
         id: signInBox

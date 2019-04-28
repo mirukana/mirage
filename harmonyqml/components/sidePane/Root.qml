@@ -1,11 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
+import QtGraphicalEffects 1.0
 import "../base" as Base
 
-Rectangle {
+Base.HGlassRectangle {
     id: sidePane
-    color: "gray"
     clip: true  // Avoid artifacts when resizing pane width to minimum
 
     ColumnLayout {

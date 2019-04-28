@@ -1,21 +1,23 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.4
 import "base" as Base
 import "sidePane" as SidePane
 import "chat" as Chat
 
-Base.HImage {
+Item {
     id: mainUI
-    fillMode: Image.PreserveAspectCrop
-    source: "../images/login_background.jpg"
-    anchors.fill: parent
+
+    Base.HImage {
+        id: mainUIBackground
+        fillMode: Image.PreserveAspectCrop
+        source: "../images/login_background.jpg"
+        anchors.fill: parent
+    }
 
     property bool accountsLoggedIn: Backend.clientManager.clientCount > 0
 
-    //https://doc.qt.io/qt-5/qml-qtquick-controls-splitview.html
-    Controls1.SplitView {
+    Base.HSplitView {
         anchors.fill: parent
 
         SidePane.Root {
@@ -25,6 +27,10 @@ Base.HImage {
         }
 
         StackView {
+            id: pageStack
+
+            property bool initialPageSet: false
+
             function showPage(name, properties) {
                 pageStack.replace("pages/" + name + ".qml", properties || {})
             }
@@ -35,10 +41,11 @@ Base.HImage {
                 )
             }
 
-            id: pageStack
-            Component.onCompleted: showPage(
-                accountsLoggedIn ? "Default" : "SignIn"
-            )
+            Component.onCompleted: {
+                if (initialPageSet) { return }
+                initialPageSet = true
+                showPage(accountsLoggedIn ? "Default" : "SignIn")
+            }
 
             onCurrentItemChanged: if (currentItem) {
                 currentItem.forceActiveFocus()
