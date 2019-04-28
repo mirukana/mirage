@@ -29,6 +29,7 @@ Base.HGlassRectangle {
 
             id: textArea
             placeholderText: qsTr("Type a message...")
+            backgroundColor: "transparent"
             area.focus: true
 
             function setTyping(typing) {

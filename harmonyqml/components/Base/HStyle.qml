@@ -20,6 +20,8 @@ QtObject {
         property string mono: "Hack"
     }
 
+    property int radius: 5
+
     readonly property QtObject colors: QtObject {
         property color background0: Qt.hsla(0, 0, 0.8, 0.5)
         property color background1: Qt.hsla(0, 0, 0.8, 0.7)
@@ -28,10 +30,30 @@ QtObject {
         property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
     }
 
-    property int radius: 5
+    readonly property QtObject controls: QtObject {
+        readonly property QtObject button: QtObject {
+            property color background: colors.background1
+        }
+
+        readonly property QtObject textField: QtObject {
+            property color background: colors.background1
+        }
+
+        readonly property QtObject textArea: QtObject {
+            property color background: colors.background1
+        }
+    }
 
     readonly property QtObject sidePane: QtObject {
         property color background: colors.background1
+
+        readonly property QtObject settingsButton: QtObject {
+            property color background: colors.background1
+        }
+
+        readonly property QtObject filterRooms: QtObject {
+            property color background: colors.background1
+        }
     }
 
     readonly property QtObject chat: QtObject {

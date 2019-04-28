@@ -8,7 +8,7 @@ Button {
     property bool circle: false
 
     property int fontSize: HStyle.fontSize.normal
-    property color backgroundColor: "lightgray"
+    property color backgroundColor: HStyle.controls.button.background
     property alias overlayOpacity: buttonBackgroundOverlay.opacity
 
     property bool loading: false
