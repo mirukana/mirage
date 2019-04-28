@@ -4,20 +4,20 @@ import QtQuick.Layouts 1.4
 import "../Base" as Base
 import "utils.js" as ChatJS
 
-Rectangle {
-    id: root
+Base.HGlassRectangle {
+    property var typingUsers: chatPage.roomInfo.typingUsers
+
+    color: Base.HStyle.chat.typingUsers.background
+
     Layout.fillWidth: true
     Layout.minimumHeight: usersLabel.text ? usersLabel.implicitHeight : 0
     Layout.maximumHeight: Layout.minimumHeight
-    color: "#BBB"
-
-    property var typingUsers: chatPage.roomInfo.typingUsers
 
     Base.HLabel {
         id: usersLabel
         anchors.fill: parent
-        text: ChatJS.getTypingUsersText(typingUsers, chatPage.userId)
 
+        text: ChatJS.getTypingUsersText(typingUsers, chatPage.userId)
         elide: Text.ElideMiddle
         maximumLineCount: 1
     }

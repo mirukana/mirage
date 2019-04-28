@@ -8,12 +8,11 @@ Base.HGlassRectangle {
     Layout.fillWidth: true
     Layout.preferredHeight: 32
 
-    signal buttonClicked(string signalId)
-
     property alias avatarName: bannerAvatar.name
     property alias avatarSource: bannerAvatar.imageSource
     property alias labelText: bannerLabel.text
     property alias buttonModel: bannerRepeater.model
+    property var buttonCallbacks: []
 
     Base.HRowLayout {
         id: bannerRow
@@ -66,48 +65,15 @@ Base.HGlassRectangle {
                 bannerLabel.Layout.rightMargin +
                 getButtonsWidth()
 
-             property int displayMode:
-                 compact ? Button.IconOnly : Button.TextBesideIcon
-
             Repeater {
                 id: bannerRepeater
                 model: []
 
                 Base.HButton {
-                    property bool alreadyClicked: false
-
+                    id: button
                     text: modelData.text
                     iconName: modelData.iconName
-                    display: bannerButtons.displayMode
-
-                    MouseArea {
-                        anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            if (alreadyClicked) { return }
-
-                            iconName       = "hourglass"
-                            alreadyClicked = true
-
-                            // modelData might be undefined after Backend call
-                            var signalId = modelData.signalId
-                            var isForget =
-                                modelData.clientFunction === "forgetRoom"
-
-                            var future =
-                                Backend.clientManager.clients[chatPage.userId].
-                                call(modelData.clientFunction,
-                                     modelData.clientArgs)
-
-                            if (! isForget) {
-                                future.onGotResult.connect(function() {
-                                    iconName = modelData.iconName
-                                })
-                            }
-
-                            if (signalId) { buttonClicked(signalId) }
-                        }
-                    }
+                    onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.maximumWidth: bannerButtons.compact ? height : -1
                     Layout.fillHeight: true

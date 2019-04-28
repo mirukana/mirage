@@ -9,6 +9,7 @@ Rectangle {
     property var imageSource: null
     property int dimension: 48
 
+
     readonly property string resolvedName:
         ! name ? "?" :
         typeof(name) == "string" ? name :
@@ -16,6 +17,9 @@ Rectangle {
 
     width: dimension
     height: hidden ? 1 : dimension
+    implicitWidth: dimension
+    implicitHeight: hidden ? 1 : dimension
+
     opacity: hidden ? 0 : 1
 
     color: resolvedName === "?" ?

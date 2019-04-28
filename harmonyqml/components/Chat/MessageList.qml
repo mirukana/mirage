@@ -7,7 +7,7 @@ Base.HGlassRectangle {
     property bool canLoadPastEvents: true
     property int space: 8
 
-    color: "transparent"
+    color: Base.HStyle.chat.messageList.background
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -40,16 +40,10 @@ Base.HGlassRectangle {
         }
     }
 
-    Base.HLabel {
+    Base.HNoticeLabel {
+        text: qsTr("Nothing to show here yet...")
+
         visible: messageListView.model.count < 1
         anchors.centerIn: parent
-        text: qsTr("Nothing to see here yet…")
-        padding: 10
-        topPadding: padding / 3
-        bottomPadding: topPadding
-        background: Rectangle {
-            color: Base.HStyle.chat.messageList.background
-            radius: 5
-        }
     }
 }

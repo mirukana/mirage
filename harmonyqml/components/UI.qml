@@ -21,8 +21,10 @@ Item {
         anchors.fill: parent
 
         SidePane.SidePane {
+            property int parentWidth: parent.width
+            onParentWidthChanged: width = Math.min(parent.width * 0.3, 300)
+
             Layout.minimumWidth: 36
-            width: Math.min(parent.width * 0.33, 300)
             Layout.maximumWidth: parent.width
             visible: accountsLoggedIn
         }
@@ -38,7 +40,7 @@ Item {
 
             function showRoom(userId, roomId) {
                 pageStack.replace(
-                    "Chat/Root.qml", { userId: userId, roomId: roomId }
+                    "Chat/Chat.qml", { userId: userId, roomId: roomId }
                 )
             }
 

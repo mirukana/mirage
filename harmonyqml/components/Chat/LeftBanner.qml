@@ -9,22 +9,25 @@ Banner {
 
     color: Base.HStyle.chat.leftBanner.background
 
-    onButtonClicked: if (signalId === "forget") {
-        chatPage.canLoadPastEvents = false
-        pageStack.clear()
-    }
-
     avatarName: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
     labelText: ChatJS.getLeftBannerText(leftEvent)
 
     buttonModel: [
         {
-            signalId: "forget",
-            text: "Forget",
+            name: "forget",
+            text: qsTr("Forget"),
             iconName: "forget_room",
-            //iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
-            clientFunction: "forgetRoom",
-            clientArgs: [chatPage.roomId],
         }
     ]
+
+    buttonCallbacks: {
+        "forget": function(button) {
+            button.loading = true
+            chatPage.canLoadPastEvents = false
+            Backend.clientManager.clients[chatPage.userId].forgetRoom(
+                chatPage.roomId
+            )
+            pageStack.clear()
+        },
+    }
 }

@@ -13,7 +13,6 @@ ColumnLayout {
 
     Component.onCompleted: console.log("replaced")
 
-
     id: chatPage
     spacing: 0
     onFocusChanged: sendBox.setFocus()

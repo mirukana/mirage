@@ -11,8 +11,10 @@
   - Icons aren't reloaded
   - Bug when resizing window being tiled (i3), can't figure it out
   - HStyle singleton isn't reloaded
+  - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI
+  - Use nested listview for categories instead of section property
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Scaling

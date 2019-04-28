@@ -8,7 +8,4 @@ Base.HNoticeLabel {
     radius: Base.HStyle.chat.daybreak.radius
 
     width: messageDelegate.width
-    //topPadding: messageDelegate.isFirstMessage ?
-                //0 : messageDelegate.standardSpacing
-    //bottomPadding: messageDelegate.standardSpacing
 }

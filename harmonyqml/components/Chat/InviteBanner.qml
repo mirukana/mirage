@@ -18,18 +18,30 @@ Banner {
 
     buttonModel: [
         {
-            text: "Accept",
+            name: "accept",
+            text: qsTr("Accept"),
             iconName: "invite_accept",
-            //iconColor: Qt.hsla(0.45, 0.9, 0.3, 1),
-            clientFunction: "joinRoom",
-            clientArgs: [chatPage.roomId],
         },
         {
-            text: "Decline",
+            name: "decline",
+            text: qsTr("Decline"),
             iconName: "invite_decline",
-            //iconColor: Qt.hsla(0.95, 0.9, 0.35, 1),
-            clientFunction: "leaveRoom",
-            clientArgs: [chatPage.roomId],
         }
     ]
+
+    buttonCallbacks: {
+        "accept": function(button) {
+            button.loading = true
+            Backend.clientManager.clients[chatPage.userId].joinRoom(
+                chatPage.roomId
+            )
+        },
+
+        "decline": function(button) {
+            button.loading = true
+            Backend.clientManager.clients[chatPage.userId].leaveRoom(
+                chatPage.roomId
+            )
+        }
+    }
 }

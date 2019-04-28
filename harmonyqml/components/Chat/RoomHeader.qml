@@ -7,22 +7,22 @@ Base.HGlassRectangle {
     property string displayName: ""
     property string topic: ""
 
-    id: root
-    Layout.fillWidth: true
-    Layout.minimumHeight: 36
-    Layout.maximumHeight: Layout.minimumHeight
+    id: roomHeader
     color: Base.HStyle.chat.roomHeader.background
 
-    RowLayout {
+    Layout.fillWidth: true
+    Layout.preferredHeight: 32
+
+    Base.HRowLayout {
         id: row
-        spacing: 12
+        spacing: 8
         anchors.fill: parent
 
         Base.HAvatar {
             id: avatar
-            Layout.alignment: Qt.AlignTop
-            dimension: root.Layout.minimumHeight
             name: displayName
+            dimension: roomHeader.height
+            Layout.alignment: Qt.AlignTop
         }
 
         Base.HLabel {
@@ -31,9 +31,7 @@ Base.HGlassRectangle {
             font.pixelSize: Base.HStyle.fontSize.big
             elide: Text.ElideRight
             maximumLineCount: 1
-            Layout.maximumWidth:
-                row.width - row.spacing * (row.children.length - 1) -
-                avatar.width
+            Layout.maximumWidth: row.width - row.totalSpacing - avatar.width
         }
 
         Base.HLabel {
@@ -43,10 +41,7 @@ Base.HGlassRectangle {
             elide: Text.ElideRight
             maximumLineCount: 1
             Layout.maximumWidth:
-                row.width -
-                row.spacing * (row.children.length - 1) -
-                avatar.width -
-                roomName.width
+                row.width - row.totalSpacing - avatar.width - roomName.width
         }
 
         Item { Layout.fillWidth: true }

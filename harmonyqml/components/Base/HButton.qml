@@ -15,6 +15,9 @@ Button {
 
     property int contentWidth: 0
 
+    readonly property alias visibility: button.visible
+    onVisibilityChanged: if (! visibility) { loading = false }
+
     signal canceled
     signal clicked
     signal doubleClicked
@@ -30,7 +33,6 @@ Button {
     }
 
     id: button
-    display: Button.TextBesideIcon
 
     background: Rectangle {
         id: buttonBackground
