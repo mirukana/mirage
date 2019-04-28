@@ -1,9 +1,7 @@
 - Refactoring
-  - Use new H\* components everywhere
-  - TextInput.accepted() for SendBox
+  - Use totalSpacing everywhere
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
-  - Better names and organization for the Message components
 
 - Bug fixes
   - 100% CPU usage when hitting top edge to trigger messages loading

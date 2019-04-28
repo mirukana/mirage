@@ -7,7 +7,6 @@ Row {
     id: row
     spacing: standardSpacing
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
-    anchors.right: isOwn ? parent.right : undefined
 
     Base.HAvatar { id: avatar; hidden: combine; name: displayName }
 

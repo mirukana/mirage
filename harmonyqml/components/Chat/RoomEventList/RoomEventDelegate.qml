@@ -72,7 +72,10 @@ Column {
         combine ? standardSpacing / 4 :
         standardSpacing
 
-    Daybreak { visible: dayBreak }
+    Loader {
+        source: dayBreak ? "Daybreak.qml" : ""
+        width: roomEventDelegate.width
+    }
 
     Item {
         visible: dayBreak
@@ -80,7 +83,8 @@ Column {
         height: topPadding
     }
 
-    MessageContent { visible: isMessage }
-
-    EventContent { visible: ! isMessage }
+    Loader {
+        source: isMessage ? "MessageContent.qml" : "EventContent.qml"
+        anchors.right: isOwn ? parent.right : undefined
+    }
 }

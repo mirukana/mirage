@@ -6,6 +6,4 @@ Base.HNoticeLabel {
     color: Base.HStyle.chat.daybreak.foreground
     backgroundColor: Base.HStyle.chat.daybreak.background
     radius: Base.HStyle.chat.daybreak.radius
-
-    width: roomEventDelegate.width
 }

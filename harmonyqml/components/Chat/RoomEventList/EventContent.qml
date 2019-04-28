@@ -5,13 +5,9 @@ import "../../Base" as Base
 import "../utils.js" as ChatJS
 
 RowLayout {
-    id: row
+    id: eventContent
     spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
-    anchors.right: isOwn ? parent.right : undefined
-
-    readonly property string contentText:
-        isMessage ?  "" : ChatJS.getEventText(type, dict)
 
     Base.HAvatar {
         id: avatar
@@ -29,7 +25,7 @@ RowLayout {
                       1) +
               "'>" +
               (displayName.value || dict.sender) + " " +
-              contentText +
+              ChatJS.getEventText(type, dict) +
 
               "&nbsp;&nbsp;" +
               "<font size=" + Base.HStyle.fontSize.small + "px " +
@@ -48,7 +44,8 @@ RowLayout {
         bottomPadding: verticalPadding
 
         Layout.maximumWidth: Math.min(
-            600, roomEventListView.width - avatar.width - row.spacing
+            600,
+            roomEventListView.width - avatar.width - eventContent.totalSpacing
         )
     }
 }
