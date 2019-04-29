@@ -3,7 +3,6 @@
   - Don't bake in size properties for components
 
 - Bug fixes
-  - The damn remember account dialog
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons aren't reloaded
@@ -25,6 +24,7 @@
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
   - Better theming/styling system
+    - See about <https://doc.qt.io/qt-5/qtquickcontrols2-configuration.html>
   - Settings page
     - Multiaccount aliases
 

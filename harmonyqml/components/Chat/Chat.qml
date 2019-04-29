@@ -12,8 +12,6 @@ HColumnLayout {
 
     property bool canLoadPastEvents: true
 
-    Component.onCompleted: console.log("replaced")
-
     id: chatPage
     onFocusChanged: sendBox.setFocus()
 

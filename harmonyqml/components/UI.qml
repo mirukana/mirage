@@ -44,8 +44,8 @@ Item {
             }
 
             Component.onCompleted: {
-                if (initialPageSet) { return }
-                initialPageSet = true
+                if (pageStack.initialPageSet) { return }
+                pageStack.initialPageSet = true
                 showPage(accountsLoggedIn ? "Default" : "SignIn")
             }
 
