@@ -62,7 +62,6 @@
 - Waiting for approval/release
   - nio avatars
   - olm/olm-devel 0.3.1 in void repos
-  - html-sanitizer allowed attributes fix pypi release
 
 - Distribution
   - Review setup.py, add dependencies

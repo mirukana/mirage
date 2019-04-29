@@ -28,10 +28,6 @@ class HtmlFilter(QObject):
         sanitizer.normalize_overall_whitespace         = lambda html: html
         sanitizer.normalize_whitespace_in_text_or_tail = lambda el: el
 
-        # Prevent custom attributes from being removed
-        sanitizer.lxml.html.clean.Cleaner.safe_attrs |= \
-            self.sanitizer_settings["attributes"]["font"]
-
         # hard_wrap: convert all \n to <br> without required two spaces
         self._markdown_to_html = mistune.Markdown(hard_wrap=True)
 
