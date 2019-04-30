@@ -4,7 +4,7 @@ import "../../Base"
 
 Row {
     id: row
-    spacing: standardSpacing
+    spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
 
     HAvatar { id: avatar; hidden: combine; name: displayName }
