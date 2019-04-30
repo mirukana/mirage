@@ -8,7 +8,7 @@ HColumnLayout {
     property string roomId: ""
 
     readonly property var roomInfo:
-        Backend.models.rooms.get(userId).getWhere("roomId", roomId)
+        Backend.models.rooms.get(userId).get(roomId)
 
     property bool canLoadPastEvents: true
 
@@ -17,7 +17,7 @@ HColumnLayout {
 
     RoomHeader {
         displayName: roomInfo.displayName
-        topic: roomInfo.topic
+        topic: roomInfo.topic || ""
     }
 
     RoomEventList {}

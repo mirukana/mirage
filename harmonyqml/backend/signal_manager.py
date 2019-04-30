@@ -41,8 +41,7 @@ class SignalManager(QObject):
 
 
     def onClientDeleted(self, user_id: str) -> None:
-        accs = self.backend.models.accounts
-        del accs[accs.indexWhere("userId", user_id)]
+        del self.backend.models.accounts[user_id]
 
 
     def connectClient(self, client: Client) -> None:
@@ -120,7 +119,7 @@ class SignalManager(QObject):
                   client:     Client,
                   room_id:    str,
                   room:       MatrixRoom,
-                  category:   str,
+                  category:   str       = "Rooms",
                   inviter:    Inviter   = None,
                   left_event: LeftEvent = None) -> None:
 
@@ -144,15 +143,14 @@ class SignalManager(QObject):
 
         item = Room(
             roomId      = room_id,
-            category    = category,
             displayName = get_displayname(),
-            topic       = room.topic if room else "",
+            category    = category,
+            topic       = room.topic if room else None,
             inviter     = inviter,
             leftEvent   = left_event,
-            no_update   = no_update,
         )
 
-        model.updateOrAppendWhere("roomId", room_id, item)
+        model.upsert(room_id, item, ignore_roles=no_update)
         with self._lock:
             self._move_room(client.userId, room_id)
 
@@ -242,9 +240,7 @@ class SignalManager(QObject):
                                  client:  Client,
                                  room_id: str,
                                  users:   List[str]) -> None:
-
-        rooms = self.backend.models.rooms[client.userId]
-        rooms[rooms.indexWhere("roomId", room_id)].typingUsers = users
+        self.backend.models.rooms[client.userId][room_id].typingUsers = users
 
 
     def onMessageAboutToBeSent(self,
@@ -253,17 +249,15 @@ class SignalManager(QObject):
                                content: Dict[str, str]) -> None:
 
         with self._lock:
-            timestamp = QDateTime.currentMSecsSinceEpoch()
             model     = self.backend.models.roomEvents[room_id]
             nio_event = nio.events.RoomMessage.parse_event({
                 "event_id":         "",
                 "sender":           client.userId,
-                "origin_server_ts": timestamp,
+                "origin_server_ts": QDateTime.currentMSecsSinceEpoch(),
                 "content":          content,
             })
             event = RoomEvent(
                 type        = type(nio_event).__name__,
-                dateTime    = QDateTime.fromMSecsSinceEpoch(timestamp),
                 dict        = nio_event.__dict__,
                 isLocalEcho = True,
             )
@@ -275,7 +269,5 @@ class SignalManager(QObject):
 
     def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:
         with self._lock:
-            rooms = self.backend.models.rooms[client.userId]
-            del rooms[rooms.indexWhere("roomId", room_id)]
-
+            del self.backend.models.rooms[client.userId][room_id]
             self.backend.models.roomEvents[room_id].clear()

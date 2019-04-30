@@ -6,9 +6,6 @@ Item {
     property string loginWith: "username"
     onFocusChanged: identifierField.forceActiveFocus()
 
-    property int wi: x
-    onWiChanged: console.log("loginI", wi)
-
     HInterfaceBox {
         id: signInBox
         title: "Sign in"

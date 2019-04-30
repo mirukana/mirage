@@ -9,12 +9,14 @@ from PyQt5.QtCore import (
     pyqtSlot
 )
 
-from .items import ListItem
+from .list_item import ListItem
 
+Index   = Union[int, str]
 NewItem = Union[ListItem, Mapping[str, Any], Sequence]
 
 
 class ListModel(QAbstractListModel):
+    rolesSet     = pyqtSignal()
     changed      = pyqtSignal()
     countChanged = pyqtSignal(int)
 
@@ -34,7 +36,7 @@ class ListModel(QAbstractListModel):
 
 
     def __getitem__(self, index):
-        return self._data[index]
+        return self.get(index)
 
 
     def __setitem__(self, index, value) -> None:
@@ -53,9 +55,15 @@ class ListModel(QAbstractListModel):
         return iter(self._data)
 
 
-    @pyqtProperty(list, constant=True)
+    @pyqtProperty("QVariant", notify=rolesSet)
     def roles(self) -> Tuple[str, ...]:
         return self._data[0].roles if self._data else ()  # type: ignore
+
+
+    @pyqtProperty("QVariant", notify=rolesSet)
+    def mainKey(self) -> Optional[str]:
+        return self._data[0].mainKey if self._data else None
+
 
 
     def roleNames(self) -> Dict[int, bytes]:
@@ -110,11 +118,6 @@ class ListModel(QAbstractListModel):
         return len(self)
 
 
-    @pyqtSlot(int, result="QVariant")
-    def get(self, index: int) -> ListItem:
-        return self._data[index]
-
-
     @pyqtSlot(str, "QVariant", result=int)
     def indexWhere(self, prop: str, is_value: Any) -> int:
         for i, item in enumerate(self._data):
@@ -125,16 +128,26 @@ class ListModel(QAbstractListModel):
                          f"property {prop!r} set to {is_value!r}.")
 
 
-    @pyqtSlot(str, "QVariant", result="QVariant")
-    def getWhere(self, prop: str, is_value: Any) -> ListItem:
-        return self.get(self.indexWhere(prop, is_value))
+    @pyqtSlot(int, result="QVariant")
+    @pyqtSlot(str, result="QVariant")
+    def get(self, index: Index) -> ListItem:
+        if isinstance(index, str):
+            index = self.indexWhere(self.mainKey, index)
+
+        return self._data[index]  # type: ignore
 
 
     @pyqtSlot(int, "QVariantMap")
     def insert(self, index: int, value: NewItem) -> None:
         value = self._convert_new_value(value)
+
         self.beginInsertRows(QModelIndex(), index, index)
+
+        had_data = bool(self._data)
         self._data.insert(index, value)
+        if not had_data:
+            self.rolesSet.emit()
+
         self.endInsertRows()
 
         self.countChanged.emit(len(self))
@@ -152,46 +165,68 @@ class ListModel(QAbstractListModel):
             self.append(val)
 
 
-    @pyqtSlot("QVariantMap")
-    def update(self, index: int, value: NewItem) -> None:
+    @pyqtSlot(int, "QVariantMap")
+    @pyqtSlot(int, "QVariantMap", "QVariant")
+    @pyqtSlot(str, "QVariantMap")
+    @pyqtSlot(str, "QVariantMap", "QVariant")
+    def update(self,
+               index:        Index,
+               value:        NewItem,
+               ignore_roles: Sequence[str] = ()) -> None:
         value = self._convert_new_value(value)
 
-        for role in self.roles:
-            if role in value.no_update:
-                continue
+        if isinstance(index, str):
+            index = self.indexWhere(self.mainKey or value.mainKey, index)
 
-            setattr(self._data[index], role, getattr(value, role))
+        to_update = self._data[index]  # type: ignore
+
+        for role in self.roles:
+            if role not in ignore_roles:
+                try:
+                    setattr(to_update, role, getattr(value, role))
+                except AttributeError:  # constant/not settable
+                    pass
 
         qidx = QAbstractListModel.index(self, index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
 
 
-    @pyqtSlot(str, "QVariant", "QVariantMap")
-    def updateOrAppendWhere(
-            self, prop: str, is_value: Any, update_with: NewItem
-    ) -> None:
+    @pyqtSlot(str, "QVariantMap")
+    @pyqtSlot(str, "QVariantMap", int)
+    @pyqtSlot(str, "QVariantMap", int, list)
+    def upsert(self,
+               where_main_key_is_value: Any,
+               update_with:             NewItem,
+               index_if_insert:         Optional[int] = None,
+               ignore_roles:            Sequence[str] = ()) -> None:
         try:
-            index = self.indexWhere(prop, is_value)
-            self.update(index, update_with)
-        except ValueError:
-            index = len(self)
-            self.append(update_with)
+            self.update(where_main_key_is_value, update_with, ignore_roles)
+        except (IndexError, ValueError):
+            self.insert(index_if_insert or len(self), update_with)
 
 
 
     @pyqtSlot(int, list)
-    def set(self, index: int, value: NewItem) -> None:
+    @pyqtSlot(str, list)
+    def set(self, index: Index, value: NewItem) -> None:
+        if isinstance(index, str):
+            index = self.indexWhere(self.mainKey, index)
+
         qidx              = QAbstractListModel.index(self, index, 0)
         value             = self._convert_new_value(value)
-        self._data[index] = value
+        self._data[index] = value  # type: ignore
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
 
 
     @pyqtSlot(int, str, "QVariant")
-    def setProperty(self, index: int, prop: str, value: Any) -> None:
-        setattr(self._data[index], prop, value)
+    @pyqtSlot(str, str, "QVariant")
+    def setProperty(self, index: Index, prop: str, value: Any) -> None:
+        if isinstance(index, str):
+            index = self.indexWhere(self.mainKey, index)
+
+        setattr(self._data[index], prop, value)  # type: ignore
         qidx = QAbstractListModel.index(self, index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
@@ -227,9 +262,13 @@ class ListModel(QAbstractListModel):
 
 
     @pyqtSlot(int)
-    def remove(self, index: int) -> None:
+    @pyqtSlot(str)
+    def remove(self, index: Index) -> None:
+        if isinstance(index, str):
+            index = self.indexWhere(self.mainKey, index)
+
         self.beginRemoveRows(QModelIndex(), index, index)
-        del self._data[index]
+        del self._data[index]  # type: ignore
         self.endRemoveRows()
 
         self.countChanged.emit(len(self))
