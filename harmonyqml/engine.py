@@ -26,7 +26,7 @@ class Engine(QQmlApplicationEngine):
         self._sigint_timer.start(100)
 
         super().__init__()
-        self.app_dir = Path(sys.argv[0]).resolve().parent
+        self.app_dir = Path(__file__).resolve().parent
 
         from .backend.backend import Backend
         self.backend = Backend(self)
