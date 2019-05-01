@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Window 2.7
 import "Base"
 import "SidePane"
 
@@ -11,6 +12,8 @@ Item {
         id: mainUIBackground
         fillMode: Image.PreserveAspectCrop
         source: "../images/login_background.jpg"
+        sourceSize.width: Screen.width
+        sourceSize.height: Screen.height
         anchors.fill: parent
     }
 
