@@ -1,15 +1,18 @@
-from typing import Any, Dict, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Set, Tuple, Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
+
+PyqtType = Union[str, type]
 
 
 class _ListItemMeta(type(QObject)):  # type: ignore
     __slots__ = ()
 
     def __new__(mcs, name: str, bases: Tuple[type], attrs: Dict[str, Any]):
-        def to_pyqt_type(type_):
+        def to_pyqt_type(type_) -> PyqtType:
+            "Return an appropriate pyqtProperty type from an annotation."
             try:
-                if issubclass(type_, (bool, int, float, str)):
+                if issubclass(type_, (bool, int, float, str, type(None))):
                     return type_
                 if issubclass(type_, Mapping):
                     return "QVariantMap"
@@ -17,10 +20,14 @@ class _ListItemMeta(type(QObject)):  # type: ignore
             except TypeError:  # e.g. None passed
                 return to_pyqt_type(type(type_))
 
-        special  = {"_main_key", "_required_init_values", "_constant"}
-        constant = set(attrs.get("_constant") or set())
+        # These special attributes must not be processed like properties
+        special = {"_main_key", "_required_init_values", "_constant"}
 
-        props = {
+        # These properties won't be settable and will not have a notify signal
+        constant: Set[str] = set(attrs.get("_constant") or set())
+
+        # {property_name: (its_pyqt_type, its_default_value)}
+        props: Dict[str, Tuple[PyqtType, Any]] = {
             name: (to_pyqt_type(attrs.get("__annotations__", {}).get(name)),
                    value)
             for name, value in attrs.items()
@@ -29,23 +36,28 @@ class _ListItemMeta(type(QObject)):  # type: ignore
                     name in special)
         }
 
-        signals = {
+        # Signals for the pyqtProperty notify arguments
+        signals: Dict[str, pyqtSignal] = {
             f"{name}Changed": pyqtSignal(type_)
             for name, (type_, _) in props.items() if name not in constant
         }
 
+        # pyqtProperty() won't take None, so we make dicts of extra kwargs
+        # to pass for each property
         pyqt_props_kwargs: Dict[str, Dict[str, Any]] = {
             name: {"constant": True} if name in constant else
+
                   {"notify": signals[f"{name}Changed"],
+
                    "fset": lambda self, value, n=name: (
                        setattr(self, f"_{n}", value) or  # type: ignore
                        getattr(self, f"{n}Changed").emit(value),
-                   ),
-                  }
+                   )}
             for name in props
         }
 
-        pyqt_props = {
+        # The final pyqtProperty objects
+        pyqt_props: Dict[str, pyqtProperty] = {
             name: pyqtProperty(
                 type_,
                 fget=lambda self, n=name: getattr(self, f"_{n}"),
@@ -55,9 +67,17 @@ class _ListItemMeta(type(QObject)):  # type: ignore
         }
 
         attrs = {
-            **attrs, **signals, **pyqt_props,
+            **attrs,  # Original class attributes
+            **signals,
+            **pyqt_props,
+
+            # Set the internal _properties as slots for memory savings
             "__slots__": tuple({f"_{prop}" for prop in props} & {"_main_key"}),
-            "_props":    props,
+
+            "_props": props,
+
+            # The main key is either the attribute _main_key,
+            # or the first defined property
             "_main_key": attrs.get("_main_key") or
                          list(props.keys())[0] if props else None,
 
@@ -71,25 +91,29 @@ class ListItem(QObject, metaclass=_ListItemMeta):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__()
 
-        method      = "%s.__init__()" % type(self).__name__
-        already_set = set()
+        method:      str      = "%s.__init__()" % type(self).__name__
+        already_set: Set[str] = set()
 
-        required     = set(self._required_init_values)
-        required_num = len(required) + 1  # + 1 = self
-        args_num     = len(self._props) + 1
-        from_to      = str(args_num) if required_num == args_num else \
-                       f"from {required_num} to {args_num}"
+        required:     Set[str] = set(self._required_init_values)
+        required_num: int      = len(required) + 1  # + 1 = self
 
+        args_num: int = len(self._props) + 1
+        from_to: str  = str(args_num) if required_num == args_num else \
+                        f"from {required_num} to {args_num}"
+
+        # Check that not too many positional arguments were passed
         if len(args) > len(self._props):
             raise TypeError(
                 f"{method} takes {from_to} positional arguments but "
                 f"{len(args) + 1} were given"
             )
 
+        # Set properties from provided positional arguments
         for prop, value in zip(self._props, args):
             setattr(self, f"_{prop}", value)
             already_set.add(prop)
 
+        # Set properties from provided keyword arguments
         for prop, value in kwargs.items():
             if prop in already_set:
                 raise TypeError(f"{method} got multiple values for "
@@ -100,48 +124,38 @@ class ListItem(QObject, metaclass=_ListItemMeta):
             setattr(self, f"_{prop}", value)
             already_set.add(prop)
 
-        missing = required - already_set
+        # Check for required init arguments not provided
+        missing: Set[str] = required - already_set
         if missing:
             raise TypeError("%s missing %d required argument: %s" % (
                 method, len(missing), ", ".join((repr(m) for m in missing))))
 
+        # Set default values for properties not provided in arguments
         for prop in set(self._props) - already_set:
-            # Set default values for properties not provided in arguments
             setattr(self, f"_{prop}", self._props[prop][1])
 
 
     def __repr__(self) -> str:
-        return "%s(main_key=%r, required_init_values=%r, constant=%r, %s)" % (
-            type(self).__name__,
-            self.mainKey,
-            self._required_init_values,
-            self._constant,
-            ", ".join((("%s=%r" % (p, getattr(self, p))) for p in self._props))
+        prop_strings = (
+            "\033[%dm%s\033[0m=%r" % (
+                1 if p == self.mainKey else 0, # 1 = term bold
+                p,
+                getattr(self, p)
+            ) for p in self._props
         )
+        return "%s(%s)" % (type(self).__name__, ", ".join(prop_strings))
 
 
     @pyqtSlot(result=str)
     def repr(self) -> str:
-        return self.__repr()
+        return self.__repr__()
 
 
-    @pyqtProperty(list)
+    @pyqtProperty("QStringList", constant=True)
     def roles(self) -> List[str]:
         return list(self._props.keys())
 
 
-    @pyqtProperty(str)
+    @pyqtProperty(str, constant=True)
     def mainKey(self) -> str:
         return self._main_key
-
-
-class User(ListItem):
-    _required_init_values = {"name"}
-    _constant             = {"name"}
-
-    name:  str             = ""
-    age:   int             = 0
-    likes: Tuple[str, ...] = ()
-    knows: Dict[str, str]  = {}
-    photo: Optional[str]   = None
-    other = None

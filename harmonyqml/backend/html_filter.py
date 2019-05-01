@@ -57,7 +57,7 @@ class HtmlFilter(QObject):
         return str(result, "utf-8")
 
 
-    @pyqtProperty("QVariant")
+    @pyqtProperty("QVariantMap")
     def sanitizer_settings(self) -> dict:
         # https://matrix.org/docs/spec/client_server/latest.html#m-room-message-msgtypes
         return {

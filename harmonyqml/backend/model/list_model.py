@@ -35,15 +35,15 @@ class ListModel(QAbstractListModel):
         return "%s(%r)" % (type(self).__name__, self._data)
 
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: Index) -> ListItem:
         return self.get(index)
 
 
-    def __setitem__(self, index, value) -> None:
+    def __setitem__(self, index: Index, value: NewItem) -> None:
         self.set(index, value)
 
 
-    def __delitem__(self, index) -> None:
+    def __delitem__(self, index: Index) -> None:
         self.remove(index)
 
 
@@ -51,11 +51,16 @@ class ListModel(QAbstractListModel):
         return len(self._data)
 
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[NewItem]:
         return iter(self._data)
 
 
-    @pyqtProperty("QVariant", notify=rolesSet)
+    @pyqtSlot(result=str)
+    def repr(self) -> str:
+        return self.__repr__()
+
+
+    @pyqtProperty("QStringList", notify=rolesSet)
     def roles(self) -> Tuple[str, ...]:
         return self._data[0].roles if self._data else ()  # type: ignore
 
@@ -166,9 +171,9 @@ class ListModel(QAbstractListModel):
 
 
     @pyqtSlot(int, "QVariantMap")
-    @pyqtSlot(int, "QVariantMap", "QVariant")
+    @pyqtSlot(int, "QVariantMap", "QStringList")
     @pyqtSlot(str, "QVariantMap")
-    @pyqtSlot(str, "QVariantMap", "QVariant")
+    @pyqtSlot(str, "QVariantMap", "QStringList")
     def update(self,
                index:        Index,
                value:        NewItem,
@@ -194,7 +199,7 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot(str, "QVariantMap")
     @pyqtSlot(str, "QVariantMap", int)
-    @pyqtSlot(str, "QVariantMap", int, list)
+    @pyqtSlot(str, "QVariantMap", int, "QStringList")
     def upsert(self,
                where_main_key_is_value: Any,
                update_with:             NewItem,
