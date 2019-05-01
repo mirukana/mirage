@@ -8,6 +8,8 @@ ApplicationWindow {
     width: Math.min(Screen.width, 1152)
     height: Math.min(Screen.height, 768)
 
+    onClosing: Backend.clientManager.deleteAll()
+
     Loader {
         anchors.fill: parent
         source: "UI.qml"

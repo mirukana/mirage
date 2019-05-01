@@ -80,7 +80,7 @@ def futurize(max_instances: Optional[int] = None, pyqt: bool = True
                     return func(self, *args, **kws)
                 except Exception:
                     traceback.print_exc()
-                    logging.error("Exiting thread due to exception.")
+                    logging.error("Exiting thread/process due to exception.")
                     sys.exit(1)
                 finally:
                     del _RUNNING[_RUNNING.index((self.pool, func, args, kws))]

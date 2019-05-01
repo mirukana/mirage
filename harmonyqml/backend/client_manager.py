@@ -85,6 +85,13 @@ class ClientManager(QObject):
             client.logout()
 
 
+    @pyqtSlot()
+    def deleteAll(self) -> None:
+        for user_id in self.clients.copy():
+            self.delete(user_id)
+            print("deleted", user_id, self.clients)
+
+
     @pyqtProperty(str, constant=True)
     def defaultDeviceName(self) -> str:  # pylint: disable=no-self-use
         os_ = f" on {platform.system()}".rstrip()

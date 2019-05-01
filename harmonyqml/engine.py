@@ -1,57 +1,54 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
-import logging
+import signal
 import sys
 from pathlib import Path
-from typing import Generator
+from typing import Any, Dict, Generator
 
-from PyQt5.QtCore import QFileSystemWatcher, QObject, QTimer
+from PyQt5.QtCore import QObject, QTimer
 from PyQt5.QtQml import QQmlApplicationEngine
-
-from .app import Application
-from .backend.backend import Backend
-
-# logging.basicConfig(level=logging.INFO)
 
 
 class Engine(QQmlApplicationEngine):
-    def __init__(self,
-                 app:    Application,
-                 debug:  bool = False) -> None:
-        super().__init__(app)
-        self.app     = app
-        self.backend = Backend(self)
-        self.app_dir = Path(sys.argv[0]).resolve().parent
+    def __init__(self, debug:  bool = False) -> None:
+        # Connect UNXI signals to properly exit program
+        self._original_signal_handlers: Dict[int, Any] = {}
 
-        # Set QML properties
-        self.rootContext().setContextProperty("Engine", self)
-        self.rootContext().setContextProperty("Backend", self.backend)
-
-        # Connect Qt signals
-        self.quit.connect(self.app.quit)
+        for signame in ("INT" , "HUP", "QUIT", "TERM"):
+            sig = signal.Signals[f"SIG{signame}"]  # pylint: disable=no-member
+            self._original_signal_handlers[sig] = signal.getsignal(sig)
+            signal.signal(sig, self.onExitSignal)
 
         # Make SIGINT (ctrl-c) work
         self._sigint_timer = QTimer()
         self._sigint_timer.timeout.connect(lambda: None)
         self._sigint_timer.start(100)
 
+        super().__init__()
+        self.app_dir = Path(sys.argv[0]).resolve().parent
+
+        from .backend.backend import Backend
+        self.backend = Backend(self)
+        self.rootContext().setContextProperty("Backend", self.backend)
+
         # Setup UI live-reloading when a file is edited
         if debug:
+            from PyQt5.QtCore import QFileSystemWatcher
             self._watcher = QFileSystemWatcher()
-            self._watcher.directoryChanged.connect(lambda _: self.reload_qml())
+            self._watcher.directoryChanged.connect(lambda _: self.reloadQml())
             self._watcher.addPath(str(self.app_dir))
 
             for _dir in list(self._recursive_dirs_in(self.app_dir)):
                 self._watcher.addPath(str(_dir))
 
-        # Load QML page and show window
-        self.load(str(self.app_dir / "components" / "Window.qml"))
 
+    def onExitSignal(self, *_) -> None:
+        for sig, handler in self._original_signal_handlers.items():
+            signal.signal(sig, handler)
 
-    def show_window(self) -> None:
-        self.rootObjects()[0].show()
-        sys.exit(self.app.exec())
+        self._original_signal_handlers.clear()
+        self.closeWindow()
 
 
     def _recursive_dirs_in(self, path: Path) -> Generator[Path, None, None]:
@@ -61,10 +58,22 @@ class Engine(QQmlApplicationEngine):
                 yield from self._recursive_dirs_in(item)
 
 
-    def reload_qml(self) -> None:
+    def showWindow(self) -> None:
+        self.load(str(self.app_dir / "components" / "Window.qml"))
+
+
+    def closeWindow(self) -> None:
+        try:
+            self.rootObjects()[0].close()
+        except IndexError:
+            pass
+
+
+    def reloadQml(self) -> None:
         loader = self.rootObjects()[0].findChild(QObject, "UILoader")
+
         source = loader.property("source")
         loader.setProperty("source", None)
         self.clearComponentCache()
+
         loader.setProperty("source", source)
-        logging.info("Reloaded: %s", source)

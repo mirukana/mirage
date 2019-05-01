@@ -4,6 +4,7 @@ import "Banners"
 import "RoomEventList"
 
 HColumnLayout {
+    Component.onCompleted: Backend.pdb()
     property string userId: ""
     property string roomId: ""
 

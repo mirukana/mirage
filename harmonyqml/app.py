@@ -10,17 +10,13 @@ from . import __about__
 
 class Application(QGuiApplication):
     def __init__(self, args: Optional[List[str]] = None) -> None:
-        try:
-            args.index("--debug")  # type: ignore
-            debug = True
-        except (AttributeError, ValueError):
-            debug = False
+        self.debug = False
+
+        if args and "--debug" in args:
+            del args[args.index("--debug")]
+            self.debug = True
 
         super().__init__(args or [])
 
         self.setApplicationName(__about__.__pkg_name__)
         self.setApplicationDisplayName(__about__.__pretty_name__)
-
-        from .engine import Engine
-        engine = Engine(self, debug=debug)
-        engine.show_window()

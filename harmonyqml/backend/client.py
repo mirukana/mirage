@@ -13,11 +13,6 @@ import nio
 from .network_manager import NetworkManager
 from .pyqt_future import futurize
 
-# One pool per hostname/remote server;
-# multiple Client for different accounts on the same server can exist.
-_POOLS: DefaultDict[str, ThreadPoolExecutor] = \
-    DefaultDict(lambda: ThreadPoolExecutor(max_workers=6))
-
 
 class Client(QObject):
     roomInvited = pyqtSignal([str, dict], [str])
@@ -36,9 +31,9 @@ class Client(QObject):
 
     def __init__(self,
                  manager,
-                 hostname:  str,
-                 username:  str,
-                 device_id: str = "") -> None:
+                 hostname:         str,
+                 username:         str,
+                 device_id:        str = "") -> None:
         super().__init__(manager)
         self.manager = manager
 
@@ -46,7 +41,7 @@ class Client(QObject):
         self.host: str = host
         self.port: int = int(port[0]) if port else 443
 
-        self.pool: ThreadPoolExecutor = _POOLS[self.host]
+        self.pool: ThreadPoolExecutor = ThreadPoolExecutor(6)
 
         self.nio: nio.client.HttpClient = \
             nio.client.HttpClient(self.host, username, device_id)
@@ -109,9 +104,12 @@ class Client(QObject):
     @futurize(pyqt=False)
     def startSyncing(self) -> None:
         while True:
-            self._on_sync(self.net_sync.talk(
-                self.nio_sync.sync, timeout=8000
-            ))
+            try:
+                response = self.net_sync.talk(self.nio_sync.sync, timeout=8000)
+            except nio.LocalProtocolError:  # logout occured
+                pass
+            else:
+                self._on_sync(response)
 
             if self._stop_sync.is_set():
                 self._stop_sync.clear()
