@@ -26,6 +26,12 @@ class _ListItemMeta(type(QObject)):  # type: ignore
         # These properties won't be settable and will not have a notify signal
         constant: Set[str] = set(attrs.get("_constant") or set())
 
+        # pyqtProperty objects that were directly defined in the class
+        direct_pyqt_props: Dict[str, pyqtProperty] = {
+            name: obj for name, obj in attrs.items()
+            if isinstance(obj, pyqtProperty)
+        }
+
         # {property_name: (its_pyqt_type, its_default_value)}
         props: Dict[str, Tuple[PyqtType, Any]] = {
             name: (to_pyqt_type(attrs.get("__annotations__", {}).get(name)),
@@ -56,7 +62,7 @@ class _ListItemMeta(type(QObject)):  # type: ignore
             for name in props
         }
 
-        # The final pyqtProperty objects
+        # The final pyqtProperty objects we create
         pyqt_props: Dict[str, pyqtProperty] = {
             name: pyqtProperty(
                 type_,
@@ -69,11 +75,13 @@ class _ListItemMeta(type(QObject)):  # type: ignore
         attrs = {
             **attrs,  # Original class attributes
             **signals,
+            **direct_pyqt_props,
             **pyqt_props,
 
             # Set the internal _properties as slots for memory savings
             "__slots__": tuple({f"_{prop}" for prop in props} & {"_main_key"}),
 
+            "_direct_props": list(direct_pyqt_props.keys()),
             "_props": props,
 
             # The main key is either the attribute _main_key,
@@ -141,7 +149,7 @@ class ListItem(QObject, metaclass=_ListItemMeta):
                 1 if p == self.mainKey else 0, # 1 = term bold
                 p,
                 getattr(self, p)
-            ) for p in self._props
+            ) for p in list(self._props.keys()) + self._direct_props
         )
         return "%s(%s)" % (type(self).__name__, ", ".join(prop_strings))
 
@@ -153,7 +161,7 @@ class ListItem(QObject, metaclass=_ListItemMeta):
 
     @pyqtProperty("QStringList", constant=True)
     def roles(self) -> List[str]:
-        return list(self._props.keys())
+        return list(self._props.keys()) + self._direct_props
 
 
     @pyqtProperty(str, constant=True)
