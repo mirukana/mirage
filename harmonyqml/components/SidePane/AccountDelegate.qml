@@ -1,16 +1,23 @@
+import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
 
-HColumnLayout {
+Column {
     id: accountDelegate
     width: parent.width
 
-    property string roomListUserId: userId
+    property string roomCategoriesListUserId: userId
+    property bool expanded: true
 
     HRowLayout {
+        width: parent.width
+        height: childrenRect.height
         id: row
 
-        HAvatar { id: avatar; name: displayName; dimension: 36 }
+        HAvatar {
+            id: avatar
+            name: displayName
+        }
 
         HColumnLayout {
             Layout.fillWidth: true
@@ -47,30 +54,27 @@ HColumnLayout {
 
         HButton {
             id: toggleExpand
-            iconName: roomList.visible ? "up" : "down"
+            iconName: roomCategoriesList.visible ? "up" : "down"
             iconDimension: 16
             backgroundColor: "transparent"
-            onClicked: roomList.visible = ! roomList.visible
+            onClicked: accountDelegate.expanded = ! accountDelegate.expanded
 
             Layout.preferredHeight: row.height
         }
     }
 
-    RoomList {
-        id: roomList
-        visible: true
+    RoomCategoriesList {
+        id: roomCategoriesList
         interactive: false  // no scrolling
-        userId: roomListUserId
+        visible: height > 0
+        width: parent.width
+        height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
+        clip: heightAnimation.running
 
-        Layout.preferredHeight: roomList.visible ? roomList.contentHeight : 0
+        userId: roomCategoriesListUserId
 
-        Layout.preferredWidth:
-            parent.width - Layout.leftMargin - Layout.rightMargin
-
-        Layout.margins: accountList.spacing
-        Layout.rightMargin: 0
-        Layout.leftMargin:
-            sidePane.width <= (sidePane.Layout.minimumWidth + Layout.margins) ?
-            0 : Layout.margins
+        Behavior on height {
+            NumberAnimation { id: heightAnimation; duration: 100 }
+        }
     }
 }

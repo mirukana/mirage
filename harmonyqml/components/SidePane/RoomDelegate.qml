@@ -6,36 +6,33 @@ import "utils.js" as SidePaneJS
 MouseArea {
     id: roomDelegate
     width: roomList.width
-    height: roomList.childrenHeight
+    height: childrenRect.height
 
-    onClicked: pageStack.showRoom(roomList.userId, roomId)
+    onClicked: pageStack.showRoom(roomList.userId, roomList.category, roomId)
 
     HRowLayout {
-        anchors.fill: parent
-        id: row
-        spacing: 1
+        width: parent.width
+        spacing: roomList.spacing
 
         HAvatar {
             id: roomAvatar
             name: displayName
-            dimension: roomDelegate.height
         }
 
         HColumnLayout {
+            Layout.fillWidth: true
+            Layout.maximumWidth:
+                parent.width - parent.totalSpacing - roomAvatar.width
+
             HLabel {
                 id: roomLabel
                 text: displayName ? displayName : "<i>Empty room</i>"
                 textFormat: Text.StyledText
                 elide: Text.ElideRight
                 maximumLineCount: 1
-                Layout.maximumWidth:
-                    row.width - row.totalSpacing - roomAvatar.width
                 verticalAlignment: Qt.AlignVCenter
 
-                topPadding: -2
-                bottomPadding: subtitleLabel.visible ? 0 : topPadding
-                leftPadding: 5
-                rightPadding: leftPadding
+                Layout.maximumWidth: parent.width
             }
 
             HLabel {
@@ -58,15 +55,9 @@ MouseArea {
                 font.pixelSize: HStyle.fontSize.small
                 elide: Text.ElideRight
                 maximumLineCount: 1
-                Layout.maximumWidth: roomLabel.Layout.maximumWidth
 
-                topPadding: -2
-                bottomPadding: topPadding
-                leftPadding: 5
-                rightPadding: leftPadding
+                Layout.maximumWidth: parent.width
             }
         }
-
-        HSpacer {}
     }
 }

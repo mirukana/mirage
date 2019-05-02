@@ -1,5 +1,4 @@
 import QtQuick 2.7
-import QtQuick.Layouts 1.3
 import "../../Base"
 
 HGlassRectangle {
@@ -7,9 +6,6 @@ HGlassRectangle {
     property int space: 8
 
     color: HStyle.chat.roomEventList.background
-
-    Layout.fillWidth: true
-    Layout.fillHeight: true
 
     ListView {
         id: roomEventListView
@@ -20,7 +16,6 @@ HGlassRectangle {
         anchors.leftMargin: space
         anchors.rightMargin: space
 
-        clip: true
         topMargin: space
         bottomMargin: space
         verticalLayoutDirection: ListView.BottomToTop
@@ -39,10 +34,10 @@ HGlassRectangle {
         }
     }
 
-    HNoticeLabel {
+    HNoticePage {
         text: qsTr("Nothing to show here yet...")
 
         visible: roomEventListView.model.count < 1
-        anchors.centerIn: parent
+        anchors.fill: parent
     }
 }

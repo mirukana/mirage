@@ -2,7 +2,7 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 from threading import Lock
-from typing import Any, Deque, Dict, List, Optional, Sequence
+from typing import Any, Deque, Dict, List, Optional
 
 from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
 
@@ -11,7 +11,8 @@ from nio.rooms import MatrixRoom
 
 from .backend import Backend
 from .client import Client
-from .model.items import Room, RoomEvent, User
+from .model.items import Account, Room, RoomCategory, RoomEvent
+from .model.list_model import ListModel
 
 Inviter   = Optional[Dict[str, str]]
 LeftEvent = Optional[Dict[str, str]]
@@ -34,8 +35,14 @@ class SignalManager(QObject):
 
     def onClientAdded(self, client: Client) -> None:
         self.connectClient(client)
-        self.backend.models.accounts.append(User(
-            userId      = client.userId,
+
+        self.backend.models.accounts.append(Account(
+            userId         = client.userId,
+            roomCategories = ListModel([
+                RoomCategory("Invites", ListModel()),
+                RoomCategory("Rooms", ListModel()),
+                RoomCategory("Left", ListModel()),
+            ]),
             displayName = self.backend.getUserDisplayName(client.userId),
         ))
 
@@ -56,104 +63,65 @@ class SignalManager(QObject):
                 attr.connect(onSignal)
 
 
+    @staticmethod
+    def _get_room_displayname(nio_room: MatrixRoom) -> Optional[str]:
+        name = nio_room.name or nio_room.canonical_alias
+        if name:
+            return name
+
+        name = nio_room.group_name()
+        return None if name == "Empty room?" else name
+
+
     def onRoomInvited(self,
                       client:  Client,
                       room_id: str,
                       inviter: Inviter = None) -> None:
 
-        self._add_room(client, room_id, client.nio.invited_rooms[room_id],
-                       "Invites", inviter=inviter)
+        nio_room   = client.nio.invited_rooms[room_id]
+        categories = self.backend.models.accounts[client.userId].roomCategories
+
+        categories["Rooms"].rooms.pop(room_id, None)
+        categories["Left"].rooms.pop(room_id, None)
+
+        categories["Invites"].rooms.upsert(room_id, Room(
+            roomId      = room_id,
+            displayName = self._get_room_displayname(nio_room),
+            topic       = nio_room.topic,
+            inviter     = inviter,
+        ), 0, 0)
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
-        self._add_room(client, room_id, client.nio.rooms[room_id], "Rooms")
+        nio_room   = client.nio.rooms[room_id]
+        categories = self.backend.models.accounts[client.userId].roomCategories
+
+        categories["Invites"].rooms.pop(room_id, None)
+        categories["Left"].rooms.pop(room_id, None)
+
+        categories["Rooms"].rooms.upsert(room_id, Room(
+            roomId      = room_id,
+            displayName = self._get_room_displayname(nio_room),
+            topic       = nio_room.topic,
+        ), 0, 0)
 
 
     def onRoomLeft(self,
                    client:     Client,
                    room_id:    str,
                    left_event: LeftEvent = None) -> None:
+        categories = self.backend.models.accounts[client.userId].roomCategories
 
-        self._add_room(client, room_id, client.nio.rooms.get(room_id), "Left",
-                       left_event=left_event)
+        previous = categories["Rooms"].rooms.pop(room_id, None)
+        previous = previous or categories["Invites"].rooms.pop(room_id, None)
+        previous = previous or categories["Left"].rooms.get(room_id, None)
 
-
-    def _move_room(self, account_id: str, room_id: str) -> None:
-        def get_newest_event_date_time(room_id: str) -> QDateTime:
-            for ev in self.backend.models.roomEvents[room_id]:
-                if not self.backend.EventIsOurProfileChanged(ev, account_id):
-                    return ev.dateTime
-
-            return QDateTime.fromMSecsSinceEpoch(0)
-
-        rooms_model = self.backend.models.rooms[account_id]
-        room_index  = rooms_model.indexWhere("roomId", room_id)
-        category    = rooms_model[room_index].category
-        timestamp   = get_newest_event_date_time(room_id)
-
-        def get_index(put_before_categories: Sequence[str],
-                      put_after_categories: Sequence[str]) -> int:
-            for i, room in enumerate(rooms_model):
-                if room.category not in put_after_categories and \
-                   (room.category in put_before_categories or
-                    timestamp >= get_newest_event_date_time(room.roomId)):
-                    return i
-
-            return len(rooms_model) - 1
-
-        to = 0
-
-        if category == "Invites":
-            to = get_index(["Rooms", "Left"], [])
-
-        if category == "Rooms":
-            to = get_index(["Left"], ["Invites"])
-
-        elif category == "Left":
-            to = get_index([], ["Invites", "Rooms", "Left"])
-
-        rooms_model.move(room_index, to)
-
-
-    def _add_room(self,
-                  client:     Client,
-                  room_id:    str,
-                  room:       MatrixRoom,
-                  category:   str       = "Rooms",
-                  inviter:    Inviter   = None,
-                  left_event: LeftEvent = None) -> None:
-
-        if (inviter and left_event):
-            raise ValueError()
-
-        model     = self.backend.models.rooms[client.userId]
-        no_update = []
-
-        def get_displayname() -> Optional[str]:
-            if not room:
-                no_update.append("displayName")
-                return room_id
-
-            name = room.name or room.canonical_alias
-            if name:
-                return name
-
-            name = room.group_name()
-            return None if name == "Empty room?" else name
-
-        item = Room(
+        categories["Left"].rooms.upsert(0, Room(
             roomId      = room_id,
-            displayName = get_displayname(),
-            category    = category,
-            topic       = room.topic if room else None,
-            inviter     = inviter,
+            displayName = previous.displayName if previous else None,
+            topic       = previous.topic if previous else None,
             leftEvent   = left_event,
-        )
-
-        model.upsert(room_id, item, ignore_roles=no_update)
-        with self._lock:
-            self._move_room(client.userId, room_id)
-
+        ), 0, 0)
 
     def onRoomSyncPrevBatchTokenReceived(self,
                                          _:       Client,
@@ -176,7 +144,7 @@ class SignalManager(QObject):
 
 
     def onRoomEventReceived(self,
-                            client:  Client,
+                            _:  Client,
                             room_id: str,
                             etype:   str,
                             edict:   Dict[str, Any]) -> None:
@@ -191,6 +159,16 @@ class SignalManager(QObject):
             date_time = QDateTime\
                         .fromMSecsSinceEpoch(edict["server_timestamp"])
             new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
+
+            event_is_our_profile_changed = (
+                etype == "RoomMemberEvent" and
+                edict.get("sender") in self.backend.clientManager.clients and
+                ((edict.get("content") or {}).get("membership") ==
+                 (edict.get("prev_content") or {}).get("membership"))
+            )
+
+            if event_is_our_profile_changed:
+                return
 
             if etype == "RoomCreateEvent":
                 self.backend.fully_loaded_rooms.add(room_id)
@@ -233,14 +211,20 @@ class SignalManager(QObject):
 
         with self._lock:
             process()
-            self._move_room(client.userId, room_id)
+            # self._move_room(client.userId, room_id)
 
 
     def onRoomTypingUsersUpdated(self,
                                  client:  Client,
                                  room_id: str,
                                  users:   List[str]) -> None:
-        self.backend.models.rooms[client.userId][room_id].typingUsers = users
+        categories = self.backend.models.accounts[client.userId].roomCategories
+        for categ in categories:
+            try:
+                categ.rooms[room_id].typingUsers = users
+                break
+            except ValueError:
+                pass
 
 
     def onMessageAboutToBeSent(self,
@@ -264,10 +248,13 @@ class SignalManager(QObject):
             model.insert(0, event)
             self._events_in_transfer += 1
 
-            self._move_room(client.userId, room_id)
+            # self._move_room(client.userId, room_id)
 
 
     def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:
-        with self._lock:
-            del self.backend.models.rooms[client.userId][room_id]
-            self.backend.models.roomEvents[room_id].clear()
+        categories = self.backend.models.accounts[client.userId].roomCategories
+
+        for categ in categories:
+            categ.rooms.pop(room_id, None)
+
+        self.backend.models.roomEvents[room_id].clear()

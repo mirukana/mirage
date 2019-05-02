@@ -4,8 +4,6 @@ import "../Base"
 
 HGlassRectangle {
     id: sidePane
-    clip: true  // Avoid artifacts when resizing pane width to minimum
-
     isPageStackDescendant: false
 
     HColumnLayout {
@@ -14,6 +12,10 @@ HGlassRectangle {
         AccountList {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            Layout.leftMargin:
+                sidePane.width <= (sidePane.Layout.minimumWidth + spacing) ?
+                0 : spacing
         }
 
         PaneToolBar {}

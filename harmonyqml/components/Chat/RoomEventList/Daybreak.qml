@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import "../../Base"
 
-HNoticeLabel {
+HNoticePage {
     text: dateTime.toLocaleDateString()
     color: HStyle.chat.daybreak.foreground
     backgroundColor: HStyle.chat.daybreak.background

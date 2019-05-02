@@ -110,22 +110,3 @@ class Backend(QObject):
         from PyQt5.QtCore import pyqtRemoveInputHook
         pyqtRemoveInputHook()
         pdb.set_trace()
-
-
-    @pyqtSlot("QVariant", str, result=bool)
-    def EventIsOurProfileChanged(self, event: RoomEvent, account_id) -> bool:
-        # pylint: disable=unused-self
-        info     = event.dict.get("content")
-        previous = event.dict.get("prev_content")
-
-        return (
-            event.type == "RoomMemberEvent" and
-            event.dict["sender"] == account_id and
-            bool(info) and
-            bool(previous) and
-            info["membership"] == previous["membership"] and
-            (
-                info.get("displayname") != previous.get("displayname") or
-                info.get("avatar_url") != previous.get("avatar_url")
-            )
-        )

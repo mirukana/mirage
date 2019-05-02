@@ -12,20 +12,13 @@ from .list_model_map import ListModelMap
 class QMLModels(QObject):
     def __init__(self, parent: QObject) -> None:
         super().__init__(parent)
-        self._accounts:    ListModel    = ListModel(parent)
-        self._rooms:       ListModelMap = ListModelMap(parent)
-        self._room_events: ListModelMap = ListModelMap(parent,
-                                                       models_container=Deque)
+        self._accounts:    ListModel    = ListModel(parent=parent)
+        self._room_events: ListModelMap = ListModelMap(Deque, parent)
 
 
     @pyqtProperty(ListModel, constant=True)
     def accounts(self):
         return self._accounts
-
-
-    @pyqtProperty("QVariant", constant=True)
-    def rooms(self):
-        return self._rooms
 
 
     @pyqtProperty("QVariant", constant=True)

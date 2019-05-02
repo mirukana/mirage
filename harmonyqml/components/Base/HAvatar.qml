@@ -5,7 +5,7 @@ Rectangle {
     property bool hidden: false
     property var name: null  // null, string or PyQtFuture
     property var imageSource: null
-    property int dimension: 48
+    property int dimension: 36
 
 
     readonly property string resolvedName:

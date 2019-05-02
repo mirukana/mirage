@@ -7,15 +7,15 @@ from .list_model import ListModel
 
 class ListModelMap(QObject):
     def __init__(self,
-                 parent:           QObject,
-                 models_container: Callable[..., MutableSequence] = list
-                ) -> None:
+                 models_container: Callable[..., MutableSequence] = list,
+                 parent:           QObject = None) -> None:
         super().__init__(parent)
 
         # Set the parent to prevent item garbage-collection on the C++ side
         self.dict: DefaultDict[Any, ListModel] = \
-            DefaultDict(lambda: ListModel(parent    = self,
-                                          container = models_container))
+            DefaultDict(
+                lambda: ListModel(container=models_container, parent=self)
+            )
 
 
     @pyqtSlot(str, result="QVariant")

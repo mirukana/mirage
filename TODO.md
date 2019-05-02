@@ -3,16 +3,18 @@
   - Don't bake in size properties for components
 
 - Bug fixes
+  - Sendbox
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons and images aren't reloaded
   - HStyle singleton isn't reloaded
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
   - Bug when resizing window being tiled (i3), can't figure it out
+  - Can scroll the SidePane rooms too far
 
 - UI
-  - Use nested listview for categories instead of section property
   - Improve SidePane appearance when at min width
+  - Accounts delegates background
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Scaling

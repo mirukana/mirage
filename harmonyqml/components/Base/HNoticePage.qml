@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.3
 import "../Base"
 
 HRowLayout {
+    property alias label: noticeLabel
     property alias text: noticeLabel.text
     property alias color: noticeLabel.color
     property alias font: noticeLabel.font
@@ -19,7 +20,10 @@ HRowLayout {
 
         Layout.margins: 10
         Layout.alignment: Qt.AlignCenter
-        Layout.maximumWidth: parent.width - Layout.margins * 2
+        Layout.maximumWidth:
+            parent.width - Layout.leftMargin - Layout.rightMargin
+
+        opacity: width > Layout.leftMargin + Layout.rightMargin ? 1 : 0
 
         background: Rectangle {
             id: noticeLabelBackground

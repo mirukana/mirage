@@ -40,9 +40,10 @@ Item {
                 pageStack.replace("Pages/" + name + ".qml", properties || {})
             }
 
-            function showRoom(userId, roomId) {
+            function showRoom(userId, category, roomId) {
                 pageStack.replace(
-                    "Chat/Chat.qml", { userId: userId, roomId: roomId }
+                    "Chat/Chat.qml",
+                    { userId: userId, category: category, roomId: roomId }
                 )
             }
 

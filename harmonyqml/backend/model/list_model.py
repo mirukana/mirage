@@ -15,15 +15,23 @@ Index   = Union[int, str]
 NewItem = Union[ListItem, Mapping[str, Any], Sequence]
 
 
+class _GetFail:
+    pass
+
+
+class _PopFail:
+    pass
+
+
 class ListModel(QAbstractListModel):
     rolesSet     = pyqtSignal()
     changed      = pyqtSignal()
     countChanged = pyqtSignal(int)
 
     def __init__(self,
-                 parent:       QObject,
                  initial_data: Optional[List[NewItem]]        = None,
-                 container:    Callable[..., MutableSequence]  = list) -> None:
+                 container:    Callable[..., MutableSequence] = list,
+                 parent:       QObject                        = None) -> None:
         super().__init__(parent)
         self._data: MutableSequence[ListItem] = container()
 
@@ -135,11 +143,19 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot(int, result="QVariant")
     @pyqtSlot(str, result="QVariant")
-    def get(self, index: Index) -> ListItem:
-        if isinstance(index, str):
-            index = self.indexWhere(self.mainKey, index)
+    @pyqtSlot(int, "QVariant", result="QVariant")
+    @pyqtSlot(str, "QVariant", result="QVariant")
+    def get(self, index: Index, default: Any = _GetFail()) -> ListItem:
+        try:
+            i_index: int = self.indexWhere(self.mainKey, index) \
+                           if isinstance(index, str) else index
 
-        return self._data[index]  # type: ignore
+            return self._data[i_index]
+
+        except (ValueError, IndexError):
+            if isinstance(default, _GetFail):
+                raise
+            return default
 
 
     @pyqtSlot(int, "QVariantMap")
@@ -170,20 +186,20 @@ class ListModel(QAbstractListModel):
             self.append(val)
 
 
-    @pyqtSlot(int, "QVariantMap")
-    @pyqtSlot(int, "QVariantMap", "QStringList")
-    @pyqtSlot(str, "QVariantMap")
-    @pyqtSlot(str, "QVariantMap", "QStringList")
+    @pyqtSlot(int, "QVariantMap", result=int)
+    @pyqtSlot(int, "QVariantMap", "QStringList", result=int)
+    @pyqtSlot(str, "QVariantMap", result=int)
+    @pyqtSlot(str, "QVariantMap", "QStringList", result=int)
     def update(self,
                index:        Index,
                value:        NewItem,
-               ignore_roles: Sequence[str] = ()) -> None:
+               ignore_roles: Sequence[str] = ()) -> int:
         value = self._convert_new_value(value)
 
-        if isinstance(index, str):
-            index = self.indexWhere(self.mainKey or value.mainKey, index)
+        i_index: int = self.indexWhere(self.mainKey, index) \
+                       if isinstance(index, str) else index
 
-        to_update = self._data[index]  # type: ignore
+        to_update = self[i_index]
 
         for role in self.roles:
             if role not in ignore_roles:
@@ -192,35 +208,40 @@ class ListModel(QAbstractListModel):
                 except AttributeError:  # constant/not settable
                     pass
 
-        qidx = QAbstractListModel.index(self, index, 0)
+        qidx = QAbstractListModel.index(self, i_index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
+        return i_index
 
 
     @pyqtSlot(str, "QVariantMap")
     @pyqtSlot(str, "QVariantMap", int)
-    @pyqtSlot(str, "QVariantMap", int, "QStringList")
+    @pyqtSlot(str, "QVariantMap", int, int)
+    @pyqtSlot(str, "QVariantMap", int, int, "QStringList")
     def upsert(self,
-               where_main_key_is_value: Any,
-               update_with:             NewItem,
-               index_if_insert:         Optional[int] = None,
-               ignore_roles:            Sequence[str] = ()) -> None:
+               where_main_key_is:   Any,
+               update_with:         NewItem,
+               new_index_if_insert: Optional[int] = None,
+               new_index_if_update: Optional[int] = None,
+               ignore_roles:        Sequence[str] = ()) -> None:
         try:
-            self.update(where_main_key_is_value, update_with, ignore_roles)
+            index = self.update(where_main_key_is, update_with, ignore_roles)
         except (IndexError, ValueError):
-            self.insert(index_if_insert or len(self), update_with)
-
+            self.insert(new_index_if_insert or len(self), update_with)
+        else:
+            if new_index_if_update:
+                self.move(index, new_index_if_update)
 
 
     @pyqtSlot(int, list)
     @pyqtSlot(str, list)
     def set(self, index: Index, value: NewItem) -> None:
-        if isinstance(index, str):
-            index = self.indexWhere(self.mainKey, index)
+        i_index: int = self.indexWhere(self.mainKey, index) \
+                       if isinstance(index, str) else index
 
-        qidx              = QAbstractListModel.index(self, index, 0)
-        value             = self._convert_new_value(value)
-        self._data[index] = value  # type: ignore
+        qidx                = QAbstractListModel.index(self, i_index, 0)
+        value               = self._convert_new_value(value)
+        self._data[i_index] = value
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
 
@@ -228,11 +249,11 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int, str, "QVariant")
     @pyqtSlot(str, str, "QVariant")
     def setProperty(self, index: Index, prop: str, value: Any) -> None:
-        if isinstance(index, str):
-            index = self.indexWhere(self.mainKey, index)
+        i_index: int = self.indexWhere(self.mainKey, index) \
+                       if isinstance(index, str) else index
 
-        setattr(self._data[index], prop, value)  # type: ignore
-        qidx = QAbstractListModel.index(self, index, 0)
+        setattr(self[i_index], prop, value)
+        qidx = QAbstractListModel.index(self, i_index, 0)
         self.dataChanged.emit(qidx, qidx, self.roleNames())
         self.changed.emit()
 
@@ -269,15 +290,37 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int)
     @pyqtSlot(str)
     def remove(self, index: Index) -> None:
-        if isinstance(index, str):
-            index = self.indexWhere(self.mainKey, index)
+        i_index: int = self.indexWhere(self.mainKey, index) \
+                       if isinstance(index, str) else index
 
-        self.beginRemoveRows(QModelIndex(), index, index)
-        del self._data[index]  # type: ignore
+        self.beginRemoveRows(QModelIndex(), i_index, i_index)
+        del self._data[i_index]
         self.endRemoveRows()
 
         self.countChanged.emit(len(self))
         self.changed.emit()
+
+
+    @pyqtSlot(int, result="QVariant")
+    @pyqtSlot(str, result="QVariant")
+    def pop(self, index: Index, default: Any = _PopFail()) -> ListItem:
+        try:
+            i_index: int = self.indexWhere(self.mainKey, index) \
+                           if isinstance(index, str) else index
+            item = self[i_index]
+
+        except (ValueError, IndexError):
+            if isinstance(default, _PopFail):
+                raise
+            return default
+
+        self.beginRemoveRows(QModelIndex(), i_index, i_index)
+        del self._data[i_index]
+        self.endRemoveRows()
+
+        self.countChanged.emit(len(self))
+        self.changed.emit()
+        return item
 
 
     @pyqtSlot()

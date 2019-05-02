@@ -3,17 +3,8 @@
 
 function getLastRoomEventText(roomId, accountId) {
     var eventsModel = Backend.models.roomEvents.get(roomId)
-
-    for (var i = 0; i < eventsModel.count; i++) {
-        var ev = eventsModel.get(i)
-
-        if (! Backend.EventIsOurProfileChanged(ev, accountId)) {
-            var found = true
-            break
-        }
-    }
-
-    if (! found) { return "" }
+    if (eventsModel.count < 1) { return "" }
+    var ev = eventsModel.get(0)
 
     var name = Backend.getUserDisplayName(ev.dict.sender, false).result()
     var undecryptable = ev.type === "OlmEvent" || ev.type === "MegolmEvent"

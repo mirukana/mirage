@@ -1,14 +1,17 @@
 import QtQuick 2.7
+import QtQuick.Layouts 1.3
 import "../Base"
 import "Banners"
 import "RoomEventList"
 
 HColumnLayout {
     property string userId: ""
+    property string category: ""
     property string roomId: ""
 
     readonly property var roomInfo:
-        Backend.models.rooms.get(userId).get(roomId)
+        Backend.models.accounts.get(userId)
+               .roomCategories.get(category).rooms.get(roomId)
 
     property bool canLoadPastEvents: true
 
@@ -20,22 +23,25 @@ HColumnLayout {
         topic: roomInfo.topic || ""
     }
 
-    RoomEventList {}
+    RoomEventList {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
 
     TypingUsersBar {}
 
     InviteBanner {
-        visible: roomInfo.category === "Invites"
+        visible: category === "Invites"
         inviter: roomInfo.inviter
     }
 
     SendBox {
         id: sendBox
-        visible: roomInfo.category === "Rooms"
+        visible: category === "Rooms"
     }
 
     LeftBanner {
-        visible: roomInfo.category === "Left"
+        visible: category === "Left"
         leftEvent: roomInfo.leftEvent
     }
 }
