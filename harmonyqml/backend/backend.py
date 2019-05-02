@@ -2,13 +2,12 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, Sequence, Set
+from typing import Deque, Dict, Sequence, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 
 from .html_filter import HtmlFilter
-from .model.items import RoomEvent
-from .model.qml_models import QMLModels
+from .model import ListModel, ListModelMap
 from .pyqt_future import futurize
 
 
@@ -22,10 +21,13 @@ class Backend(QObject):
         self.past_tokens:        Dict[str, str] = {}
         self.fully_loaded_rooms: Set[str]       = set()
 
+        self._html_filter: HtmlFilter = HtmlFilter(self)
+
         from .client_manager import ClientManager
         self._client_manager: ClientManager = ClientManager(self)
-        self._models:         QMLModels     = QMLModels(self)
-        self._html_filter:    HtmlFilter    = HtmlFilter(self)
+
+        self._accounts:    ListModel    = ListModel(parent=parent)
+        self._room_events: ListModelMap = ListModelMap(Deque, parent)
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
@@ -34,16 +36,20 @@ class Backend(QObject):
 
 
     @pyqtProperty("QVariant", constant=True)
+    def htmlFilter(self):
+        return self._html_filter
+
+    @pyqtProperty("QVariant", constant=True)
     def clientManager(self):
         return self._client_manager
 
     @pyqtProperty("QVariant", constant=True)
-    def models(self):
-        return self._models
+    def accounts(self):
+        return self._accounts
 
     @pyqtProperty("QVariant", constant=True)
-    def htmlFilter(self):
-        return self._html_filter
+    def roomEvents(self):
+        return self._room_events
 
 
     @pyqtSlot(str, result="QVariant")

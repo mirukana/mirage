@@ -10,7 +10,7 @@ HGlassRectangle {
     ListView {
         id: roomEventListView
         delegate: RoomEventDelegate {}
-        model: Backend.models.roomEvents.get(chatPage.roomId)
+        model: Backend.roomEvents.get(chatPage.roomId)
 
         anchors.fill: parent
         anchors.leftMargin: space

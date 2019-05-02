@@ -9,6 +9,6 @@ ListView {
     topMargin: spacing
     bottomMargin: topMargin
 
-    model: Backend.models.accounts
+    model: Backend.accounts
     delegate: AccountDelegate {}
 }

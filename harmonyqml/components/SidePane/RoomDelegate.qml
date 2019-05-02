@@ -43,7 +43,7 @@ MouseArea {
                 }
 
                 Connections {
-                    target: Backend.models.roomEvents.get(roomId)
+                    target: Backend.roomEvents.get(roomId)
                     onChanged: subtitleLabel.text = subtitleLabel.getText()
                 }
 

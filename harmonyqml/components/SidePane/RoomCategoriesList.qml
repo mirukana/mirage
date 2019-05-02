@@ -6,6 +6,6 @@ ListView {
     property string userId: ""
 
     id: roomCategoriesList
-    model: Backend.models.accounts.get(userId).roomCategories
+    model: Backend.accounts.get(userId).roomCategories
     delegate: RoomCategoryDelegate {}
 }

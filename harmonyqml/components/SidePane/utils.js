@@ -2,7 +2,7 @@
 
 
 function getLastRoomEventText(roomId, accountId) {
-    var eventsModel = Backend.models.roomEvents.get(roomId)
+    var eventsModel = Backend.roomEvents.get(roomId)
     if (eventsModel.count < 1) { return "" }
     var ev = eventsModel.get(0)
 

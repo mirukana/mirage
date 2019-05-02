@@ -11,8 +11,7 @@ from nio.rooms import MatrixRoom
 
 from .backend import Backend
 from .client import Client
-from .model.items import Account, Room, RoomCategory, RoomEvent
-from .model.list_model import ListModel
+from .model.items import Account, ListModel, Room, RoomCategory, RoomEvent
 
 Inviter   = Optional[Dict[str, str]]
 LeftEvent = Optional[Dict[str, str]]
@@ -36,7 +35,7 @@ class SignalManager(QObject):
     def onClientAdded(self, client: Client) -> None:
         self.connectClient(client)
 
-        self.backend.models.accounts.append(Account(
+        self.backend.accounts.append(Account(
             userId         = client.userId,
             roomCategories = ListModel([
                 RoomCategory("Invites", ListModel()),
@@ -48,7 +47,7 @@ class SignalManager(QObject):
 
 
     def onClientDeleted(self, user_id: str) -> None:
-        del self.backend.models.accounts[user_id]
+        del self.backend.accounts[user_id]
 
 
     def connectClient(self, client: Client) -> None:
@@ -79,7 +78,7 @@ class SignalManager(QObject):
                       inviter: Inviter = None) -> None:
 
         nio_room   = client.nio.invited_rooms[room_id]
-        categories = self.backend.models.accounts[client.userId].roomCategories
+        categories = self.backend.accounts[client.userId].roomCategories
 
         categories["Rooms"].rooms.pop(room_id, None)
         categories["Left"].rooms.pop(room_id, None)
@@ -94,7 +93,7 @@ class SignalManager(QObject):
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
         nio_room   = client.nio.rooms[room_id]
-        categories = self.backend.models.accounts[client.userId].roomCategories
+        categories = self.backend.accounts[client.userId].roomCategories
 
         categories["Invites"].rooms.pop(room_id, None)
         categories["Left"].rooms.pop(room_id, None)
@@ -110,7 +109,7 @@ class SignalManager(QObject):
                    client:     Client,
                    room_id:    str,
                    left_event: LeftEvent = None) -> None:
-        categories = self.backend.models.accounts[client.userId].roomCategories
+        categories = self.backend.accounts[client.userId].roomCategories
 
         previous = categories["Rooms"].rooms.pop(room_id, None)
         previous = previous or categories["Invites"].rooms.pop(room_id, None)
@@ -155,7 +154,7 @@ class SignalManager(QObject):
 
             self.last_room_events.appendleft(edict["event_id"])
 
-            model     = self.backend.models.roomEvents[room_id]
+            model     = self.backend.roomEvents[room_id]
             date_time = QDateTime\
                         .fromMSecsSinceEpoch(edict["server_timestamp"])
             new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
@@ -218,7 +217,7 @@ class SignalManager(QObject):
                                  client:  Client,
                                  room_id: str,
                                  users:   List[str]) -> None:
-        categories = self.backend.models.accounts[client.userId].roomCategories
+        categories = self.backend.accounts[client.userId].roomCategories
         for categ in categories:
             try:
                 categ.rooms[room_id].typingUsers = users
@@ -233,7 +232,7 @@ class SignalManager(QObject):
                                content: Dict[str, str]) -> None:
 
         with self._lock:
-            model     = self.backend.models.roomEvents[room_id]
+            model     = self.backend.roomEvents[room_id]
             nio_event = nio.events.RoomMessage.parse_event({
                 "event_id":         "",
                 "sender":           client.userId,
@@ -252,9 +251,9 @@ class SignalManager(QObject):
 
 
     def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:
-        categories = self.backend.models.accounts[client.userId].roomCategories
+        categories = self.backend.accounts[client.userId].roomCategories
 
         for categ in categories:
             categ.rooms.pop(room_id, None)
 
-        self.backend.models.roomEvents[room_id].clear()
+        self.backend.roomEvents[room_id].clear()

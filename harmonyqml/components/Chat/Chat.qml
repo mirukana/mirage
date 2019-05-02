@@ -10,8 +10,9 @@ HColumnLayout {
     property string roomId: ""
 
     readonly property var roomInfo:
-        Backend.models.accounts.get(userId)
-               .roomCategories.get(category).rooms.get(roomId)
+        Backend.accounts.get(userId)
+               .roomCategories.get(category)
+               .rooms.get(roomId)
 
     property bool canLoadPastEvents: true
 
