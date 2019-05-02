@@ -27,9 +27,8 @@ class SignalManager(QObject):
         self.last_room_events:    Deque[str] = Deque(maxlen=1000)
         self._events_in_transfer: int        = 0
 
-        cm = self.backend.clientManager
-        cm.clientAdded.connect(self.onClientAdded)
-        cm.clientDeleted.connect(self.onClientDeleted)
+        self.backend.clients.clientAdded.connect(self.onClientAdded)
+        self.backend.clients.clientDeleted.connect(self.onClientDeleted)
 
 
     def onClientAdded(self, client: Client) -> None:
@@ -161,7 +160,7 @@ class SignalManager(QObject):
 
             event_is_our_profile_changed = (
                 etype == "RoomMemberEvent" and
-                edict.get("sender") in self.backend.clientManager.clients and
+                edict.get("sender") in self.backend.clients and
                 ((edict.get("content") or {}).get("membership") ==
                  (edict.get("prev_content") or {}).get("membership"))
             )

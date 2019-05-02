@@ -23,7 +23,7 @@ Item {
             "register": function(button) {},
 
             "login": function(button) {
-                var future = Backend.clientManager.new(
+                var future = Backend.clients.new(
                     "matrix.org", identifierField.text, passwordField.text
                 )
                 button.loadingUntilFutureDone(future)

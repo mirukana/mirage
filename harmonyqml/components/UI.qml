@@ -17,7 +17,7 @@ Item {
         anchors.fill: parent
     }
 
-    property bool accountsLoggedIn: Backend.clientManager.clientCount > 0
+    property bool accountsLoggedIn: Backend.clients.count > 0
 
     HSplitView {
         anchors.fill: parent

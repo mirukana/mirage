@@ -32,7 +32,7 @@ class Backend(QObject):
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
 
-        self.clientManager.configLoad()
+        self.clients.configLoad()
 
 
     @pyqtProperty("QVariant", constant=True)
@@ -40,7 +40,7 @@ class Backend(QObject):
         return self._html_filter
 
     @pyqtProperty("QVariant", constant=True)
-    def clientManager(self):
+    def clients(self):
         return self._client_manager
 
     @pyqtProperty("QVariant", constant=True)
@@ -59,7 +59,7 @@ class Backend(QObject):
         if user_id in self._queried_displaynames:
             return self._queried_displaynames[user_id]
 
-        for client in self.clientManager.clients.values():
+        for client in self.clients.values():
             for room in client.nio.rooms.values():
                 displayname = room.user_name(user_id)
 
@@ -70,7 +70,7 @@ class Backend(QObject):
 
 
     def _query_user_displayname(self, user_id: str) -> str:
-        client      = next(iter(self.clientManager.clients.values()))
+        client      = next(iter(self.clients.values()))
         response    = client.net.talk(client.nio.get_displayname, user_id)
         displayname = getattr(response, "displayname", "") or user_id
 
@@ -93,7 +93,7 @@ class Backend(QObject):
         if room_id in self.fully_loaded_rooms:
             return
 
-        for client in self.clientManager.clients.values():
+        for client in self.clients.values():
             if room_id in client.nio.rooms:
                 client.loadPastEvents(
                     room_id, self.past_tokens[room_id], limit
@@ -105,12 +105,11 @@ class Backend(QObject):
     @pyqtSlot(list)
     def pdb(self, additional_data: Sequence = ()) -> None:
         # pylint: disable=all
-        ad = additional_data
-        cm = self.clientManager
-        cl = self.clientManager.clients
-        m  = self.models
+        a = additional_data
+        c = self.clients
+        m = self.models
 
-        tcl = lambda user: cl[f"@test_{user}:matrix.org"]
+        tcl = lambda user: c[f"@test_{user}:matrix.org"]
 
         import pdb
         from PyQt5.QtCore import pyqtRemoveInputHook

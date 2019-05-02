@@ -22,9 +22,7 @@ Banner {
         "forget": function(button) {
             button.loading = true
             chatPage.canLoadPastEvents = false
-            Backend.clientManager.clients[chatPage.userId].forgetRoom(
-                chatPage.roomId
-            )
+            Backend.clients.get(chatPage.userId).forgetRoom(chatPage.roomId)
             pageStack.clear()
         },
     }

@@ -20,7 +20,7 @@ Item {
 
         buttonCallbacks: {
             "yes": function(button) {
-                Backend.clientManager.remember(client)
+                Backend.clients.remember(client)
                 pageStack.showPage("Default")
             },
             "no": function(button) { pageStack.showPage("Default") },

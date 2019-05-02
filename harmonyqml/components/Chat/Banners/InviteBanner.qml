@@ -30,16 +30,12 @@ Banner {
     buttonCallbacks: {
         "accept": function(button) {
             button.loading = true
-            Backend.clientManager.clients[chatPage.userId].joinRoom(
-                chatPage.roomId
-            )
+            Backend.clients.get(chatPage.userId).joinRoom(chatPage.roomId)
         },
 
         "decline": function(button) {
             button.loading = true
-            Backend.clientManager.clients[chatPage.userId].leaveRoom(
-                chatPage.roomId
-            )
+            Backend.clients.get(chatPage.userId).leaveRoom(chatPage.roomId)
         }
     }
 }

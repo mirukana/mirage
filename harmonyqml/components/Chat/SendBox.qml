@@ -32,7 +32,7 @@ HGlassRectangle {
             area.focus: true
 
             function setTyping(typing) {
-                Backend.clientManager.clients[chatPage.userId]
+                Backend.clients.get(chatPage.userId)
                        .setTypingState(chatPage.roomId, typing)
             }
 
@@ -50,7 +50,7 @@ HGlassRectangle {
                 }
 
                 if (textArea.text === "") { return }
-                Backend.clientManager.clients[chatPage.userId]
+                Backend.clients.get(chatPage.userId)
                        .sendMarkdown(chatPage.roomId, textArea.text)
                 textArea.clear()
             }

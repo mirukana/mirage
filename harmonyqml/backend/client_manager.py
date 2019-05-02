@@ -5,7 +5,8 @@ import json
 import os
 import platform
 import threading
-from typing import Dict, Optional
+from collections.abc import Mapping
+from typing import Dict, Iterable, Optional
 
 from atomicfile import AtomicFile
 from PyQt5.QtCore import (
@@ -22,7 +23,11 @@ AccountConfig = Dict[str, Dict[str, str]]
 _CONFIG_LOCK = threading.Lock()
 
 
-class ClientManager(QObject):
+class _ClientManagerMeta(type(QObject), type(Mapping)):  # type: ignore
+    pass
+
+
+class ClientManager(QObject, Mapping, metaclass=_ClientManagerMeta):
     clientAdded        = pyqtSignal(Client)
     clientDeleted      = pyqtSignal(str)
     clientCountChanged = pyqtSignal(int)
@@ -33,23 +38,35 @@ class ClientManager(QObject):
         self.backend = backend
         self._clients: Dict[str, Client] = {}
 
-        func = lambda: self.clientCountChanged.emit(len(self.clients))
+        func = lambda: self.clientCountChanged.emit(len(self))
         self.clientAdded.connect(func)
         self.clientDeleted.connect(func)
 
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(clients={self.clients!r})"
+        return f"{type(self).__name__}(clients={self._clients!r})"
 
 
-    @pyqtProperty("QVariantMap", notify=clientCountChanged)
-    def clients(self):
-        return self._clients
+    def __getitem__(self, user_id: str) -> Client:
+        return self.get(user_id)
+
+
+    def __len__(self) -> int:
+        return self.count
+
+
+    def __iter__(self):
+        return iter(self._clients)
+
+
+    @pyqtSlot(str, result="QVariant")
+    def get(self, key: str) -> Client:
+        return self._clients[key]
 
 
     @pyqtProperty(int, notify=clientCountChanged)
-    def clientCount(self):
-        return len(self.clients)
+    def count(self):
+        return len(self._clients)
 
 
     @pyqtSlot()
@@ -72,23 +89,23 @@ class ClientManager(QObject):
 
 
     def _on_connected(self, client: Client) -> None:
-        self.clients[client.userId] = client
+        self._clients[client.userId] = client
         self.clientAdded.emit(client)
         client.startSyncing()
 
 
     @pyqtSlot(str)
-    def delete(self, user_id: str) -> None:
-        client = self.clients.pop(user_id, None)
+    def remove(self, user_id: str) -> None:
+        client = self._clients.pop(user_id, None)
         if client:
             self.clientDeleted.emit(user_id)
             client.logout()
 
 
     @pyqtSlot()
-    def deleteAll(self) -> None:
-        for user_id in self.clients.copy():
-            self.delete(user_id)
+    def removeAll(self) -> None:
+        for user_id in self._clients.copy():
+            self.remove(user_id)
 
 
     @pyqtProperty(str, constant=True)

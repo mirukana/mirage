@@ -8,7 +8,7 @@ ApplicationWindow {
     width: Math.min(Screen.width, 1152)
     height: Math.min(Screen.height, 768)
 
-    onClosing: Backend.clientManager.deleteAll()
+    onClosing: Backend.clients.removeAll()
 
     Loader {
         anchors.fill: parent
