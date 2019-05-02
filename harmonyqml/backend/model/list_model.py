@@ -43,6 +43,17 @@ class ListModel(QAbstractListModel):
         return "%s(%r)" % (type(self).__name__, self._data)
 
 
+    def __contains__(self, index: Index) -> bool:
+        if isinstance(index, str):
+            try:
+                self.indexWhere(self.mainKey, index)
+                return True
+            except ValueError:
+                return False
+
+        return index in self._data
+
+
     def __getitem__(self, index: Index) -> ListItem:
         return self.get(index)
 
@@ -260,27 +271,32 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot(int, int)
     @pyqtSlot(int, int, int)
-    def move(self, from_: int, to: int, n: int = 1) -> None:
+    @pyqtSlot(str, int)
+    @pyqtSlot(str, int, int)
+    def move(self, from_: Index, to: int, n: int = 1) -> None:
         # pylint: disable=invalid-name
-        qlast = from_ + n - 1
+        i_from: int = self.indexWhere(self.mainKey, from_) \
+                      if isinstance(from_, str) else from_
 
-        if (n <= 0) or (from_ == to) or (qlast == to) or \
+        qlast = i_from + n - 1
+
+        if (n <= 0) or (i_from == to) or (qlast == to) or \
            not (len(self) > qlast >= 0) or \
            not len(self) >= to >= 0:
             return
 
         qidx  = QModelIndex()
-        qto   = min(len(self), to + n if to > from_ else to)
-        # print(f"self.beginMoveRows(qidx, {from_}, {qlast}, qidx, {qto})")
-        valid = self.beginMoveRows(qidx, from_, qlast, qidx, qto)
+        qto   = min(len(self), to + n if to > i_from else to)
+        # print(f"self.beginMoveRows(qidx, {i_from}, {qlast}, qidx, {qto})")
+        valid = self.beginMoveRows(qidx, i_from, qlast, qidx, qto)
 
         if not valid:
             logging.warning("Invalid move operation - %r", locals())
             return
 
-        last = from_ + n
-        cut  = self._data[from_:last]
-        del self._data[from_:last]
+        last = i_from + n
+        cut  = self._data[i_from:last]
+        del self._data[i_from:last]
         self._data[to:to] = cut
 
         self.endMoveRows()

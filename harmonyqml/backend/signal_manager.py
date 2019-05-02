@@ -141,15 +141,39 @@ class SignalManager(QObject):
         self.backend.past_tokens[room_id] = token
 
 
+    def _move_room(self, account_id: str, room_id: str, new_event: RoomEvent
+                  ) -> None:
+        # Find in which category our room is
+        for categ in self.backend.accounts[account_id].roomCategories:
+            if room_id not in categ.rooms:
+                continue
+
+            # Found the category, now find before which room we must move to
+            for index, room in enumerate(categ.rooms):
+                if not self.backend.roomEvents[room.roomId]:
+                    # That other room has no events, move before it
+                    categ.rooms.move(room_id, index)
+                    return
+
+                other_room_last_event = self.backend.roomEvents[room.roomId][0]
+
+                if new_event.dateTime > other_room_last_event.dateTime:
+                    # Our last event is newer than that other room, move before
+                    categ.rooms.move(room_id, max(0, index - 1))
+                    return
+        return
+
+
     def onRoomEventReceived(self,
-                            _:  Client,
+                            client:  Client,
                             room_id: str,
                             etype:   str,
                             edict:   Dict[str, Any]) -> None:
-        def process() -> None:
+
+        def process() -> Optional[RoomEvent]:
             # Prevent duplicate events in models due to multiple accounts
             if edict["event_id"] in self.last_room_events:
-                return
+                return None
 
             self.last_room_events.appendleft(edict["event_id"])
 
@@ -166,7 +190,7 @@ class SignalManager(QObject):
             )
 
             if event_is_our_profile_changed:
-                return
+                return None
 
             if etype == "RoomCreateEvent":
                 self.backend.fully_loaded_rooms.add(room_id)
@@ -194,7 +218,7 @@ class SignalManager(QObject):
                 if update_at is not None:
                     model.update(update_at, new_event)
                     self._events_in_transfer -= 1
-                    return
+                    return new_event
 
             for i, event in enumerate(model):
                 if event.isLocalEcho:
@@ -203,13 +227,15 @@ class SignalManager(QObject):
                 # Model is sorted from newest to oldest message
                 if new_event.dateTime > event.dateTime:
                     model.insert(i, new_event)
-                    return
+                    return new_event
 
             model.append(new_event)
+            return new_event
 
         with self._lock:
-            process()
-            # self._move_room(client.userId, room_id)
+            new_event = process()
+            if new_event:
+                self._move_room(client.userId, room_id, new_event)
 
 
     def onRoomTypingUsersUpdated(self,
@@ -246,7 +272,7 @@ class SignalManager(QObject):
             model.insert(0, event)
             self._events_in_transfer += 1
 
-            # self._move_room(client.userId, room_id)
+            self._move_room(client.userId, room_id, event)
 
 
     def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:
