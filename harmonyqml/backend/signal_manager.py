@@ -12,6 +12,7 @@ from nio.rooms import MatrixRoom
 from .backend import Backend
 from .client import Client
 from .model.items import Account, ListModel, Room, RoomCategory, RoomEvent
+from .model.sort_filter_proxy import SortFilterProxy
 
 Inviter   = Optional[Dict[str, str]]
 LeftEvent = Optional[Dict[str, str]]
@@ -34,12 +35,24 @@ class SignalManager(QObject):
     def onClientAdded(self, client: Client) -> None:
         self.connectClient(client)
 
+        room_categories_kwargs: List[Dict[str, Any]] = [
+            {"name": "Invites", "rooms": ListModel()},
+            {"name": "Rooms", "rooms": ListModel()},
+            {"name": "Left", "rooms": ListModel()},
+        ]
+
+        for i, _ in enumerate(room_categories_kwargs):
+            proxy = SortFilterProxy(
+                source_model = room_categories_kwargs[i]["rooms"],
+                sort_by_role = "lastEventDateTime",
+                ascending    = False,
+            )
+            room_categories_kwargs[i]["sortedRooms"] = proxy
+
         self.backend.accounts.append(Account(
             userId         = client.userId,
             roomCategories = ListModel([
-                RoomCategory("Invites", ListModel()),
-                RoomCategory("Rooms", ListModel()),
-                RoomCategory("Left", ListModel()),
+                RoomCategory(**kws) for kws in room_categories_kwargs
             ]),
             displayName = self.backend.getUserDisplayName(client.userId),
         ))
@@ -82,12 +95,18 @@ class SignalManager(QObject):
         categories["Rooms"].rooms.pop(room_id, None)
         categories["Left"].rooms.pop(room_id, None)
 
-        categories["Invites"].rooms.upsert(room_id, Room(
-            roomId      = room_id,
-            displayName = self._get_room_displayname(nio_room),
-            topic       = nio_room.topic,
-            inviter     = inviter,
-        ), 0, 0)
+        categories["Invites"].rooms.upsert(
+            where_main_key_is = room_id,
+            update_with       = Room(
+                roomId            = room_id,
+                displayName       = self._get_room_displayname(nio_room),
+                topic             = nio_room.topic,
+                inviter           = inviter,
+                lastEventDateTime = QDateTime.currentDateTime(),  # FIXME
+            ),
+            new_index_if_insert = 0,
+            ignore_roles        = ("typingUsers"),
+        )
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
@@ -97,11 +116,16 @@ class SignalManager(QObject):
         categories["Invites"].rooms.pop(room_id, None)
         categories["Left"].rooms.pop(room_id, None)
 
-        categories["Rooms"].rooms.upsert(room_id, Room(
-            roomId      = room_id,
-            displayName = self._get_room_displayname(nio_room),
-            topic       = nio_room.topic,
-        ), 0, 0)
+        categories["Rooms"].rooms.upsert(
+            where_main_key_is = room_id,
+            update_with       = Room(
+                roomId      = room_id,
+                displayName = self._get_room_displayname(nio_room),
+                topic       = nio_room.topic,
+            ),
+            new_index_if_insert = 0,
+            ignore_roles        = ("typingUsers", "lastEventDateTime"),
+        )
 
 
     def onRoomLeft(self,
@@ -114,12 +138,23 @@ class SignalManager(QObject):
         previous = previous or categories["Invites"].rooms.pop(room_id, None)
         previous = previous or categories["Left"].rooms.get(room_id, None)
 
-        categories["Left"].rooms.upsert(0, Room(
-            roomId      = room_id,
-            displayName = previous.displayName if previous else None,
-            topic       = previous.topic if previous else None,
-            leftEvent   = left_event,
-        ), 0, 0)
+        left_time = left_event.get("server_timestamp") if left_event else None
+
+        categories["Left"].rooms.upsert(
+            where_main_key_is = room_id,
+            update_with     = Room(
+                roomId      = room_id,
+                displayName = previous.displayName if previous else None,
+                topic       = previous.topic       if previous else None,
+                leftEvent   = left_event,
+                lastEventDateTime = (
+                    QDateTime.fromMSecsSinceEpoch(left_time)
+                    if left_time else QDateTime.currentDateTime()
+                ),
+            ),
+            new_index_if_insert = 0,
+            ignore_roles        = ("typingUsers", "lastEventDateTime"),
+        )
 
     def onRoomSyncPrevBatchTokenReceived(self,
                                          _:       Client,
@@ -141,27 +176,14 @@ class SignalManager(QObject):
         self.backend.past_tokens[room_id] = token
 
 
-    def _move_room(self, account_id: str, room_id: str, new_event: RoomEvent
-                  ) -> None:
-        # Find in which category our room is
-        for categ in self.backend.accounts[account_id].roomCategories:
-            if room_id not in categ.rooms:
-                continue
-
-            # Found the category, now find before which room we must move to
-            for index, room in enumerate(categ.rooms):
-                if not self.backend.roomEvents[room.roomId]:
-                    # That other room has no events, move before it
-                    categ.rooms.move(room_id, index)
-                    return
-
-                other_room_last_event = self.backend.roomEvents[room.roomId][0]
-
-                if new_event.dateTime > other_room_last_event.dateTime:
-                    # Our last event is newer than that other room, move before
-                    categ.rooms.move(room_id, max(0, index - 1))
-                    return
-        return
+    def _set_room_last_event(self, user_id: str, room_id: str, event: RoomEvent
+                            ) -> None:
+        for categ in self.backend.accounts[user_id].roomCategories:
+            if room_id in categ.rooms:
+                # Use setProperty to make sure to trigger model changed signals
+                categ.rooms.setProperty(
+                    room_id, "lastEventDateTime", event.dateTime
+                )
 
 
     def onRoomEventReceived(self,
@@ -197,7 +219,7 @@ class SignalManager(QObject):
 
             if self._events_in_transfer:
                 local_echoes_met: int           = 0
-                update_at:       Optional[int] = None
+                update_at:        Optional[int] = None
 
                 # Find if any locally echoed event corresponds to new_event
                 for i, event in enumerate(model):
@@ -235,7 +257,7 @@ class SignalManager(QObject):
         with self._lock:
             new_event = process()
             if new_event:
-                self._move_room(client.userId, room_id, new_event)
+                self._set_room_last_event(client.userId, room_id, new_event)
 
 
     def onRoomTypingUsersUpdated(self,
@@ -245,7 +267,7 @@ class SignalManager(QObject):
         categories = self.backend.accounts[client.userId].roomCategories
         for categ in categories:
             try:
-                categ.rooms[room_id].typingUsers = users
+                categ.rooms.setProperty(room_id, "typingUsers", users)
                 break
             except ValueError:
                 pass
@@ -272,7 +294,7 @@ class SignalManager(QObject):
             model.insert(0, event)
             self._events_in_transfer += 1
 
-            self._move_room(client.userId, room_id, event)
+            self._set_room_last_event(client.userId, room_id, event)
 
 
     def onRoomAboutToBeForgotten(self, client: Client, room_id: str) -> None:

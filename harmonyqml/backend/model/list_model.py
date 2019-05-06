@@ -89,10 +89,15 @@ class ListModel(QAbstractListModel):
         return self._data[0].mainKey if self._data else None
 
 
+    def roleNumbers(self) -> Dict[str, int]:
+        return {name: Qt.UserRole + i
+                for i, name in enumerate(self.roles, 1)} \
+                if self._data else {}
+
 
     def roleNames(self) -> Dict[int, bytes]:
-        return {Qt.UserRole + i: bytes(f, "utf-8")
-                for i, f in enumerate(self.roles, 1)} \
+        return {Qt.UserRole + i: bytes(name, "utf-8")
+                for i, name in enumerate(self.roles, 1)} \
                 if self._data else {}
 
 
@@ -219,8 +224,10 @@ class ListModel(QAbstractListModel):
                 except AttributeError:  # constant/not settable
                     pass
 
-        qidx = QAbstractListModel.index(self, i_index, 0)
-        self.dataChanged.emit(qidx, qidx, self.roleNames())
+        qidx    = QAbstractListModel.index(self, i_index, 0)
+        updated = [number for name, number in self.roleNumbers().items()
+                   if name not in ignore_roles]
+        self.dataChanged.emit(qidx, qidx, updated)
         self.changed.emit()
         return i_index
 
@@ -265,7 +272,7 @@ class ListModel(QAbstractListModel):
 
         setattr(self[i_index], prop, value)
         qidx = QAbstractListModel.index(self, i_index, 0)
-        self.dataChanged.emit(qidx, qidx, self.roleNames())
+        self.dataChanged.emit(qidx, qidx, (self.roleNumbers()[prop],))
         self.changed.emit()
 
 

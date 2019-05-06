@@ -56,6 +56,7 @@
   - Banner name color instead of bold
 
 - Missing nio support
+  - Invite events are missing their timestamps
   - Left room events
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event

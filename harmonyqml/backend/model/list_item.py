@@ -118,7 +118,7 @@ class ListItem(QObject, metaclass=_ListItemMeta):
 
         # Set properties from provided positional arguments
         for prop, value in zip(self._props, args):
-            setattr(self, f"_{prop}", value)
+            setattr(self, f"_{prop}", self._set_parent(value))
             already_set.add(prop)
 
         # Set properties from provided keyword arguments
@@ -129,7 +129,7 @@ class ListItem(QObject, metaclass=_ListItemMeta):
             if prop not in self._props:
                 raise TypeError(f"{method} got an unexpected keyword "
                                 f"argument {prop!r}")
-            setattr(self, f"_{prop}", value)
+            setattr(self, f"_{prop}", self._set_parent(value))
             already_set.add(prop)
 
         # Check for required init arguments not provided
@@ -140,7 +140,13 @@ class ListItem(QObject, metaclass=_ListItemMeta):
 
         # Set default values for properties not provided in arguments
         for prop in set(self._props) - already_set:
-            setattr(self, f"_{prop}", self._props[prop][1])
+            setattr(self, f"_{prop}", self._set_parent(self._props[prop][1]))
+
+
+    def _set_parent(self, value: Any) -> Any:
+        if isinstance(value, QObject):
+            value.setParent(self)
+        return value
 
 
     def __repr__(self) -> str:

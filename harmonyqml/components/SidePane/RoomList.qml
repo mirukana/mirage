@@ -8,6 +8,7 @@ ListView {
 
     id: roomList
     spacing: accountList.spacing
-    model: Backend.accounts.get(userId).roomCategories.get(category).rooms
+    model:
+        Backend.accounts.get(userId).roomCategories.get(category).sortedRooms
     delegate: RoomDelegate {}
 }

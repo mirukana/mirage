@@ -42,10 +42,8 @@ MouseArea {
                     )
                 }
 
-                Connections {
-                    target: Backend.roomEvents.get(roomId)
-                    onChanged: subtitleLabel.text = subtitleLabel.getText()
-                }
+                property var lastEvTime: lastEventDateTime
+                onLastEvTimeChanged: subtitleLabel.text = getText()
 
                 id: subtitleLabel
                 visible: text !== ""

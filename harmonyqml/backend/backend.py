@@ -105,9 +105,10 @@ class Backend(QObject):
     @pyqtSlot(list)
     def pdb(self, additional_data: Sequence = ()) -> None:
         # pylint: disable=all
-        a = additional_data
-        c = self.clients
-        m = self.models
+        ad = additional_data
+        cl = self.clients
+        ac = self.accounts
+        re = self.roomEvents
 
         tcl = lambda user: c[f"@test_{user}:matrix.org"]
 

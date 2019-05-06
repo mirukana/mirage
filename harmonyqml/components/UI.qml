@@ -62,5 +62,7 @@ Item {
             popExit: null
             pushExit: null
         }
+
+        Keys.onEscapePressed: Backend.pdb()  // TODO: only if debug mode True
     }
 }
