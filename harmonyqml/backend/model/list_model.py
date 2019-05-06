@@ -155,7 +155,6 @@ class ListModel(QAbstractListModel):
 
         raise ValueError(f"No item in model data with "
                          f"property {prop!r} set to {is_value!r}.")
-        from PyQt5.QtCore import pyqtRemoveInputHook as PRI; import pdb; PRI(); pdb.set_trace()
 
 
     @pyqtSlot(int, result="QVariant")

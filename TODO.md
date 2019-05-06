@@ -9,8 +9,6 @@
   - Icons and images aren't reloaded
   - HStyle singleton isn't reloaded
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
-  - Bug when resizing window being tiled (i3), can't figure it out
-  - Can scroll the SidePane rooms too far
 
 - UI
   - Improve SidePane appearance when at min width
