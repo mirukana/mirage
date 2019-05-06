@@ -51,6 +51,10 @@ class Backend(QObject):
     def roomEvents(self):
         return self._room_events
 
+    @pyqtProperty("QVariant", constant=True)
+    def signals(self):
+        return self._signal_manager
+
 
     @pyqtSlot(str, result="QVariant")
     @pyqtSlot(str, bool, result="QVariant")
@@ -110,7 +114,7 @@ class Backend(QObject):
         ac = self.accounts
         re = self.roomEvents
 
-        tcl = lambda user: c[f"@test_{user}:matrix.org"]
+        tcl = lambda user: cl[f"@test_{user}:matrix.org"]
 
         import pdb
         from PyQt5.QtCore import pyqtRemoveInputHook

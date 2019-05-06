@@ -4,7 +4,7 @@
 from threading import Lock
 from typing import Any, Deque, Dict, List, Optional
 
-from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal
+from PyQt5.QtCore import QDateTime, QObject, pyqtBoundSignal, pyqtSignal
 
 import nio
 from nio.rooms import MatrixRoom
@@ -19,6 +19,8 @@ LeftEvent = Optional[Dict[str, str]]
 
 
 class SignalManager(QObject):
+    roomCategoryChanged = pyqtSignal(str, str, str, str)
+
     _lock: Lock = Lock()
 
     def __init__(self, backend: Backend) -> None:
@@ -92,8 +94,8 @@ class SignalManager(QObject):
         nio_room   = client.nio.invited_rooms[room_id]
         categories = self.backend.accounts[client.userId].roomCategories
 
-        categories["Rooms"].rooms.pop(room_id, None)
-        categories["Left"].rooms.pop(room_id, None)
+        previous_room = categories["Rooms"].rooms.pop(room_id, None)
+        previous_left = categories["Left"].rooms.pop(room_id, None)
 
         categories["Invites"].rooms.upsert(
             where_main_key_is = room_id,
@@ -108,13 +110,19 @@ class SignalManager(QObject):
             ignore_roles        = ("typingUsers"),
         )
 
+        signal = self.roomCategoryChanged
+        if previous_room:
+            signal.emit(client.userId, room_id, "Rooms", "Invites")
+        elif previous_left:
+            signal.emit(client.userId, room_id, "Left", "Invites")
+
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
         nio_room   = client.nio.rooms[room_id]
         categories = self.backend.accounts[client.userId].roomCategories
 
-        categories["Invites"].rooms.pop(room_id, None)
-        categories["Left"].rooms.pop(room_id, None)
+        previous_invite = categories["Invites"].rooms.pop(room_id, None)
+        previous_left   = categories["Left"].rooms.pop(room_id, None)
 
         categories["Rooms"].rooms.upsert(
             where_main_key_is = room_id,
@@ -127,6 +135,12 @@ class SignalManager(QObject):
             ignore_roles        = ("typingUsers", "lastEventDateTime"),
         )
 
+        signal = self.roomCategoryChanged
+        if previous_invite:
+            signal.emit(client.userId, room_id, "Invites", "Rooms")
+        elif previous_left:
+            signal.emit(client.userId, room_id, "Left", "Rooms")
+
 
     def onRoomLeft(self,
                    client:     Client,
@@ -134,9 +148,10 @@ class SignalManager(QObject):
                    left_event: LeftEvent = None) -> None:
         categories = self.backend.accounts[client.userId].roomCategories
 
-        previous = categories["Rooms"].rooms.pop(room_id, None)
-        previous = previous or categories["Invites"].rooms.pop(room_id, None)
-        previous = previous or categories["Left"].rooms.get(room_id, None)
+        previous_room   = categories["Rooms"].rooms.pop(room_id, None)
+        previous_invite = categories["Invites"].rooms.pop(room_id, None)
+        previous        = previous_room or previous_invite or \
+                          categories["Left"].rooms.get(room_id, None)
 
         left_time = left_event.get("server_timestamp") if left_event else None
 
@@ -155,6 +170,14 @@ class SignalManager(QObject):
             new_index_if_insert = 0,
             ignore_roles        = ("typingUsers", "lastEventDateTime"),
         )
+
+        signal = self.roomCategoryChanged
+        if previous_room:
+            signal.emit(client.userId, room_id, "Rooms", "Left")
+        elif previous_invite:
+            signal.emit(client.userId, room_id, "Invites", "Left")
+
+
 
     def onRoomSyncPrevBatchTokenReceived(self,
                                          _:       Client,

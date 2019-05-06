@@ -14,10 +14,16 @@ HColumnLayout {
                .roomCategories.get(category)
                .rooms.get(roomId)
 
-    property bool canLoadPastEvents: true
-
     id: chatPage
     onFocusChanged: sendBox.setFocus()
+
+   Component.onCompleted: Backend.signals.roomCategoryChanged.connect(
+        function(forUserId, forRoomId, previous, now) {
+            if (chatPage && forUserId == userId && forRoomId == roomId) {
+                chatPage.category = now
+            }
+        }
+    )
 
     RoomHeader {
         displayName: roomInfo.displayName

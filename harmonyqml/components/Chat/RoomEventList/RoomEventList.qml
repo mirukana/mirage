@@ -2,7 +2,6 @@ import QtQuick 2.7
 import "../../Base"
 
 HGlassRectangle {
-    property bool canLoadPastEvents: true
     property int space: 8
 
     color: HStyle.chat.roomEventList.background
@@ -29,7 +28,7 @@ HGlassRectangle {
         property real yPos: visibleArea.yPosition
 
         onYPosChanged: {
-            if (chatPage.canLoadPastEvents && yPos <= 0.1) {
+            if (chatPage.category != "Invites" && yPos <= 0.1) {
                 Backend.loadPastEvents(chatPage.roomId)
             }
         }

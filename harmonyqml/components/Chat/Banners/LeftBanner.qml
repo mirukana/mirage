@@ -21,7 +21,6 @@ Banner {
     buttonCallbacks: {
         "forget": function(button) {
             button.loading = true
-            chatPage.canLoadPastEvents = false
             Backend.clients.get(chatPage.userId).forgetRoom(chatPage.roomId)
             pageStack.clear()
         },
