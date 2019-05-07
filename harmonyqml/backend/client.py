@@ -87,6 +87,10 @@ class Client(QObject):
     def login(self, password: str, device_name: str = "") -> "Client":
         response = self.net.talk(self.nio.login, password, device_name)
         self.nio_sync.receive_response(response)
+
+        if not self.nio.olm_account_shared:
+            self._keys_upload()
+
         return self
 
 
@@ -97,7 +101,17 @@ class Client(QObject):
         response = nio.LoginResponse(user_id, device_id, token)
         self.nio.receive_response(response)
         self.nio_sync.receive_response(response)
+
+        if not self.nio.olm_account_shared:
+            self._keys_upload()
+
         return self
+
+
+    @futurize(pyqt=False)
+    def _keys_upload(self) -> None:
+        print("uploading key")
+        self.net.talk(self.nio.keys_upload)
 
 
     @pyqtSlot(result="QVariant")
@@ -126,6 +140,9 @@ class Client(QObject):
 
     def _on_sync(self, response: nio.SyncResponse) -> None:
         self.nio.receive_response(response)
+
+        if self.nio.should_upload_keys:
+            self._keys_upload()
 
         for room_id, room_info in response.rooms.invite.items():
             for ev in room_info.invite_state:

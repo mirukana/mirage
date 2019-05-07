@@ -37,6 +37,7 @@
   - Status message and presence
 
 - Client improvements
+  - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
   - HTTP/2
   - `retry_after_ms` when rate-limited
   - Direct chats category
