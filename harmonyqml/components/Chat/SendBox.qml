@@ -40,6 +40,7 @@ HGlassRectangle {
             area.onEditingFinished: setTyping(false)  // when lost focus
 
             Keys.onReturnPressed: {
+                console.log( "enter")
                 event.accepted = true
 
                 if (event.modifiers & Qt.ShiftModifier ||
@@ -52,10 +53,11 @@ HGlassRectangle {
                 if (textArea.text === "") { return }
                 Backend.clients.get(chatPage.userId)
                        .sendMarkdown(chatPage.roomId, textArea.text)
-                textArea.clear()
+                area.clear()
             }
 
-            Keys.onEnterPressed: Keys.onReturnPressed(event)  // numpad enter
+            // Numpad enter
+            Keys.onEnterPressed: Keys.onReturnPressed(event)
         }
     }
 }

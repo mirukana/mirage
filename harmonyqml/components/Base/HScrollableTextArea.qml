@@ -9,6 +9,7 @@ ScrollView {
 
     default property alias textAreaData: textArea.data
 
+    id: scrollView
     clip: true
 
     TextArea {
@@ -25,6 +26,8 @@ ScrollView {
             id: textAreaBackground
             color: HStyle.controls.textArea.background
         }
+
+        Keys.forwardTo: [scrollView]
     }
 }
 

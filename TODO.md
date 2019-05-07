@@ -1,13 +1,12 @@
 - Refactoring
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
+  - Cleanup unused icons
 
 - Bug fixes
-  - Sendbox
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
-  - Icons and images aren't reloaded
-  - HStyle singleton isn't reloaded
+  - Icons, images and HStyle singleton aren't reloaded
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI
