@@ -81,6 +81,18 @@ class Client(QObject):
         return self.nio.user_id
 
 
+    @futurize(pyqt=False)
+    def _keys_upload(self) -> None:
+        print("uploading key")
+        self.net.talk(self.nio.keys_upload)
+
+
+    @futurize(max_instances=1, pyqt=False)
+    def _keys_query(self) -> None:
+        print("querying keys")
+        self.net.talk(self.nio.keys_query)
+
+
     @pyqtSlot(str, result="QVariant")
     @pyqtSlot(str, str, result="QVariant")
     @futurize()
@@ -106,12 +118,6 @@ class Client(QObject):
             self._keys_upload()
 
         return self
-
-
-    @futurize(pyqt=False)
-    def _keys_upload(self) -> None:
-        print("uploading key")
-        self.net.talk(self.nio.keys_upload)
 
 
     @pyqtSlot(result="QVariant")
@@ -143,6 +149,9 @@ class Client(QObject):
 
         if self.nio.should_upload_keys:
             self._keys_upload()
+
+        if self.nio.should_query_keys:
+            self._keys_query()
 
         for room_id, room_info in response.rooms.invite.items():
             for ev in room_info.invite_state:

@@ -11,6 +11,7 @@
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI
+  - "the tree arrows could be smaller"
   - Improve SidePane appearance when at min width
   - Accounts delegates background
   - Server selection
@@ -38,6 +39,7 @@
 
 - Client improvements
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
+    - See also `handle_response()`'s `keys_query` request
   - HTTP/2
   - `retry_after_ms` when rate-limited
   - Direct chats category
