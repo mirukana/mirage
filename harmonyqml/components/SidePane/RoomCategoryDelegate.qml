@@ -5,8 +5,11 @@ import "../Base"
 Column {
     id: roomCategoryDelegate
     width: roomCategoriesList.width
-    height: roomList.model.rowCount() > 0 ? childrenRect.height : 0
-    visible: roomList.model.rowCount() > 0
+
+    property int normalHeight: childrenRect.height  // avoid binding loop
+
+    height: roomList.model.count > 0 ? normalHeight : 0
+    visible: roomList.model.count > 0
 
     property string roomListUserId: userId
     property bool expanded: true

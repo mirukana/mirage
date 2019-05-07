@@ -9,6 +9,7 @@ from .list_model import ListModel
 
 class SortFilterProxy(QSortFilterProxyModel):
     sortByRoleChanged = pyqtSignal()
+    countChanged      = pyqtSignal(int)
 
     def __init__(self,
                  source_model: ListModel,
@@ -24,6 +25,7 @@ class SortFilterProxy(QSortFilterProxyModel):
 
         self.setSourceModel(source_model)
         source_model.rolesSet.connect(self._set_sort_role)
+        source_model.countChanged.connect(self.countChanged.emit)
         source_model.changed.connect(self._sort)
 
         self._sort_by_role = sort_by_role
@@ -58,6 +60,11 @@ class SortFilterProxy(QSortFilterProxyModel):
     @pyqtSlot(result=str)
     def repr(self) -> str:
         return self.__repr__()
+
+
+    @pyqtProperty(int, notify=countChanged)
+    def count(self) -> int:
+        return self.rowCount()
 
 
     def roleNames(self) -> Dict[int, bytes]:
