@@ -1,10 +1,12 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+import os
 from concurrent.futures import ThreadPoolExecutor
-from typing import Deque, Dict, Sequence, Set
+from typing import Deque, Dict, Optional, Sequence, Set
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
+from atomicfile import AtomicFile
+from PyQt5.QtCore import QObject, QStandardPaths, pyqtProperty, pyqtSlot
 
 from .html_filter import HtmlFilter
 from .model import ListModel, ListModelMap
@@ -103,6 +105,27 @@ class Backend(QObject):
                     room_id, self.past_tokens[room_id], limit
                 )
                 break
+
+
+    @staticmethod
+    def getPath(kind:            QStandardPaths.StandardLocation,
+                file:            str,
+                initial_content: Optional[str] = None) -> str:
+        relative_path = file.replace("/", os.sep)
+
+        path = QStandardPaths.locate(kind, relative_path)
+        if path:
+            return path
+
+        base_dir = QStandardPaths.writableLocation(kind)
+        path     = f"{base_dir}{os.sep}{relative_path}"
+        os.makedirs(os.path.split(path)[0], exist_ok=True)
+
+        if initial_content is not None:
+            with AtomicFile(path, "w") as new:
+                new.write(initial_content)
+
+        return path
 
 
     @pyqtSlot()

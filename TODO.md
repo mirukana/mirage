@@ -45,7 +45,6 @@
   - Make links in room subtitle clickable, formatting?
   - `<pre>` scrollbar on overflow
   - Handle cases where an avatar char is # or @ (#alias room, @user\_id)
-  - Proper logoff when closing client
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Keep an accounts order

@@ -117,29 +117,8 @@ class ClientManager(QObject, Mapping, metaclass=_ClientManagerMeta):
 
     # Standard file paths
 
-    @staticmethod
-    def _get_standard_path(kind:            QStandardPaths.StandardLocation,
-                           file:            str,
-                           initial_content: Optional[str] = None) -> str:
-        relative_path = file.replace("/", os.sep)
-
-        path = QStandardPaths.locate(kind, relative_path)
-        if path:
-            return path
-
-        base_dir = QStandardPaths.writableLocation(kind)
-        path     = f"{base_dir}{os.sep}{relative_path}"
-        os.makedirs(os.path.split(path)[0], exist_ok=True)
-
-        if initial_content is not None:
-            with AtomicFile(path, "w") as new:
-                new.write(initial_content)
-
-        return path
-
-
     def getAccountConfigPath(self) -> str:
-        return self._get_standard_path(
+        return self.backend.getPath(
             QStandardPaths.AppConfigLocation, "accounts.json", "[]"
         )
 
