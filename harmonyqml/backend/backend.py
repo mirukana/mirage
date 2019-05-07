@@ -106,20 +106,25 @@ class Backend(QObject):
                 )
                 break
 
-
     @staticmethod
-    def getPath(kind:            QStandardPaths.StandardLocation,
-                file:            str,
-                initial_content: Optional[str] = None) -> str:
-        relative_path = file.replace("/", os.sep)
+    def getDir(standard_dir: QStandardPaths.StandardLocation) -> str:
+        path = QStandardPaths.writableLocation(standard_dir)
+        os.makedirs(path, exist_ok=True)
+        return path
 
-        path = QStandardPaths.locate(kind, relative_path)
+
+    def getFile(self,
+                standard_dir:       QStandardPaths.StandardLocation,
+                relative_file_path: str,
+                initial_content:    Optional[str] = None) -> str:
+
+        relative_file_path = relative_file_path.replace("/", os.sep)
+
+        path = QStandardPaths.locate(standard_dir, relative_file_path)
         if path:
             return path
 
-        base_dir = QStandardPaths.writableLocation(kind)
-        path     = f"{base_dir}{os.sep}{relative_path}"
-        os.makedirs(os.path.split(path)[0], exist_ok=True)
+        path = os.path.join(self.getDir(standard_dir), relative_file_path)
 
         if initial_content is not None:
             with AtomicFile(path, "w") as new:

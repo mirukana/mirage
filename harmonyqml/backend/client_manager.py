@@ -115,15 +115,13 @@ class ClientManager(QObject, Mapping, metaclass=_ClientManagerMeta):
         return f"{__about__.__pretty_name__}{os}"
 
 
-    # Standard file paths
+    # Config file operations
 
     def getAccountConfigPath(self) -> str:
-        return self.backend.getPath(
+        return self.backend.getFile(
             QStandardPaths.AppConfigLocation, "accounts.json", "[]"
         )
 
-
-    # Config file operations
 
     def configAccounts(self) -> AccountConfig:
         with open(self.getAccountConfigPath(), "r") as file:
