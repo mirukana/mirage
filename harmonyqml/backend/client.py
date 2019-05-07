@@ -284,4 +284,6 @@ class Client(QObject):
     @futurize()
     def forgetRoom(self, room_id: str) -> None:
         self.roomAboutToBeForgotten.emit(room_id)
-        return self.net.talk(self.nio.room_forget, room_id=room_id)
+        response = self.net.talk(self.nio.room_forget, room_id=room_id)
+        self.nio.invalidate_outbound_session(room_id)
+        return response
