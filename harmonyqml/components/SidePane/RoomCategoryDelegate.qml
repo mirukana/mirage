@@ -24,13 +24,8 @@ Column {
             Layout.fillWidth: true
         }
 
-        HButton {
-            id: roomCategoryToggleExpand
-            iconName: roomList.visible ? "up" : "down"
-            iconDimension: 16
-            backgroundColor: "transparent"
-            onClicked:
-                roomCategoryDelegate.expanded = !roomCategoryDelegate.expanded
+        ExpandButton {
+            expandableItem: roomCategoryDelegate
         }
     }
 

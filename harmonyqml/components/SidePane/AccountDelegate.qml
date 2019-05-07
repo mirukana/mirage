@@ -52,13 +52,8 @@ Column {
             }
         }
 
-        HButton {
-            id: toggleExpand
-            iconName: roomCategoriesList.visible ? "up" : "down"
-            iconDimension: 16
-            backgroundColor: "transparent"
-            onClicked: accountDelegate.expanded = ! accountDelegate.expanded
-
+        ExpandButton {
+            expandableItem: accountDelegate
             Layout.preferredHeight: row.height
         }
     }

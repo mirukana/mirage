@@ -3,8 +3,12 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 Button {
+    property int horizontalMargin: 0
+    property int verticalMargin: 0
+
     property string iconName: ""
     property var iconDimension: null
+    property var iconTransform: null
     property bool circle: false
 
     property int fontSize: HStyle.fontSize.normal
@@ -59,6 +63,12 @@ Button {
             HIcon {
                 svgName: loading ? "hourglass" : iconName
                 dimension: iconDimension || contentLayout.height
+                transform: iconTransform
+
+                Layout.topMargin: verticalMargin
+                Layout.bottomMargin: verticalMargin
+                Layout.leftMargin: horizontalMargin
+                Layout.rightMargin: horizontalMargin
             }
 
             HLabel {
