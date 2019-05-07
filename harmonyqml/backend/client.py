@@ -6,7 +6,9 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Event
 from typing import DefaultDict, Tuple
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (
+    QObject, QStandardPaths, pyqtProperty, pyqtSignal, pyqtSlot
+)
 
 import nio
 
@@ -43,13 +45,19 @@ class Client(QObject):
 
         self.pool: ThreadPoolExecutor = ThreadPoolExecutor(6)
 
-        self.nio: nio.client.HttpClient = \
-            nio.client.HttpClient(self.host, username, device_id)
+        store_path = self.manager.backend.getDir(
+            QStandardPaths.AppDataLocation
+        )
+
+        self.nio: nio.client.HttpClient = nio.client.HttpClient(
+            self.host, username, device_id, store_path=store_path
+        )
 
         # Since nio clients can't handle more than one talk operation
         # at a time, this one is used exclusively to poll the sync API
-        self.nio_sync: nio.client.HttpClient = \
-            nio.client.HttpClient(self.host, username, device_id)
+        self.nio_sync: nio.client.HttpClient = nio.client.HttpClient(
+            self.host, username, device_id, store_path=store_path
+        )
 
         self.net      = NetworkManager(self.host, self.port, self.nio)
         self.net_sync = NetworkManager(self.host, self.port, self.nio_sync)

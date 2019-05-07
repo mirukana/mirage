@@ -40,7 +40,6 @@ HGlassRectangle {
             area.onEditingFinished: setTyping(false)  // when lost focus
 
             Keys.onReturnPressed: {
-                console.log( "enter")
                 event.accepted = true
 
                 if (event.modifiers & Qt.ShiftModifier ||
