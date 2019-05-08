@@ -112,7 +112,7 @@ class ClientManager(QObject, Mapping, metaclass=_ClientManagerMeta):
     def defaultDeviceName(self) -> str:  # pylint: disable=no-self-use
         os_ = f" on {platform.system()}".rstrip()
         os_ = f"{os_} {platform.release()}".rstrip() if os_ != " on" else ""
-        return f"{__about__.__pretty_name__}{os}"
+        return f"{__about__.__pretty_name__}{os_}"
 
 
     # Config file operations
