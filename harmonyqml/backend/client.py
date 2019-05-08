@@ -1,6 +1,7 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+import logging as log
 import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Event
@@ -84,9 +85,22 @@ class Client(QObject):
         self.net.talk(self.nio.keys_upload)
 
 
-    @futurize(max_running=1, discard_if_max_running=True, pyqt=False)
     def _keys_query(self) -> None:
         self.net.talk(self.nio.keys_query)
+
+
+    def _keys_claim(self, room_id: str) -> None:
+        self.net.talk(self.nio.keys_claim, room_id)
+
+
+    def _share_group_session(self,
+                             room_id: str,
+                             ignore_missing_sessions: bool = False) -> None:
+        self.net.talk(
+            self.nio.share_group_session,
+            room_id                 = room_id,
+            ignore_missing_sessions = ignore_missing_sessions,
+        )
 
 
     @pyqtSlot(str, result="QVariant")
@@ -253,12 +267,28 @@ class Client(QObject):
         # sent at a time is one per room at a time.
         @futurize(max_running=1, consider_args=True)
         def send(self, room_id: str) -> PyQtFuture:
-            return self.net.talk(
+            talk = lambda: self.net.talk(
                 self.nio.room_send,
                 room_id      = room_id,
                 message_type = "m.room.message",
                 content      = content,
             )
+
+            try:
+                log.debug("Try sending message %r to %r", content, room_id)
+                return talk()
+            except nio.GroupEncryptionError as err:
+                log.warning(err)
+                try:
+                    self._share_group_session(room_id)
+                except nio.EncryptionError as err:
+                    log.warning(err)
+                    self._keys_claim(room_id)
+                    self._share_group_session(room_id,
+                                              ignore_missing_sessions=True)
+
+                log.debug("Final try to send %r to %r", content, room_id)
+                return talk()
 
         return send(self, room_id)
 
