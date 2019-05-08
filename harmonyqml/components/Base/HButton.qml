@@ -106,7 +106,7 @@ Button {
         onClicked: button.clicked()
         onDoubleClicked: button.doubleClicked()
         onEntered: {
-            overlayOpacity = checked ? 0 : 0.3
+            overlayOpacity = checked ? 0 : 0.2
             button.entered()
         }
         onExited: {
@@ -115,12 +115,12 @@ Button {
         }
         onPressAndHold: button.pressAndHold()
         onPressed: {
-            overlayOpacity += 0.3
+            overlayOpacity += 0.2
             button.pressed()
         }
         onReleased: {
             if (checkable) { checked = ! checked }
-            overlayOpacity = checked ? 0 : 0.3
+            overlayOpacity = checked ? 0 : 0.2
             button.released()
         }
     }
