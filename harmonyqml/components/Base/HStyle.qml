@@ -92,6 +92,10 @@ QtObject {
             property color background: colors.background1
         }
 
+        readonly property QtObject unknownDevices: QtObject {
+            property color background: colors.background1
+        }
+
         readonly property QtObject typingUsers: QtObject {
             property color background: colors.background0
         }

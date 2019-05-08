@@ -7,7 +7,7 @@ Banner {
 
     color: HStyle.chat.leftBanner.background
 
-    avatarName: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
+    avatar.name: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
     labelText: ChatJS.getLeftBannerText(leftEvent)
 
     buttonModel: [

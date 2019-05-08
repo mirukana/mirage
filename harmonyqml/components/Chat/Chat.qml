@@ -14,6 +14,9 @@ HColumnLayout {
                .roomCategories.get(category)
                .rooms.get(roomId)
 
+    readonly property bool hasUnknownDevices:
+         Backend.clients.get(userId).roomHasUnknownDevices(roomId)
+
     id: chatPage
     onFocusChanged: sendBox.setFocus()
 
@@ -42,9 +45,13 @@ HColumnLayout {
         inviter: roomInfo.inviter
     }
 
+    UnknownDevicesBanner {
+        visible: category === "Rooms" && hasUnknownDevices
+    }
+
     SendBox {
         id: sendBox
-        visible: category === "Rooms"
+        visible: category === "Rooms" && ! hasUnknownDevices
     }
 
     LeftBanner {

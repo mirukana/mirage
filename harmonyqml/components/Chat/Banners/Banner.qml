@@ -7,8 +7,8 @@ HGlassRectangle {
     Layout.fillWidth: true
     Layout.preferredHeight: 32
 
-    property alias avatarName: bannerAvatar.name
-    property alias avatarSource: bannerAvatar.imageSource
+    property alias avatar: bannerAvatar
+    property alias icon: bannerIcon
     property alias labelText: bannerLabel.text
     property alias buttonModel: bannerRepeater.model
     property var buttonCallbacks: []
@@ -20,6 +20,14 @@ HGlassRectangle {
         HAvatar {
             id: bannerAvatar
             dimension: banner.Layout.preferredHeight
+        }
+
+        HIcon {
+            id: bannerIcon
+            dimension: bannerLabel.implicitHeight
+            visible: Boolean(svgName)
+
+            Layout.leftMargin: 5
         }
 
         HLabel {
@@ -36,7 +44,7 @@ HGlassRectangle {
                 bannerAvatar.width - bannerButtons.width -
                 Layout.leftMargin - Layout.rightMargin
 
-            Layout.leftMargin: 10
+            Layout.leftMargin: 5
             Layout.rightMargin: Layout.leftMargin
         }
 

@@ -312,3 +312,8 @@ class Client(QObject):
         response = self.net.talk(self.nio.room_forget, room_id=room_id)
         self.nio.invalidate_outbound_session(room_id)
         return response
+
+
+    @pyqtSlot(str, result=bool)
+    def roomHasUnknownDevices(self, room_id: str) -> bool:
+        return self.nio.room_contains_unverified(room_id)
