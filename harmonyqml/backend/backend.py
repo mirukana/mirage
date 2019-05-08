@@ -60,7 +60,7 @@ class Backend(QObject):
 
     @pyqtSlot(str, result="QVariant")
     @pyqtSlot(str, bool, result="QVariant")
-    @futurize()
+    @futurize(max_running=1, consider_args=True)
     def getUserDisplayName(self, user_id: str, can_block: bool = True) -> str:
         if user_id in self._queried_displaynames:
             return self._queried_displaynames[user_id]

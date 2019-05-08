@@ -62,8 +62,6 @@ class Client(QObject):
         self.net      = NetworkManager(self.host, self.port, self.nio)
         self.net_sync = NetworkManager(self.host, self.port, self.nio_sync)
 
-        self._loading: bool = False
-
         self._stop_sync: Event = Event()
 
         # {room_id: (was_typing, at_timestamp_secs)}
@@ -81,15 +79,13 @@ class Client(QObject):
         return self.nio.user_id
 
 
-    @futurize(pyqt=False)
+    @futurize(max_running=1, discard_if_max_running=True, pyqt=False)
     def _keys_upload(self) -> None:
-        print("uploading key")
         self.net.talk(self.nio.keys_upload)
 
 
-    @futurize(max_instances=1, pyqt=False)
+    @futurize(max_running=1, discard_if_max_running=True, pyqt=False)
     def _keys_query(self) -> None:
-        print("querying keys")
         self.net.talk(self.nio.keys_query)
 
 
@@ -192,14 +188,10 @@ class Client(QObject):
                 self.roomLeft[str].emit(room_id)
 
 
-    @futurize()
+    @futurize(max_running=1, discard_if_max_running=True)
     def loadPastEvents(self, room_id: str, start_token: str, limit: int = 100
                       ) -> None:
         # From QML, use Backend.loastPastEvents instead
-
-        if self._loading:
-            return
-        self._loading = True
 
         self._on_past_events(
             room_id,
@@ -207,7 +199,6 @@ class Client(QObject):
                 self.nio.room_messages, room_id, start=start_token, limit=limit
             )
         )
-        self._loading = False
 
 
     def _on_past_events(self, room_id: str, response: nio.RoomMessagesResponse
@@ -221,7 +212,7 @@ class Client(QObject):
 
 
     @pyqtSlot(str, bool)
-    @futurize(max_instances=1)
+    @futurize(max_running=1, discard_if_max_running=True)
     def setTypingState(self, room_id: str, typing: bool) -> None:
         set_for_secs        = 5
         last_set, last_time = self._last_typing_set[room_id]
@@ -256,7 +247,7 @@ class Client(QObject):
         # If the thread pool workers are all occupied, and @futurize
         # wrapped sendMarkdown, the messageAboutToBeSent signal neccessary
         # for local echoes would not be sent until a thread is free.
-        @futurize()
+        @futurize(max_running=1)
         def send(self):
             return self.net.talk(
                 self.nio.room_send,

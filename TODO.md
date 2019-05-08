@@ -4,6 +4,7 @@
   - Cleanup unused icons
 
 - Bug fixes
+  - Local echo messages all have the same time
   - Something weird happening when nio store is created first time
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
@@ -38,6 +39,7 @@
   - Status message and presence
 
 - Client improvements
+  - Don't send setTypingState False when focus lost if nothing in sendbox
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
   - HTTP/2
