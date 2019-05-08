@@ -3,10 +3,16 @@ import QtQuick.Layouts 1.3
 import "../../Base"
 import "../utils.js" as ChatJS
 
-HRowLayout {
+Row {
     id: eventContent
     spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
+
+    width: Math.min(
+        roomEventListView.width - avatar.width - eventContent.spacing,
+        HStyle.fontSize.normal * 0.5 * 75,  // 600 with 16px font
+        contentLabel.implicitWidth
+    )
 
     HAvatar {
         id: avatar
@@ -16,6 +22,8 @@ HRowLayout {
     }
 
     HLabel {
+        width: parent.width
+
         id: contentLabel
         text: "<font color='" +
               Qt.hsla(Backend.hueFromString(displayName.value || dict.sender),
@@ -41,10 +49,5 @@ HRowLayout {
         rightPadding: horizontalPadding
         topPadding: verticalPadding
         bottomPadding: verticalPadding
-
-        Layout.maximumWidth: Math.min(
-            600,
-            roomEventListView.width - avatar.width - eventContent.totalSpacing
-        )
     }
 }
