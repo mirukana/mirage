@@ -13,7 +13,7 @@ from PyQt5.QtCore import (
 import nio
 
 from .network_manager import NetworkManager
-from .pyqt_future import futurize
+from .pyqt_future import PyQtFuture, futurize
 
 
 class Client(QObject):
@@ -234,7 +234,7 @@ class Client(QObject):
 
 
     @pyqtSlot(str, str)
-    def sendMarkdown(self, room_id: str, text: str) -> None:
+    def sendMarkdown(self, room_id: str, text: str) -> PyQtFuture:
         html = self.manager.backend.htmlFilter.fromMarkdown(text)
         content = {
             "body": text,
@@ -247,8 +247,12 @@ class Client(QObject):
         # If the thread pool workers are all occupied, and @futurize
         # wrapped sendMarkdown, the messageAboutToBeSent signal neccessary
         # for local echoes would not be sent until a thread is free.
-        @futurize(max_running=1)
-        def send(self):
+        #
+        # send() only takes the room_id argument explicitely because
+        # of consider_args=True: This means the max number of messages being
+        # sent at a time is one per room at a time.
+        @futurize(max_running=1, consider_args=True)
+        def send(self, room_id: str) -> PyQtFuture:
             return self.net.talk(
                 self.nio.room_send,
                 room_id      = room_id,
@@ -256,7 +260,7 @@ class Client(QObject):
                 content      = content,
             )
 
-        return send(self)
+        return send(self, room_id)
 
 
     @pyqtSlot(str, result="QVariant")
