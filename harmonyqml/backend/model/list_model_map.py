@@ -18,14 +18,8 @@ class ListModelMap(QObject):
             )
 
 
-    @pyqtSlot(str, result="QVariant")
-    def get(self, key) -> ListModel:
-        return self.dict[key]
-
-
-    @pyqtSlot(str, result=bool)
-    def has(self, key) -> bool:
-        return key in self.dict
+    def __repr__(self) -> str:
+        return "%s(%r)" % (type(self).__name__, self.dict)
 
 
     def __getitem__(self, key) -> ListModel:
@@ -47,3 +41,18 @@ class ListModelMap(QObject):
 
     def __len__(self) -> int:
         return len(self.dict)
+
+
+    @pyqtSlot(result=str)
+    def repr(self) -> str:
+        return self.__repr__()
+
+
+    @pyqtSlot(str, result="QVariant")
+    def get(self, key) -> ListModel:
+        return self.dict[key]
+
+
+    @pyqtSlot(str, result=bool)
+    def has(self, key) -> bool:
+        return key in self.dict
