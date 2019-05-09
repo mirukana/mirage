@@ -357,6 +357,9 @@ class ListModel(QAbstractListModel):
 
     @pyqtSlot()
     def clear(self) -> None:
+        if not self._data:
+            return
+
         # Reimplemented for performance reasons (begin/endRemoveRows)
         self.beginRemoveRows(QModelIndex(), 0, len(self))
         self._data.clear()
