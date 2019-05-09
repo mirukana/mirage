@@ -5,7 +5,8 @@
 
 - Bug fixes
   - Local echo messages all have the same time
-  - Something weird happening when nio store is created first time
+  - Prevent briefly seeing login screen if there are accounts to
+    resumeSession for but they take time to appear
   - 100% CPU usage when hitting top edge to trigger messages loading
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons, images and HStyle singleton aren't reloaded
@@ -29,14 +30,21 @@
     - See about <https://doc.qt.io/qt-5/qtquickcontrols2-configuration.html>
   - Settings page
     - Multiaccount aliases
+  - Message/text selection
 
 - Major features
   - E2E
+    - Device verification
+      - Member pane
+    - Edit/delete own devices
+    - Request room keys from own other devices
+    - Auto-trust accounts within the same client
+    - Import/export keys
   - Uploads
-  - Links preview
   - QQuickImageProvider
   - Read receipts
   - Status message and presence
+  - Links preview
 
 - Client improvements
   - Don't send setTypingState False when focus lost if nothing in sendbox
@@ -58,8 +66,8 @@
   - Banner name color instead of bold
 
 - Missing nio support
-  - Invite events are missing their timestamps
-  - Left room events
+  - Invite events are missing their timestamps (needed for sorting)
+  - Left room events after client reboot
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event
   - Support "Empty room (was ...)" after peer left
