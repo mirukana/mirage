@@ -150,6 +150,9 @@ class Backend(QObject):
 
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]
 
+        import json
+        jd = lambda obj: print(json.dumps(obj, indent=4, ensure_ascii=False))
+
         import pdb
         from PyQt5.QtCore import pyqtRemoveInputHook
         pyqtRemoveInputHook()

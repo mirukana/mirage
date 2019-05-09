@@ -53,10 +53,12 @@ class Device(ListItem):
     _required_init_values = {"deviceId", "ed25519Key"}
     _constant             = {"deviceId", "ed25519Key"}
 
-    deviceId:    str           = ""
-    ed25519Key:  str           = ""
-    displayName: Optional[str] = None
-    trust:       Trust         = Trust.undecided
+    deviceId:     str                 = ""
+    ed25519Key:   str                 = ""
+    displayName:  Optional[str]       = None
+    trust:        Trust               = Trust.undecided
+    lastSeenIp:   Optional[str]       = None
+    lastSeenDate: Optional[QDateTime] = None
 
 
 class Account(ListItem):
