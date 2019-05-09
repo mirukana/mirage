@@ -11,7 +11,9 @@ from nio.rooms import MatrixRoom
 
 from .backend import Backend
 from .client import Client
-from .model.items import Account, ListModel, Room, RoomCategory, RoomEvent
+from .model.items import (
+    Account, Device, ListModel, Room, RoomCategory, RoomEvent
+)
 from .model.sort_filter_proxy import SortFilterProxy
 
 Inviter   = Optional[Dict[str, str]]
@@ -35,8 +37,7 @@ class SignalManager(QObject):
 
 
     def onClientAdded(self, client: Client) -> None:
-        self.connectClient(client)
-
+        # Build an Account item for the Backend.accounts model
         room_categories_kwargs: List[Dict[str, Any]] = [
             {"name": "Invites", "rooms": ListModel()},
             {"name": "Rooms", "rooms": ListModel()},
@@ -58,6 +59,27 @@ class SignalManager(QObject):
             ]),
             displayName = self.backend.getUserDisplayName(client.userId),
         ))
+
+        # Upload our E2E keys to the matrix server if needed
+        if not client.nio.olm_account_shared:
+            client.uploadE2EKeys()
+
+        # Add our devices to the Backend.devices model
+        store = client.nio.device_store
+
+        for user_id in store.users:
+            self.backend.devices[user_id].clear()
+            self.backend.devices[user_id].extend([
+                Device(
+                    deviceId   = dev.id,
+                    ed25519Key = dev.ed25519,
+                    trust      = client.getDeviceTrust(dev),
+                    # displayName = TODO
+                ) for dev in store.active_user_devices(user_id)
+            ])
+
+        # Finally, connect all client signals
+        self.connectClient(client)
 
 
     def onClientDeleted(self, user_id: str) -> None:

@@ -30,6 +30,7 @@ class Backend(QObject):
 
         self._accounts:    ListModel    = ListModel(parent=parent)
         self._room_events: ListModelMap = ListModelMap(Deque, parent)
+        self._devices:     ListModelMap = ListModelMap(parent=parent)
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
@@ -52,6 +53,10 @@ class Backend(QObject):
     @pyqtProperty("QVariant", constant=True)
     def roomEvents(self):
         return self._room_events
+
+    @pyqtProperty("QVariant", constant=True)
+    def devices(self):
+        return self._devices
 
     @pyqtProperty("QVariant", constant=True)
     def signals(self):
@@ -141,6 +146,7 @@ class Backend(QObject):
         cl = self.clients
         ac = self.accounts
         re = self.roomEvents
+        de = self.devices
 
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]
 

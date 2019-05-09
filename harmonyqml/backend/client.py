@@ -13,6 +13,7 @@ from PyQt5.QtCore import (
 
 import nio
 
+from .model.items import Trust
 from .network_manager import NetworkManager
 from .pyqt_future import PyQtFuture, futurize
 
@@ -81,25 +82,34 @@ class Client(QObject):
 
 
     @futurize(max_running=1, discard_if_max_running=True, pyqt=False)
-    def _keys_upload(self) -> None:
+    def uploadE2EKeys(self) -> None:
         self.net.talk(self.nio.keys_upload)
 
 
-    def _keys_query(self) -> None:
+    def queryE2EKeys(self) -> None:
         self.net.talk(self.nio.keys_query)
 
 
-    def _keys_claim(self, room_id: str) -> None:
+    def claimE2EKeysForRoom(self, room_id: str) -> None:
         self.net.talk(self.nio.keys_claim, room_id)
 
 
-    def _share_group_session(self,
-                             room_id: str,
-                             ignore_missing_sessions: bool = False) -> None:
+    def shareRoomE2ESession(self,
+                            room_id: str,
+                            ignore_missing_sessions: bool = False) -> None:
         self.net.talk(
             self.nio.share_group_session,
             room_id                 = room_id,
             ignore_missing_sessions = ignore_missing_sessions,
+        )
+
+
+    def getDeviceTrust(self, device: nio.crypto.OlmDevice) -> Trust:
+        olm = self.nio.olm
+        return (
+            Trust.trusted     if olm.is_device_verified(device)    else
+            Trust.blacklisted if olm.is_device_blacklisted(device) else
+            Trust.undecided
         )
 
 
@@ -109,10 +119,6 @@ class Client(QObject):
     def login(self, password: str, device_name: str = "") -> "Client":
         response = self.net.talk(self.nio.login, password, device_name)
         self.nio_sync.receive_response(response)
-
-        if not self.nio.olm_account_shared:
-            self._keys_upload()
-
         return self
 
 
@@ -123,10 +129,6 @@ class Client(QObject):
         response = nio.LoginResponse(user_id, device_id, token)
         self.nio.receive_response(response)
         self.nio_sync.receive_response(response)
-
-        if not self.nio.olm_account_shared:
-            self._keys_upload()
-
         return self
 
 
@@ -158,10 +160,10 @@ class Client(QObject):
         self.nio.receive_response(response)
 
         if self.nio.should_upload_keys:
-            self._keys_upload()
+            self.uploadE2EKeys()
 
         if self.nio.should_query_keys:
-            self._keys_query()
+            self.queryE2EKeys()
 
         for room_id, room_info in response.rooms.invite.items():
             for ev in room_info.invite_state:
@@ -280,12 +282,12 @@ class Client(QObject):
             except nio.GroupEncryptionError as err:
                 log.warning(err)
                 try:
-                    self._share_group_session(room_id)
+                    self.shareRoomE2ESession(room_id)
                 except nio.EncryptionError as err:
                     log.warning(err)
-                    self._keys_claim(room_id)
-                    self._share_group_session(room_id,
-                                              ignore_missing_sessions=True)
+                    self.claimE2EKeysForRoom(room_id)
+                    self.shareRoomE2ESession(room_id,
+                                             ignore_missing_sessions=True)
 
                 log.debug("Final try to send %r to %r", content, room_id)
                 return talk()

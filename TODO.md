@@ -71,3 +71,12 @@
 - Distribution
   - Review setup.py, add dependencies
   - README.md
+  - Use PyInstaller or pyqtdeploy
+    - Test command:
+    ```
+    pyinstaller --onefile --windowed --name harmonyqml \
+                --add-data 'harmonyqml/components:harmonyqml/components' \
+                --additional-hooks-dir . \
+                --upx-dir ~/opt/upx-3.95-amd64_linux \
+                run.py
+    ```

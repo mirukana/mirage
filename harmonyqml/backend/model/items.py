@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import QDateTime, QSortFilterProxyModel
@@ -40,6 +41,22 @@ class RoomCategory(ListItem):
     # for every RoomCategory
     rooms:       ListModel             = ListModel()
     sortedRooms: QSortFilterProxyModel = QSortFilterProxyModel()
+
+
+class Trust(Enum):
+    blacklisted = -1
+    undecided   = 0
+    trusted     = 1
+
+
+class Device(ListItem):
+    _required_init_values = {"deviceId", "ed25519Key"}
+    _constant             = {"deviceId", "ed25519Key"}
+
+    deviceId:    str           = ""
+    ed25519Key:  str           = ""
+    displayName: Optional[str] = None
+    trust:       Trust         = Trust.undecided
 
 
 class Account(ListItem):
