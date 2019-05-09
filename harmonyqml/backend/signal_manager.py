@@ -74,7 +74,6 @@ class SignalManager(QObject):
                     deviceId   = dev.id,
                     ed25519Key = dev.ed25519,
                     trust      = client.getDeviceTrust(dev),
-                    # displayName = TODO
                 ) for dev in store.active_user_devices(user_id)
             ])
 
@@ -349,3 +348,25 @@ class SignalManager(QObject):
             categ.rooms.pop(room_id, None)
 
         self.backend.roomEvents[room_id].clear()
+
+
+    def onDeviceIsPresent(self,
+                          client:      Client,
+                          user_id:     str,
+                          device_id:   str,
+                          ed25519_key: str) -> None:
+        nio_device = client.nio.device_store[user_id][device_id]
+
+        self.backend.devices[user_id].upsert(
+            where_main_key_is = device_id,
+            update_with       = Device(
+                deviceId   = device_id,
+                ed25519Key = ed25519_key,
+                trust      = client.getDeviceTrust(nio_device),
+            )
+        )
+
+
+    def onDeviceIsDeleted(self, _: Client, user_id: str, device_id: str
+                         ) -> None:
+        self.backend.devices[user_id].pop(device_id, None)

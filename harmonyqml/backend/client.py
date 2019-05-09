@@ -32,6 +32,9 @@ class Client(QObject):
 
     messageAboutToBeSent = pyqtSignal(str, dict)
 
+    deviceIsPresent = pyqtSignal(str, str, str)
+    deviceIsDeleted = pyqtSignal(str, str)
+
 
     def __init__(self,
                  manager,
@@ -87,7 +90,22 @@ class Client(QObject):
 
 
     def queryE2EKeys(self) -> None:
-        self.net.talk(self.nio.keys_query)
+        print("query")
+        self._on_query_e2e_keys(self.net.talk(self.nio.keys_query))
+
+
+    def _on_query_e2e_keys(self, response: nio.KeysQueryResponse) -> None:
+        for user_id, device_dict in response.device_keys.items():
+            for device_id, payload in device_dict.items():
+                if device_id == self.nio.device_id:
+                    continue
+
+                ed25519_key = payload["keys"][f"ed25519:{device_id}"]
+                self.deviceIsPresent.emit(user_id, device_id, ed25519_key)
+
+            for device_id, device in self.nio.device_store[user_id].items():
+                if device.deleted:
+                    self.deviceIsDeleted.emit(user_id, device_id)
 
 
     def claimE2EKeysForRoom(self, room_id: str) -> None:
@@ -117,7 +135,9 @@ class Client(QObject):
     @pyqtSlot(str, str, result="QVariant")
     @futurize()
     def login(self, password: str, device_name: str = "") -> "Client":
+        # Main nio client will receive the response here
         response = self.net.talk(self.nio.login, password, device_name)
+        # Now, receive it with the sync nio client too:
         self.nio_sync.receive_response(response)
         return self
 
