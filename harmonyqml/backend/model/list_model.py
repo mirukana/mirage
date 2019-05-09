@@ -1,7 +1,7 @@
 import logging
 from typing import (
     Any, Callable, Dict, Iterable, List, Mapping, MutableSequence, Optional,
-    Sequence, Tuple, Union
+    Sequence, Set, Tuple, Union
 )
 
 from PyQt5.QtCore import (
@@ -217,18 +217,26 @@ class ListModel(QAbstractListModel):
 
         to_update = self[i_index]
 
-        for role in self.roles:
-            if role not in ignore_roles:
-                try:
-                    setattr(to_update, role, getattr(value, role))
-                except AttributeError:  # constant/not settable
-                    pass
+        updated_roles: Set[int] = set()
 
-        qidx    = QAbstractListModel.index(self, i_index, 0)
-        updated = [number for name, number in self.roleNumbers().items()
-                   if name not in ignore_roles]
-        self.dataChanged.emit(qidx, qidx, updated)
-        self.changed.emit()
+        for role_name, role_num in self.roleNumbers().items():
+            if role_name not in ignore_roles:
+                old_value = getattr(to_update, role_name)
+                new_value = getattr(value, role_name)
+
+                if old_value != new_value:
+                    try:
+                        setattr(to_update, role_name, new_value)
+                    except AttributeError:  # constant/not settable
+                        pass
+                    else:
+                        updated_roles.add(role_num)
+
+        if updated_roles:
+            qidx = QAbstractListModel.index(self, i_index, 0)
+            self.dataChanged.emit(qidx, qidx, updated_roles)
+            self.changed.emit()
+
         return i_index
 
 
@@ -270,10 +278,11 @@ class ListModel(QAbstractListModel):
         i_index: int = self.indexWhere(self.mainKey, index) \
                        if isinstance(index, str) else index
 
-        setattr(self[i_index], prop, value)
-        qidx = QAbstractListModel.index(self, i_index, 0)
-        self.dataChanged.emit(qidx, qidx, (self.roleNumbers()[prop],))
-        self.changed.emit()
+        if getattr(self[i_index], prop) != value:
+            setattr(self[i_index], prop, value)
+            qidx = QAbstractListModel.index(self, i_index, 0)
+            self.dataChanged.emit(qidx, qidx, (self.roleNumbers()[prop],))
+            self.changed.emit()
 
 
     @pyqtSlot(int, int)
