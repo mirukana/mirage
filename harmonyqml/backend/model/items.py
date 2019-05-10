@@ -7,14 +7,27 @@ from .list_item import ListItem
 from .list_model import ListModel
 
 
-class RoomEvent(ListItem):
-    _required_init_values = {"type", "dict"}
-    _constant             = {"type"}
+class Account(ListItem):
+    _required_init_values = {"userId", "roomCategories"}
+    _constant             = {"userId", "roomCategories"}
 
-    type:        str            = ""
-    dict:        Dict[str, Any] = {}
-    dateTime:    QDateTime      = QDateTime.currentDateTime()
-    isLocalEcho: bool           = False
+    userId:         str           = ""
+    roomCategories: ListModel     = ListModel()
+    displayName:    Optional[str] = None
+    avatarUrl:      Optional[str] = None
+    statusMessage:  Optional[str] = None
+
+
+class RoomCategory(ListItem):
+    _required_init_values = {"name", "rooms", "sortedRooms"}
+    _constant             = {"rooms", "sortedRooms"}
+
+    name: str = ""
+
+    # Must be provided at init, else it will be the same object
+    # for every RoomCategory
+    rooms:       ListModel             = ListModel()
+    sortedRooms: QSortFilterProxyModel = QSortFilterProxyModel()
 
 
 class Room(ListItem):
@@ -31,17 +44,17 @@ class Room(ListItem):
     leftEvent: Optional[Dict[str, str]] = None
 
 
-class RoomCategory(ListItem):
-    _required_init_values = {"name", "rooms", "sortedRooms"}
-    _constant             = {"rooms", "sortedRooms"}
+class RoomEvent(ListItem):
+    _required_init_values = {"type", "dict"}
+    _constant             = {"type"}
 
-    name: str = ""
+    type:        str            = ""
+    dict:        Dict[str, Any] = {}
+    dateTime:    QDateTime      = QDateTime.currentDateTime()
+    isLocalEcho: bool           = False
 
-    # Must be provided at init, else it will be the same object
-    # for every RoomCategory
-    rooms:       ListModel             = ListModel()
-    sortedRooms: QSortFilterProxyModel = QSortFilterProxyModel()
 
+# ----------
 
 class Trust(Enum):
     blacklisted = -1
@@ -59,14 +72,3 @@ class Device(ListItem):
     trust:        Trust               = Trust.undecided
     lastSeenIp:   Optional[str]       = None
     lastSeenDate: Optional[QDateTime] = None
-
-
-class Account(ListItem):
-    _required_init_values = {"userId", "roomCategories"}
-    _constant             = {"userId", "roomCategories"}
-
-    userId:         str           = ""
-    roomCategories: ListModel     = ListModel()  # same as RoomCategory.rooms
-    displayName:    Optional[str] = None
-    avatarUrl:      Optional[str] = None
-    statusMessage:  Optional[str] = None

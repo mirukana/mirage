@@ -90,7 +90,6 @@ class Client(QObject):
 
 
     def queryE2EKeys(self) -> None:
-        print("query")
         self._on_query_e2e_keys(self.net.talk(self.nio.keys_query))
 
 
