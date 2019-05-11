@@ -1,4 +1,5 @@
 import logging
+import textwrap
 from typing import (
     Any, Callable, Dict, Iterable, List, Mapping, MutableSequence, Optional,
     Sequence, Set, Tuple, Union
@@ -40,7 +41,16 @@ class ListModel(QAbstractListModel):
 
 
     def __repr__(self) -> str:
-        return "%s(%r)" % (type(self).__name__, self._data)
+        if not self._data:
+            return "%s()" % type(self).__name__
+
+        return "%s(\n%s\n)" % (
+            type(self).__name__,
+            textwrap.indent(
+                ",\n".join((repr(item) for item in self._data)),
+                prefix = " " * 4,
+            )
+        )
 
 
     def __contains__(self, index: Index) -> bool:

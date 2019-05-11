@@ -1,3 +1,7 @@
+# Copyright 2019 miruka
+# This file is part of harmonyqml, licensed under GPLv3.
+
+import textwrap
 from typing import Any, Dict, List, Mapping, Set, Tuple, Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
@@ -150,13 +154,26 @@ class ListItem(QObject, metaclass=_ListItemMeta):
 
 
     def __repr__(self) -> str:
+        from .list_model import ListModel
+        multiline = any((
+            isinstance(v, ListModel) for _, v in self._props.values()
+        ))
+
         prop_strings = (
-            "\033[%dm%s\033[0m=%r" % (
+            "\033[{0}m{1}{2}={2}{3}\033[0m".format(
                 1 if p == self.mainKey else 0, # 1 = term bold
                 p,
+                " " if multiline else "",
                 getattr(self, p)
             ) for p in list(self._props.keys()) + self._direct_props
         )
+
+        if any((isinstance(v, ListModel) for _, v in self._props.values())):
+            return "%s(\n%s\n)" % (
+                type(self).__name__,
+                textwrap.indent(",\n".join(prop_strings), prefix=" " * 4)
+            )
+
         return "%s(%s)" % (type(self).__name__, ", ".join(prop_strings))
 
 
