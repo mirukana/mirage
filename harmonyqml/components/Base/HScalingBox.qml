@@ -1,6 +1,6 @@
 import QtQuick 2.7
 
-HGlassRectangle {
+HRectangle {
     property real widthForHeight: 0.75
     property int baseHeight: 300
     property int startScalingUpAboveHeight: 1080

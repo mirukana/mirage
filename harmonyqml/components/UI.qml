@@ -50,7 +50,8 @@ Item {
             Component.onCompleted: {
                 if (pageStack.initialPageSet) { return }
                 pageStack.initialPageSet = true
-                showPage(accountsLoggedIn ? "Default" : "SignIn")
+                showRoom("@test_mary:matrix.org", "Rooms", "!TSXGsbBbdwsdylIOJZ:matrix.org")
+                //showPage(accountsLoggedIn ? "Default" : "SignIn")
             }
 
             onCurrentItemChanged: if (currentItem) {

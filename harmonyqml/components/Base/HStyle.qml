@@ -57,6 +57,10 @@ QtObject {
     }
 
     readonly property QtObject chat: QtObject {
+        readonly property QtObject selectViewBar: QtObject {
+            property color background: colors.background1
+        }
+
         readonly property QtObject roomHeader: QtObject {
             property color background: colors.background1
         }

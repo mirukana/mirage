@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
 
-HGlassRectangle {
+HRectangle {
     id: banner
     Layout.fillWidth: true
     Layout.preferredHeight: 32

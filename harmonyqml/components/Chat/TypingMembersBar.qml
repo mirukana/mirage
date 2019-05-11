@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import "../Base"
 import "utils.js" as ChatJS
 
-HGlassRectangle {
+HRectangle {
     property var typingMembers: chatPage.roomInfo.typingMembers
 
     color: HStyle.chat.typingMembers.background

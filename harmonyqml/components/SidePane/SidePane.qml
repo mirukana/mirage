@@ -1,10 +1,8 @@
 import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
 import "../Base"
 
-HGlassRectangle {
+HRectangle {
     id: sidePane
-    isPageStackDescendant: false
 
     HColumnLayout {
         anchors.fill: parent

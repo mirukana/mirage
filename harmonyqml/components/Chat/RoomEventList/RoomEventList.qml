@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import "../../Base"
 
-HGlassRectangle {
+HRectangle {
     property int space: 8
 
     color: HStyle.chat.roomEventList.background

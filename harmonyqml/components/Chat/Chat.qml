@@ -3,8 +3,9 @@ import QtQuick.Layouts 1.3
 import "../Base"
 import "Banners"
 import "RoomEventList"
+import "DetailsPane"
 
-HColumnLayout {
+HSplitView {
     property string userId: ""
     property string category: ""
     property string roomId: ""
@@ -31,34 +32,46 @@ HColumnLayout {
         }
     )
 
-    RoomHeader {
-        displayName: roomInfo.displayName
-        topic: roomInfo.topic || ""
-    }
-
-    RoomEventList {
+    HColumnLayout {
         Layout.fillWidth: true
-        Layout.fillHeight: true
+
+        RoomHeader {
+            displayName: roomInfo.displayName
+            topic: roomInfo.topic || ""
+        }
+
+        RoomEventList {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        TypingMembersBar {}
+
+        InviteBanner {
+            visible: category === "Invites"
+            inviter: roomInfo.inviter
+        }
+
+        UnknownDevicesBanner {
+            visible: category == "Rooms" && hasUnknownDevices
+        }
+
+        SendBox {
+            id: sendBox
+            visible: category == "Rooms" && ! hasUnknownDevices
+        }
+
+        LeftBanner {
+            visible: category === "Left"
+            leftEvent: roomInfo.leftEvent
+        }
     }
 
-    TypingMembersBar {}
+    DetailsPane {
+        property int parentWidth: parent.width
+        onParentWidthChanged: width = Math.min(parent.width * 0.3, 300)
 
-    InviteBanner {
-        visible: category === "Invites"
-        inviter: roomInfo.inviter
-    }
-
-    UnknownDevicesBanner {
-        visible: category == "Rooms" && hasUnknownDevices
-    }
-
-    SendBox {
-        id: sendBox
-        visible: category == "Rooms" && ! hasUnknownDevices
-    }
-
-    LeftBanner {
-        visible: category === "Left"
-        leftEvent: roomInfo.leftEvent
+        Layout.minimumWidth: 36
+        Layout.maximumWidth: parent.width
     }
 }
