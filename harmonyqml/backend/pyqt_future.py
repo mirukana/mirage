@@ -26,7 +26,13 @@ class PyQtFuture(QObject):
 
 
     def __repr__(self) -> str:
-        return "%s(%s)" % (type(self).__name__, repr(self.future))
+        state = ("canceled" if self.cancelled else
+                 "running"  if self.running   else
+                 "finished")
+
+        return "%s(state=%s, value=%r)" % (
+            type(self).__name__, state, self.value
+        )
 
 
     @pyqtSlot()
