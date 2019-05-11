@@ -7,7 +7,7 @@ Banner {
     color: HStyle.chat.inviteBanner.background
 
     avatar.name: inviter ? inviter.displayname : ""
-    //avatar.imageSource: inviter ? inviter.avatar_url : ""
+    //avatar.imageUrl: inviter ? inviter.avatar_url : ""
 
     labelText:
         (inviter ?

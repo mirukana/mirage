@@ -154,27 +154,18 @@ class ListItem(QObject, metaclass=_ListItemMeta):
 
 
     def __repr__(self) -> str:
-        from .list_model import ListModel
-        multiline = any((
-            isinstance(v, ListModel) for _, v in self._props.values()
-        ))
-
         prop_strings = (
-            "\033[{0}m{1}{2}={2}{3}\033[0m".format(
+            "\033[{0};34m{1}\033[0,{0}m = \033[{0};32m{2}\033[0m".format(
                 1 if p == self.mainKey else 0, # 1 = term bold
                 p,
-                " " if multiline else "",
-                getattr(self, p)
+                repr(getattr(self, p))
             ) for p in list(self._props.keys()) + self._direct_props
         )
 
-        if any((isinstance(v, ListModel) for _, v in self._props.values())):
-            return "%s(\n%s\n)" % (
-                type(self).__name__,
-                textwrap.indent(",\n".join(prop_strings), prefix=" " * 4)
-            )
-
-        return "%s(%s)" % (type(self).__name__, ", ".join(prop_strings))
+        return "\033[35m%s\033[0m(\n%s\n)" % (
+            type(self).__name__,
+            textwrap.indent(",\n".join(prop_strings), prefix=" " * 4)
+        )
 
 
     @pyqtSlot(result=str)

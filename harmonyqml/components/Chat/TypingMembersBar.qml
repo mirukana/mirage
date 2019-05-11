@@ -4,9 +4,9 @@ import "../Base"
 import "utils.js" as ChatJS
 
 HGlassRectangle {
-    property var typingUsers: chatPage.roomInfo.typingUsers
+    property var typingMembers: chatPage.roomInfo.typingMembers
 
-    color: HStyle.chat.typingUsers.background
+    color: HStyle.chat.typingMembers.background
 
     Layout.fillWidth: true
     Layout.minimumHeight: usersLabel.text ? usersLabel.implicitHeight : 0
@@ -16,7 +16,7 @@ HGlassRectangle {
         id: usersLabel
         anchors.fill: parent
 
-        text: ChatJS.getTypingUsersText(typingUsers, chatPage.userId)
+        text: ChatJS.getTypingMembersText(typingMembers, chatPage.userId)
         elide: Text.ElideMiddle
         maximumLineCount: 1
     }

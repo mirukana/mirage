@@ -10,7 +10,7 @@ Row {
     HAvatar {
         id: avatar
         hidden: combine
-        name: displayName
+        name: sender.displayName.value
     }
 
     Rectangle {
@@ -37,7 +37,7 @@ Row {
                 visible: height > 0
 
                 id: nameLabel
-                text: displayName.value || dict.sender
+                text: sender.displayName.value
                 color: Qt.hsla(Backend.hueFromString(text),
                                HStyle.displayName.saturation,
                                HStyle.displayName.lightness,

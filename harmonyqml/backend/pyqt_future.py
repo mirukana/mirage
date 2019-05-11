@@ -7,7 +7,7 @@ import sys
 import time
 import traceback
 from concurrent.futures import Executor, Future
-from typing import Callable, Deque, Optional, Tuple, Union
+from typing import Any, Callable, Deque, Optional, Tuple, Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
@@ -15,10 +15,14 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 class PyQtFuture(QObject):
     gotResult = pyqtSignal("QVariant")
 
-    def __init__(self, future: Future, parent: QObject) -> None:
+    def __init__(self,
+                 future:        Future,
+                 running_value: Any               = None,
+                 parent:        Optional[QObject] = None) -> None:
         super().__init__(parent)
-        self.future  = future
-        self._result = None
+        self.future        = future
+        self.running_value = running_value
+        self._result       = None
 
         self.future.add_done_callback(
             lambda future: self.gotResult.emit(future.result())
@@ -64,7 +68,7 @@ class PyQtFuture(QObject):
 
     @pyqtProperty("QVariant", notify=gotResult)
     def value(self):
-        return self.future.result() if self.done else None
+        return self.future.result() if self.done else self.running_value
 
 
     def add_done_callback(self, fn: Callable[[Future], None]) -> None:
@@ -79,7 +83,8 @@ _PENDING: Deque[_Task] = Deque()
 def futurize(max_running:            Optional[int] = None,
              consider_args:          bool          = False,
              discard_if_max_running: bool          = False,
-             pyqt:                   bool          = True) -> Callable:
+             pyqt:                   bool          = True,
+             running_value:          Any           = None) -> Callable:
 
     def decorator(func: Callable) -> Callable:
 
@@ -145,7 +150,9 @@ def futurize(max_running:            Optional[int] = None,
                     del _RUNNING[_RUNNING.index(task)]
 
             future = self.pool.submit(run_and_catch_errs)
-            return PyQtFuture(future, self) if pyqt else future
+            return PyQtFuture(
+                future=future, running_value=running_value, parent=self
+            ) if pyqt else future
 
         return wrapper
 

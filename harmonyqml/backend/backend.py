@@ -2,14 +2,17 @@
 # This file is part of harmonyqml, licensed under GPLv3.
 
 import os
+import random
 from concurrent.futures import ThreadPoolExecutor
-from typing import Deque, Dict, Optional, Sequence, Set
+from typing import Deque, Dict, Optional, Sequence, Set, Tuple
 
 from atomicfile import AtomicFile
 from PyQt5.QtCore import QObject, QStandardPaths, pyqtProperty, pyqtSlot
 
 from .html_filter import HtmlFilter
 from .model import ListModel, ListModelMap
+from .model.items import User
+from .network_manager import NioErrorResponse
 from .pyqt_future import futurize
 
 
@@ -17,8 +20,6 @@ class Backend(QObject):
     def __init__(self, parent: QObject) -> None:
         super().__init__(parent)
         self.pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=6)
-
-        self._queried_displaynames: Dict[str, str] = {}
 
         self.past_tokens:        Dict[str, str] = {}
         self.fully_loaded_rooms: Set[str]       = set()
@@ -28,9 +29,17 @@ class Backend(QObject):
         from .client_manager import ClientManager
         self._client_manager: ClientManager = ClientManager(self)
 
-        self._accounts:    ListModel    = ListModel(parent=parent)
-        self._room_events: ListModelMap = ListModelMap(Deque, parent)
-        self._devices:     ListModelMap = ListModelMap(parent=parent)
+        self._accounts: ListModel = ListModel(parent=parent)
+
+        self._room_events: ListModelMap = ListModelMap(
+            container = Deque,
+            parent    = self
+        )
+
+        self._users: ListModel = ListModel(
+            default_factory = self._query_user,
+            parent          = self
+        )
 
         from .signal_manager import SignalManager
         self._signal_manager: SignalManager = SignalManager(self)
@@ -55,38 +64,31 @@ class Backend(QObject):
         return self._room_events
 
     @pyqtProperty("QVariant", constant=True)
-    def devices(self):
-        return self._devices
+    def users(self):
+        return self._users
 
     @pyqtProperty("QVariant", constant=True)
     def signals(self):
         return self._signal_manager
 
 
-    @pyqtSlot(str, result="QVariant")
-    @pyqtSlot(str, bool, result="QVariant")
-    @futurize(max_running=1, consider_args=True)
-    def getUserDisplayName(self, user_id: str, can_block: bool = True) -> str:
-        if user_id in self._queried_displaynames:
-            return self._queried_displaynames[user_id]
+    def _query_user(self, user_id: str) -> User:
+        client = random.choice(tuple(self.clients.values()))  # nosec
 
-        for client in self.clients.values():
-            for room in client.nio.rooms.values():
-                displayname = room.user_name(user_id)
+        @futurize(running_value=user_id)
+        def get_displayname(self) -> str:
+            print("querying", user_id)
+            try:
+                response = client.net.talk(client.nio.get_displayname, user_id)
+                return response.displayname or user_id
+            except NioErrorResponse:
+                return user_id
 
-                if displayname:
-                    return displayname
-
-        return self._query_user_displayname(user_id) if can_block else user_id
-
-
-    def _query_user_displayname(self, user_id: str) -> str:
-        client      = next(iter(self.clients.values()))
-        response    = client.net.talk(client.nio.get_displayname, user_id)
-        displayname = getattr(response, "displayname", "") or user_id
-
-        self._queried_displaynames[user_id] = displayname
-        return displayname
+        return User(
+            userId      = user_id,
+            displayName = get_displayname(self),
+            devices     = ListModel(),
+        )
 
 
     @pyqtSlot(str, result=float)
@@ -146,7 +148,7 @@ class Backend(QObject):
         cl = self.clients
         ac = self.accounts
         re = self.roomEvents
-        de = self.devices
+        us = self.users
 
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]
 

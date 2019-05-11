@@ -2,16 +2,10 @@ import QtQuick 2.7
 import "../Base"
 
 Rectangle {
-    property bool hidden: false
-    property var name: null  // null, string or PyQtFuture
-    property var imageSource: null
+    property var name: null
+    property var imageUrl: null
     property int dimension: 36
-
-
-    readonly property string resolvedName:
-        ! name ? "?" :
-        typeof(name) == "string" ? name :
-        (name.value ? name.value : "?")
+    property bool hidden: false
 
     width: dimension
     height: hidden ? 1 : dimension
@@ -20,21 +14,21 @@ Rectangle {
 
     opacity: hidden ? 0 : 1
 
-    color: resolvedName === "?" ?
-           HStyle.avatar.background.unknown :
+    color: name ?
            Qt.hsla(
-               Backend.hueFromString(resolvedName),
+               Backend.hueFromString(name),
                HStyle.avatar.background.saturation,
                HStyle.avatar.background.lightness,
                HStyle.avatar.background.alpha
-            )
+           ) :
+           HStyle.avatar.background.unknown
 
     HLabel {
         z: 1
         anchors.centerIn: parent
         visible: ! hidden
 
-        text: resolvedName.charAt(0)
+        text: name ? name.charAt(0) : "?"
         color: HStyle.avatar.letter
         font.pixelSize: parent.height / 1.4
     }
@@ -42,9 +36,9 @@ Rectangle {
     HImage {
         z: 2
         anchors.fill: parent
-        visible: ! hidden && imageSource !== null
+        visible: ! hidden && imageUrl
 
-        Component.onCompleted: if (imageSource) {source = imageSource}
+        Component.onCompleted: if (imageUrl) { source = imageUrl }
         fillMode: Image.PreserveAspectCrop
         sourceSize.width: dimension
     }

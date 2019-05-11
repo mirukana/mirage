@@ -96,7 +96,7 @@ QtObject {
             property color background: colors.background1
         }
 
-        readonly property QtObject typingUsers: QtObject {
+        readonly property QtObject typingMembers: QtObject {
             property color background: colors.background0
         }
 

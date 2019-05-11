@@ -14,8 +14,11 @@ HColumnLayout {
                .roomCategories.get(category)
                .rooms.get(roomId)
 
+    readonly property var sender: Backend.users.get(userId)
+
     readonly property bool hasUnknownDevices:
-         Backend.clients.get(userId).roomHasUnknownDevices(roomId)
+         category == "Rooms" ?
+         Backend.clients.get(userId).roomHasUnknownDevices(roomId) : false
 
     id: chatPage
     onFocusChanged: sendBox.setFocus()
@@ -38,7 +41,7 @@ HColumnLayout {
         Layout.fillHeight: true
     }
 
-    TypingUsersBar {}
+    TypingMembersBar {}
 
     InviteBanner {
         visible: category === "Invites"
@@ -46,12 +49,12 @@ HColumnLayout {
     }
 
     UnknownDevicesBanner {
-        visible: category === "Rooms" && hasUnknownDevices
+        visible: category == "Rooms" && hasUnknownDevices
     }
 
     SendBox {
         id: sendBox
-        visible: category === "Rooms" && ! hasUnknownDevices
+        visible: category == "Rooms" && ! hasUnknownDevices
     }
 
     LeftBanner {

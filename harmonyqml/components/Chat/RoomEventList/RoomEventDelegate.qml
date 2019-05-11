@@ -26,8 +26,7 @@ Column {
     readonly property bool isUndecryptableEvent:
         type === "OlmEvent" || type === "MegolmEvent"
 
-    readonly property var displayName:
-        Backend.getUserDisplayName(dict.sender)
+    readonly property var sender: Backend.users.get(dict.sender)
 
     readonly property bool isOwn:
         chatPage.userId === dict.sender

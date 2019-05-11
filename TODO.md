@@ -4,6 +4,7 @@
   - Cleanup unused icons
 
 - Bug fixes
+  - dataclass-like `default_factory` for ListItem
   - Local echo messages all have the same time
   - Prevent briefly seeing login screen if there are accounts to
     resumeSession for but they take time to appear
@@ -47,6 +48,7 @@
   - Links preview
 
 - Client improvements
+  - nio.MatrixRoom has `typing_users`, no need to handle it on our own
   - Don't send setTypingState False when focus lost if nothing in sendbox
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request

@@ -84,9 +84,7 @@ function getHistoryVisibilityEventText(dict) {
 function getStateDisplayName(dict) {
     // The dict.content.displayname may be outdated, prefer
     // retrieving it fresh
-    var name = Backend.getUserDisplayName(dict.state_key, false)
-    return name === dict.state_key ?
-           dict.content.displayname : name.result()
+    return Backend.users.get(dict.state_key).displayName.value
 }
 
 
@@ -168,7 +166,7 @@ function getLeftBannerText(leftEvent) {
 
     if (info.membership)
 
-    var name = Backend.getUserDisplayName(leftEvent.sender, false).result()
+    var name = Backend.users.get(leftEvent.sender).displayName.value
 
     return "<b>" + name + "</b> " +
            (info.membership == "ban" ?
@@ -187,19 +185,19 @@ function getLeftBannerText(leftEvent) {
 
 function getLeftBannerAvatarName(leftEvent, accountId) {
     if (! leftEvent || leftEvent.state_key == leftEvent.sender) {
-        return Backend.getUserDisplayName(accountId, false).result()
+        return Backend.users.get(accountId).displayName.value
     }
 
-    return Backend.getUserDisplayName(leftEvent.sender, false).result()
+    return Backend.users.get(leftEvent.sender).displayName.value
 }
 
 
-function getTypingUsersText(users, ourAccountId) {
+function getTypingMembersText(users, ourAccountId) {
     var names = []
 
     for (var i = 0; i < users.length; i++) {
         if (users[i] !== ourAccountId) {
-            names.push(Backend.getUserDisplayName(users[i], false).result())
+            names.push(Backend.users.get(users[i]).displayName.value)
         }
     }
 

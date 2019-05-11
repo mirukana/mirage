@@ -1,6 +1,7 @@
 # Copyright 2019 miruka
 # This file is part of harmonyqml, licensed under GPLv3.
 
+from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
 from typing import Any, Deque, Dict, List, Optional
 
@@ -12,9 +13,10 @@ from nio.rooms import MatrixRoom
 from .backend import Backend
 from .client import Client
 from .model.items import (
-    Account, Device, ListModel, Room, RoomCategory, RoomEvent
+    Account, Device, ListModel, Room, RoomCategory, RoomEvent, User
 )
 from .model.sort_filter_proxy import SortFilterProxy
+from .pyqt_future import futurize
 
 Inviter   = Optional[Dict[str, str]]
 LeftEvent = Optional[Dict[str, str]]
@@ -27,6 +29,8 @@ class SignalManager(QObject):
 
     def __init__(self, backend: Backend) -> None:
         super().__init__(parent=backend)
+        self.pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=6)
+
         self.backend = backend
 
         self.last_room_events:    Deque[str] = Deque(maxlen=1000)
@@ -37,7 +41,23 @@ class SignalManager(QObject):
 
 
     def onClientAdded(self, client: Client) -> None:
-        # Build an Account item for the Backend.accounts model
+        if client.userId in self.backend.accounts:
+            return
+
+        # An user might already exist in the model, e.g. if another account
+        # was in a room with the account that we just connected to
+        self.backend.users.upsert(
+            where_main_key_is = client.userId,
+            update_with       = User(
+                userId      = client.userId,
+                displayName = self.backend.users[client.userId].displayName,
+                # Devices are added later, we might need to upload keys before
+                # but we want to show the accounts ASAP in the client side pane
+                devices     = ListModel(),
+            )
+        )
+
+        # Backend.accounts
         room_categories_kwargs: List[Dict[str, Any]] = [
             {"name": "Invites", "rooms": ListModel()},
             {"name": "Rooms", "rooms": ListModel()},
@@ -57,25 +77,31 @@ class SignalManager(QObject):
             roomCategories = ListModel([
                 RoomCategory(**kws) for kws in room_categories_kwargs
             ]),
-            displayName = self.backend.getUserDisplayName(client.userId),
         ))
 
         # Upload our E2E keys to the matrix server if needed
         if not client.nio.olm_account_shared:
             client.uploadE2EKeys()
 
-        # Add our devices to the Backend.devices model
+        # Add all devices nio knows for this account
         store = client.nio.device_store
 
         for user_id in store.users:
-            self.backend.devices[user_id].clear()
-            self.backend.devices[user_id].extend([
-                Device(
-                    deviceId   = dev.id,
-                    ed25519Key = dev.ed25519,
-                    trust      = client.getDeviceTrust(dev),
-                ) for dev in store.active_user_devices(user_id)
-            ])
+            user = self.backend.users.get(user_id, None)
+            if not user:
+                self.backend.users.append(
+                    User(userId=user_id, devices=ListModel())
+                )
+
+            for device in store.active_user_devices(user_id):
+                self.backend.users[client.userId].devices.upsert(
+                    where_main_key_is = device.id,
+                    update_with       = Device(
+                        deviceId   = device.id,
+                        ed25519Key = device.ed25519,
+                        trust      = client.getDeviceTrust(device),
+                    )
+                )
 
         # Finally, connect all client signals
         self.connectClient(client)
@@ -107,12 +133,32 @@ class SignalManager(QObject):
         return None if name == "Empty room?" else name
 
 
+    def _add_users_from_nio_room(self, room: nio.rooms.MatrixRoom) -> None:
+        for user in room.users.values():
+            @futurize(running_value=user.display_name)
+            def get_displayname(self, user) -> str:
+                # pylint:disable=unused-argument
+                return user.display_name
+
+            self.backend.users.upsert(
+                where_main_key_is = user.user_id,
+                update_with       = User(
+                    userId      = user.user_id,
+                    displayName = get_displayname(self, user),
+                    devices     = ListModel()
+                ),
+                ignore_roles = ("devices",),
+            )
+
+
     def onRoomInvited(self,
                       client:  Client,
                       room_id: str,
                       inviter: Inviter = None) -> None:
 
-        nio_room   = client.nio.invited_rooms[room_id]
+        nio_room = client.nio.invited_rooms[room_id]
+        self._add_users_from_nio_room(nio_room)
+
         categories = self.backend.accounts[client.userId].roomCategories
 
         previous_room = categories["Rooms"].rooms.pop(room_id, None)
@@ -126,9 +172,9 @@ class SignalManager(QObject):
                 topic             = nio_room.topic,
                 inviter           = inviter,
                 lastEventDateTime = QDateTime.currentDateTime(),  # FIXME
+                members           = list(nio_room.users.keys()),
             ),
-            new_index_if_insert = 0,
-            ignore_roles        = ("typingUsers"),
+            ignore_roles = ("typingMembers"),
         )
 
         signal = self.roomCategoryChanged
@@ -139,7 +185,9 @@ class SignalManager(QObject):
 
 
     def onRoomJoined(self, client: Client, room_id: str) -> None:
-        nio_room   = client.nio.rooms[room_id]
+        nio_room = client.nio.rooms[room_id]
+        self._add_users_from_nio_room(nio_room)
+
         categories = self.backend.accounts[client.userId].roomCategories
 
         previous_invite = categories["Invites"].rooms.pop(room_id, None)
@@ -151,9 +199,9 @@ class SignalManager(QObject):
                 roomId      = room_id,
                 displayName = self._get_room_displayname(nio_room),
                 topic       = nio_room.topic,
+                members     = list(nio_room.users.keys()),
             ),
-            new_index_if_insert = 0,
-            ignore_roles        = ("typingUsers", "lastEventDateTime"),
+            ignore_roles = ("typingMembers", "lastEventDateTime"),
         )
 
         signal = self.roomCategoryChanged
@@ -188,8 +236,7 @@ class SignalManager(QObject):
                     if left_time else QDateTime.currentDateTime()
                 ),
             ),
-            new_index_if_insert = 0,
-            ignore_roles        = ("typingUsers", "lastEventDateTime"),
+            ignore_roles = ("members", "lastEventDateTime"),
         )
 
         signal = self.roomCategoryChanged
@@ -304,14 +351,14 @@ class SignalManager(QObject):
                 self._set_room_last_event(client.userId, room_id, new_event)
 
 
-    def onRoomTypingUsersUpdated(self,
-                                 client:  Client,
-                                 room_id: str,
-                                 users:   List[str]) -> None:
+    def onRoomTypingMembersUpdated(self,
+                                   client:  Client,
+                                   room_id: str,
+                                   users:   List[str]) -> None:
         categories = self.backend.accounts[client.userId].roomCategories
         for categ in categories:
             try:
-                categ.rooms.setProperty(room_id, "typingUsers", users)
+                categ.rooms.setProperty(room_id, "typingMembers", users)
                 break
             except ValueError:
                 pass
@@ -355,9 +402,16 @@ class SignalManager(QObject):
                           user_id:     str,
                           device_id:   str,
                           ed25519_key: str) -> None:
+
         nio_device = client.nio.device_store[user_id][device_id]
 
-        self.backend.devices[user_id].upsert(
+        user = self.backend.users.get(user_id, None)
+        if not user:
+            self.backend.users.append(
+                User(userId=user_id, devices=ListModel())
+            )
+
+        self.backend.users[user_id].devices.upsert(
             where_main_key_is = device_id,
             update_with       = Device(
                 deviceId   = device_id,
@@ -369,4 +423,7 @@ class SignalManager(QObject):
 
     def onDeviceIsDeleted(self, _: Client, user_id: str, device_id: str
                          ) -> None:
-        self.backend.devices[user_id].pop(device_id, None)
+        try:
+            del self.backend.users[user_id].devices[device_id]
+        except ValueError:
+            pass

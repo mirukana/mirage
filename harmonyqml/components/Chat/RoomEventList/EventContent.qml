@@ -16,7 +16,7 @@ Row {
 
     HAvatar {
         id: avatar
-        name: displayName
+        name: sender.displayName.value
         hidden: combine
         dimension: 28
     }
@@ -26,12 +26,12 @@ Row {
 
         id: contentLabel
         text: "<font color='" +
-              Qt.hsla(Backend.hueFromString(displayName.value || dict.sender),
+              Qt.hsla(Backend.hueFromString(sender.displayName.value),
                       HStyle.chat.event.saturation,
                       HStyle.chat.event.lightness,
                       1) +
               "'>" +
-              (displayName.value || dict.sender) + " " +
+              sender.displayName.value + " " +
               ChatJS.getEventText(type, dict) +
 
               "&nbsp;&nbsp;" +

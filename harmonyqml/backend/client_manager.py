@@ -2,11 +2,10 @@
 # This file is part of harmonyqt, licensed under GPLv3.
 
 import json
-import os
 import platform
 import threading
 from collections.abc import Mapping
-from typing import Dict, Iterable, Optional
+from typing import Dict
 
 from atomicfile import AtomicFile
 from PyQt5.QtCore import (

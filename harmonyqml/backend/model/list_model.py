@@ -30,11 +30,14 @@ class ListModel(QAbstractListModel):
     countChanged = pyqtSignal(int)
 
     def __init__(self,
-                 initial_data: Optional[List[NewItem]]        = None,
-                 container:    Callable[..., MutableSequence] = list,
-                 parent:       QObject                        = None) -> None:
+                 initial_data:    Optional[List[NewItem]]             = None,
+                 container:       Callable[..., MutableSequence]      = list,
+                 default_factory: Optional[Callable[[str], ListItem]] = None,
+                 parent:          QObject = None) -> None:
         super().__init__(parent)
         self._data: MutableSequence[ListItem] = container()
+
+        self.default_factory = default_factory
 
         if initial_data:
             self.extend(initial_data)
@@ -42,9 +45,9 @@ class ListModel(QAbstractListModel):
 
     def __repr__(self) -> str:
         if not self._data:
-            return "%s()" % type(self).__name__
+            return "\033[35m%s\033[0m()" % type(self).__name__
 
-        return "%s(\n%s\n)" % (
+        return "\033[35m%s\033[0m(\n%s\n)" % (
             type(self).__name__,
             textwrap.indent(
                 ",\n".join((repr(item) for item in self._data)),
@@ -56,7 +59,7 @@ class ListModel(QAbstractListModel):
     def __contains__(self, index: Index) -> bool:
         if isinstance(index, str):
             try:
-                self.indexWhere(self.mainKey, index)
+                self.indexWhere(index)
                 return True
             except ValueError:
                 return False
@@ -82,6 +85,10 @@ class ListModel(QAbstractListModel):
 
     def __iter__(self) -> Iterable[NewItem]:
         return iter(self._data)
+
+
+    def __bool__(self) -> bool:
+        return bool(self._data)
 
 
     @pyqtSlot(result=str)
@@ -157,14 +164,22 @@ class ListModel(QAbstractListModel):
         return len(self)
 
 
-    @pyqtSlot(str, "QVariant", result=int)
-    def indexWhere(self, prop: str, is_value: Any) -> int:
+    @pyqtSlot("QVariant", result=int)
+    def indexWhere(self,
+                   main_key_is_value:        Any,
+                   _can_use_default_factory: bool = True) -> int:
+
         for i, item in enumerate(self._data):
-            if getattr(item, prop) == is_value:
+            if getattr(item, self.mainKey) == main_key_is_value:
                 return i
 
-        raise ValueError(f"No item in model data with "
-                         f"property {prop!r} set to {is_value!r}.")
+        if _can_use_default_factory and self.default_factory:
+            return self.append(self.default_factory(main_key_is_value))
+
+        raise ValueError(
+            f"No item in model data with "
+            f"property {self.mainKey} is set to {main_key_is_value!r}."
+        )
 
 
     @pyqtSlot(int, result="QVariant")
@@ -173,19 +188,25 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(str, "QVariant", result="QVariant")
     def get(self, index: Index, default: Any = _GetFail()) -> ListItem:
         try:
-            i_index: int = self.indexWhere(self.mainKey, index) \
-                           if isinstance(index, str) else index
+            i_index: int = \
+                self.indexWhere(index, _can_use_default_factory=False) \
+                if isinstance(index, str) else index
 
             return self._data[i_index]
 
         except (ValueError, IndexError):
             if isinstance(default, _GetFail):
+                if self.default_factory and isinstance(index, str):
+                    item = self.default_factory(index)
+                    self.append(item)
+                    return item
                 raise
+
             return default
 
 
-    @pyqtSlot(int, "QVariantMap")
-    def insert(self, index: int, value: NewItem) -> None:
+    @pyqtSlot(int, "QVariantMap", result=int)
+    def insert(self, index: int, value: NewItem) -> int:
         value = self._convert_new_value(value)
 
         self.beginInsertRows(QModelIndex(), index, index)
@@ -199,11 +220,12 @@ class ListModel(QAbstractListModel):
 
         self.countChanged.emit(len(self))
         self.changed.emit()
+        return index
 
 
-    @pyqtSlot("QVariantMap")
-    def append(self, value: NewItem) -> None:
-        self.insert(len(self), value)
+    @pyqtSlot("QVariantMap", result=int)
+    def append(self, value: NewItem) -> int:
+        return self.insert(len(self), value)
 
 
     @pyqtSlot(list)
@@ -222,7 +244,7 @@ class ListModel(QAbstractListModel):
                ignore_roles: Sequence[str] = ()) -> int:
         value = self._convert_new_value(value)
 
-        i_index: int = self.indexWhere(self.mainKey, index) \
+        i_index: int = self.indexWhere(index, _can_use_default_factory=False) \
                        if isinstance(index, str) else index
 
         to_update = self[i_index]
@@ -272,7 +294,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int, list)
     @pyqtSlot(str, list)
     def set(self, index: Index, value: NewItem) -> None:
-        i_index: int = self.indexWhere(self.mainKey, index) \
+        i_index: int = self.indexWhere(index) \
                        if isinstance(index, str) else index
 
         qidx                = QAbstractListModel.index(self, i_index, 0)
@@ -285,7 +307,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int, str, "QVariant")
     @pyqtSlot(str, str, "QVariant")
     def setProperty(self, index: Index, prop: str, value: Any) -> None:
-        i_index: int = self.indexWhere(self.mainKey, index) \
+        i_index: int = self.indexWhere(index) \
                        if isinstance(index, str) else index
 
         if getattr(self[i_index], prop) != value:
@@ -301,7 +323,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(str, int, int)
     def move(self, from_: Index, to: int, n: int = 1) -> None:
         # pylint: disable=invalid-name
-        i_from: int = self.indexWhere(self.mainKey, from_) \
+        i_from: int = self.indexWhere(from_) \
                       if isinstance(from_, str) else from_
 
         qlast = i_from + n - 1
@@ -332,7 +354,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(int)
     @pyqtSlot(str)
     def remove(self, index: Index) -> None:
-        i_index: int = self.indexWhere(self.mainKey, index) \
+        i_index: int = self.indexWhere(index) \
                        if isinstance(index, str) else index
 
         self.beginRemoveRows(QModelIndex(), i_index, i_index)
@@ -347,7 +369,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(str, result="QVariant")
     def pop(self, index: Index, default: Any = _PopFail()) -> ListItem:
         try:
-            i_index: int = self.indexWhere(self.mainKey, index) \
+            i_index: int = self.indexWhere(index) \
                            if isinstance(index, str) else index
             item = self[i_index]
 

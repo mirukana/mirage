@@ -1,4 +1,4 @@
-from typing import Any, Callable, DefaultDict, MutableSequence
+from typing import Any, DefaultDict
 
 from PyQt5.QtCore import QObject, pyqtSlot
 
@@ -6,15 +6,15 @@ from .list_model import ListModel
 
 
 class ListModelMap(QObject):
-    def __init__(self,
-                 models_container: Callable[..., MutableSequence] = list,
-                 parent:           QObject = None) -> None:
+    def __init__(self, *models_args, parent: QObject = None, **models_kwargs
+                ) -> None:
         super().__init__(parent)
+        models_kwargs["parent"] = self
 
         # Set the parent to prevent item garbage-collection on the C++ side
         self.dict: DefaultDict[Any, ListModel] = \
             DefaultDict(
-                lambda: ListModel(container=models_container, parent=self)
+                lambda: ListModel(*models_args, **models_kwargs)
             )
 
 

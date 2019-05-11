@@ -18,7 +18,7 @@ HGlassRectangle {
 
         HAvatar {
             id: avatar
-            name: Backend.getUserDisplayName(chatPage.userId)
+            name: chatPage.sender.displayName.value
             dimension: root.Layout.minimumHeight
         }
 

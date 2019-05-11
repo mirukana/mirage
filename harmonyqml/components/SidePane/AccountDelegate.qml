@@ -6,6 +6,8 @@ Column {
     id: accountDelegate
     width: parent.width
 
+    property var user: Backend.users.get(userId)
+
     property string roomCategoriesListUserId: userId
     property bool expanded: true
 
@@ -16,7 +18,7 @@ Column {
 
         HAvatar {
             id: avatar
-            name: displayName
+            name: user.displayName.value
         }
 
         HColumnLayout {
@@ -25,7 +27,7 @@ Column {
 
             HLabel {
                 id: accountLabel
-                text: displayName.value || userId
+                text: user.displayName.value
                 elide: HLabel.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true
@@ -35,7 +37,7 @@ Column {
 
             HTextField {
                 id: statusEdit
-                text: statusMessage || ""
+                text: user.statusMessage || ""
                 placeholderText: qsTr("Set status message")
                 font.pixelSize: HStyle.fontSize.small
                 background: null

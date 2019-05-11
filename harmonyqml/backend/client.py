@@ -28,7 +28,7 @@ class Client(QObject):
     roomSyncPrevBatchTokenReceived = pyqtSignal(str, str)
     roomPastPrevBatchTokenReceived = pyqtSignal(str, str)
     roomEventReceived              = pyqtSignal(str, str, dict)
-    roomTypingUsersUpdated         = pyqtSignal(str, list)
+    roomTypingMembersUpdated       = pyqtSignal(str, list)
 
     messageAboutToBeSent = pyqtSignal(str, dict)
 
@@ -208,7 +208,7 @@ class Client(QObject):
 
             for ev in room_info.ephemeral:
                 if isinstance(ev, nio.TypingNoticeEvent):
-                    self.roomTypingUsersUpdated.emit(room_id, ev.users)
+                    self.roomTypingMembersUpdated.emit(room_id, ev.users)
                 else:
                     print("ephemeral event: ", ev)
 
