@@ -17,6 +17,8 @@ HRowLayout {
         placeholderText: qsTr("Filter rooms")
         backgroundColor: HStyle.sidePane.filterRooms.background
 
+        onTextChanged: Backend.setRoomFilter(text)
+
         Layout.fillWidth: true
         Layout.preferredHeight: 32
     }

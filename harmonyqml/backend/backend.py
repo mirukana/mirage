@@ -113,6 +113,14 @@ class Backend(QObject):
                 )
                 break
 
+
+    @pyqtSlot(str)
+    def setRoomFilter(self, pattern: str) -> None:
+        for account in self.accounts:
+            for categ in account.roomCategories:
+                categ.sortedRooms.filter = pattern
+
+
     @staticmethod
     def getDir(standard_dir: QStandardPaths.StandardLocation) -> str:
         path = QStandardPaths.writableLocation(standard_dir)

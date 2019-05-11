@@ -66,9 +66,10 @@ class SignalManager(QObject):
 
         for i, _ in enumerate(room_categories_kwargs):
             proxy = SortFilterProxy(
-                source_model = room_categories_kwargs[i]["rooms"],
-                sort_by_role = "lastEventDateTime",
-                ascending    = False,
+                source_model   = room_categories_kwargs[i]["rooms"],
+                sort_by_role   = "lastEventDateTime",
+                filter_by_role = "displayName",
+                ascending      = False,
             )
             room_categories_kwargs[i]["sortedRooms"] = proxy
 

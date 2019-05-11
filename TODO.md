@@ -49,6 +49,7 @@
   - Links preview
 
 - Client improvements
+  - Filtering rooms: smart case, fuzzy filter, search more than display names
   - nio.MatrixRoom has `typing_users`, no need to handle it on our own
   - Don't send setTypingState False when focus lost if nothing in sendbox
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
