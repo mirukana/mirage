@@ -18,18 +18,16 @@ class SortFilterProxy(QSortFilterProxyModel):
                  parent:       QObject = None) -> None:
         super().__init__(parent)
         self.setDynamicSortFilter(False)
-
-        self.ascending = ascending
-
-        self.sortByRoleChanged.connect(self._set_sort_role)
+        self.setFilterCaseSensitivity(Qt.CaseInsensitive)
 
         self.setSourceModel(source_model)
-        source_model.rolesSet.connect(self._set_sort_role)
+        source_model.rolesSet.connect(self._set_internal_sort_role)
         source_model.countChanged.connect(self.countChanged.emit)
         source_model.changed.connect(self._sort)
 
-        self._sort_by_role = sort_by_role
-        self._set_sort_role()
+        self._sort_by_role = ""
+        self.sortByRole    = sort_by_role
+        self.ascending     = ascending
 
 
     @pyqtProperty(str, notify=sortByRoleChanged)
@@ -40,10 +38,11 @@ class SortFilterProxy(QSortFilterProxyModel):
     @sortByRole.setter  # type: ignore
     def sortByRole(self, role: str) -> None:
         self._sort_by_role = role
+        self._set_internal_sort_role()
         self.sortByRoleChanged.emit()
 
 
-    def _set_sort_role(self) -> None:
+    def _set_internal_sort_role(self) -> None:
         numbers = self.sourceModel().roleNumbers()
         try:
             self.setSortRole(numbers[self._sort_by_role])
