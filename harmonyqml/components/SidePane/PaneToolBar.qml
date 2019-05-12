@@ -5,7 +5,7 @@ HRowLayout {
     id: toolBar
 
     Layout.fillWidth: true
-    Layout.preferredHeight: 32
+    Layout.preferredHeight: HStyle.bottomElementsHeight
 
     HButton {
         iconName: "settings"
@@ -20,6 +20,6 @@ HRowLayout {
         onTextChanged: Backend.setRoomFilter(text)
 
         Layout.fillWidth: true
-        Layout.preferredHeight: 32
+        Layout.preferredHeight: parent.height
     }
 }

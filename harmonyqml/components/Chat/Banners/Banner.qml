@@ -5,7 +5,7 @@ import "../../Base"
 HRectangle {
     id: banner
     Layout.fillWidth: true
-    Layout.preferredHeight: 32
+    Layout.preferredHeight: HStyle.avatar.size
 
     property alias avatar: bannerAvatar
     property alias icon: bannerIcon

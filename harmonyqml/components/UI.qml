@@ -20,15 +20,24 @@ Item {
     property bool accountsLoggedIn: Backend.clients.count > 0
 
     HSplitView {
+        id: uiSplitView
         anchors.fill: parent
 
         SidePane {
-            property int parentWidth: parent.width
-            onParentWidthChanged: width = Math.min(parent.width * 0.3, 300)
-
-            Layout.minimumWidth: 36
-            Layout.maximumWidth: parent.width
             visible: accountsLoggedIn
+            collapsed: width < Layout.minimumWidth + normalSpacing
+
+            function set_width() {
+                width = parent.width * 0.3 < 120 ?
+                        Layout.minimumWidth : Math.min(parent.width * 0.3, 300)
+            }
+
+            property int parentWidth: parent.width
+            onParentWidthChanged: if (uiSplitView.canAutoSize) { set_width() }
+
+            width: set_width()  // Initial width
+            Layout.minimumWidth: HStyle.avatar.size
+            Layout.maximumWidth: parent.width
         }
 
         StackView {

@@ -4,7 +4,7 @@ import "../Base"
 Rectangle {
     property var name: null
     property var imageUrl: null
-    property int dimension: 36
+    property int dimension: HStyle.avatar.size
     property bool hidden: false
 
     width: dimension

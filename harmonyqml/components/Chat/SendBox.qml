@@ -7,7 +7,7 @@ HRectangle {
 
     id: root
     Layout.fillWidth: true
-    Layout.minimumHeight: 32
+    Layout.minimumHeight: HStyle.bottomElementsHeight
     Layout.preferredHeight: textArea.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2

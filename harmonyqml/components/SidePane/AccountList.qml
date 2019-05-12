@@ -5,10 +5,6 @@ ListView {
     id: accountList
     clip: true
 
-    spacing: 8
-    topMargin: spacing
-    bottomMargin: topMargin
-
     model: Backend.accounts
     delegate: AccountDelegate {}
 }

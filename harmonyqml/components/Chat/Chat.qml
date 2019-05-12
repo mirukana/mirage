@@ -38,7 +38,7 @@ HColumnLayout {
         topic: roomInfo.topic || ""
 
         Layout.fillWidth: true
-        Layout.preferredHeight: 32
+        Layout.preferredHeight: HStyle.avatar.size
     }
 
 
@@ -82,7 +82,7 @@ HColumnLayout {
             property int referenceWidth: roomHeader.buttonsWidth
             onReferenceWidthChanged: width = referenceWidth
 
-            Layout.minimumWidth: 36
+            Layout.minimumWidth: HStyle.avatar.size
             Layout.maximumWidth: parent.width
         }
     }

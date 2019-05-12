@@ -115,6 +115,7 @@ QtObject {
     }
 
     readonly property QtObject avatar: QtObject {
+        property int size: 36
         property int radius: style.radius
         property color letter: "white"
 
@@ -130,4 +131,6 @@ QtObject {
         property real saturation: 0.32
         property real lightness: 0.3
     }
+
+    property int bottomElementsHeight: 32
 }

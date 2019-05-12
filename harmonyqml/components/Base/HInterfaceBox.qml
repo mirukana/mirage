@@ -52,7 +52,7 @@ HScalingBox {
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 32
+                    Layout.preferredHeight: HStyle.avatar.size
                 }
             }
         }

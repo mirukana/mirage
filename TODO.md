@@ -4,7 +4,6 @@
 
 - Bug fixes
   - dataclass-like `default_factory` for ListItem
-  - Dragging SidePane to max size makes messages disappear
   - Local echo messages all have the same time
   - Prevent briefly seeing login screen if there are accounts to
     resumeSession for but they take time to appear
@@ -15,7 +14,6 @@
 
 - UI
   - "the tree arrows could be smaller"
-  - Improve SidePane appearance when at min width
   - Accounts delegates background
   - Server selection
   - Register/Forgot? for SignIn dialog
