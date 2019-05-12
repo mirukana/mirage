@@ -43,6 +43,7 @@ HColumnLayout {
 
 
     HSplitView {
+        id: chatSplitView
         Layout.fillWidth: true
         Layout.fillHeight: true
 
@@ -79,9 +80,13 @@ HColumnLayout {
         RoomSidePane {
             id: roomSidePane
 
-            property int referenceWidth: roomHeader.buttonsWidth
-            onReferenceWidthChanged: width = referenceWidth
+            function set_width() { width = referenceWidth }
 
+            property int referenceWidth: roomHeader.buttonsWidth
+            onReferenceWidthChanged:
+                if (chatSplitView.canAutoSize) { set_width() }
+
+            width: set_width()  // Initial width
             Layout.minimumWidth: HStyle.avatar.size
             Layout.maximumWidth: parent.width
         }
