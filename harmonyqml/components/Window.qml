@@ -10,6 +10,8 @@ ApplicationWindow {
 
     onClosing: Backend.clients.removeAll()
 
+    property int reloadedTimes: 0
+
     Loader {
         anchors.fill: parent
         source: "UI.qml"

@@ -50,8 +50,21 @@ Item {
             Component.onCompleted: {
                 if (pageStack.initialPageSet) { return }
                 pageStack.initialPageSet = true
-                showRoom("@test_mary:matrix.org", "Rooms", "!TSXGsbBbdwsdylIOJZ:matrix.org")
-                //showPage(accountsLoggedIn ? "Default" : "SignIn")
+                showPage(accountsLoggedIn ? "Default" : "SignIn")
+                if (accountsLoggedIn) { initialRoomTimer.start() }
+            }
+
+            Timer {
+                // TODO: remove this, debug
+                id: initialRoomTimer
+                interval: appWindow.reloadedTimes > 0 ? 0 : 5000
+                repeat: false
+                onTriggered: pageStack.showRoom(
+                    "@test_mary:matrix.org",
+                    "Rooms",
+                    //"!TSXGsbBbdwsdylIOJZ:matrix.org"
+                    "!HfNYlUkGqcWcpDQJpb:matrix.org"
+                )
             }
 
             onCurrentItemChanged: if (currentItem) {

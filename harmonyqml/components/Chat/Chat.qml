@@ -3,9 +3,9 @@ import QtQuick.Layouts 1.3
 import "../Base"
 import "Banners"
 import "RoomEventList"
-import "DetailsPane"
+import "RoomSidePane"
 
-HSplitView {
+HColumnLayout {
     property string userId: ""
     property string category: ""
     property string roomId: ""
@@ -32,46 +32,58 @@ HSplitView {
         }
     )
 
-    HColumnLayout {
+    RoomHeader {
+        id: roomHeader
+        displayName: roomInfo.displayName
+        topic: roomInfo.topic || ""
+
         Layout.fillWidth: true
-
-        RoomHeader {
-            displayName: roomInfo.displayName
-            topic: roomInfo.topic || ""
-        }
-
-        RoomEventList {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-
-        TypingMembersBar {}
-
-        InviteBanner {
-            visible: category === "Invites"
-            inviter: roomInfo.inviter
-        }
-
-        UnknownDevicesBanner {
-            visible: category == "Rooms" && hasUnknownDevices
-        }
-
-        SendBox {
-            id: sendBox
-            visible: category == "Rooms" && ! hasUnknownDevices
-        }
-
-        LeftBanner {
-            visible: category === "Left"
-            leftEvent: roomInfo.leftEvent
-        }
+        Layout.preferredHeight: 32
     }
 
-    DetailsPane {
-        property int parentWidth: parent.width
-        onParentWidthChanged: width = Math.min(parent.width * 0.3, 300)
 
-        Layout.minimumWidth: 36
-        Layout.maximumWidth: parent.width
+    HSplitView {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
+        HColumnLayout {
+            Layout.fillWidth: true
+
+            RoomEventList {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            TypingMembersBar {}
+
+            InviteBanner {
+                visible: category === "Invites"
+                inviter: roomInfo.inviter
+            }
+
+            UnknownDevicesBanner {
+                visible: category == "Rooms" && hasUnknownDevices
+            }
+
+            SendBox {
+                id: sendBox
+                visible: category == "Rooms" && ! hasUnknownDevices
+            }
+
+            LeftBanner {
+                visible: category === "Left"
+                leftEvent: roomInfo.leftEvent
+            }
+        }
+
+        RoomSidePane {
+            id: roomSidePane
+
+            property int referenceWidth: roomHeader.buttonsWidth
+            onReferenceWidthChanged: width = referenceWidth
+
+            Layout.minimumWidth: 36
+            Layout.maximumWidth: parent.width
+        }
     }
 }

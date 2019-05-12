@@ -1,7 +1,6 @@
 - Refactoring
   - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
-  - Cleanup unused icons
 
 - Bug fixes
   - dataclass-like `default_factory` for ListItem
