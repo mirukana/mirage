@@ -6,6 +6,8 @@ HRectangle {
     property string displayName: ""
     property string topic: ""
 
+    property alias buttonsImplicitWidth: viewButtons.implicitWidth
+
     property bool collapseButtons: width < 400
 
     id: roomHeader

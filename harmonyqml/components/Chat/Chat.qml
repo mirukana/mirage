@@ -87,7 +87,9 @@ HColumnLayout {
 
             function set_width() {
                 width = parent.width * 0.3 < collapseBelow ?
-                        Layout.minimumWidth : Math.min(parent.width * 0.3, 300)
+                        Layout.minimumWidth :
+                        Math.min(parent.width * 0.3,
+                                 roomHeader.buttonsImplicitWidth)
             }
 
             onParentWidthChanged:
