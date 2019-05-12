@@ -21,17 +21,10 @@ HRectangle {
             Layout.leftMargin: spacing
 
             Behavior on spacing {
-                NumberAnimation { duration: 150 }
+                NumberAnimation { duration: 120 }
             }
         }
 
         PaneToolBar {}
-    }
-
-    Behavior on width {
-        NumberAnimation {
-            // Don't slow down the user manually resizing
-            duration: uiSplitView.canAutoSize ? 150 : 0
-        }
     }
 }

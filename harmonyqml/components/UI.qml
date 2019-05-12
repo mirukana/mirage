@@ -24,20 +24,33 @@ Item {
         anchors.fill: parent
 
         SidePane {
+            id: sidePane
             visible: accountsLoggedIn
             collapsed: width < Layout.minimumWidth + normalSpacing
 
+            property int parentWidth: parent.width
+            property int collapseBelow: 120
+
             function set_width() {
-                width = parent.width * 0.3 < 120 ?
+                width = parent.width * 0.3 < collapseBelow ?
                         Layout.minimumWidth : Math.min(parent.width * 0.3, 300)
             }
 
-            property int parentWidth: parent.width
             onParentWidthChanged: if (uiSplitView.canAutoSize) { set_width() }
 
             width: set_width()  // Initial width
             Layout.minimumWidth: HStyle.avatar.size
             Layout.maximumWidth: parent.width
+
+            Behavior on width {
+                NumberAnimation {
+                    // Don't slow down the user manually resizing
+                    duration:
+                        (uiSplitView.canAutoSize &&
+                        parent.width * 0.3 < sidePane.collapseBelow * 1.2) ?
+                        120 : 0
+                }
+            }
         }
 
         StackView {

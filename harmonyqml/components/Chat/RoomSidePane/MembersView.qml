@@ -21,7 +21,7 @@ Column {
         bottomMargin: topMargin
 
         Behavior on spacing {
-            NumberAnimation { duration: 150 }
+            NumberAnimation { duration: 120 }
         }
 
         model: chatPage.roomInfo.members

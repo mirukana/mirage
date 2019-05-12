@@ -78,7 +78,7 @@ HRectangle {
             }
 
             Behavior on Layout.maximumWidth {
-                NumberAnimation { id: buttonsAnimation; duration: 150 }
+                NumberAnimation { id: buttonsAnimation; duration: 120 }
             }
         }
     }
