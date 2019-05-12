@@ -5,6 +5,8 @@ import "../../Base"
 HRectangle {
     id: roomSidePane
 
+    property bool collapsed: false
+
     HColumnLayout {
         anchors.fill: parent
 

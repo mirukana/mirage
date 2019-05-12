@@ -4,10 +4,8 @@ import "../../Base"
 
 Column {
     property int normalSpacing: 8
-    property bool collapsed:
-        width < roomSidePane.Layout.minimumWidth + normalSpacing
 
-    leftPadding: collapsed ? 0 : normalSpacing
+    leftPadding: roomSidePane.collapsed ? 0 : normalSpacing
     rightPadding: leftPadding
 
     ListView {
@@ -16,7 +14,7 @@ Column {
 
         id: memberList
 
-        spacing: collapsed ? 0 : normalSpacing
+        spacing: parent.leftPadding
         topMargin: spacing
         bottomMargin: topMargin
 

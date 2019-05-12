@@ -6,14 +6,14 @@ HRectangle {
     property string displayName: ""
     property string topic: ""
 
-    property bool collapseButtons: width < 480
-    property alias buttonsWidth: viewButtons.width
+    property bool collapseButtons: width < 400
 
     id: roomHeader
     color: HStyle.chat.roomHeader.background
 
     HRowLayout {
         id: row
+        spacing: 8
         anchors.fill: parent
 
         HAvatar {
@@ -30,11 +30,12 @@ HRectangle {
             elide: Text.ElideRight
             maximumLineCount: 1
 
-            Layout.maximumWidth:
+            Layout.maximumWidth: Math.max(
+                0,
                 row.width - Layout.leftMargin * 2 - avatar.width -
                 viewButtons.width -
                 (expandButton.visible ? expandButton.width : 0)
-            Layout.leftMargin: 8
+            )
         }
 
         HLabel {
@@ -44,18 +45,19 @@ HRectangle {
             elide: Text.ElideRight
             maximumLineCount: 1
 
-            Layout.maximumWidth:
-                row.width - Layout.leftMargin * 2 - avatar.width -
+            Layout.maximumWidth: Math.max(
+                0,
+                row.width - row.totalSpacing - avatar.width -
                 roomName.width - viewButtons.width -
                 (expandButton.visible ? expandButton.width : 0)
-            Layout.leftMargin: 8
+            )
         }
 
         HSpacer {}
 
         Row {
             id: viewButtons
-            Layout.maximumWidth: collapseButtons ? 0 : implicitWidth
+            Layout.preferredWidth: collapseButtons ? 0 : implicitWidth
 
             HButton {
                 iconName: "room_view_members"
@@ -77,7 +79,7 @@ HRectangle {
                 iconName: "room_view_settings"
             }
 
-            Behavior on Layout.maximumWidth {
+            Behavior on Layout.preferredWidth {
                 NumberAnimation { id: buttonsAnimation; duration: 120 }
             }
         }

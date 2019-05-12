@@ -80,15 +80,28 @@ HColumnLayout {
         RoomSidePane {
             id: roomSidePane
 
-            function set_width() { width = referenceWidth }
+            collapsed: width < Layout.minimumWidth + 8
 
-            property int referenceWidth: roomHeader.buttonsWidth
-            onReferenceWidthChanged:
+            property int parentWidth: parent.width
+            property int collapseBelow: 120
+
+            function set_width() {
+                width = parent.width * 0.3 < collapseBelow ?
+                        Layout.minimumWidth : Math.min(parent.width * 0.3, 300)
+            }
+
+            onParentWidthChanged:
                 if (chatSplitView.canAutoSize) { set_width() }
 
             width: set_width()  // Initial width
             Layout.minimumWidth: HStyle.avatar.size
             Layout.maximumWidth: parent.width
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: chatSplitView.canAutoSize ? 120 : 0
+                }
+            }
         }
     }
 }
