@@ -2,19 +2,16 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
 
-Column {
+HColumnLayout {
     property int normalSpacing: 8
 
-    leftPadding: roomSidePane.collapsed ? 0 : normalSpacing
-    rightPadding: leftPadding
+    Layout.leftMargin: roomSidePane.collapsed ? 0 : normalSpacing
+    Layout.rightMargin: Layout.leftMargin
 
     ListView {
-        width: parent.width
-        height: parent.height
-
         id: memberList
 
-        spacing: parent.leftPadding
+        spacing: parent.Layout.leftMargin
         topMargin: spacing
         bottomMargin: topMargin
 
@@ -24,5 +21,9 @@ Column {
 
         model: chatPage.roomInfo.members
         delegate: MemberDelegate {}
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
     }
 }
