@@ -272,6 +272,11 @@ class SignalManager(QObject):
                             ) -> None:
         for categ in self.backend.accounts[user_id].roomCategories:
             if room_id in categ.rooms:
+
+                last = categ.rooms[room_id].lastEventDateTime
+                if last and last > event.dateTime:
+                    continue
+
                 # Use setProperty to make sure to trigger model changed signals
                 categ.rooms.setProperty(
                     room_id, "lastEventDateTime", event.dateTime
