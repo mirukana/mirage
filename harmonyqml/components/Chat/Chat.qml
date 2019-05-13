@@ -91,9 +91,31 @@ HColumnLayout {
 
             collapsed: width < Layout.minimumWidth + 8
 
+            property bool wasSnapped: false
             property int referenceWidth: roomHeader.buttonsWidth
-            onReferenceWidthChanged:
-                if (chatSplitView.canAutoSize) { width = referenceWidth }
+            onReferenceWidthChanged: {
+                if (chatSplitView.canAutoSize || wasSnapped) {
+                    if (wasSnapped) { chatSplitView.canAutoSize = true }
+                    width = referenceWidth
+                }
+            }
+
+            property int currentWidth: width
+            onCurrentWidthChanged: {
+                if (referenceWidth != width &&
+                    referenceWidth - 15 < width &&
+                    width < referenceWidth + 15)
+                {
+                    currentWidth = referenceWidth
+                    width = referenceWidth
+                    wasSnapped = true
+                    currentWidth = Qt.binding(
+                        function() { return roomSidePane.width }
+                    )
+                } else {
+                    wasSnapped = false
+                }
+            }
 
             width: referenceWidth // Initial width
             Layout.minimumWidth: HStyle.avatar.size
