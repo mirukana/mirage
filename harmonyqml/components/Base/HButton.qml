@@ -46,12 +46,20 @@ Button {
         )
         radius: circle ? height : 0
 
+        Behavior on color {
+            ColorAnimation { duration: 60 }
+        }
+
         Rectangle {
             id: buttonBackgroundOverlay
             anchors.fill: parent
             radius: parent.radius
             color: "black"
             opacity: 0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 60 }
+            }
         }
     }
 
