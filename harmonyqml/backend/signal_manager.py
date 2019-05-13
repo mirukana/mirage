@@ -318,8 +318,9 @@ class SignalManager(QObject):
                     if not event.isLocalEcho:
                         continue
 
-                    sb     = (event.dict["sender"], event.dict["body"])
-                    new_sb = (new_event.dict["sender"], new_event.dict["body"])
+                    sb     = (event.dict.get("sender"), event.dict.get("body"))
+                    new_sb = (new_event.dict.get("sender"),
+                              new_event.dict.get("body"))
 
                     if sb == new_sb:
                         # The oldest matching local echo shall be replaced

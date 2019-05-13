@@ -6,7 +6,7 @@ HRectangle {
 
     color: HStyle.chat.roomEventList.background
 
-    ListView {
+    HListView {
         id: roomEventListView
         delegate: RoomEventDelegate {}
         model: Backend.roomEvents.get(chatPage.roomId)

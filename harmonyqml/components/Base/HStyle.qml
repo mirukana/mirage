@@ -4,6 +4,8 @@ import QtQuick 2.7
 QtObject {
     id: style
 
+    property int animationDurations: 120
+
     readonly property QtObject fontSize: QtObject {
         property int smallest: 6
         property int smaller: 8

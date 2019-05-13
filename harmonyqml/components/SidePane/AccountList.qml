@@ -1,7 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
+import "../Base"
 
-ListView {
+HListView {
     id: accountList
     clip: true
 

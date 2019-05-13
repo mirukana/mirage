@@ -8,7 +8,7 @@ HColumnLayout {
     Layout.leftMargin: roomSidePane.collapsed ? 0 : normalSpacing
     Layout.rightMargin: Layout.leftMargin
 
-    ListView {
+    HListView {
         id: memberList
 
         spacing: parent.Layout.leftMargin
