@@ -51,6 +51,7 @@ Item {
                     circle: true
                     checked: loginWith == modelData
                     autoExclusive: true
+                    checkedLightens: true
                     onClicked: loginWith = modelData
                 }
             }

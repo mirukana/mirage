@@ -82,28 +82,13 @@ HColumnLayout {
 
             collapsed: width < Layout.minimumWidth + 8
 
-            property int parentWidth: parent.width
-            property int collapseBelow: 120
+            property int referenceWidth: roomHeader.buttonsWidth
+            onReferenceWidthChanged:
+                if (chatSplitView.canAutoSize) { width = referenceWidth }
 
-            function set_width() {
-                width = parent.width * 0.3 < collapseBelow ?
-                        Layout.minimumWidth :
-                        Math.min(parent.width * 0.3,
-                                 roomHeader.buttonsImplicitWidth)
-            }
-
-            onParentWidthChanged:
-                if (chatSplitView.canAutoSize) { set_width() }
-
-            width: set_width()  // Initial width
+            width: referenceWidth // Initial width
             Layout.minimumWidth: HStyle.avatar.size
             Layout.maximumWidth: parent.width
-
-            Behavior on width {
-                NumberAnimation {
-                    duration: chatSplitView.canAutoSize ? 120 : 0
-                }
-            }
         }
     }
 }

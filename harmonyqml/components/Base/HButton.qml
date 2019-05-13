@@ -14,6 +14,7 @@ Button {
     property int fontSize: HStyle.fontSize.normal
     property color backgroundColor: HStyle.controls.button.background
     property alias overlayOpacity: buttonBackgroundOverlay.opacity
+    property bool checkedLightens: false
 
     property bool loading: false
 
@@ -40,7 +41,9 @@ Button {
 
     background: Rectangle {
         id: buttonBackground
-        color: Qt.lighter(backgroundColor, checked ? 1.3 : 1.0)
+        color: Qt.lighter(
+            backgroundColor, checked ? (checkedLightens ? 1.3 : 0.7) : 1.0
+        )
         radius: circle ? height : 0
 
         Rectangle {
@@ -106,7 +109,7 @@ Button {
         onClicked: button.clicked()
         onDoubleClicked: button.doubleClicked()
         onEntered: {
-            overlayOpacity = checked ? 0 : 0.2
+            overlayOpacity = checked ? 0 : 0.15
             button.entered()
         }
         onExited: {
@@ -115,12 +118,12 @@ Button {
         }
         onPressAndHold: button.pressAndHold()
         onPressed: {
-            overlayOpacity += 0.2
+            overlayOpacity += 0.15
             button.pressed()
         }
         onReleased: {
             if (checkable) { checked = ! checked }
-            overlayOpacity = checked ? 0 : 0.2
+            overlayOpacity = checked ? 0 : 0.15
             button.released()
         }
     }
