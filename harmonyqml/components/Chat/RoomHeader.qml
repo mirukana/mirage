@@ -60,25 +60,16 @@ HRectangle {
         Row {
             id: viewButtons
             Layout.preferredWidth: collapseButtons ? 0 : implicitWidth
+            Layout.fillHeight: true
 
-            HButton {
-                iconName: "room_view_members"
-            }
-
-            HButton {
-                iconName: "room_view_files"
-            }
-
-            HButton {
-                iconName: "room_view_notifications"
-            }
-
-            HButton {
-                iconName: "room_view_history"
-            }
-
-            HButton {
-                iconName: "room_view_settings"
+            Repeater {
+                model: [
+                    "members", "files", "notifications", "history", "settings"
+                ]
+                HButton {
+                    iconName: "room_view_" + modelData
+                    iconDimension: 22
+                }
             }
 
             Behavior on Layout.preferredWidth {
