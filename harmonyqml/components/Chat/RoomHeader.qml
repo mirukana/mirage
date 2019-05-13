@@ -8,6 +8,7 @@ HRectangle {
 
     property alias buttonsImplicitWidth: viewButtons.implicitWidth
     property int buttonsWidth: viewButtons.Layout.preferredWidth
+    property var activeButton: "members"
 
     property bool collapseButtons: width < 400
 
@@ -71,7 +72,9 @@ HRectangle {
                     iconName: "room_view_" + modelData
                     iconDimension: 22
                     autoExclusive: true
-                    checked: modelData == "members"  // TODO
+                    checked: activeButton == modelData
+                    onClicked: activeButton = activeButton == modelData ?
+                                              null : modelData
                 }
             }
 

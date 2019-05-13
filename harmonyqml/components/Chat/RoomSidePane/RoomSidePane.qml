@@ -6,6 +6,7 @@ HRectangle {
     id: roomSidePane
 
     property bool collapsed: false
+    property var activeView: null
 
     HColumnLayout {
         anchors.fill: parent

@@ -80,6 +80,15 @@ HColumnLayout {
         RoomSidePane {
             id: roomSidePane
 
+            activeView: roomHeader.activeButton
+            transform: Translate {
+                x: roomSidePane.activeView ? 0 : parent.width
+
+                Behavior on x {
+                    NumberAnimation { duration: 120 }
+                }
+            }
+
             collapsed: width < Layout.minimumWidth + 8
 
             property int referenceWidth: roomHeader.buttonsWidth
