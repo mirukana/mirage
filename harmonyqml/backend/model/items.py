@@ -43,9 +43,10 @@ class Room(ListItem):
 # ----------
 
 class RoomEvent(ListItem):
-    _required_init_values = {"type", "dict", "dateTime"}
+    _required_init_values = {"eventId", "type", "dict", "dateTime"}
     _constant             = {"type"}
 
+    eventId:     str            = ""
     type:        str            = ""
     dict:        Dict[str, Any] = {}
     dateTime:    QDateTime      = QDateTime()

@@ -299,7 +299,12 @@ class SignalManager(QObject):
             model     = self.backend.roomEvents[room_id]
             date_time = QDateTime\
                         .fromMSecsSinceEpoch(edict["server_timestamp"])
-            new_event = RoomEvent(type=etype, dateTime=date_time, dict=edict)
+            new_event = RoomEvent(
+                eventId  = edict["event_id"],
+                type     = etype,
+                dateTime = date_time,
+                dict     = edict,
+            )
 
             event_is_our_profile_changed = (
                 etype == "RoomMemberEvent" and
@@ -387,6 +392,7 @@ class SignalManager(QObject):
                 "content":          content,
             })
             event = RoomEvent(
+                eventId     = f"localEcho.{self._events_in_transfer + 1}",
                 type        = type(nio_event).__name__,
                 dict        = nio_event.__dict__,
                 dateTime    = date_time,
