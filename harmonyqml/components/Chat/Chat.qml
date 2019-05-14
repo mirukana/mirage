@@ -82,7 +82,7 @@ HColumnLayout {
 
             activeView: roomHeader.activeButton
             transform: Translate {
-                x: roomSidePane.activeView ? 0 : parent.width
+                x: roomSidePane.activeView ? 0 : roomSidePane.width
 
                 Behavior on x {
                     NumberAnimation { duration: 120 }
