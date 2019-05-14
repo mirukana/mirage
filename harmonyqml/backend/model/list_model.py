@@ -279,9 +279,9 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(str, "QVariantMap", result=int)
     @pyqtSlot(str, "QVariantMap", "QStringList", result=int)
     def updateItem(self,
-                   index:        Index,
-                   value:        NewItem,
-                   ignore_roles: Sequence[str] = ()) -> int:
+                   index:     Index,
+                   value:     NewItem,
+                   no_update: Sequence[str] = ()) -> int:
         value = self._convert_new_value(value)
 
         i_index: int = self.indexWhere(index, _can_use_default_factory=False) \
@@ -292,7 +292,7 @@ class ListModel(QAbstractListModel):
         updated_roles: Set[int] = set()
 
         for role_name, role_num in self.roleNumbers().items():
-            if role_name not in ignore_roles:
+            if role_name not in no_update:
                 old_value = getattr(to_update, role_name)
                 new_value = getattr(value, role_name)
 
@@ -321,10 +321,10 @@ class ListModel(QAbstractListModel):
                update_with:         NewItem,
                new_index_if_insert: Optional[int] = None,
                new_index_if_update: Optional[int] = None,
-               ignore_roles:        Sequence[str] = ()) -> None:
+               no_update:           Sequence[str] = ()) -> None:
         try:
             index = self.updateItem(
-                where_main_key_is, update_with, ignore_roles
+                where_main_key_is, update_with, no_update
             )
         except (IndexError, ValueError):
             self.insert(new_index_if_insert or len(self), update_with)

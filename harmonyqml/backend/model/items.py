@@ -26,15 +26,15 @@ class RoomCategory(ListItem):
 
 
 class Room(ListItem):
-    _required_init_values = {"roomId", "displayName"}
-    _constant             = {"roomId"}
+    _required_init_values = {"roomId", "displayName", "members"}
+    _constant             = {"roomId", "members"}
 
     roomId:            str                 = ""
     displayName:       str                 = ""
     topic:             Optional[str]       = None
     lastEventDateTime: Optional[QDateTime] = None
     typingMembers:     List[str]           = []
-    members:           List[str]           = []
+    members:           ListModel           = ListModel()
 
     inviter:   Optional[Dict[str, str]] = None
     leftEvent: Optional[Dict[str, str]] = None

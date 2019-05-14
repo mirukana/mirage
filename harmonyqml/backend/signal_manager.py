@@ -148,7 +148,7 @@ class SignalManager(QObject):
                     displayName = get_displayname(self, user),
                     devices     = ListModel()
                 ),
-                ignore_roles = ("devices",),
+                no_update = ("devices",),
             )
 
 
@@ -175,7 +175,7 @@ class SignalManager(QObject):
                 lastEventDateTime = QDateTime.currentDateTime(),  # FIXME
                 members           = list(nio_room.users.keys()),
             ),
-            ignore_roles = ("typingMembers"),
+            no_update = ("typingMembers"),
         )
 
         signal = self.roomCategoryChanged
@@ -202,7 +202,7 @@ class SignalManager(QObject):
                 topic       = nio_room.topic,
                 members     = list(nio_room.users.keys()),
             ),
-            ignore_roles = ("typingMembers", "lastEventDateTime"),
+            no_update = ("typingMembers", "lastEventDateTime"),
         )
 
         signal = self.roomCategoryChanged
@@ -237,7 +237,7 @@ class SignalManager(QObject):
                     if left_time else QDateTime.currentDateTime()
                 ),
             ),
-            ignore_roles = ("members", "lastEventDateTime"),
+            no_update = ("members", "lastEventDateTime"),
         )
 
         signal = self.roomCategoryChanged
