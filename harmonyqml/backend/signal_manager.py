@@ -376,17 +376,20 @@ class SignalManager(QObject):
                                room_id: str,
                                content: Dict[str, str]) -> None:
 
+        date_time = QDateTime.currentDateTime()
+
         with self._lock:
             model     = self.backend.roomEvents[room_id]
             nio_event = nio.events.RoomMessage.parse_event({
                 "event_id":         "",
                 "sender":           client.userId,
-                "origin_server_ts": QDateTime.currentMSecsSinceEpoch(),
+                "origin_server_ts": date_time.toMSecsSinceEpoch(),
                 "content":          content,
             })
             event = RoomEvent(
                 type        = type(nio_event).__name__,
                 dict        = nio_event.__dict__,
+                dateTime    = date_time,
                 isLocalEcho = True,
             )
             model.insert(0, event)

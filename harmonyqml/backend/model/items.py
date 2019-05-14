@@ -43,12 +43,12 @@ class Room(ListItem):
 # ----------
 
 class RoomEvent(ListItem):
-    _required_init_values = {"type", "dict"}
+    _required_init_values = {"type", "dict", "dateTime"}
     _constant             = {"type"}
 
     type:        str            = ""
     dict:        Dict[str, Any] = {}
-    dateTime:    QDateTime      = QDateTime.currentDateTime()
+    dateTime:    QDateTime      = QDateTime()
     isLocalEcho: bool           = False
 
 

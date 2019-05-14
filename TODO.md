@@ -4,7 +4,6 @@
 
 - Bug fixes
   - dataclass-like `default_factory` for ListItem
-  - Local echo messages all have the same time
   - Prevent briefly seeing login screen if there are accounts to
     resumeSession for but they take time to appear
   - 100% CPU usage when hitting top edge to trigger messages loading
