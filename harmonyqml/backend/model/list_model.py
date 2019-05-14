@@ -209,6 +209,21 @@ class ListModel(QAbstractListModel):
     def insert(self, index: int, value: NewItem) -> int:
         value = self._convert_new_value(value)
 
+        try:
+            present_index = self.indexWhere(
+                main_key_is_value        = getattr(value, self.mainKey),
+                _can_use_default_factory = False
+            )
+        except (TypeError, ValueError):  # TypeError = no items in model
+            pass
+        else:
+            logging.warning(
+                "Duplicate mainKey %r in model - present: %r, inserting: %r",
+                self.mainKey,
+                self[present_index],
+                value
+            )
+
         self.beginInsertRows(QModelIndex(), index, index)
 
         had_data = bool(self._data)
@@ -232,6 +247,31 @@ class ListModel(QAbstractListModel):
     def extend(self, values: Iterable[NewItem]) -> None:
         for val in values:
             self.append(val)
+
+
+    @pyqtSlot(list)
+    @pyqtSlot(list, bool)
+    def updateAll(self, items: Sequence[NewItem], delete: bool = False
+                 ) -> None:
+        items = [self._convert_new_value(i) for i in items]
+
+        if delete:
+            present_item: ListItem
+            for i, present_item in enumerate(self):
+                present_item_key = getattr(present_item, self.mainKey)
+
+                # If this present item is in the update items, based on mainKey
+                for update_item in items:
+                    if present_item_key == getattr(update_item, self.mainKey):
+                        break
+                else:
+                    del self[i]
+
+        for item in items:
+            self.upsert(
+                where_main_key_is = getattr(item, self.mainKey),
+                update_with       = item
+            )
 
 
     @pyqtSlot(int, "QVariantMap", result=int)
