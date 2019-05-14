@@ -79,7 +79,10 @@ HRectangle {
             }
 
             Behavior on Layout.preferredWidth {
-                NumberAnimation { id: buttonsAnimation; duration: 120 }
+                NumberAnimation {
+                    id: buttonsAnimation
+                    duration: HStyle.animationDuration
+                }
             }
         }
     }

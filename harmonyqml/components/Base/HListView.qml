@@ -1,7 +1,7 @@
 import QtQuick 2.7
 
 ListView {
-    property int duration: HStyle.animationDurations
+    property int duration: HStyle.animationDuration
 
     add: Transition {
         NumberAnimation { properties: "x,y"; from: 100; duration: duration }

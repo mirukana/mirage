@@ -21,7 +21,7 @@ HRectangle {
             Layout.leftMargin: spacing
 
             Behavior on spacing {
-                NumberAnimation { duration: 120 }
+                NumberAnimation { duration: HStyle.animationDuration }
             }
         }
 

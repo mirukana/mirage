@@ -85,7 +85,7 @@ HColumnLayout {
                 x: roomSidePane.activeView ? 0 : roomSidePane.width
 
                 Behavior on x {
-                    NumberAnimation { duration: 120 }
+                    NumberAnimation { duration: HStyle.animationDuration }
                 }
             }
 

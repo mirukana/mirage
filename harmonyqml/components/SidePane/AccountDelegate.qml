@@ -71,7 +71,10 @@ Column {
         userId: roomCategoriesListUserId
 
         Behavior on height {
-            NumberAnimation { id: heightAnimation; duration: 100 }
+            NumberAnimation {
+                id: heightAnimation;
+                duration: HStyle.animationDuration
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ Button {
         radius: circle ? height : 0
 
         Behavior on color {
-            ColorAnimation { duration: 60 }
+            ColorAnimation { duration: HStyle.animationDuration / 2 }
         }
 
         Rectangle {
@@ -58,7 +58,7 @@ Button {
             opacity: 0
 
             Behavior on opacity {
-                NumberAnimation { duration: 60 }
+                NumberAnimation { duration: HStyle.animationDuration / 2 }
             }
         }
     }

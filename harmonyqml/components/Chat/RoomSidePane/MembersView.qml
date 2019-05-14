@@ -16,7 +16,7 @@ HColumnLayout {
         bottomMargin: topMargin
 
         Behavior on spacing {
-            NumberAnimation { duration: 120 }
+            NumberAnimation { duration: HStyle.animationDuration }
         }
 
         model: chatPage.roomInfo.members

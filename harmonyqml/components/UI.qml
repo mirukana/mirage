@@ -48,7 +48,7 @@ Item {
                     duration:
                         (uiSplitView.canAutoSize &&
                         parent.width * 0.3 < sidePane.collapseBelow * 1.2) ?
-                        120 : 0
+                        HStyle.animationDuration : 0
                 }
             }
         }
