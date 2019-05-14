@@ -336,7 +336,7 @@ class SignalManager(QObject):
                         break
 
                 if update_at is not None:
-                    model.update(update_at, new_event)
+                    model.updateItem(update_at, new_event)
                     self._events_in_transfer -= 1
                     return new_event
 
