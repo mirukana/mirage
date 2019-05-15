@@ -81,13 +81,34 @@ HColumnLayout {
             id: roomSidePane
 
             activeView: roomHeader.activeButton
-            transform: Translate {
-                x: roomSidePane.activeView ? 0 : roomSidePane.width
+            property int oldWidth: width
+            onActiveViewChanged:
+                activeView ? restoreAnimation.start() : hideAnimation.start()
 
-                Behavior on x {
-                    NumberAnimation { duration: HStyle.animationDuration }
+            NumberAnimation {
+                id: hideAnimation
+                target: roomSidePane
+                properties: "width"
+                duration: HStyle.animationDuration
+                from: target.width
+                to: 0
+                onStarted: {
+                    target.oldWidth = target.width
+                    target.Layout.minimumWidth = 0
                 }
             }
+
+            NumberAnimation {
+                id: restoreAnimation
+                target: roomSidePane
+                properties: "width"
+                duration: HStyle.animationDuration
+                from: 0
+                to: target.oldWidth
+                onStopped: target.Layout.minimumWidth = Qt.binding(
+                    function() { return HStyle.avatar.size }
+                )
+           }
 
             collapsed: width < Layout.minimumWidth + 8
 
