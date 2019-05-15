@@ -39,6 +39,11 @@ class PyQtFuture(QObject):
         )
 
 
+    def __lt__(self, other: "PyQtFuture") -> bool:
+        # This is to allow sorting, e.g. from SortFilterProxy.lessThan()
+        return self.value < other.value
+
+
     @pyqtSlot()
     def cancel(self):
         self.future.cancel()

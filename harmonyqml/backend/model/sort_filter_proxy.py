@@ -1,7 +1,8 @@
-from typing import Dict
+from typing import Any, Callable, Dict, Optional
 
 from PyQt5.QtCore import (
-    QObject, QSortFilterProxyModel, Qt, pyqtProperty, pyqtSignal, pyqtSlot
+    QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtProperty, pyqtSignal,
+    pyqtSlot
 )
 
 from .list_model import ListModel
@@ -15,9 +16,10 @@ class SortFilterProxy(QSortFilterProxyModel):
 
     def __init__(self,
                  source_model:   ListModel,
-                 sort_by_role:   str,
-                 filter_by_role: str,
+                 sort_by_role:   str  = "",
+                 filter_by_role: str  = "",
                  ascending:      bool = True,
+                 sort_func:      Optional[Callable[[Any, Any], bool]] = None,
                  parent:         QObject = None) -> None:
         super().__init__(parent)
         self.setDynamicSortFilter(False)
@@ -27,6 +29,8 @@ class SortFilterProxy(QSortFilterProxyModel):
         source_model.rolesSet.connect(self._set_internal_sort_filter_role)
         source_model.countChanged.connect(self.countChanged.emit)
         source_model.changed.connect(self._apply_sort)
+
+        self.sort_func = sort_func
 
         self._sort_by_role = ""
         self.sortByRole    = sort_by_role
@@ -83,14 +87,38 @@ class SortFilterProxy(QSortFilterProxyModel):
         numbers = self.sourceModel().roleNumbers()
         try:
             self.setSortRole(numbers[self.sortByRole])
+        except (AttributeError, KeyError):
+            # Model doesn't have its roles set yet (empty model), or no
+            # self.sortByRole passed
+            pass
+
+        try:
             self.setFilterRole(numbers[self.filterByRole])
-        except KeyError:
-            pass  # Model doesn't have its roles set yet (empty model)
+        except (AttributeError, KeyError):
+            pass
 
 
     def _apply_sort(self) -> None:
         order = Qt.AscendingOrder if self.ascending else Qt.DescendingOrder
         self.sort(0, order)
+
+
+    # Sorting/filtering implementations
+
+
+    def lessThan(self, source_left: QModelIndex, source_right: QModelIndex
+                ) -> bool:
+        left  = self.sourceModel()[source_left.row()]
+        right = self.sourceModel()[source_right.row()]
+
+        if self.sort_func:
+            return self.sort_func(left, right)
+
+        role = self.sortByRole
+        try:
+            return getattr(left, role) < getattr(right, role)
+        except TypeError:  # comparison between the two types not supported
+            return False
 
 
     # The rest

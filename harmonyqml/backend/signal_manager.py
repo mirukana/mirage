@@ -153,6 +153,11 @@ class SignalManager(QObject):
             )
 
 
+    def _members_sort_func(self, left: RoomMember, right: RoomMember) -> bool:
+        users = self.backend.users
+        return users[left.userId].displayName < users[right.userId].displayName
+
+
     def onRoomInvited(self,
                       client:  Client,
                       room_id: str,
@@ -169,8 +174,8 @@ class SignalManager(QObject):
         members        = ListModel()
         sorted_members = SortFilterProxy(
             source_model   = members,
-            sort_by_role   = "userId",  # TODO
-            filter_by_role = "userId",
+            filter_by_role = "displayName",
+            sort_func      = self._members_sort_func,
         )
 
         categories["Invites"].rooms.upsert(
@@ -209,8 +214,8 @@ class SignalManager(QObject):
         members        = ListModel()
         sorted_members = SortFilterProxy(
             source_model   = members,
-            sort_by_role   = "userId",  # TODO
-            filter_by_role = "userId",
+            filter_by_role = "displayName",
+            sort_func      = self._members_sort_func,
         )
 
         categories["Rooms"].rooms.upsert(
@@ -252,8 +257,8 @@ class SignalManager(QObject):
         members        = ListModel()
         sorted_members = SortFilterProxy(
             source_model   = members,
-            sort_by_role   = "userId",  # TODO
-            filter_by_role = "userId",
+            sort_by_role   = "displayName",
+            filter_by_role = "displayName",
         )
 
         categories["Left"].rooms.upsert(
