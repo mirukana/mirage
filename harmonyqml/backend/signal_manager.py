@@ -166,6 +166,13 @@ class SignalManager(QObject):
         previous_room = categories["Rooms"].rooms.pop(room_id, None)
         previous_left = categories["Left"].rooms.pop(room_id, None)
 
+        members        = ListModel()
+        sorted_members = SortFilterProxy(
+            source_model   = members,
+            sort_by_role   = "userId",  # TODO
+            filter_by_role = "userId",
+        )
+
         categories["Invites"].rooms.upsert(
             where_main_key_is = room_id,
             update_with       = Room(
@@ -174,9 +181,10 @@ class SignalManager(QObject):
                 topic             = nio_room.topic,
                 inviter           = inviter,
                 lastEventDateTime = QDateTime.currentDateTime(),  # FIXME
-                members           = ListModel(),
+                members           = members,
+                sortedMembers     = sorted_members,
             ),
-            no_update = ("typingMembers"),
+            no_update = ("typingMembers", "members"),
         )
         categories["Invites"].rooms[room_id].members.updateAll([
             RoomMember(userId=user_id) for user_id in nio_room.users
@@ -198,15 +206,24 @@ class SignalManager(QObject):
         previous_invite = categories["Invites"].rooms.pop(room_id, None)
         previous_left   = categories["Left"].rooms.pop(room_id, None)
 
+        members        = ListModel()
+        sorted_members = SortFilterProxy(
+            source_model   = members,
+            sort_by_role   = "userId",  # TODO
+            filter_by_role = "userId",
+        )
+
         categories["Rooms"].rooms.upsert(
             where_main_key_is = room_id,
             update_with       = Room(
-                roomId      = room_id,
-                displayName = self._get_room_displayname(nio_room),
-                topic       = nio_room.topic,
-                members     = ListModel(),
+                roomId        = room_id,
+                displayName   = self._get_room_displayname(nio_room),
+                topic         = nio_room.topic,
+                members       = members,
+                sortedMembers = sorted_members,
             ),
-            no_update = ("typingMembers", "members", "lastEventDateTime"),
+            no_update = ("typingMembers", "members", "sortedMembers",
+                         "lastEventDateTime"),
         )
         categories["Rooms"].rooms[room_id].members.updateAll([
             RoomMember(userId=user_id) for user_id in nio_room.users
@@ -232,6 +249,13 @@ class SignalManager(QObject):
 
         left_time = left_event.get("server_timestamp") if left_event else None
 
+        members        = ListModel()
+        sorted_members = SortFilterProxy(
+            source_model   = members,
+            sort_by_role   = "userId",  # TODO
+            filter_by_role = "userId",
+        )
+
         categories["Left"].rooms.upsert(
             where_main_key_is = room_id,
             update_with     = Room(
@@ -243,9 +267,10 @@ class SignalManager(QObject):
                     QDateTime.fromMSecsSinceEpoch(left_time)
                     if left_time else QDateTime.currentDateTime()
                 ),
-                members = ListModel(),
+                members       = members,
+                sortedMembers = sorted_members,
             ),
-            no_update = ("members", "lastEventDateTime"),
+            no_update = ("members", "sortedMembers", "lastEventDateTime"),
         )
 
         signal = self.roomCategoryChanged

@@ -19,7 +19,7 @@ HColumnLayout {
             NumberAnimation { duration: HStyle.animationDuration }
         }
 
-        model: chatPage.roomInfo.members
+        model: chatPage.roomInfo.sortedMembers
         delegate: MemberDelegate {}
 
         Layout.fillWidth: true

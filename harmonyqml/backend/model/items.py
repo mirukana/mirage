@@ -1,11 +1,12 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from PyQt5.QtCore import QDateTime, QSortFilterProxyModel
+from PyQt5.QtCore import QDateTime
 
 from ..pyqt_future import PyQtFuture
 from .list_item import ListItem
 from .list_model import ListModel
+from .sort_filter_proxy import SortFilterProxy
 
 
 class Account(ListItem):
@@ -20,21 +21,24 @@ class RoomCategory(ListItem):
     _required_init_values = {"name", "rooms", "sortedRooms"}
     _constant             = {"name", "rooms", "sortedRooms"}
 
-    name:        str                   = ""
-    rooms:       ListModel             = ListModel()
-    sortedRooms: QSortFilterProxyModel = QSortFilterProxyModel()
+    name:        str             = ""
+    rooms:       ListModel       = ListModel()
+    sortedRooms: SortFilterProxy = SortFilterProxy(ListModel(), "", "")
 
 
 class Room(ListItem):
-    _required_init_values = {"roomId", "displayName", "members"}
-    _constant             = {"roomId", "members"}
+    _required_init_values = {"roomId", "displayName", "members",
+                             "sortedMembers"}
+    _constant             = {"roomId", "members", "sortedMembers"}
 
     roomId:            str                 = ""
     displayName:       str                 = ""
     topic:             Optional[str]       = None
     lastEventDateTime: Optional[QDateTime] = None
     typingMembers:     List[str]           = []
-    members:           ListModel           = ListModel()
+
+    members:       ListModel       = ListModel()
+    sortedMembers: SortFilterProxy = SortFilterProxy(ListModel(), "", "")
 
     inviter:   Optional[Dict[str, str]] = None
     leftEvent: Optional[Dict[str, str]] = None
