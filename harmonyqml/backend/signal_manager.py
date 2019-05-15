@@ -13,7 +13,8 @@ from nio.rooms import MatrixRoom
 from .backend import Backend
 from .client import Client
 from .model.items import (
-    Account, Device, ListModel, Room, RoomCategory, RoomEvent, User
+    Account, Device, ListModel, Room, RoomCategory, RoomEvent, RoomMember,
+    User
 )
 from .model.sort_filter_proxy import SortFilterProxy
 from .pyqt_future import futurize
@@ -173,10 +174,13 @@ class SignalManager(QObject):
                 topic             = nio_room.topic,
                 inviter           = inviter,
                 lastEventDateTime = QDateTime.currentDateTime(),  # FIXME
-                members           = list(nio_room.users.keys()),
+                members           = ListModel(),
             ),
             no_update = ("typingMembers"),
         )
+        categories["Invites"].rooms[room_id].members.updateAll([
+            RoomMember(userId=user_id) for user_id in nio_room.users
+        ], delete=True)
 
         signal = self.roomCategoryChanged
         if previous_room:
@@ -200,10 +204,13 @@ class SignalManager(QObject):
                 roomId      = room_id,
                 displayName = self._get_room_displayname(nio_room),
                 topic       = nio_room.topic,
-                members     = list(nio_room.users.keys()),
+                members     = ListModel(),
             ),
-            no_update = ("typingMembers", "lastEventDateTime"),
+            no_update = ("typingMembers", "members", "lastEventDateTime"),
         )
+        categories["Rooms"].rooms[room_id].members.updateAll([
+            RoomMember(userId=user_id) for user_id in nio_room.users
+        ], delete=True)
 
         signal = self.roomCategoryChanged
         if previous_invite:
@@ -236,6 +243,7 @@ class SignalManager(QObject):
                     QDateTime.fromMSecsSinceEpoch(left_time)
                     if left_time else QDateTime.currentDateTime()
                 ),
+                members = ListModel(),
             ),
             no_update = ("members", "lastEventDateTime"),
         )

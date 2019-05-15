@@ -65,6 +65,7 @@
   - Banner name color instead of bold
 
 - Missing nio support
+  - MatrixRoom invited members list
   - Invite events are missing their timestamps (needed for sorting)
   - Left room events after client reboot
   - `org.matrix.room.preview_urls` event

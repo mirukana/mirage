@@ -253,7 +253,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(list, bool)
     def updateAll(self, items: Sequence[NewItem], delete: bool = False
                  ) -> None:
-        items = [self._convert_new_value(i) for i in items]
+        items_: List[ListItem] = [self._convert_new_value(i) for i in items]
 
         if delete:
             present_item: ListItem
@@ -261,15 +261,15 @@ class ListModel(QAbstractListModel):
                 present_item_key = getattr(present_item, self.mainKey)
 
                 # If this present item is in the update items, based on mainKey
-                for update_item in items:
+                for update_item in items_:
                     if present_item_key == getattr(update_item, self.mainKey):
                         break
                 else:
                     del self[i]
 
-        for item in items:
+        for item in items_:
             self.upsert(
-                where_main_key_is = getattr(item, self.mainKey),
+                where_main_key_is = getattr(item, item.mainKey),
                 update_with       = item
             )
 

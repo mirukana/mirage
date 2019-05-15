@@ -40,6 +40,13 @@ class Room(ListItem):
     leftEvent: Optional[Dict[str, str]] = None
 
 
+class RoomMember(ListItem):
+    _required_init_values = {"userId"}
+    _constant             = {"userId"}
+
+    userId: str = ""
+
+
 # ----------
 
 class RoomEvent(ListItem):
