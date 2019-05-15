@@ -11,6 +11,7 @@ Row {
         id: avatar
         hidden: combine
         name: sender.displayName.value
+        dimension: 48
     }
 
     Rectangle {

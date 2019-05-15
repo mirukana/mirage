@@ -53,8 +53,8 @@ Column {
 
 
     property int standardSpacing: 16
-    property int horizontalPadding: 7
-    property int verticalPadding: 5
+    property int horizontalPadding: 6
+    property int verticalPadding: 4
 
     ListView.onAdd: {
         var nextDelegate = roomEventListView.contentItem.children[index]
