@@ -96,9 +96,12 @@ class SortFilterProxy(QSortFilterProxyModel):
     # The rest
 
     def __repr__(self) -> str:
-        return "%s(sortByRole=%r, sourceModel=%s)" % (
+        return \
+        "%s(sortByRole=%r, filterByRole=%r, filter=%r, sourceModel=%s)" % (
             type(self).__name__,
             self.sortByRole,
+            self.filterByRole,
+            self.filter,
             "<%s at %s>" % (
                 type(self.sourceModel()).__name__,
                 hex(id(self.sourceModel())),
