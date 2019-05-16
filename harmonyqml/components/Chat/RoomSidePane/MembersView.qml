@@ -5,15 +5,14 @@ import "../../Base"
 HColumnLayout {
     property int normalSpacing: 8
 
-    Layout.leftMargin: roomSidePane.collapsed ? 0 : normalSpacing
-    Layout.rightMargin: Layout.leftMargin
-
     HListView {
         id: memberList
 
-        spacing: parent.Layout.leftMargin
+        spacing: normalSpacing
         topMargin: spacing
         bottomMargin: topMargin
+        Layout.leftMargin: roomSidePane.collapsed ? 0 : normalSpacing
+        Layout.rightMargin: Layout.leftMargin
 
         Behavior on spacing {
             NumberAnimation { duration: HStyle.animationDuration }
@@ -25,5 +24,18 @@ HColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
+    }
+
+    HTextField {
+        id: filterField
+        placeholderText: qsTr("Filter members")
+        backgroundColor: HStyle.sidePane.filterRooms.background
+
+        onTextChanged: Backend.clients.get(chatPage.userId).setMemberFilter(
+            chatPage.category, chatPage.roomId, text
+        )
+
+        Layout.fillWidth: true
+        Layout.preferredHeight: HStyle.bottomElementsHeight
     }
 }

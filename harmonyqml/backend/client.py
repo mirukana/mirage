@@ -338,3 +338,12 @@ class Client(QObject):
     @pyqtSlot(str, result=bool)
     def roomHasUnknownDevices(self, room_id: str) -> bool:
         return self.nio.room_contains_unverified(room_id)
+
+
+    @pyqtSlot(str, str, str)
+    def setMemberFilter(self, room_category: str, room_id: str, pattern: str
+                       ) -> None:
+        self.manager.backend.accounts[self.userId]\
+            .roomCategories[room_category]\
+            .rooms[room_id]\
+            .sortedMembers.filter = pattern

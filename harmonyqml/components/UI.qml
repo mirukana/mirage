@@ -73,7 +73,7 @@ Item {
                 if (pageStack.initialPageSet) { return }
                 pageStack.initialPageSet = true
                 showPage(accountsLoggedIn ? "Default" : "SignIn")
-                //if (accountsLoggedIn) { initialRoomTimer.start() }
+                if (accountsLoggedIn) { initialRoomTimer.start() }
             }
 
             Timer {

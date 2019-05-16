@@ -70,7 +70,7 @@ class SignalManager(QObject):
                 source_model   = room_categories_kwargs[i]["rooms"],
                 sort_by_role   = "lastEventDateTime",
                 filter_by_role = "displayName",
-                ascending      = False,
+                reverse        = True,
             )
             room_categories_kwargs[i]["sortedRooms"] = proxy
 
@@ -153,9 +153,16 @@ class SignalManager(QObject):
             )
 
 
-    def _members_sort_func(self, left: RoomMember, right: RoomMember) -> bool:
+    def _members_sort_func(self, _, left: RoomMember, right: RoomMember
+                          ) -> bool:
         users = self.backend.users
         return users[left.userId].displayName < users[right.userId].displayName
+
+
+    def _members_filter_func(self, proxy: SortFilterProxy, member: RoomMember
+                            ) -> bool:
+        users = self.backend.users
+        return proxy.filterMatches(users[member.userId].displayName.value)
 
 
     def onRoomInvited(self,
@@ -173,9 +180,9 @@ class SignalManager(QObject):
 
         members        = ListModel()
         sorted_members = SortFilterProxy(
-            source_model   = members,
-            filter_by_role = "displayName",
-            sort_func      = self._members_sort_func,
+            source_model = members,
+            sort_func    = self._members_sort_func,
+            filter_func  = self._members_filter_func,
         )
 
         categories["Invites"].rooms.upsert(
@@ -213,9 +220,9 @@ class SignalManager(QObject):
 
         members        = ListModel()
         sorted_members = SortFilterProxy(
-            source_model   = members,
-            filter_by_role = "displayName",
-            sort_func      = self._members_sort_func,
+            source_model = members,
+            sort_func    = self._members_sort_func,
+            filter_func  = self._members_filter_func,
         )
 
         categories["Rooms"].rooms.upsert(
@@ -256,9 +263,9 @@ class SignalManager(QObject):
 
         members        = ListModel()
         sorted_members = SortFilterProxy(
-            source_model   = members,
-            sort_by_role   = "displayName",
-            filter_by_role = "displayName",
+            source_model = members,
+            sort_func    = self._members_sort_func,
+            filter_func  = self._members_filter_func,
         )
 
         categories["Left"].rooms.upsert(

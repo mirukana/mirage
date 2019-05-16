@@ -51,8 +51,6 @@ class RoomMember(ListItem):
     userId: str = ""
 
 
-# ----------
-
 class RoomEvent(ListItem):
     _required_init_values = {"eventId", "type", "dict", "dateTime"}
     _constant             = {"type"}

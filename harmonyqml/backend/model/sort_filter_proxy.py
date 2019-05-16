@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional
+from typing import Callable, Dict, Optional
 
 from PyQt5.QtCore import (
     QModelIndex, QObject, QSortFilterProxyModel, Qt, pyqtProperty, pyqtSignal,
@@ -6,7 +6,10 @@ from PyQt5.QtCore import (
 )
 
 from .list_model import ListModel
+from .list_item import ListItem
 
+SortCallable   = Callable[["SortFilterProxy", ListItem, ListItem], bool]
+FilterCallable = Callable[["SortFilterProxy", ListItem], bool]
 
 class SortFilterProxy(QSortFilterProxyModel):
     sortByRoleChanged   = pyqtSignal()
@@ -16,59 +19,34 @@ class SortFilterProxy(QSortFilterProxyModel):
 
     def __init__(self,
                  source_model:   ListModel,
-                 sort_by_role:   str  = "",
-                 filter_by_role: str  = "",
-                 ascending:      bool = True,
-                 sort_func:      Optional[Callable[[Any, Any], bool]] = None,
-                 parent:         QObject = None) -> None:
+                 sort_by_role:   str                      = "",
+                 filter_by_role: str                      = "",
+                 sort_func:      Optional[SortCallable]   = None,
+                 filter_func:    Optional[FilterCallable] = None,
+                 reverse:        bool                     = False,
+                 parent:         QObject                  = None) -> None:
+
+        error = "{} and {}: only one can be set"
+        if (sort_by_role and sort_func):
+            raise TypeError(error.format("sort_by_role", "sort_func"))
+        if (filter_by_role and filter_func):
+            raise TypeError(error.format("filter_by_role", "filter_func"))
+
         super().__init__(parent)
         self.setDynamicSortFilter(False)
-        self.setFilterCaseSensitivity(Qt.CaseInsensitive)
 
         self.setSourceModel(source_model)
-        source_model.rolesSet.connect(self._set_internal_sort_filter_role)
         source_model.countChanged.connect(self.countChanged.emit)
         source_model.changed.connect(self._apply_sort)
+        source_model.changed.connect(self.invalidateFilter)
 
-        self.sort_func = sort_func
-
-        self._sort_by_role = ""
-        self.sortByRole    = sort_by_role
-        self.ascending     = ascending
-
-        self._filter_by_role = ""
-        self.filterByRole    = filter_by_role
+        self.sortByRole   = sort_by_role
+        self.filterByRole = filter_by_role
+        self.sort_func    = sort_func
+        self.filter_func  = filter_func
+        self.reverse      = reverse
 
         self._filter = None
-        self.filterChanged.connect(
-            lambda: self.countChanged.emit(self.rowCount())
-        )
-
-
-    # Sorting and filtering
-
-    @pyqtProperty(str, notify=sortByRoleChanged)
-    def sortByRole(self) -> str:
-        return self._sort_by_role
-
-
-    @sortByRole.setter  # type: ignore
-    def sortByRole(self, role: str) -> None:
-        self._sort_by_role = role
-        self._set_internal_sort_filter_role()
-        self.sortByRoleChanged.emit()
-
-
-    @pyqtProperty(str, notify=filterByRoleChanged)
-    def filterByRole(self) -> str:
-        return self._filter_by_role
-
-
-    @filterByRole.setter  # type: ignore
-    def filterByRole(self, role: str) -> None:
-        self._filter_by_role = role
-        self._set_internal_sort_filter_role()
-        self.filterByRoleChanged.emit()
 
 
     @pyqtProperty(str, notify=filterChanged)
@@ -79,46 +57,51 @@ class SortFilterProxy(QSortFilterProxyModel):
     @filter.setter  # type: ignore
     def filter(self, pattern: str) -> None:
         self._filter = pattern
-        self.setFilterWildcard(pattern or "*")
+        self.invalidateFilter()
         self.filterChanged.emit()
+        self.countChanged.emit(self.rowCount())
 
 
-    def _set_internal_sort_filter_role(self) -> None:
-        numbers = self.sourceModel().roleNumbers()
-        try:
-            self.setSortRole(numbers[self.sortByRole])
-        except (AttributeError, KeyError):
-            # Model doesn't have its roles set yet (empty model), or no
-            # self.sortByRole passed
-            pass
+    # Sorting/filtering methods override
 
-        try:
-            self.setFilterRole(numbers[self.filterByRole])
-        except (AttributeError, KeyError):
-            pass
-
-
-    def _apply_sort(self) -> None:
-        order = Qt.AscendingOrder if self.ascending else Qt.DescendingOrder
-        self.sort(0, order)
-
-
-    # Sorting/filtering implementations
-
-
-    def lessThan(self, source_left: QModelIndex, source_right: QModelIndex
+    def lessThan(self, index_left: QModelIndex, index_right: QModelIndex
                 ) -> bool:
-        left  = self.sourceModel()[source_left.row()]
-        right = self.sourceModel()[source_right.row()]
+        left  = self.sourceModel()[index_left.row()]
+        right = self.sourceModel()[index_right.row()]
 
         if self.sort_func:
-            return self.sort_func(left, right)
+            return self.sort_func(self, left, right)
 
         role = self.sortByRole
         try:
             return getattr(left, role) < getattr(right, role)
         except TypeError:  # comparison between the two types not supported
             return False
+
+
+    def filterAcceptsRow(self, row_index: int, _: QModelIndex) -> bool:
+        item = self.sourceModel()[row_index]
+
+        if self.filter_func:
+            return self.filter_func(self, item)
+
+        return self.filterMatches(getattr(item, self.filterByRole))
+
+
+    # Implementations
+
+
+    def _apply_sort(self) -> None:
+        order = Qt.DescendingOrder if self.reverse else Qt.AscendingOrder
+        self.sort(0, order)
+
+
+    def filterMatches(self, string: str) -> bool:
+        if not self.filter:
+            return True
+
+        string = string.lower()
+        return all(word in string for word in self.filter.lower().split())
 
 
     # The rest
