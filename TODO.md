@@ -12,7 +12,6 @@
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI
-  - "the tree arrows could be smaller"
   - Accounts delegates background
   - Server selection
   - Register/Forgot? for SignIn dialog

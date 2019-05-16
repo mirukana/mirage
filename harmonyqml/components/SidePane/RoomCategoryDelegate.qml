@@ -29,6 +29,7 @@ Column {
 
         ExpandButton {
             expandableItem: roomCategoryDelegate
+            iconDimension: 12
         }
     }
 
