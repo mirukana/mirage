@@ -36,7 +36,7 @@ HRectangle {
 
             Layout.maximumWidth: Math.max(
                 0,
-                row.width - Layout.leftMargin * 2 - avatar.width -
+                row.width - row.totalSpacing - avatar.width -
                 viewButtons.width -
                 (expandButton.visible ? expandButton.width : 0)
             )

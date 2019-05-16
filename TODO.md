@@ -44,7 +44,7 @@
   - Links preview
 
 - Client improvements
-  - Filtering rooms: smart case, fuzzy filter, search more than display names
+  - Filtering rooms: search more than display names?
   - nio.MatrixRoom has `typing_users`, no need to handle it on our own
   - Don't send setTypingState False when focus lost if nothing in sendbox
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
@@ -54,7 +54,7 @@
   - Direct chats category
   - On sync, check messages API, if a limited sync timeline was received
   - Markdown: don't turn #things into title (space), disable __ syntax
-  - Push instead of replacing in stack view
+  - Push instead of replacing in stack view (remove getMemberFilter when done)
   - Make links in room subtitle clickable, formatting?
   - `<pre>` scrollbar on overflow
   - Handle cases where an avatar char is # or @ (#alias room, @user\_id)
