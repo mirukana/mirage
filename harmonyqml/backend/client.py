@@ -340,6 +340,14 @@ class Client(QObject):
         return self.nio.room_contains_unverified(room_id)
 
 
+    @pyqtSlot(str, str, result=str)
+    def getMemberFilter(self, room_category: str, room_id: str) -> str:
+        return self.manager.backend.accounts[self.userId]\
+                   .roomCategories[room_category]\
+                   .rooms[room_id]\
+                   .sortedMembers.filter
+
+
     @pyqtSlot(str, str, str)
     def setMemberFilter(self, room_category: str, room_id: str, pattern: str
                        ) -> None:
