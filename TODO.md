@@ -10,6 +10,7 @@
   - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - Icons, images and HStyle singleton aren't reloaded
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
+  - RoomEventsList scrolling when resizing the window
 
 - UI
   - Accounts delegates background
