@@ -8,8 +8,13 @@ Column {
 
     property int normalHeight: childrenRect.height  // avoid binding loop
 
-    height: roomList.model.count > 0 ? normalHeight : 0
-    visible: roomList.model.count > 0
+    opacity: roomList.model.count > 0 ? 1 : 0
+    height: normalHeight * opacity
+    visible: opacity > 0
+
+    Behavior on opacity {
+        NumberAnimation { duration: HStyle.animationDuration }
+    }
 
     property string roomListUserId: userId
     property bool expanded: true
@@ -38,15 +43,16 @@ Column {
         interactive: false  // no scrolling
         visible: height > 0
         width: roomCategoriesList.width - accountList.Layout.leftMargin
-        height: childrenRect.height * (roomCategoryDelegate.expanded ? 1 : 0)
-        clip: heightAnimation.running
+        opacity: roomCategoryDelegate.expanded ? 1 : 0
+        height: childrenRect.height * opacity
+        clip: listHeightAnimation.running
 
         userId: roomListUserId
         category: name
 
-        Behavior on height {
+        Behavior on opacity {
             NumberAnimation {
-                id: heightAnimation
+                id: listHeightAnimation
                 duration: HStyle.animationDuration
             }
         }
