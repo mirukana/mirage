@@ -30,6 +30,7 @@ QtObject {
         property color foreground: "black"
         property color foregroundDim: Qt.hsla(0, 0, 0.2, 1)
         property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
+        property color textBorder: Qt.hsla(0, 0, 0, 0.07)
     }
 
     readonly property QtObject controls: QtObject {
