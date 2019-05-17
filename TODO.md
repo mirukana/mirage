@@ -53,7 +53,8 @@
   - `retry_after_ms` when rate-limited
   - Direct chats category
   - On sync, check messages API, if a limited sync timeline was received
-  - Markdown: don't turn #things into title (space), disable __ syntax
+  - Markdown: don't turn #things (no space) and `thing\n---` into title,
+    disable `__` syntax for bold/italic
   - Push instead of replacing in stack view (remove getMemberFilter when done)
   - Make links in room subtitle clickable, formatting?
   - `<pre>` scrollbar on overflow

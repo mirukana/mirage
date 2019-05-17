@@ -77,7 +77,6 @@ class Backend(QObject):
 
         @futurize(running_value=user_id)
         def get_displayname(self) -> str:
-            print("querying", user_id)
             try:
                 response = client.net.talk(client.nio.get_displayname, user_id)
                 return response.displayname or user_id
