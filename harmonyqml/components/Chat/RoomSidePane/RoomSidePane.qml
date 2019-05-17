@@ -8,12 +8,7 @@ HRectangle {
     property bool collapsed: false
     property var activeView: null
 
-    HColumnLayout {
+    MembersView {
         anchors.fill: parent
-
-        MembersView {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
     }
 }

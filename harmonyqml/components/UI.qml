@@ -84,8 +84,7 @@ Item {
                 onTriggered: pageStack.showRoom(
                     "@test_mary:matrix.org",
                     "Rooms",
-                    //"!TSXGsbBbdwsdylIOJZ:matrix.org"
-                    "!HfNYlUkGqcWcpDQJpb:matrix.org"
+                    "!TSXGsbBbdwsdylIOJZ:matrix.org"
                 )
             }
 

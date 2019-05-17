@@ -85,8 +85,6 @@ HColumnLayout {
             onActiveViewChanged:
                 activeView ? restoreAnimation.start() : hideAnimation.start()
 
-            property bool wasHiddenOnce: false
-
             NumberAnimation {
                 id: hideAnimation
                 target: roomSidePane
@@ -96,7 +94,6 @@ HColumnLayout {
                 to: 0
 
                 onStarted: {
-                    target.wasHiddenOnce = true
                     target.oldWidth = target.width
                     target.Layout.minimumWidth = 0
                 }
@@ -109,9 +106,6 @@ HColumnLayout {
                 duration: HStyle.animationDuration
                 from: 0
                 to: target.oldWidth
-
-                // Prevent RoomEventDelegate positions glitch on startup
-                onStarted: if (! target.wasHiddenOnce) { complete() }
 
                 onStopped: target.Layout.minimumWidth = Qt.binding(
                     function() { return HStyle.avatar.size }

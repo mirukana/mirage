@@ -7,10 +7,6 @@ ListView {
         NumberAnimation { properties: "x,y"; from: 100; duration: duration }
     }
 
-    populate: Transition {
-        NumberAnimation { properties: "x,y"; duration: duration }
-    }
-
     move: Transition {
         NumberAnimation { properties: "x,y"; duration: duration }
     }
