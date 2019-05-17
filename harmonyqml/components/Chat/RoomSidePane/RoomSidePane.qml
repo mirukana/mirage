@@ -10,5 +10,6 @@ HRectangle {
 
     MembersView {
         anchors.fill: parent
+        collapsed: parent.collapsed
     }
 }

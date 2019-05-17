@@ -3,20 +3,21 @@ import QtQuick.Layouts 1.3
 import "../../Base"
 
 HColumnLayout {
-    property int normalSpacing: 8
+    property bool collapsed: false
+    property int normalSpacing: collapsed ? 0 : 8
+
+    Behavior on normalSpacing {
+        NumberAnimation { duration: HStyle.animationDuration }
+    }
 
     HListView {
         id: memberList
 
         spacing: normalSpacing
-        topMargin: spacing
-        bottomMargin: topMargin
-        Layout.leftMargin: roomSidePane.collapsed ? 0 : normalSpacing
-        Layout.rightMargin: Layout.leftMargin
-
-        Behavior on spacing {
-            NumberAnimation { duration: HStyle.animationDuration }
-        }
+        topMargin: normalSpacing
+        bottomMargin: normalSpacing
+        Layout.leftMargin: normalSpacing
+        Layout.rightMargin: normalSpacing
 
         model: chatPage.roomInfo.sortedMembers
         delegate: MemberDelegate {}

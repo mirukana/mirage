@@ -112,7 +112,7 @@ HColumnLayout {
                 )
            }
 
-            collapsed: width < Layout.minimumWidth + 8
+            collapsed: width < HStyle.avatar.size + 8
 
             property bool wasSnapped: false
             property int referenceWidth: roomHeader.buttonsWidth
