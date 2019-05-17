@@ -31,13 +31,23 @@ HRectangle {
             backgroundColor: "transparent"
             area.focus: true
 
+            property bool textChangedSinceLostFocus: false
+
             function setTyping(typing) {
                 Backend.clients.get(chatPage.userId)
                        .setTypingState(chatPage.roomId, typing)
             }
 
-            onTextChanged: setTyping(Boolean(text))
-            area.onEditingFinished: setTyping(false)  // when lost focus
+            onTextChanged: {
+                setTyping(Boolean(text))
+                textChangedSinceLostFocus = true
+            }
+            area.onEditingFinished: {  // when lost focus
+                if (text && textChangedSinceLostFocus) {
+                    setTyping(false)
+                    textChangedSinceLostFocus = false
+                }
+            }
 
             Keys.onReturnPressed: {
                 event.accepted = true

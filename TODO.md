@@ -47,7 +47,6 @@
 - Client improvements
   - Filtering rooms: search more than display names?
   - nio.MatrixRoom has `typing_users`, no need to handle it on our own
-  - Don't send setTypingState False when focus lost if nothing in sendbox
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
   - HTTP/2
@@ -64,6 +63,7 @@
   - Keep an accounts order
   - See `Qt.callLater()` potential usages
   - Banner name color instead of bold
+  - Animate RoomEventDelegate DayBreak apparition
 
 - Missing nio support
   - MatrixRoom invited members list
