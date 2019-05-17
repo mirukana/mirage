@@ -13,7 +13,9 @@
   - RoomEventsList scrolling when resizing the window
 
 - UI
+  - Invite to room
   - Accounts delegates background
+  - SidePane delegates hover effect
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Scaling
@@ -32,7 +34,6 @@
 - Major features
   - E2E
     - Device verification
-      - Member pane
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
