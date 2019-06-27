@@ -1,10 +1,6 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under GPLv3.
-
-PKG_DIR = harmonyqml
+PKG_DIR = src
 
 PYTHON  = python3
-PIP     = pip3
 PYLINT  = pylint
 MYPY    = mypy
 VULTURE = vulture
@@ -12,8 +8,6 @@ BANDIT  = bandit
 PYCYLE  = pycycle
 CLOC    = cloc
 
-ARCHIVE_FORMATS = gztar
-INSTALL_FLAGS   = --user --editable
 PYLINT_FLAGS    = --output-format colorized
 MYPY_FLAGS      = --ignore-missing-imports
 VULTURE_FLAGS   = --min-confidence 70
@@ -23,11 +17,7 @@ CLOC_FLAGS      = --ignore-whitespace
 
 LINE = "\033[35m―――――――――――――――――――――――――――――――――――――――――――――――――――――――\033[0m"
 
-
-.PHONY: all clean dist install upload test
-
-
-all: clean dist install
+.PHONY: clean test
 
 clean:
 	find . -name '__pycache__' -exec rm -Rfv {} +
@@ -35,23 +25,6 @@ clean:
 	find . -name '*.qmlc'      -exec rm -Rfv {} +
 	find . -name '*.jsc'       -exec rm -Rfv {} +
 	find . -name '*.egg-info'  -exec rm -Rfv {} +
-	rm -Rfv build dist
-
-dist: clean
-	@echo
-	${PYTHON} setup.py sdist --format ${ARCHIVE_FORMATS}
-	@echo
-	${PYTHON} setup.py bdist_wheel
-
-install: clean
-	@echo
-	${PIP} install ${INSTALL_FLAGS} .
-
-
-upload: dist
-	@echo
-	twine upload dist/*
-
 
 test:
 	@echo
@@ -73,7 +46,7 @@ test:
 	@echo
 	@echo pylint ${LINE}
 	@echo
-	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR} *.py
+	- ${PYLINT} ${PYLINT_FLAGS} ${PKG_DIR}
 	@echo
 	@echo cloc ${LINE}
 	@echo
