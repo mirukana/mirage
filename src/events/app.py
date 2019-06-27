@@ -6,7 +6,7 @@ from .event import Event
 
 
 @dataclass
-class AppExitRequested(Event):
+class ExitRequested(Event):
     exit_code: int = 0
 
 

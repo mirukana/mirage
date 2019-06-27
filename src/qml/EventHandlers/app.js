@@ -1,4 +1,4 @@
-function onAppExitRequested(exit_code) {
+function onExitRequested(exit_code) {
     Qt.exit(exit_code)
 }
 

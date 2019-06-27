@@ -8,7 +8,7 @@ from uuid import uuid4
 from appdirs import AppDirs
 
 from . import __about__
-from .events.system import CoroutineDone, AppExitRequested
+from .events.app import CoroutineDone, ExitRequested
 
 
 class App:
@@ -39,7 +39,7 @@ class App:
         from watchgod import awatch
 
         async for _ in awatch(Path(__file__).resolve().parent):
-            AppExitRequested(231)
+            ExitRequested(231)
 
 
     def _loop_starter(self) -> None:
