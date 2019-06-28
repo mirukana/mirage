@@ -7,6 +7,14 @@ Rectangle {
     property int dimension: HStyle.avatar.size
     property bool hidden: false
 
+    function hue_from_name(name) {
+        var hue = 0
+        for (var i = 0; i < name.length; i++) {
+            hue += name.charCodeAt(i) * 99
+        }
+        return hue % 360 / 360
+    }
+
     width: dimension
     height: hidden ? 1 : dimension
     implicitWidth: dimension
@@ -16,7 +24,7 @@ Rectangle {
 
     color: name ?
            Qt.hsla(
-               Backend.hueFromString(name),
+               hue_from_name(name),
                HStyle.avatar.background.saturation,
                HStyle.avatar.background.lightness,
                HStyle.avatar.background.alpha
