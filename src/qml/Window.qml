@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import "Base"
 
 ApplicationWindow {
     id: window
@@ -7,7 +8,7 @@ ApplicationWindow {
     height: 480
     visible: true
     color: "black"
-    title: "Test"
+    title: "Harmony QML"
 
     property bool debug: false
     property bool ready: false
@@ -21,6 +22,10 @@ ApplicationWindow {
 
     Python {
         id: py
+    }
+
+    Models {
+        id: models
     }
 
     LoadingScreen {
@@ -38,7 +43,7 @@ ApplicationWindow {
         source: uiLoader.ready ? "UI.qml" : ""
 
         Behavior on scale {
-            NumberAnimation { duration: 100 }
+            NumberAnimation { duration: HStyle.animationDuration }
         }
     }
 }

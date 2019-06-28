@@ -1,11 +1,12 @@
 import asyncio
 import json
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from atomicfile import AtomicFile
 
 from .app import App
+from .events import users
 from .matrix_client import MatrixClient
 
 SavedAccounts = Dict[str, Dict[str, str]]
@@ -34,6 +35,7 @@ class Backend:
         )
         await client.login(password)
         self.clients[client.user_id] = client
+        users.AccountUpdated(client.user_id)
 
 
     async def resume_client(self,
@@ -46,12 +48,14 @@ class Backend:
         )
         await client.resume(user_id=user_id, token=token, device_id=device_id)
         self.clients[client.user_id] = client
+        users.AccountUpdated(client.user_id)
 
 
     async def logout_client(self, user_id: str) -> None:
         client = self.clients.pop(user_id, None)
         if client:
-            await client.close()
+            await client.logout()
+            users.AccountDeleted(user_id)
 
 
     async def logout_all_clients(self) -> None:

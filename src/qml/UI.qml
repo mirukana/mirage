@@ -8,7 +8,10 @@ import "SidePane"
 Item {
     id: mainUI
 
-    property bool accountsLoggedIn: Backend.clients.count > 0
+    property bool accountsPresent:
+        models.accounts.count > 0 || py.loadingAccounts
+    onAccountsPresentChanged:
+        pageStack.showPage(accountsPresent ? "Default" : "SignIn")
 
     HImage {
         id: mainUIBackground
@@ -26,7 +29,7 @@ Item {
 
         SidePane {
             id: sidePane
-            visible: accountsLoggedIn
+            visible: accountsPresent
             collapsed: width < Layout.minimumWidth + normalSpacing
 
             property int parentWidth: parent.width
@@ -66,17 +69,6 @@ Item {
                     "Chat/Chat.qml",
                     { userId: userId, category: category, roomId: roomId }
                 )
-            }
-
-            Connections {
-                target: py
-                onReady: function(accountsToLoad) {
-                    pageStack.showPage(accountsToLoad ? "Default" : "SignIn")
-                    if (accountsToLoad) {
-                        py.callCoro("load_saved_accounts")
-                        // initialRoomTimer.start()
-                    }
-                }
             }
 
             Timer {

@@ -6,12 +6,21 @@ import "EventHandlers/includes.js" as EventHandlers
 Python {
     id: py
 
-    signal ready(bool accountsToLoad)
-
+    property bool ready: false
     property var pendingCoroutines: ({})
+
+    property bool loadingAccounts: false
 
     function callCoro(name, args, kwargs, callback) {
         call("APP.call_backend_coro", [name, args, kwargs], function(uuid){
+            pendingCoroutines[uuid] = callback || function() {}
+        })
+    }
+
+    function callClientCoro(account_id, name, args, kwargs, callback) {
+        var args = [account_id, name, args, kwargs]
+
+        call("APP.call_client_coro", args, function(uuid){
             pendingCoroutines[uuid] = callback || function() {}
         })
     }
@@ -29,8 +38,14 @@ Python {
                 window.debug = debug_on
 
                 callCoro("has_saved_accounts", [], {}, function(has) {
-                    print(has)
-                    py.ready(has)
+                    loadingAccounts = has
+                    py.ready = true
+
+                    if (has) {
+                        py.callCoro("load_saved_accounts", [], {}, function() {
+                            loadingAccounts = false
+                        })
+                    }
                 })
             })
         })

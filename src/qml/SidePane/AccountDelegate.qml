@@ -6,7 +6,9 @@ Column {
     id: accountDelegate
     width: parent.width
 
-    property var user: Backend.users.get(userId)
+    // Avoid binding loop by using Component.onCompleted
+    property var user: null
+    Component.onCompleted: user = models.users.getUser(userId)
 
     property string roomCategoriesListUserId: userId
     property bool expanded: true
@@ -18,7 +20,7 @@ Column {
 
         HAvatar {
             id: avatar
-            name: user.displayName.value
+            name: user.displayName
         }
 
         HColumnLayout {
@@ -27,7 +29,7 @@ Column {
 
             HLabel {
                 id: accountLabel
-                text: user.displayName.value
+                text: user.displayName || user.userId
                 elide: HLabel.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true

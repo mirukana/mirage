@@ -26,7 +26,7 @@ class App:
         debug = False
 
         if "-d" in cli_flags or "--debug" in cli_flags:
-            self._run_in_loop(self._exit_on_app_file_change())
+            self.run_in_loop(self._exit_on_app_file_change())
             debug = True
 
         from .backend import Backend
@@ -47,28 +47,43 @@ class App:
         self.loop.run_forever()
 
 
-    def _run_in_loop(self, coro: Coroutine) -> Future:
+    def run_in_loop(self, coro: Coroutine) -> Future:
         return asyncio.run_coroutine_threadsafe(coro, self.loop)
+
+
+    def _call_coro(self, coro: Coroutine) -> str:
+        uuid = str(uuid4())
+
+        self.run_in_loop(coro).add_done_callback(
+            lambda future: CoroutineDone(uuid=uuid, result=future.result())
+        )
+        return uuid
 
 
     def call_backend_coro(self,
                           name:   str,
                           args:   Optional[List[str]]      = None,
                           kwargs: Optional[Dict[str, Any]] = None) -> str:
-        # To be used from QML
-
-        coro = getattr(self.backend, name)(*args or [], **kwargs or {})
-        uuid = str(uuid4())
-
-        self._run_in_loop(coro).add_done_callback(
-            lambda future: CoroutineDone(uuid=uuid, result=future.result())
+        return self._call_coro(
+            getattr(self.backend, name)(*args or [], **kwargs or {})
         )
-        return uuid
+
+
+    def call_client_coro(self,
+                         account_id: str,
+                         name:       str,
+                         args:       Optional[List[str]]      = None,
+                         kwargs:     Optional[Dict[str, Any]] = None) -> str:
+        client = self.backend.clients[account_id]  # type: ignore
+        return self._call_coro(
+            getattr(client, name)(*args or [], **kwargs or {})
+        )
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
         # pylint: disable=all
         ad = additional_data
+        rl = self.run_in_loop
         ba = self.backend
         cl = self.backend.clients  # type: ignore
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]

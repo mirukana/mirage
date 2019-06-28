@@ -37,21 +37,66 @@ ListModel {
         return results
     }
 
-    function upsert(where_role, is, new_item) {
+    function forEachWhere(where_role, is, max, func) {
+        var items = getWhere(where_role, is, max)
+        for (var i = 0; i < items.length; i++) {
+            func(item)
+        }
+    }
+
+    function upsert(where_role, is, new_item, update_if_exist) {
         // new_item can contain only the keys we're interested in updating
 
         var indices = getIndices(where_role, is, 1)
 
         if (indices.length == 0) {
             listModel.append(new_item)
-        } else {
+            return listModel.get(listModel.count)
+        }
+
+        if (update_if_exist != false) {
             listModel.set(indices[0], new_item)
         }
+        return listModel.get(indices[0])
     }
 
     function pop(index) {
         var item = listModel.get(index)
         listModel.remove(index)
         return item
+    }
+
+    function popWhere(where_role, is, max) {
+        var indices = getIndices(where_role, is, max)
+        var results = []
+
+        for (var i = 0; i < indices.length; i++) {
+            results.push(listModel.get(indices[i]))
+            listModel.remove(indices[i])
+        }
+        return results
+    }
+
+
+    function toObject(item_list) {
+        item_list = item_list || listModel
+        var obj_list = []
+
+        for (var i = 0; i < item_list.count; i++) {
+            var item = item_list.get(i)
+            var obj  = JSON.parse(JSON.stringify(item))
+
+            for (var role in obj) {
+                if (obj[role]["objectName"] != undefined) {
+                    obj[role] = toObject(item[role])
+                }
+            }
+            obj_list.push(obj)
+        }
+        return obj_list
+    }
+
+    function toJson() {
+        return JSON.stringify(toObject(), null, 4)
     }
 }

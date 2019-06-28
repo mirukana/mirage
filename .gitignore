@@ -1,0 +1,12 @@
+__pycache__
+.mypy_cache
+build
+dist
+*.egg-info
+*.pyc
+*.qmlc
+*.jsc
+
+.pylintrc
+
+tmp-*

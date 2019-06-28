@@ -22,9 +22,10 @@ class AccountDeleted(Event):
 
 @dataclass
 class UserUpdated(Event):
-    user_id:      str           = field()
-    display_name: Optional[str] = None
-    avatar_url:   Optional[str] = None
+    user_id:        str           = field()
+    display_name:   Optional[str] = None
+    avatar_url:     Optional[str] = None
+    status_message: Optional[str] = None
 
 
 # Devices
