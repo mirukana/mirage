@@ -1,7 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
-import "../utils.js" as ChatJS
 
 Column {
     id: roomEventDelegate
@@ -10,46 +9,47 @@ Column {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
     }
 
-    function getIsMessage(type_) { return type_.startsWith("RoomMessage") }
-
     function getPreviousItem() {
         return index < roomEventListView.model.count - 1 ?
                 roomEventListView.model.get(index + 1) : null
+    }
+
+    function getIsMessage(type) {
+        return true
     }
 
     property var previousItem: getPreviousItem()
     signal reloadPreviousItem()
     onReloadPreviousItem: previousItem = getPreviousItem()
 
-    readonly property bool isMessage: getIsMessage(type)
+    property var senderInfo: null
+    Component.onCompleted:
+        senderInfo = models.users.getUser(chatPage.userId, senderId)
 
-    readonly property bool isUndecryptableEvent:
-        type === "OlmEvent" || type === "MegolmEvent"
+    //readonly property bool isMessage: ! model.type.match(/^event.*/)
+    readonly property bool isMessage: getIsMessage(model.type)
 
-    readonly property var sender: Backend.users.get(dict.sender)
+    readonly property bool isOwn: chatPage.userId === senderId
 
-    readonly property bool isOwn:
-        chatPage.userId === dict.sender
-
-    readonly property bool isFirstEvent: type == "RoomCreateEvent"
+    readonly property bool isFirstEvent: model.type == "eventCreate"
 
     readonly property bool combine:
         previousItem &&
         ! talkBreak &&
         ! dayBreak &&
         getIsMessage(previousItem.type) === isMessage &&
-        previousItem.dict.sender === dict.sender &&
-        minsBetween(previousItem.dateTime, dateTime) <= 5
+        previousItem.senderId === senderId &&
+        minsBetween(previousItem.date, model.date) <= 5
 
     readonly property bool dayBreak:
         isFirstEvent ||
         previousItem &&
-        dateTime.getDate() != previousItem.dateTime.getDate()
+        model.date.getDate() != previousItem.date.getDate()
 
     readonly property bool talkBreak:
         previousItem &&
         ! dayBreak &&
-        minsBetween(previousItem.dateTime, dateTime) >= 20
+        minsBetween(previousItem.date, model.date) >= 20
 
 
     property int standardSpacing: 16

@@ -8,10 +8,15 @@ import "SidePane"
 Item {
     id: mainUI
 
+    Connections {
+        target: py
+        onWillLoadAccounts: function(will) {
+            pageStack.showPage(will ? "Default" : "SignIn")
+        }
+    }
+
     property bool accountsPresent:
         models.accounts.count > 0 || py.loadingAccounts
-    onAccountsPresentChanged:
-        pageStack.showPage(accountsPresent ? "Default" : "SignIn")
 
     HImage {
         id: mainUIBackground

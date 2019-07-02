@@ -32,11 +32,6 @@ Button {
     signal pressed
     signal released
 
-    function loadingUntilFutureDone(future) {
-        loading = true
-        future.onGotResult.connect(function() { loading = false })
-    }
-
     id: button
 
     background: Rectangle {

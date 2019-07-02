@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
+import SortFilterProxyModel 0.2
 import "../Base"
 
 HListView {
@@ -7,8 +8,37 @@ HListView {
     property string category: ""
 
     id: roomList
-    spacing: accountList.spacing
-    model:
-        Backend.accounts.get(userId).roomCategories.get(category).sortedRooms
+    spacing: sidePane.normalSpacing
+
+    model: SortFilterProxyModel {
+        sourceModel: models.rooms
+        filters: AllOf {
+            ValueFilter {
+                roleName: "category"
+                value: category
+            }
+
+            ValueFilter {
+                roleName: "userId"
+                value: userId
+            }
+
+            ExpressionFilter {
+                expression: {
+                    var filter = paneToolBar.roomFilter.toLowerCase()
+                    var words = filter.split(" ")
+                    var room_name = displayName.toLowerCase()
+
+                    for (var i = 0; i < words.length; i++) {
+                        if (words[i] && room_name.indexOf(words[i]) == -1) {
+                            return false
+                        }
+                    }
+                    return true
+                }
+            }
+        }
+    }
+
     delegate: RoomDelegate {}
 }

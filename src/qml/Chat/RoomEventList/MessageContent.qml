@@ -10,7 +10,7 @@ Row {
     HAvatar {
         id: avatar
         hidden: combine
-        name: sender.displayName.value
+        name: senderInfo.displayName || stripUserId(model.senderId)
         dimension: 48
     }
 
@@ -38,8 +38,8 @@ Row {
                 visible: height > 0
 
                 id: nameLabel
-                text: sender.displayName.value
-                color: Qt.hsla(Backend.hueFromString(text),
+                text: senderInfo.displayName || model.senderId
+                color: Qt.hsla(avatar.hueFromName(avatar.name),
                                HStyle.displayName.saturation,
                                HStyle.displayName.lightness,
                                1)
@@ -56,17 +56,16 @@ Row {
                 width: parent.width
 
                 id: contentLabel
-                text: (dict.formatted_body ?
-                       Backend.htmlFilter.filter(dict.formatted_body) :
-                       dict.body) +
+                text: model.content +
                       "&nbsp;&nbsp;<font size=" + HStyle.fontSize.small +
                       "px color=" + HStyle.chat.message.date + ">" +
-                      Qt.formatDateTime(dateTime, "hh:mm:ss") +
+                      Qt.formatDateTime(model.date, "hh:mm:ss") +
                       "</font>" +
-                      (isLocalEcho ?
+                      (model.isLocalEcho ?
                        "&nbsp;<font size=" + HStyle.fontSize.small +
                        "px>⏳</font>" : "")
-                textFormat: Text.RichText
+                textFormat: model.type == "text" ?
+                            Text.PlainText : Text.RichText
                 color: HStyle.chat.message.body
                 wrapMode: Text.Wrap
 

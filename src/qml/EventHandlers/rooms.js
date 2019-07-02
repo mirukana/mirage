@@ -1,26 +1,28 @@
-function clientId(user_id, category, room_id) {
-    return user_id + " " + room_id + " " + category
-}
-
-
 function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
                        topic, last_event_date, inviter, left_event) {
 
-    var client_id = clientId(user_id, category, room_id)
-    var rooms     = models.rooms
+    models.roomCategories.upsert({"userId": user_id, "name": category}, {
+        "userId": user_id,
+        "name":   category
+    })
+
+    var rooms = models.rooms
+
+    function roles(for_category) {
+        return {"userId": user_id, "roomId": room_id, "category": for_category}
+    }
 
     if (category == "Invites") {
-        rooms.popWhere("clientId", clientId(user_id, "Rooms", room_id))
-        rooms.popWhere("clientId", clientId(user_id, "Left", room_id))
+        rooms.popWhere(roles("Rooms"), 1)
+        rooms.popWhere(roles("Left"), 1)
     }
     else if (category == "Rooms") {
-        rooms.popWhere("clientId", clientId(user_id, "Invites", room_id))
-        rooms.popWhere("clientId", clientId(user_id, "Left", room_id))
+        rooms.popWhere(roles("Invites"), 1)
+        rooms.popWhere(roles("Left"), 1)
     }
     else if (category == "Left") {
-        var old_room  =
-            rooms.popWhere("clientId", clientId(user_id, "Rooms", room_id)) ||
-            rooms.popWhere("clientId", clientId(user_id, "Invites", room_id))
+        var old_room  = rooms.popWhere(roles("Invites"), 1)[0] ||
+                        rooms.popWhere(roles("Rooms"), 1)[0]
 
         if (old_room) {
             display_name = old_room.displayName
@@ -30,8 +32,7 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
         }
     }
 
-    rooms.upsert("clientId", client_id , {
-        "clientId":      client_id,
+    rooms.upsert(roles(category), {
         "userId":        user_id,
         "category":      category,
         "roomId":        room_id,
@@ -47,8 +48,8 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
 
 
 function onRoomDeleted(user_id, category, room_id) {
-    var client_id = clientId(user_id, category, room_id)
-    return models.rooms.popWhere("clientId", client_id, 1)
+    var roles = {"userId": user_id, "roomId": room_id, "category": category}
+    models.rooms.popWhere(roles, 1)
 }
 
 

@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import SortFilterProxyModel 0.2
 import "Base"
 
 QtObject {
@@ -8,7 +9,7 @@ QtObject {
         function getUser(as_account_id, wanted_user_id) {
             wanted_user_id = wanted_user_id || as_account_id
 
-            var found = users.getWhere("userId", wanted_user_id, 1)
+            var found = users.getWhere({"userId": wanted_user_id}, 1)
             if (found.length > 0) { return found[0] }
 
             users.append({
@@ -22,13 +23,20 @@ QtObject {
                 as_account_id, "request_user_update_event", [wanted_user_id]
             )
 
-            return users.getWhere("userId", wanted_user_id, 1)[0]
+            return users.getWhere({"userId": wanted_user_id}, 1)[0]
         }
     }
 
     property HListModel devices: HListModel {}
 
+    property HListModel roomCategories: HListModel {}
+
     property HListModel rooms: HListModel {}
 
-    property HListModel timelines: HListModel {}
+    property HListModel timelines: HListModel {
+        sorters: RoleSorter {
+            roleName: "date"
+            sortOrder: Qt.DescendingOrder
+        }
+    }
 }

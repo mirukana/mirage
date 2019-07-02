@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import "../Base"
 
 HRectangle {
-    property string displayName: ""
+    property var displayName: ""
     property string topic: ""
 
     property alias buttonsImplicitWidth: viewButtons.implicitWidth
@@ -22,7 +22,7 @@ HRectangle {
 
         HAvatar {
             id: avatar
-            name: displayName
+            name: stripRoomName(displayName) || qsTr("Empty room")
             dimension: roomHeader.height
             Layout.alignment: Qt.AlignTop
         }

@@ -7,7 +7,14 @@ Rectangle {
     property int dimension: HStyle.avatar.size
     property bool hidden: false
 
-    function hue_from_name(name) {
+    function stripUserId(user_id) {
+        return user_id.substring(1)  // Remove leading @
+    }
+    function stripRoomName(name) {
+        return name[0] == "#" ? name.substring(1) : name
+    }
+
+    function hueFromName(name) {
         var hue = 0
         for (var i = 0; i < name.length; i++) {
             hue += name.charCodeAt(i) * 99
@@ -24,7 +31,7 @@ Rectangle {
 
     color: name ?
            Qt.hsla(
-               hue_from_name(name),
+               hueFromName(name),
                HStyle.avatar.background.saturation,
                HStyle.avatar.background.lightness,
                HStyle.avatar.background.alpha

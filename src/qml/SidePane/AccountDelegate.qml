@@ -20,7 +20,7 @@ Column {
 
         HAvatar {
             id: avatar
-            name: user.displayName
+            name: user.displayName || stripUserId(user.userId)
         }
 
         HColumnLayout {

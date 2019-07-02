@@ -16,7 +16,7 @@ Row {
 
     HAvatar {
         id: avatar
-        name: sender.displayName.value
+        name: sender.displayName || stripUserId(sender.userId)
         hidden: combine
         dimension: 28
     }

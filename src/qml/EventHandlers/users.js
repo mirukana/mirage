@@ -2,18 +2,17 @@ function onAccountUpdated(user_id) {
     models.accounts.append({"userId": user_id})
 }
 
-function AccountDeleted(user_id) {
-    models.accounts.popWhere("userId", user_id, 1)
+function onAccountDeleted(user_id) {
+    models.accounts.popWhere({"userId": user_id}, 1)
 }
 
 function onUserUpdated(user_id, display_name, avatar_url, status_message) {
-    models.users.upsert("userId", user_id, {
+    models.users.upsert({"userId": user_id}, {
         "userId":        user_id,
         "displayName":   display_name,
         "avatarUrl":     avatar_url,
         "statusMessage": status_message
     })
-
 }
 
 function onDeviceUpdated(user_id, device_id, ed25519_key, trust, display_name,

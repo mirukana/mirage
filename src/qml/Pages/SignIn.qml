@@ -4,7 +4,7 @@ import "../Base"
 
 Item {
     property string loginWith: "username"
-    onFocusChanged: identifierField.forceActiveFocus()
+    onFocusChanged: idField.forceActiveFocus()
 
     HInterfaceBox {
         id: signInBox
@@ -23,15 +23,15 @@ Item {
             "register": function(button) {},
 
             "login": function(button) {
-                var future = Backend.clients.new(
-                    "matrix.org", identifierField.text, passwordField.text
-                )
-                button.loadingUntilFutureDone(future)
-                future.onGotResult.connect(function(client) {
+                button.loading = true
+                var args = [idField.text, passwordField.text]
+
+                py.callCoro("login_client", args, {}, function(user_id) {
                     pageStack.showPage(
                         "RememberAccount",
-                        {"loginWith": loginWith, "client": client}
+                        {"loginWith": loginWith, "userId": user_id}
                     )
+                    button.loading = false
                 })
             },
 
@@ -58,7 +58,7 @@ Item {
         }
 
         HTextField {
-            id: identifierField
+            id: idField
             placeholderText: qsTr(
                 loginWith === "email" ? "Email" :
                 loginWith === "phone" ? "Phone" :

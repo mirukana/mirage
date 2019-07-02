@@ -15,16 +15,18 @@ HRectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            spacing: collapsed ? 0 : normalSpacing
-            topMargin: spacing
-            bottomMargin: spacing
-            Layout.leftMargin: spacing
+            spacing: collapsed ? 0 : normalSpacing * 3
+            topMargin: normalSpacing
+            bottomMargin: normalSpacing
+            Layout.leftMargin: normalSpacing
 
             Behavior on spacing {
                 NumberAnimation { duration: HStyle.animationDuration }
             }
         }
 
-        PaneToolBar {}
+        PaneToolBar {
+            id: paneToolBar
+        }
     }
 }

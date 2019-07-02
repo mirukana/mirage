@@ -1,4 +1,5 @@
 import asyncio
+import signal
 from concurrent.futures import Future
 from pathlib import Path
 from threading import Thread
@@ -15,31 +16,16 @@ class App:
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__about__.__pkg_name__, roaming=True)
 
-        self.backend = None
+        from .backend import Backend
+        self.backend = Backend(app=self)
 
         self.loop        = asyncio.get_event_loop()
         self.loop_thread = Thread(target=self._loop_starter)
         self.loop_thread.start()
 
 
-    def start(self, cli_flags: Sequence[str] = ()) -> bool:
-        debug = False
-
-        if "-d" in cli_flags or "--debug" in cli_flags:
-            self.run_in_loop(self._exit_on_app_file_change())
-            debug = True
-
-        from .backend import Backend
-        self.backend = Backend(app=self)  # type: ignore
-
-        return debug
-
-
-    async def _exit_on_app_file_change(self) -> None:
-        from watchgod import awatch
-
-        async for _ in awatch(Path(__file__).resolve().parent):
-            ExitRequested(231)
+    def is_debug_on(self, cli_flags: Sequence[str] = ()) -> bool:
+        return "-d" in cli_flags or "--debug" in cli_flags
 
 
     def _loop_starter(self) -> None:
@@ -74,7 +60,7 @@ class App:
                          name:       str,
                          args:       Optional[List[str]]      = None,
                          kwargs:     Optional[Dict[str, Any]] = None) -> str:
-        client = self.backend.clients[account_id]  # type: ignore
+        client = self.backend.clients[account_id]
         return self._call_coro(
             getattr(client, name)(*args or [], **kwargs or {})
         )
@@ -85,14 +71,19 @@ class App:
         ad = additional_data
         rl = self.run_in_loop
         ba = self.backend
-        cl = self.backend.clients  # type: ignore
+        cl = self.backend.clients
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]
 
         import json
         jd = lambda obj: print(json.dumps(obj, indent=4, ensure_ascii=False))
 
-        import pdb
-        pdb.set_trace()
+        print("\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
+              "to connect to pdb.")
+        import remote_pdb
+        remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
+
+# Make CTRL-C work again
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 APP = App()

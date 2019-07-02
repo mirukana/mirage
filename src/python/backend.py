@@ -1,7 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from atomicfile import AtomicFile
 
@@ -29,13 +29,14 @@ class Backend:
                            user:       str,
                            password:   str,
                            device_id:  Optional[str] = None,
-                           homeserver: str = "https://matrix.org") -> None:
+                           homeserver: str = "https://matrix.org") -> str:
         client = MatrixClient(
             user=user, homeserver=homeserver, device_id=device_id
         )
         await client.login(password)
         self.clients[client.user_id] = client
         users.AccountUpdated(client.user_id)
+        return client.user_id
 
 
     async def resume_client(self,
@@ -98,13 +99,15 @@ class Backend:
         ))
 
 
-    async def save_account(self, client: MatrixClient) -> None:
+    async def save_account(self, user_id: str) -> None:
+        client = self.clients[user_id]
+
         await self._write_config({
             **self.saved_accounts,
-            client.userId: {
-                "hostname":  client.nio.host,
-                "token":     client.nio.access_token,
-                "device_id": client.nio.device_id,
+            client.user_id: {
+                "homeserver": client.homeserver,
+                "token":      client.access_token,
+                "device_id":  client.device_id,
             }
         })
 
@@ -119,7 +122,7 @@ class Backend:
     async def _write_config(self, accounts: SavedAccounts) -> None:
         js = json.dumps(accounts, indent=4, ensure_ascii=False, sort_keys=True)
 
-        with CONFIG_LOCK:
+        async with CONFIG_LOCK:
             self.saved_accounts_path.parent.mkdir(parents=True, exist_ok=True)
 
             with AtomicFile(self.saved_accounts_path, "w") as new:

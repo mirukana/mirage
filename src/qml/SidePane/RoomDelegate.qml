@@ -12,11 +12,11 @@ MouseArea {
 
     HRowLayout {
         width: parent.width
-        spacing: roomList.spacing
+        spacing: sidePane.normalSpacing
 
         HAvatar {
             id: roomAvatar
-            name: displayName
+            name: stripRoomName(displayName) || qsTr("Empty room")
         }
 
         HColumnLayout {
@@ -35,27 +35,27 @@ MouseArea {
                 Layout.maximumWidth: parent.width
             }
 
-            HLabel {
-                function getText() {
-                    return SidePaneJS.getLastRoomEventText(
-                        roomId, roomList.userId
-                    )
-                }
+            //HLabel {
+                //function getText() {
+                    //return SidePaneJS.getLastRoomEventText(
+                        //roomId, roomList.userId
+                    //)
+                //}
 
-                property var lastEvTime: lastEventDateTime
-                onLastEvTimeChanged: subtitleLabel.text = getText()
+                //property var lastEvTime: lastEventDateTime
+                //onLastEvTimeChanged: subtitleLabel.text = getText()
 
-                id: subtitleLabel
-                visible: text !== ""
-                text: getText()
-                textFormat: Text.StyledText
+                //id: subtitleLabel
+                //visible: text !== ""
+                //text: getText()
+                //textFormat: Text.StyledText
 
-                font.pixelSize: HStyle.fontSize.small
-                elide: Text.ElideRight
-                maximumLineCount: 1
+                //font.pixelSize: HStyle.fontSize.small
+                //elide: Text.ElideRight
+                //maximumLineCount: 1
 
-                Layout.maximumWidth: parent.width
-            }
+                //Layout.maximumWidth: parent.width
+            //}
         }
     }
 }

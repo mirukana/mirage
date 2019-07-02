@@ -4,6 +4,8 @@ import "../Base"
 HRowLayout {
     id: toolBar
 
+    property alias roomFilter: filterField.text
+
     Layout.fillWidth: true
     Layout.preferredHeight: HStyle.bottomElementsHeight
 
@@ -16,8 +18,6 @@ HRowLayout {
         id: filterField
         placeholderText: qsTr("Filter rooms")
         backgroundColor: HStyle.sidePane.filterRooms.background
-
-        onTextChanged: Backend.setRoomFilter(text)
 
         Layout.fillWidth: true
         Layout.preferredHeight: parent.height

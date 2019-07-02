@@ -1,0 +1,3 @@
+[submodule "submodules/SortFilterProxyModel"]
+	path = submodules/SortFilterProxyModel
+	url = https://github.com/oKcerG/SortFilterProxyModel

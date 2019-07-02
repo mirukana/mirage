@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import SortFilterProxyModel 0.2
 import "../../Base"
 
 HRectangle {
@@ -8,9 +9,18 @@ HRectangle {
 
     HListView {
         id: roomEventListView
-        delegate: RoomEventDelegate {}
-        model: Backend.roomEvents.get(chatPage.roomId)
         clip: true
+
+        model: HListModel {
+            sourceModel: models.timelines
+
+            filters: ValueFilter {
+                roleName: "roomId"
+                value: chatPage.roomId
+            }
+        }
+
+        delegate: RoomEventDelegate {}
 
         anchors.fill: parent
         anchors.leftMargin: space
@@ -29,7 +39,7 @@ HRectangle {
 
         onYPosChanged: {
             if (chatPage.category != "Invites" && yPos <= 0.1) {
-                Backend.loadPastEvents(chatPage.roomId)
+                //Backend.loadPastEvents(chatPage.roomId)
             }
         }
     }

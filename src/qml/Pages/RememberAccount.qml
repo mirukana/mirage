@@ -4,7 +4,7 @@ import "../Base"
 
 Item {
     property string loginWith: "username"
-    property var client: null
+    property string userId: ""
 
     HInterfaceBox {
         id: rememberBox
@@ -20,10 +20,13 @@ Item {
 
         buttonCallbacks: {
             "yes": function(button) {
-                Backend.clients.remember(client)
+                py.callCoro("save_account", [userId])
                 pageStack.showPage("Default")
             },
-            "no": function(button) { pageStack.showPage("Default") },
+            "no": function(button) {
+                py.callCoro("forget_account", [userId])
+                pageStack.showPage("Default")
+            },
         }
 
         HLabel {

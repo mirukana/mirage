@@ -18,7 +18,7 @@ HRectangle {
 
         HAvatar {
             id: avatar
-            name: chatPage.sender.displayName.value
+            name: chatPage.sender.displayName || stripUserId(chatPage.userId)
             dimension: root.Layout.minimumHeight
         }
 

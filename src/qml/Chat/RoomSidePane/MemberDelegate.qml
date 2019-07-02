@@ -15,7 +15,7 @@ MouseArea {
 
         HAvatar {
             id: memberAvatar
-            name: member.displayName.value
+            name: member.displayName || stripUserId(member.userId)
         }
 
         HColumnLayout {

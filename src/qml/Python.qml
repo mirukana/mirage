@@ -9,6 +9,7 @@ Python {
     property bool ready: false
     property var pendingCoroutines: ({})
 
+    signal willLoadAccounts(bool will)
     property bool loadingAccounts: false
 
     function callCoro(name, args, kwargs, callback) {
@@ -32,18 +33,20 @@ Python {
             }
         }
 
-        addImportPath("../..")
-        importNames("src", ["APP"], function() {
-            call("APP.start", [Qt.application.arguments], function(debug_on) {
-                window.debug = debug_on
+        addImportPath("src")
+        addImportPath("qrc:/")
+        importNames("python", ["APP"], function() {
+            call("APP.is_debug_on", [Qt.application.arguments], function(on) {
+                window.debug = on
 
                 callCoro("has_saved_accounts", [], {}, function(has) {
-                    loadingAccounts = has
                     py.ready = true
+                    willLoadAccounts(has)
 
                     if (has) {
+                        py.loadingAccounts = true
                         py.callCoro("load_saved_accounts", [], {}, function() {
-                            loadingAccounts = false
+                            py.loadingAccounts = false
                         })
                     }
                 })
