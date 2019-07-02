@@ -8,6 +8,7 @@ from types import ModuleType
 from typing import Dict, Optional, Type
 
 import nio
+from nio.rooms import MatrixRoom
 
 from . import __about__
 from .events import rooms, users
@@ -48,10 +49,9 @@ class MatrixClient(nio.AsyncClient):
             with suppress(AttributeError):
                 self.add_response_callback(getattr(self, f"on{name}"), class_)
 
-        # TODO: get this implemented in AsyncClient
-        # for name, class_ in self._classes_defined_in(nio.events).items():
-            # with suppress(AttributeError):
-                # self.add_event_callback(getattr(self, f"on{name}"), class_)
+        for name, class_ in self._classes_defined_in(nio.events).items():
+            with suppress(AttributeError):
+                self.add_event_callback(getattr(self, f"on{name}"), class_)
 
 
     async def start_syncing(self) -> None:
@@ -72,8 +72,10 @@ class MatrixClient(nio.AsyncClient):
         return f"{__about__.__pretty_name__}{os_}"
 
 
-    async def login(self, password: str) -> None:
-        response = await super().login(password, self.default_device_name)
+    async def login(self, password: str, device_name: str = "") -> None:
+        response = await super().login(
+            password, device_name or self.default_device_name
+        )
 
         if isinstance(response, nio.LoginError):
             print(response)
@@ -113,7 +115,7 @@ class MatrixClient(nio.AsyncClient):
     # Callbacks for nio responses
 
     @staticmethod
-    def _get_room_name(room: nio.rooms.MatrixRoom) -> Optional[str]:
+    def _get_room_name(room: MatrixRoom) -> Optional[str]:
         # FIXME: reimplanted because of nio's non-standard room.display_name
         name = room.name or room.canonical_alias
         if name:
@@ -124,8 +126,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
-        for room_id, info in resp.rooms.invite.items():
-            room: nio.rooms.MatrixRoom = self.invited_rooms[room_id]
+        for room_id, _ in resp.rooms.invite.items():
+            room: MatrixRoom = self.invited_rooms[room_id]
 
             rooms.RoomUpdated(
                 user_id      = self.user_id,
@@ -137,7 +139,7 @@ class MatrixClient(nio.AsyncClient):
                 inviter      = room.inviter,
             )
 
-        for room_id, info in resp.rooms.join.items():
+        for room_id, _ in resp.rooms.join.items():
             room = self.rooms[room_id]
 
             rooms.RoomUpdated(
@@ -149,13 +151,7 @@ class MatrixClient(nio.AsyncClient):
                 topic        = room.topic,
             )
 
-            asyncio.gather(*(
-                getattr(self, f"on{type(ev).__name__}")(room_id, ev)
-                for ev in info.timeline.events
-                if hasattr(self, f"on{type(ev).__name__}")
-            ))
-
-        for room_id, info in resp.rooms.leave.items():
+        for room_id, _ in resp.rooms.leave.items():
             rooms.RoomUpdated(
                 user_id  = self.user_id,
                 category = "Left",
@@ -166,14 +162,14 @@ class MatrixClient(nio.AsyncClient):
 
     # Callbacks for nio events
 
-    async def onRoomMessageText(self, room_id: str, ev: nio.RoomMessageText
+    async def onRoomMessageText(self, room: MatrixRoom, ev: nio.RoomMessageText
                                ) -> None:
         is_html = ev.format == "org.matrix.custom.html"
         filter_ = HTML_FILTER.filter
 
         HtmlMessageReceived(
             type          = EventType.html if is_html else EventType.text,
-            room_id       = room_id,
+            room_id       = room.room_id,
             event_id      = ev.event_id,
             sender_id     = ev.sender,
             date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
