@@ -3,7 +3,12 @@ import SortFilterProxyModel 0.2
 import "Base"
 
 QtObject {
-    property HListModel accounts: HListModel {}
+    property HListModel accounts: HListModel {
+        sorters: StringSorter {
+            roleName: "userId"
+            numericMode: true  // human numeric sort
+        }
+    }
 
     property HListModel users: HListModel {
         function getUser(as_account_id, wanted_user_id) {
@@ -29,7 +34,13 @@ QtObject {
 
     property HListModel devices: HListModel {}
 
-    property HListModel roomCategories: HListModel {}
+    property HListModel roomCategories: HListModel {
+        sorters: FilterSorter {
+            ValueFilter { roleName: "name"; value: "Invites" }
+            ValueFilter { roleName: "name"; value: "Rooms" }
+            ValueFilter { roleName: "name"; value: "Left" }
+        }
+    }
 
     property HListModel rooms: HListModel {}
 
