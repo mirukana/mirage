@@ -50,7 +50,7 @@ class HtmlFilter:
         result = b"".join((etree.tostring(el, encoding="utf-8")
                            for el in tree[0].iterchildren()))
 
-        return str(result, "utf-8")
+        return str(result, "utf-8").strip("\n")
 
 
     @property
