@@ -9,9 +9,16 @@ Column {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
     }
 
-    function getPreviousItem() {
-        return index < roomEventListView.model.count - 1 ?
-                roomEventListView.model.get(index + 1) : null
+    function getPreviousItem(nth) {
+        // Remember, index 0 = newest bottomest message
+        nth = nth || 1
+        return model.index + nth - 1 < roomEventListView.model.count - 1 ?
+                roomEventListView.model.get(index + nth) : null
+    }
+
+    function isMessage(item) {
+        item = item || model
+        return /^RoomMessage($|[A-Z])/.test(item.eventType)
     }
 
     property var previousItem: getPreviousItem()
@@ -20,17 +27,18 @@ Column {
 
     property var senderInfo: null
     Component.onCompleted:
-        senderInfo = models.users.getUser(chatPage.userId, senderId)
+        senderInfo = models.users.getUser(chatPage.userId, model.senderId)
 
-    readonly property bool isOwn: chatPage.userId === senderId
+    readonly property bool isOwn: chatPage.userId === model.senderId
 
-    readonly property bool isFirstEvent: model.event_type == "RoomCreateEvent"
+    readonly property bool isFirstEvent: model.eventType == "RoomCreateEvent"
 
     readonly property bool combine:
         previousItem &&
+        isMessage(previousItem) == isMessage(model) &&
         ! talkBreak &&
         ! dayBreak &&
-        previousItem.senderId === senderId &&
+        previousItem.senderId === model.senderId &&
         minsBetween(previousItem.date, model.date) <= 5
 
     readonly property bool dayBreak:
