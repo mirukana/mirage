@@ -59,3 +59,25 @@ function onRoomMemberUpdated(room_id, user_id, typing) {
 
 function onRoomMemberDeleted(room_id, user_id) {
 }
+
+
+function onTimelineEventReceived(
+    event_type, room_id, event_id, sender_id, date, content,
+    content_type, is_local_echo, show_name_line, translatable, target_user_id
+) {
+    models.timelines.upsert({"eventId": event_id}, {
+        "eventType":    py.getattr(event_type, "__name__"),
+        "roomId":       room_id,
+        "eventId":      event_id,
+        "senderId":     sender_id,
+        "date":         date,
+        "content":      content,
+        "contentType":  content,
+        "isLocalEcho":  is_local_echo,
+        "showNameLine": show_name_line,
+        "translatable": translatable,
+        "targetUserId": target_user_id
+    }, true, 1000)
+}
+
+var onTimelineMessageReceived = onTimelineEventReceived

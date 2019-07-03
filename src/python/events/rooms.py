@@ -1,9 +1,12 @@
 from datetime import datetime
-from typing import Dict, Optional
+from enum import auto
+from typing import Dict, Optional, Sequence, Type, Union
 
 from dataclasses import dataclass, field
 
-from .event import Event
+import nio
+
+from .event import AutoStrEnum, Event
 
 
 @dataclass
@@ -38,3 +41,52 @@ class RoomMemberUpdated(Event):
 class RoomMemberDeleted(Event):
     room_id: str  = field()
     user_id: str  = field()
+
+
+# Timeline
+
+class ContentType(AutoStrEnum):
+    html     = auto()
+    image    = auto()
+    audio    = auto()
+    video    = auto()
+    file     = auto()
+    location = auto()
+
+
+@dataclass
+class TimelineEventReceived(Event):
+    event_type: Type[nio.Event] = field()
+    room_id:    str             = field()
+    event_id:   str             = field()
+    sender_id:  str             = field()
+    date:       datetime        = field()
+    content:    str             = field()
+
+    content_type:  ContentType = ContentType.html
+    is_local_echo: bool        = False
+
+    show_name_line: bool                       = False
+    translatable:   Union[bool, Sequence[str]] = True
+
+    target_user_id: Optional[str] = None
+
+
+    @classmethod
+    def from_nio(cls, room: nio.rooms.MatrixRoom, ev: nio.Event, **fields
+                ) -> "TimelineEventReceived":
+        return cls(
+            event_type = type(ev),
+            room_id    = room.room_id,
+            event_id   = ev.event_id,
+            sender_id  = ev.sender,
+            date       = datetime.fromtimestamp(ev.server_timestamp / 1000),
+            target_user_id = getattr(ev, "state_key", None),
+            **fields
+        )
+
+
+@dataclass
+class TimelineMessageReceived(TimelineEventReceived):
+    show_name_line: bool                       = True
+    translatable:   Union[bool, Sequence[str]] = False

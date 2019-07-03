@@ -55,27 +55,27 @@ HColumnLayout {
                 Layout.fillHeight: true
             }
 
-            TypingMembersBar {}
+            //TypingMembersBar {}
 
-            InviteBanner {
-                visible: category === "Invites"
-                inviter: roomInfo.inviter
-            }
+//            InviteBanner {
+                //visible: category === "Invites"
+                //inviter: roomInfo.inviter
+            //}
 
-            UnknownDevicesBanner {
-                visible: category == "Rooms" && hasUnknownDevices
-            }
+            //UnknownDevicesBanner {
+                //visible: category == "Rooms" && hasUnknownDevices
+            //}
 
             SendBox {
                 id: sendBox
                 visible: category == "Rooms" && ! hasUnknownDevices
             }
 
-            LeftBanner {
-                visible: category === "Left"
-                leftEvent: roomInfo.leftEvent
-            }
-        }
+            //LeftBanner {
+                //visible: category === "Left"
+                //leftEvent: roomInfo.leftEvent
+            //}
+        //}
 
 //        RoomSidePane {
             //id: roomSidePane
@@ -144,5 +144,6 @@ HColumnLayout {
             //Layout.minimumWidth: HStyle.avatar.size
             //Layout.maximumWidth: parent.width
         //}
+        }
     }
 }

@@ -14,10 +14,6 @@ Column {
                 roomEventListView.model.get(index + 1) : null
     }
 
-    function getIsMessage(type) {
-        return true
-    }
-
     property var previousItem: getPreviousItem()
     signal reloadPreviousItem()
     onReloadPreviousItem: previousItem = getPreviousItem()
@@ -26,18 +22,14 @@ Column {
     Component.onCompleted:
         senderInfo = models.users.getUser(chatPage.userId, senderId)
 
-    //readonly property bool isMessage: ! model.type.match(/^event.*/)
-    readonly property bool isMessage: getIsMessage(model.type)
-
     readonly property bool isOwn: chatPage.userId === senderId
 
-    readonly property bool isFirstEvent: model.type == "eventCreate"
+    readonly property bool isFirstEvent: model.event_type == "RoomCreateEvent"
 
     readonly property bool combine:
         previousItem &&
         ! talkBreak &&
         ! dayBreak &&
-        getIsMessage(previousItem.type) === isMessage &&
         previousItem.senderId === senderId &&
         minsBetween(previousItem.date, model.date) <= 5
 
@@ -75,14 +67,13 @@ Column {
         width: roomEventDelegate.width
     }
 
-    Item {
+    Item { // TODO: put this in Daybreak.qml?
         visible: dayBreak
         width: parent.width
         height: topPadding
     }
 
-    Loader {
-        source: isMessage ? "MessageContent.qml" : "EventContent.qml"
+    MessageContent {
         anchors.right: isOwn ? parent.right : undefined
     }
 }

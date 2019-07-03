@@ -576,7 +576,7 @@ distdir: FORCE
 
 clean: compiler_clean 
 	-$(DEL_FILE) $(OBJECTS)
-	-$(DEL_FILE) build/moc build/obj build/rcc src/python/__pycache__ src/python/events/__pycache__ build/resources.qrc build Makefile .qmake.stash src/python/__pycache__/__about__.cpython-36.pyc src/python/__pycache__/__init__.cpython-36.pyc src/python/__pycache__/app.cpython-36.pyc src/python/__pycache__/backend.cpython-36.pyc src/python/__pycache__/html_filter.cpython-36.pyc src/python/__pycache__/matrix_client.cpython-36.pyc src/python/events/__pycache__/__init__.cpython-36.pyc src/python/events/__pycache__/app.cpython-36.pyc src/python/events/__pycache__/event.cpython-36.pyc src/python/events/__pycache__/rooms.cpython-36.pyc src/python/events/__pycache__/rooms_timeline.cpython-36.pyc src/python/events/__pycache__/users.cpython-36.pyc
+	-$(DEL_FILE) build/moc build/obj build/rcc src/python/__pycache__ src/python/events/__pycache__ build/resources.qrc build Makefile .qmake.stash src/python/__pycache__/__about__.cpython-36.pyc src/python/__pycache__/__init__.cpython-36.pyc src/python/__pycache__/app.cpython-36.pyc src/python/__pycache__/backend.cpython-36.pyc src/python/__pycache__/html_filter.cpython-36.pyc src/python/__pycache__/matrix_client.cpython-36.pyc src/python/events/__pycache__/__init__.cpython-36.pyc src/python/events/__pycache__/app.cpython-36.pyc src/python/events/__pycache__/event.cpython-36.pyc src/python/events/__pycache__/rooms.cpython-36.pyc src/python/events/__pycache__/rooms_timeline.cpython-36.pyc src/python/events/__pycache__/timeline.cpython-36.pyc src/python/events/__pycache__/users.cpython-36.pyc
 	-$(DEL_FILE) *~ core *.core
 
 
