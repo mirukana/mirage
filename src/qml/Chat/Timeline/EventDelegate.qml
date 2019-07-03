@@ -73,7 +73,7 @@ Column {
         height: topPadding
     }
 
-    MessageContent {
+    EventContent {
         anchors.right: isOwn ? parent.right : undefined
     }
 }

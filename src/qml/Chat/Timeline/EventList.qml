@@ -20,7 +20,7 @@ HRectangle {
             }
         }
 
-        delegate: RoomEventDelegate {}
+        delegate: EventDelegate {}
 
         anchors.fill: parent
         anchors.leftMargin: space

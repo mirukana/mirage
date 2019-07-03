@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
 import "Banners"
-import "RoomEventList"
+import "Timeline"
 import "RoomSidePane"
 
 HColumnLayout {
@@ -50,7 +50,7 @@ HColumnLayout {
         HColumnLayout {
             Layout.fillWidth: true
 
-            RoomEventList {
+            EventList {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
             }
