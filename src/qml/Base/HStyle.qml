@@ -25,8 +25,8 @@ QtObject {
     property int radius: 5
 
     readonly property QtObject colors: QtObject {
-        property color background0: Qt.hsla(0, 0, 0.8, 0.5)
-        property color background1: Qt.hsla(0, 0, 0.8, 0.7)
+        property color background0: Qt.hsla(0, 0, 0.9, 0.5)
+        property color background1: Qt.hsla(0, 0, 0.9, 0.7)
         property color foreground: "black"
         property color foregroundDim: Qt.hsla(0, 0, 0.2, 1)
         property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
@@ -79,10 +79,7 @@ QtObject {
         }
 
         readonly property QtObject event: QtObject {
-            property color background: colors.background1
-            property real saturation: 0.22
-            property real lightness: 0.24
-            property color date: colors.foregroundDim
+            property color background: Qt.darker(colors.background1, 1.1)
         }
 
         readonly property QtObject daybreak: QtObject {

@@ -17,7 +17,6 @@ Column {
     }
 
     function isMessage(item) {
-        item = item || model
         return /^RoomMessage($|[A-Z])/.test(item.eventType)
     }
 

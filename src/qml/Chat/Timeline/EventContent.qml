@@ -22,7 +22,8 @@ Row {
     }
 
     Rectangle {
-        color: HStyle.chat.message.background
+        color: isMessage(model) ?
+               HStyle.chat.message.background : HStyle.chat.event.background
 
         //width: nameLabel.implicitWidth
         width: Math.min(
