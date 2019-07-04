@@ -102,6 +102,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def request_user_update_event(self, user_id: str) -> None:
+        print("Requesting user profile:", user_id)
         response = await self.get_profile(user_id)
 
         if isinstance(response, nio.ProfileGetError):
@@ -109,9 +110,9 @@ class MatrixClient(nio.AsyncClient):
 
         users.UserUpdated(
             user_id        = user_id,
-            display_name   = getattr(response, "displayname", None),
-            avatar_url     = getattr(response, "avatar_url", None),
-            status_message = None,  # TODO
+            display_name   = getattr(response, "displayname", "") or "",
+            avatar_url     = getattr(response, "avatar_url", "") or "",
+            status_message = "",  # TODO
         )
 
 
@@ -157,10 +158,10 @@ class MatrixClient(nio.AsyncClient):
                 user_id      = self.user_id,
                 category     = "Invites",
                 room_id      = room_id,
-                display_name = self._get_room_name(room),
-                avatar_url   = room.gen_avatar_url,
-                topic        = room.topic,
-                inviter      = room.inviter,
+                display_name = self._get_room_name(room) or "",
+                avatar_url   = room.gen_avatar_url or "",
+                topic        = room.topic or "",
+                inviter      = room.inviter or "",
             )
 
         for room_id, _ in resp.rooms.join.items():
@@ -170,9 +171,9 @@ class MatrixClient(nio.AsyncClient):
                 user_id      = self.user_id,
                 category     = "Rooms",
                 room_id      = room_id,
-                display_name = self._get_room_name(room),
-                avatar_url   = room.gen_avatar_url,
-                topic        = room.topic,
+                display_name = self._get_room_name(room) or "",
+                avatar_url   = room.gen_avatar_url or "",
+                topic        = room.topic or "",
             )
 
         for room_id, _ in resp.rooms.leave.items():
@@ -300,6 +301,15 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomMemberEvent(self, room, ev) -> None:
+        # TODO: ignore for past events
+        if ev.content["membership"] != "leave":
+            users.UserUpdated(
+                user_id        = ev.state_key,
+                display_name   = ev.content["displayname"] or "",
+                avatar_url     = ev.content["avatar_url"] or "",
+                status_message = "",  # TODO
+            )
+
         co = await self._get_room_member_event_content(ev)
         TimelineEventReceived.from_nio(room, ev, content=co)
 

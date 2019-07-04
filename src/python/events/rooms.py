@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import auto
-from typing import Dict, Optional, Sequence, Type, Union
+from typing import Dict, Sequence, Type, Union
 
 from dataclasses import dataclass, field
 
@@ -11,15 +11,15 @@ from .event import AutoStrEnum, Event
 
 @dataclass
 class RoomUpdated(Event):
-    user_id:         str                = field()
-    category:        str                = field()
-    room_id:         str                = field()
-    display_name:    Optional[str]      = None
-    avatar_url:      Optional[str]      = None
-    topic:           Optional[str]      = None
+    user_id:         str = field()
+    category:        str = field()
+    room_id:         str = field()
+    display_name:    str = ""
+    avatar_url:      str = ""
+    topic:           str = ""
 
-    inviter:    Optional[str]            = None
-    left_event: Optional[Dict[str, str]] = None
+    inviter:    str            = ""
+    left_event: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -53,8 +53,6 @@ class ContentType(AutoStrEnum):
     location = auto()
 
 
-
-
 @dataclass
 class TimelineEventReceived(Event):
     event_type:    Type[nio.Event] = field()
@@ -69,7 +67,7 @@ class TimelineEventReceived(Event):
     show_name_line: bool                       = False
     translatable:   Union[bool, Sequence[str]] = True
 
-    target_user_id: Optional[str] = None
+    target_user_id: str = ""
 
     @classmethod
     def from_nio(cls, room, ev, **fields) -> "TimelineEventReceived":
@@ -79,7 +77,7 @@ class TimelineEventReceived(Event):
             event_id   = ev.event_id,
             sender_id  = ev.sender,
             date       = datetime.fromtimestamp(ev.server_timestamp / 1000),
-            target_user_id = getattr(ev, "state_key", None),
+            target_user_id = getattr(ev, "state_key", "") or "",
             **fields
         )
 

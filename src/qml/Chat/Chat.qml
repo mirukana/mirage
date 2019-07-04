@@ -35,7 +35,7 @@ HColumnLayout {
     RoomHeader {
         id: roomHeader
         displayName: roomInfo.displayName
-        topic: roomInfo.topic || ""
+        topic: roomInfo.topic
 
         Layout.fillWidth: true
         Layout.preferredHeight: HStyle.avatar.size

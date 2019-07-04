@@ -22,29 +22,29 @@ class AccountDeleted(Event):
 
 @dataclass
 class UserUpdated(Event):
-    user_id:        str           = field()
-    display_name:   Optional[str] = None
-    avatar_url:     Optional[str] = None
-    status_message: Optional[str] = None
+    user_id:        str = field()
+    display_name:   str = ""
+    avatar_url:     str = ""
+    status_message: str = ""
 
 
 # Devices
 
 class Trust(Enum):
     blacklisted = -1
-    undecided = 0
-    trusted = 1
+    undecided   = 0
+    trusted     = 1
 
 
 @dataclass
 class DeviceUpdated(Event):
-    user_id:        str                = field()
-    device_id:      str                = field()
-    ed25519_key:    str                = field()
-    trust:          Trust              = Trust.undecided
-    display_name:   Optional[str]      = None
-    last_seen_ip:   Optional[str]      = None
-    last_seen_date: Optional[datetime] = None
+    user_id:        str      = field()
+    device_id:      str      = field()
+    ed25519_key:    str      = field()
+    trust:          Trust    = Trust.undecided
+    display_name:   str      = ""
+    last_seen_ip:   str      = ""
+    last_seen_date: datetime = field(default_factory=lambda: datetime(1, 1, 1))
 
 
 @dataclass

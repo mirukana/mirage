@@ -81,10 +81,24 @@ SortFilterProxyModel {
             return model.get(model.count)
         }
 
-        if (update_if_exist != false) {
-            model.set(indices[0], new_item)
-        }
-        return model.get(indices[0])
+		var existing = model.get(indices[0])
+        if (update_if_exist == false) { return existing }
+
+		// Really update only if existing and new item have a difference
+		for (var role in existing) {
+			if (Boolean(existing[role].getTime)) {
+				if (existing[role].getTime() != new_item[role].getTime()) {
+					model.set(indices[0], new_item)
+					return existing
+				}
+			} else {
+				if (existing[role] != new_item[role]) {
+					model.set(indices[0], new_item)
+					return existing
+				}
+			}
+		}
+        return existing
     }
 
     function pop(index) {

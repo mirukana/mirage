@@ -72,7 +72,7 @@ function onTimelineEventReceived(
         "isLocalEcho":  is_local_echo,
         "showNameLine": show_name_line,
         "translatable": translatable,
-        "targetUserId": target_user_id || "",
+        "targetUserId": target_user_id,
     }
 
     // Replace any matching local echo

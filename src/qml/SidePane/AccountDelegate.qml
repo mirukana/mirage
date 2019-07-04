@@ -40,7 +40,7 @@ Column {
 
             HTextField {
                 id: statusEdit
-                text: user.statusMessage || ""
+                text: user.statusMessage
                 placeholderText: qsTr("Set status message")
                 font.pixelSize: HStyle.fontSize.small
                 background: null
