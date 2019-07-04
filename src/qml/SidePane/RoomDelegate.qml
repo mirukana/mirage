@@ -50,10 +50,13 @@ MouseArea {
                     ) + ": " + py.callSync("inlinify", [ev.content])
                 }
 
+                // Have to do it like this to avoid binding loop
+                property var lastEv: timelines.lastEventOf(model.roomId)
+                onLastEvChanged: text = getText(lastEv)
+
                 id: subtitleLabel
                 visible: Boolean(text)
                 textFormat: Text.StyledText
-                text: getText(timelines.lastEventOf(model.roomId))
 
                 font.pixelSize: HStyle.fontSize.small
                 elide: Text.ElideRight
