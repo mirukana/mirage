@@ -8,6 +8,7 @@ HLabel {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
+        propagateComposedEvents: true
 
         onPositionChanged: function (event) {
             cursorShape = label.linkAt(event.x, event.y) ?
@@ -16,6 +17,7 @@ HLabel {
 
         onClicked: function(event) {
             var link = label.linkAt(event.x, event.y)
+            event.accepted = Boolean(link)
             if (link) { Qt.openUrlExternally(link) }
         }
     }
