@@ -12,8 +12,8 @@ Column {
     function getPreviousItem(nth) {
         // Remember, index 0 = newest bottomest message
         nth = nth || 1
-        return model.index + nth - 1 < roomEventListView.model.count - 1 ?
-                roomEventListView.model.get(index + nth) : null
+        return roomEventListView.model.count - 1 > model.index + nth ?
+                roomEventListView.model.get(model.index + nth) : null
     }
 
     function isMessage(item) {
@@ -32,23 +32,28 @@ Column {
 
     readonly property bool isFirstEvent: model.eventType == "RoomCreateEvent"
 
-    readonly property bool combine:
-        previousItem &&
+    // Item roles may not be loaded yet, reason for all these checks
+    readonly property bool combine: Boolean(
+        model.date &&
+        previousItem && previousItem.eventType && previousItem.date &&
         isMessage(previousItem) == isMessage(model) &&
         ! talkBreak &&
         ! dayBreak &&
         previousItem.senderId === model.senderId &&
         minsBetween(previousItem.date, model.date) <= 5
+    )
 
-    readonly property bool dayBreak:
+    readonly property bool dayBreak: Boolean(
         isFirstEvent ||
-        previousItem &&
+        model.date && previousItem && previousItem.date &&
         model.date.getDate() != previousItem.date.getDate()
+    )
 
-    readonly property bool talkBreak:
-        previousItem &&
+    readonly property bool talkBreak: Boolean(
+        model.date && previousItem && previousItem.date &&
         ! dayBreak &&
         minsBetween(previousItem.date, model.date) >= 20
+    )
 
 
     property int standardSpacing: 16

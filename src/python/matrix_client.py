@@ -5,6 +5,7 @@ import json
 import logging as log
 import platform
 from contextlib import suppress
+from datetime import datetime
 from types import ModuleType
 from typing import Dict, Optional, Type
 
@@ -22,9 +23,10 @@ class MatrixClient(nio.AsyncClient):
                  user:       str,
                  homeserver: str           = "https://matrix.org",
                  device_id:  Optional[str] = None) -> None:
-
         # TODO: ensure homeserver starts with a scheme://
+
         self.sync_task: Optional[asyncio.Future] = None
+
         super().__init__(homeserver=homeserver, user=user, device_id=device_id)
 
         self.connect_callbacks()
@@ -113,6 +115,27 @@ class MatrixClient(nio.AsyncClient):
         )
 
 
+    async def send_markdown(self, room_id: str, text: str) -> None:
+        content = {
+            "body":           text,
+            "formatted_body": HTML_FILTER.from_markdown(text),
+            "format":         "org.matrix.custom.html",
+            "msgtype":        "m.text",
+        }
+
+        TimelineMessageReceived(
+            event_type    = nio.RoomMessageText,
+            room_id       = room_id,
+            event_id      = "local_echo",
+            sender_id     = self.user_id,
+            date          = datetime.now(),
+            content       = content["formatted_body"],
+            is_local_echo = True,
+        )
+
+        await self.room_send(room_id, "m.room.message", content)
+
+
     # Callbacks for nio responses
 
     @staticmethod
@@ -172,6 +195,7 @@ class MatrixClient(nio.AsyncClient):
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else html.escape(ev.body)
         )
+
         TimelineMessageReceived.from_nio(room, ev, content=co)
 
 

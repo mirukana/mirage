@@ -43,7 +43,6 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
         "inviter":       inviter,
         "leftEvent":     left_event
     })
-    //print("room up", rooms.toJson())
 }
 
 
@@ -65,19 +64,35 @@ function onTimelineEventReceived(
     event_type, room_id, event_id, sender_id, date, content,
     content_type, is_local_echo, show_name_line, translatable, target_user_id
 ) {
-    models.timelines.upsert({"eventId": event_id}, {
+    var item = {
         "eventType":    py.getattr(event_type, "__name__"),
         "roomId":       room_id,
         "eventId":      event_id,
         "senderId":     sender_id,
         "date":         date,
         "content":      content,
-        "contentType":  content,
-        "isLocalEcho":  is_local_echo,
+        "contentType":  content_type,
         "showNameLine": show_name_line,
         "translatable": translatable,
-        "targetUserId": target_user_id
-    }, true, 1000)
+        "targetUserId": target_user_id,
+        "isLocalEcho":  is_local_echo,
+    }
+
+    // Replace any matching local echo
+    var found = models.timelines.getIndices({
+        "roomId":       room_id,
+        "senderId":     sender_id,
+        "content":      content,
+        "isLocalEcho":  true
+    }, 1, 500)
+    if (found.length > 0) {
+        models.timelines.set(found[0], item)
+        return
+    }
+
+    // Multiple clients will emit duplicate events with the same eventId
+    models.timelines.upsert({"eventId": event_id},  item, true, 500)
 }
+
 
 var onTimelineMessageReceived = onTimelineEventReceived
