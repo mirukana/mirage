@@ -12,3 +12,4 @@ build
 dist
 .qmake.stash
 Makefile
+harmonyqml

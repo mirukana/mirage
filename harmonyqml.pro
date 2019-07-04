@@ -1,7 +1,10 @@
 TEMPLATE = app
 QT = quick
 DEFINES += QT_DEPRECATED_WARNINGS
-CONFIG += release warn_off c++11
+CONFIG += warn_off c++11 release
+dev {
+    CONFIG += debug
+}
 
 BUILD_DIR = build
 MOC_DIR = $$BUILD_DIR/moc
