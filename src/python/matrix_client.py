@@ -7,7 +7,8 @@ import platform
 from contextlib import suppress
 from datetime import datetime
 from types import ModuleType
-from typing import Dict, Optional, Type
+from typing import DefaultDict, Dict, Optional, Type
+from uuid import uuid4
 
 import nio
 from nio.rooms import MatrixRoom
@@ -30,6 +31,9 @@ class MatrixClient(nio.AsyncClient):
         self.backend: Backend = backend
 
         self.sync_task: Optional[asyncio.Future] = None
+
+        self.send_locks: DefaultDict[str, asyncio.Lock] = \
+                DefaultDict(asyncio.Lock)  # {room_id: lock}
 
         super().__init__(homeserver=homeserver, user=user, device_id=device_id)
 
@@ -131,14 +135,15 @@ class MatrixClient(nio.AsyncClient):
         TimelineMessageReceived(
             event_type    = nio.RoomMessageText,
             room_id       = room_id,
-            event_id      = "local_echo",
+            event_id      = f"local_echo.{uuid4()}",
             sender_id     = self.user_id,
             date          = datetime.now(),
             content       = content["formatted_body"],
             is_local_echo = True,
         )
 
-        await self.room_send(room_id, "m.room.message", content)
+        async with self.send_locks[room_id]:
+            print(await self.room_send(room_id, "m.room.message", content))
 
 
     # Callbacks for nio responses

@@ -87,7 +87,7 @@ function onTimelineEventReceived(
         timelines.set(found[0], item)
     } else {
         // Multiple clients will emit duplicate events with the same eventId
-        timelines.upsert({"eventId": event_id},  item, true, 500)
+        timelines.upsert({"eventId": event_id}, item, true, 500)
     }
 }
 

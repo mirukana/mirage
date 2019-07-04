@@ -37,8 +37,11 @@ HRectangle {
         // Declaring this "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
 
+        property int zz: 0
         onYPosChanged: {
             if (chatPage.category != "Invites" && yPos <= 0.1) {
+                zz += 1
+                print(zz)
                 //Backend.loadPastEvents(chatPage.roomId)
             }
         }
