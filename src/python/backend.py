@@ -33,7 +33,7 @@ class Backend:
                            device_id:  Optional[str] = None,
                            homeserver: str = "https://matrix.org") -> str:
         client = MatrixClient(
-            user=user, homeserver=homeserver, device_id=device_id
+            backend=self, user=user, homeserver=homeserver, device_id=device_id
         )
         await client.login(password)
         self.clients[client.user_id] = client
@@ -47,6 +47,7 @@ class Backend:
                             device_id:  str,
                             homeserver: str = "https://matrix.org") -> None:
         client = MatrixClient(
+            backend=self,
             user=user_id, homeserver=homeserver, device_id=device_id
         )
         await client.resume(user_id=user_id, token=token, device_id=device_id)

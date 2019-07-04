@@ -20,10 +20,14 @@ from .html_filter import HTML_FILTER
 
 class MatrixClient(nio.AsyncClient):
     def __init__(self,
+                 backend,
                  user:       str,
                  homeserver: str           = "https://matrix.org",
                  device_id:  Optional[str] = None) -> None:
         # TODO: ensure homeserver starts with a scheme://
+
+        from .backend import Backend
+        self.backend: Backend = backend
 
         self.sync_task: Optional[asyncio.Future] = None
 
@@ -242,7 +246,7 @@ class MatrixClient(nio.AsyncClient):
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def _get_room_member_event_content(self, ev) -> str:
+    async def _get_room_member_event_content(self, ev) -> Optional[str]:
         prev            = ev.prev_content
         prev_membership = prev["membership"] if prev else None
         now             = ev.content
@@ -280,6 +284,11 @@ class MatrixClient(nio.AsyncClient):
             if membership == "ban":
                 return f"%S banned %T from the room.{reason}"
 
+
+        if ev.sender in self.backend.clients:
+            # Don't put our own name/avatar changes in the timeline
+            return None
+
         changed = []
 
         if prev and now["avatar_url"] != prev["avatar_url"]:
@@ -297,7 +306,7 @@ class MatrixClient(nio.AsyncClient):
 
         log.warning("Invalid member event - %s",
                     json.dumps(ev.__dict__, indent=4))
-        return "%S ???"
+        return None
 
 
     async def onRoomMemberEvent(self, room, ev) -> None:
@@ -311,7 +320,9 @@ class MatrixClient(nio.AsyncClient):
             )
 
         co = await self._get_room_member_event_content(ev)
-        TimelineEventReceived.from_nio(room, ev, content=co)
+
+        if co is not None:
+            TimelineEventReceived.from_nio(room, ev, content=co)
 
 
     async def onRoomAliasEvent(self, room, ev) -> None:
