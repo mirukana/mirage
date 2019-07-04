@@ -9,7 +9,7 @@ Column {
 
     // Avoid binding loop by using Component.onCompleted
     property var user: null
-    Component.onCompleted: user = models.users.getUser(userId)
+    Component.onCompleted: user = users.getUser(userId)
 
     property string roomCategoriesListUserId: userId
     property bool expanded: true

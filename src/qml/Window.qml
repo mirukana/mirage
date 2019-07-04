@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "Base"
+import "Models"
 
 ApplicationWindow {
     id: window
@@ -20,13 +21,14 @@ ApplicationWindow {
         window.ready = true
     }
 
-    Python {
-        id: py
-    }
+    Python { id: py }
 
-    Models {
-        id: models
-    }
+    Accounts       { id: accounts }
+    Devices        { id: devices }
+    RoomCategories { id: roomCategories }
+    Rooms          { id: rooms }
+    Timelines      { id: timelines }
+    Users          { id: users }
 
     LoadingScreen {
         id: loadingScreen

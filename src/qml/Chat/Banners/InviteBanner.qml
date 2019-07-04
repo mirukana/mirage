@@ -6,7 +6,7 @@ Banner {
 
     color: HStyle.chat.inviteBanner.background
 
-    // TODO: get disp name from models.users, inviter = userid  now
+    // TODO: get disp name from users, inviter = userid  now
     avatar.name: inviter ? inviter.displayname : ""
     //avatar.imageUrl: inviter ? inviter.avatar_url : ""
 

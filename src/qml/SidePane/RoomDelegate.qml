@@ -37,11 +37,7 @@ MouseArea {
             }
 
             HRichLabel {
-                id: subtitleLabel
-                visible: Boolean(text)
-                textFormat: Text.StyledText
-                text: {
-                    var ev = models.timelines.lastEventOf(model.roomId)
+                function getText(ev) {
                     if (! ev) { return "" }
 
                     if (! Utils.eventIsMessage(ev)) {
@@ -49,10 +45,15 @@ MouseArea {
                     }
 
                     return Utils.coloredNameHtml(
-                        models.users.getUser(ev.senderId).displayName,
+                        users.getUser(ev.senderId).displayName,
                         ev.senderId
                     ) + ": " + py.callSync("inlinify", [ev.content])
                 }
+
+                id: subtitleLabel
+                visible: Boolean(text)
+                textFormat: Text.StyledText
+                text: getText(timelines.lastEventOf(model.roomId))
 
                 font.pixelSize: HStyle.fontSize.small
                 elide: Text.ElideRight

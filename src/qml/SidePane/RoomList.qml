@@ -11,7 +11,7 @@ HListView {
     spacing: sidePane.normalSpacing
 
     model: SortFilterProxyModel {
-        sourceModel: models.rooms
+        sourceModel: rooms
         filters: AllOf {
             ValueFilter {
                 roleName: "category"

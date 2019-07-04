@@ -1,12 +1,10 @@
 function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
                        topic, inviter, left_event) {
 
-    models.roomCategories.upsert({"userId": user_id, "name": category}, {
+    roomCategories.upsert({"userId": user_id, "name": category}, {
         "userId": user_id,
         "name":   category
     })
-
-    var rooms = models.rooms
 
     function roles(for_category) {
         return {"userId": user_id, "roomId": room_id, "category": for_category}
@@ -47,7 +45,7 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
 
 function onRoomDeleted(user_id, category, room_id) {
     var roles = {"userId": user_id, "roomId": room_id, "category": category}
-    models.rooms.popWhere(roles, 1)
+    rooms.popWhere(roles, 1)
 }
 
 
@@ -78,19 +76,19 @@ function onTimelineEventReceived(
     }
 
     // Replace any matching local echo
-    var found = models.timelines.getIndices({
+    var found = timelines.getIndices({
         "roomId":       room_id,
         "senderId":     sender_id,
         "content":      content,
         "isLocalEcho":  true
     }, 1, 500)
     if (found.length > 0) {
-        models.timelines.set(found[0], item)
+        timelines.set(found[0], item)
         return
     }
 
     // Multiple clients will emit duplicate events with the same eventId
-    models.timelines.upsert({"eventId": event_id},  item, true, 500)
+    timelines.upsert({"eventId": event_id},  item, true, 500)
 }
 
 

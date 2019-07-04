@@ -10,12 +10,12 @@ HColumnLayout {
     property string category: ""
     property string roomId: ""
 
-    readonly property var roomInfo: models.rooms.getWhere(
+    readonly property var roomInfo: rooms.getWhere(
         {"userId": userId, "roomId": roomId, "category": category}, 1
     )[0]
 
     readonly property var sender:
-        models.users.getWhere({"userId": userId}, 1)[0]
+        users.getWhere({"userId": userId}, 1)[0]
 
     readonly property bool hasUnknownDevices: false
          //category == "Rooms" ?

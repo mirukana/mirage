@@ -12,7 +12,7 @@ HRectangle {
         clip: true
 
         model: HListModel {
-            sourceModel: models.timelines
+            sourceModel: timelines
 
             filters: ValueFilter {
                 roleName: "roomId"

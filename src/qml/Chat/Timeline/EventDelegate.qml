@@ -22,7 +22,7 @@ Column {
     onReloadPreviousItem: previousItem = getPreviousItem()
 
     property var senderInfo: null
-    Component.onCompleted: senderInfo = models.users.getUser(model.senderId)
+    Component.onCompleted: senderInfo = users.getUser(model.senderId)
 
     readonly property bool isOwn: chatPage.userId === model.senderId
 

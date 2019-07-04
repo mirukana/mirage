@@ -6,6 +6,6 @@ HListView {
     id: accountList
     clip: true
 
-    model: models.accounts
+    model: accounts
     delegate: AccountDelegate {}
 }

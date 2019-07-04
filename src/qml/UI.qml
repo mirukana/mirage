@@ -16,7 +16,7 @@ Item {
     }
 
     property bool accountsPresent:
-        models.accounts.count > 0 || py.loadingAccounts
+        accounts.count > 0 || py.loadingAccounts
 
     HImage {
         id: mainUIBackground

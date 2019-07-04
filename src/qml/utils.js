@@ -63,16 +63,16 @@ function eventIsMessage(ev) {
 
 
 function translatedEventContent(ev) {
-    // ev: models.timelines item
+    // ev: timelines item
     if (ev.translatable == false) { return ev.content }
 
     // %S → sender display name
-    var name = models.users.getUser(ev.senderId).displayName
+    var name = users.getUser(ev.senderId).displayName
     var text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
 
     // %T → target (event state_key) display name
     if (ev.targetUserId) {
-        var tname = models.users.getUser(ev.targetUserId).displayName
+        var tname = users.getUser(ev.targetUserId).displayName
         text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
     }
 

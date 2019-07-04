@@ -9,7 +9,7 @@ HListView {
     id: roomCategoriesList
 
     model: SortFilterProxyModel {
-        sourceModel: models.roomCategories
+        sourceModel: roomCategories
         filters: ValueFilter {
             roleName: "userId"
             value: userId
