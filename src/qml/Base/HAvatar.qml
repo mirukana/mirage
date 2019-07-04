@@ -15,7 +15,7 @@ Rectangle {
 
     opacity: hidden ? 0 : 1
 
-    color: name ? Utils.avatarHue(name) : HStyle.avatar.background.unknown
+    color: name ? Utils.avatarColor(name) : HStyle.avatar.background.unknown
 
     HLabel {
         z: 1

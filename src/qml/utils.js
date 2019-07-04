@@ -20,7 +20,7 @@ function hueFrom(string) {
 }
 
 
-function avatarHue(name) {  // TODO: bad name
+function avatarColor(name) {
    return Qt.hsla(
        hueFrom(name),
        HStyle.avatar.background.saturation,
@@ -30,7 +30,7 @@ function avatarHue(name) {  // TODO: bad name
 }
 
 
-function nameHue(name) {  // TODO: bad name
+function nameColor(name) {
     return Qt.hsla(
         hueFrom(name),
         HStyle.displayName.saturation,
@@ -41,9 +41,9 @@ function nameHue(name) {  // TODO: bad name
 
 
 function coloredNameHtml(name, alt_id) {
-        return "<font color='" + nameHue(name || stripUserId(alt_id)) + "'>" +
-               escapeHtml(name || alt_id) +
-               "</font>"
+    return "<font color='" + nameColor(name || stripUserId(alt_id)) + "'>" +
+           escapeHtml(name || alt_id) +
+           "</font>"
 }
 
 

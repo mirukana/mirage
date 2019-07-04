@@ -41,7 +41,7 @@ Row {
 
                 id: nameLabel
                 text: senderInfo.displayName || model.senderId
-                color: Utils.nameHue(avatar.name)
+                color: Utils.nameColor(avatar.name)
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 horizontalAlignment: isOwn ? Text.AlignRight : Text.AlignLeft
