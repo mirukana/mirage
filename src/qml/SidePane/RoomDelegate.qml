@@ -1,14 +1,15 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
-import "utils.js" as SidePaneJS
+import "../utils.js" as Utils
 
 MouseArea {
     id: roomDelegate
     width: roomList.width
     height: childrenRect.height
 
-    onClicked: pageStack.showRoom(roomList.userId, roomList.category, roomId)
+    onClicked:
+        pageStack.showRoom(roomList.userId, roomList.category, model.roomId)
 
     HRowLayout {
         width: parent.width
@@ -16,7 +17,7 @@ MouseArea {
 
         HAvatar {
             id: roomAvatar
-            name: stripRoomName(displayName) || qsTr("Empty room")
+            name: Utils.stripRoomName(model.displayName)
         }
 
         HColumnLayout {
@@ -26,8 +27,8 @@ MouseArea {
 
             HLabel {
                 id: roomLabel
-                text: displayName ? displayName : "<i>Empty room</i>"
-                textFormat: Text.StyledText
+                text: model.displayName || "<i>Empty room</i>"
+                textFormat: model.displayName? Text.PlainText : Text.StyledText
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 verticalAlignment: Qt.AlignVCenter
@@ -35,27 +36,18 @@ MouseArea {
                 Layout.maximumWidth: parent.width
             }
 
-            //HLabel {
-                //function getText() {
-                    //return SidePaneJS.getLastRoomEventText(
-                        //roomId, roomList.userId
-                    //)
-                //}
+            HLabel {
+                id: subtitleLabel
+                visible: Boolean(text)
+                //text: models.timelines.getWhere({"roomId": model.roomId}, 1)[0].content
+                textFormat: Text.StyledText
 
-                //property var lastEvTime: lastEventDateTime
-                //onLastEvTimeChanged: subtitleLabel.text = getText()
+                font.pixelSize: HStyle.fontSize.small
+                elide: Text.ElideRight
+                maximumLineCount: 1
 
-                //id: subtitleLabel
-                //visible: text !== ""
-                //text: getText()
-                //textFormat: Text.StyledText
-
-                //font.pixelSize: HStyle.fontSize.small
-                //elide: Text.ElideRight
-                //maximumLineCount: 1
-
-                //Layout.maximumWidth: parent.width
-            //}
+                Layout.maximumWidth: parent.width
+            }
         }
     }
 }

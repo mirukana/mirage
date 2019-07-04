@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
+import "../utils.js" as Utils
 
 HRectangle {
     property var displayName: ""
@@ -22,7 +23,7 @@ HRectangle {
 
         HAvatar {
             id: avatar
-            name: stripRoomName(displayName) || qsTr("Empty room")
+            name: Utils.stripRoomName(displayName)
             dimension: roomHeader.height
             Layout.alignment: Qt.AlignTop
         }

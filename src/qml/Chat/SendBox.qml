@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
+import "../utils.js" as Utils
 
 HRectangle {
     function setFocus() { textArea.forceActiveFocus() }
@@ -18,7 +19,8 @@ HRectangle {
 
         HAvatar {
             id: avatar
-            name: chatPage.sender.displayName || stripUserId(chatPage.userId)
+            name: chatPage.sender.displayName ||
+                  Utils.stripUserId(chatPage.userId)
             dimension: root.Layout.minimumHeight
         }
 

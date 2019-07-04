@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
+import "../utils.js" as Utils
 
 Column {
     id: accountDelegate
@@ -20,7 +21,7 @@ Column {
 
         HAvatar {
             id: avatar
-            name: user.displayName || stripUserId(user.userId)
+            name: user.displayName || Utils.stripUserId(user.userId)
         }
 
         HColumnLayout {

@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
+import "../utils.js" as Utils
 
 MouseArea {
     id: memberDelegate
@@ -15,7 +16,7 @@ MouseArea {
 
         HAvatar {
             id: memberAvatar
-            name: member.displayName || stripUserId(member.userId)
+            name: member.displayName || Utils.stripUserId(member.userId)
         }
 
         HColumnLayout {

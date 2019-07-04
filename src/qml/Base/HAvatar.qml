@@ -1,26 +1,12 @@
 import QtQuick 2.7
 import "../Base"
+import "../utils.js" as Utils
 
 Rectangle {
     property var name: null
     property var imageUrl: null
     property int dimension: HStyle.avatar.size
     property bool hidden: false
-
-    function stripUserId(user_id) {
-        return user_id.substring(1)  // Remove leading @
-    }
-    function stripRoomName(name) {
-        return name[0] == "#" ? name.substring(1) : name
-    }
-
-    function hueFromName(name) {
-        var hue = 0
-        for (var i = 0; i < name.length; i++) {
-            hue += name.charCodeAt(i) * 99
-        }
-        return hue % 360 / 360
-    }
 
     width: dimension
     height: hidden ? 1 : dimension
@@ -29,14 +15,7 @@ Rectangle {
 
     opacity: hidden ? 0 : 1
 
-    color: name ?
-           Qt.hsla(
-               hueFromName(name),
-               HStyle.avatar.background.saturation,
-               HStyle.avatar.background.lightness,
-               HStyle.avatar.background.alpha
-           ) :
-           HStyle.avatar.background.unknown
+    color: name ? Utils.avatarHue(name) : HStyle.avatar.background.unknown
 
     HLabel {
         z: 1

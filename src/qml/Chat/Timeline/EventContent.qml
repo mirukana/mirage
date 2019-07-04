@@ -1,23 +1,17 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
+import "../../utils.js" as Utils
 
 Row {
     id: messageContent
     spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
 
-    function textHueForName(name) { // TODO: move
-        return Qt.hsla(avatar.hueFromName(name),
-                       HStyle.displayName.saturation,
-                       HStyle.displayName.lightness,
-                       1)
-    }
-
     HAvatar {
         id: avatar
         hidden: combine
-        name: senderInfo.displayName || stripUserId(model.senderId)
+        name: senderInfo.displayName || Utils.stripUserId(model.senderId)
         dimension: model.showNameLine ? 48 : 28
     }
 
@@ -47,7 +41,7 @@ Row {
 
                 id: nameLabel
                 text: senderInfo.displayName || model.senderId
-                color: textHueForName(avatar.name)
+                color: Utils.nameHue(avatar.name)
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 horizontalAlignment: isOwn ? Text.AlignRight : Text.AlignLeft
@@ -58,56 +52,20 @@ Row {
             }
 
             HRichLabel {
-                function escapeHtml(text) {  // TODO: move this
-                    return text.replace("&", "&amp;")
-                               .replace("<", "&lt;")
-                               .replace(">", "&gt;")
-                               .replace('"', "&quot;")
-                               .replace("'", "&#039;")
-                }
-
-                function translate(text) {
-                    if (model.translatable == false) { return text }
-
-                    text = text.replace(
-                        "%S",
-                        "<font color='" + nameLabel.color + "'>" +
-                        escapeHtml(senderInfo.displayName || model.senderId) +
-                        "</font>"
-                    )
-
-                    var name = models.users.getUser(
-                        chatPage.userId, model.targetUserId
-                    ).displayName
-                    var sid = avatar.stripUserId(model.targetUserId || "")
-
-                    text = text.replace(
-                        "%T",
-                        "<font color='" + textHueForName(name || sid) + "'>" +
-                        escapeHtml(name || model.targetUserId) +
-                        "</font>"
-                    )
-
-                    text = qsTr(text)
-                    if (model.translatable == true) { return text }
-
-                    // Else, model.translatable should be an array of args
-                    for (var i = 0; model.translatable.length; i++) {
-                        text = text.arg(model.translatable[i])
-                    }
-                }
-
                 width: parent.width
 
                 id: contentLabel
-                text: translate(model.content) +
+                text: Utils.translatedEventContent(model) +
+                      // time
                       "&nbsp;&nbsp;<font size=" + HStyle.fontSize.small +
                       "px color=" + HStyle.chat.message.date + ">" +
                       Qt.formatDateTime(model.date, "hh:mm:ss") +
                       "</font>" +
+                      // local echo icon
                       (model.isLocalEcho ?
                        "&nbsp;<font size=" + HStyle.fontSize.small +
                        "px>⏳</font>" : "")
+
                 color: HStyle.chat.message.body
                 wrapMode: Text.Wrap
 

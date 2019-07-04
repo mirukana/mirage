@@ -1,5 +1,5 @@
 function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
-                       topic, last_event_date, inviter, left_event) {
+                       topic, inviter, left_event) {
 
     models.roomCategories.upsert({"userId": user_id, "name": category}, {
         "userId": user_id,
@@ -39,7 +39,6 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
         "displayName":   display_name,
         "avatarUrl":     avatar_url,
         "topic":         topic,
-        "lastEventDate": last_event_date,
         "inviter":       inviter,
         "leftEvent":     left_event
     })
@@ -72,10 +71,10 @@ function onTimelineEventReceived(
         "date":         date,
         "content":      content,
         "contentType":  content_type,
+        "isLocalEcho":  is_local_echo,
         "showNameLine": show_name_line,
         "translatable": translatable,
-        "targetUserId": target_user_id,
-        "isLocalEcho":  is_local_echo,
+        "targetUserId": target_user_id || "",
     }
 
     // Replace any matching local echo

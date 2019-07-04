@@ -17,7 +17,6 @@ class RoomUpdated(Event):
     display_name:    Optional[str]      = None
     avatar_url:      Optional[str]      = None
     topic:           Optional[str]      = None
-    last_event_date: Optional[datetime] = None
 
     inviter:    Optional[str]            = None
     left_event: Optional[Dict[str, str]] = None
