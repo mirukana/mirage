@@ -82,13 +82,13 @@ function onTimelineEventReceived(
         "content":      content,
         "isLocalEcho":  true
     }, 1, 500)
+
     if (found.length > 0) {
         timelines.set(found[0], item)
-        return
+    } else {
+        // Multiple clients will emit duplicate events with the same eventId
+        timelines.upsert({"eventId": event_id},  item, true, 500)
     }
-
-    // Multiple clients will emit duplicate events with the same eventId
-    timelines.upsert({"eventId": event_id},  item, true, 500)
 }
 
 
