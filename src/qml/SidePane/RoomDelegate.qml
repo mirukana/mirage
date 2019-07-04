@@ -39,16 +39,9 @@ MouseArea {
             HRichLabel {
                 id: subtitleLabel
                 visible: Boolean(text)
+                textFormat: Text.StyledText
                 text: {
-                    for (var i = 0; i < models.timelines.count; i++) {
-                        var item = models.timelines.get(i) // TODO: standardize
-
-                        if (item.roomId == model.roomId) {
-                            var ev = item
-                            break
-                        }
-                    }
-
+                    var ev = models.timelines.lastEventOf(model.roomId)
                     if (! ev) { return "" }
 
                     if (! Utils.eventIsMessage(ev)) {
@@ -60,7 +53,6 @@ MouseArea {
                         ev.senderId
                     ) + ": " + py.callSync("inlinify", [ev.content])
                 }
-                textFormat: Text.StyledText
 
                 font.pixelSize: HStyle.fontSize.small
                 elide: Text.ElideRight

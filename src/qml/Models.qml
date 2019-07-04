@@ -41,6 +41,15 @@ QtObject {
     property HListModel rooms: HListModel {}
 
     property HListModel timelines: HListModel {
+        function lastEventOf(room_id) {
+            // Return an event item or undefined if none found
+
+            for (var i = 0; i < timelines.count; i++) {
+                var item = timelines.get(i) // TODO: standardize
+                if (item.roomId == room_id) { return item }
+            }
+        }
+
         sorters: RoleSorter {
             roleName: "date"
             sortOrder: Qt.DescendingOrder
