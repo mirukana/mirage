@@ -20,7 +20,7 @@ function hueFrom(string) {
 }
 
 
-function avatarHue(name) {
+function avatarHue(name) {  // TODO: bad name
    return Qt.hsla(
        hueFrom(name),
        HStyle.avatar.background.saturation,
@@ -30,13 +30,20 @@ function avatarHue(name) {
 }
 
 
-function nameHue(name) {
+function nameHue(name) {  // TODO: bad name
     return Qt.hsla(
         hueFrom(name),
         HStyle.displayName.saturation,
         HStyle.displayName.lightness,
         1
     )
+}
+
+
+function coloredNameHtml(name, alt_id) {
+        return "<font color='" + nameHue(name || stripUserId(alt_id)) + "'>" +
+               escapeHtml(name || alt_id) +
+               "</font>"
 }
 
 
@@ -50,38 +57,31 @@ function escapeHtml(string) {
 }
 
 
+function eventIsMessage(ev) {
+    return /^RoomMessage($|[A-Z])/.test(ev.eventType)
+}
+
+
 function translatedEventContent(ev) {
     // ev: models.timelines item
     if (ev.translatable == false) { return ev.content }
 
     // %S → sender display name
     var name = models.users.getUser(ev.senderId).displayName
-    var text = ev.content.replace(
-        "%S",
-        "<font color='" + nameHue(name || stripUserId(ev.senderId)) + "'>" +
-        escapeHtml(name || ev.senderId) +
-        "</font>"
-    )
+    var text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
 
     // %T → target (event state_key) display name
     if (ev.targetUserId) {
-        var target_name = models.users.getUser(ev.targetUserId).displayName
-        text = text.replace(
-            "%T",
-            "<font color='" +
-            nameHue(target_name || stripUserId(ev.targetUserId)) +
-            "'>" +
-            escapeHtml(target_name || ev.targetUserId) +
-            "</font>"
-        )
+        var tname = models.users.getUser(ev.targetUserId).displayName
+        text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
     }
 
     text = qsTr(text)
-    if (model.translatable == true) { return text }
+    if (ev.translatable == true) { return text }
 
     // Else, model.translatable should be an array of args
-    for (var i = 0; model.translatable.length; i++) {
-        text = text.arg(model.translatable[i])
+    for (var i = 0; ev.translatable.length; i++) {
+        text = text.arg(ev.translatable[i])
     }
     return text
 }

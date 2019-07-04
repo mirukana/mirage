@@ -6,6 +6,7 @@ function onAccountDeleted(user_id) {
     models.accounts.popWhere({"userId": user_id}, 1)
 }
 
+// TODO: get updated from nio rooms
 function onUserUpdated(user_id, display_name, avatar_url, status_message) {
     models.users.upsert({"userId": user_id}, {
         "userId":        user_id,

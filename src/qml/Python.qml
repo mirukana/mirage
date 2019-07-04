@@ -12,6 +12,10 @@ Python {
     signal willLoadAccounts(bool will)
     property bool loadingAccounts: false
 
+    function callSync(name, args) {
+        return call_sync("APP.backend." + name, args)
+    }
+
     function callCoro(name, args, kwargs, callback) {
         call("APP.call_backend_coro", [name, args, kwargs], function(uuid){
             pendingCoroutines[uuid] = callback || function() {}

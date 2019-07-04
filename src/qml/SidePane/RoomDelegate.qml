@@ -36,10 +36,30 @@ MouseArea {
                 Layout.maximumWidth: parent.width
             }
 
-            HLabel {
+            HRichLabel {
                 id: subtitleLabel
                 visible: Boolean(text)
-                //text: models.timelines.getWhere({"roomId": model.roomId}, 1)[0].content
+                text: {
+                    for (var i = 0; i < models.timelines.count; i++) {
+                        var item = models.timelines.get(i) // TODO: standardize
+
+                        if (item.roomId == model.roomId) {
+                            var ev = item
+                            break
+                        }
+                    }
+
+                    if (! ev) { return "" }
+
+                    if (! Utils.eventIsMessage(ev)) {
+                        return Utils.translatedEventContent(ev)
+                    }
+
+                    return Utils.coloredNameHtml(
+                        models.users.getUser(ev.senderId).displayName,
+                        ev.senderId
+                    ) + ": " + py.callSync("inlinify", [ev.content])
+                }
                 textFormat: Text.StyledText
 
                 font.pixelSize: HStyle.fontSize.small

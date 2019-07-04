@@ -7,6 +7,7 @@ import mistune
 from lxml.html import HtmlElement, etree  # nosec
 
 import html_sanitizer.sanitizer as sanitizer
+from html_sanitizer.sanitizer import Sanitizer
 
 
 class HtmlFilter:
@@ -20,7 +21,8 @@ class HtmlFilter:
 
 
     def __init__(self) -> None:
-        self._sanitizer = sanitizer.Sanitizer(self.sanitizer_settings)
+        self._sanitizer        = Sanitizer(self.sanitize_settings())
+        self._inline_sanitizer = Sanitizer(self.sanitize_settings(inline=True))
 
         # The whitespace remover doesn't take <pre> into account
         sanitizer.normalize_overall_whitespace         = lambda html: html
@@ -32,6 +34,10 @@ class HtmlFilter:
 
     def from_markdown(self, text: str) -> str:
         return self.filter(self._markdown_to_html(text))
+
+
+    def filter_inline(self, html: str) -> str:
+        return self._inline_sanitizer.sanitize(html)
 
 
     def filter(self, html: str) -> str:
@@ -53,33 +59,39 @@ class HtmlFilter:
         return str(result, "utf-8").strip("\n")
 
 
-    @property
-    def sanitizer_settings(self) -> dict:
+    def sanitize_settings(self, inline: bool = False) -> dict:
         # https://matrix.org/docs/spec/client_server/latest.html#m-room-message-msgtypes
+        # TODO: mx-reply, audio, video
+
+        inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
+        tags        = inline_tags | {
+            "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
+            "p", "ul", "ol", "li", "hr", "br",
+            "table", "thead", "tbody", "tr", "th", "td",
+            "pre", "img",
+        }
+
+        inlines_attributes = {
+            # TODO: translate font attrs to qt html subset
+            "font": {"data-mx-bg-color", "data-mx-color"},
+            "a":    {"href"},
+            "code": {"class"},
+        }
+        attributes = {**inlines_attributes, **{
+            "img":  {"width", "height", "alt", "title", "src"},
+            "ol":   {"start"},
+        }}
+
         return {
-            "tags": {
-                # TODO: mx-reply, audio, video
-                "font", "h1", "h2", "h3", "h4", "h5", "h6",
-                "blockquote", "p", "a", "ul", "ol", "sup", "sub", "li",
-                "b", "i", "s", "u", "code", "hr", "br",
-                "table", "thead", "tbody", "tr", "th", "td",
-                "pre", "img",
-            },
-            "attributes": {
-                # TODO: translate font attrs to qt html subset
-                "font": {"data-mx-bg-color", "data-mx-color"},
-                "a":    {"href"},
-                "img":  {"width", "height", "alt", "title", "src"},
-                "ol":   {"start"},
-                "code": {"class"},
-            },
-            "empty": {"hr", "br", "img"},
-            "separate": {
+            "tags": inline_tags if inline else tags,
+            "attributes": inlines_attributes if inline else attributes,
+            "empty": {} if inline else {"hr", "br", "img"},
+            "separate": {"a"} if inline else {
                 "a", "p", "li", "table", "tr", "th", "td", "br", "hr"
             },
             "whitespace": {},
             "add_nofollow": False,
-            "autolink": {  # FIXME: arg dict not working
+            "autolink": {
                 "link_regexes": self.link_regexes,
                 "avoid_hosts": [],
             },
@@ -107,7 +119,8 @@ class HtmlFilter:
         if el.tag != "font":
             return el
 
-        if not self.sanitizer_settings["attributes"]["font"] & set(el.keys()):
+        settings = self.sanitize_settings()
+        if not settings["attributes"]["font"] & set(el.keys()):
             el.clear()
 
         return el

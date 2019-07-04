@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
@@ -7,6 +8,7 @@ from atomicfile import AtomicFile
 
 from .app import App
 from .events import users
+from .html_filter import HTML_FILTER
 from .matrix_client import MatrixClient
 
 SavedAccounts = Dict[str, Dict[str, str]]
@@ -127,3 +129,16 @@ class Backend:
 
             with AtomicFile(self.saved_accounts_path, "w") as new:
                 new.write(js)
+
+
+    # General functions
+
+    async def request_user_update_event(self, user_id: str) -> None:
+        client = self.clients.get(user_id,
+                                  random.choice(tuple(self.clients.values())))
+        await client.request_user_update_event(user_id)
+
+
+    @staticmethod
+    def inlinify(html: str) -> str:
+        return HTML_FILTER.filter_inline(html)

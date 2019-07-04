@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
+import "../../utils.js" as Utils
 
 Column {
     id: roomEventDelegate
@@ -16,17 +17,12 @@ Column {
                 roomEventListView.model.get(model.index + nth) : null
     }
 
-    function isMessage(item) {
-        return /^RoomMessage($|[A-Z])/.test(item.eventType)
-    }
-
     property var previousItem: getPreviousItem()
     signal reloadPreviousItem()
     onReloadPreviousItem: previousItem = getPreviousItem()
 
     property var senderInfo: null
-    Component.onCompleted:
-        senderInfo = models.users.getUser(chatPage.userId, model.senderId)
+    Component.onCompleted: senderInfo = models.users.getUser(model.senderId)
 
     readonly property bool isOwn: chatPage.userId === model.senderId
 
@@ -36,7 +32,7 @@ Column {
     readonly property bool combine: Boolean(
         model.date &&
         previousItem && previousItem.eventType && previousItem.date &&
-        isMessage(previousItem) == isMessage(model) &&
+        Utils.eventIsMessage(previousItem) == Utils.eventIsMessage(model) &&
         ! talkBreak &&
         ! dayBreak &&
         previousItem.senderId === model.senderId &&
