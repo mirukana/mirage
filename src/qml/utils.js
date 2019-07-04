@@ -6,7 +6,7 @@ function stripUserId(user_id) {
 
 function stripRoomName(name) {
     // Remove leading # (aliases)
-    return name[0] == "#" ? name.substring(1) : name
+    return name[0] == "#" && name.length > 1 ? name.substring(1) : name
 }
 
 
