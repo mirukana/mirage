@@ -131,8 +131,7 @@ class HtmlFilter:
         width  = el.attrib.get("width", "256")
         height = el.attrib.get("height", "256")
 
-        if el.getparent().tag == "a" or el.tag != "img" or \
-           not self._is_image_path(link):
+        if el.getparent().tag == "a" or el.tag != "img":
             return el
 
         el.tag    = "a"

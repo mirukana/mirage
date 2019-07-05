@@ -18,9 +18,7 @@ OLD
 
 - Bug fixes
   - 100% CPU usage when hitting top edge to trigger messages loading
-  - Sending `![A picture](https://picsum.photos/256/256)` → not clickable?
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
-  - RoomEventsList scrolling when resizing the window
 
 - UI
   - Invite to room
@@ -70,6 +68,7 @@ OLD
   - See `Qt.callLater()` potential usages
   - Banner name color instead of bold
   - Animate RoomEventDelegate DayBreak apparition
+  - Room subtitle: show things like "*Image*" instead of blank, etc
 
 - Missing nio support
   - MatrixRoom invited members list
