@@ -1,5 +1,7 @@
+- invite/leave/forget backend funcs
 - license headers
-- replace "property var" by "property <object>" where applicable
+- replace "property var" by "property <object>" where applicable and
+  var by string and readonly
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
 - `pyotherside.atexit()`
 
@@ -69,7 +71,6 @@ OLD
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - See `Qt.callLater()` potential usages
-  - Banner name color instead of bold
   - Animate RoomEventDelegate DayBreak apparition
   - Room subtitle: show things like "*Image*" instead of blank, etc
 

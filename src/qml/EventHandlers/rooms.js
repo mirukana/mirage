@@ -1,5 +1,5 @@
 function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
-                       topic, inviter, left_event) {
+                       topic, inviter_id, left_event) {
 
     roomCategories.upsert({"userId": user_id, "name": category}, {
         "userId": user_id,
@@ -26,7 +26,7 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
             display_name = old_room.displayName
             avatar_url   = old_room.avatarUrl
             topic        = old_room.topic
-            inviter      = old_room.topic
+            inviter_id   = old_room.inviterId
         }
     }
 
@@ -37,7 +37,7 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
         "displayName":   display_name,
         "avatarUrl":     avatar_url,
         "topic":         topic,
-        "inviter":       inviter,
+        "inviterId":     inviter_id,
         "leftEvent":     left_event
     })
 }

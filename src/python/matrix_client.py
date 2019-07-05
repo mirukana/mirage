@@ -207,7 +207,7 @@ class MatrixClient(nio.AsyncClient):
                 display_name = self._get_room_name(room) or "",
                 avatar_url   = room.gen_avatar_url or "",
                 topic        = room.topic or "",
-                inviter      = room.inviter or "",
+                inviter_id   = room.inviter or "",
             )
 
         for room_id, info in resp.rooms.join.items():

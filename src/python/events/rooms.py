@@ -18,7 +18,7 @@ class RoomUpdated(Event):
     avatar_url:      str = ""
     topic:           str = ""
 
-    inviter:    str            = ""
+    inviter_id: str            = ""
     left_event: Dict[str, str] = field(default_factory=dict)
 
 

@@ -1,19 +1,23 @@
 import QtQuick 2.7
 import "../../Base"
+import "../../utils.js" as Utils
 
 Banner {
-    property var inviter: null
+    property string inviterId: ""
+
+    readonly property var inviterInfo:
+        inviterId ? users.getUser(inviterId) : null
 
     color: HStyle.chat.inviteBanner.background
 
-    // TODO: get disp name from users, inviter = userid  now
-    avatar.name: inviter ? inviter.displayname : ""
-    //avatar.imageUrl: inviter ? inviter.avatar_url : ""
+    avatar.name: inviterId ? inviterInfo.displayName : ""
+    avatar.imageUrl: inviterId ? inviterInfo.avatarUrl : ""
 
-    labelText:
-        (inviter ?
-         ("<b>" + inviter.displayname + "</b>") : qsTr("Someone")) +
-        " " + qsTr("invited you to join the room.")
+    labelText: qsTr("%1 invited you to join the room.").arg(
+        inviterId ?
+        Utils.coloredNameHtml(inviterInfo.displayName, inviterId) :
+        qsTr("Someone")
+    )
 
     buttonModel: [
         {
@@ -31,12 +35,18 @@ Banner {
     buttonCallbacks: {
         "accept": function(button) {
             button.loading = true
-            Backend.clients.get(chatPage.userId).joinRoom(chatPage.roomId)
+            py.callClientCoro(
+                chatPage.userId, "join", [chatPage.roomId], {},
+                function() { button.loading = false }
+            )
         },
 
         "decline": function(button) {
             button.loading = true
-            Backend.clients.get(chatPage.userId).leaveRoom(chatPage.roomId)
+            py.callClientCoro(
+                chatPage.userId, "room_leave", [chatPage.roomId], {},
+                function() { button.loading = false }
+            )
         }
     }
 }

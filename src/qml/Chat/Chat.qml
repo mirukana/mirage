@@ -57,10 +57,10 @@ HColumnLayout {
 
             //TypingMembersBar {}
 
-//            InviteBanner {
-                //visible: category === "Invites"
-                //inviter: roomInfo.inviter
-            //}
+            InviteBanner {
+                visible: category === "Invites"
+                inviterId: roomInfo.inviterId
+            }
 
             //UnknownDevicesBanner {
                 //visible: category == "Rooms" && hasUnknownDevices
