@@ -1,6 +1,7 @@
 - license headers
 - replace "property var" by "property <object>" where applicable
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
+- `pyotherside.atexit()`
 
 ideas
 (^/v) messages unread + messages still sending
@@ -17,7 +18,9 @@ OLD
   - Don't bake in size properties for components
 
 - Bug fixes
-  - 100% CPU usage when hitting top edge to trigger messages loading
+  - Past events loading (limit 100) freezes the GUI - need to move upsert func
+    to a WorkerScript
+  - Past events loading: text binding loop on name request
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI

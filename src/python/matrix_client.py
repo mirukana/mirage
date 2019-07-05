@@ -114,7 +114,7 @@ class MatrixClient(nio.AsyncClient):
         response = await self.get_profile(user_id)
 
         if isinstance(response, nio.ProfileGetError):
-            log.warning("Error getting profile for %r: %s", user_id, response)
+            log.warning("%s: %s", user_id, response)
 
         users.UserUpdated(
             user_id        = user_id,
@@ -122,6 +122,11 @@ class MatrixClient(nio.AsyncClient):
             avatar_url     = getattr(response, "avatar_url", "") or "",
             status_message = "",  # TODO
         )
+
+
+    @property
+    def all_rooms(self) -> Dict[str, MatrixRoom]:
+        return {**self.invited_rooms, **self.rooms}
 
 
     async def send_markdown(self, room_id: str, text: str) -> None:
@@ -147,6 +152,35 @@ class MatrixClient(nio.AsyncClient):
 
             if isinstance(response, nio.RoomSendError):
                 log.error("Failed to send message: %s", response)
+
+
+    async def load_past_events(self, room_id: str, limit: int = 100) -> bool:
+        if room_id in self.backend.fully_loaded_rooms:
+            return False
+
+        response = await self.room_messages(
+            room_id = room_id,
+            start   = self.backend.past_tokens[room_id],
+            limit   = limit,
+        )
+
+        more_to_load = True
+        print(len(response.chunk))
+
+        if self.backend.past_tokens[room_id] == response.end:
+            self.backend.fully_loaded_rooms.add(room_id)
+            more_to_load = False
+
+        self.backend.past_tokens[room_id] = response.end
+
+        for event in response.chunk:
+            for cb in self.event_callbacks:
+                if (cb.filter is None or isinstance(event, cb.filter)):
+                    await cb.func(
+                        self.all_rooms[room_id], event, from_past=True
+                    )
+
+        return more_to_load
 
 
     # Callbacks for nio responses
@@ -176,8 +210,11 @@ class MatrixClient(nio.AsyncClient):
                 inviter      = room.inviter or "",
             )
 
-        for room_id, _ in resp.rooms.join.items():
+        for room_id, info in resp.rooms.join.items():
             room = self.rooms[room_id]
+
+            if room_id not in self.backend.past_tokens:
+                self.backend.past_tokens[room_id] = info.timeline.prev_batch
 
             rooms.RoomUpdated(
                 user_id      = self.user_id,
@@ -208,7 +245,9 @@ class MatrixClient(nio.AsyncClient):
     # %S = sender's displayname
     # %T = target (ev.state_key)'s displayname
 
-    async def onRoomMessageText(self, room, ev) -> None:
+    # pylint: disable=unused-argument
+
+    async def onRoomMessageText(self, room, ev, from_past=False) -> None:
         co = HTML_FILTER.filter(
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else html.escape(ev.body)
@@ -217,26 +256,27 @@ class MatrixClient(nio.AsyncClient):
         TimelineMessageReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomCreateEvent(self, room, ev) -> None:
+    async def onRoomCreateEvent(self, room, ev, from_past=False) -> None:
         co = "%S allowed users on other matrix servers to join this room." \
              if ev.federate else \
              "%S blocked users on other matrix servers from joining this room."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomGuestAccessEvent(self, room, ev) -> None:
+    async def onRoomGuestAccessEvent(self, room, ev, from_past=False) -> None:
         allowed = "allowed" if ev.guest_access else "forbad"
         co      = f"%S {allowed} guests to join the room."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomJoinRulesEvent(self, room, ev) -> None:
+    async def onRoomJoinRulesEvent(self, room, ev, from_past=False) -> None:
         access = "public" if ev.join_rule == "public" else "invite-only"
         co     = f"%S made the room {access}."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomHistoryVisibilityEvent(self, room, ev) -> None:
+    async def onRoomHistoryVisibilityEvent(self, room, ev, from_past=False
+                                          ) -> None:
         if ev.history_visibility == "shared":
             to = "all room members"
         elif ev.history_visibility == "world_readable":
@@ -254,7 +294,7 @@ class MatrixClient(nio.AsyncClient):
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onPowerLevelsEvent(self, room, ev) -> None:
+    async def onPowerLevelsEvent(self, room, ev, from_past=False) -> None:
         co = "%S changed the room's permissions."  # TODO: improve
         TimelineEventReceived.from_nio(room, ev, content=co)
 
@@ -322,9 +362,8 @@ class MatrixClient(nio.AsyncClient):
         return None
 
 
-    async def onRoomMemberEvent(self, room, ev) -> None:
-        # TODO: ignore for past events
-        if ev.content["membership"] != "leave":
+    async def onRoomMemberEvent(self, room, ev, from_past=False) -> None:
+        if not from_past and ev.content["membership"] != "leave":
             users.UserUpdated(
                 user_id        = ev.state_key,
                 display_name   = ev.content["displayname"] or "",
@@ -338,40 +377,40 @@ class MatrixClient(nio.AsyncClient):
             TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomAliasEvent(self, room, ev) -> None:
+    async def onRoomAliasEvent(self, room, ev, from_past=False) -> None:
         co = f"%S set the room's main address to {ev.canonical_alias}."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomNameEvent(self, room, ev) -> None:
+    async def onRoomNameEvent(self, room, ev, from_past=False) -> None:
         co = f"%S changed the room's name to \"{ev.name}\"."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomTopicEvent(self, room, ev) -> None:
+    async def onRoomTopicEvent(self, room, ev, from_past=False) -> None:
         co = f"%S changed the room's topic to \"{ev.topic}\"."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onRoomEncryptionEvent(self, room, ev) -> None:
+    async def onRoomEncryptionEvent(self, room, ev, from_past=False) -> None:
         co = f"%S turned on encryption for this room."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onOlmEvent(self, room, ev) -> None:
+    async def onOlmEvent(self, room, ev, from_past=False) -> None:
         co = f"%S hasn't sent your device the keys to decrypt this message."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onMegolmEvent(self, room, ev) -> None:
-        await self.onOlmEvent(room, ev)
+    async def onMegolmEvent(self, room, ev, from_past=False) -> None:
+        await self.onOlmEvent(room, ev, from_past=False)
 
 
-    async def onBadEvent(self, room, ev) -> None:
+    async def onBadEvent(self, room, ev, from_past=False) -> None:
         co = f"%S sent a malformed event."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def onUnknownBadEvent(self, room, ev) -> None:
+    async def onUnknownBadEvent(self, room, ev, from_past=False) -> None:
         co = f"%S sent an event this client doesn't understand."
         TimelineEventReceived.from_nio(room, ev, content=co)

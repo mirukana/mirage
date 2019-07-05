@@ -34,15 +34,23 @@ HRectangle {
         // reloaded from network.
         cacheBuffer: height * 6
 
-        // Declaring this "alias" provides the on... signal
+        // Declaring this as "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
-
+        property bool canLoad: true
         property int zz: 0
+
         onYPosChanged: {
-            if (chatPage.category != "Invites" && yPos <= 0.1) {
+            if (chatPage.category != "Invites" && canLoad && yPos <= 0.1) {
                 zz += 1
-                print(zz)
-                //Backend.loadPastEvents(chatPage.roomId)
+                print(canLoad, zz)
+                canLoad = false
+                py.callClientCoro(
+                    chatPage.userId,
+                    "load_past_events",
+                    [chatPage.roomId],
+                    {},
+                    function(more_to_load) { canLoad = more_to_load }
+                )
             }
         }
     }

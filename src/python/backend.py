@@ -2,7 +2,7 @@ import asyncio
 import json
 import random
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Set, Tuple
 
 from atomicfile import AtomicFile
 
@@ -18,7 +18,11 @@ CONFIG_LOCK   = asyncio.Lock()
 class Backend:
     def __init__(self, app: App) -> None:
         self.app = app
+
         self.clients: Dict[str, MatrixClient] = {}
+
+        self.past_tokens:        Dict[str, str] =  {}    # {room_id: token}
+        self.fully_loaded_rooms: Set[str]       = set()  # {room_id}
 
 
     def __repr__(self) -> str:
