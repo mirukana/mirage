@@ -52,25 +52,26 @@ HRectangle {
                 }
             }
 
-            Keys.onReturnPressed: {
-                event.accepted = true
+            Component.onCompleted: {
+                area.Keys.onReturnPressed.connect(function (event) {
+                    event.accepted = true
 
-                if (event.modifiers & Qt.ShiftModifier ||
-                    event.modifiers & Qt.ControlModifier ||
-                    event.modifiers & Qt.AltModifier) {
-                    textArea.insert(textArea.cursorPosition, "\n")
-                    return
-                }
+                    if (event.modifiers & Qt.ShiftModifier ||
+                        event.modifiers & Qt.ControlModifier ||
+                        event.modifiers & Qt.AltModifier) {
+                        textArea.insert(textArea.cursorPosition, "\n")
+                        return
+                    }
 
-                if (textArea.text === "") { return }
+                    if (textArea.text === "") { return }
 
-                var args = [chatPage.roomId, textArea.text]
-                py.callClientCoro(chatPage.userId, "send_markdown", args)
-                area.clear()
+                    var args = [chatPage.roomId, textArea.text]
+                    py.callClientCoro(chatPage.userId, "send_markdown", args)
+                    area.clear()
+                })
+
+                area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
             }
-
-            // Numpad enter
-            Keys.onEnterPressed: Keys.onReturnPressed(event)
         }
     }
 }

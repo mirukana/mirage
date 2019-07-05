@@ -27,7 +27,6 @@ ScrollView {
             color: HStyle.controls.textArea.background
         }
 
-        Keys.forwardTo: [scrollView]
+        //Keys.forwardTo: [scrollView]
     }
 }
-
