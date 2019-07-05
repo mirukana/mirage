@@ -9,7 +9,7 @@ QtObject {
     readonly property QtObject fontSize: QtObject {
         property int smallest: 6
         property int smaller: 8
-        property int small: 12
+        property int small: 13
         property int normal: 16
         property int big: 24
         property int bigger: 32
