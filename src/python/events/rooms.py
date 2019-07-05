@@ -11,12 +11,13 @@ from .event import AutoStrEnum, Event
 
 @dataclass
 class RoomUpdated(Event):
-    user_id:         str = field()
-    category:        str = field()
-    room_id:         str = field()
-    display_name:    str = ""
-    avatar_url:      str = ""
-    topic:           str = ""
+    user_id:        str           = field()
+    category:       str           = field()
+    room_id:        str           = field()
+    display_name:   str           = ""
+    avatar_url:     str           = ""
+    topic:          str           = ""
+    typing_members: Sequence[str] = ()
 
     inviter_id: str            = ""
     left_event: Dict[str, str] = field(default_factory=dict)

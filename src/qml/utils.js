@@ -1,3 +1,17 @@
+function arrayToModelItem(keys_name, array) {
+    // Convert an array to an object suitable to be in a model, example:
+    // [1, 2, 3] → [{keys_name: 1}, {keys_name: 2}, {keys_name: 3}]
+    var items = []
+
+    for (var i = 0; i < array.length; i++) {
+        var obj        = {}
+        obj[keys_name] = array[i]
+        items.push(obj)
+    }
+    return items
+}
+
+
 function stripUserId(user_id) {
     // Remove leading @
     return user_id.substring(1)

@@ -55,7 +55,7 @@ HColumnLayout {
                 Layout.fillHeight: true
             }
 
-            //TypingMembersBar {}
+            TypingMembersBar {}
 
             InviteBanner {
                 visible: category === "Invites"

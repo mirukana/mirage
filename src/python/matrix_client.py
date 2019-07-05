@@ -7,7 +7,7 @@ import platform
 from contextlib import suppress
 from datetime import datetime
 from types import ModuleType
-from typing import DefaultDict, Dict, Optional, Type
+from typing import DefaultDict, Dict, List, Optional, Type
 from uuid import uuid4
 
 import nio
@@ -216,13 +216,19 @@ class MatrixClient(nio.AsyncClient):
             if room_id not in self.backend.past_tokens:
                 self.backend.past_tokens[room_id] = info.timeline.prev_batch
 
+            typing: List[str] = []
+            for ev in info.ephemeral:
+                if isinstance(ev, nio.TypingNoticeEvent):
+                    typing = ev.users
+
             rooms.RoomUpdated(
-                user_id      = self.user_id,
-                category     = "Rooms",
-                room_id      = room_id,
-                display_name = self._get_room_name(room) or "",
-                avatar_url   = room.gen_avatar_url or "",
-                topic        = room.topic or "",
+                user_id        = self.user_id,
+                category       = "Rooms",
+                room_id        = room_id,
+                display_name   = self._get_room_name(room) or "",
+                avatar_url     = room.gen_avatar_url or "",
+                topic          = room.topic or "",
+                typing_members = typing,
             )
 
         for room_id, _ in resp.rooms.leave.items():

@@ -1,6 +1,27 @@
-function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
-                       topic, inviter_id, left_event) {
+function typingTextFor(members, our_user_id) {
+    var names = []
 
+    for (var i = 0; i < members.length; i++) {
+        if (members[i] != our_user_id) {
+            names.push(users.getUser(members[i]).displayName)
+        }
+    }
+
+    if (names.length == 0) { return "" }
+    if (names.length == 1) { return qsTr("%1 is typing...").arg(names[0]) }
+
+    var text = qsTr("%1 and %2 are typing...")
+
+    if (names.length == 2) { return text.arg(names[0]).arg(names[1]) }
+
+    return text.arg(names.slice(0, -1).join(", ")).arg(names.slice(-1)[0])
+}
+
+
+function onRoomUpdated(
+    user_id, category, room_id, display_name, avatar_url, topic,
+    typing_members, inviter_id, left_event
+) {
     roomCategories.upsert({"userId": user_id, "name": category}, {
         "userId": user_id,
         "name":   category
@@ -31,14 +52,15 @@ function onRoomUpdated(user_id, category, room_id, display_name, avatar_url,
     }
 
     rooms.upsert(roles(category), {
-        "userId":        user_id,
-        "category":      category,
-        "roomId":        room_id,
-        "displayName":   display_name,
-        "avatarUrl":     avatar_url,
-        "topic":         topic,
-        "inviterId":     inviter_id,
-        "leftEvent":     left_event
+        "userId":      user_id,
+        "category":    category,
+        "roomId":      room_id,
+        "displayName": display_name,
+        "avatarUrl":   avatar_url,
+        "topic":       topic,
+        "typingText":  typingTextFor(typing_members, user_id),
+        "inviterId":   inviter_id,
+        "leftEvent":   left_event,
     })
 }
 
@@ -98,3 +120,7 @@ function onTimelineEventReceived(
 
 
 var onTimelineMessageReceived = onTimelineEventReceived
+
+
+function onTypingNoticeEvent(room_id, members) {
+}

@@ -39,21 +39,3 @@ function getLeftBannerAvatarName(leftEvent, accountId) {
 
     return Backend.users.get(leftEvent.sender).displayName.value
 }
-
-
-function getTypingMembersText(users, ourAccountId) {
-    var names = []
-
-    for (var i = 0; i < users.length; i++) {
-        if (users[i] !== ourAccountId) {
-            names.push(Backend.users.get(users[i]).displayName.value)
-        }
-    }
-
-    if (names.length < 1) { return "" }
-
-    return "🖋 " +
-           [names.slice(0, -1).join(", "), names.slice(-1)[0]]
-           .join(names.length < 2 ? "" : " and ") +
-           (names.length > 1 ? " are" : " is") + " typing…"
-}
