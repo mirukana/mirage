@@ -7,4 +7,4 @@
 
 find src harmonyqml.pro -type f |
 entr -cdnr sh -c \
-    'qmake CONFIG="dev no_embedded" && make && ./harmonyqml --debug'
+    'qmake CONFIG+="dev no_embedded" && make && ./harmonyqml --debug'
