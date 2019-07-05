@@ -16,9 +16,9 @@ HRectangle {
             Layout.fillHeight: true
 
             spacing: collapsed ? 0 : normalSpacing * 3
-            topMargin: normalSpacing
-            bottomMargin: normalSpacing
-            Layout.leftMargin: normalSpacing
+            topMargin: collapsed ? 0 : normalSpacing
+            bottomMargin: topMargin
+            Layout.leftMargin: topMargin
 
             Behavior on spacing {
                 NumberAnimation { duration: HStyle.animationDuration }

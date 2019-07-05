@@ -13,7 +13,7 @@ MouseArea {
 
     HRowLayout {
         width: parent.width
-        spacing: sidePane.normalSpacing
+        spacing: sidePane.collapsed ? 0 : sidePane.normalSpacing
 
         HAvatar {
             id: roomAvatar

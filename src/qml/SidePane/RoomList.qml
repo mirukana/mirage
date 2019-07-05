@@ -8,7 +8,7 @@ HListView {
     property string category: ""
 
     id: roomList
-    spacing: sidePane.normalSpacing
+    spacing: sidePane.collapsed ? 0 : sidePane.normalSpacing
 
     model: SortFilterProxyModel {
         sourceModel: rooms

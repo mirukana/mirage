@@ -4,6 +4,8 @@
   var by string and readonly
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
 - `pyotherside.atexit()`
+- way to put sidepane back to auto-sizing (snap)
+- better look for arrows when sidepane collapsed
 
 ideas
 (^/v) messages unread + messages still sending
