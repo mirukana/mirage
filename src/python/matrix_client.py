@@ -154,7 +154,7 @@ class MatrixClient(nio.AsyncClient):
                 log.error("Failed to send message: %s", response)
 
 
-    async def load_past_events(self, room_id: str, limit: int = 100) -> bool:
+    async def load_past_events(self, room_id: str, limit: int = 25) -> bool:
         if room_id in self.backend.fully_loaded_rooms:
             return False
 
