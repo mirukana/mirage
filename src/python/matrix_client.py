@@ -143,7 +143,10 @@ class MatrixClient(nio.AsyncClient):
         )
 
         async with self.send_locks[room_id]:
-            print(await self.room_send(room_id, "m.room.message", content))
+            response = await self.room_send(room_id, "m.room.message", content)
+
+            if isinstance(response, nio.RoomSendError):
+                log.error("Failed to send message: %s", response)
 
 
     # Callbacks for nio responses
@@ -192,6 +195,11 @@ class MatrixClient(nio.AsyncClient):
                 room_id  = room_id,
                 # left_event TODO
             )
+
+
+    async def onLimitExceededError(self, resp: nio.LimitExceededError) -> None:
+        # TODO: show something in the client
+        log.warning("Failed to send message: %s", resp)
 
 
     # Callbacks for nio events
