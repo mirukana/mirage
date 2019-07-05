@@ -10,15 +10,22 @@ HLabel {
         hoverEnabled: true
         propagateComposedEvents: true
 
-        onPositionChanged: function (event) {
-            cursorShape = label.linkAt(event.x, event.y) ?
+        onPositionChanged: function (mouse) {
+            mouse.accepted = false
+            cursorShape = label.linkAt(mouse.x, mouse.y) ?
                           Qt.PointingHandCursor : Qt.ArrowCursor
         }
 
-        onClicked: function(event) {
-            var link = label.linkAt(event.x, event.y)
-            event.accepted = Boolean(link)
+        onClicked: function(mouse) {
+            var link = label.linkAt(mouse.x, mouse.y)
+            mouse.accepted = Boolean(link)
             if (link) { Qt.openUrlExternally(link) }
         }
+
+        onPressAndHold: mouse.accepted = false
+        onDoubleClicked: mouse.accepted = false
+        onPressed: mouse.accepted = false
+        onReleased: mouse.accepted = false
+        onWheel: mouse.accepted = false
     }
 }
