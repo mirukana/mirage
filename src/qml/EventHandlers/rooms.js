@@ -75,7 +75,12 @@ function onTimelineEventReceived(
         "targetUserId": target_user_id,
     }
 
-    // Replace any matching local echo
+    if (is_local_echo) {
+        timelines.append(item)
+        return
+    }
+
+    // Replace first matching local echo
     var found = timelines.getIndices({
         "roomId":       room_id,
         "senderId":     sender_id,

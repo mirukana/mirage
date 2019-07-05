@@ -12,8 +12,11 @@ HListModel {
         }
     }
 
-    sorters: RoleSorter {
-        roleName: "date"
-        sortOrder: Qt.DescendingOrder
+    sorters: ExpressionSorter {
+        expression: modelLeft.isLocalEcho && ! modelRight.isLocalEcho ?
+                    true :
+                    ! modelLeft.isLocalEcho && modelRight.isLocalEcho ?
+                    false :
+                    modelLeft.date > modelRight.date // descending order
     }
 }

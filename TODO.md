@@ -5,6 +5,7 @@
 ideas
 (^/v) messages unread + messages still sending
 sticky avatar at top
+ability to cancel message being sent
 
 nio
 fix `RoomForgetResponse.create_error`
