@@ -8,7 +8,7 @@ Banner {
     readonly property var inviterInfo:
         inviterId ? users.getUser(inviterId) : null
 
-    color: HStyle.chat.inviteBanner.background
+    color: theme.chat.inviteBanner.background
 
     avatar.name: inviterId ? inviterInfo.displayName : ""
     avatar.imageUrl: inviterId ? inviterInfo.avatarUrl : ""

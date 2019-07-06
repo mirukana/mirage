@@ -7,7 +7,7 @@ HRectangle {
 
     property int space: 8
 
-    color: HStyle.chat.roomEventList.background
+    color: theme.chat.roomEventList.background
 
     HListView {
         id: roomEventListView

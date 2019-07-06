@@ -1,11 +1,11 @@
 import QtQuick.Controls 2.2
 
 Label {
-    font.family: HStyle.fontFamily.sans
-    font.pixelSize: HStyle.fontSize.normal
+    font.family: theme.fontFamily.sans
+    font.pixelSize: theme.fontSize.normal
     textFormat: Label.PlainText
 
-    color: HStyle.colors.foreground
+    color: theme.colors.foreground
     style: Label.Outline
-    styleColor: HStyle.colors.textBorder
+    styleColor: theme.colors.textBorder
 }

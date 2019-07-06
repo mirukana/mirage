@@ -18,13 +18,13 @@ Row {
 
     Rectangle {
         color: isOwn?
-               HStyle.chat.message.ownBackground :
-               HStyle.chat.message.background
+               theme.chat.message.ownBackground :
+               theme.chat.message.background
 
         //width: nameLabel.implicitWidth
         width: Math.min(
             roomEventListView.width - avatar.width - messageContent.spacing,
-            HStyle.fontSize.normal * 0.5 * 75,  // 600 with 16px font
+            theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
             Math.max(
                 nameLabel.visible ? nameLabel.implicitWidth : 0,
                 contentLabel.implicitWidth
@@ -60,16 +60,16 @@ Row {
                 id: contentLabel
                 text: Utils.translatedEventContent(model) +
                       // time
-                      "&nbsp;&nbsp;<font size=" + HStyle.fontSize.small +
-                      "px color=" + HStyle.chat.message.date + ">" +
+                      "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
+                      "px color=" + theme.chat.message.date + ">" +
                       Qt.formatDateTime(model.date, "hh:mm:ss") +
                       "</font>" +
                       // local echo icon
                       (model.isLocalEcho ?
-                       "&nbsp;<font size=" + HStyle.fontSize.small +
+                       "&nbsp;<font size=" + theme.fontSize.small +
                        "px>⏳</font>" : "")
 
-                color: HStyle.chat.message.body
+                color: theme.chat.message.body
                 wrapMode: Text.Wrap
 
                 leftPadding: horizontalPadding

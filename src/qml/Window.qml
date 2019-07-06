@@ -21,6 +21,8 @@ ApplicationWindow {
         window.ready = true
     }
 
+    Theme { id: theme }
+
     Python { id: py }
 
     Accounts       { id: accounts }

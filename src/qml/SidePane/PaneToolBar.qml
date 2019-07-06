@@ -7,18 +7,18 @@ HRowLayout {
     property alias roomFilter: filterField.text
 
     Layout.fillWidth: true
-    Layout.preferredHeight: HStyle.bottomElementsHeight
+    Layout.preferredHeight: theme.bottomElementsHeight
 
     HButton {
         iconName: "settings"
-        backgroundColor: HStyle.sidePane.settingsButton.background
+        backgroundColor: theme.sidePane.settingsButton.background
         Layout.preferredHeight: parent.height
     }
 
     HTextField {
         id: filterField
         placeholderText: qsTr("Filter rooms")
-        backgroundColor: HStyle.sidePane.filterRooms.background
+        backgroundColor: theme.sidePane.filterRooms.background
 
         Layout.fillWidth: true
         Layout.preferredHeight: parent.height

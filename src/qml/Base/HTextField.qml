@@ -4,13 +4,13 @@ import QtQuick.Controls 2.2
 TextField {
     property alias backgroundColor: textFieldBackground.color
 
-    font.family: HStyle.fontFamily.sans
-    font.pixelSize: HStyle.fontSize.normal
+    font.family: theme.fontFamily.sans
+    font.pixelSize: theme.fontSize.normal
 
-    color: HStyle.colors.foreground
+    color: theme.colors.foreground
     background: Rectangle {
         id: textFieldBackground
-        color: HStyle.controls.textField.background
+        color: theme.controls.textField.background
     }
 
     selectByMouse: true

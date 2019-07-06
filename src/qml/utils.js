@@ -37,9 +37,9 @@ function hueFrom(string) {
 function avatarColor(name) {
    return Qt.hsla(
        hueFrom(name),
-       HStyle.avatar.background.saturation,
-       HStyle.avatar.background.lightness,
-       HStyle.avatar.background.alpha
+       theme.avatar.background.saturation,
+       theme.avatar.background.lightness,
+       theme.avatar.background.alpha
    )
 }
 
@@ -47,8 +47,8 @@ function avatarColor(name) {
 function nameColor(name) {
     return Qt.hsla(
         hueFrom(name),
-        HStyle.displayName.saturation,
-        HStyle.displayName.lightness,
+        theme.displayName.saturation,
+        theme.displayName.lightness,
         1
     )
 }

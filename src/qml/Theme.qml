@@ -1,8 +1,7 @@
-pragma Singleton
 import QtQuick 2.7
 
 QtObject {
-    id: style
+    id: theme
 
     property int animationDuration: 100
 
@@ -82,7 +81,7 @@ QtObject {
         readonly property QtObject daybreak: QtObject {
             property color background: colors.background1
             property color foreground: colors.foreground
-            property int radius: style.radius
+            property int radius: theme.radius
         }
 
         readonly property QtObject inviteBanner: QtObject {
@@ -108,12 +107,12 @@ QtObject {
 
     readonly property QtObject box: QtObject {
         property color background: colors.background0
-        property int radius: style.radius
+        property int radius: theme.radius
     }
 
     readonly property QtObject avatar: QtObject {
         property int size: 36
-        property int radius: style.radius
+        property int radius: theme.radius
         property color letter: "white"
 
         readonly property QtObject background: QtObject {

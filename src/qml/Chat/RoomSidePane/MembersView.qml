@@ -28,7 +28,7 @@ HColumnLayout {
     HTextField {
         id: filterField
         placeholderText: qsTr("Filter members")
-        backgroundColor: HStyle.sidePane.filterRooms.background
+        backgroundColor: theme.sidePane.filterRooms.background
 
         // Without this, if the user types in the field, changes of room, then
         // comes back, the field will be empty but the filter still applied.
@@ -42,6 +42,6 @@ HColumnLayout {
         )
 
         Layout.fillWidth: true
-        Layout.preferredHeight: HStyle.bottomElementsHeight
+        Layout.preferredHeight: theme.bottomElementsHeight
     }
 }

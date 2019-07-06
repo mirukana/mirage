@@ -28,7 +28,7 @@ HScalingBox {
 
             HLabel {
                 id: interfaceTitle
-                font.pixelSize: HStyle.fontSize.big
+                font.pixelSize: theme.fontSize.big
             }
         }
 
@@ -52,7 +52,7 @@ HScalingBox {
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: HStyle.avatar.size
+                    Layout.preferredHeight: theme.avatar.size
                 }
             }
         }

@@ -18,13 +18,13 @@ ScrollView {
         selectByMouse: true
 
         wrapMode: TextEdit.Wrap
-        font.family: HStyle.fontFamily.sans
-        font.pixelSize: HStyle.fontSize.normal
+        font.family: theme.fontFamily.sans
+        font.pixelSize: theme.fontSize.normal
 
-        color: HStyle.colors.foreground
+        color: theme.colors.foreground
         background: Rectangle {
             id: textAreaBackground
-            color: HStyle.controls.textArea.background
+            color: theme.controls.textArea.background
         }
     }
 }

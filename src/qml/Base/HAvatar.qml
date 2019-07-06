@@ -5,7 +5,7 @@ import "../utils.js" as Utils
 Rectangle {
     property var name: null
     property var imageUrl: null
-    property int dimension: HStyle.avatar.size
+    property int dimension: theme.avatar.size
     property bool hidden: false
 
     width: dimension
@@ -15,7 +15,7 @@ Rectangle {
 
     opacity: hidden ? 0 : 1
 
-    color: name ? Utils.avatarColor(name) : HStyle.avatar.background.unknown
+    color: name ? Utils.avatarColor(name) : theme.avatar.background.unknown
 
     HLabel {
         z: 1
@@ -23,7 +23,7 @@ Rectangle {
         visible: ! hidden
 
         text: name ? name.charAt(0) : "?"
-        color: HStyle.avatar.letter
+        color: theme.avatar.letter
         font.pixelSize: parent.height / 1.4
     }
 

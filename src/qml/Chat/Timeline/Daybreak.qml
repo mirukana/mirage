@@ -3,7 +3,7 @@ import "../../Base"
 
 HNoticePage {
     text: model.date.toLocaleDateString()
-    color: HStyle.chat.daybreak.foreground
-    backgroundColor: HStyle.chat.daybreak.background
-    radius: HStyle.chat.daybreak.radius
+    color: theme.chat.daybreak.foreground
+    backgroundColor: theme.chat.daybreak.background
+    radius: theme.chat.daybreak.radius
 }

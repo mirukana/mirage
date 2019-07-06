@@ -3,7 +3,7 @@ import "../../Base"
 import "../utils.js" as ChatJS
 
 Banner {
-    color: HStyle.chat.unknownDevices.background
+    color: theme.chat.unknownDevices.background
 
     avatar.visible: false
     icon.svgName: "unknown_devices_warning"

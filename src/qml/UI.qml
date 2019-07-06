@@ -48,7 +48,7 @@ Item {
             onParentWidthChanged: if (uiSplitView.canAutoSize) { set_width() }
 
             width: set_width()  // Initial width
-            Layout.minimumWidth: HStyle.avatar.size
+            Layout.minimumWidth: theme.avatar.size
             Layout.maximumWidth: parent.width
 
             Behavior on width {
@@ -57,7 +57,7 @@ Item {
                     duration:
                         (uiSplitView.canAutoSize &&
                         parent.width * 0.3 < sidePane.collapseBelow * 1.2) ?
-                        HStyle.animationDuration : 0
+                        theme.animationDuration : 0
                 }
             }
         }

@@ -42,7 +42,7 @@ Column {
                 id: statusEdit
                 text: user.statusMessage
                 placeholderText: qsTr("Set status message")
-                font.pixelSize: HStyle.fontSize.small
+                font.pixelSize: theme.fontSize.small
                 background: null
 
                 padding: 0

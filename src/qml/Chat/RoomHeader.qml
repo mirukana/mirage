@@ -14,7 +14,7 @@ HRectangle {
     property bool collapseButtons: width < 400
 
     id: roomHeader
-    color: HStyle.chat.roomHeader.background
+    color: theme.chat.roomHeader.background
 
     HRowLayout {
         id: row
@@ -31,7 +31,7 @@ HRectangle {
         HLabel {
             id: roomName
             text: displayName
-            font.pixelSize: HStyle.fontSize.big
+            font.pixelSize: theme.fontSize.big
             elide: Text.ElideRight
             maximumLineCount: 1
 
@@ -46,7 +46,7 @@ HRectangle {
         HLabel {
             id: roomTopic
             text: topic
-            font.pixelSize: HStyle.fontSize.small
+            font.pixelSize: theme.fontSize.small
             elide: Text.ElideRight
             maximumLineCount: 1
 

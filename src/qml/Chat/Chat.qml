@@ -38,7 +38,7 @@ HColumnLayout {
         topic: roomInfo.topic
 
         Layout.fillWidth: true
-        Layout.preferredHeight: HStyle.avatar.size
+        Layout.preferredHeight: theme.avatar.size
     }
 
 
@@ -109,11 +109,11 @@ HColumnLayout {
                 //to: target.oldWidth
 
                 //onStopped: target.Layout.minimumWidth = Qt.binding(
-                    //function() { return HStyle.avatar.size }
+                    //function() { return theme.avatar.size }
                 //)
            //}
 
-            //collapsed: width < HStyle.avatar.size + 8
+            //collapsed: width < theme.avatar.size + 8
 
             //property bool wasSnapped: false
             //property int referenceWidth: roomHeader.buttonsWidth
@@ -142,7 +142,7 @@ HColumnLayout {
             //}
 
             //width: referenceWidth // Initial width
-            //Layout.minimumWidth: HStyle.avatar.size
+            //Layout.minimumWidth: theme.avatar.size
             //Layout.maximumWidth: parent.width
         //}
         }

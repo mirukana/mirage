@@ -11,8 +11,8 @@ Button {
     property var iconTransform: null
     property bool circle: false
 
-    property int fontSize: HStyle.fontSize.normal
-    property color backgroundColor: HStyle.controls.button.background
+    property int fontSize: theme.fontSize.normal
+    property color backgroundColor: theme.controls.button.background
     property alias overlayOpacity: buttonBackgroundOverlay.opacity
     property bool checkedLightens: false
 
@@ -42,7 +42,7 @@ Button {
         radius: circle ? height : 0
 
         Behavior on color {
-            ColorAnimation { duration: HStyle.animationDuration / 2 }
+            ColorAnimation { duration: theme.animationDuration / 2 }
         }
 
         Rectangle {
@@ -53,7 +53,7 @@ Button {
             opacity: 0
 
             Behavior on opacity {
-                HNumberAnimation { duration: HStyle.animationDuration / 2 }
+                HNumberAnimation { duration: theme.animationDuration / 2 }
             }
         }
     }

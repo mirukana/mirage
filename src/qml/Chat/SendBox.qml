@@ -8,11 +8,11 @@ HRectangle {
 
     id: root
     Layout.fillWidth: true
-    Layout.minimumHeight: HStyle.bottomElementsHeight
+    Layout.minimumHeight: theme.bottomElementsHeight
     Layout.preferredHeight: textArea.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2
-    color: HStyle.chat.sendBox.background
+    color: theme.chat.sendBox.background
 
     HRowLayout {
         anchors.fill: parent

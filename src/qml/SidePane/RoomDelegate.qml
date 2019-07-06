@@ -58,7 +58,7 @@ MouseArea {
                 visible: Boolean(text)
                 textFormat: Text.StyledText
 
-                font.pixelSize: HStyle.fontSize.small
+                font.pixelSize: theme.fontSize.small
                 elide: Text.ElideRight
                 maximumLineCount: 1
 

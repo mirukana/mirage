@@ -8,7 +8,7 @@ HRectangle {
     readonly property int baseWidth: baseHeight * widthForHeight
     readonly property int margins: baseHeight * 0.03
 
-    color: HStyle.box.background
+    color: theme.box.background
     height: Math.min(parent.height, baseHeight)
     width: Math.min(parent.width, baseWidth)
     scale: Math.max(1, parent.height / startScalingUpAboveHeight)

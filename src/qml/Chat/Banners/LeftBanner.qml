@@ -5,7 +5,7 @@ import "../utils.js" as ChatJS
 Banner {
     property var leftEvent: null
 
-    color: HStyle.chat.leftBanner.background
+    color: theme.chat.leftBanner.background
 
     avatar.name: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
     labelText: ChatJS.getLeftBannerText(leftEvent)
