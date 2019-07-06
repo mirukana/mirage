@@ -5,9 +5,13 @@ import "../Base"
 HRectangle {
     property alias label: typingLabel
 
+    color: HStyle.chat.typingMembers.background
     implicitWidth: childrenRect.width
     implicitHeight: typingLabel.text ? childrenRect.height : 0
-    color: HStyle.chat.typingMembers.background
+
+    Behavior on implicitHeight {
+        NumberAnimation { duration: HStyle.animationDuration }
+    }
 
     Row {
         spacing: 8
