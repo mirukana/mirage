@@ -1,5 +1,4 @@
 - daybreak color
-- rename component id that are named "root"
 - html links color
 - invite/leave/forget backend funcs
 - license headers

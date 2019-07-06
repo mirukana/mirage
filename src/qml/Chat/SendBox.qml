@@ -6,7 +6,7 @@ import "../utils.js" as Utils
 HRectangle {
     function setFocus() { textArea.forceActiveFocus() }
 
-    id: root
+    id: sendBox
     Layout.fillWidth: true
     Layout.minimumHeight: theme.bottomElementsHeight
     Layout.preferredHeight: textArea.implicitHeight
@@ -21,13 +21,13 @@ HRectangle {
             id: avatar
             name: chatPage.sender.displayName ||
                   Utils.stripUserId(chatPage.userId)
-            dimension: root.Layout.minimumHeight
+            dimension: sendBox.Layout.minimumHeight
         }
 
         HScrollableTextArea {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.topMargin: Math.max(0, root.Layout.minimumHeight - 34)
+            Layout.topMargin: Math.max(0, sendBox.Layout.minimumHeight - 34)
 
             id: textArea
             placeholderText: qsTr("Type a message...")
