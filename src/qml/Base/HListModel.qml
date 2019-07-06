@@ -7,7 +7,7 @@ SortFilterProxyModel {
 
     id: sortFilteredModel
 
-    property var model: ListModel {}
+    property ListModel model: ListModel {}
     sourceModel: model  // Can't assign a "ListModel {}" directly here
 
     function append(dict)         { return model.append(dict) }

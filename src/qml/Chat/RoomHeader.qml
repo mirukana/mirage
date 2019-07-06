@@ -4,7 +4,7 @@ import "../Base"
 import "../utils.js" as Utils
 
 HRectangle {
-    property var displayName: ""
+    property string displayName: ""
     property string topic: ""
 
     property alias buttonsImplicitWidth: viewButtons.implicitWidth
