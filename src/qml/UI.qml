@@ -76,10 +76,11 @@ Item {
                 )
             }
 
+            Component.onCompleted: initialRoomTimer.start()
             Timer {
                 // TODO: remove this, debug
                 id: initialRoomTimer
-                interval: 5000
+                interval: 3000
                 repeat: false
                 onTriggered: pageStack.showRoom(
                     "@test_mary:matrix.org",

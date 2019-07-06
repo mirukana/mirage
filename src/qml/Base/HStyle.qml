@@ -73,13 +73,10 @@ QtObject {
         }
 
         readonly property QtObject message: QtObject {
+            property color ownBackground: Qt.hsla(0.07, 0.4, 0.82, 0.7)
             property color background: colors.background1
             property color body: colors.foreground
             property color date: colors.foregroundDim
-        }
-
-        readonly property QtObject event: QtObject {
-            property color background: Qt.darker(colors.background1, 1.1)
         }
 
         readonly property QtObject daybreak: QtObject {
@@ -132,5 +129,5 @@ QtObject {
         property real lightness: 0.3
     }
 
-    property int bottomElementsHeight: 32
+    property int bottomElementsHeight: 36
 }

@@ -13,11 +13,13 @@ Row {
         hidden: combine
         name: senderInfo.displayName || Utils.stripUserId(model.senderId)
         dimension: model.showNameLine ? 48 : 28
+        visible: ! isOwn
     }
 
     Rectangle {
-        color: Utils.eventIsMessage(model) ?
-               HStyle.chat.message.background : HStyle.chat.event.background
+        color: isOwn?
+               HStyle.chat.message.ownBackground :
+               HStyle.chat.message.background
 
         //width: nameLabel.implicitWidth
         width: Math.min(
@@ -36,7 +38,8 @@ Row {
 
             HLabel {
                 width: parent.width
-                height: model.showNameLine && ! combine ? implicitHeight : 0
+                height: model.showNameLine && ! isOwn && ! combine ?
+                        implicitHeight : 0
                 visible: height > 0
 
                 id: nameLabel

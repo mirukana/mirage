@@ -5,7 +5,6 @@ CONFIG += warn_off c++11 release
 dev {
     CONFIG -= warn_off release
     CONFIG += debug
-    message($$CONFIG)
 }
 
 BUILD_DIR = build
