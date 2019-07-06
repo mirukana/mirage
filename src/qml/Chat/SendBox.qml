@@ -27,6 +27,7 @@ HRectangle {
         HScrollableTextArea {
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.topMargin: Math.max(0, root.Layout.minimumHeight - 34)
 
             id: textArea
             placeholderText: qsTr("Type a message...")

@@ -75,12 +75,6 @@ Column {
         width: roomEventDelegate.width
     }
 
-    Item { // TODO: put this in Daybreak.qml?
-        visible: dayBreak
-        width: parent.width
-        height: topPadding
-    }
-
     EventContent {
         anchors.right: isOwn ? parent.right : undefined
     }

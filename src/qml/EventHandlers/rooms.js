@@ -1,9 +1,15 @@
+//Qt.include("../utils.js")
+
+
 function typingTextFor(members, our_user_id) {
     var names = []
 
     for (var i = 0; i < members.length; i++) {
         if (members[i] != our_user_id) {
             names.push(users.getUser(members[i]).displayName)
+            //names.push(coloredNameHtml(
+                //users.getUser(members[i]).displayName, members[i]
+            //))
         }
     }
 

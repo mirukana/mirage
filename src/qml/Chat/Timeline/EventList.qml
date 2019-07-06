@@ -3,6 +3,8 @@ import SortFilterProxyModel 0.2
 import "../../Base"
 
 HRectangle {
+    property alias listView: roomEventListView
+
     property int space: 8
 
     color: HStyle.chat.roomEventList.background

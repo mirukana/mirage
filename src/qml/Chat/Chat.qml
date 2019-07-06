@@ -55,7 +55,10 @@ HColumnLayout {
                 Layout.fillHeight: true
             }
 
-            TypingMembersBar {}
+            TypingMembersBar {
+                Layout.fillWidth: true
+                //Layout.preferredHeight: text ? implicitHeight : 0
+            }
 
             InviteBanner {
                 visible: category === "Invites"

@@ -12,6 +12,7 @@ HRowLayout {
     HButton {
         iconName: "settings"
         backgroundColor: HStyle.sidePane.settingsButton.background
+        Layout.preferredHeight: parent.height
     }
 
     HTextField {

@@ -3,17 +3,30 @@ import QtQuick.Layouts 1.3
 import "../Base"
 
 HRectangle {
+    property alias label: typingLabel
+
+    implicitWidth: childrenRect.width
+    implicitHeight: typingLabel.text ? childrenRect.height : 0
     color: HStyle.chat.typingMembers.background
 
-    Layout.fillWidth: true
-    Layout.preferredHeight: usersLabel.text ? usersLabel.implicitHeight : 0
+    Row {
+        spacing: 8
+        leftPadding: spacing
+        rightPadding: spacing
+        topPadding: 2
+        bottomPadding: 2
 
-    HLabel {
-        id: usersLabel
-        anchors.fill: parent
+        HIcon {
+            svgName: "typing"  // TODO: animate
+            height: typingLabel.height
+        }
 
-        text: chatPage.roomInfo.typingText
-        elide: Text.ElideMiddle
-        maximumLineCount: 1
+        HLabel {
+            id: typingLabel
+            text: chatPage.roomInfo.typingText
+            textFormat: Text.StyledText
+            elide: Text.ElideMiddle
+            maximumLineCount: 1
+        }
     }
 }
