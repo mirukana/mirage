@@ -53,7 +53,7 @@ Button {
             opacity: 0
 
             Behavior on opacity {
-                NumberAnimation { duration: HStyle.animationDuration / 2 }
+                HNumberAnimation { duration: HStyle.animationDuration / 2 }
             }
         }
     }

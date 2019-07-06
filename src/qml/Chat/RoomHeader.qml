@@ -80,10 +80,7 @@ HRectangle {
             }
 
             Behavior on Layout.preferredWidth {
-                NumberAnimation {
-                    id: buttonsAnimation
-                    duration: HStyle.animationDuration
-                }
+                HNumberAnimation { id: buttonsAnimation }
             }
         }
     }
@@ -97,7 +94,7 @@ HRectangle {
         iconName: "reduced_room_buttons"
 
         Behavior on opacity {
-            NumberAnimation { duration: buttonsAnimation.duration * 2 }
+            HNumberAnimation { duration: buttonsAnimation.duration * 2 }
         }
     }
 }

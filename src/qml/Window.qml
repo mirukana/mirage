@@ -44,8 +44,6 @@ ApplicationWindow {
         scale: uiLoader.ready ? 1 : 0.5
         source: uiLoader.ready ? "UI.qml" : ""
 
-        Behavior on scale {
-            NumberAnimation { duration: HStyle.animationDuration }
-        }
+        Behavior on scale { HNumberAnimation {} }
     }
 }

@@ -52,7 +52,7 @@ Item {
             Layout.maximumWidth: parent.width
 
             Behavior on width {
-                NumberAnimation {
+                HNumberAnimation {
                     // Don't slow down the user manually resizing
                     duration:
                         (uiSplitView.canAutoSize &&

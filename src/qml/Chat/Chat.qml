@@ -88,11 +88,10 @@ HColumnLayout {
             //onActiveViewChanged:
                 //activeView ? restoreAnimation.start() : hideAnimation.start()
 
-            //NumberAnimation {
+            //HNumberAnimation {
                 //id: hideAnimation
                 //target: roomSidePane
                 //properties: "width"
-                //duration: HStyle.animationDuration
                 //from: target.width
                 //to: 0
 
@@ -102,11 +101,10 @@ HColumnLayout {
                 //}
             //}
 
-            //NumberAnimation {
+            //HNumberAnimation {
                 //id: restoreAnimation
                 //target: roomSidePane
                 //properties: "width"
-                //duration: HStyle.animationDuration
                 //from: 0
                 //to: target.oldWidth
 

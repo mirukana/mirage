@@ -1,24 +1,22 @@
 import QtQuick 2.7
 
 ListView {
-    property int duration: HStyle.animationDuration
-
     add: Transition {
-        NumberAnimation { properties: "x,y"; from: 100; duration: duration }
+        HNumberAnimation { properties: "x,y"; from: 100 }
     }
 
     move: Transition {
-        NumberAnimation { properties: "x,y"; duration: duration }
+        HNumberAnimation { properties: "x,y" }
     }
 
     displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: duration }
+        HNumberAnimation { properties: "x,y" }
     }
 
     remove: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; to: 0; duration: duration }
-            NumberAnimation { properties: "x,y"; to: 100; duration: duration }
+            HNumberAnimation { property: "opacity"; to: 0 }
+            HNumberAnimation { properties: "x,y"; to: 100 }
         }
     }
 }

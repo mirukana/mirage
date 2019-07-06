@@ -6,9 +6,7 @@ HColumnLayout {
     property bool collapsed: false
     property int normalSpacing: collapsed ? 0 : 8
 
-    Behavior on normalSpacing {
-        NumberAnimation { duration: HStyle.animationDuration }
-    }
+    Behavior on normalSpacing { HNumberAnimation {} }
 
     HListView {
         id: memberList

@@ -12,9 +12,7 @@ Column {
     height: normalHeight * opacity
     visible: opacity > 0
 
-    Behavior on opacity {
-        NumberAnimation { duration: HStyle.animationDuration }
-    }
+    Behavior on opacity { HNumberAnimation {} }
 
     property string roomListUserId: userId
     property bool expanded: true
@@ -51,10 +49,7 @@ Column {
         category: name
 
         Behavior on opacity {
-            NumberAnimation {
-                id: listHeightAnimation
-                duration: HStyle.animationDuration
-            }
+            HNumberAnimation { id: listHeightAnimation }
         }
     }
 }

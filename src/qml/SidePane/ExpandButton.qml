@@ -15,8 +15,6 @@ HButton {
         origin.x: expandButton.iconDimension / 2
         origin.y: expandButton.iconDimension / 2
         angle: expandableItem.expanded ? 90 : 180
-        Behavior on angle {
-            NumberAnimation { duration: HStyle.animationDuration }
-        }
+        Behavior on angle { HNumberAnimation {} }
     }
 }

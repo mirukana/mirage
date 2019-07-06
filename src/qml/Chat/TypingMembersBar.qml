@@ -9,9 +9,7 @@ HRectangle {
     implicitWidth: childrenRect.width
     implicitHeight: typingLabel.text ? childrenRect.height : 0
 
-    Behavior on implicitHeight {
-        NumberAnimation { duration: HStyle.animationDuration }
-    }
+    Behavior on implicitHeight { HNumberAnimation {} }
 
     Row {
         spacing: 8

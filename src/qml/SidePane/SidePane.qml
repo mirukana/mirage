@@ -20,9 +20,7 @@ HRectangle {
             bottomMargin: topMargin
             Layout.leftMargin: topMargin
 
-            Behavior on spacing {
-                NumberAnimation { duration: HStyle.animationDuration }
-            }
+            Behavior on spacing { HNumberAnimation {} }
         }
 
         PaneToolBar {
