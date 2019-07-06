@@ -240,9 +240,9 @@ class MatrixClient(nio.AsyncClient):
             )
 
 
-    async def onLimitExceededError(self, resp: nio.LimitExceededError) -> None:
+    async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
         # TODO: show something in the client
-        log.warning("Failed to send message: %s", resp)
+        log.warning(resp)
 
 
     # Callbacks for nio events
