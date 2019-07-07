@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import auto
-from typing import List, Sequence, Type, Union
+from typing import Any, Dict, List, Sequence, Type, Union
 
 from dataclasses import dataclass, field
 
@@ -12,14 +12,15 @@ from .event import AutoStrEnum, Event
 
 @dataclass
 class RoomUpdated(Event):
-    user_id:        str           = field()
-    category:       str           = field()
-    room_id:        str           = field()
-    display_name:   str           = ""
-    avatar_url:     str           = ""
-    topic:          str           = ""
-    typing_members: Sequence[str] = ()
-    inviter_id:     str           = ""
+    user_id:        str                      = field()
+    category:       str                      = field()
+    room_id:        str                      = field()
+    display_name:   str                      = ""
+    avatar_url:     str                      = ""
+    topic:          str                      = ""
+    members:        Sequence[Dict[str, Any]] = ()
+    typing_members: Sequence[str]            = ()
+    inviter_id:     str                      = ""
 
 
     @classmethod
@@ -42,6 +43,9 @@ class RoomUpdated(Event):
             name = room.group_name()
             name = "" if name == "Empty room?" else name
 
+        members = [{"userId": m.user_id, "powerLevel": m.power_level}
+                   for m in room.users.values()]
+
         return cls(
             user_id        = user_id,
             category       = category,
@@ -50,6 +54,7 @@ class RoomUpdated(Event):
             avatar_url     = room.gen_avatar_url or "",
             topic          = room.topic or "",
             inviter_id     = getattr(room, "inviter", "") or "",
+            members        = members,
             typing_members = typing,
         )
 

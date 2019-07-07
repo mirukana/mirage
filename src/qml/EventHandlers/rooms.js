@@ -35,7 +35,7 @@ function typingTextFor(members, our_user_id) {
 
 function onRoomUpdated(
     user_id, category, room_id, display_name, avatar_url, topic,
-    typing_members, inviter_id
+    members, typing_members, inviter_id
 ) {
     roomCategories.upsert({"userId": user_id, "name": category}, {
         "userId": user_id,
@@ -61,6 +61,7 @@ function onRoomUpdated(
         "displayName": display_name,
         "avatarUrl":   avatar_url,
         "topic":       topic,
+        "members":     members,
         "typingText":  typingTextFor(typing_members, user_id),
         "inviterId":   inviter_id
     }
