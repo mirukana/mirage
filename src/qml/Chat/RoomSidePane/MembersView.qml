@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
+import SortFilterProxyModel 0.2
 import "../../Base"
 
 HColumnLayout {
@@ -17,7 +18,19 @@ HColumnLayout {
         Layout.leftMargin: normalSpacing
         Layout.rightMargin: normalSpacing
 
-        model: chatPage.roomInfo.members
+        model: HListModel {
+            sourceModel: chatPage.roomInfo.members
+
+            proxyRoles: ExpressionRole {
+                name: "displayName"
+                expression: users.getUser(userId).displayName || userId
+            }
+
+            sorters: StringSorter {
+                roleName: "displayName"
+            }
+        }
+
         delegate: MemberDelegate {}
 
         Layout.fillWidth: true
