@@ -17,7 +17,7 @@ HColumnLayout {
         Layout.leftMargin: normalSpacing
         Layout.rightMargin: normalSpacing
 
-        model: chatPage.roomInfo.sortedMembers
+        model: chatPage.roomInfo.members
         delegate: MemberDelegate {}
 
         Layout.fillWidth: true
@@ -32,14 +32,14 @@ HColumnLayout {
 
         // Without this, if the user types in the field, changes of room, then
         // comes back, the field will be empty but the filter still applied.
-        Component.onCompleted:
-            text = Backend.clients.get(chatPage.userId).getMemberFilter(
-                chatPage.category, chatPage.roomId
-            )
+        //Component.onCompleted:
+            //text = Backend.clients.get(chatPage.userId).getMemberFilter(
+                //chatPage.category, chatPage.roomId
+            //)
 
-        onTextChanged: Backend.clients.get(chatPage.userId).setMemberFilter(
-            chatPage.category, chatPage.roomId, text
-        )
+        //onTextChanged: Backend.clients.get(chatPage.userId).setMemberFilter(
+            //chatPage.category, chatPage.roomId, text
+        //)
 
         Layout.fillWidth: true
         Layout.preferredHeight: theme.bottomElementsHeight

@@ -7,7 +7,7 @@ MouseArea {
     width: memberList.width
     height: childrenRect.height
 
-    property var memberInfo: Backend.users.get(model.userId)
+    property var memberInfo: users.getUser(model.userId)
 
     HRowLayout {
         width: parent.width
@@ -15,7 +15,7 @@ MouseArea {
 
         HUserAvatar {
             id: avatar
-            userId: memberInfo.userId
+            userId: model.userId
         }
 
         HColumnLayout {

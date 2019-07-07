@@ -68,70 +68,70 @@ HColumnLayout {
             }
         }
 
-//        RoomSidePane {
-            //id: roomSidePane
+        RoomSidePane {
+            id: roomSidePane
 
-            //activeView: roomHeader.activeButton
-            //property int oldWidth: width
-            //onActiveViewChanged:
-                //activeView ? restoreAnimation.start() : hideAnimation.start()
+            activeView: roomHeader.activeButton
+            property int oldWidth: width
+            onActiveViewChanged:
+                activeView ? restoreAnimation.start() : hideAnimation.start()
 
-            //HNumberAnimation {
-                //id: hideAnimation
-                //target: roomSidePane
-                //properties: "width"
-                //from: target.width
-                //to: 0
+            HNumberAnimation {
+                id: hideAnimation
+                target: roomSidePane
+                properties: "width"
+                from: target.width
+                to: 0
 
-                //onStarted: {
-                    //target.oldWidth = target.width
-                    //target.Layout.minimumWidth = 0
-                //}
-            //}
+                onStarted: {
+                    target.oldWidth = target.width
+                    target.Layout.minimumWidth = 0
+                }
+            }
 
-            //HNumberAnimation {
-                //id: restoreAnimation
-                //target: roomSidePane
-                //properties: "width"
-                //from: 0
-                //to: target.oldWidth
+            HNumberAnimation {
+                id: restoreAnimation
+                target: roomSidePane
+                properties: "width"
+                from: 0
+                to: target.oldWidth
 
-                //onStopped: target.Layout.minimumWidth = Qt.binding(
-                    //function() { return theme.avatar.size }
-                //)
-           //}
+                onStopped: target.Layout.minimumWidth = Qt.binding(
+                    function() { return theme.avatar.size }
+                )
+           }
 
-            //collapsed: width < theme.avatar.size + 8
+            collapsed: width < theme.avatar.size + 8
 
-            //property bool wasSnapped: false
-            //property int referenceWidth: roomHeader.buttonsWidth
-            //onReferenceWidthChanged: {
-                //if (chatSplitView.canAutoSize || wasSnapped) {
-                    //if (wasSnapped) { chatSplitView.canAutoSize = true }
-                    //width = referenceWidth
-                //}
-            //}
+            property bool wasSnapped: false
+            property int referenceWidth: roomHeader.buttonsWidth
+            onReferenceWidthChanged: {
+                if (chatSplitView.canAutoSize || wasSnapped) {
+                    if (wasSnapped) { chatSplitView.canAutoSize = true }
+                    width = referenceWidth
+                }
+            }
 
-            //property int currentWidth: width
-            //onCurrentWidthChanged: {
-                //if (referenceWidth != width &&
-                    //referenceWidth - 15 < width &&
-                    //width < referenceWidth + 15)
-                //{
-                    //currentWidth = referenceWidth
-                    //width = referenceWidth
-                    //wasSnapped = true
-                    //currentWidth = Qt.binding(
-                        //function() { return roomSidePane.width }
-                    //)
-                //} else {
-                    //wasSnapped = false
-                //}
-            //}
+            property int currentWidth: width
+            onCurrentWidthChanged: {
+                if (referenceWidth != width &&
+                    referenceWidth - 15 < width &&
+                    width < referenceWidth + 15)
+                {
+                    currentWidth = referenceWidth
+                    width = referenceWidth
+                    wasSnapped = true
+                    currentWidth = Qt.binding(
+                        function() { return roomSidePane.width }
+                    )
+                } else {
+                    wasSnapped = false
+                }
+            }
 
-            //width: referenceWidth // Initial width
-            //Layout.minimumWidth: theme.avatar.size
-            //Layout.maximumWidth: parent.width
-        //}
+            width: referenceWidth // Initial width
+            Layout.minimumWidth: theme.avatar.size
+            Layout.maximumWidth: parent.width
+        }
     }
 }
