@@ -275,9 +275,9 @@ class MatrixClient(nio.AsyncClient):
 
     async def _get_room_member_event_content(self, ev) -> Optional[str]:
         prev            = ev.prev_content
-        prev_membership = prev["membership"] if prev else None
         now             = ev.content
-        membership      = now["membership"]
+        membership      = ev.membership
+        prev_membership = ev.prev_membership
 
         if not prev or membership != prev_membership:
             reason = f" Reason: {now['reason']}" if now.get("reason") else ""
@@ -337,7 +337,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomMemberEvent(self, room, ev, from_past=False) -> None:
-        if not from_past and ev.content["membership"] != "leave":
+        if not from_past and ev.membership != "leave":
             users.UserUpdated(
                 user_id        = ev.state_key,
                 display_name   = ev.content["displayname"] or "",
