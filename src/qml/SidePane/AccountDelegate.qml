@@ -6,9 +6,7 @@ Column {
     id: accountDelegate
     width: parent.width
 
-    // Avoid binding loop by using Component.onCompleted
-    property var userInfo: null
-    Component.onCompleted: userInfo = users.getUser(model.userId)
+    property var userInfo: users.getUser(model.userId)
 
     property bool expanded: true
 
@@ -19,6 +17,7 @@ Column {
 
         HUserAvatar {
             id: avatar
+            // Need to do this because conflict with the model property
             Component.onCompleted: userId = model.userId
         }
 

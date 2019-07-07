@@ -17,17 +17,17 @@ Python {
     }
 
     function callCoro(name, args, kwargs, callback) {
-        call("APP.call_backend_coro", [name, args, kwargs], function(uuid){
-            pendingCoroutines[uuid] = callback || function() {}
-        })
+        var uuid = Math.random() + "." + name
+
+        pendingCoroutines[uuid] = callback || function() {}
+        call("APP.call_backend_coro", [name, uuid, args, kwargs])
     }
 
     function callClientCoro(account_id, name, args, kwargs, callback) {
-        var args = [account_id, name, args, kwargs]
+        var uuid = Math.random() + "." + name
 
-        call("APP.call_client_coro", args, function(uuid){
-            pendingCoroutines[uuid] = callback || function() {}
-        })
+        pendingCoroutines[uuid] = callback || function() {}
+        call("APP.call_client_coro", [account_id, name, uuid, args, kwargs])
     }
 
     Component.onCompleted: {

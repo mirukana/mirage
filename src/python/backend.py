@@ -24,6 +24,8 @@ class Backend:
         self.past_tokens:        Dict[str, str] =  {}    # {room_id: token}
         self.fully_loaded_rooms: Set[str]       = set()  # {room_id}
 
+        self.pending_profile_requests: Set[str] = set()
+
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(clients={self.clients!r})"

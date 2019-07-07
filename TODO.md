@@ -25,7 +25,6 @@ OLD
 - Bug fixes
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
-  - Past events loading: text binding loop on name request
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
 
 - UI

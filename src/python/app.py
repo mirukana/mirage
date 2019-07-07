@@ -37,32 +37,31 @@ class App:
         return asyncio.run_coroutine_threadsafe(coro, self.loop)
 
 
-    def _call_coro(self, coro: Coroutine) -> str:
-        uuid = str(uuid4())
-
+    def _call_coro(self, coro: Coroutine, uuid: str) -> None:
         self.run_in_loop(coro).add_done_callback(
             lambda future: CoroutineDone(uuid=uuid, result=future.result())
         )
-        return uuid
 
 
     def call_backend_coro(self,
                           name:   str,
+                          uuid:   str,
                           args:   Optional[List[str]]      = None,
-                          kwargs: Optional[Dict[str, Any]] = None) -> str:
-        return self._call_coro(
-            getattr(self.backend, name)(*args or [], **kwargs or {})
+                          kwargs: Optional[Dict[str, Any]] = None) -> None:
+        self._call_coro(
+            getattr(self.backend, name)(*args or [], **kwargs or {}), uuid
         )
 
 
     def call_client_coro(self,
                          account_id: str,
                          name:       str,
+                         uuid:       str,
                          args:       Optional[List[str]]      = None,
-                         kwargs:     Optional[Dict[str, Any]] = None) -> str:
+                         kwargs:     Optional[Dict[str, Any]] = None) -> None:
         client = self.backend.clients[account_id]
-        return self._call_coro(
-            getattr(client, name)(*args or [], **kwargs or {})
+        self._call_coro(
+            getattr(client, name)(*args or [], **kwargs or {}), uuid
         )
 
 

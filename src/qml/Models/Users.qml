@@ -7,15 +7,13 @@ HListModel {
         var found = getWhere({"userId": user_id}, 1)
         if (found.length > 0) { return found[0] }
 
-        append({
+        py.callCoro("request_user_update_event", [user_id])
+
+        return {
             "userId":        user_id,
             "displayName":   "",
             "avatarUrl":     "",
             "statusMessage": ""
-        })
-
-        py.callCoro("request_user_update_event", [user_id])
-
-        return getWhere({"userId": user_id}, 1)[0]
+        }
     }
 }
