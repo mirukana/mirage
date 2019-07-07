@@ -289,12 +289,14 @@ class MatrixClient(nio.AsyncClient):
             reason = f" Reason: {now['reason']}" if now.get("reason") else ""
 
             if membership == "join":
-                did = "accepted" if prev and prev_membership == "invite" else \
-                      "declined"
-                return f"%S {did} their invitation."
+                return (
+                    "%S accepted their invitation."
+                    if prev and prev_membership == "invite" else
+                    "%S joined the room."
+                )
 
             if membership == "invite":
-                return f"%S invited %T to the room."
+                return "%S invited %T to the room."
 
             if membership == "leave":
                 if ev.state_key == ev.sender:
