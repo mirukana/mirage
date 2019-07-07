@@ -1,10 +1,11 @@
 from datetime import datetime
 from enum import auto
-from typing import Dict, Sequence, Type, Union
+from typing import Dict, List, Optional, Sequence, Type, Union
 
 from dataclasses import dataclass, field
 
 import nio
+from nio.rooms import MatrixRoom
 
 from .event import AutoStrEnum, Event
 
@@ -19,8 +20,42 @@ class RoomUpdated(Event):
     topic:          str           = ""
     typing_members: Sequence[str] = ()
 
-    inviter_id: str            = ""
-    left_event: Dict[str, str] = field(default_factory=dict)
+    inviter_id: str                           = ""
+    left_event: Optional[nio.RoomMemberEvent] = None
+
+
+    @classmethod
+    def from_nio(cls,
+                 user_id:  str,
+                 category: str,
+                 room:     MatrixRoom,
+                 info:     nio.RoomInfo,
+                 **fields) -> "RoomUpdated":
+
+        typing: List[str] = []
+
+        if hasattr(info, "ephemeral"):
+            for ev in info.ephemeral:
+                if isinstance(ev, nio.TypingNoticeEvent):
+                    typing = ev.users
+
+        name = room.name or room.canonical_alias
+
+        if not name:
+            name = room.group_name()
+            name = "" if name == "Empty room?" else name
+
+        return cls(
+            user_id        = user_id,
+            category       = category,
+            room_id        = room.room_id,
+            display_name   = name,
+            avatar_url     = room.gen_avatar_url or "",
+            topic          = room.topic or "",
+            inviter_id     = getattr(room, "inviter", "") or "",
+            typing_members = typing,
+            **fields
+        )
 
 
 @dataclass
@@ -71,7 +106,8 @@ class TimelineEventReceived(Event):
     target_user_id: str = ""
 
     @classmethod
-    def from_nio(cls, room, ev, **fields) -> "TimelineEventReceived":
+    def from_nio(cls, room: MatrixRoom, ev: nio.Event, **fields
+                ) -> "TimelineEventReceived":
         return cls(
             event_type = type(ev),
             room_id    = room.room_id,

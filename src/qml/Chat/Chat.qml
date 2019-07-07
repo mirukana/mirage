@@ -57,11 +57,10 @@ HColumnLayout {
 
             TypingMembersBar {
                 Layout.fillWidth: true
-                //Layout.preferredHeight: text ? implicitHeight : 0
             }
 
             InviteBanner {
-                visible: category === "Invites"
+                visible: category == "Invites"
                 inviterId: roomInfo.inviterId
             }
 
@@ -75,10 +74,10 @@ HColumnLayout {
             }
 
             //LeftBanner {
-                //visible: category === "Left"
+                //visible: category == "Left"
                 //leftEvent: roomInfo.leftEvent
             //}
-        //}
+        }
 
 //        RoomSidePane {
             //id: roomSidePane
@@ -145,6 +144,5 @@ HColumnLayout {
             //Layout.minimumWidth: theme.avatar.size
             //Layout.maximumWidth: parent.width
         //}
-        }
     }
 }

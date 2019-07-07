@@ -32,31 +32,17 @@ function onRoomUpdated(
         "name":   category
     })
 
-    function roles(for_category) {
-        return {"userId": user_id, "roomId": room_id, "category": for_category}
+    function pop(for_category) {
+        rooms.popWhere(
+            {"userId": user_id, "roomId": room_id, "category": for_category}, 1
+        )
     }
 
-    if (category == "Invites") {
-        rooms.popWhere(roles("Rooms"), 1)
-        rooms.popWhere(roles("Left"), 1)
-    }
-    else if (category == "Rooms") {
-        rooms.popWhere(roles("Invites"), 1)
-        rooms.popWhere(roles("Left"), 1)
-    }
-    else if (category == "Left") {
-        var old_room  = rooms.popWhere(roles("Invites"), 1)[0] ||
-                        rooms.popWhere(roles("Rooms"), 1)[0]
+    if (category == "Invites")    { pop("Rooms");   pop("Left") }
+    else if (category == "Rooms") { pop("Invites"); pop("Left") }
+    else if (category == "Left")  { pop("Invites"); pop("Rooms") }
 
-        if (old_room) {
-            display_name = old_room.displayName
-            avatar_url   = old_room.avatarUrl
-            topic        = old_room.topic
-            inviter_id   = old_room.inviterId
-        }
-    }
-
-    rooms.upsert(roles(category), {
+    rooms.upsert({"userId": user_id, "roomId": room_id, "category": category},{
         "userId":      user_id,
         "category":    category,
         "roomId":      room_id,
@@ -65,7 +51,7 @@ function onRoomUpdated(
         "topic":       topic,
         "typingText":  typingTextFor(typing_members, user_id),
         "inviterId":   inviter_id,
-        "leftEvent":   left_event,
+        "leftEvent":   left_event ? py.getattr(left_event, "__dict__") : {},
     })
 }
 

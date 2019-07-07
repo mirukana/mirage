@@ -7,7 +7,7 @@ import platform
 from contextlib import suppress
 from datetime import datetime
 from types import ModuleType
-from typing import DefaultDict, Dict, List, Optional, Type
+from typing import DefaultDict, Dict, Optional, Type
 from uuid import uuid4
 
 import nio
@@ -185,59 +185,28 @@ class MatrixClient(nio.AsyncClient):
 
     # Callbacks for nio responses
 
-    @staticmethod
-    def _get_room_name(room: MatrixRoom) -> Optional[str]:
-        # FIXME: reimplanted because of nio's non-standard room.display_name
-        name = room.name or room.canonical_alias
-        if name:
-            return name
-
-        name = room.group_name()
-        return None if name == "Empty room?" else name
-
-
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
-        for room_id, _ in resp.rooms.invite.items():
-            room: MatrixRoom = self.invited_rooms[room_id]
+        up = rooms.RoomUpdated.from_nio
 
-            rooms.RoomUpdated(
-                user_id      = self.user_id,
-                category     = "Invites",
-                room_id      = room_id,
-                display_name = self._get_room_name(room) or "",
-                avatar_url   = room.gen_avatar_url or "",
-                topic        = room.topic or "",
-                inviter_id   = room.inviter or "",
-            )
+        for room_id, info in resp.rooms.invite.items():
+            up(self.user_id, "Invites", self.invited_rooms[room_id], info)
 
         for room_id, info in resp.rooms.join.items():
-            room = self.rooms[room_id]
-
             if room_id not in self.backend.past_tokens:
                 self.backend.past_tokens[room_id] = info.timeline.prev_batch
 
-            typing: List[str] = []
-            for ev in info.ephemeral:
-                if isinstance(ev, nio.TypingNoticeEvent):
-                    typing = ev.users
+            up(self.user_id, "Rooms", self.rooms[room_id], info)
 
-            rooms.RoomUpdated(
-                user_id        = self.user_id,
-                category       = "Rooms",
-                room_id        = room_id,
-                display_name   = self._get_room_name(room) or "",
-                avatar_url     = room.gen_avatar_url or "",
-                topic          = room.topic or "",
-                typing_members = typing,
-            )
+        for room_id, info in resp.rooms.leave.items():
+            lev = None
 
-        for room_id, _ in resp.rooms.leave.items():
-            rooms.RoomUpdated(
-                user_id  = self.user_id,
-                category = "Left",
-                room_id  = room_id,
-                # left_event TODO
-            )
+            for ev in info.timeline.events:
+                is_member_ev = isinstance(ev, nio.RoomMemberEvent)
+
+                if is_member_ev and ev.membership in ("leave", "ban"):
+                    lev = ev
+
+            up(self.user_id, "Left", self.rooms[room_id], info, left_event=lev)
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
@@ -250,7 +219,6 @@ class MatrixClient(nio.AsyncClient):
     # Special %tokens for event contents:
     # %S = sender's displayname
     # %T = target (ev.state_key)'s displayname
-
     # pylint: disable=unused-argument
 
     async def onRoomMessageText(self, room, ev, from_past=False) -> None:
