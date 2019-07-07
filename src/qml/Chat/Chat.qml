@@ -6,15 +6,13 @@ import "Timeline"
 import "RoomSidePane"
 
 HColumnLayout {
-    property string userId: ""
-    property string category: ""
-    property string roomId: ""
+    property var roomInfo: null
+
+    readonly property string userId: roomInfo.userId
+    readonly property string category: roomInfo.category
+    readonly property string roomId: roomInfo.roomId
 
     readonly property var senderInfo: users.getUser(userId)
-
-    readonly property var roomInfo: rooms.getWhere(
-        {"userId": userId, "roomId": roomId, "category": category}, 1
-    )[0]
 
     readonly property bool hasUnknownDevices: false
          //category == "Rooms" ?
@@ -22,14 +20,6 @@ HColumnLayout {
 
     id: chatPage
     onFocusChanged: sendBox.setFocus()
-
-   //Component.onCompleted: Backend.signals.roomCategoryChanged.connect(
-        //function(forUserId, forRoomId, previous, now) {
-            //if (chatPage && forUserId == userId && forRoomId == roomId) {
-                //chatPage.category = now
-            //}
-        //}
-    //)
 
     RoomHeader {
         id: roomHeader

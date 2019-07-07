@@ -70,10 +70,13 @@ Item {
             }
 
             function showRoom(userId, category, roomId) {
-                pageStack.replace(
-                    "Chat/Chat.qml",
-                    { userId: userId, category: category, roomId: roomId }
-                )
+                var info = rooms.getWhere({
+                    "userId": userId,
+                    "roomId": roomId,
+                    "category": category
+                }, 1)[0]
+
+                pageStack.replace("Chat/Chat.qml", {"roomInfo": info})
             }
 
             Component.onCompleted: initialRoomTimer.start()

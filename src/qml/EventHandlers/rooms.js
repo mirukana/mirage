@@ -32,17 +32,19 @@ function onRoomUpdated(
         "name":   category
     })
 
-    function pop(for_category) {
-        rooms.popWhere(
+    function find(for_category) {
+        var found = rooms.getIndices(
             {"userId": user_id, "roomId": room_id, "category": for_category}, 1
         )
+        return found.length > 0 ? found[0] : null
     }
 
-    if (category == "Invites")    { pop("Rooms");   pop("Left") }
-    else if (category == "Rooms") { pop("Invites"); pop("Left") }
-    else if (category == "Left")  { pop("Invites"); pop("Rooms") }
+    var replace = null
+    if (category == "Invites")    { replace = find("Rooms") || find("Left") }
+    else if (category == "Rooms") { replace = find("Invites") || find("Left") }
+    else if (category == "Left")  { replace = find("Invites") || find("Rooms")}
 
-    rooms.upsert({"userId": user_id, "roomId": room_id, "category": category},{
+    var item = {
         "userId":      user_id,
         "category":    category,
         "roomId":      room_id,
@@ -51,7 +53,18 @@ function onRoomUpdated(
         "topic":       topic,
         "typingText":  typingTextFor(typing_members, user_id),
         "inviterId":   inviter_id
-    })
+    }
+
+    if (replace === null) {
+        rooms.upsert(
+            {"userId": user_id, "roomId": room_id, "category": category},
+            item
+        )
+    } else {
+        print("re", replace, display_name)
+        rooms.set(replace, item)
+    }
+
 }
 
 

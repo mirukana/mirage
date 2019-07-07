@@ -114,7 +114,6 @@ class MatrixClient(nio.AsyncClient):
             return
         self.backend.pending_profile_requests.add(user_id)
 
-        print("Requesting user profile:", user_id)
         response = await self.get_profile(user_id)
 
         if isinstance(response, nio.ProfileGetError):
@@ -171,7 +170,6 @@ class MatrixClient(nio.AsyncClient):
         )
 
         more_to_load = True
-        print(len(response.chunk))
 
         if self.backend.past_tokens[room_id] == response.end:
             self.backend.fully_loaded_rooms.add(room_id)

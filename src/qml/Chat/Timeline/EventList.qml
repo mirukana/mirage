@@ -34,7 +34,7 @@ HRectangle {
 
         // Keep x scroll pages cached, to limit images having to be
         // reloaded from network.
-        cacheBuffer: height * 6
+        cacheBuffer: height * 4
 
         // Declaring this as "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
