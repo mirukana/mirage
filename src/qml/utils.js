@@ -88,3 +88,18 @@ function translatedEventContent(ev) {
     }
     return text
 }
+
+
+function filterMatches(filter, text) {
+    filter = filter.toLowerCase()
+    text   = text.toLowerCase()
+
+    var words = filter.split(" ")
+
+    for (var i = 0; i < words.length; i++) {
+        if (words[i] && text.indexOf(words[i]) == -1) {
+            return false
+        }
+    }
+    return true
+}

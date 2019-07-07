@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import SortFilterProxyModel 0.2
 import "../../Base"
+import "../../utils.js" as Utils
 
 HColumnLayout {
     property bool collapsed: false
@@ -29,6 +30,13 @@ HColumnLayout {
             sorters: StringSorter {
                 roleName: "displayName"
             }
+
+            filters: ExpressionFilter {
+                function filterIt(filter, text) {
+                    return Utils.filterMatches(filter, text)
+                }
+                expression: filterIt(filterField.text, displayName)
+            }
         }
 
         delegate: MemberDelegate {}
@@ -42,17 +50,6 @@ HColumnLayout {
         id: filterField
         placeholderText: qsTr("Filter members")
         backgroundColor: theme.sidePane.filterRooms.background
-
-        // Without this, if the user types in the field, changes of room, then
-        // comes back, the field will be empty but the filter still applied.
-        //Component.onCompleted:
-            //text = Backend.clients.get(chatPage.userId).getMemberFilter(
-                //chatPage.category, chatPage.roomId
-            //)
-
-        //onTextChanged: Backend.clients.get(chatPage.userId).setMemberFilter(
-            //chatPage.category, chatPage.roomId, text
-        //)
 
         Layout.fillWidth: true
         Layout.preferredHeight: theme.bottomElementsHeight

@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import SortFilterProxyModel 0.2
 import "../Base"
+import "../utils.js" as Utils
 
 HListView {
     property string userId: ""
@@ -24,18 +25,11 @@ HListView {
             }
 
             ExpressionFilter {
-                expression: {
-                    var filter = paneToolBar.roomFilter.toLowerCase()
-                    var words = filter.split(" ")
-                    var room_name = displayName.toLowerCase()
-
-                    for (var i = 0; i < words.length; i++) {
-                        if (words[i] && room_name.indexOf(words[i]) == -1) {
-                            return false
-                        }
-                    }
-                    return true
+                // Utils... won't work directly in expression?
+                function filterIt(filter, text) {
+                    return Utils.filterMatches(filter, text)
                 }
+                expression: filterIt(paneToolBar.roomFilter, displayName)
             }
         }
     }
