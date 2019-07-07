@@ -1,14 +1,17 @@
 import QtQuick 2.7
 import "../../Base"
-import "../utils.js" as ChatJS
+import "../../utils.js" as Utils
 
 Banner {
-    property var leftEvent: null
+    property string userId: ""
+    readonly property var userInfo: users.getUser(userId)
 
     color: theme.chat.leftBanner.background
 
-    avatar.name: ChatJS.getLeftBannerAvatarName(leftEvent, chatPage.userId)
-    labelText: ChatJS.getLeftBannerText(leftEvent)
+    // TODO: avatar func auto
+    avatar.name: userInfo.displayName || Utils.stripUserId(userId)
+    avatar.imageUrl: users.getUser(userId).avatarUrl
+    labelText: qsTr("You are not part of this room anymore.")
 
     buttonModel: [
         {
@@ -21,8 +24,13 @@ Banner {
     buttonCallbacks: {
         "forget": function(button) {
             button.loading = true
-            Backend.clients.get(chatPage.userId).forgetRoom(chatPage.roomId)
-            pageStack.clear()
+            py.callClientCoro(
+                chatPage.userId, "room_forget", [chatPage.roomId], {},
+                function() {
+                    button.loading = false
+                    pageStack.clear()
+                }
+            )
         },
     }
 }

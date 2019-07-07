@@ -1,3 +1,4 @@
+- "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color
 - invite/leave/forget backend funcs
@@ -82,6 +83,7 @@ OLD
   - `org.matrix.room.preview_urls` event
   - `m.room.aliases` event
   - Support "Empty room (was ...)" after peer left
+  - Previewing room without joining
 
 - Distribution
   - List dependencies

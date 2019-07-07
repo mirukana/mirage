@@ -198,15 +198,17 @@ class MatrixClient(nio.AsyncClient):
             up(self.user_id, "Rooms", self.rooms[room_id], info)
 
         for room_id, info in resp.rooms.leave.items():
-            lev = None
+            # TODO: handle in nio, these are rooms that were left before
+            # starting the client.
+            if room_id not in self.rooms:
+                continue
 
+            # TODO: handle left events in nio async client
             for ev in info.timeline.events:
-                is_member_ev = isinstance(ev, nio.RoomMemberEvent)
+                if isinstance(ev, nio.RoomMemberEvent):
+                    await self.onRoomMemberEvent(self.rooms[room_id], ev)
 
-                if is_member_ev and ev.membership in ("leave", "ban"):
-                    lev = ev
-
-            up(self.user_id, "Left", self.rooms[room_id], info, left_event=lev)
+            up(self.user_id, "Left", self.rooms[room_id], info)
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
@@ -273,7 +275,7 @@ class MatrixClient(nio.AsyncClient):
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
-    async def _get_room_member_event_content(self, ev) -> Optional[str]:
+    async def get_room_member_event_content(self, ev) -> Optional[str]:
         prev            = ev.prev_content
         now             = ev.content
         membership      = ev.membership
@@ -345,7 +347,7 @@ class MatrixClient(nio.AsyncClient):
                 status_message = "",  # TODO
             )
 
-        co = await self._get_room_member_event_content(ev)
+        co = await self.get_room_member_event_content(ev)
 
         if co is not None:
             TimelineEventReceived.from_nio(room, ev, content=co)

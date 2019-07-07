@@ -14,8 +14,8 @@ HColumnLayout {
         {"userId": userId, "roomId": roomId, "category": category}, 1
     )[0]
 
-    readonly property var sender:
-        users.getWhere({"userId": userId}, 1)[0]
+    readonly property var sender: //TODO: info$
+        users.getUser(userId)
 
     readonly property bool hasUnknownDevices: false
          //category == "Rooms" ?
@@ -73,10 +73,10 @@ HColumnLayout {
                 visible: category == "Rooms" && ! hasUnknownDevices
             }
 
-            //LeftBanner {
-                //visible: category == "Left"
-                //leftEvent: roomInfo.leftEvent
-            //}
+            LeftBanner {
+                visible: category == "Left"
+                userId: chatPage.userId
+            }
         }
 
 //        RoomSidePane {

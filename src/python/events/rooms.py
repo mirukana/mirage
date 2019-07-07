@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import auto
-from typing import Dict, List, Optional, Sequence, Type, Union
+from typing import List, Sequence, Type, Union
 
 from dataclasses import dataclass, field
 
@@ -19,9 +19,7 @@ class RoomUpdated(Event):
     avatar_url:     str           = ""
     topic:          str           = ""
     typing_members: Sequence[str] = ()
-
-    inviter_id: str                           = ""
-    left_event: Optional[nio.RoomMemberEvent] = None
+    inviter_id:     str           = ""
 
 
     @classmethod
@@ -29,8 +27,7 @@ class RoomUpdated(Event):
                  user_id:  str,
                  category: str,
                  room:     MatrixRoom,
-                 info:     nio.RoomInfo,
-                 **fields) -> "RoomUpdated":
+                 info:     nio.RoomInfo) -> "RoomUpdated":
 
         typing: List[str] = []
 
@@ -54,7 +51,6 @@ class RoomUpdated(Event):
             topic          = room.topic or "",
             inviter_id     = getattr(room, "inviter", "") or "",
             typing_members = typing,
-            **fields
         )
 
 

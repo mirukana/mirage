@@ -10,7 +10,8 @@ Banner {
 
     color: theme.chat.inviteBanner.background
 
-    avatar.name: inviterId ? inviterInfo.displayName : ""
+    avatar.name: inviterId ? (inviterInfo.displayName ||
+                              Utils.stripUserId(inviterId)) : ""
     avatar.imageUrl: inviterId ? inviterInfo.avatarUrl : ""
 
     labelText: qsTr("%1 invited you to join the room.").arg(

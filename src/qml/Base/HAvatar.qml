@@ -30,9 +30,10 @@ Rectangle {
     HImage {
         z: 2
         anchors.fill: parent
-        visible: ! hidden && imageUrl
+        //visible: ! hidden && imageUrl
+        visible: false
 
-        Component.onCompleted: if (imageUrl) { source = imageUrl }
+        //Component.onCompleted: if (imageUrl) { source = imageUrl }
         fillMode: Image.PreserveAspectCrop
         sourceSize.width: dimension
     }
