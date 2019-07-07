@@ -12,8 +12,8 @@ from html_sanitizer.sanitizer import Sanitizer
 
 class HtmlFilter:
     link_regexes = [re.compile(r, re.IGNORECASE) for r in [
-        (r"(?P<body>.+://(?P<host>[a-z0-9._-]+)(?:/[/\-_.,a-z0-9%&?;=~]*)?"
-         r"(?:\([/\-_.,a-z0-9%&?;=~]*\))?)"),
+        (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+)"
+         r"(?:/[/\-_.,a-z\d%&?;=~]*)?(?:\([/\-_.,a-z\d%&?;=~]*\))?)"),
         r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9_.-]+[a-z]))",
         r"tel:(?P<body>[0-9+-]+)(?P<host>)",
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
