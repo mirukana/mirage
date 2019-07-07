@@ -10,12 +10,11 @@ HColumnLayout {
     property string category: ""
     property string roomId: ""
 
+    readonly property var senderInfo: users.getUser(userId)
+
     readonly property var roomInfo: rooms.getWhere(
         {"userId": userId, "roomId": roomId, "category": category}, 1
     )[0]
-
-    readonly property var sender: //TODO: info$
-        users.getUser(userId)
 
     readonly property bool hasUnknownDevices: false
          //category == "Rooms" ?
