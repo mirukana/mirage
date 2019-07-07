@@ -17,7 +17,7 @@ HRectangle {
         id: bannerRow
         anchors.fill: parent
 
-        HAvatar {
+        HUserAvatar {
             id: bannerAvatar
             dimension: banner.Layout.preferredHeight
         }

@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import "../../Base"
-import "../../utils.js" as Utils
 
 Banner {
     property string userId: ""
@@ -9,7 +8,7 @@ Banner {
     color: theme.chat.leftBanner.background
 
     // TODO: avatar func auto
-    avatar.name: userInfo.displayName || Utils.stripUserId(userId)
+    avatar.userId: userId
     avatar.imageUrl: users.getUser(userId).avatarUrl
     labelText: qsTr("You are not part of this room anymore.")
 

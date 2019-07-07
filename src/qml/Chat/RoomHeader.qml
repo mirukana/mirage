@@ -1,7 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
-import "../utils.js" as Utils
 
 HRectangle {
     property string displayName: ""
@@ -21,9 +20,9 @@ HRectangle {
         spacing: 8
         anchors.fill: parent
 
-        HAvatar {
+        HRoomAvatar {
             id: avatar
-            name: Utils.stripRoomName(displayName)
+            roomId: chatPage.roomId
             dimension: roomHeader.height
             Layout.alignment: Qt.AlignTop
         }

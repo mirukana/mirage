@@ -15,9 +15,9 @@ MouseArea {
         width: parent.width
         spacing: sidePane.collapsed ? 0 : sidePane.normalSpacing
 
-        HAvatar {
+        HRoomAvatar {
             id: roomAvatar
-            name: Utils.stripRoomName(model.displayName)
+            roomId: model.roomId
         }
 
         HColumnLayout {

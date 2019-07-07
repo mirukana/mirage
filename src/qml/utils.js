@@ -12,18 +12,6 @@ function arrayToModelItem(keys_name, array) {
 }
 
 
-function stripUserId(user_id) {
-    // Remove leading @
-    return user_id.substring(1)
-}
-
-
-function stripRoomName(name) {
-    // Remove leading # (aliases)
-    return name[0] == "#" && name.length > 1 ? name.substring(1) : name
-}
-
-
 function hueFrom(string) {
     // Calculate and return a unique hue between 0 and 1 for the string
     var hue = 0
@@ -55,7 +43,8 @@ function nameColor(name) {
 
 
 function coloredNameHtml(name, alt_id) {
-    return "<font color='" + nameColor(name || stripUserId(alt_id)) + "'>" +
+    // substring: remove leading @
+    return "<font color='" + nameColor(name || alt_id.substring(1)) + "'>" +
            escapeHtml(name || alt_id) +
            "</font>"
 }

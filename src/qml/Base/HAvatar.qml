@@ -3,7 +3,7 @@ import "../Base"
 import "../utils.js" as Utils
 
 Rectangle {
-    property var name: null
+    property string name: ""
     property var imageUrl: null
     property int dimension: theme.avatar.size
     property bool hidden: false

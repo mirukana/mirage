@@ -1,7 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
-import "../utils.js" as Utils
 
 HRectangle {
     function setFocus() { textArea.forceActiveFocus() }
@@ -17,10 +16,9 @@ HRectangle {
     HRowLayout {
         anchors.fill: parent
 
-        HAvatar {
+        HUserAvatar {
             id: avatar
-            name: chatPage.senderInfo.displayName ||
-                  Utils.stripUserId(chatPage.userId)
+            userId: chatPage.userId
             dimension: sendBox.Layout.minimumHeight
         }
 

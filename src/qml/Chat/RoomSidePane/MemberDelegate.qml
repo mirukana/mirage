@@ -1,32 +1,31 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
-import "../utils.js" as Utils
 
 MouseArea {
     id: memberDelegate
     width: memberList.width
     height: childrenRect.height
 
-    property var member: Backend.users.get(userId)
+    property var memberInfo: Backend.users.get(model.userId)
 
     HRowLayout {
         width: parent.width
         spacing: memberList.spacing
 
-        HAvatar {
-            id: memberAvatar
-            name: member.displayName || Utils.stripUserId(member.userId)
+        HUserAvatar {
+            id: avatar
+            userId: memberInfo.userId
         }
 
         HColumnLayout {
             Layout.fillWidth: true
             Layout.maximumWidth:
-                parent.width - parent.totalSpacing - memberAvatar.width
+                parent.width - parent.totalSpacing - avatar.width
 
             HLabel {
                 id: memberName
-                text: member.displayName.value
+                text: memberInfo.displayName || model.userId
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 verticalAlignment: Qt.AlignVCenter

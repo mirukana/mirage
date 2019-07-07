@@ -1,17 +1,15 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../Base"
-import "../utils.js" as Utils
 
 Column {
     id: accountDelegate
     width: parent.width
 
     // Avoid binding loop by using Component.onCompleted
-    property var user: null
-    Component.onCompleted: user = users.getUser(userId)
+    property var userInfo: null
+    Component.onCompleted: userInfo = users.getUser(model.userId)
 
-    property string roomCategoriesListUserId: userId
     property bool expanded: true
 
     HRowLayout {
@@ -19,9 +17,9 @@ Column {
         height: childrenRect.height
         id: row
 
-        HAvatar {
+        HUserAvatar {
             id: avatar
-            name: user.displayName || Utils.stripUserId(user.userId)
+            Component.onCompleted: userId = model.userId
         }
 
         HColumnLayout {
@@ -30,7 +28,7 @@ Column {
 
             HLabel {
                 id: accountLabel
-                text: user.displayName || user.userId
+                text: userInfo.displayName || model.userId
                 elide: HLabel.ElideRight
                 maximumLineCount: 1
                 Layout.fillWidth: true
@@ -40,7 +38,7 @@ Column {
 
             HTextField {
                 id: statusEdit
-                text: user.statusMessage
+                text: userInfo.statusMessage
                 placeholderText: qsTr("Set status message")
                 font.pixelSize: theme.fontSize.small
                 background: null
@@ -51,7 +49,7 @@ Column {
                 Layout.fillWidth: true
 
                 onEditingFinished: {
-                    //Backend.setStatusMessage(userId, text)
+                    //Backend.setStatusMessage(model.userId, text)  TODO
                     pageStack.forceActiveFocus()
                 }
             }
@@ -71,7 +69,7 @@ Column {
         height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
         clip: heightAnimation.running
 
-        userId: roomCategoriesListUserId
+        userId: userInfo.userId
 
         Behavior on height {
             HNumberAnimation { id: heightAnimation }

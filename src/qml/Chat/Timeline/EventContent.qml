@@ -8,10 +8,10 @@ Row {
     spacing: standardSpacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
 
-    HAvatar {
+    HUserAvatar {
         id: avatar
         hidden: combine
-        name: senderInfo.displayName || Utils.stripUserId(model.senderId)
+        userId: model.senderId
         dimension: model.showNameLine ? 48 : 28
         visible: ! isOwn
     }
