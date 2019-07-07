@@ -2,14 +2,24 @@ Qt.include("../utils.js")
 
 
 function typingTextFor(members, our_user_id) {
-    var names = []
+    var profiles = []
+    var names    = []
 
     for (var i = 0; i < members.length; i++) {
         if (members[i] != our_user_id) {
-            names.push(coloredNameHtml(
-                users.getUser(members[i]).displayName, members[i]
-            ))
+            profiles.push(users.getUser(members[i]))
         }
+    }
+
+    profiles.sort(function(left, right) {
+      if (left.displayName < right.displayName) { return -1 }
+      if (left.displayName > right.displayName) { return +1 }
+      return 0
+    })
+
+    for (var i = 0; i < profiles.length; i++) {
+        var profile = profiles[i]
+        names.push(coloredNameHtml(profile.displayName, profile.userId))
     }
 
     if (names.length == 0) { return "" }
