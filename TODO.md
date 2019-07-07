@@ -2,8 +2,6 @@
 - html links color
 - invite/leave/forget backend funcs
 - license headers
-- replace "property var" by "property <object>" where applicable and
-  var by string and readonly
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
 - `pyotherside.atexit()`
 - way to put sidepane back to auto-sizing (snap)
@@ -63,7 +61,6 @@ OLD
 
 - Client improvements
   - Filtering rooms: search more than display names?
-  - nio.MatrixRoom has `typing_users`, no need to handle it on our own
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
   - Direct chats category
