@@ -6,7 +6,7 @@ Banner {
     property string inviterId: ""
 
     readonly property var inviterInfo:
-        inviterId ? users.getUser(inviterId) : null
+        inviterId ? users.find(inviterId) : null
 
     color: theme.chat.inviteBanner.background
 

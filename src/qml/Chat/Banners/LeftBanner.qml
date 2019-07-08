@@ -3,13 +3,13 @@ import "../../Base"
 
 Banner {
     property string userId: ""
-    readonly property var userInfo: users.getUser(userId)
+    readonly property var userInfo: users.find(userId)
 
     color: theme.chat.leftBanner.background
 
     // TODO: avatar func auto
     avatar.userId: userId
-    avatar.imageUrl: users.getUser(userId).avatarUrl
+    avatar.imageUrl: users.find(userId).avatarUrl
     labelText: qsTr("You are not part of this room anymore.")
 
     buttonModel: [

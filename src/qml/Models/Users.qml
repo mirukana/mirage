@@ -3,7 +3,7 @@ import SortFilterProxyModel 0.2
 import "../Base"
 
 HListModel {
-    function getUser(user_id) {
+    function find(user_id) {
         // Happens when SortFilterProxyModel ExpressionFilter/Sorter/Role tests
         // the expression with invalid data to establish property bindings
         if (! user_id) { return }

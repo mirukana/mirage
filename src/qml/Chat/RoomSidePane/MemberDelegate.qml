@@ -7,7 +7,7 @@ MouseArea {
     width: memberList.width
     height: childrenRect.height
 
-    property var memberInfo: users.getUser(model.userId)
+    property var memberInfo: users.find(model.userId)
 
     HRowLayout {
         width: parent.width

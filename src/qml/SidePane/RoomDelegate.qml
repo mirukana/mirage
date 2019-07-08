@@ -45,7 +45,7 @@ MouseArea {
                     }
 
                     return Utils.coloredNameHtml(
-                        users.getUser(ev.senderId).displayName,
+                        users.find(ev.senderId).displayName,
                         ev.senderId
                     ) + ": " + py.callSync("inlinify", [ev.content])
                 }

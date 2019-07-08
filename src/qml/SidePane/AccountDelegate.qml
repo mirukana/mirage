@@ -6,7 +6,7 @@ Column {
     id: accountDelegate
     width: parent.width
 
-    property var userInfo: users.getUser(model.userId)
+    property var userInfo: users.find(model.userId)
 
     property bool expanded: true
 

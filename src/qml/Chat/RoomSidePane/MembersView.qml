@@ -24,7 +24,7 @@ HColumnLayout {
 
             proxyRoles: ExpressionRole {
                 name: "displayName"
-                expression: users.getUser(userId).displayName || userId
+                expression: users.find(userId).displayName || userId
             }
 
             sorters: StringSorter {

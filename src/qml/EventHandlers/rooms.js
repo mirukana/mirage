@@ -7,7 +7,7 @@ function typingTextFor(members, our_user_id) {
 
     for (var i = 0; i < members.length; i++) {
         if (members[i] != our_user_id) {
-            profiles.push(users.getUser(members[i]))
+            profiles.push(users.find(members[i]))
         }
     }
 
@@ -106,7 +106,7 @@ function onTimelineEventReceived(
         "isLocalEcho":  is_local_echo,
         "showNameLine": show_name_line,
         "translatable": translatable,
-        "targetUserId": target_user_id,
+        "tarfindId": target_user_id,
     }
 
     if (is_local_echo) {

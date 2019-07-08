@@ -70,13 +70,13 @@ function translatedEventContent(ev) {
     if (ev.translatable == false) { return ev.content }
 
     // %S → sender display name
-    var name = users.getUser(ev.senderId).displayName
+    var name = users.find(ev.senderId).displayName
     var text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
 
     // %T → target (event state_key) display name
-    if (ev.targetUserId) {
-        var tname = users.getUser(ev.targetUserId).displayName
-        text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
+    if (ev.tarfindId) {
+        var tname = users.find(ev.tarfindId).displayName
+        text = text.replace("%T", coloredNameHtml(tname, ev.tarfindId))
     }
 
     text = qsTr(text)

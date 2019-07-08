@@ -13,7 +13,7 @@ HColumnLayout {
     readonly property string category: roomInfo.category
     readonly property string roomId: roomInfo.roomId
 
-    readonly property var senderInfo: users.getUser(userId)
+    readonly property var senderInfo: users.find(userId)
 
     readonly property bool hasUnknownDevices: false
          //category == "Rooms" ?
