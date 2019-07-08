@@ -1,3 +1,6 @@
+- room doesn't change category when accept/reject invite
+- forget doesn't delete
+
 - "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color
@@ -14,6 +17,7 @@ sticky avatar at top
 ability to cancel message being sent
 
 nio
+set typing
 fix `RoomForgetResponse.create_error`
 
 OLD

@@ -188,6 +188,11 @@ class MatrixClient(nio.AsyncClient):
         return more_to_load
 
 
+    async def room_forget(self, room_id: str) -> None:
+        await super().room_forget(room_id)
+        rooms.RoomForgotten(user_id=self.user_id, room_id=room_id)
+
+
     # Callbacks for nio responses
 
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:

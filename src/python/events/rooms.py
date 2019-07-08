@@ -60,9 +60,8 @@ class RoomUpdated(Event):
 
 
 @dataclass
-class RoomDeleted(Event):
+class RoomForgotten(Event):
     user_id:  str = field()
-    category: str = field()
     room_id:  str = field()
 
 

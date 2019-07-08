@@ -25,11 +25,8 @@ Banner {
             button.loading = true
             py.callClientCoro(
                 chatPage.userId, "room_forget", [chatPage.roomId], {},
-                function() {
-                    button.loading = false
-                    pageStack.clear()
-                }
+                function() { button.loading = false }
             )
-        },
+        }
     }
 }

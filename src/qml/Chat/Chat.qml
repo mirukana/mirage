@@ -7,6 +7,7 @@ import "RoomSidePane"
 
 HColumnLayout {
     property var roomInfo: null
+    onRoomInfoChanged: if (! roomInfo) { pageStack.showPage("Default") }
 
     readonly property string userId: roomInfo.userId
     readonly property string category: roomInfo.category

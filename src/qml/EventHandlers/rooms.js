@@ -79,9 +79,8 @@ function onRoomUpdated(
 }
 
 
-function onRoomDeleted(user_id, category, room_id) {
-    var roles = {"userId": user_id, "roomId": room_id, "category": category}
-    rooms.popWhere(roles, 1)
+function onRoomForgotten(user_id, room_id) {
+    rooms.popWhere({"userId": user_id, "roomId": room_id})
 }
 
 
