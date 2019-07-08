@@ -258,9 +258,6 @@ class MatrixClient(nio.AsyncClient):
     # pylint: disable=unused-argument
 
     async def onRoomMessageText(self, room, ev, from_past=False) -> None:
-        if ev.event_id == "$1562605869886420ieZBa:matrix.org":
-            print("GOT DECRYPTED")
-
         co = HTML_FILTER.filter(
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else html.escape(ev.body)
@@ -405,8 +402,6 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onOlmEvent(self, room, ev, from_past=False) -> None:
-        if ev.event_id == "$1562605869886420ieZBa:matrix.org":
-            print(json.dumps( ev.__dict__ , indent=4))
         co = f"%S hasn't sent your device the keys to decrypt this message."
         TimelineEventReceived.from_nio(room, ev, content=co)
 

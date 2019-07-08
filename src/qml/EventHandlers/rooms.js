@@ -127,8 +127,14 @@ function onTimelineEventReceived(
 
     if (found.length > 0) {
         timelines.set(found[0], item)
-    } else {
-        // Multiple clients will emit duplicate events with the same eventId
+    }
+    // Multiple clients will emit duplicate events with the same eventId
+    else if (item.eventType == "OlmEvent" || item.eventType == "MegolmEvent") {
+        // Don't replace if an item with the same eventId is found in these
+        // cases, because it would be the ecrypted version of the event.
+        timelines.upsert({"eventId": event_id}, item, false, 250)
+    }
+    else {
         timelines.upsert({"eventId": event_id}, item, true, 250)
     }
 }
