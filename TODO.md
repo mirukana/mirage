@@ -1,3 +1,4 @@
+- see how the member list reacts to a huge unencrypted room
 - "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color

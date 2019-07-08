@@ -3,9 +3,10 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from dataclasses import dataclass, field
+
+from nio.rooms import MatrixUser
 
 from .event import Event
 
@@ -29,6 +30,15 @@ class UserUpdated(Event):
     display_name:   str = ""
     avatar_url:     str = ""
     status_message: str = ""
+
+
+    @classmethod
+    def from_nio(cls, user: MatrixUser) -> "UserUpdated":
+        return cls(
+            user_id      = user.user_id,
+            display_name = user.display_name,
+            avatar_url   = user.avatar_url,
+        )
 
 
 # Devices

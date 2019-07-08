@@ -202,13 +202,23 @@ class MatrixClient(nio.AsyncClient):
         up = rooms.RoomUpdated.from_nio
 
         for room_id, info in resp.rooms.invite.items():
-            up(self.user_id, "Invites", self.invited_rooms[room_id], info)
+            room = self.invited_rooms[room_id]
+
+            for member in room.users.values():
+                users.UserUpdated.from_nio(member)
+
+            up(self.user_id, "Invites", room, info)
 
         for room_id, info in resp.rooms.join.items():
+            room = self.rooms[room_id]
+
+            for member in room.users.values():
+                users.UserUpdated.from_nio(member)
+
             if room_id not in self.backend.past_tokens:
                 self.backend.past_tokens[room_id] = info.timeline.prev_batch
 
-            up(self.user_id, "Rooms", self.rooms[room_id], info)
+            up(self.user_id, "Rooms", room, info)
 
         for room_id, info in resp.rooms.leave.items():
             # TODO: handle in nio, these are rooms that were left before
@@ -354,14 +364,6 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomMemberEvent(self, room, ev, from_past=False) -> None:
-        if not from_past and ev.membership != "leave":
-            users.UserUpdated(
-                user_id        = ev.state_key,
-                display_name   = ev.content["displayname"] or "",
-                avatar_url     = ev.content["avatar_url"] or "",
-                status_message = "",  # TODO
-            )
-
         co = await self.get_room_member_event_content(ev)
 
         if co is not None:
