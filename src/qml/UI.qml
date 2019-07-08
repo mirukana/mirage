@@ -15,7 +15,7 @@ Item {
         target: py
         onWillLoadAccounts: function(will) {
             pageStack.showPage(will ? "Default": "SignIn")
-            if (will) {initialRoomTimer.start()}
+            // if (will) {initialRoomTimer.start()}
         }
     }
 

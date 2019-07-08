@@ -38,7 +38,13 @@ class MatrixClient(nio.AsyncClient):
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
-        super().__init__(homeserver=homeserver, user=user, device_id=device_id)
+        # TODO: pass a ClientConfig with a pickle key
+        super().__init__(
+            homeserver = homeserver,
+            user       = user,
+            device_id  = device_id,
+            store_path = self.backend.app.appdirs.user_data_dir,
+        )
 
         self.connect_callbacks()
 
@@ -157,7 +163,12 @@ class MatrixClient(nio.AsyncClient):
         )
 
         async with self.send_locks[room_id]:
-            response = await self.room_send(room_id, "m.room.message", content)
+            response = await self.room_send(
+                room_id                   = room_id,
+                message_type              = "m.room.message",
+                content                   = content,
+                ignore_unverified_devices = True,
+            )
 
             if isinstance(response, nio.RoomSendError):
                 log.error("Failed to send message: %s", response)
