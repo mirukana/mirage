@@ -1,26 +1,19 @@
 - "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color
-- invite/leave/forget backend funcs
 - license headers
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
 - `pyotherside.atexit()`
 - way to put sidepane back to auto-sizing (snap)
 - better look for arrows when sidepane collapsed
+- don't put own messages to the right past certain width
 
 ideas
 (^/v) messages unread + messages still sending
-sticky avatar at top
+sticky avatar at top in event list
 ability to cancel message being sent
 
-nio
-set typing
-fix `RoomForgetResponse.create_error`
-
-OLD
-
 - Refactoring
-  - Migrate more JS functions to their own files / Implement in Python instead
   - Don't bake in size properties for components
 
 - Bug fixes

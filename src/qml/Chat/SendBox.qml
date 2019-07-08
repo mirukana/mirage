@@ -35,9 +35,11 @@ HRectangle {
             property bool textChangedSinceLostFocus: false
 
             function setTyping(typing) {
-                return
-                Backend.clients.get(chatPage.userId)
-                       .setTypingState(chatPage.roomId, typing)
+                py.callClientCoro(
+                    chatPage.userId,
+                    "room_typing",
+                    [chatPage.roomId, typing, 5000]
+                )
             }
 
             onTextChanged: {
