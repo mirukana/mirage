@@ -1,3 +1,6 @@
+// Copyright 2019 miruka
+// This file is part of harmonyqml, licensed under LGPLv3.
+
 function onAccountUpdated(user_id) {
     accounts.append({"userId": user_id})
 }

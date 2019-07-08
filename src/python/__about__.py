@@ -1,3 +1,6 @@
+# Copyright 2019 miruka
+# This file is part of harmonyqml, licensed under LGPLv3.
+
 """<SHORTDESC>"""
 
 __pkg_name__    = "harmonyqml"
@@ -9,4 +12,4 @@ __status__      = "Development"
 __author__   = "miruka"
 __email__    = "miruka@disroot.org"
 
-__license__  = "GPLv3"
+__license__  = "LGPLv3"

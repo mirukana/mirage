@@ -1,7 +1,6 @@
 - "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color
-- license headers
 - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
 - `pyotherside.atexit()`
 - way to put sidepane back to auto-sizing (snap)

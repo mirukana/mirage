@@ -1,3 +1,6 @@
+// Copyright 2019 miruka
+// This file is part of harmonyqml, licensed under LGPLv3.
+
 function arrayToModelItem(keys_name, array) {
     // Convert an array to an object suitable to be in a model, example:
     // [1, 2, 3] → [{keys_name: 1}, {keys_name: 2}, {keys_name: 3}]

@@ -1,5 +1,5 @@
 # Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under GPLv3.
+# This file is part of harmonyqml, licensed under LGPLv3.
 
 import re
 
@@ -126,7 +126,8 @@ class HtmlFilter:
         return el
 
 
-    def _wrap_img_in_a(self, el: HtmlElement) -> HtmlElement:
+    @staticmethod
+    def _wrap_img_in_a(el: HtmlElement) -> HtmlElement:
         link   = el.attrib.get("src", "")
         width  = el.attrib.get("width", "256")
         height = el.attrib.get("height", "256")
