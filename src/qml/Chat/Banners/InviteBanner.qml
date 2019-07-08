@@ -35,17 +35,17 @@ Banner {
         "accept": function(button) {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "join", [chatPage.roomId], {},
-                function() { button.loading = false }
-            )
+                chatPage.userId, "join", [chatPage.roomId], function() {
+                    button.loading = false
+            })
         },
 
         "decline": function(button) {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "room_leave", [chatPage.roomId], {},
-                function() { button.loading = false }
-            )
+                chatPage.userId, "room_leave", [chatPage.roomId], function() {
+                    button.loading = false
+            })
         }
     }
 }

@@ -16,18 +16,18 @@ Python {
         return call_sync("APP.backend." + name, args)
     }
 
-    function callCoro(name, args, kwargs, callback) {
+    function callCoro(name, args, callback) {
         var uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
-        call("APP.call_backend_coro", [name, uuid, args, kwargs])
+        call("APP.call_backend_coro", [name, uuid, args])
     }
 
-    function callClientCoro(account_id, name, args, kwargs, callback) {
+    function callClientCoro(account_id, name, args, callback) {
         var uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
-        call("APP.call_client_coro", [account_id, name, uuid, args, kwargs])
+        call("APP.call_client_coro", [account_id, name, uuid, args])
     }
 
     Component.onCompleted: {
@@ -43,13 +43,13 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], function(on) {
                 window.debug = on
 
-                callCoro("has_saved_accounts", [], {}, function(has) {
+                callCoro("has_saved_accounts", [], function(has) {
                     py.ready = true
                     willLoadAccounts(has)
 
                     if (has) {
                         py.loadingAccounts = true
-                        py.callCoro("load_saved_accounts", [], {}, function() {
+                        py.callCoro("load_saved_accounts", [], function() {
                             py.loadingAccounts = false
                         })
                     }

@@ -44,12 +44,11 @@ class App:
 
 
     def call_backend_coro(self,
-                          name:   str,
-                          uuid:   str,
-                          args:   Optional[List[str]]      = None,
-                          kwargs: Optional[Dict[str, Any]] = None) -> None:
+                          name: str,
+                          uuid: str,
+                          args: Optional[List[str]] = None) -> None:
         self._call_coro(
-            getattr(self.backend, name)(*args or [], **kwargs or {}), uuid
+            getattr(self.backend, name)(*args or []), uuid
         )
 
 
@@ -57,11 +56,10 @@ class App:
                          account_id: str,
                          name:       str,
                          uuid:       str,
-                         args:       Optional[List[str]]      = None,
-                         kwargs:     Optional[Dict[str, Any]] = None) -> None:
+                         args:       Optional[List[str]] = None) -> None:
         client = self.backend.clients[account_id]
         self._call_coro(
-            getattr(client, name)(*args or [], **kwargs or {}), uuid
+            getattr(client, name)(*args or []), uuid
         )
 
 

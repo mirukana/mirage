@@ -50,7 +50,6 @@ HRectangle {
                     chatPage.userId,
                     "load_past_events",
                     [chatPage.roomId],
-                    {},
                     function(more_to_load) { canLoad = more_to_load }
                 )
             }

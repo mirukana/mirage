@@ -24,9 +24,9 @@ Banner {
         "forget": function(button) {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "room_forget", [chatPage.roomId], {},
-                function() { button.loading = false }
-            )
+                chatPage.userId, "room_forget", [chatPage.roomId], function() {
+                    button.loading = false
+            })
         }
     }
 }
