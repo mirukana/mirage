@@ -14,12 +14,6 @@ HListView {
             roleName: "userId"
             value: userId
         }
-
-        sorters: FilterSorter {
-            ValueFilter { roleName: "name"; value: "Invites" }
-            ValueFilter { roleName: "name"; value: "Rooms" }
-            ValueFilter { roleName: "name"; value: "Left" }
-        }
     }
 
     delegate: RoomCategoryDelegate {}

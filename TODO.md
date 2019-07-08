@@ -1,5 +1,4 @@
 - room doesn't change category when accept/reject invite
-- forget doesn't delete
 
 - "rejoin" leftbanner button if room is public
 - daybreak color
