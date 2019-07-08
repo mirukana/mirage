@@ -112,7 +112,7 @@ class MatrixClient(nio.AsyncClient):
     async def request_user_update_event(self, user_id: str) -> None:
         if user_id in self.backend.pending_profile_requests:
             return
-        print(user_id)
+        print("Requesting profile for", user_id)
         self.backend.pending_profile_requests.add(user_id)
 
         response = await self.get_profile(user_id)

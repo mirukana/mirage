@@ -72,7 +72,6 @@ function onRoomUpdated(
             item
         )
     } else {
-        print("re", replace, display_name)
         rooms.set(replace, item)
     }
 

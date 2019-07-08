@@ -4,6 +4,10 @@ import "../Base"
 
 HListModel {
     function getUser(user_id) {
+        // Happens when SortFilterProxyModel ExpressionFilter/Sorter/Role tests
+        // the expression with invalid data to establish property bindings
+        if (! user_id) { return }
+
         var found = getWhere({"userId": user_id}, 1)
         if (found.length > 0) { return found[0] }
 
