@@ -77,9 +77,9 @@ function translatedEventContent(ev) {
     var text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
 
     // %T → target (event state_key) display name
-    if (ev.tarfindId) {
-        var tname = users.find(ev.tarfindId).displayName
-        text = text.replace("%T", coloredNameHtml(tname, ev.tarfindId))
+    if (ev.targetUserId) {
+        var tname = users.find(ev.targetUserId).displayName
+        text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
     }
 
     text = qsTr(text)
