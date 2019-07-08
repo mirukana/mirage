@@ -1,18 +1,3 @@
-- see how the member list reacts to a huge unencrypted room
-- "rejoin" leftbanner button if room is public
-- daybreak color
-- html links color
-- [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
-- `pyotherside.atexit()`
-- way to put sidepane back to auto-sizing (snap)
-- better look for arrows when sidepane collapsed
-- don't put own messages to the right past certain width
-
-ideas
-(^/v) messages unread + messages still sending
-sticky avatar at top in event list
-ability to cancel message being sent
-
 - Refactoring
   - Don't bake in size properties for components
 
@@ -20,8 +5,18 @@ ability to cancel message being sent
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
+  - Horrible performance for big rooms
 
 - UI
+  - "Rejoin" leftbanner button if room is public
+  - Daybreak color
+  - Html links color
+  - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
+  - `pyotherside.atexit()`
+  - Way to put sidepane back to auto-sizing (snap)
+  - Better look for arrows when sidepane collapsed
+  - Don't put own messages to the right past certain width
+
   - Invite to room
   - Accounts delegates background
   - SidePane delegates hover effect

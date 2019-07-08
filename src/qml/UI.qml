@@ -14,7 +14,7 @@ Item {
     Connections {
         target: py
         onWillLoadAccounts: function(will) {
-            pageStack.showPage(will ? "Default" : "SignIn")
+            pageStack.showPage(will ? "Default": "SignIn")
             if (will) {initialRoomTimer.start()}
         }
     }
