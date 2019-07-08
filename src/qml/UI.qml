@@ -15,6 +15,7 @@ Item {
         target: py
         onWillLoadAccounts: function(will) {
             pageStack.showPage(will ? "Default" : "SignIn")
+            if (will) {initialRoomTimer.start()}
         }
     }
 
@@ -82,11 +83,10 @@ Item {
                 pageStack.replace("Chat/Chat.qml", {"roomInfo": info})
             }
 
-            Component.onCompleted: initialRoomTimer.start()
             Timer {
                 // TODO: remove this, debug
                 id: initialRoomTimer
-                interval: 3000
+                interval: 4000
                 repeat: false
                 onTriggered: pageStack.showRoom(
                     "@test_mary:matrix.org",
