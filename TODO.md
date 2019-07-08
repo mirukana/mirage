@@ -1,5 +1,3 @@
-- room doesn't change category when accept/reject invite
-
 - "rejoin" leftbanner button if room is public
 - daybreak color
 - html links color

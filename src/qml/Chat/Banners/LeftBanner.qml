@@ -9,7 +9,7 @@ Banner {
 
     // TODO: avatar func auto
     avatar.userId: userId
-    avatar.imageUrl: users.find(userId).avatarUrl
+    avatar.imageUrl: userInfo ? userInfo.avatarUrl : null
     labelText: qsTr("You are not part of this room anymore.")
 
     buttonModel: [

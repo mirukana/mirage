@@ -13,7 +13,7 @@ Banner {
     avatar.userId: inviterId
 
     labelText: qsTr("%1 invited you to join the room.").arg(
-        inviterId ?
+        inviterId && inviterInfo ?
         Utils.coloredNameHtml(inviterInfo.displayName, inviterId) :
         qsTr("Someone")
     )
