@@ -8,7 +8,7 @@
   - Horrible performance for big rooms
 
 - UI
-  - "Rejoin" leftbanner button if room is public
+  - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Html links color
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
