@@ -8,6 +8,7 @@ from pathlib import Path
 from threading import Thread
 from typing import Any, Coroutine, Dict, List, Optional, Sequence
 
+import uvloop
 from appdirs import AppDirs
 
 import pyotherside
@@ -38,6 +39,7 @@ class App:
 
     def _loop_starter(self) -> None:
         asyncio.set_event_loop(self.loop)
+        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         self.loop.run_forever()
 
 
