@@ -78,7 +78,7 @@ HRectangle {
                 id: bannerRepeater
                 model: []
 
-                HButton {
+                HUIButton {
                     id: button
                     text: modelData.text
                     iconName: modelData.iconName

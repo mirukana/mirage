@@ -71,7 +71,7 @@ HRectangle {
                 model: [
                     "members", "files", "notifications", "history", "settings"
                 ]
-                HButton {
+                HUIButton {
                     iconName: "room_view_" + modelData
                     iconDimension: 22
                     autoExclusive: true
@@ -87,7 +87,7 @@ HRectangle {
         }
     }
 
-    HButton {
+    HUIButton {
         id: expandButton
         z: 1
         anchors.right: parent.right

@@ -12,7 +12,7 @@ HRowLayout {
     Layout.fillWidth: true
     Layout.preferredHeight: theme.bottomElementsHeight
 
-    HButton {
+    HUIButton {
         iconName: "settings"
         backgroundColor: theme.sidePane.settingsButton.background
         Layout.preferredHeight: parent.height

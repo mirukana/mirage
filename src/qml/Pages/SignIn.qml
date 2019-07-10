@@ -49,7 +49,7 @@ Item {
             Repeater {
                 model: ["username", "email", "phone"]
 
-                HButton {
+                HUIButton {
                     iconName: modelData
                     circle: true
                     checked: loginWith == modelData

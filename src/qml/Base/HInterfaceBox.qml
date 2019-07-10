@@ -46,7 +46,7 @@ HScalingBox {
                 id: interfaceButtonsRepeater
                 model: []
 
-                HButton {
+                HUIButton {
                     property string name: modelData.name
 
                     id: button
