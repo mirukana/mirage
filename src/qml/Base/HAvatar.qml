@@ -54,9 +54,8 @@ Rectangle {
             hoverEnabled: true
         }
 
-        ToolTip {
+        HToolTip {
             visible: imageMouseArea.containsMouse
-            delay: Qt.styleHints.mousePressAndHoldInterval
 
             HImage {
                 id: avatarToolTipImage
