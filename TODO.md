@@ -49,6 +49,7 @@
   - Links preview
 
 - Client improvements
+  - More intelligent thumbnails downloading for different sizes
   - Filtering rooms: search more than display names?
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
