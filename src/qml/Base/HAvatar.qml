@@ -2,16 +2,22 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 
 import QtQuick 2.7
+import QtQuick.Controls 2.0
 import "../Base"
 import "../utils.js" as Utils
 
 Rectangle {
     property string name: ""
     property var imageUrl: null
+    property var toolTipImageUrl: imageUrl
     property int dimension: theme.avatar.size
     property bool hidden: false
 
     onImageUrlChanged: if (imageUrl) { avatarImage.source = imageUrl }
+
+    onToolTipImageUrlChanged: if (imageUrl) {
+        avatarToolTipImage.source = toolTipImageUrl
+    }
 
     width: dimension
     height: hidden ? 1 : dimension
@@ -41,5 +47,22 @@ Rectangle {
 
         sourceSize.width: dimension
         sourceSize.height: dimension
+
+        MouseArea {
+            id: imageMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+        }
+
+        ToolTip {
+            visible: imageMouseArea.containsMouse
+            delay: Qt.styleHints.mousePressAndHoldInterval
+
+            HImage {
+                id: avatarToolTipImage
+                sourceSize.width: 128
+                sourceSize.height: 128
+            }
+        }
     }
 }

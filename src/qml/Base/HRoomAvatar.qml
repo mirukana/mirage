@@ -15,6 +15,9 @@ HAvatar {
 
     imageUrl:
         roomInfo.avatarUrl ?
-        ("image://python/crop/" + roomInfo.avatarUrl) :
-        null
+        ("image://python/crop/" + roomInfo.avatarUrl) : null
+
+    toolTipImageUrl:
+        roomInfo.avatarUrl ?
+        ("image://python/scale/" + roomInfo.avatarUrl) : null
 }

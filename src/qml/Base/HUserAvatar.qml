@@ -13,8 +13,11 @@ HAvatar {
 
     imageUrl:
         userInfo.avatarUrl ?
-        ("image://python/crop/" + userInfo.avatarUrl) :
-        null
+        ("image://python/crop/" + userInfo.avatarUrl) : null
+
+    toolTipImageUrl:
+        userInfo.avatarUrl ?
+        ("image://python/scale/" + userInfo.avatarUrl) : null
 
     //HImage {
         //id: status
