@@ -84,6 +84,7 @@ HRectangle {
                     iconName: modelData.iconName
                     onClicked: buttonCallbacks[modelData.name](button)
 
+                    clip: true
                     Layout.maximumWidth: bannerButtons.compact ? height : -1
                     Layout.fillHeight: true
                 }
