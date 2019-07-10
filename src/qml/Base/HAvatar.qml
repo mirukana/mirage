@@ -55,12 +55,17 @@ Rectangle {
         }
 
         HToolTip {
+            id: avatarToolTip
             visible: imageMouseArea.containsMouse
+            width: 128
+            height: 128
 
             HImage {
                 id: avatarToolTipImage
-                sourceSize.width: 128
-                sourceSize.height: 128
+                sourceSize.width: avatarToolTip.width
+                sourceSize.height: avatarToolTip.height
+                width: sourceSize.width
+                height: sourceSize.height
             }
         }
     }
