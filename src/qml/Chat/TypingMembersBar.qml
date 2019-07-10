@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.3
 import "../Base"
 
 HRectangle {
+    id: typingMembersBar
+
     property alias label: typingLabel
 
     color: theme.chat.typingMembers.background
@@ -22,6 +24,7 @@ HRectangle {
         bottomPadding: 2
 
         HIcon {
+            id: icon
             svgName: "typing"  // TODO: animate
             height: typingLabel.height
         }
@@ -30,8 +33,10 @@ HRectangle {
             id: typingLabel
             text: chatPage.roomInfo.typingText
             textFormat: Text.StyledText
-            elide: Text.ElideMiddle
+            elide: Text.ElideRight
             maximumLineCount: 1
+            width: typingMembersBar.width - icon.width -
+                   parent.spacing - parent.leftPadding - parent.rightPadding
         }
     }
 }
