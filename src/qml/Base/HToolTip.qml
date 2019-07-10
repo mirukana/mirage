@@ -15,4 +15,10 @@ ToolTip {
     exit: Transition {
         HNumberAnimation { property: "opacity"; from: 1.0; to: 0.0 }
     }
+
+    MouseArea {
+        anchors.fill: parent
+        propagateComposedEvents: true
+        onClicked: { toolTip.close(); mouse.accepted = false }
+    }
 }

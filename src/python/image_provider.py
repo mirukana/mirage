@@ -112,8 +112,6 @@ class ImageProvider:
 
 
     def get(self, image_id: str, requested_size: Size) -> ImageData:
-        print("Get image:", image_id, "with size", requested_size)
-
         width  = 128 if requested_size[0] < 1 else requested_size[0]
         height = width if requested_size[1] < 1 else requested_size[1]
         thumb  = Thumbnail(self, image_id, width, height)

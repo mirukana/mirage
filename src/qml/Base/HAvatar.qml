@@ -52,6 +52,7 @@ Rectangle {
             id: imageMouseArea
             anchors.fill: parent
             hoverEnabled: true
+            propagateComposedEvents: true
         }
 
         HToolTip {
