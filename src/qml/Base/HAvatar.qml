@@ -11,6 +11,8 @@ Rectangle {
     property int dimension: theme.avatar.size
     property bool hidden: false
 
+    onImageUrlChanged: if (imageUrl) { avatarImage.source = imageUrl }
+
     width: dimension
     height: hidden ? 1 : dimension
     implicitWidth: dimension
@@ -23,7 +25,7 @@ Rectangle {
     HLabel {
         z: 1
         anchors.centerIn: parent
-        visible: ! hidden
+        visible: ! hidden && ! imageUrl
 
         text: name ? name.charAt(0) : "?"
         color: theme.avatar.letter
@@ -32,12 +34,12 @@ Rectangle {
 
     HImage {
         z: 2
+        id: avatarImage
         anchors.fill: parent
-        //visible: ! hidden && imageUrl
-        visible: false
-
-        //Component.onCompleted: if (imageUrl) { source = imageUrl }
+        visible: ! hidden && imageUrl
         fillMode: Image.PreserveAspectCrop
+
         sourceSize.width: dimension
+        sourceSize.height: dimension
     }
 }

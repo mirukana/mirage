@@ -7,9 +7,10 @@ from concurrent.futures import Future
 from pathlib import Path
 from threading import Thread
 from typing import Any, Coroutine, Dict, List, Optional, Sequence
-from uuid import uuid4
 
 from appdirs import AppDirs
+
+import pyotherside
 
 from . import __about__
 from .events.app import CoroutineDone, ExitRequested
@@ -21,6 +22,10 @@ class App:
 
         from .backend import Backend
         self.backend = Backend(app=self)
+
+        from .image_provider import ImageProvider
+        self.image_provider = ImageProvider(self)
+        pyotherside.set_image_provider(self.image_provider.get)
 
         self.loop        = asyncio.get_event_loop()
         self.loop_thread = Thread(target=self._loop_starter)

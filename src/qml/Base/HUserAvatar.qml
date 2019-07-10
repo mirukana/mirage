@@ -7,8 +7,14 @@ HAvatar {
     property string userId: ""
 
     readonly property var userInfo: userId ? users.find(userId) : ({})
-    name: userInfo.displayName || userId.substring(1)  // no leading @
-    imageUrl: userInfo.avatarUrl
+
+    name:
+        userInfo.displayName || userId.substring(1)  // no leading @
+
+    imageUrl:
+        userInfo.avatarUrl ?
+        ("image://python/crop/" + userInfo.avatarUrl) :
+        null
 
     //HImage {
         //id: status
