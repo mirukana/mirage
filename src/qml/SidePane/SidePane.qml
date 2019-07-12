@@ -13,7 +13,9 @@ HRectangle {
 
     property bool collapsed: false
     property int normalSpacing: 8
-    readonly property int currentSpacing: collapsed ? 0 : normalSpacing
+    property int currentSpacing: collapsed ? 0 : normalSpacing
+
+    Behavior on currentSpacing { HNumberAnimation {} }
 
     HColumnLayout {
         anchors.fill: parent
@@ -24,8 +26,6 @@ HRectangle {
 
             spacing: currentSpacing
             bottomMargin: currentSpacing
-
-            Behavior on spacing { HNumberAnimation {} }
         }
 
         PaneToolBar {

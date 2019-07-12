@@ -12,9 +12,9 @@ HRectangle {
     property var activeView: null
 
     property int normalSpacing: 8
-    readonly property int currentSpacing: collapsed ? 0 : normalSpacing
+    property int currentSpacing: collapsed ? 0 : normalSpacing
 
-    Behavior on normalSpacing { HNumberAnimation {} }
+    Behavior on currentSpacing { HNumberAnimation {} }
 
     MembersView {
         anchors.fill: parent
