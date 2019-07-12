@@ -8,6 +8,9 @@ import "../Base"
 HRectangle {
     id: sidePane
 
+    // Avoid artifacts when collapsed
+    clip: true
+
     property int normalSpacing: 8
     property bool collapsed: false
 
