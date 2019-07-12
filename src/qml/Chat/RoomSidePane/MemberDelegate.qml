@@ -5,35 +5,42 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import "../../Base"
 
-MouseArea {
+HHighlightRectangle {
     id: memberDelegate
     width: memberList.width
     height: childrenRect.height
 
     property var memberInfo: users.find(model.userId)
 
-    HRowLayout {
-        width: parent.width
-        spacing: memberList.spacing
+    Row {
+        width: parent.width - leftPadding * 2
+        padding: roomSidePane.currentSpacing / 2
+        leftPadding: roomSidePane.currentSpacing
+        rightPadding: 0
 
-        HUserAvatar {
-            id: avatar
-            userId: model.userId
-        }
+        HRowLayout {
+            width: parent.width
+            spacing: roomSidePane.currentSpacing
 
-        HColumnLayout {
-            Layout.fillWidth: true
-            Layout.maximumWidth:
-                parent.width - parent.totalSpacing - avatar.width
+            HUserAvatar {
+                id: avatar
+                userId: model.userId
+            }
 
-            HLabel {
-                id: memberName
-                text: memberInfo.displayName || model.userId
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                verticalAlignment: Qt.AlignVCenter
+            HColumnLayout {
+                Layout.fillWidth: true
+                Layout.maximumWidth:
+                    parent.width - parent.totalSpacing - avatar.width
 
-                Layout.maximumWidth: parent.width
+                HLabel {
+                    id: memberName
+                    text: memberInfo.displayName || model.userId
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+                    verticalAlignment: Qt.AlignVCenter
+
+                    Layout.maximumWidth: parent.width
+                }
             }
         }
     }

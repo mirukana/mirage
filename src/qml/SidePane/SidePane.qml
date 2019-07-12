@@ -11,9 +11,9 @@ HRectangle {
     // Avoid artifacts when collapsed
     clip: true
 
-    property int normalSpacing: 8
-    property int currentSpacing: collapsed ? 0 : normalSpacing
     property bool collapsed: false
+    property int normalSpacing: 8
+    readonly property int currentSpacing: collapsed ? 0 : normalSpacing
 
     HColumnLayout {
         anchors.fill: parent

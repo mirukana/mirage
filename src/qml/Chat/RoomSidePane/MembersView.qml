@@ -8,19 +8,9 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 HColumnLayout {
-    property bool collapsed: false
-    property int normalSpacing: collapsed ? 0 : 8
-
-    Behavior on normalSpacing { HNumberAnimation {} }
-
     HListView {
         id: memberList
-
-        spacing: normalSpacing
-        topMargin: normalSpacing
-        bottomMargin: normalSpacing
-        Layout.leftMargin: normalSpacing
-        Layout.rightMargin: normalSpacing
+        bottomMargin: currentSpacing
 
         model: HListModel {
             sourceModel: chatPage.roomInfo.members

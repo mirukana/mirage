@@ -18,7 +18,7 @@ HHighlightRectangle {
     }
 
     Row {
-        width: parent.width - sidePane.currentSpacing * 2
+        width: parent.width - leftPadding * 2
         padding: sidePane.currentSpacing / 2
         leftPadding: sidePane.currentSpacing
         rightPadding: 0
