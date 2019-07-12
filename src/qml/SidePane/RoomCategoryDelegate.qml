@@ -30,6 +30,7 @@ Column {
             elide: Text.ElideRight
             maximumLineCount: 1
 
+            Layout.leftMargin: sidePane.currentSpacing
             Layout.fillWidth: true
         }
 

@@ -41,6 +41,13 @@ QtObject {
             property color background: colors.background2
         }
 
+        property QtObject listEntry: QtObject {
+            property color background: "transparent"
+            property color hoveredBackground: Qt.hsla(0, 0, 0, 0.2)
+            property color pressedBackground: Qt.hsla(0, 0, 0, 0.4)
+            property color checkedBackground: Qt.hsla(0, 0, 0, 0.4)
+        }
+
         property QtObject textField: QtObject {
             property color background: colors.background2
         }
@@ -52,6 +59,10 @@ QtObject {
 
     property QtObject sidePane: QtObject {
         property color background: colors.background2
+
+        property QtObject account: QtObject {
+            property color background: Qt.lighter(colors.background2, 1.05)
+        }
 
         property QtObject settingsButton: QtObject {
             property color background: colors.background2

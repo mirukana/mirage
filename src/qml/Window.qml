@@ -28,6 +28,7 @@ ApplicationWindow {
 
     Python { id: py }
 
+    // Models
     Accounts       { id: accounts }
     Devices        { id: devices }
     RoomCategories { id: roomCategories }

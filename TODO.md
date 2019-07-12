@@ -1,3 +1,11 @@
+- Qt 5.12
+  - New input handlers
+  - ECMAScript 7
+  - .mjs modules
+  - inset properties
+  - `ToolTip.hide()`/`show()`
+  - horizontal & vertical padding props
+
 - Refactoring
   - Don't bake in size properties for components
 

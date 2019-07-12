@@ -13,53 +13,60 @@ Column {
 
     property bool expanded: true
 
-    HRowLayout {
+    HHighlightRectangle {
         width: parent.width
         height: childrenRect.height
-        id: row
 
-        HUserAvatar {
-            id: avatar
-            // Need to do this because conflict with the model property
-            Component.onCompleted: userId = model.userId
-        }
+        normalColor: theme.sidePane.account.background
 
-        HColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        HRowLayout {
+            id: row
+            width: parent.width
 
-            HLabel {
-                id: accountLabel
-                text: userInfo.displayName || model.userId
-                elide: HLabel.ElideRight
-                maximumLineCount: 1
-                Layout.fillWidth: true
-                leftPadding: 6
-                rightPadding: leftPadding
+            HUserAvatar {
+                id: avatar
+                // Need to do this because conflict with the model property
+                Component.onCompleted: userId = model.userId
             }
 
-            HTextField {
-                id: statusEdit
-                text: userInfo.statusMessage
-                placeholderText: qsTr("Set status message")
-                font.pixelSize: theme.fontSize.small
-                background: null
-
-                padding: 0
-                leftPadding: accountLabel.leftPadding
-                rightPadding: leftPadding
+            HColumnLayout {
                 Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                onEditingFinished: {
-                    //Backend.setStatusMessage(model.userId, text)  TODO
-                    pageStack.forceActiveFocus()
+                HLabel {
+                    id: accountLabel
+                    text: userInfo.displayName || model.userId
+                    elide: HLabel.ElideRight
+                    maximumLineCount: 1
+                    Layout.fillWidth: true
+                    leftPadding: sidePane.currentSpacing
+                    rightPadding: leftPadding
+                }
+
+                HTextField {
+                    id: statusEdit
+                    text: userInfo.statusMessage
+                    placeholderText: qsTr("Set status message")
+                    font.pixelSize: theme.fontSize.small
+                    background: null
+
+                    padding: 0
+                    leftPadding: accountLabel.leftPadding
+                    rightPadding: leftPadding
+                    Layout.fillWidth: true
+
+                    onEditingFinished: {
+                        //Backend.setStatusMessage(model.userId, text)  TODO
+                        pageStack.forceActiveFocus()
+                    }
                 }
             }
-        }
 
-        ExpandButton {
-            expandableItem: accountDelegate
-            Layout.preferredHeight: row.height
+            ExpandButton {
+                id: expandButton
+                expandableItem: accountDelegate
+                Layout.preferredHeight: row.height
+            }
         }
     }
 

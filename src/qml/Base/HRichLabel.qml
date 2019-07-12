@@ -24,11 +24,5 @@ HLabel {
             mouse.accepted = Boolean(link)
             if (link) { Qt.openUrlExternally(link) }
         }
-
-        onPressAndHold: mouse.accepted = false
-        onDoubleClicked: mouse.accepted = false
-        onPressed: mouse.accepted = false
-        onReleased: mouse.accepted = false
-        onWheel: mouse.accepted = false
     }
 }

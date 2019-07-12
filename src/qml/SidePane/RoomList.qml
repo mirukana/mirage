@@ -8,11 +8,10 @@ import "../Base"
 import "../utils.js" as Utils
 
 HListView {
+    id: roomList
+
     property string userId: ""
     property string category: ""
-
-    id: roomList
-    spacing: sidePane.collapsed ? 0 : sidePane.normalSpacing
 
     model: SortFilterProxyModel {
         sourceModel: rooms

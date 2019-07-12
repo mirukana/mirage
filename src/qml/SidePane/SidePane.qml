@@ -12,6 +12,7 @@ HRectangle {
     clip: true
 
     property int normalSpacing: 8
+    property int currentSpacing: collapsed ? 0 : normalSpacing
     property bool collapsed: false
 
     HColumnLayout {
@@ -21,10 +22,8 @@ HRectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            spacing: collapsed ? 0 : normalSpacing * 3
-            topMargin: collapsed ? 0 : normalSpacing
-            bottomMargin: topMargin
-            Layout.leftMargin: topMargin
+            spacing: currentSpacing
+            bottomMargin: currentSpacing
 
             Behavior on spacing { HNumberAnimation {} }
         }

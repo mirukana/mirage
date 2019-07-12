@@ -6,7 +6,7 @@ import QtQuick.Controls 2.0
 import "../Base"
 import "../utils.js" as Utils
 
-Rectangle {
+HRectangle {
     property string name: ""
     property var imageUrl: null
     property var toolTipImageUrl: imageUrl
