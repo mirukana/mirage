@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.12
 import QtQuick.Controls 2.0
 
 ToolTip {
@@ -16,9 +16,7 @@ ToolTip {
         HNumberAnimation { property: "opacity"; from: 1.0; to: 0.0 }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onClicked: { toolTip.close(); mouse.accepted = false }
+    TapHandler {
+        onTapped: { toolTip.hide() }
     }
 }

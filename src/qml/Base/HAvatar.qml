@@ -1,7 +1,7 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-import QtQuick 2.7
+import QtQuick 2.12
 import QtQuick.Controls 2.0
 import "../Base"
 import "../utils.js" as Utils
@@ -48,16 +48,13 @@ HRectangle {
         sourceSize.width: dimension
         sourceSize.height: dimension
 
-        MouseArea {
-            id: imageMouseArea
-            anchors.fill: parent
-            hoverEnabled: true
-            propagateComposedEvents: true
+        HoverHandler {
+            id: hoverHandler
         }
 
         HToolTip {
             id: avatarToolTip
-            visible: imageMouseArea.containsMouse
+            visible: hoverHandler.hovered
             width: 128
             height: 128
 
