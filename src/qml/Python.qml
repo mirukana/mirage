@@ -1,8 +1,8 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import io.thp.pyotherside 1.5
 import "EventHandlers/includes.js" as EventHandlers
 

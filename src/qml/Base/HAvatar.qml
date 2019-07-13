@@ -2,7 +2,7 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 
 import QtQuick 2.12
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 import "../Base"
 import "../utils.js" as Utils
 

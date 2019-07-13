@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 
 ToolTip {
     // Be sure to have a width and height set, to prevent the tooltip from

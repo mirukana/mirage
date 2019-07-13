@@ -1,7 +1,7 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-import QtQuick 2.7
+import QtQuick 2.12
 
 HRectangle {
     property real widthForHeight: 0.75
