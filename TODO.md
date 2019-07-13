@@ -1,13 +1,13 @@
+- Rename theme.bottomElementsHeight
+
 - Qt 5.12
   - New input handlers
   - ECMAScript 7
   - .mjs modules
-  - inset properties
-  - `ToolTip.hide()`/`show()`
-  - horizontal & vertical padding props
 
 - Refactoring
   - Don't bake in size properties for components
+  - Unfinished work in button-refactor branch
 
 - Bug fixes
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
@@ -19,7 +19,6 @@
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Html links color
-  - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - `pyotherside.atexit()`
   - Way to put sidepane back to auto-sizing (snap)
   - Better look for arrows when sidepane collapsed
@@ -57,6 +56,7 @@
   - Links preview
 
 - Client improvements
+  - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - More intelligent thumbnails downloading for different sizes
   - Filtering rooms: search more than display names?
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`

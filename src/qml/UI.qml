@@ -15,7 +15,7 @@ Item {
         target: py
         onWillLoadAccounts: function(will) {
             pageStack.showPage(will ? "Default": "SignIn")
-            // if (will) {initialRoomTimer.start()}
+            if (will) {initialRoomTimer.start()}
         }
     }
 
@@ -86,12 +86,16 @@ Item {
             Timer {
                 // TODO: remove this, debug
                 id: initialRoomTimer
-                interval: 4000
+                interval: 2000
                 repeat: false
-                onTriggered: pageStack.showRoom(
-                    "@test_mary:matrix.org",
-                    "Rooms",
-                    "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                // onTriggered: pageStack.showRoom(
+                    // "@test_mary:matrix.org",
+                    // "Rooms",
+                    // "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                // )
+                onTriggered: pageStack.showPage(
+                    "EditAccount/EditAccount",
+                    {"userId": "@test_mary:matrix.org"}
                 )
             }
 

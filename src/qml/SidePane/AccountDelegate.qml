@@ -1,8 +1,8 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Layouts 1.12
 import "../Base"
 
 Column {
@@ -10,8 +10,13 @@ Column {
     width: parent.width
 
     property var userInfo: users.find(model.userId)
-
     property bool expanded: true
+
+    TapHandler {
+        onTapped: pageStack.showPage(
+            "EditAccount/EditAccount", { "userId": model.userId }
+        )
+    }
 
     HHighlightRectangle {
         width: parent.width
