@@ -7,11 +7,14 @@ import "../Base"
 import "../utils.js" as Utils
 
 HRectangle {
+    id: avatar
+    implicitWidth: theme.avatar.size
+    implicitHeight: theme.avatar.size
+
     property string name: ""
     property var imageUrl: null
     property var toolTipImageUrl: imageUrl
-    property int dimension: theme.avatar.size
-    property bool hidden: false
+    property alias fillMode: avatarImage.fillMode
 
     onImageUrlChanged: if (imageUrl) { avatarImage.source = imageUrl }
 
@@ -19,19 +22,16 @@ HRectangle {
         avatarToolTipImage.source = toolTipImageUrl
     }
 
-    width: dimension
-    height: hidden ? 1 : dimension
-    implicitWidth: dimension
-    implicitHeight: hidden ? 1 : dimension
+    readonly property var params: Utils.thumbnailParametersFor(width, height)
 
-    opacity: hidden ? 0 : 1
-
-    color: name ? Utils.avatarColor(name) : theme.avatar.background.unknown
+    color: imageUrl ? "transparent" :
+           name ? Utils.avatarColor(name) :
+           theme.avatar.background.unknown
 
     HLabel {
         z: 1
         anchors.centerIn: parent
-        visible: ! hidden && ! imageUrl
+        visible: ! imageUrl
 
         text: name ? name.charAt(0) : "?"
         color: theme.avatar.letter
@@ -39,14 +39,13 @@ HRectangle {
     }
 
     HImage {
-        z: 2
         id: avatarImage
         anchors.fill: parent
-        visible: ! hidden && imageUrl
-        fillMode: Image.PreserveAspectCrop
-
-        sourceSize.width: dimension
-        sourceSize.height: dimension
+        visible: imageUrl
+        z: 2
+        sourceSize.width: params.width
+        sourceSize.height: params.height
+        fillMode: params.fillMode
 
         HoverHandler {
             id: hoverHandler
@@ -54,16 +53,17 @@ HRectangle {
 
         HToolTip {
             id: avatarToolTip
-            visible: hoverHandler.hovered
+            visible: toolTipImageUrl && hoverHandler.hovered
             width: 128
             height: 128
 
             HImage {
                 id: avatarToolTipImage
-                sourceSize.width: avatarToolTip.width
-                sourceSize.height: avatarToolTip.height
-                width: sourceSize.width
-                height: sourceSize.height
+                width: parent.width
+                height: parent.height
+                sourceSize.width: parent.width
+                sourceSize.height: parent.height
+                fillMode: Image.PreserveAspectCrop
             }
         }
     }

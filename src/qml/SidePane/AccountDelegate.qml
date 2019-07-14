@@ -12,17 +12,17 @@ Column {
     property var userInfo: users.find(model.userId)
     property bool expanded: true
 
-    TapHandler {
-        onTapped: pageStack.showPage(
-            "EditAccount/EditAccount", { "userId": model.userId }
-        )
-    }
-
     HHighlightRectangle {
         width: parent.width
         height: childrenRect.height
 
         normalColor: theme.sidePane.account.background
+
+        TapHandler {
+            onTapped: pageStack.showPage(
+                "EditAccount/EditAccount", { "userId": model.userId }
+            )
+        }
 
         HRowLayout {
             id: row

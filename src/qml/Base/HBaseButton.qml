@@ -26,7 +26,10 @@ Button {
     background: Rectangle {
         id: buttonBackground
         color: Qt.lighter(
-            backgroundColor, checked ? (checkedLightens ? 1.3 : 0.7) : 1.0
+            backgroundColor,
+            ! enabled ? 0.7 :
+            checked ? (checkedLightens ? 1.3 : 0.7) :
+            1.0
         )
         radius: circle ? height : 0
 

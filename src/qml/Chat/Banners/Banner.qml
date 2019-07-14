@@ -22,7 +22,6 @@ HRectangle {
 
         HUserAvatar {
             id: bannerAvatar
-            dimension: banner.Layout.preferredHeight
         }
 
         HIcon {

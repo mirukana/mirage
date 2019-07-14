@@ -7,9 +7,6 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HRectangle {
-    HLabel {
-        anchors.centerIn: parent
-        text: "Devices - TODO"
-    }
+HLabel {
+    text: "Devices - TODO"
 }

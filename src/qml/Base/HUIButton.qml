@@ -4,6 +4,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import QtGraphicalEffects 1.12
 
 HBaseButton {
     property int horizontalMargin: 0
@@ -14,6 +15,7 @@ HBaseButton {
     property var iconTransform: null
 
     property int fontSize: theme.fontSize.normal
+    property bool centerText: Boolean(iconName)
 
     property bool loading: false
 
@@ -29,7 +31,7 @@ HBaseButton {
 
         HRowLayout {
             id: contentLayout
-            spacing: button.text && iconName ? 5 : 0
+            spacing: button.text && iconName ? 8 : 0
             Component.onCompleted: contentWidth = implicitWidth
 
             HIcon {
@@ -41,15 +43,25 @@ HBaseButton {
                 Layout.bottomMargin: verticalMargin
                 Layout.leftMargin: horizontalMargin
                 Layout.rightMargin: horizontalMargin
+
+                // Colorize {
+                    // anchors.fill: parent
+                    // source: parent
+                    // visible: ! button.enabled
+                    // saturation: 0
+                // }
             }
 
             HLabel {
                 text: button.text
                 font.pixelSize: fontSize
-                horizontalAlignment: Text.AlignHCenter
+                horizontalAlignment: button.centerText ?
+                                     Text.AlignHCenter : Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
+                color: enabled ?
+                       theme.colors.foreground : theme.colors.foregroundDim2
 
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
             }
         }
     }

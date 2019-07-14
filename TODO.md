@@ -1,4 +1,12 @@
+- ElidedLabel component
+- Can set `Layout.fillWidth: true` to elide/wrap 
+- Use childrenRect stuff
 - Rename theme.bottomElementsHeight
+- Account delegate name color
+- If avatar is set, name color from average color?
+- normalSpacing in Theme
+- Qt.AlignCenter instead of V | H
+- banner button repair
 
 - Qt 5.12
   - New input handlers
@@ -57,7 +65,6 @@
 
 - Client improvements
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
-  - More intelligent thumbnails downloading for different sizes
   - Filtering rooms: search more than display names?
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request

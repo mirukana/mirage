@@ -6,14 +6,14 @@ import SortFilterProxyModel 0.2
 import "../../Base"
 
 HRectangle {
-    property alias listView: roomEventListView
+    property alias listView: eventList
 
     property int space: 8
 
-    color: theme.chat.roomEventList.background
+    color: theme.chat.eventList.background
 
     HListView {
-        id: roomEventListView
+        id: eventList
         clip: true
 
         model: HListModel {
@@ -48,12 +48,12 @@ HRectangle {
             if (chatPage.category != "Invites" && canLoad && yPos <= 0.1) {
                 zz += 1
                 print(canLoad, zz)
-                canLoad = false
+                eventList.canLoad = false
                 py.callClientCoro(
                     chatPage.userId,
                     "load_past_events",
                     [chatPage.roomId],
-                    function(more_to_load) { canLoad = more_to_load }
+                    function(more_to_load) { eventList.canLoad = more_to_load }
                 )
             }
         }
@@ -62,7 +62,7 @@ HRectangle {
     HNoticePage {
         text: qsTr("Nothing to show here yet...")
 
-        visible: roomEventListView.model.count < 1
+        visible: eventList.model.count < 1
         anchors.fill: parent
     }
 }

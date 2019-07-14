@@ -47,7 +47,7 @@ function nameColor(name) {
 
 function coloredNameHtml(name, alt_id) {
     // substring: remove leading @
-    return "<font color='" + nameColor(name || alt_id.substring(1)) + "'>" +
+    return "<font color='" + nameColor(alt_id.substring(1)) + "'>" +
            escapeHtml(name || alt_id) +
            "</font>"
 }
@@ -105,4 +105,23 @@ function filterMatches(filter, text) {
         }
     }
     return true
+}
+
+
+function thumbnailParametersFor(width, height) {
+    // https://matrix.org/docs/spec/client_server/latest#thumbnails
+
+    if (width > 640 || height > 480)
+        return {width: 800, height: 600, fillMode: Image.PreserveAspectFit}
+
+    if (width > 320 || height > 240)
+        return {width: 640, height: 480, fillMode: Image.PreserveAspectFit}
+
+    if (width >  96 || height >  96)
+        return {width: 320, height: 240, fillMode: Image.PreserveAspectFit}
+
+    if (width >  32 || height >  32)
+        return {width: 96, height: 96, fillMode: Image.PreserveAspectCrop}
+
+    return {width: 32, height: 32, fillMode: Image.PreserveAspectCrop}
 }

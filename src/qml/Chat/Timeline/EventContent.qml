@@ -13,9 +13,10 @@ Row {
 
     HUserAvatar {
         id: avatar
-        hidden: combine
         userId: model.senderId
-        dimension: model.showNameLine ? 48 : 28
+        width: model.showNameLine ? 48 : 28
+        height: combine ? 1 : model.showNameLine ? 48 : 28
+        opacity: combine ? 0 : 1
         visible: ! isOwn
     }
 
@@ -26,7 +27,7 @@ Row {
 
         //width: nameLabel.implicitWidth
         width: Math.min(
-            roomEventListView.width - avatar.width - messageContent.spacing,
+            eventList.width - avatar.width - messageContent.spacing,
             theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
             Math.max(
                 nameLabel.visible ? nameLabel.implicitWidth : 0,

@@ -4,25 +4,14 @@
 import QtQuick 2.12
 
 HLabel {
+    // https://blog.shantanu.io/2015/02/15/creating-working-hyperlinks-in-qtquick-text/
     id: label
     textFormat: Text.RichText
+    onLinkActivated: Qt.openUrlExternally(link)
 
     MouseArea {
-        id: mouseArea
         anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-
-        onPositionChanged: function (mouse) {
-            mouse.accepted = false
-            cursorShape = label.linkAt(mouse.x, mouse.y) ?
-                          Qt.PointingHandCursor : Qt.ArrowCursor
-        }
-
-        onClicked: function(mouse) {
-            var link = label.linkAt(mouse.x, mouse.y)
-            mouse.accepted = Boolean(link)
-            if (link) { Qt.openUrlExternally(link) }
-        }
+        acceptedButtons: Qt.NoButton
+        cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
 }

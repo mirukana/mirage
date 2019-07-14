@@ -7,66 +7,75 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HRectangle {
+Page {
+    id: editAccount
+    padding: currentSpacing < 8 ? 0 : currentSpacing
+    Behavior on padding { HNumberAnimation {} }
+
+    property bool wide: width > 414 + padding * 2
+    property int thinMaxWidth: 240
+    property int normalSpacing: 8
+    property int currentSpacing:
+        Math.min(normalSpacing * width / 400, normalSpacing * 2)
+
     property string userId: ""
     readonly property var userInfo: users.find(userId)
 
-    HColumnLayout {
-        anchors.fill: parent
+    header: HRectangle {
+        width: parent.width
+        height: theme.bottomElementsHeight
+        color: theme.pageHeadersBackground
 
         HRowLayout {
-            Layout.preferredHeight: theme.bottomElementsHeight
+            width: parent.width
 
             HLabel {
-                text: qsTr("Edit %1").arg(
+                text: qsTr("Account settings for %1").arg(
                     Utils.coloredNameHtml(userInfo.displayName, userId)
                 )
                 textFormat: Text.StyledText
                 font.pixelSize: theme.fontSize.big
                 elide: Text.ElideRight
                 maximumLineCount: 1
-                // visible: width > 50
 
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.width - tabBar.width
-                Layout.leftMargin: 8
+                Layout.leftMargin: currentSpacing
                 Layout.rightMargin: Layout.leftMargin
-            }
-
-            TabBar {
-                id: tabBar
-                currentIndex: swipeView.currentIndex
-                spacing: 0
-                contentHeight: parent.height
-
-                TabButton {
-                    text: qsTr("Profile")
-                    width: implicitWidth * 1.25
-                }
-
-                TabButton {
-                    text: qsTr("Devices")
-                    width: implicitWidth * 1.25
-                }
-
-                TabButton {
-                    text: qsTr("Harmony")
-                    width: implicitWidth * 1.25
-                }
+                Layout.fillWidth: true
             }
         }
+    }
 
-        SwipeView {
-            id: swipeView
-            clip: true
-            currentIndex: tabBar.currentIndex
+    background: null
 
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+    HColumnLayout {
+        anchors.fill: parent
+        spacing: 16
 
-            Profile {}
-            Devices {}
-            ClientSettings {}
+        HRectangle {
+            color: theme.box.background
+            // radius: theme.box.radius
+
+            Layout.alignment: Qt.AlignCenter
+
+            Layout.preferredWidth: wide ? parent.width : thinMaxWidth
+            Layout.maximumWidth: Math.min(parent.width, 640)
+
+            Layout.preferredHeight: childrenRect.height
+            Layout.maximumHeight: parent.height
+
+            Profile { width: parent.width }
         }
+
+        // HRectangle {
+            // color: theme.box.background
+            // radius: theme.box.radius
+            // ClientSettings { width: parent.width }
+        // }
+
+        // HRectangle {
+            // color: theme.box.background
+            // radius: theme.box.radius
+            // Devices { width: parent.width }
+        // }
     }
 }

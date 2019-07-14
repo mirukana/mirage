@@ -14,10 +14,8 @@ HAvatar {
         dname[0] == "#" && dname.length > 1 ? dname.substring(1) : dname
 
     imageUrl:
-        roomInfo.avatarUrl ?
-        ("image://python/crop/" + roomInfo.avatarUrl) : null
+        roomInfo.avatarUrl ?  ("image://python/" + roomInfo.avatarUrl) : null
 
     toolTipImageUrl:
-        roomInfo.avatarUrl ?
-        ("image://python/scale/" + roomInfo.avatarUrl) : null
+        roomInfo.avatarUrl ?  ("image://python/" + roomInfo.avatarUrl) : null
 }

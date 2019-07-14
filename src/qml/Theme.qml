@@ -32,6 +32,7 @@ QtObject {
         property color background2: Qt.hsla(0, 0, 0.9, 0.7)
         property color foreground: "black"
         property color foregroundDim: Qt.hsla(0, 0, 0.2, 1)
+        property color foregroundDim2: Qt.hsla(0, 0, 0.3, 1)
         property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
         property color textBorder: Qt.hsla(0, 0, 0, 0.07)
     }
@@ -50,6 +51,8 @@ QtObject {
 
         property QtObject textField: QtObject {
             property color background: colors.background2
+            property color borderColor: "black"
+            property int borderWidth: 1
         }
 
         property QtObject textArea: QtObject {
@@ -82,7 +85,7 @@ QtObject {
             property color background: colors.background2
         }
 
-        property QtObject roomEventList: QtObject {
+        property QtObject eventList: QtObject {
             property color background: "transparent"
         }
 
@@ -119,6 +122,8 @@ QtObject {
             property color background: colors.background2
         }
     }
+
+    property color pageHeadersBackground: colors.background2
 
     property QtObject box: QtObject {
         property color background: colors.background0

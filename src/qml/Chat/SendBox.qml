@@ -22,7 +22,6 @@ HRectangle {
         HUserAvatar {
             id: avatar
             userId: chatPage.userId
-            dimension: sendBox.Layout.minimumHeight
         }
 
         HScrollableTextArea {

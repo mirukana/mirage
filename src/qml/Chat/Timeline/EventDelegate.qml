@@ -16,8 +16,8 @@ Column {
     function getPreviousItem(nth) {
         // Remember, index 0 = newest bottomest message
         nth = nth || 1
-        return roomEventListView.model.count - 1 > model.index + nth ?
-                roomEventListView.model.get(model.index + nth) : null
+        return eventList.model.count - 1 > model.index + nth ?
+                eventList.model.get(model.index + nth) : null
     }
 
     property var previousItem: getPreviousItem()
@@ -60,7 +60,7 @@ Column {
     property int verticalPadding: 4
 
     ListView.onAdd: {
-        var nextDelegate = roomEventListView.contentItem.children[index]
+        var nextDelegate = eventList.contentItem.children[index]
         if (nextDelegate) { nextDelegate.reloadPreviousItem() }
     }
 

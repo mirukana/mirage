@@ -4,10 +4,11 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
-ColumnLayout {
-    id: columnLayout
-    spacing: 0
+GridLayout {
+    id: gridLayout
+    rowSpacing: 0
+    columnSpacing: 0
 
     property int totalSpacing:
-        spacing * Math.max(0, (columnLayout.visibleChildren.length - 1))
+        spacing * Math.max(0, (gridLayout.visibleChildren.length - 1))
 }

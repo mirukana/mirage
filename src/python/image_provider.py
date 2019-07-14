@@ -17,35 +17,48 @@ import nio
 import pyotherside
 from nio.api import ResizingMethod
 
-from .app import App
-
 Size      = Tuple[int, int]
 ImageData = Tuple[bytearray, Size, int]  # last int: pyotherside format enum
 
 
 @dataclass
 class Thumbnail:
-    provider:      "ImageProvider" = field()
-    id:            str             = field()
-    width:         int             = field()
-    height:        int             = field()
+    # pylint: disable=no-member
+    provider: "ImageProvider" = field()
+    mxc:      str             = field()
+    width:    int             = field()
+    height:   int             = field()
 
     def __post_init__(self) -> None:
-        self.id = re.sub(r"#auto$", "", self.id)
+        self.mxc = re.sub(r"#auto$", "", self.mxc)
 
-        if not re.match(r"^(crop|scale)/mxc://.+/.+", self.id):
-            raise ValueError(f"Invalid image ID: {self.id}")
+        if not re.match(r"^mxc://.+/.+", self.mxc):
+            raise ValueError(f"Invalid mxc URI: {self.mxc}")
+
+
+    @property
+    def server_size(self) -> Tuple[int, int]:
+        # https://matrix.org/docs/spec/client_server/latest#thumbnails
+
+        if self.width > 640 or self.height > 480:
+            return (800, 600)
+
+        if self.width > 320 or self.height > 240:
+            return (640, 480)
+
+        if self.width > 96 or self.height > 96:
+            return (320, 240)
+
+        if self.width > 32 or self.height > 32:
+            return (96, 96)
+
+        return (32, 32)
 
 
     @property
     def resize_method(self) -> ResizingMethod:
-        return ResizingMethod.crop \
-               if self.id.startswith("crop/") else ResizingMethod.scale
-
-
-    @property
-    def mxc(self) -> str:
-        return re.sub(r"^(crop|scale)/", "", self.id)
+        return ResizingMethod.scale \
+               if self.width > 96 or self.height > 96 else ResizingMethod.crop
 
 
     @property
@@ -55,11 +68,12 @@ class Thumbnail:
 
     @property
     def local_path(self) -> Path:
+        # pylint: disable=bad-string-format-type
         parsed = urlparse(self.mxc)
-        name   = "%s.%d.%d.%s" % (
+        name   = "%s.%03d.%03d.%s" % (
             parsed.path.lstrip("/"),
-            self.width,
-            self.height,
+            self.server_size[0],
+            self.server_size[1],
             self.resize_method.value,
         )
         return self.provider.cache / parsed.netloc / name
@@ -74,16 +88,16 @@ class Thumbnail:
         response = await client.thumbnail(
             server_name = parsed.netloc,
             media_id    = parsed.path.lstrip("/"),
-            width       = self.width,
-            height      = self.height,
+            width       = self.server_size[0],
+            height      = self.server_size[1],
             method      = self.resize_method,
         )
         body = response.body
 
         if response.content_type not in ("image/jpeg", "image/png"):
-            with BytesIO(body) as in_, BytesIO() as out:
-                PILImage.open(in_).save(out, "PNG")
-                body = out.getvalue()
+            with BytesIO(body) as img_in, BytesIO() as img_out:
+                PILImage.open(img_in).save(img_out, "PNG")
+                body = img_out.getvalue()
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -99,8 +113,10 @@ class Thumbnail:
         except FileNotFoundError:
             body = await self.download()
 
-        size = (self.width, self.height)
-        return (bytearray(body), size , pyotherside.format_data)
+        with BytesIO(body) as img_in:
+            real_size = PILImage.open(img_in).size
+
+        return (bytearray(body), real_size, pyotherside.format_data)
 
 
 class ImageProvider:
@@ -112,10 +128,10 @@ class ImageProvider:
 
 
     def get(self, image_id: str, requested_size: Size) -> ImageData:
-        width  = 128 if requested_size[0] < 1 else requested_size[0]
-        height = width if requested_size[1] < 1 else requested_size[1]
-        thumb  = Thumbnail(self, image_id, width, height)
+        if requested_size[0] < 1 or requested_size[1] < 1:
+            raise ValueError(f"width or height < 1: {requested_size!r}")
 
         return asyncio.run_coroutine_threadsafe(
-            thumb.get_data(), self.app.loop
+            Thumbnail(self, image_id, *requested_size).get_data(),
+            self.app.loop
         ).result()
