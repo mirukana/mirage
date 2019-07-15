@@ -11,6 +11,7 @@ Page {
     id: editAccount
 
     property bool wide: width > 414 + padding * 2
+    property int avatarPreferredSize: theme.minimumSupportedWidth
     property int normalSpacing: 8
     property int currentSpacing:
         Math.min(normalSpacing * width / 400, normalSpacing * 2)
@@ -20,8 +21,16 @@ Page {
 
     header: HRectangle {
         width: parent.width
-        height: theme.bottomElementsHeight
         color: theme.pageHeadersBackground
+
+        height: window.height <
+                avatarPreferredSize +
+                theme.bottomElementsHeight +
+                currentSpacing * 2 ?
+                0 : theme.bottomElementsHeight
+
+        Behavior on height { HNumberAnimation {} }
+        visible: height > 0
 
         HRowLayout {
             width: parent.width
@@ -34,6 +43,7 @@ Page {
                 font.pixelSize: theme.fontSize.big
                 elide: Text.ElideRight
                 maximumLineCount: 1
+                horizontalAlignment: Text.AlignHCenter
 
                 Layout.leftMargin: currentSpacing
                 Layout.rightMargin: Layout.leftMargin
@@ -44,8 +54,9 @@ Page {
 
     background: null
 
-    padding: currentSpacing < 8 ? 0 : currentSpacing
-    Behavior on padding { HNumberAnimation {} }
+    leftPadding: currentSpacing < 8 ? 0 : currentSpacing
+    rightPadding: leftPadding
+    Behavior on leftPadding { HNumberAnimation {} }
 
     Flickable {
         id: flickable
@@ -68,7 +79,7 @@ Page {
 
                 Layout.maximumWidth: Math.min(parent.width, 640)
                 Layout.preferredWidth:
-                    wide ? parent.width : theme.minimumSupportedWidth
+                    wide ? parent.width : avatarPreferredSize
 
                 Layout.preferredHeight: childrenRect.height
 
