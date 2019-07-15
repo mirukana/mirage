@@ -64,6 +64,7 @@ Page {
         clip: true
         contentWidth: parent.width
         contentHeight: boxColumn.childrenRect.height
+        interactive: contentWidth > width || contentHeight > height
 
         HColumnLayout {
             id: boxColumn

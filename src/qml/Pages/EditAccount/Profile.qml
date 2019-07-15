@@ -48,8 +48,7 @@ HGridLayout {
 
         Layout.alignment: Qt.AlignHCenter
 
-        Layout.preferredWidth:
-            Math.min(flickable.height, theme.minimumSupportedWidth)
+        Layout.preferredWidth: Math.min(flickable.height, avatarPreferredSize)
         Layout.preferredHeight: Layout.preferredWidth
 
         HFileDialogOpener {
