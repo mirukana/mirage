@@ -9,12 +9,27 @@ import "../../utils.js" as Utils
 
 HGridLayout {
     function applyChanges() {
-        saveButton.loading = true
+        if (nameField.changed) {
+            saveButton.nameChangeRunning = true
 
-        py.callClientCoro(
-            userId, "set_displayname", [nameField.field.text],
-            () => { saveButton.loading = false }
-        )
+            py.callClientCoro(
+                userId, "set_displayname", [nameField.field.text], () => {
+                    saveButton.nameChangeRunning = false
+                }
+            )
+        }
+
+        if (avatar.changed) {
+            saveButton.avatarChangeRunning = true
+            var path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
+
+            py.callClientCoro(
+                userId, "set_avatar_from_file", [path], response => {
+                    saveButton.avatarChangeRunning = false
+                    if (response != true) { print(response) }
+                }
+            )
+        }
     }
 
     columns: 2
@@ -24,8 +39,11 @@ HGridLayout {
     Component.onCompleted: nameField.field.forceActiveFocus()
 
     HUserAvatar {
+        property bool changed: avatar.imageUrl != avatar.defaultImageUrl
+
         id: avatar
         userId: editAccount.userId
+        imageUrl: fileDialog.selectedFile || defaultImageUrl
         toolTipImageUrl: null
 
         Layout.alignment: Qt.AlignHCenter
@@ -33,6 +51,13 @@ HGridLayout {
 
         Layout.preferredWidth: thinMaxWidth
         Layout.preferredHeight: Layout.preferredWidth
+
+        HFileDialogOpener {
+            id: fileDialog
+            fileType: HFileDialogOpener.FileType.Images
+            dialog.title: qsTr("Select profile picture for %1")
+                              .arg(userInfo.displayName)
+        }
     }
 
     HColumnLayout {
@@ -53,6 +78,8 @@ HGridLayout {
             }
 
             HLabeledTextField {
+                property bool changed: field.text != userInfo.displayName
+
                 id: nameField
                 label.text: qsTr("Display name:")
                 field.text: userInfo.displayName
@@ -69,11 +96,15 @@ HGridLayout {
             Layout.alignment: Qt.AlignBottom
 
             HUIButton {
+                property bool nameChangeRunning: false
+                property bool avatarChangeRunning: false
+
                 id: saveButton
                 iconName: "save"
                 text: qsTr("Save")
                 centerText: false
-                enabled: nameField.field.text != userInfo.displayName
+                loading: nameChangeRunning || avatarChangeRunning
+                enabled: nameField.changed || avatar.changed
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom

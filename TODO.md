@@ -7,6 +7,18 @@
 - normalSpacing in Theme
 - Qt.AlignCenter instead of V | H
 - banner button repair
+- Wrong avatar for group rooms
+- Can assign "" to an Image source
+- Make sure to not cache user images and that sourceSize is set everywhere
+- Reduce messages ListView cacheBuffer height once http thumbnails
+  downloading is implemented 
+- HTextField focus effect
+- Button can get "hoverEnabled: false" to let HoverHandlers work
+- Center account box buttons
+- Handle TimeoutError for all kind of async requests (nio)
+- Handle thumbnail response status 400
+- "Loading..." if going to edit account page while it's loading
+- Improve avatar tooltips position, add stuff to room tooltips (last msg?)
 
 - Qt 5.12
   - New input handlers
@@ -49,6 +61,8 @@
   - Settings page
     - Multiaccount aliases
   - Message/text selection
+
+  - Custom file picker for Linux...
 
 - Major features
   - E2E

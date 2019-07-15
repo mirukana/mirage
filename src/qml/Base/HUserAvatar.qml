@@ -7,14 +7,15 @@ HAvatar {
     property string userId: ""
     readonly property var userInfo: userId ? users.find(userId) : ({})
 
-    name:
-        userInfo.displayName || userId.substring(1)  // no leading @
-
-    imageUrl:
+    readonly property var defaultImageUrl:
         userInfo.avatarUrl ? ("image://python/" + userInfo.avatarUrl) : null
 
-    toolTipImageUrl:
+    readonly property var defaultToolTipImageUrl:
         userInfo.avatarUrl ? ("image://python/" + userInfo.avatarUrl) : null
+
+    name: userInfo.displayName || userId.substring(1)  // no leading @
+    imageUrl: defaultImageUrl
+    toolTipImageUrl:defaultToolTipImageUrl
 
     //HImage {
         //id: status

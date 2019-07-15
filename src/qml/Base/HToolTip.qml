@@ -6,7 +6,7 @@ ToolTip {
     // going out of the window's boundaries
 
     id: toolTip
-    delay: Qt.styleHints.mousePressAndHoldInterval
+    delay: 150
     padding: 0
 
     enter: Transition {

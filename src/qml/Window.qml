@@ -18,10 +18,11 @@ ApplicationWindow {
     property bool ready: false
 
     Component.onCompleted: {
-        Qt.application.name        = "harmonyqml"
-        Qt.application.displayName = "Harmony QML"
-        Qt.application.version     = "0.1.0"
-        window.ready = true
+        Qt.application.organization = "harmonyqml"
+        Qt.application.name         = "harmonyqml"
+        Qt.application.displayName  = "Harmony QML"
+        Qt.application.version      = "0.1.0"
+        window.ready                = true
     }
 
     Theme { id: theme }

@@ -9,9 +9,13 @@ import logging as log
 import platform
 from contextlib import suppress
 from datetime import datetime
+from enum import Enum
+from pathlib import Path
 from types import ModuleType
-from typing import DefaultDict, Dict, Optional, Type
+from typing import DefaultDict, Dict, Optional, Type, Union
 from uuid import uuid4
+
+import filetype
 
 import nio
 from nio.rooms import MatrixRoom
@@ -20,6 +24,12 @@ from . import __about__
 from .events import rooms, users
 from .events.rooms import TimelineEventReceived, TimelineMessageReceived
 from .html_filter import HTML_FILTER
+
+
+class UploadError(Enum):
+    forbidden = "M_FORBIDDEN"
+    too_large = "M_TOO_LARGE"
+    unknown   = "UNKNOWN"
 
 
 class MatrixClient(nio.AsyncClient):
@@ -205,6 +215,38 @@ class MatrixClient(nio.AsyncClient):
     async def room_forget(self, room_id: str) -> None:
         await super().room_forget(room_id)
         rooms.RoomForgotten(user_id=self.user_id, room_id=room_id)
+
+
+    async def upload_file(self, path: Union[Path, str]) -> str:
+        path = Path(path)
+
+        with open(path, "rb") as file:
+            mime = filetype.guess_mime(file)
+            file.seek(0, 0)
+
+            resp = await self.upload(file, mime, path.name)
+
+        if not isinstance(resp, nio.ErrorResponse):
+            return resp.content_uri
+
+        if resp.status_code == 403:
+            return UploadError.forbidden.value
+
+        if resp.status_code == 413:
+            return UploadError.too_large.value
+
+        return UploadError.unknown.value
+
+
+    async def set_avatar_from_file(self, path: Union[Path, str]
+                                  ) -> Union[bool, str]:
+        resp = await self.upload_file(path)
+
+        if resp in (i.value for i in UploadError):
+            return resp
+
+        await self.set_avatar(resp)
+        return True
 
 
     # Callbacks for nio responses

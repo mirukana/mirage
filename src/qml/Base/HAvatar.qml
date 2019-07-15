@@ -54,15 +54,23 @@ HRectangle {
         HToolTip {
             id: avatarToolTip
             visible: toolTipImageUrl && hoverHandler.hovered
-            width: 128
-            height: 128
+            width: 192 + background.border.width * 2
+            height: width
+            delay: 1000
+
+            background: HRectangle {
+                id: background
+                border.color: "black"
+                border.width: 2
+            }
 
             HImage {
                 id: avatarToolTipImage
-                width: parent.width
-                height: parent.height
-                sourceSize.width: parent.width
-                sourceSize.height: parent.height
+                anchors.centerIn: parent
+                sourceSize.width: parent.width - background.border.width * 2
+                sourceSize.height: parent.height - background.border.width * 2
+                width: sourceSize.width
+                height: sourceSize.width
                 fillMode: Image.PreserveAspectCrop
             }
         }

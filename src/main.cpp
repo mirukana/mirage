@@ -1,7 +1,7 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQmlComponent>
@@ -10,7 +10,7 @@
 
 
 int main(int argc, char *argv[]) {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());

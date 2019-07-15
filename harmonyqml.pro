@@ -1,5 +1,6 @@
 TEMPLATE = app
-QT = quick
+# widgets: Make native file dialogs available to QML (must use QApplication)
+QT = quick widgets
 DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += warn_off c++11 release
 dev {

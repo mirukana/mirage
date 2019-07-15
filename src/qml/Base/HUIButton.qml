@@ -38,18 +38,12 @@ HBaseButton {
                 svgName: loading ? "hourglass" : iconName
                 dimension: iconDimension || contentLayout.height
                 transform: iconTransform
+                opacity: button.enabled ? 1 : 0.7
 
                 Layout.topMargin: verticalMargin
                 Layout.bottomMargin: verticalMargin
                 Layout.leftMargin: horizontalMargin
                 Layout.rightMargin: horizontalMargin
-
-                // Colorize {
-                    // anchors.fill: parent
-                    // source: parent
-                    // visible: ! button.enabled
-                    // saturation: 0
-                // }
             }
 
             HLabel {
