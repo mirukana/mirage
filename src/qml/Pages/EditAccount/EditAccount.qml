@@ -9,11 +9,8 @@ import "../../utils.js" as Utils
 
 Page {
     id: editAccount
-    padding: currentSpacing < 8 ? 0 : currentSpacing
-    Behavior on padding { HNumberAnimation {} }
 
     property bool wide: width > 414 + padding * 2
-    property int thinMaxWidth: 240
     property int normalSpacing: 8
     property int currentSpacing:
         Math.min(normalSpacing * width / 400, normalSpacing * 2)
@@ -47,35 +44,48 @@ Page {
 
     background: null
 
-    HColumnLayout {
+    padding: currentSpacing < 8 ? 0 : currentSpacing
+    Behavior on padding { HNumberAnimation {} }
+
+    Flickable {
+        id: flickable
         anchors.fill: parent
-        spacing: 16
+        clip: true
+        contentWidth: parent.width
+        contentHeight: boxColumn.childrenRect.height
 
-        HRectangle {
-            color: theme.box.background
-            // radius: theme.box.radius
+        HColumnLayout {
+            id: boxColumn
+            spacing: 16
+            width: flickable.width
+            height: flickable.height
 
-            Layout.alignment: Qt.AlignCenter
+            HRectangle {
+                color: theme.box.background
+                // radius: theme.box.radius
 
-            Layout.preferredWidth: wide ? parent.width : thinMaxWidth
-            Layout.maximumWidth: Math.min(parent.width, 640)
+                Layout.alignment: Qt.AlignCenter
 
-            Layout.preferredHeight: childrenRect.height
-            Layout.maximumHeight: parent.height
+                Layout.maximumWidth: Math.min(parent.width, 640)
+                Layout.preferredWidth:
+                    wide ? parent.width : theme.minimumSupportedWidth
 
-            Profile { width: parent.width }
+                Layout.preferredHeight: childrenRect.height
+
+                Profile { width: parent.width }
+            }
+
+            // HRectangle {
+                // color: theme.box.background
+                // radius: theme.box.radius
+                // ClientSettings { width: parent.width }
+            // }
+
+            // HRectangle {
+                // color: theme.box.background
+                // radius: theme.box.radius
+                // Devices { width: parent.width }
+            // }
         }
-
-        // HRectangle {
-            // color: theme.box.background
-            // radius: theme.box.radius
-            // ClientSettings { width: parent.width }
-        // }
-
-        // HRectangle {
-            // color: theme.box.background
-            // radius: theme.box.radius
-            // Devices { width: parent.width }
-        // }
     }
 }

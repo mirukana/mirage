@@ -47,9 +47,9 @@ HGridLayout {
         toolTipImageUrl: null
 
         Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: wide ? 0 : currentSpacing
 
-        Layout.preferredWidth: thinMaxWidth
+        Layout.preferredWidth:
+            Math.min(flickable.height, theme.minimumSupportedWidth)
         Layout.preferredHeight: Layout.preferredWidth
 
         HFileDialogOpener {

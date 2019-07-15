@@ -8,11 +8,13 @@ import "Models"
 
 ApplicationWindow {
     id: window
+    minimumWidth: theme.minimumSupportedWidth
+    minimumHeight: theme.minimumSupportedHeight
     width: 640
     height: 480
     visible: true
-    color: "black"
     title: "Harmony QML"
+    color: "black"
 
     property bool debug: false
     property bool ready: false

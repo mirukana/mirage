@@ -8,6 +8,9 @@ QtObject {
 
     property int animationDuration: 100
 
+    property int minimumSupportedWidth: 240
+    property int minimumSupportedHeight: 120
+
     property QtObject fontSize: QtObject {
         property int smallest: 6
         property int smaller: 8
