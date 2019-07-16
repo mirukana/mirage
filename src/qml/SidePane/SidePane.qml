@@ -11,7 +11,10 @@ HRectangle {
     // Avoid artifacts when collapsed
     clip: true
 
-    property bool collapsed: false
+    readonly property bool reduced: width < 1
+    readonly property bool collapsed:
+        width < theme.sidePane.collapsedWidth + theme.spacing
+
     property int currentSpacing: collapsed ? 0 : theme.spacing
 
     Behavior on currentSpacing { HNumberAnimation {} }

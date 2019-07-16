@@ -66,6 +66,14 @@ QtObject {
     }
 
     property QtObject sidePane: QtObject {
+        property real autoWidthRatio: 0.3
+        property int maximumAutoWidth: 300
+
+        property int autoCollapseBelowWidth: 120
+        property int collapsedWidth: avatar.size
+        property int autoReduceBelowWidth:
+            minimumSupportedWidth + collapsedWidth
+
         property color background: colors.background2
 
         property QtObject account: QtObject {

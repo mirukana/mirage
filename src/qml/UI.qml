@@ -39,29 +39,33 @@ Item {
         SidePane {
             id: sidePane
             visible: accountsPresent
-            collapsed: width < Layout.minimumWidth + theme.spacing
 
-            property int parentWidth: parent.width
-            property int collapseBelow: 120
+            property QtObject ts: theme.sidePane
 
             function set_width() {
-                width = parent.width * 0.3 < collapseBelow ?
-                        Layout.minimumWidth : Math.min(parent.width * 0.3, 300)
+                width =
+                    parent.width * ts.autoWidthRatio <
+                    ts.autoCollapseBelowWidth ?
+                    Layout.minimumWidth :
+                    Math.min(parent.width * ts.autoWidthRatio,
+                             ts.maximumAutoWidth)
             }
 
+            property int parentWidth: parent.width
             onParentWidthChanged: if (uiSplitView.canAutoSize) { set_width() }
 
             width: set_width()  // Initial width
-            Layout.minimumWidth: theme.avatar.size
+            Layout.minimumWidth: ts.collapsedWidth
             Layout.maximumWidth: parent.width
 
             Behavior on width {
                 HNumberAnimation {
                     // Don't slow down the user manually resizing
-                    duration:
-                        (uiSplitView.canAutoSize &&
-                        parent.width * 0.3 < sidePane.collapseBelow * 1.2) ?
-                        theme.animationDuration : 0
+                    duration: (
+                        uiSplitView.canAutoSize &&
+                        parent.width * 0.3 <
+                        theme.sidePane.autoReduceBelowWidth * 1.2
+                    ) ? theme.animationDuration : 0
                 }
             }
         }
