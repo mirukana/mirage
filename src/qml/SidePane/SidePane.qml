@@ -8,7 +8,8 @@ import "../Base"
 HRectangle {
     id: sidePane
     clip: true  // Avoid artifacts when collapsed
-    visible: mainUI.accountsPresent && width > 0
+    // opacity: mainUI.accountsPresent && ! reduce ? 1 : 0
+    // visible: opacity > 0
 
 
     property bool canAutoSize: true
@@ -27,7 +28,7 @@ HRectangle {
     property bool collapse:
         canAutoSize ?
         autoWidth < theme.sidePane.autoCollapseBelowWidth :
-        width < theme.sidePane.autoCollapseBelowWidth
+        width <= theme.sidePane.collapsedWidth
 
     property bool reduce:
         window.width < theme.sidePane.autoReduceBelowWindowWidth
@@ -37,7 +38,8 @@ HRectangle {
         collapse ? theme.sidePane.collapsedWidth :
         autoWidth
 
-    property int currentSpacing: collapse ? 0 : theme.spacing
+    property int currentSpacing:
+        collapse || reduce ? 0 : theme.spacing
 
     Behavior on currentSpacing { HNumberAnimation {} }
     Behavior on implicitWidth  { HNumberAnimation {} }

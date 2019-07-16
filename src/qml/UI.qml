@@ -40,8 +40,11 @@ Item {
             id: sidePane
             canAutoSize: uiSplitView.canAutoSize
 
-            width: implicitWidth  // Initial width
+            // Initial width until user manually resizes
+            width: implicitWidth
             Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
+            // -1: avoid making swipeview stuff disappear when dragged to max
+            Layout.maximumWidth: parent.width - 1
 
             Behavior on Layout.minimumWidth {
                 // Must run faster than SidePane implicitWidth anim

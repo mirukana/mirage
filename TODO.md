@@ -1,3 +1,7 @@
+- Resizing pane sets the autoWidthRatio
+- Show sidepane when hovering on the left when collapsed/reduced
+- Header back button
+- Standardize "wide: width > 414..."
 - Way to round avatar corners to allow box radius
 - Devices and client settings in edit account page
 - If avatar is set, name color from average color?
@@ -11,7 +15,7 @@
 - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
 - Accept drag and dropping a picture in account settings to set avatar
 - When all the events loaded on beginning in a room are name/avatar changes,
-  no last event room text is displayed
+  no last event room text is displayed (use sync filter?)
 -  `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
 
 - Qt 5.12

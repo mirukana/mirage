@@ -17,6 +17,7 @@ HRectangle {
 
     id: roomHeader
     color: theme.chat.roomHeader.background
+    implicitHeight: theme.baseElementsHeight
 
     HRowLayout {
         id: row

@@ -8,7 +8,10 @@ import "Banners"
 import "Timeline"
 import "RoomSidePane"
 
-HColumnLayout {
+HPage {
+    id: chatPage
+    onFocusChanged: sendBox.setFocus()
+
     property var roomInfo: null
     onRoomInfoChanged: if (! roomInfo) { pageStack.showPage("Default") }
 
@@ -22,18 +25,15 @@ HColumnLayout {
          //category == "Rooms" ?
          //Backend.clients.get(userId).roomHasUnknownDevices(roomId) : false
 
-    id: chatPage
-    onFocusChanged: sendBox.setFocus()
-
-    RoomHeader {
+    header: RoomHeader {
         id: roomHeader
+        width: parent.width
         displayName: roomInfo.displayName
         topic: roomInfo.topic
-
-        Layout.fillWidth: true
-        Layout.preferredHeight: theme.avatar.size
     }
 
+    page.leftPadding: 0
+    page.rightPadding: 0
 
     HSplitView {
         id: chatSplitView

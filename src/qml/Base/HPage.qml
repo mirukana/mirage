@@ -9,6 +9,8 @@ import "../SidePane"
 SwipeView {
     default property alias columnChildren: contentColumn.children
     property alias page: innerPage
+    property alias header: innerPage.header
+    property alias footer: innerPage.header
     property alias flickable: innerFlickable
 
     property alias headerLabel: innerHeaderLabel
@@ -27,8 +29,11 @@ SwipeView {
     SidePane {
         canAutoSize: false
         autoWidthRatio: 1.0
+        collapse: false
+        reduce: false
+        currentSpacing: theme.spacing
         visible: swipeView.interactive
-        onVisibleChanged: swipeView.setCurrentIndex(1)
+        onVisibleChanged: if (currentIndex != 1) swipeView.setCurrentIndex(1)
     }
 
     Page {
@@ -36,8 +41,7 @@ SwipeView {
         background: null
 
         header: HRectangle {
-            width: parent.width
-            implicitWidth: parent.width
+            implicitWidth: parent ? parent.width : 0
             color: theme.pageHeadersBackground
 
             height: ! hideHeaderUnderHeight ||
@@ -55,9 +59,6 @@ SwipeView {
 
                 HLabel {
                     id: innerHeaderLabel
-                    text: qsTr("Account settings for %1").arg(
-                        Utils.coloredNameHtml(userInfo.displayName, userId)
-                    )
                     textFormat: Text.StyledText
                     font.pixelSize: theme.fontSize.big
                     elide: Text.ElideRight
