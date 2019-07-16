@@ -45,6 +45,6 @@ HColumnLayout {
         backgroundColor: theme.sidePane.filterRooms.background
 
         Layout.fillWidth: true
-        Layout.preferredHeight: theme.bottomElementsHeight
+        Layout.preferredHeight: theme.baseElementsHeight
     }
 }

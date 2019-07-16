@@ -11,6 +11,8 @@ QtObject {
     property int minimumSupportedWidth: 240
     property int minimumSupportedHeight: 120
 
+    property int baseElementsHeight: 36
+
     property QtObject fontSize: QtObject {
         property int smallest: 6
         property int smaller: 8
@@ -134,7 +136,7 @@ QtObject {
     }
 
     property QtObject avatar: QtObject {
-        property int size: 36
+        property int size: baseElementsHeight
         property int radius: theme.radius
         property color letter: "white"
 
@@ -150,6 +152,4 @@ QtObject {
         property real saturation: 0.32
         property real lightness: 0.3
     }
-
-    property int bottomElementsHeight: 36
 }

@@ -10,7 +10,7 @@ HRowLayout {
     property alias roomFilter: filterField.text
 
     Layout.fillWidth: true
-    Layout.preferredHeight: theme.bottomElementsHeight
+    Layout.preferredHeight: theme.baseElementsHeight
 
     HUIButton {
         iconName: "settings"

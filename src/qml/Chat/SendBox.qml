@@ -10,7 +10,7 @@ HRectangle {
 
     id: sendBox
     Layout.fillWidth: true
-    Layout.minimumHeight: theme.bottomElementsHeight
+    Layout.minimumHeight: theme.baseElementsHeight
     Layout.preferredHeight: textArea.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2

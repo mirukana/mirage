@@ -25,9 +25,9 @@ Page {
 
         height: window.height <
                 avatarPreferredSize +
-                theme.bottomElementsHeight +
+                theme.baseElementsHeight +
                 currentSpacing * 2 ?
-                0 : theme.bottomElementsHeight
+                0 : theme.baseElementsHeight
 
         Behavior on height { HNumberAnimation {} }
         visible: height > 0

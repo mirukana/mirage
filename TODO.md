@@ -1,5 +1,4 @@
 - Use childrenRect stuff
-- Rename theme.bottomElementsHeight
 - Account delegate name color
 - If avatar is set, name color from average color?
 - normalSpacing in Theme
