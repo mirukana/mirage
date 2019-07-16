@@ -12,17 +12,11 @@ HRectangle {
     implicitHeight: theme.avatar.size
 
     property string name: ""
-    property var imageUrl: null
+    property var imageUrl: ""
     property var toolTipImageUrl: imageUrl
     property alias fillMode: avatarImage.fillMode
 
     readonly property alias hovered: hoverHandler.hovered
-
-    onImageUrlChanged: if (imageUrl) { avatarImage.source = imageUrl }
-
-    onToolTipImageUrlChanged: if (imageUrl) {
-        avatarToolTipImage.source = toolTipImageUrl
-    }
 
     readonly property var params: Utils.thumbnailParametersFor(width, height)
 
@@ -48,6 +42,7 @@ HRectangle {
         sourceSize.width: params.width
         sourceSize.height: params.height
         fillMode: Image.PreserveAspectCrop
+        source: Qt.resolvedUrl(imageUrl)
 
         HoverHandler {
             id: hoverHandler
@@ -74,6 +69,7 @@ HRectangle {
                 width: sourceSize.width
                 height: sourceSize.width
                 fillMode: Image.PreserveAspectCrop
+                source: Qt.resolvedUrl(toolTipImageUrl)
             }
         }
     }

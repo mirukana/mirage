@@ -43,8 +43,8 @@ HGridLayout {
 
         id: avatar
         userId: editAccount.userId
-        imageUrl: fileDialog.selectedFile || defaultImageUrl
-        toolTipImageUrl: null
+        imageUrl: fileDialog.selectedFile || fileDialog.file || defaultImageUrl
+        toolTipImageUrl: ""
 
         Layout.alignment: Qt.AlignHCenter
 
@@ -54,7 +54,8 @@ HGridLayout {
         HRectangle {
             z: 10
             visible: opacity > 0
-            opacity: ! avatar.imageUrl || avatar.hovered ? 1 : 0
+            opacity: ! fileDialog.dialog.visible &&
+                     (! avatar.imageUrl || avatar.hovered) ? 1 : 0
             Behavior on opacity { HNumberAnimation {} }
 
             anchors.fill: parent

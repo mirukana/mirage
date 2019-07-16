@@ -8,7 +8,6 @@
 - Qt.AlignCenter instead of V | H
 - banner button repair
 - Wrong avatar for group rooms
-- Can assign "" to an Image source
 - Make sure to not cache user images and that sourceSize is set everywhere
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
@@ -107,5 +106,5 @@
   - Previewing room without joining
 
 - Distribution
-  - List dependencies
+  - Include python dependencies in binary with rcc?
   - README.md

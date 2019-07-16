@@ -5,10 +5,12 @@ import QtQuick 2.12
 import Qt.labs.platform 1.1
 
 Item {
+    id: opener
     anchors.fill: parent
 
     property alias dialog: fileDialog
-    property var selectedFile: null
+    property string selectedFile: ""
+    property string file: ""
 
     enum FileType { All, Images }
     property int fileType: FileType.All
@@ -39,8 +41,10 @@ Item {
         modality: Qt.NonModal
 
         onVisibleChanged: if (visible) {
-            selectedFile = Qt.binding(() => Qt.resolvedUrl(currentFile))
+            opener.selectedFile = Qt.binding(() => Qt.resolvedUrl(currentFile))
+            opener.file         = Qt.binding(() => Qt.resolvedUrl(file))
         }
-        onRejected: selectedFile = null
+        onAccepted: { opener.selectedFile = currentFile, opener.file = file }
+        onRejected: { selectedFile = null; file = null}
     }
 }
