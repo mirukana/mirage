@@ -40,7 +40,7 @@ Item {
             id: sidePane
             canAutoSize: uiSplitView.canAutoSize
 
-            width: getWidth()  // Initial width
+            width: implicitWidth  // Initial width
             Layout.minimumWidth: theme.sidePane.collapsedWidth
             Layout.maximumWidth: parent.width
         }

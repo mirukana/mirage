@@ -71,7 +71,8 @@ QtObject {
 
         property int autoCollapseBelowWidth: 120
         property int collapsedWidth: avatar.size
-        property int autoReduceBelowWidth:
+
+        property int autoReduceBelowWindowWidth:
             minimumSupportedWidth + collapsedWidth
 
         property color background: colors.background2

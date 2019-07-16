@@ -11,45 +11,39 @@ HRectangle {
     visible: mainUI.accountsPresent
 
 
-    // Properties that may be set externally
-
-    property int parentWidth: parent.width
-    onParentWidthChanged: if (canAutoSize) { width = getWidth() }
-
     property bool canAutoSize: true
+    property int parentWidth: parent.width
+
+    // Needed for SplitView because it breaks the binding on collapse
+    onParentWidthChanged: if (canAutoSize) {
+        width = Qt.binding(() => implicitWidth)
+    }
 
 
-    // Pane state properties - should not be modified
+    property int autoWidth:
+        Math.min(
+            parentWidth * theme.sidePane.autoWidthRatio,
+            theme.sidePane.maximumAutoWidth
+        )
 
-    readonly property bool reduced: width < 1
-    readonly property bool collapsed:
-        width < theme.sidePane.collapsedWidth + theme.spacing
+    property bool collapse:
+        canAutoSize ?
+        autoWidth < theme.sidePane.autoCollapseBelowWidth :
+        width < theme.sidePane.autoCollapseBelowWidth
 
-    property int currentSpacing: collapsed ? 0 : theme.spacing
+    property bool reduce:
+        window.width < theme.sidePane.autoReduceBelowWindowWidth
+
+    property int implicitWidth:
+        reduce   ? 0 :
+        collapse ? theme.sidePane.collapsedWidth :
+        autoWidth
+
+    property int currentSpacing: collapse ? 0 : theme.spacing
+
     Behavior on currentSpacing { HNumberAnimation {} }
+    Behavior on implicitWidth  { HNumberAnimation {} }
 
-
-    // Width functions and animations
-
-    function getWidth() {
-        var ts = theme.sidePane
-        return parentWidth * ts.autoWidthRatio < ts.autoCollapseBelowWidth ?
-               ts.collapsedWidth :
-               Math.min(parentWidth * ts.autoWidthRatio, ts.maximumAutoWidth)
-    }
-
-    Behavior on width {
-        HNumberAnimation {
-            // Don't slow down the user manually resizing
-            duration: (
-                canAutoSize &&
-                parentWidth * 0.3 < theme.sidePane.autoReduceBelowWidth * 1.2
-            ) ? theme.animationDuration : 0
-        }
-    }
-
-
-    // Pane content
 
     HColumnLayout {
         anchors.fill: parent
