@@ -90,8 +90,10 @@ Item {
                 repeat: false
                 onTriggered: pageStack.showRoom(
                     "@test_mary:matrix.org",
-                    "Rooms",
-                    "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                    // "Rooms",
+                    // "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                    "Invites",
+                    "!xjqvLOGhMVutPXpAqi:matrix.org"
                 )
                 // onTriggered: pageStack.showPage(
                 //     "EditAccount/EditAccount",

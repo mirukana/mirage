@@ -1,17 +1,16 @@
 - If avatar is set, name color from average color?
-- banner button repair
 - Wrong avatar for group rooms
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
 - HTextField focus effect
 - Button can get "hoverEnabled: false" to let HoverHandlers work
-- Handle TimeoutError for all kind of async requests (nio)
 - Handle thumbnail response status 400
 - "Loading..." if going to edit account page while it's loading
 - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
 - Accept drag and dropping a picture in account settings to set avatar
 - When all the events loaded on beginning in a room are name/avatar changes,
   no last event room text is displayed
+-  `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
 
 - Qt 5.12
   - See about ECMAScript 6 and 7 features
@@ -37,8 +36,6 @@
   - Don't put own messages to the right past certain width
 
   - Invite to room
-  - Accounts delegates background
-  - SidePane delegates hover effect
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Scaling
@@ -49,7 +46,6 @@
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
   - Better theming/styling system
-    - See about <https://doc.qt.io/qt-5/qtquickcontrols2-configuration.html>
   - Settings page
     - Multiaccount aliases
   - Message/text selection
@@ -71,7 +67,6 @@
 
 - Client improvements
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
-  - Filtering rooms: search more than display names?
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
   - Direct chats category
@@ -87,6 +82,7 @@
   - Room subtitle: show things like "*Image*" instead of blank, etc
 
 - Missing nio support
+  - Handle TimeoutError for all kind of async requests (nio)
   - MatrixRoom invited members list
   - Invite events are missing their timestamps (needed for sorting)
   - Left room events after client reboot

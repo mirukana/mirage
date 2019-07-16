@@ -7,18 +7,16 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.12
 
 HBaseButton {
+    property int contentWidth: 0
     property int horizontalMargin: 0
     property int verticalMargin: 0
+    property int fontSize: theme.fontSize.normal
 
     property string iconName: ""
     property var iconDimension: null
     property var iconTransform: null
 
-    property int fontSize: theme.fontSize.normal
-
     property bool loading: false
-
-    property int contentWidth: 0
 
     readonly property alias visibility: button.visible
     onVisibilityChanged: if (! visibility) { loading = false }
@@ -46,6 +44,7 @@ HBaseButton {
             }
 
             HLabel {
+                visible: Boolean(text)
                 text: button.text
                 font.pixelSize: fontSize
                 horizontalAlignment: Text.AlignHCenter

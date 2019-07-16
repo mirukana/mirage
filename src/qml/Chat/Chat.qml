@@ -55,10 +55,14 @@ HColumnLayout {
             InviteBanner {
                 visible: category == "Invites"
                 inviterId: roomInfo.inviterId
+
+                Layout.fillWidth: true
             }
 
             //UnknownDevicesBanner {
                 //visible: category == "Rooms" && hasUnknownDevices
+                //
+                //Layout.fillWidth: true
             //}
 
             SendBox {
@@ -69,6 +73,8 @@ HColumnLayout {
             LeftBanner {
                 visible: category == "Left"
                 userId: chatPage.userId
+
+                Layout.fillWidth: true
             }
         }
 
