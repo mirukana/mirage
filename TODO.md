@@ -1,4 +1,5 @@
 - Way to round avatar corners to allow box radius
+- Devices and client settings in edit account page
 - If avatar is set, name color from average color?
 - Wrong avatar for group rooms
 - Reduce messages ListView cacheBuffer height once http thumbnails

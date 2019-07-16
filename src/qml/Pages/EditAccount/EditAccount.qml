@@ -15,37 +15,9 @@ HPage {
     property string userId: ""
     readonly property var userInfo: users.find(userId)
 
-    page.header: HRectangle {
-        width: parent.width
-        color: theme.pageHeadersBackground
-
-        height: window.height <
-                avatarPreferredSize +
-                theme.baseElementsHeight +
-                currentSpacing * 2 ?
-                0 : theme.baseElementsHeight
-
-        Behavior on height { HNumberAnimation {} }
-        visible: height > 0
-
-        HRowLayout {
-            width: parent.width
-
-            HLabel {
-                text: qsTr("Account settings for %1").arg(
-                    Utils.coloredNameHtml(userInfo.displayName, userId)
-                )
-                textFormat: Text.StyledText
-                font.pixelSize: theme.fontSize.big
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
-
-                Layout.leftMargin: currentSpacing
-                Layout.rightMargin: Layout.leftMargin
-                Layout.fillWidth: true
-            }
-        }
-    }
+    hideHeaderUnderHeight: avatarPreferredSize
+    headerLabel.text: qsTr("Account settings for %1")
+                      .arg(Utils.coloredNameHtml(userInfo.displayName, userId))
 
     HRectangle {
         color: theme.box.background

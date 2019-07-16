@@ -44,6 +44,7 @@ Item {
             Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
 
             Behavior on Layout.minimumWidth {
+                // Must run faster than SidePane implicitWidth anim
                 HNumberAnimation { duration: theme.animationDuration / 2 }
             }
         }

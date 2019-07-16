@@ -11,6 +11,9 @@ SwipeView {
     property alias page: innerPage
     property alias flickable: innerFlickable
 
+    property alias headerLabel: innerHeaderLabel
+    property var hideHeaderUnderHeight: null
+
     property bool wide: width > 414 + leftPadding + rightPadding
 
     property int currentSpacing:
@@ -31,6 +34,41 @@ SwipeView {
     Page {
         id: innerPage
         background: null
+
+        header: HRectangle {
+            width: parent.width
+            implicitWidth: parent.width
+            color: theme.pageHeadersBackground
+
+            height: ! hideHeaderUnderHeight ||
+                    window.height >=
+                    hideHeaderUnderHeight +
+                    theme.baseElementsHeight +
+                    currentSpacing * 2 ?
+                    theme.baseElementsHeight : 0
+
+            Behavior on height { HNumberAnimation {} }
+            visible: height > 0
+
+            HRowLayout {
+                width: parent.width
+
+                HLabel {
+                    id: innerHeaderLabel
+                    text: qsTr("Account settings for %1").arg(
+                        Utils.coloredNameHtml(userInfo.displayName, userId)
+                    )
+                    textFormat: Text.StyledText
+                    font.pixelSize: theme.fontSize.big
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
+
+                    Layout.leftMargin: currentSpacing
+                    Layout.rightMargin: Layout.leftMargin
+                    Layout.fillWidth: true
+                }
+            }
+        }
 
         leftPadding: currentSpacing < theme.spacing ? 0 : currentSpacing
         rightPadding: leftPadding
