@@ -38,36 +38,11 @@ Item {
 
         SidePane {
             id: sidePane
-            visible: accountsPresent
+            canAutoSize: uiSplitView.canAutoSize
 
-            property QtObject ts: theme.sidePane
-
-            function set_width() {
-                width =
-                    parent.width * ts.autoWidthRatio <
-                    ts.autoCollapseBelowWidth ?
-                    Layout.minimumWidth :
-                    Math.min(parent.width * ts.autoWidthRatio,
-                             ts.maximumAutoWidth)
-            }
-
-            property int parentWidth: parent.width
-            onParentWidthChanged: if (uiSplitView.canAutoSize) { set_width() }
-
-            width: set_width()  // Initial width
-            Layout.minimumWidth: ts.collapsedWidth
+            width: getWidth()  // Initial width
+            Layout.minimumWidth: theme.sidePane.collapsedWidth
             Layout.maximumWidth: parent.width
-
-            Behavior on width {
-                HNumberAnimation {
-                    // Don't slow down the user manually resizing
-                    duration: (
-                        uiSplitView.canAutoSize &&
-                        parent.width * 0.3 <
-                        theme.sidePane.autoReduceBelowWidth * 1.2
-                    ) ? theme.animationDuration : 0
-                }
-            }
         }
 
         StackView {
