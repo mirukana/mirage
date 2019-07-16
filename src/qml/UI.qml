@@ -41,10 +41,11 @@ Item {
             canAutoSize: uiSplitView.canAutoSize
 
             width: implicitWidth  // Initial width
-            Layout.maximumWidth: parent.width
             Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
 
-            Behavior on Layout.minimumWidth { HNumberAnimation {} }
+            Behavior on Layout.minimumWidth {
+                HNumberAnimation { duration: theme.animationDuration / 2 }
+            }
         }
 
         StackView {

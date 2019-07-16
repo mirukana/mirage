@@ -7,18 +7,15 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-Page {
+HPage {
     id: editAccount
 
-    property bool wide: width > 414 + padding * 2
     property int avatarPreferredSize: theme.minimumSupportedWidth
-    property int currentSpacing:
-        Math.min(theme.spacing * width / 400, theme.spacing * 2)
 
     property string userId: ""
     readonly property var userInfo: users.find(userId)
 
-    header: HRectangle {
+    page.header: HRectangle {
         width: parent.width
         color: theme.pageHeadersBackground
 
@@ -50,52 +47,29 @@ Page {
         }
     }
 
-    background: null
+    HRectangle {
+        color: theme.box.background
 
-    leftPadding: currentSpacing < theme.spacing ? 0 : currentSpacing
-    rightPadding: leftPadding
-    Behavior on leftPadding { HNumberAnimation {} }
+        Layout.alignment: Qt.AlignCenter
 
-    Flickable {
-        id: flickable
-        anchors.fill: parent
-        clip: true
-        contentWidth: parent.width
-        contentHeight: boxColumn.childrenRect.height
-        interactive: contentWidth > width || contentHeight > height
+        Layout.maximumWidth: Math.min(parent.width, 640)
+        Layout.preferredWidth:
+            wide ? parent.width : avatarPreferredSize
 
-        HColumnLayout {
-            id: boxColumn
-            spacing: theme.spacing * 2
-            width: flickable.width
-            height: flickable.height
+        Layout.preferredHeight: childrenRect.height
 
-            HRectangle {
-                color: theme.box.background
-                // radius: theme.box.radius
-
-                Layout.alignment: Qt.AlignCenter
-
-                Layout.maximumWidth: Math.min(parent.width, 640)
-                Layout.preferredWidth:
-                    wide ? parent.width : avatarPreferredSize
-
-                Layout.preferredHeight: childrenRect.height
-
-                Profile { width: parent.width }
-            }
-
-            // HRectangle {
-                // color: theme.box.background
-                // radius: theme.box.radius
-                // ClientSettings { width: parent.width }
-            // }
-
-            // HRectangle {
-                // color: theme.box.background
-                // radius: theme.box.radius
-                // Devices { width: parent.width }
-            // }
-        }
+        Profile { width: parent.width }
     }
+
+    // HRectangle {
+        // color: theme.box.background
+        // radius: theme.box.radius
+        // ClientSettings { width: parent.width }
+    // }
+
+    // HRectangle {
+        // color: theme.box.background
+        // radius: theme.box.radius
+        // Devices { width: parent.width }
+    // }
 }

@@ -13,6 +13,7 @@ HRectangle {
 
     property bool canAutoSize: true
     property int parentWidth: parent.width
+    property real autoWidthRatio: theme.sidePane.autoWidthRatio
 
     // Needed for SplitView because it breaks the binding on collapse
     onParentWidthChanged: if (canAutoSize) {
@@ -21,10 +22,7 @@ HRectangle {
 
 
     property int autoWidth:
-        Math.min(
-            parentWidth * theme.sidePane.autoWidthRatio,
-            theme.sidePane.maximumAutoWidth
-        )
+        Math.min(parentWidth * autoWidthRatio, theme.sidePane.maximumAutoWidth)
 
     property bool collapse:
         canAutoSize ?

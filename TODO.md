@@ -1,3 +1,4 @@
+- Way to round avatar corners to allow box radius
 - If avatar is set, name color from average color?
 - Wrong avatar for group rooms
 - Reduce messages ListView cacheBuffer height once http thumbnails
