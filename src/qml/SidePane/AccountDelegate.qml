@@ -42,7 +42,6 @@ Column {
                     id: accountLabel
                     text: userInfo.displayName || model.userId
                     elide: HLabel.ElideRight
-                    maximumLineCount: 1
                     Layout.fillWidth: true
                     leftPadding: sidePane.currentSpacing
                     rightPadding: leftPadding

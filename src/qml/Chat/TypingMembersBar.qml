@@ -34,7 +34,6 @@ HRectangle {
             text: chatPage.roomInfo.typingText
             textFormat: Text.StyledText
             elide: Text.ElideRight
-            maximumLineCount: 1
             width: typingMembersBar.width - icon.width -
                    parent.spacing - parent.leftPadding - parent.rightPadding
         }

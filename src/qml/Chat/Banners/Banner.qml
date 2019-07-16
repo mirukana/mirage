@@ -35,7 +35,6 @@ HRectangle {
         HLabel {
             id: bannerLabel
             textFormat: Text.StyledText
-            maximumLineCount: 1
             elide: Text.ElideRight
 
             visible:

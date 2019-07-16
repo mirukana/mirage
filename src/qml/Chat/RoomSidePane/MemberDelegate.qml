@@ -36,7 +36,6 @@ HHighlightRectangle {
                     id: memberName
                     text: memberInfo.displayName || model.userId
                     elide: Text.ElideRight
-                    maximumLineCount: 1
                     verticalAlignment: Qt.AlignVCenter
 
                     Layout.maximumWidth: parent.width

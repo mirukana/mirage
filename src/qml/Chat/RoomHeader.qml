@@ -34,7 +34,6 @@ HRectangle {
             text: displayName
             font.pixelSize: theme.fontSize.big
             elide: Text.ElideRight
-            maximumLineCount: 1
 
             Layout.maximumWidth: Math.max(
                 0,
@@ -49,7 +48,6 @@ HRectangle {
             text: topic
             font.pixelSize: theme.fontSize.small
             elide: Text.ElideRight
-            maximumLineCount: 1
 
             Layout.maximumWidth: Math.max(
                 0,

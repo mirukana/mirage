@@ -1,4 +1,3 @@
-- ElidedLabel component
 - Can set `Layout.fillWidth: true` to elide/wrap 
 - Use childrenRect stuff
 - Rename theme.bottomElementsHeight

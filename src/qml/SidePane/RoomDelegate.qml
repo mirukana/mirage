@@ -43,7 +43,6 @@ HHighlightRectangle {
                     textFormat:
                         model.displayName? Text.PlainText : Text.StyledText
                     elide: Text.ElideRight
-                    maximumLineCount: 1
                     verticalAlignment: Qt.AlignVCenter
 
                     Layout.maximumWidth: parent.width
@@ -73,7 +72,6 @@ HHighlightRectangle {
 
                     font.pixelSize: theme.fontSize.small
                     elide: Text.ElideRight
-                    maximumLineCount: 1
 
                     Layout.maximumWidth: parent.width
                 }

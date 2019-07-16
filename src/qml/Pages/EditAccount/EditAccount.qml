@@ -42,7 +42,6 @@ Page {
                 textFormat: Text.StyledText
                 font.pixelSize: theme.fontSize.big
                 elide: Text.ElideRight
-                maximumLineCount: 1
                 horizontalAlignment: Text.AlignHCenter
 
                 Layout.leftMargin: currentSpacing
