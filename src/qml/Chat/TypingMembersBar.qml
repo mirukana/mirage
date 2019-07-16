@@ -11,17 +11,17 @@ HRectangle {
     property alias label: typingLabel
 
     color: theme.chat.typingMembers.background
-    implicitWidth: childrenRect.width
-    implicitHeight: typingLabel.text ? childrenRect.height : 0
+    implicitHeight: typingLabel.text ? typingLabel.height : 0
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
-    Row {
+    HRowLayout {
         spacing: 8
-        leftPadding: spacing
-        rightPadding: spacing
-        topPadding: 2
-        bottomPadding: 2
+        anchors.fill: parent
+        Layout.leftMargin: spacing
+        Layout.rightMargin: spacing
+        Layout.topMargin: 2
+        Layout.bottomMargin: 2
 
         HIcon {
             id: icon
@@ -34,8 +34,8 @@ HRectangle {
             text: chatPage.roomInfo.typingText
             textFormat: Text.StyledText
             elide: Text.ElideRight
-            width: typingMembersBar.width - icon.width -
-                   parent.spacing - parent.leftPadding - parent.rightPadding
+
+            Layout.fillWidth: true
         }
     }
 }
