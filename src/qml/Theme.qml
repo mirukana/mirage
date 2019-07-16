@@ -6,12 +6,12 @@ import QtQuick 2.12
 QtObject {
     id: theme
 
-    property int animationDuration: 100
-
     property int minimumSupportedWidth: 240
     property int minimumSupportedHeight: 120
 
     property int baseElementsHeight: 36
+    property int spacing: 8
+    property int animationDuration: 100
 
     property QtObject fontSize: QtObject {
         property int smallest: 6

@@ -17,11 +17,11 @@ HRowLayout {
         id: noticeLabel
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
-        padding: 3
-        leftPadding: 10
-        rightPadding: 10
+        padding: theme.spacing / 2
+        leftPadding: theme.spacing
+        rightPadding: leftPadding
 
-        Layout.margins: 10
+        Layout.margins: theme.spacing
         Layout.alignment: Qt.AlignCenter
         Layout.maximumWidth:
             parent.width - Layout.leftMargin - Layout.rightMargin

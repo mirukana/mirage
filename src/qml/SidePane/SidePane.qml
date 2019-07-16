@@ -12,8 +12,7 @@ HRectangle {
     clip: true
 
     property bool collapsed: false
-    property int normalSpacing: 8
-    property int currentSpacing: collapsed ? 0 : normalSpacing
+    property int currentSpacing: collapsed ? 0 : theme.spacing
 
     Behavior on currentSpacing { HNumberAnimation {} }
 

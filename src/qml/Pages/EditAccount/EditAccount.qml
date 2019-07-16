@@ -12,9 +12,8 @@ Page {
 
     property bool wide: width > 414 + padding * 2
     property int avatarPreferredSize: theme.minimumSupportedWidth
-    property int normalSpacing: 8
     property int currentSpacing:
-        Math.min(normalSpacing * width / 400, normalSpacing * 2)
+        Math.min(theme.spacing * width / 400, theme.spacing * 2)
 
     property string userId: ""
     readonly property var userInfo: users.find(userId)
@@ -53,7 +52,7 @@ Page {
 
     background: null
 
-    leftPadding: currentSpacing < 8 ? 0 : currentSpacing
+    leftPadding: currentSpacing < theme.spacing ? 0 : currentSpacing
     rightPadding: leftPadding
     Behavior on leftPadding { HNumberAnimation {} }
 
@@ -67,7 +66,7 @@ Page {
 
         HColumnLayout {
             id: boxColumn
-            spacing: 16
+            spacing: theme.spacing * 2
             width: flickable.width
             height: flickable.height
 

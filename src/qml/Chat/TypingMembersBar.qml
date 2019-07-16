@@ -16,12 +16,12 @@ HRectangle {
     Behavior on implicitHeight { HNumberAnimation {} }
 
     HRowLayout {
-        spacing: 8
+        spacing: theme.spacing
         anchors.fill: parent
         Layout.leftMargin: spacing
         Layout.rightMargin: spacing
-        Layout.topMargin: 2
-        Layout.bottomMargin: 2
+        Layout.topMargin: spacing / 4
+        Layout.bottomMargin: spacing / 4
 
         HIcon {
             id: icon

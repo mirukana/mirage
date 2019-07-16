@@ -1,7 +1,5 @@
 - Use childrenRect stuff
-- Account delegate name color
 - If avatar is set, name color from average color?
-- normalSpacing in Theme
 - banner button repair
 - Wrong avatar for group rooms
 - Make sure to not cache user images and that sourceSize is set everywhere

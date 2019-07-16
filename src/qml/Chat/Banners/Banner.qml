@@ -29,7 +29,7 @@ HRectangle {
             dimension: bannerLabel.implicitHeight
             visible: Boolean(svgName)
 
-            Layout.leftMargin: 5
+            Layout.leftMargin: theme.spacing / 2
         }
 
         HLabel {
@@ -41,7 +41,7 @@ HRectangle {
                 bannerRow.width - bannerAvatar.width - bannerButtons.width > 30
 
             Layout.fillWidth: true
-            Layout.leftMargin: 5
+            Layout.leftMargin: bannerIcon.Layout.leftMargin
             Layout.rightMargin: Layout.leftMargin
         }
 

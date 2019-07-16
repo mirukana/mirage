@@ -30,7 +30,7 @@ HBaseButton {
 
         HRowLayout {
             id: contentLayout
-            spacing: button.text && iconName ? 8 : 0
+            spacing: button.text && iconName ? theme.spacing : 0
             Component.onCompleted: contentWidth = implicitWidth
 
             HIcon {

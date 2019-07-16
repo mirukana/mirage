@@ -8,8 +8,6 @@ import "../../Base"
 HRectangle {
     property alias listView: eventList
 
-    property int space: 8
-
     color: theme.chat.eventList.background
 
     HListView {
@@ -28,11 +26,11 @@ HRectangle {
         delegate: EventDelegate {}
 
         anchors.fill: parent
-        anchors.leftMargin: space
-        anchors.rightMargin: space
+        anchors.leftMargin: theme.spacing
+        anchors.rightMargin: theme.spacing
 
-        topMargin: space
-        bottomMargin: space
+        topMargin: theme.spacing
+        bottomMargin: theme.spacing
         verticalLayoutDirection: ListView.BottomToTop
 
         // Keep x scroll pages cached, to limit images having to be

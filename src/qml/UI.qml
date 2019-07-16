@@ -39,7 +39,7 @@ Item {
         SidePane {
             id: sidePane
             visible: accountsPresent
-            collapsed: width < Layout.minimumWidth + normalSpacing
+            collapsed: width < Layout.minimumWidth + theme.spacing
 
             property int parentWidth: parent.width
             property int collapseBelow: 120

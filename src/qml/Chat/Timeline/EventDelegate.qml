@@ -55,9 +55,8 @@ Column {
     )
 
 
-    property int standardSpacing: 16
-    property int horizontalPadding: 6
-    property int verticalPadding: 4
+    readonly property int horizontalPadding: theme.spacing
+    readonly property int verticalPadding: theme.spacing / 2
 
     ListView.onAdd: {
         var nextDelegate = eventList.contentItem.children[index]
@@ -68,10 +67,10 @@ Column {
 
     topPadding:
         isFirstEvent ? 0 :
-        dayBreak ? standardSpacing * 2 :
-        talkBreak ? standardSpacing * 3 :
-        combine ? standardSpacing / 4 :
-        standardSpacing
+        dayBreak ? theme.spacing * 4 :
+        talkBreak ? theme.spacing * 6 :
+        combine ? theme.spacing / 2 :
+        theme.spacing * 2
 
     Loader {
         source: dayBreak ? "Daybreak.qml" : ""

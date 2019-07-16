@@ -8,7 +8,7 @@ import "../../utils.js" as Utils
 
 Row {
     id: messageContent
-    spacing: standardSpacing / 2
+    spacing: theme.spacing / 2
     layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
 
     HUserAvatar {

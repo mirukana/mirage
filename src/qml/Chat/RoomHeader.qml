@@ -20,7 +20,7 @@ HRectangle {
 
     HRowLayout {
         id: row
-        spacing: 8
+        spacing: theme.spacing
         anchors.fill: parent
 
         HRoomAvatar {

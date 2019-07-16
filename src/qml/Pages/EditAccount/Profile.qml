@@ -71,7 +71,7 @@ HGridLayout {
                     Layout.alignment: Qt.AlignCenter
                 }
 
-                Item { Layout.preferredHeight: 8 }
+                Item { Layout.preferredHeight: theme.spacing }
 
                 HLabel {
                     text: qsTr("Upload profile picture")
@@ -95,10 +95,10 @@ HGridLayout {
 
     HColumnLayout {
         id: profileInfo
-        spacing: normalSpacing
+        spacing: theme.spacing
 
         HColumnLayout {
-            spacing: normalSpacing
+            spacing: theme.spacing
             Layout.margins: currentSpacing
 
             HLabel {

@@ -10,9 +10,7 @@ HRectangle {
 
     property bool collapsed: false
     property var activeView: null
-
-    property int normalSpacing: 8
-    property int currentSpacing: collapsed ? 0 : normalSpacing
+    property int currentSpacing: collapsed ? 0 : theme.spacing
 
     Behavior on currentSpacing { HNumberAnimation {} }
 

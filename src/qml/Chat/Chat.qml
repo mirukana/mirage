@@ -105,7 +105,7 @@ HColumnLayout {
                 )
            }
 
-            collapsed: width < theme.avatar.size + 8
+            collapsed: width < theme.avatar.size + theme.spacing
 
             property bool wasSnapped: false
             property int referenceWidth: roomHeader.buttonsWidth
