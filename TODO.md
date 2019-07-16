@@ -5,7 +5,6 @@
 - Account delegate name color
 - If avatar is set, name color from average color?
 - normalSpacing in Theme
-- Qt.AlignCenter instead of V | H
 - banner button repair
 - Wrong avatar for group rooms
 - Make sure to not cache user images and that sourceSize is set everywhere
@@ -13,7 +12,6 @@
   downloading is implemented 
 - HTextField focus effect
 - Button can get "hoverEnabled: false" to let HoverHandlers work
-- Center account box buttons
 - Handle TimeoutError for all kind of async requests (nio)
 - Handle thumbnail response status 400
 - "Loading..." if going to edit account page while it's loading

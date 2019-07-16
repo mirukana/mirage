@@ -134,7 +134,6 @@ HGridLayout {
                 id: saveButton
                 iconName: "save"
                 text: qsTr("Save")
-                centerText: false
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled: nameField.changed || avatar.changed
 
@@ -147,7 +146,6 @@ HGridLayout {
             HUIButton {
                 iconName: "cancel"
                 text: qsTr("Cancel")
-                centerText: false
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom

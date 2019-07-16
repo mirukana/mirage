@@ -15,7 +15,6 @@ HBaseButton {
     property var iconTransform: null
 
     property int fontSize: theme.fontSize.normal
-    property bool centerText: Boolean(iconName)
 
     property bool loading: false
 
@@ -49,8 +48,7 @@ HBaseButton {
             HLabel {
                 text: button.text
                 font.pixelSize: fontSize
-                horizontalAlignment: button.centerText ?
-                                     Text.AlignHCenter : Text.AlignLeft
+                horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 color: enabled ?
                        theme.colors.foreground : theme.colors.foregroundDim2
@@ -66,7 +64,7 @@ HBaseButton {
             HIcon {
                 svgName: "hourglass"
                 Layout.preferredWidth: contentWidth || -1
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.alignment: Qt.AlignCenter
             }
         }
     }
