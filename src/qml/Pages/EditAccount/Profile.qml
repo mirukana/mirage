@@ -51,6 +51,38 @@ HGridLayout {
         Layout.preferredWidth: Math.min(flickable.height, avatarPreferredSize)
         Layout.preferredHeight: Layout.preferredWidth
 
+        HRectangle {
+            z: 10
+            visible: opacity > 0
+            opacity: ! avatar.imageUrl || avatar.hovered ? 1 : 0
+            Behavior on opacity { HNumberAnimation {} }
+
+            anchors.fill: parent
+            color: Qt.hsla(0, 0, 0, avatar.imageUrl ? 0.7 : 1)
+
+            HColumnLayout {
+                anchors.centerIn: parent
+                spacing: currentSpacing
+
+                HIcon {
+                    svgName: "upload_avatar"
+                    dimension: 64
+                    Layout.alignment: Qt.AlignCenter
+                }
+
+                Item { Layout.preferredHeight: 8 }
+
+                HLabel {
+                    text: qsTr("Upload profile picture")
+                    color: Qt.hsla(0, 0, 0.9, 1)
+                    font.pixelSize: theme.fontSize.big
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignCenter
+                }
+            }
+        }
+
         HFileDialogOpener {
             id: fileDialog
             fileType: HFileDialogOpener.FileType.Images
@@ -69,7 +101,7 @@ HGridLayout {
 
             HLabel {
                 text: qsTr("User ID:<br>%1")
-                      .arg(Utils.coloredNameHtml(userId, userId))
+                      .arg(Utils.coloredNameHtml(userId, userId, userId))
                 textFormat: Text.StyledText
                 wrapMode: Text.Wrap
 

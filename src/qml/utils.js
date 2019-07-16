@@ -45,10 +45,10 @@ function nameColor(name) {
 }
 
 
-function coloredNameHtml(name, alt_id) {
+function coloredNameHtml(name, user_id, display_text) {
     // substring: remove leading @
-    return "<font color='" + nameColor(alt_id.substring(1)) + "'>" +
-           escapeHtml(name || alt_id) +
+    return "<font color='" + nameColor(name || alt_id.substring(1)) + "'>" +
+           escapeHtml(display_text || name || alt_id) +
            "</font>"
 }
 

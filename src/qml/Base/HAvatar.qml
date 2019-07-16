@@ -16,6 +16,8 @@ HRectangle {
     property var toolTipImageUrl: imageUrl
     property alias fillMode: avatarImage.fillMode
 
+    readonly property alias hovered: hoverHandler.hovered
+
     onImageUrlChanged: if (imageUrl) { avatarImage.source = imageUrl }
 
     onToolTipImageUrlChanged: if (imageUrl) {
@@ -45,7 +47,7 @@ HRectangle {
         z: 2
         sourceSize.width: params.width
         sourceSize.height: params.height
-        fillMode: params.fillMode
+        fillMode: Image.PreserveAspectCrop
 
         HoverHandler {
             id: hoverHandler

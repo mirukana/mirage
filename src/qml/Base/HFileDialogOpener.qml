@@ -36,7 +36,7 @@ Item {
             )
 
         title: "Select file"
-        modality: Qt.WindowModal
+        modality: Qt.NonModal
 
         onVisibleChanged: if (visible) {
             selectedFile = Qt.binding(() => Qt.resolvedUrl(currentFile))

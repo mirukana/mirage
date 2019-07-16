@@ -19,6 +19,9 @@
 - Handle thumbnail response status 400
 - "Loading..." if going to edit account page while it's loading
 - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
+- Accept drag and dropping a picture in account settings to set avatar
+- When all the events loaded on beginning in a room are name/avatar changes,
+  no last event room text is displayed
 
 - Qt 5.12
   - New input handlers
