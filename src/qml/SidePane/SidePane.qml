@@ -8,7 +8,7 @@ import "../Base"
 HRectangle {
     id: sidePane
     clip: true  // Avoid artifacts when collapsed
-    visible: mainUI.accountsPresent
+    visible: mainUI.accountsPresent && width > 0
 
 
     property bool canAutoSize: true
