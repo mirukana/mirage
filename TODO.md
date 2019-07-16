@@ -1,8 +1,6 @@
-- Use childrenRect stuff
 - If avatar is set, name color from average color?
 - banner button repair
 - Wrong avatar for group rooms
-- Make sure to not cache user images and that sourceSize is set everywhere
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
 - HTextField focus effect
@@ -16,8 +14,7 @@
   no last event room text is displayed
 
 - Qt 5.12
-  - New input handlers
-  - ECMAScript 7
+  - See about ECMAScript 6 and 7 features
   - .mjs modules
 
 - Refactoring

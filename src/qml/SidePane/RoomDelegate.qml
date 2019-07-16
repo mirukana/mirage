@@ -34,8 +34,6 @@ HHighlightRectangle {
 
             HColumnLayout {
                 Layout.fillWidth: true
-                Layout.maximumWidth:
-                    parent.width - parent.totalSpacing - roomAvatar.width
 
                 HLabel {
                     id: roomLabel
