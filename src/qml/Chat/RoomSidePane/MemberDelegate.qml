@@ -38,7 +38,7 @@ HHighlightRectangle {
                     elide: Text.ElideRight
                     verticalAlignment: Qt.AlignVCenter
 
-                    Layout.maximumWidth: parent.width
+                    Layout.fillWidth: true
                 }
             }
         }

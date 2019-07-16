@@ -40,11 +40,7 @@ HRectangle {
             visible:
                 bannerRow.width - bannerAvatar.width - bannerButtons.width > 30
 
-            Layout.maximumWidth:
-                bannerRow.width -
-                bannerAvatar.width - bannerButtons.width -
-                Layout.leftMargin - Layout.rightMargin
-
+            Layout.fillWidth: true
             Layout.leftMargin: 5
             Layout.rightMargin: Layout.leftMargin
         }

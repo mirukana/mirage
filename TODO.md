@@ -1,4 +1,3 @@
-- Can set `Layout.fillWidth: true` to elide/wrap 
 - Use childrenRect stuff
 - Rename theme.bottomElementsHeight
 - Account delegate name color

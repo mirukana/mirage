@@ -78,6 +78,7 @@ HGridLayout {
                     color: Qt.hsla(0, 0, 0.9, 1)
                     font.pixelSize: theme.fontSize.big
                     wrapMode: Text.WordWrap
+
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignCenter
                 }

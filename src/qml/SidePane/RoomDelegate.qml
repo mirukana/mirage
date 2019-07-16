@@ -45,7 +45,7 @@ HHighlightRectangle {
                     elide: Text.ElideRight
                     verticalAlignment: Qt.AlignVCenter
 
-                    Layout.maximumWidth: parent.width
+                    Layout.fillWidth: true
                 }
 
                 HRichLabel {
@@ -73,7 +73,7 @@ HHighlightRectangle {
                     font.pixelSize: theme.fontSize.small
                     elide: Text.ElideRight
 
-                    Layout.maximumWidth: parent.width
+                    Layout.fillWidth: true
                 }
             }
         }

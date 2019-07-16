@@ -41,7 +41,7 @@ Item {
             wrapMode: Text.Wrap
 
             Layout.margins: rememberBox.margins
-            Layout.maximumWidth: rememberBox.width - Layout.margins * 2
+            Layout.fillWidth: true
         }
 
         HSpacer {}

@@ -41,10 +41,11 @@ Column {
                 HLabel {
                     id: accountLabel
                     text: userInfo.displayName || model.userId
-                    elide: HLabel.ElideRight
-                    Layout.fillWidth: true
                     leftPadding: sidePane.currentSpacing
                     rightPadding: leftPadding
+
+                    elide: HLabel.ElideRight
+                    Layout.fillWidth: true
                 }
 
                 HTextField {
