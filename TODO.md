@@ -32,7 +32,7 @@
   - Html links color
   - `pyotherside.atexit()`
   - Way to put sidepane back to auto-sizing (snap)
-  - Better look for arrows when sidepane collapsed
+  - Better look for arrows and option button when sidepane collapsed
   - Don't put own messages to the right past certain width
 
   - Invite to room

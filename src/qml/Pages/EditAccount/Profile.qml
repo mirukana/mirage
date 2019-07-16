@@ -64,6 +64,7 @@ HGridLayout {
             HColumnLayout {
                 anchors.centerIn: parent
                 spacing: currentSpacing
+                width: parent.width
 
                 HIcon {
                     svgName: "upload_avatar"
@@ -76,11 +77,12 @@ HGridLayout {
                 HLabel {
                     text: qsTr("Upload profile picture")
                     color: Qt.hsla(0, 0, 0.9, 1)
-                    font.pixelSize: theme.fontSize.big
+                    font.pixelSize: theme.fontSize.big *
+                                    avatar.height / avatarPreferredSize
                     wrapMode: Text.WordWrap
+                    horizontalAlignment: Qt.AlignHCenter
 
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignCenter
                 }
             }
         }

@@ -69,17 +69,17 @@ Item {
                 id: initialRoomTimer
                 interval: 5000
                 repeat: false
-                onTriggered: pageStack.showRoom(
-                    "@test_mary:matrix.org",
+                // onTriggered: pageStack.showRoom(
+                    // "@test_mary:matrix.org",
                     // "Rooms",
                     // "!TSXGsbBbdwsdylIOJZ:matrix.org"
-                    "Invites",
-                    "!xjqvLOGhMVutPXpAqi:matrix.org"
-                )
-                // onTriggered: pageStack.showPage(
-                //     "EditAccount/EditAccount",
-                //     {"userId": "@test_mary:matrix.org"}
+                    // "Invites",
+                    // "!xjqvLOGhMVutPXpAqi:matrix.org"
                 // )
+                onTriggered: pageStack.showPage(
+                    "EditAccount/EditAccount",
+                    {"userId": "@test_mary:matrix.org"}
+                )
             }
 
             onCurrentItemChanged: if (currentItem) {
