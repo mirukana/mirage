@@ -25,7 +25,7 @@ Item {
     HImage {
         id: mainUIBackground
         fillMode: Image.PreserveAspectCrop
-        source: "../images/login_background.jpg"
+        source: "../images/background.jpg"
         sourceSize.width: Screen.width
         sourceSize.height: Screen.height
         anchors.fill: parent

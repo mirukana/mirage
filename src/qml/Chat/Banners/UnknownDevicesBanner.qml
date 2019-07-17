@@ -9,14 +9,14 @@ Banner {
     color: theme.chat.unknownDevices.background
 
     avatar.visible: false
-    icon.svgName: "unknown_devices_warning"
+    icon.svgName: "unknown-devices-warning"
     labelText: "Unknown devices are present in this encrypted room."
 
     buttonModel: [
         {
             name: "inspect",
             text: qsTr("Inspect"),
-            iconName: "unknown_devices_inspect",
+            iconName: "unknown-devices-inspect",
         }
     ]
 

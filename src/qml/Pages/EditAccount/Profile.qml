@@ -67,7 +67,7 @@ HGridLayout {
                 width: parent.width
 
                 HIcon {
-                    svgName: "upload_avatar"
+                    svgName: "upload-avatar"
                     dimension: 64
                     Layout.alignment: Qt.AlignCenter
                 }
