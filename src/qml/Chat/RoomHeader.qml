@@ -13,7 +13,10 @@ HRectangle {
     property int buttonsWidth: viewButtons.Layout.preferredWidth
     property var activeButton: "members"
 
-    property bool collapseButtons: width < 400
+    property bool collapseButtons:
+        viewButtons.implicitWidth > width * 0.33 ||
+        width - viewButtons.implicitWidth <
+        theme.minimumSupportedWidthPlusSpacing
 
     id: roomHeader
     color: theme.chat.roomHeader.background

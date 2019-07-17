@@ -27,11 +27,9 @@ SwipeView {
     interactive: sidePane.reduce
 
     SidePane {
-        canAutoSize: false
-        autoWidthRatio: 1.0
+        implicitWidth: swipeView.width
         collapse: false
         reduce: false
-        currentSpacing: theme.spacing
         visible: swipeView.interactive
         onVisibleChanged: if (currentIndex != 1) swipeView.setCurrentIndex(1)
     }

@@ -12,8 +12,8 @@ Controls1.SplitView {
     property bool anyPressed: false
     property bool anyResizing: false
 
-    property bool canAutoSize: true
-    onAnyPressedChanged: canAutoSize = false
+    property bool manuallyResized: false
+    onAnyResizingChanged: manuallyResized = true
 
     handleDelegate: Item {
         readonly property bool hovered: styleData.hovered

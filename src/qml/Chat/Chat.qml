@@ -116,8 +116,8 @@ HPage {
             property bool wasSnapped: false
             property int referenceWidth: roomHeader.buttonsWidth
             onReferenceWidthChanged: {
-                if (chatSplitView.canAutoSize || wasSnapped) {
-                    if (wasSnapped) { chatSplitView.canAutoSize = true }
+                if (! chatSplitView.manuallyResized || wasSnapped) {
+                    if (wasSnapped) { chatSplitView.manuallyResized = false }
                     width = referenceWidth
                 }
             }
@@ -141,7 +141,8 @@ HPage {
 
             width: referenceWidth // Initial width
             Layout.minimumWidth: theme.avatar.size
-            Layout.maximumWidth: parent.width
+            Layout.maximumWidth:
+                parent.width - theme.minimumSupportedWidthPlusSpacing
         }
     }
 }

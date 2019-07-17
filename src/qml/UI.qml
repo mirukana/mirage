@@ -36,20 +36,24 @@ Item {
         id: uiSplitView
         anchors.fill: parent
 
+        onAnyResizingChanged: if (anyResizing) {
+            sidePane.manuallyResizing = true
+        } else {
+            sidePane.manuallyResizing = false
+            sidePane.manuallyResized = true
+            sidePane.manualWidth = sidePane.width
+        }
+
         SidePane {
             id: sidePane
-            canAutoSize: uiSplitView.canAutoSize
 
             // Initial width until user manually resizes
             width: implicitWidth
             Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
-            // -1: avoid making swipeview stuff disappear when dragged to max
-            Layout.maximumWidth: parent.width - 1
+            Layout.maximumWidth:
+                window.width -theme.minimumSupportedWidthPlusSpacing
 
-            Behavior on Layout.minimumWidth {
-                // Must run faster than SidePane implicitWidth anim
-                HNumberAnimation { duration: theme.animationDuration / 2 }
-            }
+            Behavior on Layout.minimumWidth { HNumberAnimation {} }
         }
 
         StackView {

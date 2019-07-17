@@ -9,6 +9,9 @@ QtObject {
     property int minimumSupportedWidth: 240
     property int minimumSupportedHeight: 120
 
+    property int minimumSupportedWidthPlusSpacing: 240 + spacing * 2
+    property int minimumSupportedHeightPlusSpacing: 120 + spacing * 2
+
     property int baseElementsHeight: 36
     property int spacing: 8
     property int animationDuration: 100
@@ -66,14 +69,14 @@ QtObject {
     }
 
     property QtObject sidePane: QtObject {
-        property real autoWidthRatio: 0.3
-        property int maximumAutoWidth: 300
+        property real autoWidthRatio: 0.33
+        property int maximumAutoWidth: 320
 
-        property int autoCollapseBelowWidth: 120
+        property int autoCollapseBelowWidth: 128
         property int collapsedWidth: avatar.size
 
         property int autoReduceBelowWindowWidth:
-            minimumSupportedWidth + collapsedWidth
+            minimumSupportedWidthPlusSpacing + collapsedWidth
 
         property color background: colors.background2
 

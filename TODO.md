@@ -1,3 +1,4 @@
+- Use `asyncio.as_completed()` instead of `gather`
 - Resizing pane sets the autoWidthRatio
 - Show sidepane when hovering on the left when collapsed/reduced
 - Header back button
