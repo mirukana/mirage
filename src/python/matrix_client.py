@@ -289,7 +289,7 @@ class MatrixClient(nio.AsyncClient):
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
         # TODO: show something in the client
-        log.warning(resp)
+        log.warning("%s - %s", resp, json.dumps(resp.__dict__, indent=4))
 
 
     # Callbacks for nio events

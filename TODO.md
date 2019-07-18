@@ -1,4 +1,5 @@
 - Devices and client settings in edit account page
+  - Multiaccount aliases
 - If avatar is set, name color from average color?
 - Accent color from background
 - Reduce messages ListView cacheBuffer height once http thumbnails
@@ -7,12 +8,10 @@
 - Accept drag and dropping a picture in account settings to set avatar
 - When all the events loaded on beginning in a room are name/avatar changes,
   no last event room text is displayed (use sync filter?)
--  `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
-
-- Qt 5.12
-  - .mjs modules
+- `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
 
 - Refactoring
+  - Use .mjs modules
   - Don't bake in size properties for components
   - Unfinished work in button-refactor branch
     - Button can get "hoverEnabled: false" to let HoverHandlers work
@@ -26,6 +25,7 @@
   - Horrible performance for big rooms
 
 - UI
+  - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Html links color
@@ -51,7 +51,6 @@
   - Spinner when loading past room events, images or clicking buttons
   - Better theming/styling system
   - Settings page
-    - Multiaccount aliases
   - Message/text selection
 
   - Custom file picker for Linux...
