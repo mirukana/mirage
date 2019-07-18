@@ -1,6 +1,8 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
+"use strict"
+
 
 function hsl(hue, saturation, lightness) {
     return hsla(hue, saturation, lightness)
