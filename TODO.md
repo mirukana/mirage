@@ -3,8 +3,6 @@
 - Accent color from background
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
-- Button can get "hoverEnabled: false" to let HoverHandlers work
-- Handle thumbnail response status 400
 - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
 - Accept drag and dropping a picture in account settings to set avatar
 - When all the events loaded on beginning in a room are name/avatar changes,
@@ -18,6 +16,7 @@
 - Refactoring
   - Don't bake in size properties for components
   - Unfinished work in button-refactor branch
+    - Button can get "hoverEnabled: false" to let HoverHandlers work
   - Room Sidepane
 
 - Bug fixes

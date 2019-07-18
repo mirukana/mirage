@@ -92,6 +92,13 @@ class Thumbnail:
             height      = self.server_size[1],
             method      = self.resize_method,
         )
+
+        if isinstance(response, nio.ThumbnailError):
+            # Return a transparent 1x1 PNG
+            with BytesIO() as img_out:
+                PILImage.new("RGBA", (1, 1), (0, 0, 0, 0)).save(img_out, "PNG")
+                return img_out.getvalue()
+
         body = response.body
 
         if response.content_type not in ("image/jpeg", "image/png"):
