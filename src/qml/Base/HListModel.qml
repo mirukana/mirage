@@ -24,22 +24,22 @@ SortFilterProxyModel {
         return model.setProperty(index, prop, value)
     }
 
-    function extend(new_items) {
-        for (var i = 0; i < new_items.length; i++) {
-            model.append(new_items[i])
+    function extend(newItems) {
+        for (var i = 0; i < newItems.length; i++) {
+            model.append(newItems[i])
         }
     }
 
-    function getIndices(where_roles_are, max_results=null, max_tries=null) {
-        // max_results, max_tries: null or int
+    function getIndices(whereRolesAre, maxResults=null, maxTries=null) {
+        // maxResults, maxTries: null or int
         var results = []
 
         for (var i = 0; i < model.count; i++) {
             var item    = model.get(i)
             var include = true
 
-            for (var role in where_roles_are) {
-                if (item[role] != where_roles_are[role]) {
+            for (var role in whereRolesAre) {
+                if (item[role] != whereRolesAre[role]) {
                     include = false
                     break
                 }
@@ -47,20 +47,20 @@ SortFilterProxyModel {
 
             if (include) {
                 results.push(i)
-                if (max_results && results.length >= max_results) {
+                if (maxResults && results.length >= maxResults) {
                     break
                 }
             }
 
-            if (max_tries && i >= max_tries) {
+            if (maxTries && i >= maxTries) {
                 break
             }
         }
         return results
     }
 
-    function getWhere(roles_are, max_results=null, max_tries=null) {
-        var indices = getIndices(roles_are, max_results, max_tries)
+    function getWhere(rolesAre, maxResults=null, maxTries=null) {
+        var indices = getIndices(rolesAre, maxResults, maxTries)
         var items = []
 
         for (var i = 0; i < indices.length; i++) {
@@ -69,36 +69,36 @@ SortFilterProxyModel {
         return items
     }
 
-    function forEachWhere(roles_are, func, max_results=null, max_tries=null) {
-        var items = getWhere(roles_are, max_results, max_tries)
+    function forEachWhere(rolesAre, func, maxResults=null, maxTries=null) {
+        var items = getWhere(rolesAre, maxResults, maxTries)
         for (var i = 0; i < items.length; i++) {
             func(items[i])
         }
     }
 
     function upsert(
-        where_roles_are, new_item, update_if_exist=true, max_tries=null
+        whereRolesAre, newItem, updateIfExist=true, maxTries=null
     ) {
-        var indices = getIndices(where_roles_are, 1, max_tries)
+        var indices = getIndices(whereRolesAre, 1, maxTries)
 
         if (indices.length == 0) {
-            model.append(new_item)
+            model.append(newItem)
             return model.get(model.count)
         }
 
 		var existing = model.get(indices[0])
-        if (! update_if_exist) { return existing }
+        if (! updateIfExist) { return existing }
 
 		// Really update only if existing and new item have a difference
 		for (var role in existing) {
 			if (Boolean(existing[role].getTime)) {
-				if (existing[role].getTime() != new_item[role].getTime()) {
-					model.set(indices[0], new_item)
+				if (existing[role].getTime() != newItem[role].getTime()) {
+					model.set(indices[0], newItem)
 					return existing
 				}
 			} else {
-				if (existing[role] != new_item[role]) {
-					model.set(indices[0], new_item)
+				if (existing[role] != newItem[role]) {
+					model.set(indices[0], newItem)
 					return existing
 				}
 			}
@@ -112,8 +112,8 @@ SortFilterProxyModel {
         return item
     }
 
-    function popWhere(roles_are, max_results=null, max_tries=null) {
-        var indices = getIndices(roles_are, max_results, max_tries)
+    function popWhere(rolesAre, maxResults=null, maxTries=null) {
+        var indices = getIndices(rolesAre, maxResults, maxTries)
         var items = []
 
         for (var i = 0; i < indices.length; i++) {
@@ -124,11 +124,11 @@ SortFilterProxyModel {
     }
 
 
-    function toObject(item_list=sortFilteredModel) {
-        var obj_list = []
+    function toObject(itemList=sortFilteredModel) {
+        var objList = []
 
-        for (var i = 0; i < item_list.count; i++) {
-            var item = item_list.get(i)
+        for (var i = 0; i < itemList.count; i++) {
+            var item = itemList.get(i)
             var obj  = JSON.parse(JSON.stringify(item))
 
             for (var role in obj) {
@@ -136,9 +136,9 @@ SortFilterProxyModel {
                     obj[role] = toObject(item[role])
                 }
             }
-            obj_list.push(obj)
+            objList.push(obj)
         }
-        return obj_list
+        return objList
     }
 
     function toJson() {

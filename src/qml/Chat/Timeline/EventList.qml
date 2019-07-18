@@ -49,7 +49,7 @@ HRectangle {
                 eventList.canLoad = false
                 py.callClientCoro(
                     chatPage.userId, "load_past_events", [chatPage.roomId],
-                    more_to_load => { eventList.canLoad = more_to_load }
+                    moreToLoad => { eventList.canLoad = moreToLoad }
                 )
             }
         }

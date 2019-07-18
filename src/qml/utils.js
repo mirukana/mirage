@@ -15,14 +15,14 @@ function hsla(hue, saturation, lightness, alpha=1.0) {
 }
 
 
-function arrayToModelItem(keys_name, array) {
+function arrayToModelItem(keysName, array) {
     // Convert an array to an object suitable to be in a model, example:
-    // [1, 2, 3] → [{keys_name: 1}, {keys_name: 2}, {keys_name: 3}]
+    // [1, 2, 3] → [{keysName: 1}, {keysName: 2}, {keysName: 3}]
     var items = []
 
     for (var i = 0; i < array.length; i++) {
         var obj        = {}
-        obj[keys_name] = array[i]
+        obj[keysName] = array[i]
         items.push(obj)
     }
     return items
@@ -59,10 +59,10 @@ function nameColor(name) {
 }
 
 
-function coloredNameHtml(name, user_id, display_text=null) {
+function coloredNameHtml(name, userId, displayText=null) {
     // substring: remove leading @
-    return "<font color='" + nameColor(name || alt_id.substring(1)) + "'>" +
-           escapeHtml(display_text || name || alt_id) +
+    return "<font color='" + nameColor(name || userId.substring(1)) + "'>" +
+           escapeHtml(displayText || name || userId) +
            "</font>"
 }
 

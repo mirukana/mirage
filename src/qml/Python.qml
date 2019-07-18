@@ -26,11 +26,11 @@ Python {
         call("APP.call_backend_coro", [name, uuid, args])
     }
 
-    function callClientCoro(account_id, name, args=[], callback=null) {
+    function callClientCoro(accountId, name, args=[], callback=null) {
         var uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
-        call("APP.call_client_coro", [account_id, name, uuid, args])
+        call("APP.call_client_coro", [accountId, name, uuid, args])
     }
 
     Component.onCompleted: {
