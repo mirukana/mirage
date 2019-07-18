@@ -1,6 +1,7 @@
 - HTextField focus effect
 - Devices and client settings in edit account page
 - If avatar is set, name color from average color?
+- Accent color from background
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
 - Button can get "hoverEnabled: false" to let HoverHandlers work

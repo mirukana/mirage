@@ -17,9 +17,7 @@ HRectangle {
            hover.hovered ? hoveredColor :
            normalColor
 
-    Behavior on color {
-        ColorAnimation { duration: theme.animationDuration / 1.5 }
-    }
+    Behavior on color { HColorAnimation { factor: 0.66 } }
 
     HoverHandler { id: hover }
     TapHandler { id: tap }

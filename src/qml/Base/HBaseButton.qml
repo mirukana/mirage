@@ -33,9 +33,7 @@ Button {
         )
         radius: circle ? height : 0
 
-        Behavior on color {
-            ColorAnimation { duration: theme.animationDuration / 2 }
-        }
+        Behavior on color { HColorAnimation { factor: 0.5 } }
 
         Rectangle {
             id: buttonBackgroundOverlay
@@ -44,9 +42,7 @@ Button {
             color: "black"
             opacity: 0
 
-            Behavior on opacity {
-                HNumberAnimation { duration: theme.animationDuration / 2 }
-            }
+            Behavior on opacity { HNumberAnimation { factor: 0.5 } }
         }
     }
 

@@ -45,7 +45,7 @@ QtObject {
         property color foregroundDim2: Ut.hsl(0, 0, 30)
         property color foregroundError: Ut.hsl(342, 64, 32)
         property color textBorder: Ut.hsla(0, 0, 0, 0.07)
-        property color accent: Ut.hsl(160, 62, 55)
+        property color accent: Ut.hsl(25, 60, 50)
     }
 
     property QtObject controls: QtObject {
@@ -62,7 +62,9 @@ QtObject {
 
         property QtObject textField: QtObject {
             property color background: colors.background2
-            property color borderColor: "black"
+            property color border: "black"
+            property color focusedBackground: background
+            property color focusedBorder: colors.accent
             property int borderWidth: 1
         }
 
