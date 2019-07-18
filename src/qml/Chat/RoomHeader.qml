@@ -74,7 +74,7 @@ HRectangle {
                     "members", "files", "notifications", "history", "settings"
                 ]
                 HUIButton {
-                    iconName: "room_view_" + modelData
+                    iconName: "room-view-" + modelData
                     iconDimension: 22
                     autoExclusive: true
                     checked: activeButton == modelData
@@ -95,7 +95,7 @@ HRectangle {
         anchors.right: parent.right
         opacity: collapseButtons ? 1 : 0
         visible: opacity > 0
-        iconName: "reduced_room_buttons"
+        iconName: "reduced-room-buttons"
 
         Behavior on opacity {
             HNumberAnimation { duration: buttonsAnimation.duration * 2 }

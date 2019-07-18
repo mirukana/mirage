@@ -25,12 +25,12 @@ Banner {
         {
             name: "accept",
             text: qsTr("Accept"),
-            iconName: "invite_accept",
+            iconName: "invite-accept",
         },
         {
             name: "decline",
             text: qsTr("Decline"),
-            iconName: "invite_decline",
+            iconName: "invite-decline",
         }
     ]
 

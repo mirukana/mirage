@@ -18,7 +18,7 @@ Banner {
         {
             name: "forget",
             text: qsTr("Forget"),
-            iconName: "forget_room",
+            iconName: "forget-room",
         }
     ]
 
