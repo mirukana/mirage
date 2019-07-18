@@ -56,7 +56,7 @@ HRectangle {
             }
 
             Component.onCompleted: {
-                area.Keys.onReturnPressed.connect(function (event) {
+                area.Keys.onReturnPressed.connect(event => {
                     event.accepted = true
 
                     if (event.modifiers & Qt.ShiftModifier ||

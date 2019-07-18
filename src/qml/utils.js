@@ -3,11 +3,11 @@
 
 
 function hsl(hue, saturation, lightness) {
-    return hsla(hue, saturation, lightness, 1.0)
+    return hsla(hue, saturation, lightness)
 }
 
 
-function hsla(hue, saturation, lightness, alpha) {
+function hsla(hue, saturation, lightness, alpha=1.0) {
     // Convert standard hsla(0-360, 1-100, 1-100, 0-1) to Qt format
     return Qt.hsla(hue / 360, saturation / 100, lightness / 100, alpha)
 }
@@ -57,7 +57,7 @@ function nameColor(name) {
 }
 
 
-function coloredNameHtml(name, user_id, display_text) {
+function coloredNameHtml(name, user_id, display_text=null) {
     // substring: remove leading @
     return "<font color='" + nameColor(name || alt_id.substring(1)) + "'>" +
            escapeHtml(display_text || name || alt_id) +

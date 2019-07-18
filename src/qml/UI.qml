@@ -59,8 +59,8 @@ Item {
         StackView {
             id: pageStack
 
-            function showPage(name, properties) {
-                pageStack.replace("Pages/" + name + ".qml", properties || {})
+            function showPage(name, properties={}) {
+                pageStack.replace("Pages/" + name + ".qml", properties)
             }
 
             function showRoom(userId, category, roomId) {

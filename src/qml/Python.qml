@@ -15,18 +15,18 @@ Python {
     signal willLoadAccounts(bool will)
     property bool loadingAccounts: false
 
-    function callSync(name, args) {
+    function callSync(name, args=[]) {
         return call_sync("APP.backend." + name, args)
     }
 
-    function callCoro(name, args, callback) {
+    function callCoro(name, args=[], callback=null) {
         var uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
         call("APP.call_backend_coro", [name, uuid, args])
     }
 
-    function callClientCoro(account_id, name, args, callback) {
+    function callClientCoro(account_id, name, args=[], callback=null) {
         var uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}

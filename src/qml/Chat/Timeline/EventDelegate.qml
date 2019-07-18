@@ -13,9 +13,8 @@ Column {
         return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
     }
 
-    function getPreviousItem(nth) {
+    function getPreviousItem(nth=1) {
         // Remember, index 0 = newest bottomest message
-        nth = nth || 1
         return eventList.model.count - 1 > model.index + nth ?
                 eventList.model.get(model.index + nth) : null
     }

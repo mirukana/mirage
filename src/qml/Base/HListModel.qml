@@ -13,13 +13,13 @@ SortFilterProxyModel {
     property ListModel model: ListModel {}
     sourceModel: model  // Can't assign a "ListModel {}" directly here
 
-    function append(dict)         { return model.append(dict) }
-    function clear()              { return model.clear() }
-    function insert(index, dict)  { return model.inset(index, dict) }
-    function move(from, to, n)    { return model.move(from, to, n) }
-    function remove(index, count) { return model.remove(index, count) }
-    function set(index, dict)     { return model.set(index, dict) }
-    function sync()               { return model.sync() }
+    function append(dict)           { return model.append(dict) }
+    function clear()                { return model.clear() }
+    function insert(index, dict)    { return model.inset(index, dict) }
+    function move(from, to, n=1)    { return model.move(from, to, n) }
+    function remove(index, count=1) { return model.remove(index, count) }
+    function set(index, dict)       { return model.set(index, dict) }
+    function sync()                 { return model.sync() }
     function setProperty(index, prop, value) {
         return model.setProperty(index, prop, value)
     }
@@ -30,8 +30,8 @@ SortFilterProxyModel {
         }
     }
 
-    function getIndices(where_roles_are, max_results, max_tries) {
-        // max arguments: unefined or int
+    function getIndices(where_roles_are, max_results=null, max_tries=null) {
+        // max_results, max_tries: null or int
         var results = []
 
         for (var i = 0; i < model.count; i++) {
@@ -59,7 +59,7 @@ SortFilterProxyModel {
         return results
     }
 
-    function getWhere(roles_are, max_results, max_tries) {
+    function getWhere(roles_are, max_results=null, max_tries=null) {
         var indices = getIndices(roles_are, max_results, max_tries)
         var items = []
 
@@ -69,14 +69,16 @@ SortFilterProxyModel {
         return items
     }
 
-    function forEachWhere(roles_are, func, max_results, max_tries) {
+    function forEachWhere(roles_are, func, max_results=null, max_tries=null) {
         var items = getWhere(roles_are, max_results, max_tries)
         for (var i = 0; i < items.length; i++) {
             func(items[i])
         }
     }
 
-    function upsert(where_roles_are, new_item, update_if_exist, max_tries) {
+    function upsert(
+        where_roles_are, new_item, update_if_exist=true, max_tries=null
+    ) {
         var indices = getIndices(where_roles_are, 1, max_tries)
 
         if (indices.length == 0) {
@@ -85,7 +87,7 @@ SortFilterProxyModel {
         }
 
 		var existing = model.get(indices[0])
-        if (update_if_exist == false) { return existing }
+        if (! update_if_exist) { return existing }
 
 		// Really update only if existing and new item have a difference
 		for (var role in existing) {
@@ -110,7 +112,7 @@ SortFilterProxyModel {
         return item
     }
 
-    function popWhere(roles_are, max_results, max_tries) {
+    function popWhere(roles_are, max_results=null, max_tries=null) {
         var indices = getIndices(roles_are, max_results, max_tries)
         var items = []
 
@@ -122,8 +124,7 @@ SortFilterProxyModel {
     }
 
 
-    function toObject(item_list) {
-        item_list = item_list || sortFilteredModel
+    function toObject(item_list=sortFilteredModel) {
         var obj_list = []
 
         for (var i = 0; i < item_list.count; i++) {
