@@ -1,18 +1,10 @@
-- Use `asyncio.as_completed()` instead of `gather`
-- Resizing pane sets the autoWidthRatio
-- Show sidepane when hovering on the left when collapsed/reduced
-- Header back button
-- Standardize "wide: width > 414..."
-- Way to round avatar corners to allow box radius
+- HTextField focus effect
 - Devices and client settings in edit account page
 - If avatar is set, name color from average color?
-- Wrong avatar for group rooms
 - Reduce messages ListView cacheBuffer height once http thumbnails
   downloading is implemented 
-- HTextField focus effect
 - Button can get "hoverEnabled: false" to let HoverHandlers work
 - Handle thumbnail response status 400
-- "Loading..." if going to edit account page while it's loading
 - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
 - Accept drag and dropping a picture in account settings to set avatar
 - When all the events loaded on beginning in a room are name/avatar changes,
@@ -26,8 +18,10 @@
 - Refactoring
   - Don't bake in size properties for components
   - Unfinished work in button-refactor branch
+  - Room Sidepane
 
 - Bug fixes
+  - Wrong avatar for group rooms
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
@@ -37,10 +31,15 @@
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Html links color
-  - `pyotherside.atexit()`
-  - Way to put sidepane back to auto-sizing (snap)
-  - Better look for arrows and option button when sidepane collapsed
   - Don't put own messages to the right past certain width
+  - `pyotherside.atexit()`
+  - Sidepane
+    - Header back button when reduced
+    - Better look for arrows and option button when collapsed
+    - Way to put it back to auto-sizing (snap)
+    - Show it when hovering on the left when collapsed/reduced
+    - Ability to drag on any place of the pane to resize
+  - Reducable room sidepane, swipe to show full-window
 
   - Invite to room
   - Server selection
@@ -58,6 +57,7 @@
   - Message/text selection
 
   - Custom file picker for Linux...
+  - Way to round avatar corners to allow box radius
 
 - Major features
   - E2E

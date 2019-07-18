@@ -18,6 +18,7 @@ ApplicationWindow {
 
     property bool debug: false
     property bool ready: false
+    property bool isWide: width > theme.isWideAbove
 
     Component.onCompleted: {
         Qt.application.organization = "harmonyqml"

@@ -26,7 +26,7 @@ HPage {
 
         Layout.maximumWidth: Math.min(parent.width, 640)
         Layout.preferredWidth:
-            wide ? parent.width : avatarPreferredSize
+            window.isWide ? parent.width : avatarPreferredSize
 
         Layout.preferredHeight: childrenRect.height
 

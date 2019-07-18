@@ -16,8 +16,6 @@ SwipeView {
     property alias headerLabel: innerHeaderLabel
     property var hideHeaderUnderHeight: null
 
-    property bool wide: width > 414 + leftPadding + rightPadding
-
     property int currentSpacing:
         Math.min(theme.spacing * width / 400, theme.spacing * 2)
 
