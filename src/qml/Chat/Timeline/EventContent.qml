@@ -9,7 +9,7 @@ import "../../utils.js" as Utils
 Row {
     id: messageContent
     spacing: theme.spacing / 2
-    layoutDirection: isOwn ? Qt.RightToLeft : Qt.LeftToRight
+    layoutDirection: onRight ? Qt.RightToLeft : Qt.LeftToRight
 
     HUserAvatar {
         id: avatar
@@ -17,7 +17,7 @@ Row {
         width: model.showNameLine ? 48 : 28
         height: combine ? 1 : model.showNameLine ? 48 : 28
         opacity: combine ? 0 : 1
-        visible: ! isOwn
+        visible: ! onRight
     }
 
     Rectangle {
@@ -42,7 +42,7 @@ Row {
 
             HLabel {
                 width: parent.width
-                height: model.showNameLine && ! isOwn && ! combine ?
+                height: model.showNameLine && ! onRight && ! combine ?
                         implicitHeight : 0
                 visible: height > 0
 
@@ -50,7 +50,7 @@ Row {
                 text: senderInfo.displayName || model.senderId
                 color: Utils.nameColor(avatar.name)
                 elide: Text.ElideRight
-                horizontalAlignment: isOwn ? Text.AlignRight : Text.AlignLeft
+                horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
 
                 leftPadding: horizontalPadding
                 rightPadding: horizontalPadding

@@ -23,6 +23,9 @@ HRectangle {
             }
         }
 
+        property bool ownEventsOnRight:
+            width < theme.chat.eventList.ownEventsOnRightUnderWidth
+
         delegate: EventDelegate {}
 
         anchors.fill: parent

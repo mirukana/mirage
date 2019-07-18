@@ -108,6 +108,7 @@ QtObject {
         }
 
         property QtObject eventList: QtObject {
+            property int ownEventsOnRightUnderWidth: 768
             property color background: "transparent"
         }
 

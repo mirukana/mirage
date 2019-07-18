@@ -27,6 +27,7 @@ Column {
     Component.onCompleted: senderInfo = users.find(model.senderId)
 
     readonly property bool isOwn: chatPage.userId === model.senderId
+    readonly property bool onRight: eventList.ownEventsOnRight && isOwn
 
     readonly property bool isFirstEvent: model.eventType == "RoomCreateEvent"
 
@@ -62,7 +63,7 @@ Column {
         if (nextDelegate) { nextDelegate.reloadPreviousItem() }
     }
 
-    width: parent.width
+    width: eventList.width
 
     topPadding:
         isFirstEvent ? 0 :
@@ -77,6 +78,7 @@ Column {
     }
 
     EventContent {
-        anchors.right: isOwn ? parent.right : undefined
+        anchors.left: parent.left
+        anchors.right: onRight ? parent.right : undefined
     }
 }

@@ -29,7 +29,7 @@
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Html links color
-  - Don't put own messages to the right past certain width
+  - Replies
   - `pyotherside.atexit()`
   - Sidepane
     - Header back button when reduced
@@ -65,7 +65,6 @@
     - Auto-trust accounts within the same client
     - Import/export keys
   - Uploads
-  - QQuickImageProvider
   - Read receipts
   - Status message and presence
   - Links preview
@@ -87,7 +86,6 @@
   - Room subtitle: show things like "*Image*" instead of blank, etc
 
 - Missing nio support
-  - Handle TimeoutError for all kind of async requests (nio)
   - MatrixRoom invited members list
   - Invite events are missing their timestamps (needed for sorting)
   - Left room events after client reboot
