@@ -25,20 +25,18 @@ SortFilterProxyModel {
     }
 
     function extend(newItems) {
-        for (var i = 0; i < newItems.length; i++) {
-            model.append(newItems[i])
-        }
+        for (let item of newItems) { model.append(item) }
     }
 
     function getIndices(whereRolesAre, maxResults=null, maxTries=null) {
         // maxResults, maxTries: null or int
-        var results = []
+        let results = []
 
-        for (var i = 0; i < model.count; i++) {
-            var item    = model.get(i)
-            var include = true
+        for (let i = 0; i < model.count; i++) {
+            let item    = model.get(i)
+            let include = true
 
-            for (var role in whereRolesAre) {
+            for (let role in whereRolesAre) {
                 if (item[role] != whereRolesAre[role]) {
                     include = false
                     break
@@ -60,33 +58,31 @@ SortFilterProxyModel {
     }
 
     function getWhere(rolesAre, maxResults=null, maxTries=null) {
-        var indices = getIndices(rolesAre, maxResults, maxTries)
-        var items = []
+        let items = []
 
-        for (var i = 0; i < indices.length; i++) {
-            items.push(model.get(indices[i]))
+        for (let indice of getIndices(rolesAre, maxResults, maxTries)) {
+            items.push(model.get(indice))
         }
         return items
     }
 
     function forEachWhere(rolesAre, func, maxResults=null, maxTries=null) {
-        var items = getWhere(rolesAre, maxResults, maxTries)
-        for (var i = 0; i < items.length; i++) {
-            func(items[i])
+        for (let item of getWhere(rolesAre, maxResults, maxTries)) {
+            func(item)
         }
     }
 
     function upsert(
         whereRolesAre, newItem, updateIfExist=true, maxTries=null
     ) {
-        var indices = getIndices(whereRolesAre, 1, maxTries)
+        let indices = getIndices(whereRolesAre, 1, maxTries)
 
         if (indices.length == 0) {
             model.append(newItem)
             return model.get(model.count)
         }
 
-		var existing = model.get(indices[0])
+		let existing = model.get(indices[0])
         if (! updateIfExist) { return existing }
 
 		// Really update only if existing and new item have a difference
@@ -107,31 +103,29 @@ SortFilterProxyModel {
     }
 
     function pop(index) {
-        var item = model.get(index)
+        let item = model.get(index)
         model.remove(index)
         return item
     }
 
     function popWhere(rolesAre, maxResults=null, maxTries=null) {
-        var indices = getIndices(rolesAre, maxResults, maxTries)
-        var items = []
+        let items = []
 
-        for (var i = 0; i < indices.length; i++) {
-            items.push(model.get(indices[i]))
-            model.remove(indices[i])
+        for (let indice of getIndices(rolesAre, maxResults, maxTries)) {
+            items.push(model.get(indice))
+            model.remove(indice)
         }
         return items
     }
 
 
     function toObject(itemList=sortFilteredModel) {
-        var objList = []
+        let objList = []
 
-        for (var i = 0; i < itemList.count; i++) {
-            var item = itemList.get(i)
-            var obj  = JSON.parse(JSON.stringify(item))
+        for (let item of itemList) {
+            let obj = JSON.parse(JSON.stringify(item))
 
-            for (var role in obj) {
+            for (let role in obj) {
                 if (obj[role]["objectName"] != undefined) {
                     obj[role] = toObject(item[role])
                 }

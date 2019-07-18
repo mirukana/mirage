@@ -27,7 +27,7 @@ Item {
 
             login: button => {
                 button.loading = true
-                var args = [idField.text, passwordField.text]
+                let args = [idField.text, passwordField.text]
 
                 py.callCoro("login_client", args, userId => {
                     pageStack.showPage("RememberAccount", {loginWith, userId})

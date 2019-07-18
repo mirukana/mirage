@@ -64,8 +64,7 @@ Item {
             }
 
             function showRoom(userId, category, roomId) {
-                var info = rooms.getWhere({userId, roomId, category}, 1)[0]
-
+                let info = rooms.getWhere({userId, roomId, category}, 1)[0]
                 pageStack.replace("Chat/Chat.qml", {"roomInfo": info})
             }
 

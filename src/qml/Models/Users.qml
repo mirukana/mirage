@@ -11,7 +11,7 @@ HListModel {
         // the expression with invalid data to establish property bindings
         if (! userId) { return }
 
-        var found = getWhere({userId}, 1)
+        let found = getWhere({userId}, 1)
         if (found.length > 0) { return found[0] }
 
         py.callCoro("request_user_update_event", [userId])

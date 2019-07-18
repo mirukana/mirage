@@ -20,14 +20,14 @@ Python {
     }
 
     function callCoro(name, args=[], callback=null) {
-        var uuid = Math.random() + "." + name
+        let uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
         call("APP.call_backend_coro", [name, uuid, args])
     }
 
     function callClientCoro(accountId, name, args=[], callback=null) {
-        var uuid = Math.random() + "." + name
+        let uuid = Math.random() + "." + name
 
         pendingCoroutines[uuid] = callback || function() {}
         call("APP.call_client_coro", [accountId, name, uuid, args])

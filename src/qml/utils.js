@@ -18,11 +18,11 @@ function hsla(hue, saturation, lightness, alpha=1.0) {
 function arrayToModelItem(keysName, array) {
     // Convert an array to an object suitable to be in a model, example:
     // [1, 2, 3] → [{keysName: 1}, {keysName: 2}, {keysName: 3}]
-    var items = []
+    let items = []
 
-    for (var i = 0; i < array.length; i++) {
-        var obj        = {}
-        obj[keysName] = array[i]
+    for (let item of array) {
+        let obj       = {}
+        obj[keysName] = item
         items.push(obj)
     }
     return items
@@ -31,8 +31,8 @@ function arrayToModelItem(keysName, array) {
 
 function hueFrom(string) {
     // Calculate and return a unique hue between 0 and 1 for the string
-    var hue = 0
-    for (var i = 0; i < string.length; i++) {
+    let hue = 0
+    for (let i = 0; i < string.length; i++) {
         hue += string.charCodeAt(i) * 99
     }
     return hue % 360 / 360
@@ -87,23 +87,16 @@ function translatedEventContent(ev) {
     if (ev.translatable == false) { return ev.content }
 
     // %S → sender display name
-    var name = users.find(ev.senderId).displayName
-    var text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
+    let name = users.find(ev.senderId).displayName
+    let text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
 
     // %T → target (event state_key) display name
     if (ev.targetUserId) {
-        var tname = users.find(ev.targetUserId).displayName
+        let tname = users.find(ev.targetUserId).displayName
         text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
     }
 
-    text = qsTr(text)
-    if (ev.translatable == true) { return text }
-
-    // Else, model.translatable should be an array of args
-    for (var i = 0; ev.translatable.length; i++) {
-        text = text.arg(ev.translatable[i])
-    }
-    return text
+    return qsTr(text)
 }
 
 
@@ -111,10 +104,10 @@ function filterMatches(filter, text) {
     filter = filter.toLowerCase()
     text   = text.toLowerCase()
 
-    var words = filter.split(" ")
+    let words = filter.split(" ")
 
-    for (var i = 0; i < words.length; i++) {
-        if (words[i] && ! text.includes(words[i])) {
+    for (let word of words) {
+        if (word && ! text.includes(word)) {
             return false
         }
     }

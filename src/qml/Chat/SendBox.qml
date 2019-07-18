@@ -68,7 +68,7 @@ HRectangle {
 
                     if (textArea.text === "") { return }
 
-                    var args = [chatPage.roomId, textArea.text]
+                    let args = [chatPage.roomId, textArea.text]
                     py.callClientCoro(chatPage.userId, "send_markdown", args)
                     area.clear()
                 })

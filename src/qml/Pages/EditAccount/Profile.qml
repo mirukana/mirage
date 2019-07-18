@@ -21,7 +21,7 @@ HGridLayout {
 
         if (avatar.changed) {
             saveButton.avatarChangeRunning = true
-            var path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
+            let path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
 
             py.callClientCoro(
                 userId, "set_avatar_from_file", [path], response => {

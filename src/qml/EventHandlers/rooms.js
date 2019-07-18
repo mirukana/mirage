@@ -6,13 +6,11 @@
 Qt.include("../utils.js")
 
 function typingTextFor(members, ourUserId) {
-    var profiles = []
-    var names    = []
+    let profiles = []
+    let names    = []
 
-    for (var i = 0; i < members.length; i++) {
-        if (members[i] != ourUserId) {
-            profiles.push(users.find(members[i]))
-        }
+    for (let member of members) {
+        if (member != ourUserId) { profiles.push(users.find(member)) }
     }
 
     profiles.sort((left, right) => {
@@ -21,15 +19,14 @@ function typingTextFor(members, ourUserId) {
       return 0
     })
 
-    for (var i = 0; i < profiles.length; i++) {
-        var profile = profiles[i]
+    for (let profile of profiles) {
         names.push(coloredNameHtml(profile.displayName, profile.userId))
     }
 
     if (names.length == 0) { return "" }
     if (names.length == 1) { return qsTr("%1 is typing...").arg(names[0]) }
 
-    var text = qsTr("%1 and %2 are typing...")
+    let text = qsTr("%1 and %2 are typing...")
 
     if (names.length == 2) { return text.arg(names[0]).arg(names[1]) }
 
@@ -44,16 +41,16 @@ function onRoomUpdated(
     roomCategories.upsert({userId, name: category}, {userId, name: category})
 
     function find(category) {
-        var found = rooms.getIndices({userId, roomId, category}, 1)
+        let found = rooms.getIndices({userId, roomId, category}, 1)
         return found.length > 0 ? found[0] : null
     }
 
-    var replace = null
+    let replace = null
     if (category == "Invites")    { replace = find("Rooms") || find("Left") }
     else if (category == "Rooms") { replace = find("Invites") || find("Left") }
     else if (category == "Left")  { replace = find("Invites") || find("Rooms")}
 
-    var item = {
+    let item = {
         typingText: typingTextFor(typingMembers, userId),
 
         userId, category, roomId, displayName, avatarUrl, topic, members,
@@ -77,7 +74,7 @@ function onTimelineEventReceived(
     eventType, roomId, eventId, senderId, date, content,
     contentType, isLocalEcho, showNameLine, translatable, targetUserId
 ) {
-    var item = {
+    let item = {
         eventType: py.getattr(eventType, "__name__"),
 
         roomId, eventId, senderId, date, content, contentType, isLocalEcho,
@@ -90,7 +87,7 @@ function onTimelineEventReceived(
     }
 
     // Replace first matching local echo
-    var found = timelines.getIndices(
+    let found = timelines.getIndices(
         {roomId, senderId, content, "isLocalEcho": true}, 1, 250
     )
 

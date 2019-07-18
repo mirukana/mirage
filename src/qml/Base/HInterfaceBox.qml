@@ -15,8 +15,8 @@ HScalingBox {
     default property alias body: interfaceBody.children
 
     function clickEnterButtonTarget() {
-        for (var i = 0; i < buttonModel.length; i++) {
-            var btn = interfaceButtonsRepeater.itemAt(i)
+        for (let i = 0; i < buttonModel.length; i++) {
+            let btn = interfaceButtonsRepeater.itemAt(i)
             if (btn.name === enterButtonTarget) { btn.clicked() }
         }
     }

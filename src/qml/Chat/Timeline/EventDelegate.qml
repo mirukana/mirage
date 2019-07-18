@@ -58,7 +58,7 @@ Column {
     readonly property int verticalPadding: theme.spacing / 2
 
     ListView.onAdd: {
-        var nextDelegate = eventList.contentItem.children[index]
+        let nextDelegate = eventList.contentItem.children[index]
         if (nextDelegate) { nextDelegate.reloadPreviousItem() }
     }
 
