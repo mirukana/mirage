@@ -1,26 +1,21 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-function onAccountUpdated(user_id) {
-    accounts.append({"userId": user_id})
+function onAccountUpdated(userId) {
+    accounts.append({userId})
 }
 
-function onAccountDeleted(user_id) {
-    accounts.popWhere({"userId": user_id}, 1)
+function onAccountDeleted(userId) {
+    accounts.popWhere({userId}, 1)
 }
 
-function onUserUpdated(user_id, display_name, avatar_url, status_message) {
-    users.upsert({"userId": user_id}, {
-        "userId":        user_id,
-        "displayName":   display_name,
-        "avatarUrl":     avatar_url,
-        "statusMessage": status_message
-    })
+function onUserUpdated(userId, displayName, avatarUrl, statusMessage) {
+    users.upsert({userId}, {userId, displayName, avatarUrl, statusMessage})
 }
 
-function onDeviceUpdated(user_id, device_id, ed25519_key, trust, display_name,
-                         last_seen_ip, last_seen_date) {
+function onDeviceUpdated(userId, deviceId, ed25519Key, trust, displayName,
+                         lastSeenIp, lastSeenDate) {
 }
 
-function onDeviceDeleted(user_id, device_id) {
+function onDeviceDeleted(userId, deviceId) {
 }

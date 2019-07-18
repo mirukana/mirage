@@ -22,13 +22,13 @@ Banner {
         }
     ]
 
-    buttonCallbacks: {
-        "forget": button => {
+    buttonCallbacks: ({
+        forget: button => {
             button.loading = true
             py.callClientCoro(
                 chatPage.userId, "room_forget", [chatPage.roomId], () => {
                     button.loading = false
             })
         }
-    }
+    })
 }

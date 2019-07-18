@@ -20,9 +20,9 @@ Banner {
         }
     ]
 
-    buttonCallbacks: {
-        "inspect": button => {
+    buttonCallbacks: ({
+        inspect: button => {
             print("show")
         }
-    }
+    })
 }

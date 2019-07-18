@@ -21,16 +21,16 @@ Item {
             { name: "no", text: qsTr("No") },
         ]
 
-        buttonCallbacks: {
-            "yes": button => {
+        buttonCallbacks: ({
+            yes: button => {
                 py.callCoro("save_account", [userId])
                 pageStack.showPage("Default")
             },
-            "no": button => {
+            no: button => {
                 py.callCoro("forget_account", [userId])
                 pageStack.showPage("Default")
             },
-        }
+        })
 
         HLabel {
             text: qsTr(

@@ -34,8 +34,8 @@ Banner {
         }
     ]
 
-    buttonCallbacks: {
-        "accept": button => {
+    buttonCallbacks: ({
+        accept: button => {
             button.loading = true
             py.callClientCoro(
                 chatPage.userId, "join", [chatPage.roomId], () => {
@@ -43,12 +43,12 @@ Banner {
             })
         },
 
-        "decline": button => {
+        decline: button => {
             button.loading = true
             py.callClientCoro(
                 chatPage.userId, "room_leave", [chatPage.roomId], () => {
                     button.loading = false
             })
         }
-    }
+    })
 }

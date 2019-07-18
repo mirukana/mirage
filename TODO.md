@@ -10,7 +10,6 @@
 -  `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
 
 - Qt 5.12
-  - See about ECMAScript 6 and 7 features
   - .mjs modules
 
 - Refactoring
@@ -18,6 +17,7 @@
   - Unfinished work in button-refactor branch
     - Button can get "hoverEnabled: false" to let HoverHandlers work
   - Room Sidepane
+  - When qml syntax highlighting supports string interpolation, use them
 
 - Bug fixes
   - Past events loading (limit 100) freezes the GUI - need to move upsert func

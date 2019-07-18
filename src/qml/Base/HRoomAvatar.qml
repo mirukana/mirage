@@ -7,8 +7,7 @@ HAvatar {
     property string userId: ""
     property string roomId: ""
 
-    readonly property var roomInfo:
-        rooms.getWhere({"userId": userId, "roomId": roomId}, 1)[0]
+    readonly property var roomInfo: rooms.getWhere({userId, roomId}, 1)[0]
 
     // roomInfo ? → Avoid error messages when a room is forgotten
     readonly property var dname: roomInfo ? roomInfo.displayName : ""

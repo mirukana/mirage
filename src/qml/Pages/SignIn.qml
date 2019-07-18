@@ -22,24 +22,21 @@ Item {
             { name: "forgot", text: qsTr("Forgot?") }
         ]
 
-        buttonCallbacks: {
-            "register": button => {},
+        buttonCallbacks: ({
+            register: button => {},
 
-            "login": button => {
+            login: button => {
                 button.loading = true
                 var args = [idField.text, passwordField.text]
 
                 py.callCoro("login_client", args, user_id => {
-                    pageStack.showPage(
-                        "RememberAccount",
-                        {"loginWith": loginWith, "userId": user_id}
-                    )
+                    pageStack.showPage("RememberAccount", {loginWith, user_id})
                     button.loading = false
                 })
             },
 
-            "forgot": button => {}
-        }
+            forgot: button => {}
+        })
 
         HRowLayout {
             spacing: signInBox.margins * 1.25

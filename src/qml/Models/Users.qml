@@ -6,21 +6,21 @@ import SortFilterProxyModel 0.2
 import "../Base"
 
 HListModel {
-    function find(user_id) {
+    function find(userId) {
         // Happens when SortFilterProxyModel ExpressionFilter/Sorter/Role tests
         // the expression with invalid data to establish property bindings
-        if (! user_id) { return }
+        if (! userId) { return }
 
-        var found = getWhere({"userId": user_id}, 1)
+        var found = getWhere({userId}, 1)
         if (found.length > 0) { return found[0] }
 
-        py.callCoro("request_user_update_event", [user_id])
+        py.callCoro("request_user_update_event", [userId])
 
         return {
-            "userId":        user_id,
-            "displayName":   "",
-            "avatarUrl":     "",
-            "statusMessage": ""
+            userId,
+            displayName:   "",
+            avatarUrl:     "",
+            statusMessage: "",
         }
     }
 }

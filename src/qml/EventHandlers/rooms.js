@@ -3,13 +3,12 @@
 
 Qt.include("../utils.js")
 
-
-function typingTextFor(members, our_user_id) {
+function typingTextFor(members, ourUserId) {
     var profiles = []
     var names    = []
 
     for (var i = 0; i < members.length; i++) {
-        if (members[i] != our_user_id) {
+        if (members[i] != ourUserId) {
             profiles.push(users.find(members[i]))
         }
     }
@@ -37,18 +36,13 @@ function typingTextFor(members, our_user_id) {
 
 
 function onRoomUpdated(
-    user_id, category, room_id, display_name, avatar_url, topic,
-    members, typing_members, inviter_id
+    userId, category, roomId, displayName, avatarUrl, topic,
+    members, typingMembers, inviterId
 ) {
-    roomCategories.upsert({"userId": user_id, "name": category}, {
-        "userId": user_id,
-        "name":   category
-    })
+    roomCategories.upsert({userId, name: category}, {userId, name: category})
 
-    function find(for_category) {
-        var found = rooms.getIndices(
-            {"userId": user_id, "roomId": room_id, "category": for_category}, 1
-        )
+    function find(category) {
+        var found = rooms.getIndices({userId, roomId, category}, 1)
         return found.length > 0 ? found[0] : null
     }
 
@@ -58,71 +52,45 @@ function onRoomUpdated(
     else if (category == "Left")  { replace = find("Invites") || find("Rooms")}
 
     var item = {
-        "userId":      user_id,
-        "category":    category,
-        "roomId":      room_id,
-        "displayName": display_name,
-        "avatarUrl":   avatar_url,
-        "topic":       topic,
-        "members":     members,
-        "typingText":  typingTextFor(typing_members, user_id),
-        "inviterId":   inviter_id
+        typingText: typingTextFor(typingMembers, userId),
+
+        userId, category, roomId, displayName, avatarUrl, topic, members,
+        inviterId
     }
 
     if (replace === null) {
-        rooms.upsert(
-            {"userId": user_id, "roomId": room_id, "category": category},
-            item
-        )
+        rooms.upsert({userId, roomId, category}, item)
     } else {
         rooms.set(replace, item)
     }
 }
 
 
-function onRoomForgotten(user_id, room_id) {
-    rooms.popWhere({"userId": user_id, "roomId": room_id})
-}
-
-
-function onRoomMemberUpdated(room_id, user_id, typing) {
-}
-
-
-function onRoomMemberDeleted(room_id, user_id) {
+function onRoomForgotten(userId, roomId) {
+    rooms.popWhere({userId, roomId})
 }
 
 
 function onTimelineEventReceived(
-    event_type, room_id, event_id, sender_id, date, content,
-    content_type, is_local_echo, show_name_line, translatable, target_user_id
+    eventType, roomId, eventId, senderId, date, content,
+    contentType, isLocalEcho, showNameLine, translatable, targetUserId
 ) {
     var item = {
-        "eventType":    py.getattr(event_type, "__name__"),
-        "roomId":       room_id,
-        "eventId":      event_id,
-        "senderId":     sender_id,
-        "date":         date,
-        "content":      content,
-        "contentType":  content_type,
-        "isLocalEcho":  is_local_echo,
-        "showNameLine": show_name_line,
-        "translatable": translatable,
-        "targetUserId": target_user_id,
+        eventType: py.getattr(eventType, "__name__"),
+
+        roomId, eventId, senderId, date, content, contentType, isLocalEcho,
+        showNameLine, translatable, targetUserId
     }
 
-    if (is_local_echo) {
+    if (isLocalEcho) {
         timelines.append(item)
         return
     }
 
     // Replace first matching local echo
-    var found = timelines.getIndices({
-        "roomId":       room_id,
-        "senderId":     sender_id,
-        "content":      content,
-        "isLocalEcho":  true
-    }, 1, 250)
+    var found = timelines.getIndices(
+        {roomId, senderId, content, "isLocalEcho": true}, 1, 250
+    )
 
     if (found.length > 0) {
         timelines.set(found[0], item)
@@ -131,16 +99,12 @@ function onTimelineEventReceived(
     else if (item.eventType == "OlmEvent" || item.eventType == "MegolmEvent") {
         // Don't replace if an item with the same eventId is found in these
         // cases, because it would be the ecrypted version of the event.
-        timelines.upsert({"eventId": event_id}, item, false, 250)
+        timelines.upsert({eventId}, item, false, 250)
     }
     else {
-        timelines.upsert({"eventId": event_id}, item, true, 250)
+        timelines.upsert({eventId}, item, true, 250)
     }
 }
 
 
 var onTimelineMessageReceived = onTimelineEventReceived
-
-
-function onTypingNoticeEvent(room_id, members) {
-}

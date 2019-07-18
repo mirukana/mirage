@@ -36,8 +36,8 @@ class UserUpdated(Event):
     def from_nio(cls, user: MatrixUser) -> "UserUpdated":
         return cls(
             user_id      = user.user_id,
-            display_name = user.display_name,
-            avatar_url   = user.avatar_url,
+            display_name = user.display_name or "",
+            avatar_url   = user.avatar_url or "",
         )
 
 
