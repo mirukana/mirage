@@ -7,17 +7,19 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 Row {
-    id: messageContent
+    id: eventContent
     spacing: theme.spacing / 2
-    layoutDirection: onRight ? Qt.RightToLeft : Qt.LeftToRight
+    // layoutDirection: onRight ? Qt.RightToLeft : Qt.LeftToRight
 
     HUserAvatar {
         id: avatar
         userId: model.senderId
-        width: model.showNameLine ? 48 : 28
-        height: combine ? 1 : model.showNameLine ? 48 : 28
+        width: onRight ? 0 : model.showNameLine ? 48 : 28
+        height: onRight ? 0 : combine ? 1 : model.showNameLine ? 48 : 28
         opacity: combine ? 0 : 1
-        visible: ! onRight
+        visible: width > 0
+        Behavior on width { HNumberAnimation {} }
+        Behavior on height { HNumberAnimation {} }
     }
 
     Rectangle {
@@ -27,7 +29,7 @@ Row {
 
         //width: nameLabel.implicitWidth
         width: Math.min(
-            eventList.width - avatar.width - messageContent.spacing,
+            eventList.width - avatar.width - eventContent.spacing,
             theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
             Math.max(
                 nameLabel.visible ? nameLabel.implicitWidth : 0,
@@ -44,6 +46,7 @@ Row {
                 width: parent.width
                 height: model.showNameLine && ! onRight && ! combine ?
                         implicitHeight : 0
+                Behavior on height { HNumberAnimation {} }
                 visible: height > 0
 
                 id: nameLabel

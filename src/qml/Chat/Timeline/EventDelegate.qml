@@ -78,7 +78,9 @@ Column {
     }
 
     EventContent {
-        anchors.left: parent.left
-        anchors.right: onRight ? parent.right : undefined
+        // anchors.left: parent.left
+        // anchors.right: onRight ? parent.right : undefined
+        x: onRight ? parent.width - width : 0
+        Behavior on x { HNumberAnimation {} }
     }
 }

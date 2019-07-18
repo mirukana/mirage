@@ -71,19 +71,20 @@ Item {
             Timer {
                 // TODO: remove this, debug
                 id: initialRoomTimer
-                interval: 5000
+                interval: 4000
                 repeat: false
-                // onTriggered: pageStack.showRoom(
-                    // "@test_mary:matrix.org",
-                    // "Rooms",
-                    // "!TSXGsbBbdwsdylIOJZ:matrix.org"
+                onTriggered: pageStack.showRoom(
+                    "@test_mary:matrix.org",
+                    "Rooms",
+                    // "!TSXGsbBbdwsdylIOJZ:matrix.org"  // st
+                    "!VDSsFIzQnXARSCVNxS:matrix.org"  // hs
                     // "Invites",
                     // "!xjqvLOGhMVutPXpAqi:matrix.org"
-                // )
-                onTriggered: pageStack.showPage(
-                    "EditAccount/EditAccount",
-                    {"userId": "@test_mary:matrix.org"}
                 )
+                // onTriggered: pageStack.showPage(
+                    // "EditAccount/EditAccount",
+                    // {"userId": "@test_mary:matrix.org"}
+                // )
             }
 
             onCurrentItemChanged: if (currentItem) {
