@@ -2,6 +2,7 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 
 import QtQuick 2.12
+import "utils.js" as Ut
 
 QtObject {
     id: theme
@@ -44,6 +45,7 @@ QtObject {
         property color foregroundDim2: Qt.hsla(0, 0, 0.3, 1)
         property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
         property color textBorder: Qt.hsla(0, 0, 0, 0.07)
+        property color accent: Ut.hsl(160, 62, 55)
     }
 
     property QtObject controls: QtObject {

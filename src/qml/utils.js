@@ -1,6 +1,18 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
+
+function hsl(hue, saturation, lightness) {
+    return hsla(hue, saturation, lightness, 1.0)
+}
+
+
+function hsla(hue, saturation, lightness, alpha) {
+    // Convert standard hsla(0-360, 1-100, 1-100, 0-1) to Qt format
+    return Qt.hsla(hue / 360, saturation / 100, lightness / 100, alpha)
+}
+
+
 function arrayToModelItem(keys_name, array) {
     // Convert an array to an object suitable to be in a model, example:
     // [1, 2, 3] → [{keys_name: 1}, {keys_name: 2}, {keys_name: 3}]
