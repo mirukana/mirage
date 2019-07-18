@@ -7,10 +7,12 @@ HRectangle {
     property bool checkable: false  // TODO
     property bool checked: false
 
-    property color normalColor: theme.controls.listEntry.background
-    property color hoveredColor: theme.controls.listEntry.hoveredBackground
-    property color pressedColor: theme.controls.listEntry.pressedBackground
-    property color checkedColor: theme.controls.listEntry.checkedBackground
+    readonly property QtObject _ir: theme.controls.interactiveRectangle
+
+    property color normalColor: _ir.background
+    property color hoveredColor: _ir.hoveredBackground
+    property color pressedColor: _ir.pressedBackground
+    property color checkedColor: _ir.checkedBackground
 
     color: checked ? checkedColor :
            // tap.pressed ? pressedColor :

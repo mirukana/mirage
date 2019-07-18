@@ -53,7 +53,7 @@ QtObject {
             property color background: colors.background2
         }
 
-        property QtObject listEntry: QtObject {
+        property QtObject interactiveRectangle: QtObject {
             property color background: "transparent"
             property color hoveredBackground: Ut.hsla(0, 0, 0, 0.2)
             property color pressedBackground: Ut.hsla(0, 0, 0, 0.4)

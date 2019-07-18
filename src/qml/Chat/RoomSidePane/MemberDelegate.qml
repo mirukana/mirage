@@ -5,7 +5,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-HHighlightRectangle {
+HInteractiveRectangle {
     id: memberDelegate
     width: memberList.width
     height: childrenRect.height

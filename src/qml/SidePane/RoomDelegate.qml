@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
 
-HHighlightRectangle {
+HInteractiveRectangle {
     id: roomDelegate
     width: roomList.width
     height: childrenRect.height

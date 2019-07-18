@@ -1,4 +1,3 @@
-- HTextField focus effect
 - Devices and client settings in edit account page
 - If avatar is set, name color from average color?
 - Accent color from background

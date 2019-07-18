@@ -12,7 +12,7 @@ Column {
     property var userInfo: users.find(model.userId)
     property bool expanded: true
 
-    HHighlightRectangle {
+    HInteractiveRectangle {
         width: parent.width
         height: childrenRect.height
 
