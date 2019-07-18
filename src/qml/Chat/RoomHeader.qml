@@ -29,6 +29,7 @@ HRectangle {
 
         HRoomAvatar {
             id: avatar
+            userId: chatPage.userId
             roomId: chatPage.roomId
             Layout.alignment: Qt.AlignTop
         }

@@ -77,7 +77,6 @@ function onRoomUpdated(
     } else {
         rooms.set(replace, item)
     }
-
 }
 
 

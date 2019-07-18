@@ -29,6 +29,7 @@ HInteractiveRectangle {
 
             HRoomAvatar {
                 id: roomAvatar
+                userId: model.userId
                 roomId: model.roomId
             }
 
