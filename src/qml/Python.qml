@@ -42,17 +42,17 @@ Python {
 
         addImportPath("src")
         addImportPath("qrc:/")
-        importNames("python", ["APP"], function() {
-            call("APP.is_debug_on", [Qt.application.arguments], function(on) {
+        importNames("python", ["APP"], () => {
+            call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("has_saved_accounts", [], function(has) {
+                callCoro("has_saved_accounts", [], has => {
                     py.ready = true
                     willLoadAccounts(has)
 
                     if (has) {
                         py.loadingAccounts = true
-                        py.callCoro("load_saved_accounts", [], function() {
+                        py.callCoro("load_saved_accounts", [], () => {
                             py.loadingAccounts = false
                         })
                     }

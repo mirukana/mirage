@@ -14,7 +14,7 @@ function typingTextFor(members, our_user_id) {
         }
     }
 
-    profiles.sort(function(left, right) {
+    profiles.sort((left, right) => {
       if (left.displayName < right.displayName) { return -1 }
       if (left.displayName > right.displayName) { return +1 }
       return 0

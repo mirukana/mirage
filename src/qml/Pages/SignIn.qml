@@ -23,13 +23,13 @@ Item {
         ]
 
         buttonCallbacks: {
-            "register": function(button) {},
+            "register": button => {},
 
-            "login": function(button) {
+            "login": button => {
                 button.loading = true
                 var args = [idField.text, passwordField.text]
 
-                py.callCoro("login_client", args, function(user_id) {
+                py.callCoro("login_client", args, user_id => {
                     pageStack.showPage(
                         "RememberAccount",
                         {"loginWith": loginWith, "userId": user_id}
@@ -38,7 +38,7 @@ Item {
                 })
             },
 
-            "forgot": function(button) {}
+            "forgot": button => {}
         }
 
         HRowLayout {

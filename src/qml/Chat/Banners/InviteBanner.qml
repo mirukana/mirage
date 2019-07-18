@@ -35,18 +35,18 @@ Banner {
     ]
 
     buttonCallbacks: {
-        "accept": function(button) {
+        "accept": button => {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "join", [chatPage.roomId], function() {
+                chatPage.userId, "join", [chatPage.roomId], () => {
                     button.loading = false
             })
         },
 
-        "decline": function(button) {
+        "decline": button => {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "room_leave", [chatPage.roomId], function() {
+                chatPage.userId, "room_leave", [chatPage.roomId], () => {
                     button.loading = false
             })
         }

@@ -112,7 +112,7 @@ function filterMatches(filter, text) {
     var words = filter.split(" ")
 
     for (var i = 0; i < words.length; i++) {
-        if (words[i] && text.indexOf(words[i]) == -1) {
+        if (words[i] && ! text.includes(words[i])) {
             return false
         }
     }

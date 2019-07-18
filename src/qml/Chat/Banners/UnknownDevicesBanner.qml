@@ -21,8 +21,8 @@ Banner {
     ]
 
     buttonCallbacks: {
-        "inspect": function(button) {
+        "inspect": button => {
             print("show")
-        },
+        }
     }
 }

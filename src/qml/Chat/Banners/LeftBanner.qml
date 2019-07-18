@@ -23,10 +23,10 @@ Banner {
     ]
 
     buttonCallbacks: {
-        "forget": function(button) {
+        "forget": button => {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "room_forget", [chatPage.roomId], function() {
+                chatPage.userId, "room_forget", [chatPage.roomId], () => {
                     button.loading = false
             })
         }

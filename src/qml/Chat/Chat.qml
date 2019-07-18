@@ -107,7 +107,7 @@ HPage {
                 to: target.oldWidth
 
                 onStopped: target.Layout.minimumWidth = Qt.binding(
-                    function() { return theme.avatar.size }
+                    () => theme.avatar.size
                 )
            }
 
@@ -131,9 +131,7 @@ HPage {
                     currentWidth = referenceWidth
                     width = referenceWidth
                     wasSnapped = true
-                    currentWidth = Qt.binding(
-                        function() { return roomSidePane.width }
-                    )
+                    currentWidth = Qt.binding(() => roomSidePane.width)
                 } else {
                     wasSnapped = false
                 }
