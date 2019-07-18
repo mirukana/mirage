@@ -45,6 +45,6 @@ Item {
             opener.file         = Qt.binding(() => Qt.resolvedUrl(file))
         }
         onAccepted: { opener.selectedFile = currentFile, opener.file = file }
-        onRejected: { selectedFile = null; file = null}
+        onRejected: { selectedFile = ""; file = ""}
     }
 }

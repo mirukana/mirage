@@ -156,6 +156,8 @@ HGridLayout {
 
                 onClicked: {
                     nameField.field.text = userInfo.displayName
+                    fileDialog.selectedFile = ""
+                    fileDialog.file = ""
                 }
             }
         }
