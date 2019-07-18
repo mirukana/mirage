@@ -59,7 +59,7 @@ HGridLayout {
             Behavior on opacity { HNumberAnimation {} }
 
             anchors.fill: parent
-            color: Qt.hsla(0, 0, 0, avatar.imageUrl ? 0.7 : 1)
+            color: Utils.hsla(0, 0, 0, avatar.imageUrl ? 0.7 : 1)
 
             HColumnLayout {
                 anchors.centerIn: parent
@@ -76,7 +76,7 @@ HGridLayout {
 
                 HLabel {
                     text: qsTr("Upload profile picture")
-                    color: Qt.hsla(0, 0, 0.9, 1)
+                    color: Utils.hsla(0, 0, 90, 1)
                     font.pixelSize: theme.fontSize.big *
                                     avatar.height / avatarPreferredSize
                     wrapMode: Text.WordWrap

@@ -37,14 +37,14 @@ QtObject {
     property int radius: 5
 
     property QtObject colors: QtObject {
-        property color background0: Qt.hsla(0, 0, 0.9, 0.5)
-        property color background1: Qt.hsla(0, 0, 0.9, 0.6)
-        property color background2: Qt.hsla(0, 0, 0.9, 0.7)
+        property color background0: Ut.hsla(0, 0, 90, 0.5)
+        property color background1: Ut.hsla(0, 0, 90, 0.6)
+        property color background2: Ut.hsla(0, 0, 90, 0.7)
         property color foreground: "black"
-        property color foregroundDim: Qt.hsla(0, 0, 0.2, 1)
-        property color foregroundDim2: Qt.hsla(0, 0, 0.3, 1)
-        property color foregroundError: Qt.hsla(0.95, 0.64, 0.32, 1)
-        property color textBorder: Qt.hsla(0, 0, 0, 0.07)
+        property color foregroundDim: Ut.hsl(0, 0, 20)
+        property color foregroundDim2: Ut.hsl(0, 0, 30)
+        property color foregroundError: Ut.hsl(342, 64, 32)
+        property color textBorder: Ut.hsla(0, 0, 0, 0.07)
         property color accent: Ut.hsl(160, 62, 55)
     }
 
@@ -55,9 +55,9 @@ QtObject {
 
         property QtObject listEntry: QtObject {
             property color background: "transparent"
-            property color hoveredBackground: Qt.hsla(0, 0, 0, 0.2)
-            property color pressedBackground: Qt.hsla(0, 0, 0, 0.4)
-            property color checkedBackground: Qt.hsla(0, 0, 0, 0.4)
+            property color hoveredBackground: Ut.hsla(0, 0, 0, 0.2)
+            property color pressedBackground: Ut.hsla(0, 0, 0, 0.4)
+            property color checkedBackground: Ut.hsla(0, 0, 0, 0.4)
         }
 
         property QtObject textField: QtObject {
@@ -110,7 +110,7 @@ QtObject {
         }
 
         property QtObject message: QtObject {
-            property color ownBackground: Qt.hsla(0.07, 0.4, 0.82, 0.7)
+            property color ownBackground: Ut.hsla(25, 40, 82, 0.7)
             property color background: colors.background2
             property color body: colors.foreground
             property color date: colors.foregroundDim
@@ -159,7 +159,7 @@ QtObject {
             property real saturation: 0.22
             property real lightness: 0.5
             property real alpha: 1
-            property color unknown: Qt.hsla(0, 0, 0.22, 1)
+            property color unknown: Ut.hsl(0, 0, 22)
         }
     }
 
