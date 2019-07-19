@@ -36,6 +36,7 @@ HBaseButton {
                 dimension: iconDimension || contentLayout.height
                 transform: iconTransform
                 opacity: button.enabled ? 1 : 0.7
+                Behavior on opacity { HNumberAnimation {} }
 
                 Layout.topMargin: verticalMargin
                 Layout.bottomMargin: verticalMargin
@@ -51,6 +52,7 @@ HBaseButton {
                 verticalAlignment: Text.AlignVCenter
                 color: enabled ?
                        theme.colors.foreground : theme.colors.foregroundDim2
+                Behavior on color { HNumberAnimation {} }
 
                 Layout.fillWidth: true
             }
