@@ -2,25 +2,22 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 import asyncio
-import json
 import random
-from pathlib import Path
 from typing import Dict, Optional, Set, Tuple
-
-from atomicfile import AtomicFile
 
 from .app import App
 from .events import users
 from .html_filter import HTML_FILTER
 from .matrix_client import MatrixClient
 
-SavedAccounts = Dict[str, Dict[str, str]]
-CONFIG_LOCK   = asyncio.Lock()
-
 
 class Backend:
     def __init__(self, app: App) -> None:
         self.app = app
+
+        from . import config_files
+        self.saved_accounts = config_files.Accounts(self)
+        self.ui_settings    = config_files.UISettings(self)
 
         self.clients: Dict[str, MatrixClient] = {}
 
@@ -64,6 +61,22 @@ class Backend:
         users.AccountUpdated(client.user_id)
 
 
+    async def load_saved_accounts(self) -> Tuple[str, ...]:
+        async def resume(user_id: str, info: Dict[str, str]) -> str:
+            await self.resume_client(
+                user_id    = user_id,
+                token      = info["token"],
+                device_id  = info["device_id"],
+                homeserver = info["homeserver"],
+            )
+            return user_id
+
+        return await asyncio.gather(*(
+            resume(uid, info)
+            for uid, info in (await self.saved_accounts.read()).items()
+        ))
+
+
     async def logout_client(self, user_id: str) -> None:
         client = self.clients.pop(user_id, None)
         if client:
@@ -77,75 +90,13 @@ class Backend:
         ))
 
 
-    # Saved account operations - TODO: Use aiofiles?
-
-    @property
-    def saved_accounts_path(self) -> Path:
-        return Path(self.app.appdirs.user_config_dir) / "accounts.json"
-
-
-    @property
-    def saved_accounts(self) -> SavedAccounts:
-        try:
-            return json.loads(self.saved_accounts_path.read_text())
-        except (json.JSONDecodeError, FileNotFoundError):
-            return {}
-
-
-    async def has_saved_accounts(self) -> bool:
-        return bool(self.saved_accounts)
-
-
-    async def load_saved_accounts(self) -> Tuple[str, ...]:
-        async def resume(user_id: str, info: Dict[str, str]) -> str:
-            await self.resume_client(
-                user_id    = user_id,
-                token      = info["token"],
-                device_id  = info["device_id"],
-                homeserver = info["homeserver"],
-            )
-            return user_id
-
-        return await asyncio.gather(*(
-            resume(uid, info) for uid, info in self.saved_accounts.items()
-        ))
-
-
-    async def save_account(self, user_id: str) -> None:
-        client = self.clients[user_id]
-
-        await self._write_config({
-            **self.saved_accounts,
-            client.user_id: {
-                "homeserver": client.homeserver,
-                "token":      client.access_token,
-                "device_id":  client.device_id,
-            }
-        })
-
-
-    async def forget_account(self, user_id: str) -> None:
-        await self._write_config({
-            uid: info
-            for uid, info in self.saved_accounts.items() if uid != user_id
-        })
-
-
-    async def _write_config(self, accounts: SavedAccounts) -> None:
-        js = json.dumps(accounts, indent=4, ensure_ascii=False, sort_keys=True)
-
-        async with CONFIG_LOCK:
-            self.saved_accounts_path.parent.mkdir(parents=True, exist_ok=True)
-
-            with AtomicFile(self.saved_accounts_path, "w") as new:
-                new.write(js)
-
-
     # General functions
 
     async def request_user_update_event(self, user_id: str) -> None:
-        client = self.clients.get(user_id,
-                                  random.choice(tuple(self.clients.values())))
+        client = self.clients.get(
+            user_id,
+            random.choice(tuple(self.clients.values()))
+        )
         await client.request_user_update_event(user_id)
 
 

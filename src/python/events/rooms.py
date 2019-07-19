@@ -2,7 +2,6 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 from datetime import datetime
-from enum import auto
 from typing import Any, Dict, List, Sequence, Type, Union
 
 from dataclasses import dataclass, field
@@ -10,7 +9,8 @@ from dataclasses import dataclass, field
 import nio
 from nio.rooms import MatrixRoom
 
-from .event import AutoStrEnum, Event
+from ..utils import AutoStrEnum, auto
+from .event import Event
 
 
 @dataclass

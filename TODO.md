@@ -1,3 +1,4 @@
+- aiofiles Thumbnails
 - Devices and client settings in edit account page
   - Multiaccount aliases
 - If avatar is set, name color from average color?

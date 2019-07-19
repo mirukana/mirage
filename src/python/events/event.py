@@ -9,12 +9,6 @@ from dataclasses import dataclass
 import pyotherside
 
 
-class AutoStrEnum(Enum):
-    @staticmethod
-    def _generate_next_value_(name, *_):
-        return name
-
-
 @dataclass
 class Event:
     def __post_init__(self) -> None:

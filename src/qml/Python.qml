@@ -46,11 +46,11 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("has_saved_accounts", [], has => {
+                callCoro("saved_accounts.any_saved", [], any => {
                     py.ready = true
-                    willLoadAccounts(has)
+                    willLoadAccounts(any)
 
-                    if (has) {
+                    if (any) {
                         py.loadingAccounts = true
                         py.callCoro("load_saved_accounts", [], () => {
                             py.loadingAccounts = false
