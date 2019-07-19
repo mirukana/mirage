@@ -1,4 +1,4 @@
-- aiofiles Thumbnails
+- Set Qt.application.* stuff from C++
 - Devices and client settings in edit account page
   - Multiaccount aliases
 - If avatar is set, name color from average color?

@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 
 from .backend import Backend
 
+JsonData = Dict[str, Any]
+
 WRITE_LOCK = asyncio.Lock()
 
 
@@ -27,14 +29,18 @@ class ConfigFile:
 
 @dataclass
 class JSONConfigFile(ConfigFile):
-    async def read(self) -> Dict[str, Any]:
+    async def default_data(self) -> JsonData:
+        return {}
+
+
+    async def read(self) -> JsonData:
         try:
             return json.loads(self.path.read_text())
         except (json.JSONDecodeError, FileNotFoundError):
-            return {}
+            return await self.default_data()
 
 
-    async def write(self, data: Dict[str, Any]) -> None:
+    async def write(self, data: JsonData) -> None:
         js = json.dumps(data, indent=4, ensure_ascii=False, sort_keys=True)
 
         async with WRITE_LOCK:
@@ -76,3 +82,8 @@ class Accounts(JSONConfigFile):
 @dataclass
 class UISettings(JSONConfigFile):
     filename: str = "ui-settings.json"
+
+    async def default_data(self) -> JsonData:
+        return {
+            "write_aliases": {}
+        }

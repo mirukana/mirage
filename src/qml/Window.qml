@@ -16,10 +16,6 @@ ApplicationWindow {
     title: "Harmony QML"
     color: "black"
 
-    property bool debug: false
-    property bool ready: false
-    property bool isWide: width > theme.isWideAbove
-
     Component.onCompleted: {
         Qt.application.organization = "harmonyqml"
         Qt.application.name         = "harmonyqml"
@@ -27,6 +23,14 @@ ApplicationWindow {
         Qt.application.version      = "0.1.0"
         window.ready                = true
     }
+
+    property bool debug: false
+    property bool ready: false
+    property bool isWide: width > theme.isWideAbove
+
+    // Note: window.settingsChanged() must be called manually
+    property var settings: ({})
+    onSettingsChanged: py.saveSettings()
 
     Theme { id: theme }
 

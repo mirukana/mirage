@@ -19,6 +19,11 @@ HGridLayout {
             )
         }
 
+        if (aliasField.changed) {
+            window.settings.write_aliases[userId] = aliasField.field.text
+            window.settingsChanged()
+        }
+
         if (avatar.changed) {
             saveButton.avatarChangeRunning = true
             let path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
@@ -30,6 +35,13 @@ HGridLayout {
                 }
             )
         }
+    }
+
+    function cancelChanges() {
+        nameField.field.text    = userInfo.displayName
+        aliasField.field.text   = aliasField.currentAlias
+        fileDialog.selectedFile = ""
+        fileDialog.file         = ""
     }
 
     columns: 2
@@ -123,6 +135,21 @@ HGridLayout {
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
             }
+
+            HLabeledTextField {
+                property string currentAlias:
+                    window.settings.write_aliases[userId] || ""
+
+                property bool changed: field.text != currentAlias
+
+                id: aliasField
+                label.text: qsTr("Write alias:")
+                field.text: currentAlias
+                field.onAccepted: applyChanges()
+
+                Layout.fillWidth: true
+                Layout.maximumWidth: 480
+            }
         }
 
         HSpacer {}
@@ -138,7 +165,8 @@ HGridLayout {
                 iconName: "apply"
                 text: qsTr("Apply")
                 loading: nameChangeRunning || avatarChangeRunning
-                enabled: nameField.changed || avatar.changed
+                enabled:
+                    nameField.changed || aliasField.changed || avatar.changed
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
@@ -149,16 +177,12 @@ HGridLayout {
             HUIButton {
                 iconName: "cancel"
                 text: qsTr("Cancel")
+                enabled: saveButton.enabled && ! saveButton.loading
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
-                enabled: saveButton.enabled && ! saveButton.loading
 
-                onClicked: {
-                    nameField.field.text = userInfo.displayName
-                    fileDialog.selectedFile = ""
-                    fileDialog.file = ""
-                }
+                onClicked: cancelChanges()
             }
         }
     }

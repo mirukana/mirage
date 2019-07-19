@@ -33,6 +33,11 @@ Python {
         call("APP.call_client_coro", [accountId, name, uuid, args])
     }
 
+    function saveSettings(callback=null) {
+        if (! py.ready) { return }  // config not loaded yet
+        callCoro("ui_settings.write", [window.settings], callback)
+    }
+
     Component.onCompleted: {
         for (var func in EventHandlers) {
             if (EventHandlers.hasOwnProperty(func)) {
@@ -46,16 +51,20 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("saved_accounts.any_saved", [], any => {
-                    py.ready = true
-                    willLoadAccounts(any)
+                callCoro("ui_settings.read", [], settings => {
+                    window.settings = settings
 
-                    if (any) {
-                        py.loadingAccounts = true
-                        py.callCoro("load_saved_accounts", [], () => {
-                            py.loadingAccounts = false
-                        })
-                    }
+                    callCoro("saved_accounts.any_saved", [], any => {
+                        py.ready = true
+                        willLoadAccounts(any)
+
+                        if (any) {
+                            py.loadingAccounts = true
+                            py.callCoro("load_saved_accounts", [], () => {
+                                py.loadingAccounts = false
+                            })
+                        }
+                    })
                 })
             })
         })
