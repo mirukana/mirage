@@ -52,6 +52,7 @@ HScalingBox {
                     id: button
                     text: modelData.text
                     iconName: modelData.iconName || ""
+                    enabled: modelData.enabled === false ? false : true
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true

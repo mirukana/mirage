@@ -17,9 +17,9 @@ Item {
         enterButtonTarget: "login"
 
         buttonModel: [
-            { name: "register", text: qsTr("Register") },
-            { name: "login", text: qsTr("Login") },
-            { name: "forgot", text: qsTr("Forgot?") }
+            { name: "register", text: qsTr("Register"), enabled: false },
+            { name: "login", text: qsTr("Login"), enabled: true },
+            { name: "forgot", text: qsTr("Forgot?"), enabled: false }
         ]
 
         buttonCallbacks: ({

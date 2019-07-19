@@ -43,6 +43,7 @@ HColumnLayout {
         id: filterField
         placeholderText: qsTr("Filter members")
         backgroundColor: theme.sidePane.filterRooms.background
+        bordered: false
 
         Layout.fillWidth: true
         Layout.preferredHeight: theme.baseElementsHeight

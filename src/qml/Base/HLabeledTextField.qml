@@ -16,7 +16,6 @@ Column {
 
     HTextField {
         id: textField
-        bordered: true
         radius: 2
         width: parent.width
     }

@@ -11,7 +11,7 @@ TextField {
 
     readonly property QtObject _tf: theme.controls.textField
 
-    property bool bordered: false
+    property bool bordered: true
     property color backgroundColor: _tf.background
     property color borderColor: _tf.border
     property color focusedBackgroundColor: _tf.focusedBackground

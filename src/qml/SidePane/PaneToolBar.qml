@@ -22,6 +22,7 @@ HRowLayout {
         id: filterField
         placeholderText: qsTr("Filter rooms")
         backgroundColor: theme.sidePane.filterRooms.background
+        bordered: false
 
         Layout.fillWidth: true
         Layout.preferredHeight: parent.height

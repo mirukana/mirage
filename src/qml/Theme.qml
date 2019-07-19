@@ -62,7 +62,7 @@ QtObject {
 
         property QtObject textField: QtObject {
             property color background: colors.background2
-            property color border: "black"
+            property color border: "transparent"
             property color focusedBackground: background
             property color focusedBorder: colors.accent
             property int borderWidth: 1

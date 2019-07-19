@@ -54,6 +54,7 @@ Column {
                     placeholderText: qsTr("Set status message")
                     font.pixelSize: theme.fontSize.small
                     background: null
+                    bordered: false
 
                     padding: 0
                     leftPadding: accountLabel.leftPadding
