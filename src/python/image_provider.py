@@ -20,6 +20,8 @@ from nio.api import ResizingMethod
 Size      = Tuple[int, int]
 ImageData = Tuple[bytearray, Size, int]  # last int: pyotherside format enum
 
+CONCURRENT_DOWNLOADS_LIMIT = asyncio.BoundedSemaphore(8)
+
 
 @dataclass
 class Thumbnail:
@@ -85,13 +87,14 @@ class Thumbnail:
         )
         parsed = urlparse(self.mxc)
 
-        response = await client.thumbnail(
-            server_name = parsed.netloc,
-            media_id    = parsed.path.lstrip("/"),
-            width       = self.server_size[0],
-            height      = self.server_size[1],
-            method      = self.resize_method,
-        )
+        async with CONCURRENT_DOWNLOADS_LIMIT:
+            response = await client.thumbnail(
+                server_name = parsed.netloc,
+                media_id    = parsed.path.lstrip("/"),
+                width       = self.server_size[0],
+                height      = self.server_size[1],
+                method      = self.resize_method,
+            )
 
         if isinstance(response, nio.ThumbnailError):
             # Return a transparent 1x1 PNG
