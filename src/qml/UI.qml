@@ -78,7 +78,8 @@ Item {
                     "@test_mary:matrix.org",
                     "Rooms",
                     // "!TSXGsbBbdwsdylIOJZ:matrix.org"  // st
-                    "!VDSsFIzQnXARSCVNxS:matrix.org"  // hs
+                    // "!VDSsFIzQnXARSCVNxS:matrix.org"  // hs
+                    "!XhxUcnVhVhUHkBZEIL:matrix.org"  // nc
                     // "Invites",
                     // "!xjqvLOGhMVutPXpAqi:matrix.org"
                 )

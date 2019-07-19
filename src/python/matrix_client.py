@@ -304,8 +304,22 @@ class MatrixClient(nio.AsyncClient):
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else html.escape(ev.body)
         )
-
         TimelineMessageReceived.from_nio(room, ev, content=co)
+
+
+    async def onRoomMessageEmote(self, room, ev, from_past=False) -> None:
+        co = "%S {}".format(HTML_FILTER.filter_inline(
+            ev.formatted_body
+            if ev.format == "org.matrix.custom.html" else html.escape(ev.body)
+        ))
+        TimelineEventReceived.from_nio(room, ev, content=co)
+
+
+    # async def onRoomMessageImage(self, room, ev, from_past=False) -> None:
+        # import json; print("RMI", json.dumps( ev.__dict__ , indent=4))
+
+    # async def onRoomEncryptedImage(self, room, ev, from_past=False) -> None:
+        # import json; print("REI", json.dumps( ev.__dict__ , indent=4))
 
 
     async def onRoomCreateEvent(self, room, ev, from_past=False) -> None:
@@ -444,12 +458,13 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onOlmEvent(self, room, ev, from_past=False) -> None:
-        co = f"%S hasn't sent your device the keys to decrypt this message."
+        co = f"%S sent an undecryptable olm message."
         TimelineEventReceived.from_nio(room, ev, content=co)
 
 
     async def onMegolmEvent(self, room, ev, from_past=False) -> None:
-        await self.onOlmEvent(room, ev, from_past=False)
+        co = f"%S sent an undecryptable message."
+        TimelineEventReceived.from_nio(room, ev, content=co)
 
 
     async def onBadEvent(self, room, ev, from_past=False) -> None:
