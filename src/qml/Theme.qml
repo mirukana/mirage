@@ -9,7 +9,7 @@ QtObject {
 
     property int minimumSupportedWidth: 240
     property int minimumSupportedHeight: 120
-    property int isWideAbove: 599
+    property int contentIsWideAbove: 439
 
     property int minimumSupportedWidthPlusSpacing: 240 + spacing * 2
     property int minimumSupportedHeightPlusSpacing: 120 + spacing * 2

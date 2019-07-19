@@ -26,7 +26,6 @@ ApplicationWindow {
 
     property bool debug: false
     property bool ready: false
-    property bool isWide: width > theme.isWideAbove
 
     // Note: window.settingsChanged() must be called manually
     property var settings: ({})

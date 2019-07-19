@@ -58,6 +58,7 @@ Item {
 
         StackView {
             id: pageStack
+            property bool isWide: width > theme.contentIsWideAbove
 
             function showPage(name, properties={}) {
                 pageStack.replace("Pages/" + name + ".qml", properties)
