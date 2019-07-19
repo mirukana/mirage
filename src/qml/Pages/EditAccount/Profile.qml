@@ -135,8 +135,8 @@ HGridLayout {
                 property bool avatarChangeRunning: false
 
                 id: saveButton
-                iconName: "save"
-                text: qsTr("Save")
+                iconName: "apply"
+                text: qsTr("Apply")
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled: nameField.changed || avatar.changed
 
