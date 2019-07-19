@@ -1,6 +1,9 @@
+- Don't send a formatted_text if it's just `<p>plaintext</p>`
 - Set Qt.application.* stuff from C++
 - Devices and client settings in edit account page
   - Multiaccount aliases
+    - Warn when overwriting another alias
+    - Add an explanation tooltip
 - If avatar is set, name color from average color?
 - Accent color from background
 - Reduce messages ListView cacheBuffer height once http thumbnails
