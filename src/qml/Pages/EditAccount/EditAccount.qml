@@ -10,7 +10,7 @@ import "../../utils.js" as Utils
 HPage {
     id: editAccount
 
-    property int avatarPreferredSize: theme.minimumSupportedWidth
+    property int avatarPreferredSize: 256
 
     property string userId: ""
     readonly property var userInfo: users.find(userId)
