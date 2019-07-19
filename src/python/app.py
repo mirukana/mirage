@@ -4,6 +4,7 @@
 import asyncio
 import signal
 from concurrent.futures import Future
+from operator import attrgetter
 from pathlib import Path
 from threading import Thread
 from typing import Any, Coroutine, Dict, List, Optional, Sequence
@@ -53,24 +54,18 @@ class App:
         )
 
 
-    def call_backend_coro(self,
-                          name: str,
-                          uuid: str,
-                          args: Optional[List[str]] = None) -> None:
-        self._call_coro(
-            getattr(self.backend, name)(*args or []), uuid
-        )
+    def call_backend_coro(self, name: str, uuid: str, args: Sequence[str] = ()
+                         ) -> None:
+        self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
 
     def call_client_coro(self,
                          account_id: str,
                          name:       str,
                          uuid:       str,
-                         args:       Optional[List[str]] = None) -> None:
+                         args:       Sequence[str] = ()) -> None:
         client = self.backend.clients[account_id]
-        self._call_coro(
-            getattr(client, name)(*args or []), uuid
-        )
+        self._call_coro(attrgetter(name)(client)(*args), uuid)
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
