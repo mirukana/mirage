@@ -31,7 +31,7 @@ HScalingBox {
 
             HLabel {
                 id: interfaceTitle
-                font.pixelSize: theme.fontSize.big
+                font.pixelSize: theme.fontSize.bigger
             }
         }
 

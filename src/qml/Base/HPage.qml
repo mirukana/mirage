@@ -59,6 +59,7 @@ SwipeView {
                     font.pixelSize: theme.fontSize.big
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
 
                     Layout.leftMargin: currentSpacing
                     Layout.rightMargin: Layout.leftMargin

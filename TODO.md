@@ -1,22 +1,10 @@
-- Don't send a formatted_text if it's just `<p>plaintext</p>`
-- Set Qt.application.* stuff from C++
-- Devices and client settings in edit account page
-  - Multiaccount aliases
-    - Warn when overwriting another alias
-    - Add an explanation tooltip
-- If avatar is set, name color from average color?
-- Accent color from background
-- Reduce messages ListView cacheBuffer height once http thumbnails
-  downloading is implemented 
-- Improve avatar tooltips position, add stuff to room tooltips (last msg?)
-- Accept drag and dropping a picture in account settings to set avatar
-- When all the events loaded on beginning in a room are name/avatar changes,
-  no last event room text is displayed (use sync filter?)
-- `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)` ?
+- Investigate?
+  - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
 
 - Refactoring
   - Use .mjs modules
   - SignIn/RememberAccount screens
+    - SignIn must be in a flickable
   - Don't bake in size properties for components
   - Unfinished work in button-refactor branch
     - Button can get "hoverEnabled: false" to let HoverHandlers work
@@ -30,6 +18,16 @@
   - Horrible performance for big rooms
 
 - UI
+  - EditAccount page:
+    - Device settings
+    - Multiaccount aliases:
+      - Warn when overwriting another alias
+      - Add an explanation tooltip
+  - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
+  - Accept drag and dropping a picture in account settings to set avatar
+  - When all the events loaded on beginning in a room are name/avatar changes,
+    no last event room text is displayed (use sync filter?)
+
   - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
@@ -54,12 +52,14 @@
   - Forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
-  - Better theming/styling system
+  - Parse themes from JSON
   - Settings page
   - Message/text selection
 
   - Custom file picker for Linux...
   - Way to round avatar corners to allow box radius
+  - If avatar is set, name color from average color?
+  - Accent color from background
 
 - Major features
   - E2E
@@ -68,12 +68,16 @@
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
     - Import/export keys
-  - Uploads
+  - Uploads & proper http thumbnails
+    - Reduce messages ListView cacheBuffer height once http thumbnails
+      downloading is implemented 
   - Read receipts
   - Status message and presence
   - Links preview
 
 - Client improvements
+  - Set Qt.application.* stuff from C++
+  - Don't send a formatted_text if it's just `<p>plaintext</p>`
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request

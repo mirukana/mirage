@@ -23,7 +23,7 @@ QtObject {
         property int smaller: 8
         property int small: 13
         property int normal: 16
-        property int big: 24
+        property int big: 22
         property int bigger: 32
         property int biggest: 48
     }

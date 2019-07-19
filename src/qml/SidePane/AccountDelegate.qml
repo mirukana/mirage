@@ -41,14 +41,17 @@ Column {
                 HLabel {
                     id: accountLabel
                     text: userInfo.displayName || model.userId
+                    font.pixelSize: theme.fontSize.big
+                    elide: HLabel.ElideRight
                     leftPadding: sidePane.currentSpacing
                     rightPadding: leftPadding
 
-                    elide: HLabel.ElideRight
                     Layout.fillWidth: true
                 }
 
                 HTextField {
+                    visible: false // TODO
+
                     id: statusEdit
                     text: userInfo.statusMessage
                     placeholderText: qsTr("Set status message")

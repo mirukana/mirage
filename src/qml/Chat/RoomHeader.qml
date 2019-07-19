@@ -39,7 +39,9 @@ HRectangle {
             text: displayName
             font.pixelSize: theme.fontSize.big
             elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
 
+            Layout.fillHeight: true
             Layout.maximumWidth: Math.max(
                 0,
                 row.width - row.totalSpacing - avatar.width -
@@ -53,7 +55,9 @@ HRectangle {
             text: topic
             font.pixelSize: theme.fontSize.small
             elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
 
+            Layout.fillHeight: true
             Layout.maximumWidth: Math.max(
                 0,
                 row.width - row.totalSpacing - avatar.width -
