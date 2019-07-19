@@ -11,17 +11,19 @@
   - Room Sidepane
   - When qml syntax highlighting supports string interpolation, use them
 
-- Bug fixes
+- Fixes
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
   - Horrible performance for big rooms
 
 - UI
+  - Show error box if uploading avatar fails
   - EditAccount page:
     - Device settings
     - Multiaccount aliases:
       - Warn when overwriting another alias
+      - Forbid spaces?
       - Add an explanation tooltip
   - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
   - Accept drag and dropping a picture in account settings to set avatar
@@ -77,7 +79,6 @@
 
 - Client improvements
   - Set Qt.application.* stuff from C++
-  - Don't send a formatted_text if it's just `<p>plaintext</p>`
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request

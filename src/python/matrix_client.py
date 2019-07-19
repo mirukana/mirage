@@ -155,12 +155,12 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_markdown(self, room_id: str, text: str) -> None:
-        content = {
-            "body":           text,
-            "formatted_body": HTML_FILTER.from_markdown(text),
-            "format":         "org.matrix.custom.html",
-            "msgtype":        "m.text",
-        }
+        content = {"body": text, "msgtype": "m.text"}
+        to_html = HTML_FILTER.from_markdown(text)
+
+        if to_html not in (text, f"<p>{text}</p>"):
+            content["format"]         = "org.matrix.custom.html"
+            content["formatted_body"] = to_html
 
         TimelineMessageReceived(
             event_type    = nio.RoomMessageText,
@@ -168,7 +168,7 @@ class MatrixClient(nio.AsyncClient):
             event_id      = f"local_echo.{uuid4()}",
             sender_id     = self.user_id,
             date          = datetime.now(),
-            content       = content["formatted_body"],
+            content       = to_html,
             is_local_echo = True,
         )
 
