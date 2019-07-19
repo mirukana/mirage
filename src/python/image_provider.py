@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Tuple
 from urllib.parse import urlparse
 
-from atomicfile import AtomicFile
+import aiofiles
 from dataclasses import dataclass, field
 from PIL import Image as PILImage
 
@@ -108,8 +108,8 @@ class Thumbnail:
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with AtomicFile(str(self.local_path), "wb") as file:
-            file.write(body)
+        async with aiofiles.open(self.local_path, "wb") as file:
+            await file.write(body)
 
         return body
 
