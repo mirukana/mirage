@@ -52,8 +52,9 @@ HInteractiveRectangle {
                         if (! ev) { return "" }
 
                         if (ev.eventType == "RoomMessageEmote" ||
-                            ! Utils.eventIsMessage(ev)) {
-                            return Utils.translatedEventContent(ev)
+                            ! ev.eventType.startsWith("RoomMessage"))
+                        {
+                            return Utils.processedEventText(ev)
                         }
 
                         return Utils.coloredNameHtml(

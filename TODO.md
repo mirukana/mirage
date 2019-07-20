@@ -18,7 +18,7 @@
   - Horrible performance for big rooms
 
 - UI
-  - Need to make events and messages avatars the same size
+  - Don't show typing bar for any of our users
   - Show error box if uploading avatar fails
   - EditAccount page:
     - Device settings

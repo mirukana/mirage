@@ -71,14 +71,12 @@ function onRoomForgotten(userId, roomId) {
 
 
 function onTimelineEventReceived(
-    eventType, roomId, eventId, senderId, date, content,
-    contentType, isLocalEcho, showNameLine, translatable, targetUserId
+    eventType, roomId, eventId, senderId, date, content, isLocalEcho,
+    targetUserId
 ) {
     let item = {
         eventType: py.getattr(eventType, "__name__"),
-
-        roomId, eventId, senderId, date, content, contentType, isLocalEcho,
-        showNameLine, translatable, targetUserId
+        roomId, eventId, senderId, date, content, isLocalEcho, targetUserId
     }
 
     if (isLocalEcho) {

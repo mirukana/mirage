@@ -11,15 +11,22 @@ Row {
     spacing: theme.spacing / 2
     // layoutDirection: onRight ? Qt.RightToLeft : Qt.LeftToRight
 
-    HUserAvatar {
-        id: avatar
-        userId: model.senderId
-        width: onRight ? 0 : model.showNameLine ? 48 : 28
-        height: onRight ? 0 : combine ? 1 : model.showNameLine ? 48 : 28
-        opacity: combine ? 0 : 1
+    Item {
+        width: hideAvatar ? 0 : 48
+        height: hideAvatar ? 0 : collapseAvatar ? 1 : smallAvatar ? 28 : 48
+        opacity: hideAvatar || collapseAvatar ? 0 : 1
         visible: width > 0
+
+        // Don't animate w/h of avatar itself! It might affect the sourceSize
         Behavior on width { HNumberAnimation {} }
         Behavior on height { HNumberAnimation {} }
+
+        HUserAvatar {
+            id: avatar
+            userId: model.senderId
+            width: hideAvatar ? 0 : 48
+            height: hideAvatar ? 0 : collapseAvatar ? 1 : 48
+        }
     }
 
     Rectangle {
@@ -37,34 +44,34 @@ Row {
             )
         )
         height: nameLabel.height + contentLabel.implicitHeight
+        y: parent.height / 2 - height / 2
 
         Column {
             spacing: 0
             anchors.fill: parent
 
             HLabel {
-                width: parent.width
-                height: model.showNameLine && ! onRight && ! combine ?
-                        implicitHeight : 0
-                Behavior on height { HNumberAnimation {} }
-                visible: height > 0
-
                 id: nameLabel
+                visible: height > 0
+                width: parent.width
+                height: hideNameLine ? 0 : implicitHeight
+                Behavior on height { HNumberAnimation {} }
+
                 text: senderInfo.displayName || model.senderId
                 color: Utils.nameColor(avatar.name)
                 elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
 
-                leftPadding: horizontalPadding
-                rightPadding: horizontalPadding
-                topPadding: verticalPadding
+                leftPadding: theme.spacing
+                rightPadding: leftPadding
+                topPadding: theme.spacing / 2
             }
 
             HRichLabel {
+                id: contentLabel
                 width: parent.width
 
-                id: contentLabel
-                text: Utils.translatedEventContent(model) +
+                text: Utils.processedEventText(model) +
                       // time
                       "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + ">" +
@@ -78,10 +85,10 @@ Row {
                 color: theme.chat.message.body
                 wrapMode: Text.Wrap
 
-                leftPadding: horizontalPadding
-                rightPadding: horizontalPadding
-                topPadding: nameLabel.visible ? 0 : verticalPadding
-                bottomPadding: verticalPadding
+                leftPadding: theme.spacing
+                rightPadding: leftPadding
+                topPadding: nameLabel.visible ? 0 : bottomPadding
+                bottomPadding: theme.spacing / 2
             }
         }
     }

@@ -2,14 +2,13 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 from datetime import datetime
-from typing import Any, Dict, List, Sequence, Type, Union
+from typing import Any, Dict, List, Sequence, Type
 
 from dataclasses import dataclass, field
 
 import nio
 from nio.rooms import MatrixRoom
 
-from ..utils import AutoStrEnum, auto
 from .event import Event
 
 
@@ -83,15 +82,6 @@ class RoomMemberDeleted(Event):
 
 # Timeline
 
-class ContentType(AutoStrEnum):
-    html     = auto()
-    image    = auto()
-    audio    = auto()
-    video    = auto()
-    file     = auto()
-    location = auto()
-
-
 @dataclass
 class TimelineEventReceived(Event):
     event_type:    Type[nio.Event] = field()
@@ -100,11 +90,7 @@ class TimelineEventReceived(Event):
     sender_id:     str             = field()
     date:          datetime        = field()
     content:       str             = field()
-    content_type:  ContentType     = ContentType.html
     is_local_echo: bool            = False
-
-    show_name_line: bool                       = False
-    translatable:   Union[bool, Sequence[str]] = True
 
     target_user_id: str = ""
 
@@ -120,9 +106,3 @@ class TimelineEventReceived(Event):
             target_user_id = getattr(ev, "state_key", "") or "",
             **fields
         )
-
-
-@dataclass
-class TimelineMessageReceived(TimelineEventReceived):
-    show_name_line: bool                       = True
-    translatable:   Union[bool, Sequence[str]] = False

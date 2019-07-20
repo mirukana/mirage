@@ -4,6 +4,7 @@
 import QtQuick 2.12
 import SortFilterProxyModel 0.2
 import "../../Base"
+import "../../utils.js" as Utils
 
 HRectangle {
     property alias listView: eventList
@@ -13,6 +14,37 @@ HRectangle {
     HListView {
         id: eventList
         clip: true
+
+        function canCombine(item, itemAfter) {
+            if (! item || ! itemAfter) { return false }
+
+            return Boolean(
+                ! canTalkBreak(item, itemAfter) &&
+                ! canDayBreak(item, itemAfter) &&
+                item.senderId === itemAfter.senderId &&
+                Utils.minutesBetween(item.date, itemAfter.date) <= 5
+            )
+        }
+
+        function canTalkBreak(item, itemAfter) {
+            if (! item || ! itemAfter) { return false }
+
+            return Boolean(
+                ! canDayBreak(item, itemAfter) &&
+                Utils.minutesBetween(item.date, itemAfter.date) >= 20
+            )
+        }
+
+        function canDayBreak(item, itemAfter) {
+            if (! item || ! itemAfter || ! item.date || ! itemAfter.date) {
+                return false
+            }
+
+            return Boolean(
+                itemAfter.eventType == "RoomCreateEvent" ||
+                item.date.getDate() != itemAfter.date.getDate()
+            )
+        }
 
         model: HListModel {
             sourceModel: timelines

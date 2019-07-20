@@ -77,26 +77,23 @@ function escapeHtml(string) {
 }
 
 
-function eventIsMessage(ev) {
-    return /^RoomMessage($|[A-Z])/.test(ev.eventType)
-}
-
-
-function translatedEventContent(ev) {
-    // ev: timelines item
-    if (ev.translatable == false) { return ev.content }
-
-    // %S → sender display name
-    let name = users.find(ev.senderId).displayName
-    let text = ev.content.replace("%S", coloredNameHtml(name, ev.senderId))
-
-    // %T → target (event state_key) display name
-    if (ev.targetUserId) {
-        let tname = users.find(ev.targetUserId).displayName
-        text = text.replace("%T", coloredNameHtml(tname, ev.targetUserId))
+function processedEventText(ev) {
+    if (ev.eventType == "RoomMessageEmote") {
+        let name = users.find(ev.senderId).displayName
+        return "<i>" + coloredNameHtml(name) + " " + ev.content + "</i>"
     }
 
-    return qsTr(text)
+    if (ev.eventType.startsWith("RoomMessage")) { return ev.content }
+
+    let name = users.find(ev.senderId).displayName
+    let text = qsTr(ev.content).arg(coloredNameHtml(name, ev.senderId))
+
+    if (text.includes("%2") && ev.targetUserId) {
+        let tname = users.find(ev.targetUserId).displayName
+        text = text.arg(coloredNameHtml(tname, ev.targetUserId))
+    }
+
+    return text
 }
 
 
@@ -131,4 +128,9 @@ function thumbnailParametersFor(width, height) {
         return {width: 96, height: 96, fillMode: Image.PreserveAspectCrop}
 
     return {width: 32, height: 32, fillMode: Image.PreserveAspectCrop}
+}
+
+
+function minutesBetween(date1, date2) {
+    return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
 }
