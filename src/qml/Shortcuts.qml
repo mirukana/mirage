@@ -7,15 +7,12 @@ Item {
     property Item flickTarget: Item {}
 
     function smartVerticalFlick(baseVelocity, fastMultiply=3) {
-        let vel = flickTarget.verticalVelocity
+        if (! flickTarget.interactive) { return }
 
-        if (flickTarget.verticalLayoutDirection == ListView.BottomToTop) {
-            baseVelocity = -baseVelocity
-            vel          = -vel
-        }
-
-        let fast = (baseVelocity < 0 && vel < baseVelocity / 2) ||
-                   (baseVelocity > 0 && vel > baseVelocity / 2)
+        baseVelocity = -baseVelocity
+        let vel      = -flickTarget.verticalVelocity
+        let fast     = (baseVelocity < 0 && vel < baseVelocity / 2) ||
+                       (baseVelocity > 0 && vel > baseVelocity / 2)
 
         flickTarget.flick(0, baseVelocity * (fast ? fastMultiply : 1))
     }

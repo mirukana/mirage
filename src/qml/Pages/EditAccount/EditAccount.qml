@@ -9,6 +9,7 @@ import "../../utils.js" as Utils
 
 HPage {
     id: editAccount
+    Component.onCompleted: shortcuts.flickTarget = flickable
 
     property int avatarPreferredSize: 256
 
