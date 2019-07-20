@@ -54,6 +54,12 @@ Column {
         width: eventDelegate.width
     }
 
+    Item {
+        visible: dayBreak
+        width: parent.width
+        height: topPadding
+    }
+
     EventContent {
         x: onRight ? parent.width - width : 0
         Behavior on x { HNumberAnimation {} }
