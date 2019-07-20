@@ -31,9 +31,9 @@ ApplicationWindow {
     property var settings: ({})
     onSettingsChanged: py.saveSettings()
 
-    Theme { id: theme }
-
-    Python { id: py }
+    Theme     { id: theme }
+    Shortcuts { id: shortcuts}
+    Python    { id: py }
 
     // Models
     Accounts       { id: accounts }

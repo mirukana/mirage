@@ -12,12 +12,14 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - Don't strip user spacing in html
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
   - Horrible performance for big rooms
 
 - UI
+  - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails
   - EditAccount page:
     - Device settings

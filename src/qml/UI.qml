@@ -98,7 +98,5 @@ Item {
             popExit: null
             pushExit: null
         }
-
-        Keys.onEscapePressed: if (window.debug) { py.call("APP.pdb") }
     }
 }

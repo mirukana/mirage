@@ -14,6 +14,7 @@ HRectangle {
     HListView {
         id: eventList
         clip: true
+        Component.onCompleted: shortcuts.flickTarget = eventList
 
         function canCombine(item, itemAfter) {
             if (! item || ! itemAfter) { return false }
