@@ -4,7 +4,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-HFixedListView {
-    interactive: true
+Flickable {
+    interactive: contentWidth > width || contentHeight > height
     ScrollBar.vertical: ScrollBar {}
 }

@@ -72,13 +72,12 @@ SwipeView {
         rightPadding: leftPadding
         Behavior on leftPadding { HNumberAnimation {} }
 
-        Flickable {
+        HFlickable {
             id: innerFlickable
             anchors.fill: parent
             clip: true
             contentWidth: parent.width
             contentHeight: contentColumn.childrenRect.height
-            interactive: contentWidth > width || contentHeight > height
 
             HColumnLayout {
                 id: contentColumn

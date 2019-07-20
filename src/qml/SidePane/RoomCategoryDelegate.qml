@@ -41,7 +41,6 @@ Column {
 
     RoomList {
         id: roomList
-        interactive: false  // no scrolling
         visible: height > 0
         width: roomCategoriesList.width - accountList.Layout.leftMargin
         opacity: roomCategoryDelegate.expanded ? 1 : 0

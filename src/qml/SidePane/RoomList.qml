@@ -7,7 +7,7 @@ import SortFilterProxyModel 0.2
 import "../Base"
 import "../utils.js" as Utils
 
-HListView {
+HFixedListView {
     id: roomList
 
     property string userId: ""

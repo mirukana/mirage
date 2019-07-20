@@ -81,7 +81,6 @@ Column {
 
     RoomCategoriesList {
         id: roomCategoriesList
-        interactive: false  // no scrolling
         visible: height > 0
         width: parent.width
         height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
