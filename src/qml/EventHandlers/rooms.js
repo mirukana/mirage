@@ -6,11 +6,16 @@
 Qt.include("../utils.js")
 
 function typingTextFor(members, ourUserId) {
+    let ourUsers = []
     let profiles = []
     let names    = []
 
+    for (let i = 0;  i < accounts.count; i++) {
+        ourUsers.push(accounts.get(i).userId)
+    }
+
     for (let member of members) {
-        if (member != ourUserId) { profiles.push(users.find(member)) }
+        if (! ourUsers.includes(member)) { profiles.push(users.find(member)) }
     }
 
     profiles.sort((left, right) => {

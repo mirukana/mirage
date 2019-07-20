@@ -18,7 +18,6 @@
   - Horrible performance for big rooms
 
 - UI
-  - Don't show typing bar for any of our users
   - Show error box if uploading avatar fails
   - EditAccount page:
     - Device settings
