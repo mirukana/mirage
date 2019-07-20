@@ -36,8 +36,12 @@ class HtmlFilter:
         return self.filter(self._markdown_to_html(text))
 
 
+    def from_markdown_inline(self, text: str) -> str:
+        return self.filter_inline(self._markdown_to_html(text))
+
+
     def filter_inline(self, html: str) -> str:
-        return self._inline_sanitizer.sanitize(html)
+        return self._inline_sanitizer.sanitize(html).strip("\n")
 
 
     def filter(self, html: str) -> str:

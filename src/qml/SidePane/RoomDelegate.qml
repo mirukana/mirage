@@ -51,7 +51,8 @@ HInteractiveRectangle {
                     function getText(ev) {
                         if (! ev) { return "" }
 
-                        if (! Utils.eventIsMessage(ev)) {
+                        if (ev.eventType == "RoomMessageEmote" ||
+                            ! Utils.eventIsMessage(ev)) {
                             return Utils.translatedEventContent(ev)
                         }
 

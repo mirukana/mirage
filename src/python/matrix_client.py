@@ -155,15 +155,27 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_markdown(self, room_id: str, text: str) -> None:
-        content = {"body": text, "msgtype": "m.text"}
-        to_html = HTML_FILTER.from_markdown(text)
+        escape = False
+        if text.startswith("//") or text.startswith(r"\/"):
+            escape = True
+            text   = text[1:]
+
+        if text.startswith("/me ") and not escape:
+            event_type = nio.RoomMessageEmote
+            text       = text[len("/me "): ]
+            content    = {"body": text, "msgtype": "m.emote"}
+            to_html    = HTML_FILTER.from_markdown_inline(text)
+        else:
+            event_type = nio.RoomMessageText
+            content    = {"body": text, "msgtype": "m.text"}
+            to_html    = HTML_FILTER.from_markdown(text)
 
         if to_html not in (text, f"<p>{text}</p>"):
             content["format"]         = "org.matrix.custom.html"
             content["formatted_body"] = to_html
 
         TimelineMessageReceived(
-            event_type    = nio.RoomMessageText,
+            event_type    = event_type,
             room_id       = room_id,
             event_id      = f"local_echo.{uuid4()}",
             sender_id     = self.user_id,

@@ -36,6 +36,13 @@ Column {
         model.date &&
         previousItem && previousItem.eventType && previousItem.date &&
         Utils.eventIsMessage(previousItem) == Utils.eventIsMessage(model) &&
+
+        // RoomMessageEmote are shown inline-style
+        ! (previousItem.eventType == "RoomMessageEmote" &&
+           model.eventType != "RoomMessageEmote") &&
+        ! (previousItem.eventType != "RoomMessageEmote" &&
+           model.eventType == "RoomMessageEmote") &&
+
         ! talkBreak &&
         ! dayBreak &&
         previousItem.senderId === model.senderId &&
