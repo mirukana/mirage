@@ -43,7 +43,8 @@ Row {
                 contentLabel.implicitWidth
             )
         )
-        height: nameLabel.height + contentLabel.implicitHeight
+        height: (nameLabel.visible ? nameLabel.height : 0) +
+                contentLabel.implicitHeight
         y: parent.height / 2 - height / 2
 
         Column {
@@ -52,10 +53,8 @@ Row {
 
             HLabel {
                 id: nameLabel
-                visible: height > 0
                 width: parent.width
-                height: hideNameLine ? 0 : implicitHeight
-                Behavior on height { HNumberAnimation {} }
+                visible: ! hideNameLine
 
                 text: senderInfo.displayName || model.senderId
                 color: Utils.nameColor(avatar.name)
