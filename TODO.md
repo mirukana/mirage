@@ -22,9 +22,11 @@
   - EditAccount page:
     - Device settings
     - Multiaccount aliases:
-      - Warn when overwriting another alias
+      - Warn when conflict with another alias
       - Forbid spaces?
       - Add an explanation tooltip
+      - Prevent sending messages with an user not in room
+      - Support \ escaping
   - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
   - Accept drag and dropping a picture in account settings to set avatar
   - When all the events loaded on beginning in a room are name/avatar changes,
@@ -94,7 +96,8 @@
   - Animate RoomEventDelegate DayBreak apparition
   - Room subtitle: show things like "*Image*" instead of blank, etc
 
-- Missing nio support
+- nio
+  - downloads API
   - MatrixRoom invited members list
   - Invite events are missing their timestamps (needed for sorting)
   - Left room events after client reboot

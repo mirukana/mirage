@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 HRectangle {
-    function setFocus() { textArea.forceActiveFocus() }
+    function setFocus() { areaScrollView.forceActiveFocus() }
 
     property var aliases: window.settings.write_aliases
     property string writingUserId: chatPage.userId
@@ -14,10 +14,12 @@ HRectangle {
 
     property bool textChangedSinceLostFocus: false
 
+    property alias textArea: areaScrollView.area
+
     id: sendBox
     Layout.fillWidth: true
     Layout.minimumHeight: theme.baseElementsHeight
-    Layout.preferredHeight: textArea.implicitHeight
+    Layout.preferredHeight: areaScrollView.implicitHeight
     // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2
     color: theme.chat.sendBox.background
@@ -35,7 +37,7 @@ HRectangle {
             Layout.fillWidth: true
             Layout.topMargin: Math.max(0, sendBox.Layout.minimumHeight - 34)
 
-            id: textArea
+            id: areaScrollView
             placeholderText: qsTr("Type a message...")
             backgroundColor: "transparent"
             area.focus: true
@@ -105,7 +107,8 @@ HRectangle {
 
                     if (event.modifiers & Qt.ShiftModifier ||
                         event.modifiers & Qt.ControlModifier ||
-                        event.modifiers & Qt.AltModifier) {
+                        event.modifiers & Qt.AltModifier)
+                    {
                         textArea.insert(textArea.cursorPosition, "\n")
                         return
                     }
