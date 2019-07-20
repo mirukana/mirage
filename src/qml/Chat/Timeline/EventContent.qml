@@ -17,10 +17,6 @@ Row {
         opacity: hideAvatar || collapseAvatar ? 0 : 1
         visible: width > 0
 
-        // Don't animate w/h of avatar itself! It might affect the sourceSize
-        Behavior on width { HNumberAnimation {} }
-        Behavior on height { HNumberAnimation {} }
-
         HUserAvatar {
             id: avatar
             userId: model.senderId

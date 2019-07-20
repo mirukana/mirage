@@ -12,8 +12,8 @@ Column {
     property var previousItem: eventList.model.get(model.index + 1)
     property var nextItem: eventList.model.get(model.index - 1)
 
-    property int modelCount: eventList.model.count
-    onModelCountChanged: {
+    property int modelIndex: model.index
+    onModelIndexChanged: {
         previousItem = eventList.model.get(model.index + 1)
         nextItem     = eventList.model.get(model.index - 1)
     }
@@ -49,14 +49,12 @@ Column {
         combine   ? theme.spacing / 2 :
         theme.spacing * 2
 
-    Loader {
-        source: dayBreak ? "Daybreak.qml" : ""
+    Daybreak {
+        visible: dayBreak
         width: eventDelegate.width
     }
 
     EventContent {
-        // anchors.left: parent.left
-        // anchors.right: onRight ? parent.right : undefined
         x: onRight ? parent.width - width : 0
         Behavior on x { HNumberAnimation {} }
     }
