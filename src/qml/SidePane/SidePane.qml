@@ -16,6 +16,18 @@ HRectangle {
     property bool manuallyResized: false
     property int manualWidth: 0
 
+    Component.onCompleted: {
+        if (window.uiState.sidePaneManualWidth) {
+            manualWidth     = window.uiState.sidePaneManualWidth
+            manuallyResized = true
+        }
+    }
+
+    onManualWidthChanged: {
+        window.uiState.sidePaneManualWidth = manualWidth
+        window.uiStateChanged()
+    }
+
     property int maximumCalculatedWidth: Math.min(
         manuallyResized ? manualWidth : theme.sidePane.maximumAutoWidth,
         window.width - theme.minimumSupportedWidthPlusSpacing
@@ -27,7 +39,7 @@ HRectangle {
 
 
     property int calculatedWidth: Math.min(
-        manuallyResized ? manualWidth: parentWidth * autoWidthRatio,
+        manuallyResized ? manualWidth : parentWidth * autoWidthRatio,
         maximumCalculatedWidth
     )
 

@@ -99,6 +99,7 @@ class UIState(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
-            "page":           "Pages/Default.qml",
-            "pageProperties": {},
+            "page":                "Pages/Default.qml",
+            "pageProperties":      {},
+            "sidePaneManualWidth": None,
         }
