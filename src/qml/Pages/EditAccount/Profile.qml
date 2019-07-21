@@ -20,7 +20,7 @@ HGridLayout {
         }
 
         if (aliasField.changed) {
-            window.settings.write_aliases[userId] = aliasField.field.text
+            window.settings.writeAliases[userId] = aliasField.field.text
             window.settingsChanged()
         }
 
@@ -138,7 +138,7 @@ HGridLayout {
 
             HLabeledTextField {
                 property string currentAlias:
-                    window.settings.write_aliases[userId] || ""
+                    window.settings.writeAliases[userId] || ""
 
                 property bool changed: field.text != currentAlias
 

@@ -14,7 +14,10 @@ Item {
     Connections {
         target: py
         onWillLoadAccounts: will => {
-            if (! will) { pageStack.showPage("SignIn") }
+            if (! will) {
+                pageStack.showPage("SignIn")
+                return
+            }
 
             let page  = window.uiState.page
             let props = window.uiState.pageProperties

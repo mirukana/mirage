@@ -8,7 +8,7 @@ import "../Base"
 HRectangle {
     function setFocus() { areaScrollView.forceActiveFocus() }
 
-    property var aliases: window.settings.write_aliases
+    property var aliases: window.settings.writeAliases
     property string writingUserId: chatPage.userId
     property string toSend: ""
 

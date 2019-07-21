@@ -88,7 +88,7 @@ class UISettings(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
-            "write_aliases": {}
+            "writeAliases": {}
         }
 
 
