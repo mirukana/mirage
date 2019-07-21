@@ -18,13 +18,16 @@ WRITE_LOCK = asyncio.Lock()
 
 @dataclass
 class ConfigFile:
-    backend:  Backend = field()
-    filename: str     = field()
+    backend:      Backend = field()
+    filename:     str     = field()
+    use_data_dir: bool    = False
 
     @property
     def path(self) -> Path:
         # pylint: disable=no-member
-        return Path(self.backend.app.appdirs.user_config_dir) / self.filename
+        dirs = self.backend.app.appdirs
+        to = dirs.user_data_dir if self.use_data_dir else dirs.user_config_dir
+        return Path(to) / self.filename
 
 
 @dataclass
@@ -86,4 +89,16 @@ class UISettings(JSONConfigFile):
     async def default_data(self) -> JsonData:
         return {
             "write_aliases": {}
+        }
+
+
+@dataclass
+class UIState(JSONConfigFile):
+    filename:     str  = "ui-state.json"
+    use_data_dir: bool = True
+
+    async def default_data(self) -> JsonData:
+        return {
+            "page":           "Pages/Default.qml",
+            "pageProperties": {},
         }

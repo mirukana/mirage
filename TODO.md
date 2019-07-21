@@ -12,6 +12,7 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
@@ -19,6 +20,7 @@
   - Horrible performance for big rooms
 
 - UI
+  - When reduced, show the full-window sidepane instead of Default page
   - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails
   - EditAccount page:
