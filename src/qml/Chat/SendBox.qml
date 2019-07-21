@@ -8,6 +8,8 @@ import "../Base"
 HRectangle {
     function setFocus() { areaScrollView.forceActiveFocus() }
 
+    property string indent: "    "
+
     property var aliases: window.settings.writeAliases
     property string writingUserId: chatPage.userId
     property string toSend: ""
@@ -40,6 +42,7 @@ HRectangle {
             id: areaScrollView
             placeholderText: qsTr("Type a message...")
             backgroundColor: "transparent"
+            area.tabStopDistance: 4 * 4  // 4 spaces
             area.focus: true
 
             function setTyping(typing) {
@@ -109,7 +112,16 @@ HRectangle {
                         event.modifiers & Qt.ControlModifier ||
                         event.modifiers & Qt.AltModifier)
                     {
-                        textArea.insert(textArea.cursorPosition, "\n")
+                        let line     = textArea.text.split("\n").slice(-1)[0]
+                        let indents  = 0
+
+                        for (let part of line.split(indent)) {
+                            if (part) { break }
+                            indents += 1
+                        }
+
+                        let add = indent.repeat(indents)
+                        textArea.insert(textArea.cursorPosition, "\n" + add)
                         return
                     }
 
@@ -124,7 +136,7 @@ HRectangle {
                 area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
 
                 area.Keys.onTabPressed.connect(event => {
-                    textArea.insert(textArea.cursorPosition, "    ")
+                    textArea.insert(textArea.cursorPosition, indent)
                 })
             }
         }

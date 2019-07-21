@@ -14,16 +14,15 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
-  - `<hr>`, need to add width attribute
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
   - Past events loading (limit 100) freezes the GUI - need to move upsert func
     to a WorkerScript
   - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
   - Horrible performance for big rooms
+  - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 
 - UI
-  - mod+enter in sendbox: respect previous line indent
   - When reduced, show the full-window sidepane instead of Default page
   - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails
