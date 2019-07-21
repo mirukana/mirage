@@ -9,15 +9,11 @@ HAvatar {
 
     readonly property var roomInfo: rooms.getWhere({userId, roomId}, 1)[0]
 
-    // roomInfo ? → Avoid error messages when a room is forgotten
+    // Avoid error messages when a room is forgotten
     readonly property var dname: roomInfo ? roomInfo.displayName : ""
+    readonly property var avUrl: roomInfo ? roomInfo.avatarUrl : ""
 
-    name:
-        dname[0] == "#" && dname.length > 1 ? dname.substring(1) : dname
-
-    imageUrl:
-        roomInfo.avatarUrl ?  ("image://python/" + roomInfo.avatarUrl) : null
-
-    toolTipImageUrl:
-        roomInfo.avatarUrl ?  ("image://python/" + roomInfo.avatarUrl) : null
+    name: dname[0] == "#" && dname.length > 1 ? dname.substring(1) : dname
+    imageUrl: avUrl ? ("image://python/" + avUrl) : null
+    toolTipImageUrl: avUrl ? ("image://python/" + avUrl) : null
 }
