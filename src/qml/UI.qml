@@ -15,7 +15,15 @@ Item {
         target: py
         onWillLoadAccounts: will => {
             if (! will) { pageStack.showPage("SignIn") }
-            pageStack.show(window.uiState.page)
+
+            let page  = window.uiState.page
+            let props = window.uiState.pageProperties
+
+            if (page == "Chat/Chat.qml") {
+                pageStack.showRoom(props.userId, props.category, props.roomId)
+            } else {
+                pageStack.show(page, props)
+            }
         }
     }
 
@@ -65,12 +73,21 @@ Item {
             }
 
             function showPage(name, properties={}) {
-                show("Pages/" + name + ".qml", properties)
+                let path = "Pages/" + name + ".qml"
+                show(path, properties)
+
+                window.uiState.page           = path
+                window.uiState.pageProperties = properties
+                window.uiStateChanged()
             }
 
             function showRoom(userId, category, roomId) {
                 let roomInfo = rooms.find(userId, category, roomId)
                 show("Chat/Chat.qml", {roomInfo})
+
+                window.uiState.page           = "Chat/Chat.qml"
+                window.uiState.pageProperties = {userId, category, roomId}
+                window.uiStateChanged()
             }
 
             onCurrentItemChanged: if (currentItem) {
