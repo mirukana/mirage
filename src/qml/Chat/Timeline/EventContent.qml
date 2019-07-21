@@ -66,7 +66,11 @@ Row {
                 id: contentLabel
                 width: parent.width
 
-                text: Utils.processedEventText(model) +
+                Component.onCompleted: print(text)
+                text: '<style type="text/css">' +
+                      theme.chat.message.stylesheet +
+                      '</style>' +
+                      Utils.processedEventText(model) +
                       // time
                       "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + ">" +

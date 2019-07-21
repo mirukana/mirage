@@ -11,8 +11,7 @@ from html_sanitizer.sanitizer import Sanitizer
 
 
 class MarkdownRenderer(mistune.Renderer):
-    def block_quote(self, text: str) -> str:
-        return re.sub(r"^<p>", "<p>&gt;", text)
+    pass
 
 
 class HtmlFilter:
@@ -53,7 +52,11 @@ class HtmlFilter:
 
 
     def filter_inline(self, html: str) -> str:
-        return self._inline_sanitizer.sanitize(html).strip("\n")
+        text = self._inline_sanitizer.sanitize(html).strip("\n")
+        text = re.sub(
+            r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text
+        )
+        return text
 
 
     def filter(self, html: str) -> str:
@@ -72,7 +75,13 @@ class HtmlFilter:
         result = b"".join((etree.tostring(el, encoding="utf-8")
                            for el in tree[0].iterchildren()))
 
-        return str(result, "utf-8").strip("\n")
+        text = str(result, "utf-8").strip("\n")
+        text = re.sub(
+            r"<(p|br/?)>(\s*&gt;.+)(!?<(?:br|p)/?>)",
+            r'<\1><span class="greentext">\2</span>\3',
+            text
+        )
+        return text
 
 
     def sanitize_settings(self, inline: bool = False) -> dict:
@@ -88,8 +97,8 @@ class HtmlFilter:
         }
 
         inlines_attributes = {
-            # TODO: translate font attrs to qt html subset, disallow color
-            "font": {"data-mx-bg-color", "data-mx-color", "color"},
+            # TODO: translate font attrs to qt html subset
+            "font": {"data-mx-bg-color", "data-mx-color"},
             "a":    {"href"},
             "code": {"class"},
         }

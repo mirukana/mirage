@@ -117,6 +117,11 @@ QtObject {
             property color background: colors.background2
             property color body: colors.foreground
             property color date: colors.foregroundDim
+
+            property color greenTextColor: Ut.hsl(80, 60, 25)
+
+            property string stylesheet:
+                ".greentext { color: " + greenTextColor + " }"
         }
 
         property QtObject daybreak: QtObject {
