@@ -23,6 +23,7 @@
   - Horrible performance for big rooms
 
 - UI
+  - mod+enter in sendbox: respect previous line indent
   - When reduced, show the full-window sidepane instead of Default page
   - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails

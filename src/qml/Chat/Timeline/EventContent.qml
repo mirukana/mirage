@@ -66,7 +66,6 @@ Row {
                 id: contentLabel
                 width: parent.width
 
-                Component.onCompleted: print(text, "\n")
                 text: theme.chat.message.styleInclude +
                       Utils.processedEventText(model) +
                       // time
