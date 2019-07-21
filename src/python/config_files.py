@@ -38,9 +38,11 @@ class JSONConfigFile(ConfigFile):
 
     async def read(self) -> JsonData:
         try:
-            return json.loads(self.path.read_text())
+            data = json.loads(self.path.read_text())
         except (json.JSONDecodeError, FileNotFoundError):
-            return await self.default_data()
+            data = {}
+
+        return {**await self.default_data(), **data}
 
 
     async def write(self, data: JsonData) -> None:
@@ -99,6 +101,8 @@ class UIState(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
+            "collapseAccounts":    {},
+            "collapseCategories":  {},
             "page":                "Pages/Default.qml",
             "pageProperties":      {},
             "sidePaneManualWidth": None,
