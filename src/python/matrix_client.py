@@ -131,7 +131,6 @@ class MatrixClient(nio.AsyncClient):
     async def request_user_update_event(self, user_id: str) -> None:
         if user_id in self.backend.pending_profile_requests:
             return
-        print("Requesting profile for", user_id)
         self.backend.pending_profile_requests.add(user_id)
 
         response = await self.get_profile(user_id)
@@ -143,7 +142,6 @@ class MatrixClient(nio.AsyncClient):
             user_id        = user_id,
             display_name   = getattr(response, "displayname", "") or "",
             avatar_url     = getattr(response, "avatar_url", "") or "",
-            status_message = "",  # TODO
         )
 
         self.backend.pending_profile_requests.discard(user_id)

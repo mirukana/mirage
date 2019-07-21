@@ -27,9 +27,12 @@ ApplicationWindow {
     property bool debug: false
     property bool ready: false
 
-    // Note: window.settingsChanged() must be called manually
+    // Note: settingsChanged(), uiStateChanged(), etc must be called manually
     property var settings: ({})
-    onSettingsChanged: py.saveSettings()
+    onSettingsChanged: py.saveConfig("ui_settings", settings)
+
+    property var uiState: ({})
+    onUiStateChanged: py.saveConfig("ui_state", uiState)
 
     Theme     { id: theme }
     Shortcuts { id: shortcuts}

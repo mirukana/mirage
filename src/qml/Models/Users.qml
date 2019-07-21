@@ -18,9 +18,9 @@ HListModel {
 
         return {
             userId,
-            displayName:   "",
-            avatarUrl:     "",
-            statusMessage: "",
+            displayName: "",
+            avatarUrl:   "",
+            loading:     true,
         }
     }
 }

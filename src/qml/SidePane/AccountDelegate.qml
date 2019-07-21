@@ -53,7 +53,7 @@ Column {
                     visible: false // TODO
 
                     id: statusEdit
-                    text: userInfo.statusMessage
+                    // text: userInfo.statusMessage
                     placeholderText: qsTr("Set status message")
                     font.pixelSize: theme.fontSize.small
                     background: null

@@ -11,8 +11,8 @@ function onAccountDeleted(userId) {
     accounts.popWhere({userId}, 1)
 }
 
-function onUserUpdated(userId, displayName, avatarUrl, statusMessage) {
-    users.upsert({userId}, {userId, displayName, avatarUrl, statusMessage})
+function onUserUpdated(userId, displayName, avatarUrl) {
+    users.upsert({userId}, {userId, displayName, avatarUrl, loading: false})
 }
 
 function onDeviceUpdated(userId, deviceId, ed25519Key, trust, displayName,

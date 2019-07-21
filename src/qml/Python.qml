@@ -33,9 +33,9 @@ Python {
         call("APP.call_client_coro", [accountId, name, uuid, args])
     }
 
-    function saveSettings(callback=null) {
+    function saveConfig(backend_attribute, data, callback=null) {
         if (! py.ready) { return }  // config not loaded yet
-        callCoro("ui_settings.write", [window.settings], callback)
+        callCoro(backend_attribute + ".write", [data], callback)
     }
 
     Component.onCompleted: {
@@ -51,8 +51,9 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("ui_settings.read", [], settings => {
+                callCoro("load_settings", [], ([settings, uiState]) => {
                     window.settings = settings
+                    window.uiState  = uiState
 
                     callCoro("saved_accounts.any_saved", [], any => {
                         py.ready = true

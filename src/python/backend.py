@@ -3,7 +3,7 @@
 
 import asyncio
 import random
-from typing import Dict, Optional, Set, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 from .app import App
 from .events import users
@@ -18,6 +18,7 @@ class Backend:
         from . import config_files
         self.saved_accounts = config_files.Accounts(self)
         self.ui_settings    = config_files.UISettings(self)
+        self.ui_state       = config_files.UIState(self)
 
         self.clients: Dict[str, MatrixClient] = {}
 
@@ -92,7 +93,14 @@ class Backend:
 
     # General functions
 
+    async def load_settings(self) -> Tuple[Dict[str, Any], ...]:
+        return (await self.ui_settings.read(), await self.ui_state.read())
+
+
     async def request_user_update_event(self, user_id: str) -> None:
+        if not self.clients:
+            return
+
         client = self.clients.get(
             user_id,
             random.choice(tuple(self.clients.values()))

@@ -18,7 +18,7 @@ WRITE_LOCK = asyncio.Lock()
 
 @dataclass
 class ConfigFile:
-    backend:      Backend = field()
+    backend:      Backend = field(repr=False)
     filename:     str     = field()
     use_data_dir: bool    = False
 

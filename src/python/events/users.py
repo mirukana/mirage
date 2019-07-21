@@ -26,11 +26,9 @@ class AccountDeleted(Event):
 
 @dataclass
 class UserUpdated(Event):
-    user_id:        str = field()
-    display_name:   str = ""
-    avatar_url:     str = ""
-    status_message: str = ""
-
+    user_id:      str  = field()
+    display_name: str  = ""
+    avatar_url:   str  = ""
 
     @classmethod
     def from_nio(cls, user: MatrixUser) -> "UserUpdated":

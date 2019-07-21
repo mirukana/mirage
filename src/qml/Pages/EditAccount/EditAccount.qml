@@ -15,13 +15,17 @@ HPage {
 
     property string userId: ""
     readonly property var userInfo: users.find(userId)
+    readonly property bool ready: userInfo && ! userInfo.loading
 
     hideHeaderUnderHeight: avatarPreferredSize
-    headerLabel.text: qsTr("Account settings for %1")
-                      .arg(Utils.coloredNameHtml(userInfo.displayName, userId))
+    headerLabel.text:
+        qsTr("Account settings for %1").arg(
+            Utils.coloredNameHtml(userInfo ? userInfo.displayName : "", userId)
+        )
 
     HRectangle {
-        color: theme.box.background
+        color: ready ? theme.box.background : "transparent"
+        Behavior on color { HColorAnimation {} }
 
         Layout.alignment: Qt.AlignCenter
 
@@ -31,18 +35,9 @@ HPage {
 
         Layout.preferredHeight: childrenRect.height
 
-        Profile { width: parent.width }
+        Loader {
+            width: parent.width
+            source: ready ? "Profile.qml" : "../../Base/HBusyIndicator.qml"
+        }
     }
-
-    // HRectangle {
-        // color: theme.box.background
-        // radius: theme.box.radius
-        // ClientSettings { width: parent.width }
-    // }
-
-    // HRectangle {
-        // color: theme.box.background
-        // radius: theme.box.radius
-        // Devices { width: parent.width }
-    // }
 }

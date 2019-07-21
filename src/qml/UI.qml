@@ -14,8 +14,8 @@ Item {
     Connections {
         target: py
         onWillLoadAccounts: will => {
-            pageStack.showPage(will ? "Default": "SignIn")
-            // if (will) { initialRoomTimer.start() }
+            if (! will) { pageStack.showPage("SignIn") }
+            pageStack.show(window.uiState.page)
         }
     }
 
@@ -60,33 +60,17 @@ Item {
             id: pageStack
             property bool isWide: width > theme.contentIsWideAbove
 
+            function show(componentUrl, properties={}) {
+                pageStack.replace(componentUrl, properties)
+            }
+
             function showPage(name, properties={}) {
-                pageStack.replace("Pages/" + name + ".qml", properties)
+                show("Pages/" + name + ".qml", properties)
             }
 
             function showRoom(userId, category, roomId) {
                 let info = rooms.getWhere({userId, roomId, category}, 1)[0]
-                pageStack.replace("Chat/Chat.qml", {"roomInfo": info})
-            }
-
-            Timer {
-                // TODO: remove this, debug
-                id: initialRoomTimer
-                interval: 4000
-                repeat: false
-                // onTriggered: pageStack.showRoom(
-                    // "@test_mary:matrix.org",
-                    // "Rooms",
-                    // "!TSXGsbBbdwsdylIOJZ:matrix.org"  // st
-                    // "!VDSsFIzQnXARSCVNxS:matrix.org"  // hs
-                    // "!XhxUcnVhVhUHkBZEIL:matrix.org"  // nc
-                    // "Invites",
-                    // "!xjqvLOGhMVutPXpAqi:matrix.org"
-                // )
-                onTriggered: pageStack.showPage(
-                    "EditAccount/EditAccount",
-                    {"userId": "@test_mary:matrix.org"}
-                )
+                show("Chat/Chat.qml", {"roomInfo": info})
             }
 
             onCurrentItemChanged: if (currentItem) {
