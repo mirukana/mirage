@@ -122,6 +122,10 @@ HRectangle {
                 })
 
                 area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
+
+                area.Keys.onTabPressed.connect(event => {
+                    textArea.insert(textArea.cursorPosition, "    ")
+                })
             }
         }
     }
