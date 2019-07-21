@@ -9,6 +9,8 @@
   - Unfinished work in button-refactor branch
     - Button can get "hoverEnabled: false" to let HoverHandlers work
   - Room Sidepane
+    - Hide when window too small
+    - Also save/load its size
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
