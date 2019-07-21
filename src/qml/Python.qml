@@ -27,10 +27,12 @@ Python {
     }
 
     function callClientCoro(accountId, name, args=[], callback=null) {
-        let uuid = Math.random() + "." + name
+        callCoro("wait_until_client_exists", [accountId], () => {
+            let uuid = Math.random() + "." + name
 
-        pendingCoroutines[uuid] = callback || function() {}
-        call("APP.call_client_coro", [accountId, name, uuid, args])
+            pendingCoroutines[uuid] = callback || function() {}
+            call("APP.call_client_coro", [accountId, name, uuid, args])
+        })
     }
 
     function saveConfig(backend_attribute, data, callback=null) {

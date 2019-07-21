@@ -56,6 +56,7 @@ function onRoomUpdated(
     else if (category == "Left")  { replace = find("Invites") || find("Rooms")}
 
     let item = {
+        loading:    false,
         typingText: typingTextFor(typingMembers, userId),
 
         userId, category, roomId, displayName, avatarUrl, topic, members,

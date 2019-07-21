@@ -69,8 +69,8 @@ Item {
             }
 
             function showRoom(userId, category, roomId) {
-                let info = rooms.getWhere({userId, roomId, category}, 1)[0]
-                show("Chat/Chat.qml", {"roomInfo": info})
+                let roomInfo = rooms.find(userId, category, roomId)
+                show("Chat/Chat.qml", {roomInfo})
             }
 
             onCurrentItemChanged: if (currentItem) {

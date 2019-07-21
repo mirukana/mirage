@@ -91,6 +91,17 @@ class Backend:
         ))
 
 
+    async def wait_until_client_exists(self, user_id: str = "") -> None:
+        while True:
+            if user_id and user_id in self.clients:
+                return
+
+            if not user_id and self.clients:
+                return
+
+            await asyncio.sleep(0.1)
+
+
     # General functions
 
     async def load_settings(self) -> Tuple[Dict[str, Any], ...]:
@@ -99,7 +110,7 @@ class Backend:
 
     async def request_user_update_event(self, user_id: str) -> None:
         if not self.clients:
-            return
+            await self.wait_until_client_exists()
 
         client = self.clients.get(
             user_id,
