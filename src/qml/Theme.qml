@@ -46,6 +46,7 @@ QtObject {
         property color foregroundError: Ut.hsl(342, 64, 32)
         property color textBorder: Ut.hsla(0, 0, 0, 0.07)
         property color accent: Ut.hsl(25, 60, 50)
+        property color accentDarker: Ut.hsl(25, 60, 35)
     }
 
     property QtObject controls: QtObject {
@@ -118,10 +119,12 @@ QtObject {
             property color body: colors.foreground
             property color date: colors.foregroundDim
 
-            property color greenTextColor: Ut.hsl(80, 60, 25)
+            property color link: colors.accentDarker
+            property color greenText: Ut.hsl(80, 60, 25)
 
             property string styleSheet:
-                ".greentext { color: " + greenTextColor + " }"
+                "a { color: " + link  + " }" +
+                ".greentext { color: " + greenText + " }"
 
             property string styleInclude:
                 '<style type"text/css">\n' + styleSheet + '\n</style>\n'

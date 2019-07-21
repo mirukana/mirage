@@ -41,7 +41,6 @@
   - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
-  - Html links color
   - Replies
   - `pyotherside.atexit()`
   - Sidepane

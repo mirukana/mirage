@@ -11,6 +11,7 @@ Label {
     color: theme.colors.foreground
     style: Label.Outline
     styleColor: theme.colors.textBorder
+    linkColor: theme.colors.accentDarker
 
     maximumLineCount: elide == Label.ElideNone ? Number.MAX_VALUE : 1
 }
