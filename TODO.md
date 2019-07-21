@@ -14,6 +14,7 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - `<hr>`, need to add width attribute
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
   - Past events loading (limit 100) freezes the GUI - need to move upsert func

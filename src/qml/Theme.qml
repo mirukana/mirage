@@ -120,10 +120,16 @@ QtObject {
             property color date: colors.foregroundDim
 
             property color link: colors.accentDarker
+            // property color code: Ut.hsl(0, 0, 80)
+            // property color codeBackground: Ut.hsl(0, 0, 10)
+            property color code: Ut.hsl(265, 60, 35)
             property color greenText: Ut.hsl(80, 60, 25)
 
             property string styleSheet:
                 "a { color: " + link  + " }" +
+
+                "code { font-family: " + fontFamily.mono + "; " +
+                       "color: "       + code            + " }" +
 
                 "h1, h2 { font-weight: normal }" +
                 "h6 { font-size: small }" +

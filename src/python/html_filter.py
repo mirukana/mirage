@@ -111,6 +111,7 @@ class HtmlFilter:
         attributes = {**inlines_attributes, **{
             "img":  {"width", "height", "alt", "title", "src"},
             "ol":   {"start"},
+            "hr":   {"width"},
         }}
 
         return {
