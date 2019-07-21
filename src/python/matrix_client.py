@@ -162,13 +162,15 @@ class MatrixClient(nio.AsyncClient):
             event_type = nio.RoomMessageEmote
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
-            to_html    = HTML_FILTER.from_markdown_inline(text)
+            to_html    = HTML_FILTER.from_markdown_inline(text, outgoing=True)
+            echo_html  = HTML_FILTER.from_markdown_inline(text)
         else:
             event_type = nio.RoomMessageText
             content    = {"body": text, "msgtype": "m.text"}
-            to_html    = HTML_FILTER.from_markdown(text)
+            to_html    = HTML_FILTER.from_markdown(text, outgoing=True)
+            echo_html  = HTML_FILTER.from_markdown(text)
 
-        if to_html not in (text, f"<p>{text}</p>"):
+        if to_html not in (html.escape(text), f"<p>{html.escape(text)}</p>"):
             content["format"]         = "org.matrix.custom.html"
             content["formatted_body"] = to_html
 
@@ -178,7 +180,7 @@ class MatrixClient(nio.AsyncClient):
             event_id      = f"local_echo.{uuid4()}",
             sender_id     = self.user_id,
             date          = datetime.now(),
-            content       = to_html,
+            content       = echo_html,
             is_local_echo = True,
         )
 

@@ -43,23 +43,26 @@ class HtmlFilter:
         ]
 
 
-    def from_markdown(self, text: str) -> str:
-        return self.filter(self._markdown_to_html(text))
+    def from_markdown(self, text: str, outgoing: bool = False) -> str:
+        return self.filter(self._markdown_to_html(text), outgoing)
 
 
-    def from_markdown_inline(self, text: str) -> str:
-        return self.filter_inline(self._markdown_to_html(text))
+    def from_markdown_inline(self, text: str, outgoing: bool = False) -> str:
+        return self.filter_inline(self._markdown_to_html(text), outgoing)
 
 
-    def filter_inline(self, html: str) -> str:
+    def filter_inline(self, html: str, outgoing: bool = False) -> str:
         text = self._inline_sanitizer.sanitize(html).strip("\n")
-        text = re.sub(
-            r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text
-        )
+
+        if not outgoing:
+            text = re.sub(
+                r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text
+            )
+
         return text
 
 
-    def filter(self, html: str) -> str:
+    def filter(self, html: str, outgoing: bool = False) -> str:
         html = self._sanitizer.sanitize(html)
         tree = etree.fromstring(html, parser=etree.HTMLParser())
 
@@ -76,11 +79,14 @@ class HtmlFilter:
                            for el in tree[0].iterchildren()))
 
         text = str(result, "utf-8").strip("\n")
-        text = re.sub(
-            r"<(p|br/?)>(\s*&gt;.+)(!?<(?:br|p)/?>)",
-            r'<\1><span class="greentext">\2</span>\3',
-            text
-        )
+
+        if not outgoing:
+            text = re.sub(
+                r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
+                r'<\1><span class="greentext">\2</span>\3',
+                text
+            )
+
         return text
 
 

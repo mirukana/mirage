@@ -120,8 +120,11 @@ QtObject {
 
             property color greenTextColor: Ut.hsl(80, 60, 25)
 
-            property string stylesheet:
+            property string styleSheet:
                 ".greentext { color: " + greenTextColor + " }"
+
+            property string styleInclude:
+                '<style type"text/css">\n' + styleSheet + '\n</style>\n'
         }
 
         property QtObject daybreak: QtObject {
