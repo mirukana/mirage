@@ -124,6 +124,10 @@ QtObject {
 
             property string styleSheet:
                 "a { color: " + link  + " }" +
+
+                "h1, h2 { font-weight: normal }" +
+                "h6 { font-size: small }" +
+
                 ".greentext { color: " + greenText + " }"
 
             property string styleInclude:
