@@ -12,9 +12,8 @@ Column {
     property var userInfo: users.find(model.userId)
     property bool expanded: true
 
-    Component.onCompleted: {
+    Component.onCompleted:
         expanded = ! window.uiState.collapseAccounts[model.userId]
-    }
 
     onExpandedChanged: {
         window.uiState.collapseAccounts[model.userId] = ! expanded

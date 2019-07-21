@@ -20,12 +20,26 @@ Column {
     property string roomListUserId: userId
     property bool expanded: true
 
+    Component.onCompleted: {
+        if (! window.uiState.collapseCategories[model.userId]) {
+            window.uiState.collapseCategories[model.userId] = {}
+            window.uiStateChanged()
+        }
+
+        expanded = !window.uiState.collapseCategories[model.userId][model.name]
+    }
+
+    onExpandedChanged: {
+        window.uiState.collapseCategories[model.userId][model.name] = !expanded
+        window.uiStateChanged()
+    }
+
     HRowLayout {
         width: parent.width
 
         HLabel {
             id: roomCategoryLabel
-            text: name
+            text: model.name
             font.weight: Font.DemiBold
             elide: Text.ElideRight
 
