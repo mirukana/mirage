@@ -10,6 +10,11 @@ import html_sanitizer.sanitizer as sanitizer
 from html_sanitizer.sanitizer import Sanitizer
 
 
+class MarkdownRenderer(mistune.Renderer):
+    def block_quote(self, text: str) -> str:
+        return re.sub(r"^<p>", "<p>&gt;", text)
+
+
 class HtmlFilter:
     link_regexes = [re.compile(r, re.IGNORECASE) for r in [
         (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+)"
@@ -29,7 +34,14 @@ class HtmlFilter:
         sanitizer.normalize_whitespace_in_text_or_tail = lambda el: el
 
         # hard_wrap: convert all \n to <br> without required two spaces
-        self._markdown_to_html = mistune.Markdown(hard_wrap=True)
+        self._markdown_to_html = mistune.Markdown(
+            hard_wrap=True, renderer=MarkdownRenderer()
+        )
+
+        self._markdown_to_html.block.default_rules = [
+            rule for rule in self._markdown_to_html.block.default_rules
+            if rule != "block_quote"
+        ]
 
 
     def from_markdown(self, text: str) -> str:
@@ -76,8 +88,8 @@ class HtmlFilter:
         }
 
         inlines_attributes = {
-            # TODO: translate font attrs to qt html subset
-            "font": {"data-mx-bg-color", "data-mx-color"},
+            # TODO: translate font attrs to qt html subset, disallow color
+            "font": {"data-mx-bg-color", "data-mx-color", "color"},
             "a":    {"href"},
             "code": {"class"},
         }

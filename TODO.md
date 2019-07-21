@@ -63,6 +63,7 @@
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
   - Parse themes from JSON
+      - Distribute fonts
   - Settings page
   - Message/text selection
 
