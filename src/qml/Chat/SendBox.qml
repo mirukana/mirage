@@ -18,11 +18,36 @@ HRectangle {
 
     property alias textArea: areaScrollView.area
 
+    readonly property int cursorPosition:
+        textArea.cursorPosition
+
+    readonly property int cursorY:
+        textArea.text.substring(0, cursorPosition).split("\n").length - 1
+
+    readonly property int cursorX:
+        cursorPosition - lines.slice(0, cursorY).join("").length - cursorY
+
+    readonly property var lines: textArea.text.split("\n")
+    readonly property string lineText: lines[cursorY] || ""
+
+    readonly property string lineTextUntilCursor:
+        lineText.substring(0, cursorX)
+
+    readonly property int deleteCharsOnBackspace:
+        lineTextUntilCursor.match(/^ +$/) ?
+        lineTextUntilCursor.match(/ {1,4}/g).splice(-1)[0].length :
+        1
+
+    // property var pr: lineTextUntilCursor
+    // onPrChanged: print(
+    //      "y", cursorY, "x", cursorX,
+    //      "ltuc <" + lineTextUntilCursor + ">", "dob",
+    //      deleteCharsOnBackspace, "m", lineTextUntilCursor.match(/^ +$/))
+
     id: sendBox
     Layout.fillWidth: true
     Layout.minimumHeight: theme.baseElementsHeight
     Layout.preferredHeight: areaScrollView.implicitHeight
-    // parent.height / 2 causes binding loop?
     Layout.maximumHeight: pageStack.height / 2
     color: theme.chat.sendBox.background
 
@@ -112,16 +137,16 @@ HRectangle {
                         event.modifiers & Qt.ControlModifier ||
                         event.modifiers & Qt.AltModifier)
                     {
-                        let line     = textArea.text.split("\n").slice(-1)[0]
-                        let indents  = 0
+                        let indents = 0
+                        let parts   = lineText.split(indent)
 
-                        for (let part of line.split(indent)) {
-                            if (part) { break }
+                        for (const [i, part] of parts.entries()) {
+                            if (i == parts.length - 1 || part) { break }
                             indents += 1
                         }
 
                         let add = indent.repeat(indents)
-                        textArea.insert(textArea.cursorPosition, "\n" + add)
+                        textArea.insert(cursorPosition, "\n" + add)
                         return
                     }
 
@@ -136,7 +161,21 @@ HRectangle {
                 area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
 
                 area.Keys.onTabPressed.connect(event => {
-                    textArea.insert(textArea.cursorPosition, indent)
+                    event.accepted = true
+                    textArea.insert(cursorPosition, indent)
+                })
+
+                area.Keys.onPressed.connect(event => {
+                    if (event.modifiers == Qt.NoModifier &&
+                        event.key == Qt.Key_Backspace &&
+                        ! textArea.selectedText)
+                    {
+                        event.accepted = true
+                        textArea.remove(
+                            cursorPosition - deleteCharsOnBackspace,
+                            cursorPosition
+                        )
+                    }
                 })
             }
         }
