@@ -1,0 +1,160 @@
+// Copyright 2019 miruka
+// This file is part of harmonyqml, licensed under LGPLv3.
+// vim: syntax=qml
+
+int minimumSupportedWidth: 240
+int minimumSupportedHeight: 120
+int contentIsWideAbove: 439
+
+int minimumSupportedWidthPlusSpacing: 240 + spacing * 2
+int minimumSupportedHeightPlusSpacing: 120 + spacing * 2
+
+int baseElementsHeight: 36
+int spacing: 8
+int radius: 5
+int animationDuration: 100
+
+color pageHeadersBackground: colors.background2
+
+fontSize:
+    int smallest: 6
+    int smaller: 8
+    int small: 13
+    int normal: 16
+    int big: 22
+    int bigger: 32
+    int biggest: 48
+
+fontFamily:
+    string sans: "SFNS Display"
+    string serif: "Roboto Slab"
+    string mono: "Hack"
+
+colors:
+    color background0: Ut.hsla(0, 0, 90, 0.5)
+    color background1: Ut.hsla(0, 0, 90, 0.6)
+    color background2: Ut.hsla(0, 0, 90, 0.7)
+    color foreground: "black"
+    color foregroundDim: Ut.hsl(0, 0, 20)
+    color foregroundDim2: Ut.hsl(0, 0, 30)
+    color foregroundError: Ut.hsl(342, 64, 32)
+    color textBorder: Ut.hsla(0, 0, 0, 0.07)
+    color accent: Ut.hsl(25, 60, 50)
+    color accentDarker: Ut.hsl(25, 60, 35)
+
+controls:
+    button:
+        color background: colors.background2
+
+    interactiveRectangle:
+        color background: "transparent"
+        color hoveredBackground: Ut.hsla(0, 0, 0, 0.2)
+        color pressedBackground: Ut.hsla(0, 0, 0, 0.4)
+        color checkedBackground: Ut.hsla(0, 0, 0, 0.4)
+
+    textField:
+        color background: colors.background2
+        color border: "transparent"
+        color focusedBackground: background
+        color focusedBorder: colors.accent
+        int borderWidth: 1
+
+    textArea:
+        color background: colors.background2
+
+sidePane:
+    real autoWidthRatio: 0.33
+    int maximumAutoWidth: 320
+
+    int autoCollapseBelowWidth: 128
+    int collapsedWidth: avatar.size
+
+    int autoReduceBelowWindowWidth:
+        minimumSupportedWidthPlusSpacing + collapsedWidth
+
+    color background: colors.background2
+
+    account:
+        color background: Qt.lighter(colors.background2, 1.05)
+
+    settingsButton:
+        color background: colors.background2
+
+    filterRooms:
+        color background: colors.background2
+
+chat:
+    selectViewBar:
+        color background: colors.background2
+
+    roomHeader:
+        color background: colors.background2
+
+    eventList:
+        int ownEventsOnRightUnderWidth: 768
+        color background: "transparent"
+
+    message:
+        color ownBackground: Ut.hsla(25, 40, 82, 0.7)
+        color background: colors.background2
+        color body: colors.foreground
+        color date: colors.foregroundDim
+
+        color link: colors.accentDarker
+        // color code: Ut.hsl(0, 0, 80)
+        // color codeBackground: Ut.hsl(0, 0, 10)
+        color code: Ut.hsl(265, 60, 35)
+        color greenText: Ut.hsl(80, 60, 25)
+
+        string styleSheet:
+            "a { color: " + link  + " }" +
+
+            "code { font-family: " + fontFamily.mono + "; " +
+                   "color: "       + code            + " }" +
+
+            "h1, h2 { font-weight: normal }" +
+            "h6 { font-size: small }" +
+
+            ".greentext { color: " + greenText + " }"
+
+        string styleInclude:
+            '<style type"text/css">\n' + styleSheet + '\n</style>\n'
+
+    daybreak:
+        color background: colors.background2
+        color foreground: colors.foreground
+        int radius: theme.radius
+
+    inviteBanner:
+        color background: colors.background2
+
+    leftBanner:
+        color background: colors.background2
+
+    unknownDevices:
+        color background: colors.background2
+
+    typingMembers:
+        color background: colors.background1
+
+    sendBox:
+        color background: colors.background2
+
+box:
+    color background: colors.background0
+    int radius: theme.radius
+
+avatar:
+    int size: baseElementsHeight
+    int radius: theme.radius
+    color letter: "white"
+
+    background:
+        real saturation: 0.22
+        real lightness: 0.5
+        real alpha: 1
+        color unknown: Ut.hsl(0, 0, 22)
+
+displayName:
+    real saturation: 0.32
+    real lightness: 0.3

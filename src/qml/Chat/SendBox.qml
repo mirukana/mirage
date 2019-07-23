@@ -105,7 +105,7 @@ HRectangle {
                     vals.reduce((a, b) => a.length > b.length ? a: b)
 
                 let textNotStartsWithAnyAlias =
-                    ! vals.some(a => text.startsWith(a))
+                    ! vals.some(a => a.startsWith(text))
 
                 let textContainsCharNotInAnyAlias =
                     vals.every(a => text.split("").some(c => ! a.includes(c)))

@@ -8,8 +8,8 @@ import "Models"
 
 ApplicationWindow {
     id: window
-    minimumWidth: theme.minimumSupportedWidth
-    minimumHeight: theme.minimumSupportedHeight
+    minimumWidth: theme ? theme.minimumSupportedWidth : 240
+    minimumHeight: theme ? theme.minimumSupportedHeight : 120
     width: 640
     height: 480
     visible: true
@@ -34,7 +34,8 @@ ApplicationWindow {
     property var uiState: ({})
     onUiStateChanged: py.saveConfig("ui_state", uiState)
 
-    Theme     { id: theme }
+    property var theme: null
+
     Shortcuts { id: shortcuts}
     Python    { id: py }
 

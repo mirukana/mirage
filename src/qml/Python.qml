@@ -53,9 +53,10 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("load_settings", [], ([settings, uiState]) => {
+                callCoro("load_settings", [], ([settings, uiState, theme]) => {
                     window.settings = settings
                     window.uiState  = uiState
+                    window.theme   = Qt.createQmlObject(theme, window, "theme")
 
                     callCoro("saved_accounts.any_saved", [], any => {
                         py.ready = true

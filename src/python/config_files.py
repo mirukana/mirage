@@ -10,6 +10,7 @@ import aiofiles
 from dataclasses import dataclass, field
 
 from .backend import Backend
+from .theme_parser import convert_to_qml
 
 JsonData = Dict[str, Any]
 
@@ -18,16 +19,32 @@ WRITE_LOCK = asyncio.Lock()
 
 @dataclass
 class ConfigFile:
-    backend:      Backend = field(repr=False)
-    filename:     str     = field()
-    use_data_dir: bool    = False
+    backend:  Backend = field(repr=False)
+    filename: str     = field()
 
     @property
     def path(self) -> Path:
         # pylint: disable=no-member
-        dirs = self.backend.app.appdirs
-        to = dirs.user_data_dir if self.use_data_dir else dirs.user_config_dir
-        return Path(to) / self.filename
+        return Path(self.backend.app.appdirs.user_config_dir) / self.filename
+
+
+    async def default_data(self):
+        return ""
+
+
+    async def read(self):
+        try:
+            return self.path.read_text()
+        except FileNotFoundError:
+            return await self.default_data()
+
+
+    async def write(self, data) -> None:
+        async with WRITE_LOCK:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+
+            async with aiofiles.open(self.path, "w") as new:
+                await new.write(data)
 
 
 @dataclass
@@ -38,8 +55,8 @@ class JSONConfigFile(ConfigFile):
 
     async def read(self) -> JsonData:
         try:
-            data = json.loads(self.path.read_text())
-        except (json.JSONDecodeError, FileNotFoundError):
+            data = json.loads(await super().read())
+        except json.JSONDecodeError:
             data = {}
 
         return {**await self.default_data(), **data}
@@ -47,12 +64,7 @@ class JSONConfigFile(ConfigFile):
 
     async def write(self, data: JsonData) -> None:
         js = json.dumps(data, indent=4, ensure_ascii=False, sort_keys=True)
-
-        async with WRITE_LOCK:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-
-            async with aiofiles.open(self.path, "w") as new:
-                await new.write(js)
+        await super().write(js)
 
 
 @dataclass
@@ -90,14 +102,20 @@ class UISettings(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
-            "writeAliases": {}
+            "theme":        "Default.qpl",
+            "writeAliases": {},
         }
 
 
 @dataclass
 class UIState(JSONConfigFile):
-    filename:     str  = "ui-state.json"
-    use_data_dir: bool = True
+    filename: str = "ui-state.json"
+
+    @property
+    def path(self) -> Path:
+        # pylint: disable=no-member
+        return Path(self.backend.app.appdirs.user_data_dir) / self.filename
+
 
     async def default_data(self) -> JsonData:
         return {
@@ -107,3 +125,30 @@ class UIState(JSONConfigFile):
             "pageProperties":      {},
             "sidePaneManualWidth": None,
         }
+
+
+@dataclass
+class Theme(ConfigFile):
+    @property
+    def path(self) -> Path:
+        # pylint: disable=no-member
+        data_dir = Path(self.backend.app.appdirs.user_data_dir)
+        user_file = data_dir / "themes" / self.filename
+
+        if user_file.exists():
+            return user_file
+
+        return Path("src") / "themes" / self.filename
+
+
+    async def default_data(self) -> str:
+        async with aiofiles.open("src/themes/Default.qpl", "r") as file:
+            return file.read()
+
+
+    async def read(self) -> str:
+        return convert_to_qml(await super().read())
+
+
+    async def write(self, data: str) -> None:
+        raise NotImplementedError()
