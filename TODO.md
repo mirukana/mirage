@@ -68,6 +68,9 @@
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
   - Theming
+    - Don't use user theme in debug mode
+    - Don't create additional lines in theme conversion (braces)
+    - Recursively merge default and user theme
     - Distribute fonts
     - preferredIconPack: accept multiple values
     - Find icon packs in user data dir

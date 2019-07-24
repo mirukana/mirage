@@ -50,6 +50,7 @@ Item {
                     iconName: modelData
                     circle: true
                     checked: loginWith == modelData
+                    enabled: modelData == "username"
                     autoExclusive: true
                     checkedLightens: true
                     onClicked: loginWith = modelData

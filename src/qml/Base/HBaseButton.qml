@@ -25,12 +25,11 @@ Button {
 
     background: Rectangle {
         id: buttonBackground
-        color: Qt.lighter(
-            backgroundColor,
-            ! enabled ? 0.7 :
-            checked ? (checkedLightens ? 1.3 : 0.7) :
-            1.0
-        )
+        color:
+            enabled ?
+            (checked ?
+             theme.controls.button.checkedBackground : backgroundColor) :
+            theme.controls.button.disabledBackground
         radius: circle ? height : 0
 
         Behavior on color { HColorAnimation { factor: 0.5 } }
