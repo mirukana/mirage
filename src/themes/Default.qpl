@@ -186,7 +186,7 @@ chat:
         color body:          colors.text
         color date:          colors.dimText
 
-        color greenText: hsluv(80, 60, 25)
+        color greenText: hsluv(80, colors.saturation * 2.25, 80)
         color link:      colors.link
         color code:      colors.code
 
