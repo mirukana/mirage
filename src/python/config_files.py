@@ -34,10 +34,7 @@ class ConfigFile:
 
 
     async def read(self):
-        try:
-            return self.path.read_text()
-        except FileNotFoundError:
-            return await self.default_data()
+        return self.path.read_text()
 
 
     async def write(self, data) -> None:
@@ -57,7 +54,7 @@ class JSONConfigFile(ConfigFile):
     async def read(self) -> JsonData:
         try:
             data = json.loads(await super().read())
-        except json.JSONDecodeError:
+        except (FileNotFoundError, json.JSONDecodeError):
             data = {}
 
         all_data = await self.default_data()
