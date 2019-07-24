@@ -11,6 +11,8 @@ HRectangle {
     opacity: mainUI.accountsPresent && ! reduce ? 1 : 0
     visible: opacity > 0
 
+    color: theme.sidePane.background
+
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
     property bool manuallyResizing: false
     property bool manuallyResized: false

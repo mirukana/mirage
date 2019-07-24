@@ -30,8 +30,8 @@ HRowLayout {
 
         background: Rectangle {
             id: noticeLabelBackground
-            color: theme.box.background
-            radius: theme.box.radius
+            color: theme.controls.box.background
+            radius: theme.controls.box.radius
         }
     }
 }

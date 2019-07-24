@@ -42,6 +42,8 @@ Column {
             text: model.name
             font.weight: Font.DemiBold
             elide: Text.ElideRight
+            topPadding: theme.spacing / 2
+            bottomPadding: topPadding
 
             Layout.leftMargin: sidePane.currentSpacing
             Layout.fillWidth: true

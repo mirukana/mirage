@@ -1,7 +1,11 @@
 // Copyright 2019 miruka
 // This file is part of harmonyqml, licensed under LGPLv3.
 
-"use strict"
+
+function hsluv(hue, saturation, lightness, alpha=1.0) {
+    let rgb = py.call_sync("APP.backend.hsluv", [hue, saturation, lightness])
+    return Qt.rgba(rgb[0], rgb[1], rgb[2], alpha)
+}
 
 
 function hsl(hue, saturation, lightness) {
@@ -30,31 +34,20 @@ function arrayToModelItem(keysName, array) {
 
 
 function hueFrom(string) {
-    // Calculate and return a unique hue between 0 and 1 for the string
+    // Calculate and return a unique hue between 0 and 360 for the string
     let hue = 0
     for (let i = 0; i < string.length; i++) {
         hue += string.charCodeAt(i) * 99
     }
-    return hue % 360 / 360
-}
-
-
-function avatarColor(name) {
-   return Qt.hsla(
-       hueFrom(name),
-       theme.avatar.background.saturation,
-       theme.avatar.background.lightness,
-       theme.avatar.background.alpha
-   )
+    return hue % 360
 }
 
 
 function nameColor(name) {
-    return Qt.hsla(
+    return hsl(
         hueFrom(name),
-        theme.displayName.saturation,
-        theme.displayName.lightness,
-        1
+        theme.controls.displayName.saturation,
+        theme.controls.displayName.lightness,
     )
 }
 

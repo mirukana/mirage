@@ -10,6 +10,7 @@ HInteractiveRectangle {
     id: roomDelegate
     width: roomList.width
     height: childrenRect.height
+    color: theme.sidePane.room.background
 
     TapHandler {
         onTapped: pageStack.showRoom(
@@ -38,6 +39,7 @@ HInteractiveRectangle {
 
                 HLabel {
                     id: roomLabel
+                    color: theme.sidePane.room.name
                     text: model.displayName || "<i>Empty room</i>"
                     textFormat:
                         model.displayName? Text.PlainText : Text.StyledText
@@ -68,6 +70,7 @@ HInteractiveRectangle {
                     onLastEvChanged: text = getText(lastEv)
 
                     id: subtitleLabel
+                    color: theme.sidePane.room.subtitle
                     visible: Boolean(text)
                     textFormat: Text.StyledText
 

@@ -9,14 +9,14 @@ PROPERTY_TYPES = {"bool", "double", "int", "list", "real", "string", "url",
 
 
 def _add_property(line: str) -> str:
-    if re.match(r"^\s*[a-zA-Z0-9_]+\s*:$", line):
+    if re.match(r"^\s*[a-zA-Z\d_]+\s*:$", line):
         return re.sub(r"^(\s*)(\S*\s*):$",
                       r"\1readonly property QtObject \2: QtObject",
                       line)
 
     types = "|".join(PROPERTY_TYPES)
     if re.match(fr"^\s*({types}) [a-zA-Z\d_]+\s*:", line):
-        return re.sub(r"^(\s*)(\S*)", r"\1readonly property \2", line)
+        return re.sub(r"^(\s*)(\S*)", r"\1property \2", line)
 
     return line
 
@@ -60,8 +60,12 @@ def _process_lines(content: str) -> Generator[str, None, None]:
 def convert_to_qml(theme_content: str) -> str:
     lines  = [
         "import QtQuick 2.12",
-        'import "utils.js" as Ut',
+        'import "Base"',
+        'import "utils.js" as Utils',
         "QtObject {",
+        "    function hsluv(h, s, l, a) { return Utils.hsluv(h, s, l, a) }",
+        "    function hsl(h, s, l)      { return Utils.hsl(h, s, l) }",
+        "    function hsla(h, s, l, a)  { return Utils.hsla(h, s, l, a) }",
         "    id: theme",
     ]
     lines += [f"    {line}" for line in _process_lines(theme_content)]

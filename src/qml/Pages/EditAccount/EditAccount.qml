@@ -24,7 +24,7 @@ HPage {
         )
 
     HRectangle {
-        color: ready ? theme.box.background : "transparent"
+        color: ready ? theme.controls.box.background : "transparent"
         Behavior on color { HColorAnimation {} }
 
         Layout.alignment: Qt.AlignCenter

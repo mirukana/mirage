@@ -18,16 +18,17 @@ TextField {
     property color focusedBorderColor: _tf.focusedBorder
     property alias radius: textFieldBackground.radius
 
-    color: theme.colors.foreground
+    color: activeFocus ? _tf.focusedText : _tf.text
+
     background: Rectangle {
         id: textFieldBackground
         color: field.activeFocus ? focusedBackgroundColor : backgroundColor
         border.color: field.activeFocus ? focusedBorderColor : borderColor
         border.width: bordered ? theme.controls.textField.borderWidth : 0
 
-        Behavior on color { HColorAnimation {} }
-        Behavior on border.color { HColorAnimation {} }
-        Behavior on border.width { HNumberAnimation {} }
+        Behavior on color { HColorAnimation { factor: 0.5 } }
+        Behavior on border.color { HColorAnimation { factor: 0.5 } }
+        Behavior on border.width { HNumberAnimation { factor: 0.5 } }
     }
 
     selectByMouse: true

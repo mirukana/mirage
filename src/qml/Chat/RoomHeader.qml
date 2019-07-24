@@ -38,6 +38,7 @@ HRectangle {
             id: roomName
             text: displayName
             font.pixelSize: theme.fontSize.big
+            color: theme.chat.roomHeader.name
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
@@ -54,6 +55,7 @@ HRectangle {
             id: roomTopic
             text: topic
             font.pixelSize: theme.fontSize.small
+            color: theme.chat.roomHeader.topic
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
 
@@ -78,6 +80,7 @@ HRectangle {
                     "members", "files", "notifications", "history", "settings"
                 ]
                 HUIButton {
+                    backgroundColor: theme.chat.selectViewBar.background
                     iconName: "room-view-" + modelData
                     iconDimension: 22
                     autoExclusive: true
@@ -96,9 +99,13 @@ HRectangle {
     HUIButton {
         id: expandButton
         z: 1
+        width: theme.controls.avatar.size
+        height: width
         anchors.right: parent.right
         opacity: collapseButtons ? 1 : 0
         visible: opacity > 0
+
+        backgroundColor: theme.chat.selectViewBar.background
         iconName: "reduced-room-buttons"
 
         Behavior on opacity {

@@ -16,6 +16,9 @@ HSplitView {
         Layout.fillWidth: true
 
         EventList {
+            // Avoid a certain binding loop
+            Layout.minimumWidth: theme.minimumSupportedWidth
+
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
@@ -79,11 +82,11 @@ HSplitView {
             to: target.oldWidth
 
             onStopped: target.Layout.minimumWidth = Qt.binding(
-                () => theme.avatar.size
+                () => theme.controls.avatar.size
             )
        }
 
-        collapsed: width < theme.avatar.size + theme.spacing
+        collapsed: width < theme.controls.avatar.size + theme.spacing
 
         property bool wasSnapped: false
         property int referenceWidth: roomHeader.buttonsWidth
@@ -110,7 +113,7 @@ HSplitView {
         }
 
         width: referenceWidth // Initial width
-        Layout.minimumWidth: theme.avatar.size
+        Layout.minimumWidth: theme.controls.avatar.size
         Layout.maximumWidth:
             parent.width - theme.minimumSupportedWidthPlusSpacing
     }

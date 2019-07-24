@@ -8,8 +8,8 @@ import "../utils.js" as Utils
 
 HRectangle {
     id: avatar
-    implicitWidth: theme.avatar.size
-    implicitHeight: theme.avatar.size
+    implicitWidth: theme.controls.avatar.size
+    implicitHeight: theme.controls.avatar.size
 
     property string name: ""
     property var imageUrl: ""
@@ -20,18 +20,27 @@ HRectangle {
 
     readonly property var params: Utils.thumbnailParametersFor(width, height)
 
-    color: imageUrl ? "transparent" :
-           name ? Utils.avatarColor(name) :
-           theme.avatar.background.unknown
+    color: avatarImage.visible ? "transparent" : Utils.hsla(
+       name ? Utils.hueFrom(name) : 0,
+       name ? theme.controls.avatar.background.saturation : 0,
+       theme.controls.avatar.background.lightness,
+       theme.controls.avatar.background.opacity
+   )
 
     HLabel {
         z: 1
         anchors.centerIn: parent
-        visible: ! imageUrl
+        visible: ! avatarImage.visible
 
         text: name ? name.charAt(0) : "?"
-        color: theme.avatar.letter
         font.pixelSize: parent.height / 1.4
+
+        color: Utils.hsla(
+           name ? Utils.hueFrom(name) : 0,
+           name ? theme.controls.avatar.letter.saturation : 0,
+           theme.controls.avatar.letter.lightness,
+           theme.controls.avatar.letter.opacity
+       )
     }
 
     HImage {

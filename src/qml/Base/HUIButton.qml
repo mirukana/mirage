@@ -51,7 +51,8 @@ HBaseButton {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 color: enabled ?
-                       theme.colors.foreground : theme.colors.foregroundDim2
+                       theme.controls.button.text :
+                       theme.controls.button.disabledText
                 Behavior on color { HNumberAnimation {} }
 
                 Layout.fillWidth: true

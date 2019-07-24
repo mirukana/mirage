@@ -26,7 +26,7 @@ After this, verify the permissions of the installed plugin files.
 Dependencies on Pypi:
 
     pip3 install --user --upgrade \
-        Pillow aiofiles dataclasses filetype lxml mistune uvloop
+        Pillow aiofiles dataclasses filetype hsluv lxml mistune uvloop
 
 Dependencies on Github (most recent version needed):
 

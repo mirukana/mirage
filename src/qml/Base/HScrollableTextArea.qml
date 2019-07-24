@@ -24,7 +24,7 @@ ScrollView {
         font.family: theme.fontFamily.sans
         font.pixelSize: theme.fontSize.normal
 
-        color: theme.colors.foreground
+        color: theme.controls.textArea.text
         background: Rectangle {
             id: textAreaBackground
             color: theme.controls.textArea.background

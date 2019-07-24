@@ -3,7 +3,9 @@
 
 import asyncio
 import random
-from typing import Dict, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
+
+import hsluv
 
 from .app import App
 from .events import users
@@ -127,3 +129,9 @@ class Backend:
     @staticmethod
     def inlinify(html: str) -> str:
         return HTML_FILTER.filter_inline(html)
+
+
+    @staticmethod
+    def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
+        # (0-360, 0-100, 0-100) -> [0-1, 0-1, 0-1]
+        return hsluv.hsluv_to_rgb([hue, saturation, lightness])

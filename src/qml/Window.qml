@@ -8,13 +8,14 @@ import "Models"
 
 ApplicationWindow {
     id: window
+    flags: Qt.WA_TranslucentBackground
     minimumWidth: theme ? theme.minimumSupportedWidth : 240
     minimumHeight: theme ? theme.minimumSupportedHeight : 120
     width: 640
     height: 480
     visible: true
     title: "Harmony QML"
-    color: "black"
+    color: "transparent"
 
     Component.onCompleted: {
         Qt.application.organization = "harmonyqml"

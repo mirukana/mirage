@@ -7,6 +7,7 @@ import "../../Base"
 
 HRectangle {
     id: roomSidePane
+    color: theme.chat.roomSidePane.background
 
     property bool collapsed: false
     property var activeView: null

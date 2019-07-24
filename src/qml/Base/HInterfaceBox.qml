@@ -56,7 +56,7 @@ HScalingBox {
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: theme.avatar.size
+                    Layout.preferredHeight: theme.controls.avatar.size
                 }
             }
         }

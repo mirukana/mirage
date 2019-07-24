@@ -8,6 +8,7 @@ import "../Base"
 Column {
     id: accountDelegate
     width: parent.width
+    spacing: theme.spacing / 2
 
     property var userInfo: users.find(model.userId)
     property bool expanded: true
@@ -23,8 +24,7 @@ Column {
     HInteractiveRectangle {
         width: parent.width
         height: childrenRect.height
-
-        normalColor: theme.sidePane.account.background
+        color: theme.sidePane.account.background
 
         TapHandler {
             onTapped: pageStack.showPage(
@@ -48,6 +48,7 @@ Column {
 
                 HLabel {
                     id: accountLabel
+                    color: theme.sidePane.account.name
                     text: userInfo.displayName || model.userId
                     font.pixelSize: theme.fontSize.big
                     elide: HLabel.ElideRight

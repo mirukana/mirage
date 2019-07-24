@@ -2,6 +2,7 @@
   - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
 
 - Refactoring
+  - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
   - Sendbox
   - Use .mjs modules
   - SignIn/RememberAccount screens
@@ -15,6 +16,7 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - EditProfile avatar spacing in row mode
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
@@ -25,6 +27,9 @@
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 
 - UI
+  - Messages editing
+  - Code highlighting
+  - Support GIF avatars
   - When reduced, show the full-window sidepane instead of Default page
   - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails
@@ -57,22 +62,27 @@
   - Invite to room
   - Server selection
   - Register/Forgot? for SignIn dialog
-  - Scaling
-    - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
   - Add room
   - Leave room
   - Forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
   - Spinner when loading past room events, images or clicking buttons
-  - Parse themes from JSON
-      - Distribute fonts
+  - Theming
+    - Thin white icons
+    - Copy the default theme to user data dir
+    - Distribute fonts
+    - preferredIconPack: accept multiple values
+    - Find icon packs in user data dir
+    - Correctly implement uiScale/fontScale + ctrl+-= keys
+      - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
+    - Selecting background image
+    - Way to round avatar corners to allow box radius
+    - If avatar is set, name color from average color?
+    - Accent color from background
   - Settings page
   - Message/text selection
 
   - Custom file picker for Linux...
-  - Way to round avatar corners to allow box radius
-  - If avatar is set, name color from average color?
-  - Accent color from background
 
 - Major features
   - E2E

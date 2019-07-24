@@ -8,18 +8,20 @@ HRectangle {
     property bool checked: false
 
     readonly property QtObject _ir: theme.controls.interactiveRectangle
+    color: _ir.background
 
-    property color normalColor: _ir.background
-    property color hoveredColor: _ir.hoveredBackground
-    property color pressedColor: _ir.pressedBackground
-    property color checkedColor: _ir.checkedBackground
+    HRectangle {
+        anchors.fill: parent
+        visible: opacity > 0
 
-    color: checked ? checkedColor :
-           // tap.pressed ? pressedColor :
-           hover.hovered ? hoveredColor :
-           normalColor
+        color: checked ? _ir.checkedOverlay : _ir.hoveredOverlay
 
-    Behavior on color { HColorAnimation { factor: 0.66 } }
+        opacity: checked ?       _ir.checkedOpacity :
+                 hover.hovered ? _ir.hoveredOpacity :
+                 0
+
+        Behavior on opacity { HNumberAnimation { factor: 0.66 } }
+    }
 
     HoverHandler { id: hover }
     TapHandler { id: tap }

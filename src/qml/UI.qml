@@ -8,8 +8,9 @@ import QtQuick.Window 2.7
 import "Base"
 import "SidePane"
 
-Item {
+HRectangle {
     id: mainUI
+    color: theme.ui.background
 
     Connections {
         target: py
@@ -34,6 +35,7 @@ Item {
         accounts.count > 0 || py.loadingAccounts
 
     HImage {
+        visible: false
         id: mainUIBackground
         fillMode: Image.PreserveAspectCrop
         source: "../images/background.jpg"

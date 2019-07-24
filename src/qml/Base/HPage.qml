@@ -38,7 +38,7 @@ SwipeView {
 
         header: HRectangle {
             implicitWidth: parent ? parent.width : 0
-            color: theme.pageHeadersBackground
+            color: theme.controls.header.background
 
             height: ! hideHeaderUnderHeight ||
                     window.height >=

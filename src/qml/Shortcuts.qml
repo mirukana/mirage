@@ -31,4 +31,21 @@ Item {
         sequence: "Alt+Shift+D"
         onActivated: if (window.debug) { py.call("APP.pdb") }
     }
+
+    /*
+    Shortcut {
+        sequence: "Ctrl+-"
+        onActivated: theme.fontScale = Math.max(0.1, theme.fontScale - 0.1)
+    }
+
+    Shortcut {
+        sequence: "Ctrl++"
+        onActivated: theme.fontScale = Math.min(10, theme.fontScale + 0.1)
+    }
+
+    Shortcut {
+        sequence: "Ctrl+="
+        onActivated: theme.fontScale = 1.0
+    }
+    */
 }
