@@ -76,12 +76,12 @@ HRectangle {
         // Declaring this as "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
         property bool canLoad: true
-        property int zz: 0
+        // property int zz: 0
 
         onYPosChanged: {
             if (chatPage.category != "Invites" && canLoad && yPos <= 0.1) {
-                zz += 1
-                print(canLoad, zz)
+                // zz += 1
+                // print(canLoad, zz)
                 eventList.canLoad = false
                 py.callClientCoro(
                     chatPage.userId, "load_past_events", [chatPage.roomId],

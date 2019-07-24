@@ -98,6 +98,7 @@
   - Links preview
 
 - Client improvements
+  - Config file format
   - Set Qt.application.* stuff from C++
   - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`

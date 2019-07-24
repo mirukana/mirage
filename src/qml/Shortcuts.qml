@@ -18,17 +18,17 @@ Item {
     }
 
     Shortcut {
-        sequences: ["Alt+Up", "Alt+K"]
+        sequences: settings.keys ? settings.keys.scrollUp : []
         onActivated: smartVerticalFlick(-335)
     }
 
     Shortcut {
-        sequences: ["Alt+Down", "Alt+J"]
+        sequences: settings.keys ? settings.keys.scrollDown : []
         onActivated: smartVerticalFlick(335)
     }
 
     Shortcut {
-        sequence: "Alt+Shift+D"
+        sequence: settings.keys ? settings.keys.startDebugger : []
         onActivated: if (window.debug) { py.call("APP.pdb") }
     }
 
