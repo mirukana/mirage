@@ -17,11 +17,12 @@ HPage {
     readonly property var userInfo: users.find(userId)
     readonly property bool ready: userInfo && ! userInfo.loading
 
+    property string headerName: userInfo ? userInfo.displayName : ""
+
     hideHeaderUnderHeight: avatarPreferredSize
-    headerLabel.text:
-        qsTr("Account settings for %1").arg(
-            Utils.coloredNameHtml(userInfo ? userInfo.displayName : "", userId)
-        )
+    headerLabel.text: qsTr("Account settings for %1").arg(
+        Utils.coloredNameHtml(headerName, userId)
+    )
 
     HRectangle {
         color: ready ? theme.controls.box.background : "transparent"

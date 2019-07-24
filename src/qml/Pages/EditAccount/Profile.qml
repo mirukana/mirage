@@ -15,6 +15,8 @@ HGridLayout {
             py.callClientCoro(
                 userId, "set_displayname", [nameField.field.text], () => {
                     saveButton.nameChangeRunning = false
+                    editAccount.headerName =
+                        Qt.binding(() => userInfo.displayName)
                 }
             )
         }
@@ -42,6 +44,8 @@ HGridLayout {
         aliasField.field.text   = aliasField.currentAlias
         fileDialog.selectedFile = ""
         fileDialog.file         = ""
+
+        editAccount.headerName = Qt.binding(() => userInfo.displayName)
     }
 
     columns: 2
@@ -126,6 +130,9 @@ HGridLayout {
 
             HLabeledTextField {
                 property bool changed: field.text != userInfo.displayName
+
+                property string fText: field.text
+                onFTextChanged: editAccount.headerName = field.text
 
                 id: nameField
                 label.text: qsTr("Display name:")
