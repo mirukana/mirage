@@ -19,7 +19,7 @@ Item {
 
     Shortcut {
         sequences: settings.keys ? settings.keys.reloadConfig : []
-        onActivated: py.loadSettings()
+        onActivated: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
     Shortcut {

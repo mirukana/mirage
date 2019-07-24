@@ -28,6 +28,8 @@ ApplicationWindow {
     property bool debug: false
     property bool ready: false
 
+    property var mainUI: null
+
     // Note: settingsChanged(), uiStateChanged(), etc must be called manually
     property var settings: ({})
     onSettingsChanged: py.saveConfig("ui_settings", settings)

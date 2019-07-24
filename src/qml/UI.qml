@@ -11,6 +11,19 @@ import "SidePane"
 HRectangle {
     id: mainUI
     color: theme.ui.background
+    Component.onCompleted: window.mainUI = mainUI
+
+    property alias pressAnimation: _pressAnimation
+
+    SequentialAnimation {
+        id: _pressAnimation
+        HNumberAnimation {
+            target: mainUI; property: "scale"; from: 1.0; to: 0.9
+        }
+        HNumberAnimation {
+            target: mainUI; property: "scale"; from: 0.9; to: 1.0
+        }
+    }
 
     Connections {
         target: py
