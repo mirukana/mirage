@@ -122,8 +122,8 @@ controls:
             real opacity:   1.0
 
     displayName:
-        int saturation: 45
-        int lightness:  55
+        int saturation: colors.saturation
+        int lightness:  Math.min(55, colors.intensity * 55)
 
 
 // Special UI parts
