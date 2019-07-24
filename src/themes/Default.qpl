@@ -2,6 +2,8 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 // vim: syntax=qml
 
+// Base variables
+
 real uiScale: 1.0  /* TODO: Implement correctly, do not change for now */
 real fontScale: uiScale
 
@@ -62,6 +64,8 @@ colors:
         loops: Animation.Infinite
 
 
+// Generic UI controls
+
 controls:
     box:
         color background: colors.strongBackground
@@ -120,7 +124,11 @@ controls:
         int lightness:  55
 
 
+// Special UI parts
+
 ui:
+    // Supported: local file path or web URL
+    url image: ""
     color background: colors.weakBackground
 
 
@@ -137,19 +145,19 @@ sidePane:
     color background: colors.strongBackground
 
     account:
-        color background: sidePane.background
+        color background: "transparent"
         color name:       colors.text
 
     room:
-        color background: sidePane.background
+        color background: "transparent"
         color name:       colors.text
         color subtitle:   colors.dimText
 
     settingsButton:
-        color background: sidePane.background
+        color background: "transparent"
 
     filterRooms:
-        color background: sidePane.background
+        color background: "transparent"
 
 
 chat:

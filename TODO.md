@@ -75,7 +75,6 @@
     - Find icon packs in user data dir
     - Correctly implement uiScale/fontScale + ctrl+-= keys
       - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
-    - Selecting background image
     - Way to round avatar corners to allow box radius
     - If avatar is set, name color from average color?
     - Accent color from background

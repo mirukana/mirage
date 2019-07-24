@@ -35,10 +35,10 @@ HRectangle {
         accounts.count > 0 || py.loadingAccounts
 
     HImage {
-        visible: false
+        visible: Boolean(Qt.resolvedUrl(source))
         id: mainUIBackground
         fillMode: Image.PreserveAspectCrop
-        source: "../images/background.jpg"
+        source: theme.ui.image
         sourceSize.width: Screen.width
         sourceSize.height: Screen.height
         anchors.fill: parent
