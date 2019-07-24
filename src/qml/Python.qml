@@ -40,6 +40,16 @@ Python {
         callCoro(backend_attribute + ".write", [data], callback)
     }
 
+    function loadSettings(callback=null) {
+        callCoro("load_settings", [], ([settings, uiState, theme]) => {
+            window.settings = settings
+            window.uiState  = uiState
+            window.theme    = Qt.createQmlObject(theme, window, "theme")
+
+            if (callback) { callback(settings, uiState, theme) }
+        })
+    }
+
     Component.onCompleted: {
         for (var func in EventHandlers) {
             if (EventHandlers.hasOwnProperty(func)) {
@@ -53,11 +63,7 @@ Python {
             call("APP.is_debug_on", [Qt.application.arguments], on => {
                 window.debug = on
 
-                callCoro("load_settings", [], ([settings, uiState, theme]) => {
-                    window.settings = settings
-                    window.uiState  = uiState
-                    window.theme   = Qt.createQmlObject(theme, window, "theme")
-
+                loadSettings(() => {
                     callCoro("saved_accounts.any_saved", [], any => {
                         py.ready = true
                         willLoadAccounts(any)

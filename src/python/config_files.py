@@ -108,10 +108,10 @@ class UISettings(JSONConfigFile):
             "theme":        "Default.qpl",
             "writeAliases": {},
             "keys": {
+                "reloadConfig":  ["Alt+R"],
                 "scrollUp":      ["Alt+Up", "Alt+K"],
                 "scrollDown":    ["Alt+Down", "Alt+J"],
                 "startDebugger": ["Alt+Shift+D"],
-                "reloadConfig":  ["Alt+R"],
             },
         }
 

@@ -18,6 +18,11 @@ Item {
     }
 
     Shortcut {
+        sequences: settings.keys ? settings.keys.reloadConfig : []
+        onActivated: py.loadSettings()
+    }
+
+    Shortcut {
         sequences: settings.keys ? settings.keys.scrollUp : []
         onActivated: smartVerticalFlick(-335)
     }
@@ -28,7 +33,7 @@ Item {
     }
 
     Shortcut {
-        sequence: settings.keys ? settings.keys.startDebugger : []
+        sequences: settings.keys ? settings.keys.startDebugger : []
         onActivated: if (window.debug) { py.call("APP.pdb") }
     }
 
