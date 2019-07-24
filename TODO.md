@@ -16,7 +16,6 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
-  - EditProfile avatar spacing in row mode
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html

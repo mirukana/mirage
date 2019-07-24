@@ -17,7 +17,7 @@ SwipeView {
     property var hideHeaderUnderHeight: null
 
     property int currentSpacing:
-        Math.min(theme.spacing * width / 400, theme.spacing * 2)
+        Math.min(theme.spacing * width / 400, theme.spacing)
 
     id: swipeView
     currentIndex: 1
