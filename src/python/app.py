@@ -24,6 +24,7 @@ class App:
 
         from .backend import Backend
         self.backend = Backend(app=self)
+        self.debug   = False
 
         from .image_provider import ImageProvider
         self.image_provider = ImageProvider(self)
@@ -35,7 +36,9 @@ class App:
 
 
     def is_debug_on(self, cli_flags: Sequence[str] = ()) -> bool:
-        return "-d" in cli_flags or "--debug" in cli_flags
+        debug      = "-d" in cli_flags or "--debug" in cli_flags
+        self.debug = debug
+        return debug
 
 
     def _loop_starter(self) -> None:

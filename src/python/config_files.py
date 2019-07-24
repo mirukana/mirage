@@ -151,6 +151,10 @@ class Theme(ConfigFile):
 
 
     async def read(self) -> str:
+        # pylint: disable=no-member
+        if self.backend.app.debug:
+            return convert_to_qml(await self.default_data())
+
         if not self.path.exists():
             await self.write(await self.default_data())
 
