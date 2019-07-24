@@ -46,7 +46,9 @@ colors:
     color weakBackground:   hsluv(hue, saturation, intensity * 12, opacity)
     color mediumBackground: hsluv(hue, saturation, intensity * 9, opacity)
     color strongBackground: hsluv(hue, saturation, intensity * 6, opacity)
-    color fullBackground:   hsluv(hue, saturation, intensity * 2, opacity)
+
+    color inputBackground:
+        hsluv(hue, saturation, intensity * 2, Math.min(0.6, opacity))
 
     color brightText: hsluv(0, 0, intensity * 100)
     color text:       hsluv(0, 0, intensity * 80)
@@ -72,11 +74,11 @@ controls:
         int radius:       theme.radius
 
     header:
-        color background: colors.mediumBackground
+        color background: colors.strongBackground
 
     button:
-        color background: colors.fullBackground
-        color text: colors.text
+        color background:   colors.inputBackground
+        color text:         colors.text
         color disabledText: colors.dimmerText
 
     interactiveRectangle:
@@ -91,7 +93,7 @@ controls:
         real checkedOpacity: 0.2
 
     textField:
-        color background:        colors.fullBackground
+        color background:        colors.inputBackground
         color focusedBackground: background
 
         int borderWidth:     1
@@ -102,7 +104,7 @@ controls:
         color focusedText: colors.text
 
     textArea:
-        color background: colors.fullBackground
+        color background: colors.inputBackground
         color text:       colors.text
 
     avatar:

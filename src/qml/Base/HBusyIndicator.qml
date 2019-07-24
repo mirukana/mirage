@@ -8,8 +8,8 @@ BusyIndicator {
 
     contentItem: Item {
         Rectangle {
-            id: rect
-            width: indicator.height
+            id: circle
+            width: height
             height: indicator.height
             radius: height / 2
 
@@ -27,7 +27,7 @@ BusyIndicator {
 
             XAnimator on x {
                 from: 0
-                to: indicator.width - rect.width
+                to: indicator.width - circle.width
                 duration: colorAnimation.duration / 2
                 onStopped: {[from, to] = [to, from]; start()}
             }
