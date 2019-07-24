@@ -77,9 +77,10 @@ controls:
         color background: colors.strongBackground
 
     button:
-        color background:   colors.inputBackground
-        color text:         colors.text
-        color disabledText: colors.dimmerText
+        color background:     colors.inputBackground
+        color hoveredOverlay: hsluv(0, 0, 100)
+        color text:           colors.text
+        color disabledText:   colors.dimmerText
 
     interactiveRectangle:
         color background: "transparent"

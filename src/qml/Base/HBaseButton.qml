@@ -39,7 +39,7 @@ Button {
             id: buttonBackgroundOverlay
             anchors.fill: parent
             radius: parent.radius
-            color: "black"
+            color: theme.controls.button.hoveredOverlay
             opacity: 0
 
             Behavior on opacity { HNumberAnimation { factor: 0.5 } }

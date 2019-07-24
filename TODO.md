@@ -26,6 +26,7 @@
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 
 - UI
+  - Make invite/left banners look better in column mode
   - Messages editing
   - Code highlighting
   - Support GIF avatars
