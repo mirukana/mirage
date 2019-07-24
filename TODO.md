@@ -69,7 +69,6 @@
   - Spinner when loading past room events, images or clicking buttons
   - Theming
     - Thin white icons
-    - Copy the default theme to user data dir
     - Distribute fonts
     - preferredIconPack: accept multiple values
     - Find icon packs in user data dir

@@ -58,11 +58,12 @@ colors:
     color link:       accentText
     color code:       hsluv(hue + 5, saturation * 1.5, intensity * 60)
 
-    NumberAnimation on intensity  // For testing
+    // Example of an animation, set running: true to enable
+    NumberAnimation on hue
         running: false
         from: 0
-        to: 10
-        duration: 20000
+        to: 360
+        duration: 10000
         loops: Animation.Infinite
 
 

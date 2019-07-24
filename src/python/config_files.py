@@ -142,22 +142,16 @@ class Theme(ConfigFile):
     def path(self) -> Path:
         # pylint: disable=no-member
         data_dir = Path(self.backend.app.appdirs.user_data_dir)
-        user_file = data_dir / "themes" / self.filename
-
-        if user_file.exists():
-            return user_file
-
-        return Path("src") / "themes" / self.filename
+        return data_dir / "themes" / self.filename
 
 
     async def default_data(self) -> str:
         async with aiofiles.open("src/themes/Default.qpl", "r") as file:
-            return file.read()
+            return await file.read()
 
 
     async def read(self) -> str:
+        if not self.path.exists():
+            await self.write(await self.default_data())
+
         return convert_to_qml(await super().read())
-
-
-    async def write(self, data: str) -> None:
-        raise NotImplementedError()
