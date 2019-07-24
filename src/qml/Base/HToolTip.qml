@@ -19,4 +19,8 @@ ToolTip {
     TapHandler {
         onTapped: { toolTip.hide() }
     }
+
+    HoverHandler {
+        onHoveredChanged: if (!hovered) { toolTip.hide() }
+    }
 }
