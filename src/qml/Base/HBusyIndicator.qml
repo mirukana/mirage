@@ -13,10 +13,22 @@ BusyIndicator {
             height: indicator.height
             radius: height / 2
 
+            ColorAnimation on color {
+                // Can't swap direct colors values
+                property string c1: "white"
+                property string c2: theme ? theme.colors.accentText : "cyan"
+
+                id: colorAnimation
+                from: c1
+                to: c2
+                duration: 1000
+                onStopped: {[c1, c2] = [c2, c1]; start()}
+            }
+
             XAnimator on x {
                 from: 0
                 to: indicator.width - rect.width
-                duration: 500
+                duration: colorAnimation.duration / 2
                 onStopped: {[from, to] = [to, from]; start()}
             }
         }
