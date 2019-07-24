@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 
 from .backend import Backend
 from .theme_parser import convert_to_qml
+from .utils import dict_update_recursive
 
 JsonData = Dict[str, Any]
 
@@ -59,7 +60,9 @@ class JSONConfigFile(ConfigFile):
         except json.JSONDecodeError:
             data = {}
 
-        return {**await self.default_data(), **data}
+        all_data = await self.default_data()
+        dict_update_recursive(all_data, data)
+        return all_data
 
 
     async def write(self, data: JsonData) -> None:
@@ -108,6 +111,7 @@ class UISettings(JSONConfigFile):
                 "scrollUp":      ["Alt+Up", "Alt+K"],
                 "scrollDown":    ["Alt+Down", "Alt+J"],
                 "startDebugger": ["Alt+Shift+D"],
+                "reloadConfig":  ["Alt+R"],
             },
         }
 
