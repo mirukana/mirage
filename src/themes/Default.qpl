@@ -186,8 +186,10 @@ chat:
     message:
         int radius:          theme.radius
         color background:    colors.strongBackground
-        /* color ownBackground: hsluv(25, 40, 82, colors.opacity) */
-        color ownBackground: background
+        color ownBackground: hsluv(
+            colors.hue, colors.saturation + 30, colors.intensity * 6, opacity
+        )
+
         color body:          colors.text
         color date:          colors.dimText
 

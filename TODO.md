@@ -16,6 +16,9 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - Don't linkify images for outgoing html
+  - state: If last page is a room and the account for it is no longer present,
+    load Default.qml instead
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
