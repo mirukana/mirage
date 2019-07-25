@@ -98,7 +98,7 @@ class Accounts(JSONConfigFile):
 
 @dataclass
 class UISettings(JSONConfigFile):
-    filename: str = "ui-settings.json"
+    filename: str = "settings.json"
 
     async def default_data(self) -> JsonData:
         return {
@@ -115,7 +115,7 @@ class UISettings(JSONConfigFile):
 
 @dataclass
 class UIState(JSONConfigFile):
-    filename: str = "ui-state.json"
+    filename: str = "state.json"
 
     @property
     def path(self) -> Path:
