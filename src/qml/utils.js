@@ -3,7 +3,7 @@
 
 
 function hsluv(hue, saturation, lightness, alpha=1.0) {
-    let rgb = py.call_sync("APP.backend.hsluv", [hue, saturation, lightness])
+    let rgb = py.callSync("hsluv", [hue, saturation, lightness])
     return Qt.rgba(rgb[0], rgb[1], rgb[2], alpha)
 }
 
