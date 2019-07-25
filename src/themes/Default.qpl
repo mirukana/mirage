@@ -72,6 +72,9 @@ controls:
         color background: colors.strongBackground
         int radius:       theme.radius
 
+    popup:
+        color background: colors.strongBackground
+
     header:
         color background: colors.strongBackground
 

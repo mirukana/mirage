@@ -24,21 +24,32 @@ HPage {
         Utils.coloredNameHtml(headerName, userId)
     )
 
-    HRectangle {
-        color: ready ? theme.controls.box.background : "transparent"
-        Behavior on color { HColorAnimation {} }
+    HSpacer {}
 
-        Layout.alignment: Qt.AlignCenter
+    Repeater {
+        model: ["Profile.qml", "Encryption.qml"]
 
-        Layout.maximumWidth: Math.min(parent.width, 640)
-        Layout.preferredWidth:
-            pageStack.isWide ? parent.width : avatarPreferredSize
+        HRectangle {
+            color: ready ? theme.controls.box.background : "transparent"
+            Behavior on color { HColorAnimation {} }
 
-        Layout.preferredHeight: childrenRect.height
+            Layout.alignment: Qt.AlignCenter
 
-        Loader {
-            width: parent.width
-            source: ready ? "Profile.qml" : "../../Base/HBusyIndicator.qml"
+            Layout.maximumWidth: Math.min(parent.width, 640)
+            Layout.preferredWidth:
+                pageStack.isWide ? parent.width : avatarPreferredSize
+
+            Layout.preferredHeight: childrenRect.height
+
+            Loader {
+                width: parent.width
+                source: ready ?
+                        modelData :
+                        (modelData == "Profile.qml" ?
+                         "../../Base/HBusyIndicator.qml" : "")
+            }
         }
     }
+
+    HSpacer {}
 }

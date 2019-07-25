@@ -16,6 +16,9 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
+  - Run import in thread ? Does it blocks the async loop?
+  - Handle import errors
+  - Update the room subtitle when a message is decrypted/edited
   - Don't linkify images for outgoing html
   - state: If last page is a room and the account for it is no longer present,
     load Default.qml instead
@@ -29,6 +32,13 @@
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 
 - UI
+  - Popup:
+      - label size
+      - Accept/cancel buttons
+      - Transitions
+
+  - When starting a long task, e.g. importing keys, quitting the page,
+    and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode
   - Messages editing
   - Code highlighting

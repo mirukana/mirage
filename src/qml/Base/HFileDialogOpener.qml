@@ -13,7 +13,7 @@ Item {
     property string file: ""
 
     enum FileType { All, Images }
-    property int fileType: FileType.All
+    property int fileType: HFileDialogOpener.FileType.All
 
     TapHandler { onTapped: fileDialog.open() }
 
