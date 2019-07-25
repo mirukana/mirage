@@ -48,12 +48,15 @@ class MatrixClient(nio.AsyncClient):
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
+        store = Path(self.backend.app.appdirs.user_data_dir) / "encryption"
+        store.mkdir(parents=True, exist_ok=True)
+
         # TODO: pass a ClientConfig with a pickle key
         super().__init__(
             homeserver = homeserver,
             user       = user,
             device_id  = device_id,
-            store_path = self.backend.app.appdirs.user_data_dir,
+            store_path = store,
         )
 
         self.connect_callbacks()
