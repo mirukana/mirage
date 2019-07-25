@@ -16,12 +16,15 @@
   - When qml syntax highlighting supports string interpolation, use them
 
 - Fixes
-  - Run import in thread ? Does it blocks the async loop?
-  - Handle import errors
+  - Update state.json page when accepting an invite
+  - Run import in thread and AsyncClient.olm functions, they block async loop
+  - Handle import keys errors
   - Update the room subtitle when a message is decrypted/edited
+
   - Don't linkify images for outgoing html
   - state: If last page is a room and the account for it is no longer present,
     load Default.qml instead
+
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
@@ -129,6 +132,8 @@
   - Room subtitle: show things like "*Image*" instead of blank, etc
 
 - nio
+  - `AsyncClient.share_group_session`: send device batches concurrently
+
   - downloads API
   - MatrixRoom invited members list
   - Invite events are missing their timestamps (needed for sorting)

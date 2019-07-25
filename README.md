@@ -5,18 +5,20 @@
 Outside of pip/github:
 
 Qt 5.12+, including:
-- qt5-declarative
-- qt5-quickcontrols2
+- qt5-declarative-devel
+- qt5-quickcontrols
+- qt5-quickcontrols2-devel
+- qt5-svg-devel
 - qt5-graphicaleffects
 - qt5-qmake
+
+- olm-python3 >= 3.1
 
 [pyotherside](https://github.com/thp/pyotherside):
 
     git clone https://github.com/thp/pyotherside
     cd pyotherside
-    qmake
-    make
-    sudo make install
+    qmake && make && sudo make install
 
 After this, verify the permissions of the installed plugin files.
 
@@ -26,7 +28,8 @@ After this, verify the permissions of the installed plugin files.
 Dependencies on Pypi:
 
     pip3 install --user --upgrade \
-        Pillow aiofiles dataclasses filetype hsluv lxml mistune uvloop
+        Pillow aiofiles dataclasses filetype hsluv html_sanitizer \
+        lxml mistune uvloop
 
 Dependencies on Github (most recent version needed):
 
@@ -34,7 +37,7 @@ Dependencies on Github (most recent version needed):
 
     git clone https://github.com/mirukan/matrix-nio
     cd matrix-nio
-    pip3 install --user --upgrade -e .
+    pip3 install --user --upgrade -e '.[e2e]'
 
 ## Building
 
