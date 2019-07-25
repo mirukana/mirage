@@ -5,6 +5,9 @@
 
 # no_embedded (resources) is used to speed up the compilation
 
-find src harmonyqml.pro -type f |
-entr -cdnr sh -c \
-    'qmake CONFIG+="dev no_embedded" && make && ./harmonyqml --debug'
+while true; do
+    find src harmonyqml.pro -type f |
+    entr -cdnr sh -c \
+        'qmake CONFIG+="dev no_embedded" && make && ./harmonyqml --debug'
+    sleep 0.2
+done
