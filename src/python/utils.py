@@ -1,6 +1,3 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under LGPLv3.
-
 import collections
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum

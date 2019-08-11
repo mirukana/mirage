@@ -1,6 +1,3 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under LGPLv3.
-
 from typing import ClassVar, Optional
 
 

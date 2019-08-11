@@ -1,6 +1,3 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under LGPLv3.
-
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Union

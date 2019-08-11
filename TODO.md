@@ -2,7 +2,6 @@
   - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
 
 - Refactoring
-  - Remove copyrights
   - Remove clip props when possible
   - `property list<thing>`
   - See Loader.enabled and async

@@ -1,7 +1,3 @@
-// Copyright 2019 miruka
-// This file is part of harmonyqml, licensed under LGPLv3.
-
-
 function hsluv(hue, saturation, lightness, alpha=1.0) {
     let rgb = py.callSync("hsluv", [hue, saturation, lightness])
     return Qt.rgba(rgb[0], rgb[1], rgb[2], alpha)

@@ -1,6 +1,3 @@
-# Copyright 2019 miruka
-# This file is part of harmonyqml, licensed under LGPLv3.
-
 from typing import Dict, Iterator, MutableMapping, Set, Tuple, Type, Union
 
 from dataclasses import dataclass, field
