@@ -4,6 +4,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../utils.js" as Utils
 
 HRectangle {
     function setFocus() { areaScrollView.forceActiveFocus() }
@@ -11,8 +12,11 @@ HRectangle {
     property string indent: "    "
 
     property var aliases: window.settings.writeAliases
-    property string writingUserId: chatPage.userId
     property string toSend: ""
+
+    property string writingUserId: chatPage.userId
+    readonly property var writingUserInfo:
+        Utils.getItem(modelSources["Account"] || [], "user_id", writingUserId)
 
     property bool textChangedSinceLostFocus: false
 
@@ -57,6 +61,8 @@ HRectangle {
         HUserAvatar {
             id: avatar
             userId: writingUserId
+            displayName: writingUserInfo.display_name
+            avatarUrl: writingUserInfo.avatar_url
         }
 
         HScrollableTextArea {
@@ -166,6 +172,13 @@ HRectangle {
                 })
 
                 area.Keys.onPressed.connect(event => {
+                    if (event.modifiers == Qt.MetaModifier) {
+                        // Prevent super+key from sending the key as text
+                        // on xwayland
+                        event.accepted = true
+                        return
+                    }
+
                     if (event.modifiers == Qt.NoModifier &&
                         event.key == Qt.Key_Backspace &&
                         ! textArea.selectedText)

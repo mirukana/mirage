@@ -2,7 +2,6 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 
 import QtQuick 2.12
-import SortFilterProxyModel 0.2
 import "../../Base"
 import "../../utils.js" as Utils
 
@@ -22,7 +21,7 @@ HRectangle {
             return Boolean(
                 ! canTalkBreak(item, itemAfter) &&
                 ! canDayBreak(item, itemAfter) &&
-                item.senderId === itemAfter.senderId &&
+                item.sender_id === itemAfter.sender_id &&
                 Utils.minutesBetween(item.date, itemAfter.date) <= 5
             )
         }
@@ -42,18 +41,15 @@ HRectangle {
             }
 
             return Boolean(
-                itemAfter.eventType == "RoomCreateEvent" ||
+                itemAfter.event_type == "RoomCreateEvent" ||
                 item.date.getDate() != itemAfter.date.getDate()
             )
         }
 
         model: HListModel {
-            sourceModel: timelines
-
-            filters: ValueFilter {
-                roleName: "roomId"
-                value: chatPage.roomId
-            }
+            keyField: "client_id"
+            source:
+                modelSources[["Event", chatPage.userId, chatPage.roomId]] || []
         }
 
         property bool ownEventsOnRight:
@@ -76,23 +72,20 @@ HRectangle {
         // Declaring this as "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
         property bool canLoad: true
-        // property int zz: 0
+        onYPosChanged: Qt.callLater(loadPastEvents)
 
-        onYPosChanged: {
-            if (chatPage.category != "Invites" && canLoad && yPos <= 0.1) {
-                // zz += 1
-                // print(canLoad, zz)
-                eventList.canLoad = false
-                py.callClientCoro(
-                    chatPage.userId, "load_past_events", [chatPage.roomId],
-                    moreToLoad => { eventList.canLoad = moreToLoad }
-                )
-            }
+        function loadPastEvents() {
+            if (chatPage.invited_id || ! canLoad || yPos > 0.1) { return }
+            eventList.canLoad = false
+            py.callClientCoro(
+                chatPage.userId, "load_past_events", [chatPage.roomId],
+                moreToLoad => { eventList.canLoad = moreToLoad }
+            )
         }
     }
 
     HNoticePage {
-        text: qsTr("Nothing to show here yet...")
+        text: qsTr("Nothing here yet...")
 
         visible: eventList.model.count < 1
         anchors.fill: parent

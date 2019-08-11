@@ -12,11 +12,7 @@ HInteractiveRectangle {
     height: childrenRect.height
     color: theme.sidePane.room.background
 
-    TapHandler {
-        onTapped: pageStack.showRoom(
-            roomList.userId, roomList.category, model.roomId
-        )
-    }
+    TapHandler { onTapped: pageStack.showRoom(userId, model.room_id) }
 
     Row {
         width: parent.width - leftPadding * 2
@@ -30,8 +26,8 @@ HInteractiveRectangle {
 
             HRoomAvatar {
                 id: roomAvatar
-                userId: model.userId
-                roomId: model.roomId
+                displayName: model.display_name
+                avatarUrl: model.avatar_url
             }
 
             HColumnLayout {
@@ -40,9 +36,9 @@ HInteractiveRectangle {
                 HLabel {
                     id: roomLabel
                     color: theme.sidePane.room.name
-                    text: model.displayName || "<i>Empty room</i>"
+                    text: model.display_name || "<i>Empty room</i>"
                     textFormat:
-                        model.displayName? Text.PlainText : Text.StyledText
+                        model.display_name? Text.PlainText : Text.StyledText
                     elide: Text.ElideRight
                     verticalAlignment: Qt.AlignVCenter
 
@@ -50,29 +46,26 @@ HInteractiveRectangle {
                 }
 
                 HRichLabel {
-                    function getText(ev) {
-                        if (! ev) { return "" }
-
-                        if (ev.eventType == "RoomMessageEmote" ||
-                            ! ev.eventType.startsWith("RoomMessage"))
-                        {
-                            return Utils.processedEventText(ev)
-                        }
-
-                        return Utils.coloredNameHtml(
-                            users.find(ev.senderId).displayName,
-                            ev.senderId
-                        ) + ": " + py.callSync("inlinify", [ev.content])
-                    }
-
-                    // Have to do it like this to avoid binding loop
-                    property var lastEv: timelines.lastEventOf(model.roomId)
-                    onLastEvChanged: text = getText(lastEv)
-
                     id: subtitleLabel
                     color: theme.sidePane.room.subtitle
                     visible: Boolean(text)
                     textFormat: Text.StyledText
+
+                    text: {
+                        if (! model.last_event) { return "" }
+
+                        let ev = model.last_event
+
+                        if (ev.event_type === "RoomMessageEmote" ||
+                            ! ev.event_type.startsWith("RoomMessage")) {
+                            return Utils.processedEventText(ev)
+                        }
+
+                        return Utils.coloredNameHtml(
+                            ev.sender_name, ev.sender_id
+                        ) + ": " + ev.inline_content
+                    }
+
 
                     font.pixelSize: theme.fontSize.small
                     elide: Text.ElideRight

@@ -6,7 +6,6 @@ import "../../Base"
 
 Banner {
     property string userId: ""
-    readonly property var userInfo: users.find(userId)
 
     color: theme.chat.leftBanner.background
 

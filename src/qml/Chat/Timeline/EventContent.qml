@@ -19,7 +19,9 @@ Row {
 
         HUserAvatar {
             id: avatar
-            userId: model.senderId
+            userId: model.sender_id
+            displayName: model.sender_name
+            avatarUrl: model.sender_avatar
             width: hideAvatar ? 0 : 48
             height: hideAvatar ? 0 : collapseAvatar ? 1 : 48
         }
@@ -52,8 +54,8 @@ Row {
                 width: parent.width
                 visible: ! hideNameLine
 
-                text: senderInfo.displayName || model.senderId
-                color: Utils.nameColor(avatar.name)
+                text: Utils.coloredNameHtml(model.sender_name, model.sender_id)
+                textFormat: Text.StyledText
                 elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
 
@@ -74,7 +76,7 @@ Row {
                       Qt.formatDateTime(model.date, "hh:mm:ss") +
                       "</font>" +
                       // local echo icon
-                      (model.isLocalEcho ?
+                      (model.is_local_echo ?
                        "&nbsp;<font size=" + theme.fontSize.small +
                        "px>⏳</font>" : "")
 

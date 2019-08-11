@@ -3,12 +3,14 @@
 
 import asyncio
 import json
+import logging as log
 from pathlib import Path
 from typing import Any, Dict
 
 import aiofiles
 from dataclasses import dataclass, field
 
+from . import pyotherside
 from .backend import Backend
 from .theme_parser import convert_to_qml
 from .utils import dict_update_recursive
@@ -23,9 +25,10 @@ class ConfigFile:
     backend:  Backend = field(repr=False)
     filename: str     = field()
 
+    _cached_read: str = field(default="", init=False, compare=False)
+
     @property
     def path(self) -> Path:
-        # pylint: disable=no-member
         return Path(self.backend.app.appdirs.user_config_dir) / self.filename
 
 
@@ -34,7 +37,13 @@ class ConfigFile:
 
 
     async def read(self):
-        return self.path.read_text()
+        if self._cached_read:
+            log.debug("Returning cached config %s", type(self).__name__)
+            return self._cached_read
+
+        log.debug("Reading config %s at %s", type(self).__name__, self.path)
+        self._cached_read = self.path.read_text()
+        return self._cached_read
 
 
     async def write(self, data) -> None:
@@ -76,7 +85,6 @@ class Accounts(JSONConfigFile):
 
 
     async def add(self, user_id: str) -> None:
-        # pylint: disable=no-member
         client = self.backend.clients[user_id]
 
         await self.write({
@@ -85,7 +93,7 @@ class Accounts(JSONConfigFile):
                 "homeserver": client.homeserver,
                 "token":      client.access_token,
                 "device_id":  client.device_id,
-            }
+            },
         })
 
 
@@ -119,14 +127,12 @@ class UIState(JSONConfigFile):
 
     @property
     def path(self) -> Path:
-        # pylint: disable=no-member
         return Path(self.backend.app.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self) -> JsonData:
         return {
             "collapseAccounts":    {},
-            "collapseCategories":  {},
             "page":                "Pages/Default.qml",
             "pageProperties":      {},
             "sidePaneManualWidth": None,
@@ -137,7 +143,6 @@ class UIState(JSONConfigFile):
 class Theme(ConfigFile):
     @property
     def path(self) -> Path:
-        # pylint: disable=no-member
         data_dir = Path(self.backend.app.appdirs.user_data_dir)
         return data_dir / "themes" / self.filename
 
@@ -148,7 +153,9 @@ class Theme(ConfigFile):
 
 
     async def read(self) -> str:
-        # pylint: disable=no-member
+        if not pyotherside.AVAILABLE:
+            return ""
+
         if self.backend.app.debug:
             return convert_to_qml(await self.default_data())
 

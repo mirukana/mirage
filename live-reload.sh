@@ -5,9 +5,14 @@
 
 # no_embedded (resources) is used to speed up the compilation
 
+export DISPLAY=${1:-:0}
+export QT_QPA_PLATFORM=xcb
+
+CFG='dev no_embedded'
+
 while true; do
     find src harmonyqml.pro -type f |
     entr -cdnr sh -c \
-        'qmake CONFIG+="dev no_embedded" && make && ./harmonyqml --debug'
+        "qmake harmonyqml.pro CONFIG+='$CFG' && make && ./harmonyqml"
     sleep 0.2
 done

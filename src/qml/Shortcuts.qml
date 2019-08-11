@@ -34,7 +34,7 @@ Item {
 
     Shortcut {
         sequences: settings.keys ? settings.keys.startDebugger : []
-        onActivated: if (window.debug) { py.call("APP.pdb") }
+        onActivated: if (debugMode) { py.call("APP.pdb") }
     }
 
     /*

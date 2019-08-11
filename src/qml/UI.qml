@@ -37,7 +37,7 @@ HRectangle {
             let props = window.uiState.pageProperties
 
             if (page == "Chat/Chat.qml") {
-                pageStack.showRoom(props.userId, props.category, props.roomId)
+                pageStack.showRoom(props.userId, props.roomId)
             } else {
                 pageStack.show(page, props)
             }
@@ -45,11 +45,11 @@ HRectangle {
     }
 
     property bool accountsPresent:
-        accounts.count > 0 || py.loadingAccounts
+        (modelSources["Account"] || []).length > 0 || py.loadingAccounts
 
     HImage {
-        visible: Boolean(Qt.resolvedUrl(source))
         id: mainUIBackground
+        visible: Boolean(Qt.resolvedUrl(source))
         fillMode: Image.PreserveAspectCrop
         source: theme.ui.image
         sourceSize.width: Screen.width
@@ -99,12 +99,11 @@ HRectangle {
                 window.uiStateChanged()
             }
 
-            function showRoom(userId, category, roomId) {
-                let roomInfo = rooms.find(userId, category, roomId)
-                show("Chat/Chat.qml", {roomInfo})
+            function showRoom(userId, roomId) {
+                show("Chat/Chat.qml", {userId, roomId})
 
                 window.uiState.page           = "Chat/Chat.qml"
-                window.uiState.pageProperties = {userId, category, roomId}
+                window.uiState.pageProperties = {userId, roomId}
                 window.uiStateChanged()
             }
 

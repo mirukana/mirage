@@ -2,20 +2,20 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 import asyncio
+import logging as log
 import signal
 from concurrent.futures import Future
 from operator import attrgetter
-from pathlib import Path
 from threading import Thread
-from typing import Any, Coroutine, Dict, List, Optional, Sequence
+from typing import Coroutine, Sequence
 
 import uvloop
 from appdirs import AppDirs
 
-import pyotherside
+from . import __about__, pyotherside
+from .pyotherside_events import CoroutineDone
 
-from . import __about__
-from .events.app import CoroutineDone, ExitRequested
+log.getLogger().setLevel(log.INFO)
 
 
 class App:
@@ -30,15 +30,26 @@ class App:
         self.image_provider = ImageProvider(self)
         pyotherside.set_image_provider(self.image_provider.get)
 
-        self.loop        = asyncio.get_event_loop()
+        self.loop = asyncio.get_event_loop()
+
+        if not pyotherside.AVAILABLE:
+            self.set_debug(True, verbose=True)
+
         self.loop_thread = Thread(target=self._loop_starter)
         self.loop_thread.start()
 
 
-    def is_debug_on(self, cli_flags: Sequence[str] = ()) -> bool:
-        debug      = "-d" in cli_flags or "--debug" in cli_flags
-        self.debug = debug
-        return debug
+    def set_debug(self, enable: bool, verbose: bool = False) -> None:
+        if verbose:
+            log.getLogger().setLevel(log.DEBUG)
+
+        if enable:
+            log.info("Debug mode enabled.")
+            self.loop.set_debug(True)
+            self.debug = True
+        else:
+            self.loop.set_debug(False)
+            self.debug = False
 
 
     def _loop_starter(self) -> None:
@@ -53,11 +64,11 @@ class App:
 
     def _call_coro(self, coro: Coroutine, uuid: str) -> None:
         self.run_in_loop(coro).add_done_callback(
-            lambda future: CoroutineDone(uuid=uuid, result=future.result())
+            lambda future: CoroutineDone(uuid=uuid, result=future.result()),
         )
 
 
-    def call_backend_coro(self, name: str, uuid: str, args: Sequence[str] = ()
+    def call_backend_coro(self, name: str, uuid: str, args: Sequence[str] = (),
                          ) -> None:
         self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
@@ -72,20 +83,29 @@ class App:
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
-        # pylint: disable=all
-        ad = additional_data
-        rl = self.run_in_loop
-        ba = self.backend
+        ad = additional_data  # noqa
+        rl = self.run_in_loop  # noqa
+        ba = self.backend  # noqa
+        mo = self.backend.models # noqa
         cl = self.backend.clients
-        tcl = lambda user: cl[f"@test_{user}:matrix.org"]
+        tcl = lambda user: cl[f"@test_{user}:matrix.org"]  # noqa
+
+        from .models.items import Account, Room, Member, Event, Device  # noqa
 
         import json
-        jd = lambda obj: print(json.dumps(obj, indent=4, ensure_ascii=False))
+        jd = lambda obj: print(  # noqa
+            json.dumps(obj, indent=4, ensure_ascii=False),
+        )
 
-        print("\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
-              "to connect to pdb.")
+        log.info("\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
+                 "to connect to pdb.")
         import remote_pdb
         remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
+
+
+    def test_run(self) -> None:
+        self.call_backend_coro("load_settings", "")
+        self.call_backend_coro("load_saved_accounts", "")
 
 
 # Make CTRL-C work again

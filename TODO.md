@@ -2,20 +2,26 @@
   - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
 
 - Refactoring
+  - Remove copyrights
+  - Remove clip props when possible
+  - `property list<thing>`
+  - See Loader.enabled and async
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
   - Sendbox
-  - Use .mjs modules
   - SignIn/RememberAccount screens
     - SignIn must be in a flickable
-  - Don't bake in size properties for components
   - Unfinished work in button-refactor branch
     - Button can get "hoverEnabled: false" to let HoverHandlers work
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size
-  - When qml syntax highlighting supports string interpolation, use them
+  - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
+  - Reloading config files (cache)
+  - Ignore @ when filtering members
+  - Tiny invisible scrollbar
   - Update state.json page when accepting an invite
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
@@ -28,10 +34,6 @@
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
-  - Past events loading (limit 100) freezes the GUI - need to move upsert func
-    to a WorkerScript
-  - `MessageDelegate.qml:63: TypeError: 'reloadPreviousItem' not a function`
-  - Horrible performance for big rooms
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 
 - UI
@@ -40,6 +42,9 @@
       - Accept/cancel buttons
       - Transitions
 
+  - Combine events so they take less space
+    - After combining is implemented, no need to hide our own profile changes.
+  - Room last activity time in RoomDelegate
   - When starting a long task, e.g. importing keys, quitting the page,
     and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode
@@ -59,12 +64,12 @@
       - Support \ escaping
   - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
   - Accept drag and dropping a picture in account settings to set avatar
-  - When all the events loaded on beginning in a room are name/avatar changes,
-    no last event room text is displayed (use sync filter?)
 
   - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
+  - Conversation breaks: show time of first new msg after break instead of big
+    blank space
   - Replies
   - `pyotherside.atexit()`
   - Sidepane
@@ -82,7 +87,9 @@
   - Leave room
   - Forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
-  - Spinner when loading past room events, images or clicking buttons
+    - Prevent using an alias if that user is not in the room or no permission
+  - Spinner when loading account, past room events, images or clicking buttons
+    - Show account page as loading until profile initially retrieved
   - Theming
     - Don't create additional lines in theme conversion (braces)
     - Recursively merge default and user theme
@@ -114,20 +121,17 @@
   - Links preview
 
 - Client improvements
+  - Image provider: on failed conversion, way to show a "broken image" thumb?
   - Config file format
-  - Set Qt.application.* stuff from C++
-  - [debug mode](https://docs.python.org/3/library/asyncio-dev.html)
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
     - See also `handle_response()`'s `keys_query` request
   - Direct chats category
-  - On sync, check messages API, if a limited sync timeline was received
   - Markdown: don't turn #things (no space) and `thing\n---` into title,
     disable `__` syntax for bold/italic
   - Push instead of replacing in stack view (remove getMemberFilter when done)
   - `<pre>` scrollbar on overflow
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
-  - See `Qt.callLater()` potential usages
   - Animate RoomEventDelegate DayBreak apparition
   - Room subtitle: show things like "*Image*" instead of blank, etc
 

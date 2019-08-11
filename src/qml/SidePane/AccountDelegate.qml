@@ -10,14 +10,14 @@ Column {
     width: parent.width
     spacing: theme.spacing / 2
 
-    property var userInfo: users.find(model.userId)
     property bool expanded: true
+    readonly property var modelItem: model
 
     Component.onCompleted:
-        expanded = ! window.uiState.collapseAccounts[model.userId]
+        expanded = ! window.uiState.collapseAccounts[model.user_id]
 
     onExpandedChanged: {
-        window.uiState.collapseAccounts[model.userId] = ! expanded
+        window.uiState.collapseAccounts[model.user_id] = ! expanded
         window.uiStateChanged()
     }
 
@@ -28,7 +28,7 @@ Column {
 
         TapHandler {
             onTapped: pageStack.showPage(
-                "EditAccount/EditAccount", { "userId": model.userId }
+                "EditAccount/EditAccount", { "userId": model.user_id }
             )
         }
 
@@ -38,46 +38,22 @@ Column {
 
             HUserAvatar {
                 id: avatar
-                // Need to do this because conflict with the model property
-                Component.onCompleted: userId = model.userId
+                userId: model.user_id
+                displayName: model.display_name
+                avatarUrl: model.avatar_url
             }
 
-            HColumnLayout {
+            HLabel {
+                id: accountLabel
+                color: theme.sidePane.account.name
+                text: model.display_name || model.user_id
+                font.pixelSize: theme.fontSize.big
+                elide: HLabel.ElideRight
+                leftPadding: sidePane.currentSpacing
+                rightPadding: leftPadding
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                HLabel {
-                    id: accountLabel
-                    color: theme.sidePane.account.name
-                    text: userInfo.displayName || model.userId
-                    font.pixelSize: theme.fontSize.big
-                    elide: HLabel.ElideRight
-                    leftPadding: sidePane.currentSpacing
-                    rightPadding: leftPadding
-
-                    Layout.fillWidth: true
-                }
-
-                HTextField {
-                    visible: false // TODO
-
-                    id: statusEdit
-                    // text: userInfo.statusMessage
-                    placeholderText: qsTr("Set status message")
-                    font.pixelSize: theme.fontSize.small
-                    background: null
-                    bordered: false
-
-                    padding: 0
-                    leftPadding: accountLabel.leftPadding
-                    rightPadding: leftPadding
-                    Layout.fillWidth: true
-
-                    onEditingFinished: {
-                        //Backend.setStatusMessage(model.userId, text)  TODO
-                        pageStack.forceActiveFocus()
-                    }
-                }
             }
 
             ExpandButton {
@@ -88,17 +64,15 @@ Column {
         }
     }
 
-    RoomCategoriesList {
+    RoomList {
         id: roomCategoriesList
         visible: height > 0
         width: parent.width
         height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
         clip: heightAnimation.running
 
-        userId: userInfo.userId
+        userId: modelItem.user_id
 
-        Behavior on height {
-            HNumberAnimation { id: heightAnimation }
-        }
+        Behavior on height { HNumberAnimation { id: heightAnimation } }
     }
 }

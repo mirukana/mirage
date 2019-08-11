@@ -9,6 +9,10 @@ HListView {
     id: accountList
     clip: true
 
-    model: accounts
+    model: HListModel {
+        keyField: "user_id"
+        source: modelSources["Account"] || []
+    }
+
     delegate: AccountDelegate {}
 }

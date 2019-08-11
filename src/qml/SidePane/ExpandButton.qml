@@ -2,7 +2,6 @@
 // This file is part of harmonyqml, licensed under LGPLv3.
 
 import QtQuick 2.12
-import QtQuick.Layouts 1.12
 import "../Base"
 
 HUIButton {

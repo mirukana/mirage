@@ -2,15 +2,20 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 import asyncio
+import logging as log
 import random
-from typing import Dict, List, Optional, Set, Tuple
+from typing import DefaultDict, Dict, List, Optional, Tuple, Union
 
 import hsluv
 
+import nio
+
 from .app import App
-from .events import users
-from .html_filter import HTML_FILTER
 from .matrix_client import MatrixClient
+from .models.items import Account, Device, Event, Member, Room
+from .models.model_store import ModelStore
+
+ProfileResponse = Union[nio.ProfileGetResponse, nio.ProfileGetError]
 
 
 class Backend:
@@ -22,12 +27,19 @@ class Backend:
         self.ui_settings    = config_files.UISettings(self)
         self.ui_state       = config_files.UIState(self)
 
+        self.models = ModelStore(allowed_key_types={
+            Account,             # Logged-in accounts
+            (Device, str),       # Devices of user_id
+            (Room,   str),       # Rooms for user_id
+            (Member, str),       # Members in room_id
+            (Event,  str, str),  # Events for account user_id for room_id
+        })
+
         self.clients: Dict[str, MatrixClient] = {}
 
-        self.past_tokens:        Dict[str, str] =  {}    # {room_id: token}
-        self.fully_loaded_rooms: Set[str]       = set()  # {room_id}
-
-        self.pending_profile_requests: Set[str] = set()
+        self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
+        self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
+                DefaultDict(asyncio.Lock)  # {user_id: lock}
 
 
     def __repr__(self) -> str:
@@ -42,11 +54,11 @@ class Backend:
                            device_id:  Optional[str] = None,
                            homeserver: str = "https://matrix.org") -> str:
         client = MatrixClient(
-            backend=self, user=user, homeserver=homeserver, device_id=device_id
+            self, user=user, homeserver=homeserver, device_id=device_id,
         )
         await client.login(password)
-        self.clients[client.user_id] = client
-        users.AccountUpdated(client.user_id)
+        self.clients[client.user_id]         = client
+        self.models[Account][client.user_id] = Account(client.user_id)
         return client.user_id
 
 
@@ -55,13 +67,15 @@ class Backend:
                             token:      str,
                             device_id:  str,
                             homeserver: str = "https://matrix.org") -> None:
+
         client = MatrixClient(
             backend=self,
-            user=user_id, homeserver=homeserver, device_id=device_id
+            user=user_id, homeserver=homeserver, device_id=device_id,
         )
         await client.resume(user_id=user_id, token=token, device_id=device_id)
-        self.clients[client.user_id] = client
-        users.AccountUpdated(client.user_id)
+
+        self.clients[client.user_id]         = client
+        self.models[Account][client.user_id] = Account(client.user_id)
 
 
     async def load_saved_accounts(self) -> Tuple[str, ...]:
@@ -83,8 +97,8 @@ class Backend:
     async def logout_client(self, user_id: str) -> None:
         client = self.clients.pop(user_id, None)
         if client:
+            self.models[Account].pop(client.user_id, None)
             await client.logout()
-            users.AccountDeleted(user_id)
 
 
     async def logout_all_clients(self) -> None:
@@ -115,20 +129,26 @@ class Backend:
         return (settings, ui_state, theme)
 
 
-    async def request_user_update_event(self, user_id: str) -> None:
-        if not self.clients:
-            await self.wait_until_client_exists()
+    async def get_profile(self, user_id: str) -> ProfileResponse:
+        if user_id in self.profile_cache:
+            return self.profile_cache[user_id]
 
-        client = self.clients.get(
-            user_id,
-            random.choice(tuple(self.clients.values()))
-        )
-        await client.request_user_update_event(user_id)
+        async with self.get_profile_locks[user_id]:
+            if not self.clients:
+                await self.wait_until_client_exists()
 
+            client = self.clients.get(
+                user_id,
+                random.choice(tuple(self.clients.values())),
+            )
 
-    @staticmethod
-    def inlinify(html: str) -> str:
-        return HTML_FILTER.filter_inline(html)
+            response = await client.get_profile(user_id)
+
+            if isinstance(response, nio.ProfileGetError):
+                log.warning("%s: %s", user_id, response)
+
+            self.profile_cache[user_id] = response
+            return response
 
 
     @staticmethod

@@ -18,9 +18,7 @@ Column {
         nextItem     = eventList.model.get(model.index - 1)
     }
 
-    property var senderInfo: senderInfo = users.find(model.senderId)
-
-    property bool isOwn: chatPage.userId === model.senderId
+    property bool isOwn: chatPage.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
     property bool combine: eventList.canCombine(previousItem, model)
     property bool talkBreak: eventList.canTalkBreak(previousItem, model)
@@ -28,22 +26,22 @@ Column {
 
     readonly property bool smallAvatar:
         eventList.canCombine(model, nextItem) &&
-        (model.eventType == "RoomMessageEmote" ||
-         ! model.eventType.startsWith("RoomMessage"))
+        (model.event_type == "RoomMessageEmote" ||
+         ! model.event_type.startsWith("RoomMessage"))
 
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight
 
     readonly property bool hideNameLine:
-        model.eventType == "RoomMessageEmote" ||
-        ! model.eventType.startsWith("RoomMessage") ||
+        model.event_type == "RoomMessageEmote" ||
+        ! model.event_type.startsWith("RoomMessage") ||
         onRight ||
         combine
 
     width: eventList.width
 
     topPadding:
-        model.eventType == "RoomCreateEvent" ? 0 :
+        model.event_type == "RoomCreateEvent" ? 0 :
         dayBreak  ? theme.spacing * 4 :
         talkBreak ? theme.spacing * 6 :
         combine   ? theme.spacing / 2 :

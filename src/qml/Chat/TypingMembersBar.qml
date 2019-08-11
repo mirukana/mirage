@@ -11,31 +11,42 @@ HRectangle {
     property alias label: typingLabel
 
     color: theme.chat.typingMembers.background
-    implicitHeight: typingLabel.text ? typingLabel.height : 0
+    implicitHeight: typingLabel.text ? rowLayout.height : 0
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
     HRowLayout {
+        id: rowLayout
         spacing: theme.spacing
-        anchors.fill: parent
-        Layout.leftMargin: spacing
-        Layout.rightMargin: spacing
-        Layout.topMargin: spacing / 4
-        Layout.bottomMargin: spacing / 4
 
         HIcon {
             id: icon
             svgName: "typing"  // TODO: animate
-            height: typingLabel.height
+
+            Layout.fillHeight: true
+            Layout.leftMargin: rowLayout.spacing / 2
         }
 
         HLabel {
             id: typingLabel
-            text: chatPage.roomInfo.typingText
             textFormat: Text.StyledText
             elide: Text.ElideRight
+            text: {
+                let tm = chatPage.roomInfo.typing_members
+
+                if (tm.length == 0) return ""
+                if (tm.length == 1) return qsTr("%1 is typing...").arg(tm[0])
+
+                return qsTr("%1 and %2 are typing...")
+                       .arg(tm.slice(0, -1).join(", ")).arg(tm.slice(-1)[0])
+            }
 
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.topMargin: rowLayout.spacing / 4
+            Layout.bottomMargin: rowLayout.spacing / 4
+            Layout.leftMargin: rowLayout.spacing / 2
+            Layout.rightMargin: rowLayout.spacing / 2
         }
     }
 }

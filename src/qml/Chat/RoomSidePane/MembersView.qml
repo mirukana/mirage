@@ -3,7 +3,6 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import SortFilterProxyModel 0.2
 import "../../Base"
 import "../../utils.js" as Utils
 
@@ -13,23 +12,11 @@ HColumnLayout {
         bottomMargin: currentSpacing
 
         model: HListModel {
-            sourceModel: chatPage.roomInfo.members
-
-            proxyRoles: ExpressionRole {
-                name: "displayName"
-                expression: users.find(userId).displayName || userId
-            }
-
-            sorters: StringSorter {
-                roleName: "displayName"
-            }
-
-            filters: ExpressionFilter {
-                function filterIt(filter, text) {
-                    return Utils.filterMatches(filter, text)
-                }
-                expression: filterIt(filterField.text, displayName)
-            }
+            keyField: "user_id"
+            source: Utils.filterModelSource(
+                modelSources[["Member", chatPage.roomId]] || [],
+                filterField.text
+            )
         }
 
         delegate: MemberDelegate {}

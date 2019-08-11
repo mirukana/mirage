@@ -26,9 +26,8 @@ TextField {
         border.color: field.activeFocus ? focusedBorderColor : borderColor
         border.width: bordered ? theme.controls.textField.borderWidth : 0
 
-        Behavior on color { HColorAnimation { factor: 0.5 } }
-        Behavior on border.color { HColorAnimation { factor: 0.5 } }
-        Behavior on border.width { HNumberAnimation { factor: 0.5 } }
+        Behavior on color { HColorAnimation { factor: 0.25 } }
+        Behavior on border.color { HColorAnimation { factor: 0.25 } }
     }
 
     selectByMouse: true

@@ -35,7 +35,7 @@ HRectangle {
         text: name ? name.charAt(0) : "?"
         font.pixelSize: parent.height / 1.4
 
-        color: Utils.hsla(
+        color: Utils.hsluv(
            name ? Utils.hueFrom(name) : 0,
            name ? theme.controls.avatar.letter.saturation : 0,
            theme.controls.avatar.letter.lightness,

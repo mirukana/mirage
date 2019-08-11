@@ -19,20 +19,6 @@ function hsla(hue, saturation, lightness, alpha=1.0) {
 }
 
 
-function arrayToModelItem(keysName, array) {
-    // Convert an array to an object suitable to be in a model, example:
-    // [1, 2, 3] → [{keysName: 1}, {keysName: 2}, {keysName: 3}]
-    let items = []
-
-    for (let item of array) {
-        let obj       = {}
-        obj[keysName] = item
-        items.push(obj)
-    }
-    return items
-}
-
-
 function hueFrom(string) {
     // Calculate and return a unique hue between 0 and 360 for the string
     let hue = 0
@@ -52,7 +38,7 @@ function nameColor(name) {
 }
 
 
-function coloredNameHtml(name, userId, displayText=null) {
+function coloredNameHtml(name, userId, displayText=null, disambiguate=false) {
     // substring: remove leading @
     return "<font color='" + nameColor(name || userId.substring(1)) + "'>" +
            escapeHtml(displayText || name || userId) +
@@ -71,19 +57,20 @@ function escapeHtml(string) {
 
 
 function processedEventText(ev) {
-    if (ev.eventType == "RoomMessageEmote") {
-        let name = users.find(ev.senderId).displayName
-        return "<i>" + coloredNameHtml(name) + " " + ev.content + "</i>"
+    if (ev.event_type == "RoomMessageEmote") {
+        return "<i>" +
+               coloredNameHtml(ev.sender_name, ev.sender_id) + " " +
+               ev.content + "</i>"
     }
 
-    if (ev.eventType.startsWith("RoomMessage")) { return ev.content }
+    if (ev.event_type.startsWith("RoomMessage")) { return ev.content }
 
-    let name = users.find(ev.senderId).displayName
-    let text = qsTr(ev.content).arg(coloredNameHtml(name, ev.senderId))
+    let text = qsTr(ev.content).arg(
+        coloredNameHtml(ev.sender_name, ev.sender_id)
+    )
 
-    if (text.includes("%2") && ev.targetUserId) {
-        let tname = users.find(ev.targetUserId).displayName
-        text = text.arg(coloredNameHtml(tname, ev.targetUserId))
+    if (text.includes("%2") && ev.target_id) {
+        text = text.arg(coloredNameHtml(ev.target_name, ev.target_id))
     }
 
     return text
@@ -102,6 +89,17 @@ function filterMatches(filter, text) {
         }
     }
     return true
+}
+
+
+function filterModelSource(source, filter_text, property="filter_string") {
+    if (! filter_text) { return source }
+
+    let results = []
+    for (let item of source) {
+        if (filterMatches(filter_text, item[property])) { results.push(item) }
+    }
+    return results
 }
 
 
@@ -126,4 +124,12 @@ function thumbnailParametersFor(width, height) {
 
 function minutesBetween(date1, date2) {
     return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
+}
+
+
+function getItem(array, mainKey, value) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i][mainKey] === value) { return array[i] }
+    }
+    return undefined
 }

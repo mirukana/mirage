@@ -4,7 +4,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import io.thp.pyotherside 1.5
-import "EventHandlers/includes.js" as EventHandlers
+import "event_handlers.js" as EventHandlers
 
 Python {
     id: py
@@ -60,21 +60,17 @@ Python {
         addImportPath("src")
         addImportPath("qrc:/")
         importNames("python", ["APP"], () => {
-            call("APP.is_debug_on", [Qt.application.arguments], on => {
-                window.debug = on
+            loadSettings(() => {
+                callCoro("saved_accounts.any_saved", [], any => {
+                    py.ready = true
+                    willLoadAccounts(any)
 
-                loadSettings(() => {
-                    callCoro("saved_accounts.any_saved", [], any => {
-                        py.ready = true
-                        willLoadAccounts(any)
-
-                        if (any) {
-                            py.loadingAccounts = true
-                            py.callCoro("load_saved_accounts", [], () => {
-                                py.loadingAccounts = false
-                            })
-                        }
-                    })
+                    if (any) {
+                        py.loadingAccounts = true
+                        py.callCoro("load_saved_accounts", [], () => {
+                            py.loadingAccounts = false
+                        })
+                    }
                 })
             })
         })

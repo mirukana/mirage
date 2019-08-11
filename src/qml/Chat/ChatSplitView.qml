@@ -28,25 +28,21 @@ HSplitView {
         }
 
         InviteBanner {
-            visible: category == "Invites"
-            inviterId: roomInfo.inviterId
+            id: inviteBanner
+            visible: Boolean(inviterId)
+            inviterId: chatPage.roomInfo.inviter_id
 
             Layout.fillWidth: true
         }
 
-        //UnknownDevicesBanner {
-            //visible: category == "Rooms" && hasUnknownDevices
-            //
-            //Layout.fillWidth: true
-        //}
-
         SendBox {
             id: sendBox
-            visible: category == "Rooms" && ! hasUnknownDevices
+            visible: ! inviteBanner.visible && ! leftBanner.visible
         }
 
         LeftBanner {
-            visible: category == "Left"
+            id: leftBanner
+            visible: chatPage.roomInfo.left
             userId: chatPage.userId
 
             Layout.fillWidth: true
@@ -56,7 +52,8 @@ HSplitView {
     RoomSidePane {
         id: roomSidePane
 
-        activeView: roomHeader.activeButton
+        activeView: roomHeader.item ? roomHeader.item.activeButton : null
+
         property int oldWidth: width
         onActiveViewChanged:
             activeView ? restoreAnimation.start() : hideAnimation.start()
@@ -89,7 +86,9 @@ HSplitView {
         collapsed: width < theme.controls.avatar.size + theme.spacing
 
         property bool wasSnapped: false
-        property int referenceWidth: roomHeader.buttonsWidth
+        property int referenceWidth:
+            roomHeader.item ? roomHeader.item.buttonsWidth : 0
+
         onReferenceWidthChanged: {
             if (! chatSplitView.manuallyResized || wasSnapped) {
                 if (wasSnapped) { chatSplitView.manuallyResized = false }

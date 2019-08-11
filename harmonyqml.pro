@@ -5,7 +5,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += warn_off c++11 release
 dev {
     CONFIG -= warn_off release
-    CONFIG += debug
+    CONFIG += debug qml_debug declarative_debug
 }
 
 BUILD_DIR = build
@@ -24,7 +24,7 @@ TARGET = harmonyqml
 
 # Libraries includes
 
-include(submodules/SortFilterProxyModel/SortFilterProxyModel.pri)
+include(submodules/qsyncable/qsyncable.pri)
 
 
 # Custom functions

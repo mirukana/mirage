@@ -2,10 +2,14 @@
 # This file is part of harmonyqml, licensed under LGPLv3.
 
 import collections
-from enum import auto as autostr
+import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
+from enum import auto as autostr
+from typing import IO, Optional
 
-auto = autostr  # pylint: disable=invalid-name
+import filetype
+
+auto = autostr
 
 
 class AutoStrEnum(Enum):
@@ -22,3 +26,19 @@ def dict_update_recursive(dict1, dict2):
             dict_update_recursive(dict1[k], dict2[k])
         else:
             dict1[k] = dict2[k]
+
+
+def is_svg(file: IO) -> bool:
+    try:
+        _, element = next(xml_etree.iterparse(file, ("start",)))
+        return element.tag == "{http://www.w3.org/2000/svg}svg"
+    except (StopIteration, xml_etree.ParseError):
+        return False
+
+
+def guess_mime(file: IO) -> Optional[str]:
+    if is_svg(file):
+        return "image/svg+xml"
+
+    file.seek(0, 0)
+    return filetype.guess_mime(file)

@@ -34,7 +34,7 @@ class HtmlFilter:
 
         # hard_wrap: convert all \n to <br> without required two spaces
         self._markdown_to_html = mistune.Markdown(
-            hard_wrap=True, renderer=MarkdownRenderer()
+            hard_wrap=True, renderer=MarkdownRenderer(),
         )
 
         self._markdown_to_html.block.default_rules = [
@@ -56,7 +56,7 @@ class HtmlFilter:
 
         if not outgoing:
             text = re.sub(
-                r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text
+                r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text,
             )
 
         return text
@@ -84,15 +84,15 @@ class HtmlFilter:
             text = re.sub(
                 r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
                 r'<\1><span class="greentext">\2</span>\3',
-                text
+                text,
             )
 
         return text
 
 
     def sanitize_settings(self, inline: bool = False) -> dict:
-        # https://matrix.org/docs/spec/client_server/latest.html#m-room-message-msgtypes
-        # TODO: mx-reply, audio, video
+        # https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
+        # TODO: mx-reply, audio, video, the new hidden thing
 
         inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
         tags        = inline_tags | {
@@ -103,8 +103,7 @@ class HtmlFilter:
         }
 
         inlines_attributes = {
-            # TODO: translate font attrs to qt html subset
-            "font": {"data-mx-bg-color", "data-mx-color"},
+            "font": {"color"},
             "a":    {"href"},
             "code": {"class"},
         }
@@ -119,9 +118,10 @@ class HtmlFilter:
             "attributes": inlines_attributes if inline else attributes,
             "empty": {} if inline else {"hr", "br", "img"},
             "separate": {"a"} if inline else {
-                "a", "p", "li", "table", "tr", "th", "td", "br", "hr"
+                "a", "p", "li", "table", "tr", "th", "td", "br", "hr",
             },
             "whitespace": {},
+            "keep_typographic_whitespace": True,
             "add_nofollow": False,
             "autolink": {
                 "link_regexes": self.link_regexes,
@@ -135,25 +135,26 @@ class HtmlFilter:
                 sanitizer.tag_replacer("em", "i"),
                 sanitizer.tag_replacer("strike", "s"),
                 sanitizer.tag_replacer("del", "s"),
-                sanitizer.tag_replacer("span", "font"),
-                self._remove_empty_font,
                 sanitizer.tag_replacer("form", "p"),
                 sanitizer.tag_replacer("div", "p"),
                 sanitizer.tag_replacer("caption", "p"),
                 sanitizer.target_blank_noopener,
+                self._process_span_font,
             ],
             "element_postprocessors": [],
             "is_mergeable": lambda e1, e2: e1.attrib == e2.attrib,
         }
 
 
-    def _remove_empty_font(self, el: HtmlElement) -> HtmlElement:
-        if el.tag != "font":
+    @staticmethod
+    def _process_span_font(el: HtmlElement) -> HtmlElement:
+        if el.tag not in ("span", "font"):
             return el
 
-        settings = self.sanitize_settings()
-        if not settings["attributes"]["font"] & set(el.keys()):
-            el.clear()
+        color = el.attrib.pop("data-mx-color", None)
+        if color:
+            el.tag = "font"
+            el.attrib["color"] = color
 
         return el
 
@@ -191,7 +192,7 @@ class HtmlFilter:
     @staticmethod
     def _is_image_path(link: str) -> bool:
         return bool(re.match(
-            r".+\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$", link, re.IGNORECASE
+            r".+\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$", link, re.IGNORECASE,
         ))
 
 

@@ -6,9 +6,6 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 HRectangle {
-    property string displayName: ""
-    property string topic: ""
-
     property alias buttonsImplicitWidth: viewButtons.implicitWidth
     property int buttonsWidth: viewButtons.Layout.preferredWidth
     property var activeButton: "members"
@@ -29,14 +26,14 @@ HRectangle {
 
         HRoomAvatar {
             id: avatar
-            userId: chatPage.userId
-            roomId: chatPage.roomId
+            displayName: chatPage.roomInfo.display_name
+            avatarUrl: chatPage.roomInfo.avatar_url
             Layout.alignment: Qt.AlignTop
         }
 
         HLabel {
             id: roomName
-            text: displayName
+            text: chatPage.roomInfo.display_name
             font.pixelSize: theme.fontSize.big
             color: theme.chat.roomHeader.name
             elide: Text.ElideRight
@@ -53,7 +50,7 @@ HRectangle {
 
         HLabel {
             id: roomTopic
-            text: topic
+            text: chatPage.roomInfo.topic
             font.pixelSize: theme.fontSize.small
             color: theme.chat.roomHeader.topic
             elide: Text.ElideRight

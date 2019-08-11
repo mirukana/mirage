@@ -16,7 +16,7 @@ HGridLayout {
                 userId, "set_displayname", [nameField.field.text], () => {
                     saveButton.nameChangeRunning = false
                     editAccount.headerName =
-                        Qt.binding(() => userInfo.displayName)
+                        Qt.binding(() => accountInfo.display_name)
                 }
             )
         }
@@ -40,12 +40,12 @@ HGridLayout {
     }
 
     function cancelChanges() {
-        nameField.field.text    = userInfo.displayName
+        nameField.field.text    = accountInfo.display_name
         aliasField.field.text   = aliasField.currentAlias
         fileDialog.selectedFile = ""
         fileDialog.file         = ""
 
-        editAccount.headerName = Qt.binding(() => userInfo.displayName)
+        editAccount.headerName = Qt.binding(() => accountInfo.display_name)
     }
 
     columns: 2
@@ -59,6 +59,8 @@ HGridLayout {
 
         id: avatar
         userId: editAccount.userId
+        displayName: accountInfo.display_name
+        avatarUrl: accountInfo.avatar_url
         imageUrl: fileDialog.selectedFile || fileDialog.file || defaultImageUrl
         toolTipImageUrl: ""
 
@@ -72,15 +74,21 @@ HGridLayout {
             visible: opacity > 0
             opacity: ! fileDialog.dialog.visible &&
                      (! avatar.imageUrl || avatar.hovered) ? 1 : 0
-            Behavior on opacity { HNumberAnimation {} }
 
             anchors.fill: parent
-            color: Utils.hsla(0, 0, 0, avatar.imageUrl ? 0.7 : 1)
+            color: Utils.hsluv(0, 0, 0,
+                (! avatar.imageUrl && overlayHover.hovered) ? 0.9 : 0.7
+            )
+
+            Behavior on opacity { HNumberAnimation {} }
+            Behavior on color { HColorAnimation {} }
 
             HColumnLayout {
                 anchors.centerIn: parent
                 spacing: currentSpacing
                 width: parent.width
+
+                HoverHandler { id: overlayHover }
 
                 HIcon {
                     svgName: "upload-avatar"
@@ -92,7 +100,11 @@ HGridLayout {
 
                 HLabel {
                     text: qsTr("Upload profile picture")
-                    color: Utils.hsla(0, 0, 90, 1)
+                    color: (! avatar.imageUrl && overlayHover.hovered) ?
+                           Qt.lighter(theme.colors.accentText, 1.2) :
+                           Utils.hsluv(0, 0, 90, 1)
+                    Behavior on color { HColorAnimation {} }
+
                     font.pixelSize: theme.fontSize.big *
                                     avatar.height / avatarPreferredSize
                     wrapMode: Text.WordWrap
@@ -107,7 +119,7 @@ HGridLayout {
             id: fileDialog
             fileType: HFileDialogOpener.FileType.Images
             dialog.title: qsTr("Select profile picture for %1")
-                              .arg(userInfo.displayName)
+                              .arg(accountInfo.display_name)
         }
     }
 
@@ -129,14 +141,14 @@ HGridLayout {
             }
 
             HLabeledTextField {
-                property bool changed: field.text != userInfo.displayName
+                property bool changed: field.text != accountInfo.display_name
 
                 property string fText: field.text
                 onFTextChanged: editAccount.headerName = field.text
 
                 id: nameField
                 label.text: qsTr("Display name:")
-                field.text: userInfo.displayName
+                field.text: accountInfo.display_name
                 field.onAccepted: applyChanges()
 
                 Layout.fillWidth: true

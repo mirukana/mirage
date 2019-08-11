@@ -8,6 +8,7 @@ import "../SidePane"
 
 SwipeView {
     default property alias columnChildren: contentColumn.children
+
     property alias page: innerPage
     property alias header: innerPage.header
     property alias footer: innerPage.header
@@ -81,7 +82,6 @@ SwipeView {
 
             HColumnLayout {
                 id: contentColumn
-                spacing: theme.spacing
                 width: innerFlickable.width
                 height: innerFlickable.height
             }

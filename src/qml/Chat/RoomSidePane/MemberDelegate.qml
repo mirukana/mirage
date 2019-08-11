@@ -4,13 +4,12 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 HInteractiveRectangle {
     id: memberDelegate
     width: memberList.width
     height: childrenRect.height
-
-    property var memberInfo: users.find(model.userId)
 
     Row {
         width: parent.width - leftPadding * 2
@@ -24,7 +23,9 @@ HInteractiveRectangle {
 
             HUserAvatar {
                 id: avatar
-                userId: model.userId
+                userId: model.user_id
+                displayName: model.display_name
+                avatarUrl: model.avatar_url
             }
 
             HColumnLayout {
@@ -32,7 +33,7 @@ HInteractiveRectangle {
 
                 HLabel {
                     id: memberName
-                    text: memberInfo.displayName || model.userId
+                    text: model.display_name || model.user_id
                     elide: Text.ElideRight
                     verticalAlignment: Qt.AlignVCenter
 
