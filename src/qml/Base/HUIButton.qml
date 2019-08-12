@@ -67,7 +67,7 @@ HBaseButton {
         }
     }
 
-    contentItem: Loader {
+    contentItem: HLoader {
         sourceComponent:
             loading && ! iconName ? loadingOverlay : buttonContent
     }

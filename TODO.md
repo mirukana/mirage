@@ -2,9 +2,6 @@
   - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
 
 - Refactoring
-  - Remove clip props when possible
-  - `property list<thing>`
-  - See Loader.enabled and async
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
   - Sendbox
   - SignIn/RememberAccount screens

@@ -18,7 +18,7 @@ HPage {
 
     readonly property bool hasUnknownDevices: false
 
-    header: Loader {
+    header: HLoader {
         id: roomHeader
         source: ready ? "RoomHeader.qml" : ""
 
@@ -31,7 +31,7 @@ HPage {
     page.leftPadding: 0
     page.rightPadding: 0
 
-    Loader {
+    HLoader {
         source: ready ? "ChatSplitView.qml" : "../Base/HBusyIndicator.qml"
 
         Layout.fillWidth: ready

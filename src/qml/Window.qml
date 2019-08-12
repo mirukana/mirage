@@ -29,12 +29,15 @@ ApplicationWindow {
     Shortcuts { id: shortcuts}
     Python    { id: py }
 
-    Loader {
+    HLoader {
         anchors.fill: parent
         source: py.ready ? "" : "LoadingScreen.qml"
     }
 
-    Loader {
+    HLoader {
+        // true makes the initially loaded chat page invisible for some reason
+        asynchronous: false
+
         id: uiLoader
         anchors.fill: parent
         scale: py.ready ? 1 : 0.5

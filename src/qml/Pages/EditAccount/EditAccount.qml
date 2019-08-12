@@ -46,7 +46,7 @@ HPage {
 
             Layout.preferredHeight: childrenRect.height
 
-            Loader {
+            HLoader {
                 width: parent.width
                 source: ready ?
                         modelData :
