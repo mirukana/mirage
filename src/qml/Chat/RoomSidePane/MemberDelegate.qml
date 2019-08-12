@@ -6,36 +6,32 @@ import "../../utils.js" as Utils
 HInteractiveRectangle {
     id: memberDelegate
     width: memberList.width
-    height: childrenRect.height
+    height: rowLayout.height
 
-    Row {
-        width: parent.width - leftPadding * 2
-        padding: roomSidePane.currentSpacing / 2
-        leftPadding: roomSidePane.currentSpacing
-        rightPadding: 0
+    HRowLayout {
+        id: rowLayout
+        x: roomSidePane.currentSpacing
+        width: parent.width - roomSidePane.currentSpacing * 1.5
+        height: avatar.height + roomSidePane.currentSpacing / 1.5
+        spacing: roomSidePane.currentSpacing
 
-        HRowLayout {
-            width: parent.width
-            spacing: roomSidePane.currentSpacing
+        HUserAvatar {
+            id: avatar
+            userId: model.user_id
+            displayName: model.display_name
+            avatarUrl: model.avatar_url
+        }
 
-            HUserAvatar {
-                id: avatar
-                userId: model.user_id
-                displayName: model.display_name
-                avatarUrl: model.avatar_url
-            }
+        HColumnLayout {
+            Layout.fillWidth: true
 
-            HColumnLayout {
+            HLabel {
+                id: memberName
+                text: model.display_name || model.user_id
+                elide: Text.ElideRight
+                verticalAlignment: Qt.AlignVCenter
+
                 Layout.fillWidth: true
-
-                HLabel {
-                    id: memberName
-                    text: model.display_name || model.user_id
-                    elide: Text.ElideRight
-                    verticalAlignment: Qt.AlignVCenter
-
-                    Layout.fillWidth: true
-                }
             }
         }
     }
