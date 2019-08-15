@@ -69,16 +69,20 @@ HRectangle {
         // Declaring this as "alias" provides the on... signal
         property real yPos: visibleArea.yPosition
         property bool canLoad: true
-        onYPosChanged: Qt.callLater(loadPastEvents)
+        onYPosChanged: if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
 
         function loadPastEvents() {
-            if (chatPage.invited_id || ! canLoad || yPos > 0.1) { return }
             eventList.canLoad = false
             py.callClientCoro(
                 chatPage.userId, "load_past_events", [chatPage.roomId],
                 moreToLoad => { eventList.canLoad = moreToLoad }
             )
         }
+
+        property string inviter: chatPage.roomInfo.inviter || ""
+        // When an invited room becomes joined, we should now be able to fetch
+        // past events.
+        onInviterChanged: canLoad = true
     }
 
     HNoticePage {

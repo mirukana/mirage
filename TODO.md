@@ -35,6 +35,11 @@
       - Accept/cancel buttons
       - Transitions
 
+  - Restoring UI state:
+    - Sendbox content
+    - Which element was focused
+    - Room member filter field
+
   - Combine events so they take less space
     - After combining is implemented, no need to hide our own profile changes.
   - Room last activity time in RoomDelegate

@@ -34,7 +34,6 @@ Python {
 
     function saveConfig(backend_attribute, data, callback=null) {
         if (! py.ready) { return }  // config not loaded yet
-        print(backend_attribute, JSON.stringify( data, null, 4))
         callCoro(backend_attribute + ".write", [data], callback)
     }
 

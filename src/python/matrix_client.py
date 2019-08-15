@@ -212,7 +212,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_past_events(self, room_id: str) -> bool:
-        if room_id in self.fully_loaded_rooms:
+        if room_id in self.fully_loaded_rooms or room_id in self.invited_rooms:
             return False
 
         await self.first_sync_happened.wait()
