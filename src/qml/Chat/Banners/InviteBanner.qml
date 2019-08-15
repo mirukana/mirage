@@ -3,25 +3,24 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 Banner {
-    property string inviterId: ""
-
-    readonly property var inviterInfo:
-        inviterId ? users.find(inviterId) : null
+    property string inviterId: chatPage.roomInfo.inviter
+    property string inviterName: chatPage.roomInfo.inviter_name
+    property string inviterAvatar: chatPage.roomInfo.inviter_avatar
 
     color: theme.chat.inviteBanner.background
 
     avatar.userId: inviterId
+    avatar.displayName: inviterName
+    avatar.avatarUrl: inviterAvatar
 
-    labelText: qsTr("%1 invited you to join the room.").arg(
-        inviterId && inviterInfo ?
-        Utils.coloredNameHtml(inviterInfo.displayName, inviterId) :
-        qsTr("Someone")
+    labelText: qsTr("%1 invited you to the room.").arg(
+        Utils.coloredNameHtml(inviterName, inviterId)
     )
 
     buttonModel: [
         {
             name: "accept",
-            text: qsTr("Accept"),
+            text: qsTr("Join"),
             iconName: "invite-accept",
         },
         {

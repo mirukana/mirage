@@ -333,12 +333,17 @@ class MatrixClient(nio.AsyncClient):
         except KeyError:
             last_ev = None
 
+        inviter = getattr(room, "inviter", "") or ""
+
+
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
             display_name   = name,
             avatar_url     = room.gen_avatar_url or "",
             topic          = room.topic or "",
-            inviter_id     = getattr(room, "inviter", "") or "",
+            inviter_id     = inviter,
+            inviter_name   = room.user_name(inviter) if inviter else "",
+            inviter_avatar = room.avatar_url(inviter) if inviter else "",
             left           = left,
             filter_string  = " ".join({name, room.topic or ""}).strip(),
             last_event     = last_ev,

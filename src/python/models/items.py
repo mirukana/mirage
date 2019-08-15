@@ -30,6 +30,8 @@ class Room(ModelItem):
     avatar_url:     str       = ""
     topic:          str       = ""
     inviter_id:     str       = ""
+    inviter_name:   str       = ""
+    inviter_avatar: str       = ""
     left:           bool      = False
     filter_string:  str       = ""
     typing_members: List[str] = field(default_factory=list)
