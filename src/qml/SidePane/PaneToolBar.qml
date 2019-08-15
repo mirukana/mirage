@@ -1,3 +1,4 @@
+import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
@@ -25,5 +26,20 @@ HRowLayout {
 
         Layout.fillWidth: true
         Layout.preferredHeight: parent.height
+
+        onTextChanged: {
+            if (window.uiState.sidePaneFilter == text) return
+
+            print("save")
+            window.uiState.sidePaneFilter = text
+            window.uiStateChanged()
+        }
+
+        Connections {
+            target: window
+            // Keep multiple instances of PaneToolBar in sync
+            onUiStateChanged: filterField.text = uiState.sidePaneFilter
+        }
+
     }
 }
