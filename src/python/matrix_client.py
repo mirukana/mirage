@@ -654,6 +654,12 @@ class MatrixClient(nio.AsyncClient):
         await self.register_nio_event(room, ev, content=co)
 
 
+    # Callbacks for nio invite events
+
+    async def onInviteEvent(self, room, ev) -> None:
+        await self.register_nio_room(room)
+
+
     # Callbacks for nio ephemeral events
 
     async def onTypingNoticeEvent(self, room, ev) -> None:
