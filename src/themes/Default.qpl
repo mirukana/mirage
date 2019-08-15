@@ -58,11 +58,11 @@ colors:
 
     // Example of an animation, set running: true to enable
     NumberAnimation on hue
-        running: false
-        from: 0
-        to: 360
+        running:  false
+        from:     0
+        to:       360
         duration: 10000
-        loops: Animation.Infinite
+        loops:    Animation.Infinite
 
 
 // Generic UI controls
@@ -164,10 +164,10 @@ sidePane:
         color subtitle:   colors.dimText
 
     settingsButton:
-        color background: "transparent"
+        color background: colors.inputBackground
 
     filterRooms:
-        color background: "transparent"
+        color background: colors.inputBackground
 
 
 chat:
