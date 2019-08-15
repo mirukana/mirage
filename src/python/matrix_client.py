@@ -258,8 +258,8 @@ class MatrixClient(nio.AsyncClient):
     async def room_forget(self, room_id: str) -> None:
         await super().room_forget(room_id)
         self.models[Room, self.user_id].pop(room_id, None)
-        self.models.pop([Event, self.user_id, room_id], None)
-        self.models.pop([Member, room_id], None)
+        self.models.pop((Event, self.user_id, room_id), None)
+        self.models.pop((Member, room_id), None)
 
 
     async def upload_file(self, path: Union[Path, str]) -> str:
@@ -334,7 +334,6 @@ class MatrixClient(nio.AsyncClient):
             last_ev = None
 
         inviter = getattr(room, "inviter", "") or ""
-
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,

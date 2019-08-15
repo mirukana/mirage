@@ -15,7 +15,6 @@ HSplitView {
         EventList {
             // Avoid a certain binding loop
             Layout.minimumWidth: theme.minimumSupportedWidth
-
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
@@ -26,9 +25,8 @@ HSplitView {
 
         InviteBanner {
             id: inviteBanner
-            visible: Boolean(inviterId)
+            visible: ! chatPage.roomInfo.left && inviterId
             inviterId: chatPage.roomInfo.inviter_id
-
             Layout.fillWidth: true
         }
 
@@ -40,8 +38,6 @@ HSplitView {
         LeftBanner {
             id: leftBanner
             visible: chatPage.roomInfo.left
-            userId: chatPage.userId
-
             Layout.fillWidth: true
         }
     }

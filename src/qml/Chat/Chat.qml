@@ -9,7 +9,11 @@ HPage {
     property string userId: ""
     property string roomId: ""
 
-    property bool ready: roomInfo !== "waiting"
+    property bool ready: userInfo !== "waiting" && roomInfo !== "waiting"
+
+    readonly property var userInfo:
+        Utils.getItem(modelSources["Account"] || [], "user_id", userId) ||
+        "waiting"
 
     readonly property var roomInfo: Utils.getItem(
         modelSources[["Room", userId]] || [], "room_id", roomId
