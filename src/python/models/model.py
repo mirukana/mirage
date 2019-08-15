@@ -38,7 +38,9 @@ class Model(MutableMapping):
 
     def __str__(self) -> str:
         if isinstance(self.sync_id, tuple):
-            sid = (self.sync_id[0].__name__, *self.sync_id[1:])  # type: ignore
+            reprs = tuple(repr(s) for s in self.sync_id[1:])
+            sid = ", ".join((self.sync_id[0].__name__, *reprs))  # type: ignore
+            sid = f"({sid})"
         else:
             sid = self.sync_id.__name__  # type: ignore
 
@@ -111,3 +113,7 @@ class Model(MutableMapping):
             self.sortable = True
 
         return self.serialized()
+
+
+    def __lt__(self, other: "Model") -> bool:
+        return str(self.sync_id) < str(other.sync_id)

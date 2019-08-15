@@ -34,7 +34,8 @@ class Room(ModelItem):
     filter_string:  str       = ""
     typing_members: List[str] = field(default_factory=list)
 
-    last_event: Optional[Dict[str, Any]] = None  # Event __dict__
+    # Event __dict__
+    last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
 
     def __lt__(self, other: "Room") -> bool:
         # Left rooms may still have an inviter_id, check left first.

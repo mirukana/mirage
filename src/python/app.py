@@ -89,10 +89,8 @@ class App:
 
         from .models.items import Account, Room, Member, Event, Device  # noqa
 
-        import json
-        jd = lambda obj: print(  # noqa
-            json.dumps(obj, indent=4, ensure_ascii=False),
-        )
+        p = print  # pdb's `p` doesn't print a class's __str__  # noqa
+        from pprintpp import pprint as pp  # noqa
 
         log.info("\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
                  "to connect to pdb.")

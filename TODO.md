@@ -1,6 +1,3 @@
-- Investigate?
-  - `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
-
 - Refactoring
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
   - Sendbox
@@ -14,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
   - Reloading config files (cache)
   - Ignore @ when filtering members
   - Tiny invisible scrollbar
@@ -31,6 +27,7 @@
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
+  - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
   - Popup:
@@ -93,6 +90,7 @@
     - preferredIconPack: accept multiple values
     - Find icon packs in user data dir
     - Correctly implement uiScale/fontScale + ctrl+-= keys
+      - See `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
       - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
     - Way to round avatar corners to allow box radius
     - If avatar is set, name color from average color?

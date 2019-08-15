@@ -52,3 +52,10 @@ class ModelStore(MutableMapping):
 
     def __len__(self) -> int:
         return len(self.data)
+
+
+    def __str__(self) -> str:
+        return "%s(\n    %s\n)" % (
+            type(self).__name__,
+            "\n    ".join(sorted(str(v) for v in self.values())),
+        )
