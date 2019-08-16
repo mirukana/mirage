@@ -6,9 +6,9 @@ function onExitRequested(exitCode) {
 }
 
 
-function onAlertRequested(msec) {
+function onAlertRequested() {
     if (Qt.application.state != Qt.ApplicationActive) {
-		window.alert(msec)
+		window.alert(window.settings.alertOnMessageForMsec)
 	}
 }
 

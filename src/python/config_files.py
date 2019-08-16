@@ -107,7 +107,8 @@ class UISettings(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
-            "theme":        "Default.qpl",
+            "alertOnMessageForMsec": 4000,
+            "theme": "Default.qpl",
             "writeAliases": {},
             "keys": {
                 "reloadConfig":  ["Alt+R"],

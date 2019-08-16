@@ -37,14 +37,9 @@ class ExitRequested(PyOtherSideEvent):
 @dataclass
 class AlertRequested(PyOtherSideEvent):
     """Request an alert to be shown for msec milliseconds.
-    If msec is 0 (default), the alert should be shown indefinitely until
-    the window is focused.
-
     The Alert state for example sets the urgency hint on X11/Wayland,
     or flashes the taskbar icon on Windows.
     """
-
-    msec: int = 0
 
 
 @dataclass
