@@ -18,6 +18,14 @@ HPage {
     readonly property var roomInfo: Utils.getItem(
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
+    onRoomInfoChanged: {
+        if (roomInfo.left) {
+            // The room will most likely be gone on client restart
+            window.uiState.page           = "Pages/Default.qml"
+            window.uiState.pageProperties = {}
+            window.uiStateChanged()
+        }
+    }
 
     readonly property bool hasUnknownDevices: false
 
