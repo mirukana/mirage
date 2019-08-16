@@ -4,6 +4,7 @@ import inspect
 import json
 import logging as log
 import platform
+import re
 from contextlib import suppress
 from datetime import datetime
 from enum import Enum
@@ -346,7 +347,13 @@ class MatrixClient(nio.AsyncClient):
             inviter_name   = room.user_name(inviter) if inviter else "",
             inviter_avatar = room.avatar_url(inviter) if inviter else "",
             left           = left,
-            filter_string  = " ".join({name, room.topic or ""}).strip(),
+            filter_string  = " ".join({
+                name,
+                room.topic or "",
+                re.sub(
+                    r"<.*?>", "", last_ev["inline_content"],
+                ) if last_ev else "",
+            }).strip(),
             last_event     = last_ev,
         )
 
