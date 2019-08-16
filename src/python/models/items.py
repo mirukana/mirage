@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..html_filter import HTML_FILTER
+from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
 
 
@@ -69,6 +70,12 @@ class Member(ModelItem):
         return name < other_name
 
 
+class TypeSpecifier(AutoStrEnum):
+    none              = auto()
+    profile_change    = auto()
+    membership_change = auto()
+
+
 @dataclass
 class Event(ModelItem):
     main_key = "event_id"
@@ -83,6 +90,8 @@ class Event(ModelItem):
     sender_id:     str = field()
     sender_name:   str = field()
     sender_avatar: str = field()
+
+    type_specifier: TypeSpecifier = TypeSpecifier.none
 
     target_id:     str = ""
     target_name:   str = ""

@@ -16,7 +16,7 @@ import nio
 
 from . import __about__, utils
 from .html_filter import HTML_FILTER
-from .models.items import Account, Event, Member, Room
+from .models.items import Account, Event, Member, Room, TypeSpecifier
 from .models.model_store import ModelStore
 
 
@@ -303,14 +303,14 @@ class MatrixClient(nio.AsyncClient):
             room.last_event = item.__dict__
             return
 
-        for_us       = item.target_id in self.backend.clients
-        is_member_ev = item.event_type == nio.RoomMemberEvent.__name__
+        for_us        = item.target_id in self.backend.clients
+        is_profile_ev = item.type_specifier == TypeSpecifier.profile_change
 
         # If there were no better events available to show previously
         prev_is_member_ev = \
             room.last_event["event_type"] == nio.RoomMemberEvent.__name__
 
-        if is_member_ev and for_us and not prev_is_member_ev:
+        if is_profile_ev and for_us and not prev_is_member_ev:
             return
 
         if item.date < room.last_event["date"]:  # If this is a past event
@@ -379,10 +379,13 @@ class MatrixClient(nio.AsyncClient):
             return (item.display_name, item.avatar_url)
 
 
-    async def register_nio_event(self,
-                                 room:    nio.MatrixRoom,
-                                 ev:      nio.Event,
-                                 content: str) -> None:
+    async def register_nio_event(
+        self,
+        room:           nio.MatrixRoom,
+        ev:             nio.Event,
+        content:        str,
+        type_specifier: TypeSpecifier = TypeSpecifier.none,
+    ) -> None:
 
         await self.register_nio_room(room)
 
@@ -407,6 +410,8 @@ class MatrixClient(nio.AsyncClient):
             sender_id     = ev.sender,
             sender_name   = sender_name,
             sender_avatar = sender_avatar,
+
+            type_specifier = type_specifier,
 
             target_id     = target_id,
             target_name   = target_name,
@@ -533,12 +538,16 @@ class MatrixClient(nio.AsyncClient):
         await self.register_nio_event(room, ev, content=co)
 
 
-    async def process_room_member_event(self, room, ev) -> Optional[str]:
+    async def process_room_member_event(
+        self, room, ev,
+    ) -> Optional[Tuple[TypeSpecifier, str]]:
         prev            = ev.prev_content
         now             = ev.content
         membership      = ev.membership
         prev_membership = ev.prev_membership
         ev_date         = datetime.fromtimestamp(ev.server_timestamp / 1000)
+
+        member_change = TypeSpecifier.membership_change
 
         # Membership changes
         if not prev or membership != prev_membership:
@@ -546,34 +555,38 @@ class MatrixClient(nio.AsyncClient):
 
             if membership == "join":
                 return (
+                    member_change,
                     "%1 accepted their invitation."
                     if prev and prev_membership == "invite" else
-                    "%1 joined the room."
+                    "%1 joined the room.",
                 )
 
             if membership == "invite":
-                return "%1 invited %2 to the room."
+                return (member_change, "%1 invited %2 to the room.")
 
             if membership == "leave":
                 if ev.state_key == ev.sender:
                     return (
+                        member_change,
                         f"%1 declined their invitation.{reason}"
                         if prev and prev_membership == "invite" else
-                        f"%1 left the room.{reason}"
+                        f"%1 left the room.{reason}",
                     )
 
                 return (
+                    member_change,
+
                     f"%1 withdrew %2's invitation.{reason}"
                     if prev and prev_membership == "invite" else
 
                     f"%1 unbanned %2 from the room.{reason}"
                     if prev and prev_membership == "ban" else
 
-                    f"%1 kicked out %2 from the room.{reason}"
+                    f"%1 kicked out %2 from the room.{reason}",
                 )
 
             if membership == "ban":
-                return f"%1 banned %2 from the room.{reason}"
+                return (member_change, f"%1 banned %2 from the room.{reason}")
 
         # Profile changes
         changed = []
@@ -601,7 +614,10 @@ class MatrixClient(nio.AsyncClient):
                 self.skipped_events[room.room_id] += 1
                 return None
 
-            return "%1 changed their {}.".format(" and ".join(changed))
+            return (
+                TypeSpecifier.profile_change,
+                "%1 changed their {}.".format(" and ".join(changed)),
+            )
 
         log.warning("Invalid member event - %s",
                     json.dumps(ev.__dict__, indent=4))
@@ -609,13 +625,16 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomMemberEvent(self, room, ev) -> None:
-        co = await self.process_room_member_event(room, ev)
+        type_and_content = await self.process_room_member_event(room, ev)
 
-        if co is None:
+        if type_and_content is None:
             # This is run from register_nio_event otherwise
             await self.register_nio_room(room)
         else:
-            await self.register_nio_event(room, ev, content=co)
+            type_specifier, content = type_and_content
+            await self.register_nio_event(
+                room, ev, content=content, type_specifier=type_specifier,
+            )
 
 
     async def onRoomAliasEvent(self, room, ev) -> None:
