@@ -43,6 +43,14 @@ HInteractiveRectangle {
                     Layout.fillWidth: true
                 }
 
+                HIcon {
+                    svgName: "invite-received"
+
+                    visible: Layout.maximumWidth > 0
+                    Layout.maximumWidth: model.inviter_id ? implicitWidth : 0
+                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
+                }
+
                 HLabel {
                     readonly property var evDate:
                         model.last_event ? model.last_event.date : null
@@ -64,7 +72,6 @@ HInteractiveRectangle {
                     Layout.maximumWidth:
                         text && roomDelegate.width >= 200 ? implicitWidth : 0
                     Behavior on Layout.maximumWidth { HNumberAnimation {} }
-
                 }
             }
 

@@ -87,6 +87,7 @@
   - Spinner when loading account, past room events, images or clicking buttons
     - Show account page as loading until profile initially retrieved
   - Theming
+    - Support SVG hue via image provider for icons
     - Don't create additional lines in theme conversion (braces)
     - Recursively merge default and user theme
     - Distribute fonts
