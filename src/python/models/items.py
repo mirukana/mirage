@@ -43,9 +43,13 @@ class Room(ModelItem):
     def __lt__(self, other: "Room") -> bool:
         # Left rooms may still have an inviter_id, check left first.
         if self.left and not other.left:
+            return False
+        if other.left and not self.left:
             return True
 
         if other.inviter_id and not self.inviter_id:
+            return False
+        if self.inviter_id and not other.inviter_id:
             return True
 
         name       = self.display_name or self.room_id
