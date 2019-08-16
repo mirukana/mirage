@@ -22,6 +22,7 @@
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
 
+  - Do something when access token is invalid
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 

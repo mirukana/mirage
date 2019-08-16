@@ -4,6 +4,8 @@ import "../Base"
 
 Item {
     property string loginWith: "username"
+    readonly property bool canLogin: idField.text && passwordField.text
+
     onFocusChanged: idField.forceActiveFocus()
 
     HInterfaceBox {
@@ -15,7 +17,7 @@ Item {
 
         buttonModel: [
             { name: "register", text: qsTr("Register"), enabled: false },
-            { name: "login", text: qsTr("Login"), enabled: true },
+            { name: "login", text: qsTr("Login"), enabled: canLogin },
             { name: "forgot", text: qsTr("Forgot?"), enabled: false }
         ]
 

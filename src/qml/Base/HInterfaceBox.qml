@@ -14,7 +14,7 @@ HScalingBox {
     function clickEnterButtonTarget() {
         for (let i = 0; i < buttonModel.length; i++) {
             let btn = interfaceButtonsRepeater.itemAt(i)
-            if (btn.name === enterButtonTarget) { btn.clicked() }
+            if (btn.enabled && btn.name === enterButtonTarget) btn.clicked()
         }
     }
 
