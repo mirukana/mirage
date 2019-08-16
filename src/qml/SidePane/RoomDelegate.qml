@@ -19,7 +19,7 @@ HInteractiveRectangle {
         x: sidePane.currentSpacing
         width: parent.width - sidePane.currentSpacing * 1.5
         height: roomName.height + subtitle.height +
-                sidePane.currentSpacing / 1.5
+                sidePane.currentSpacing
         spacing: sidePane.currentSpacing
 
         HRoomAvatar {
