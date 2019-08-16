@@ -21,11 +21,11 @@ Item {
         buttonCallbacks: ({
             yes: button => {
                 py.callCoro("saved_accounts.add", [userId])
-                pageStack.showPage("Default")
+                pageStack.showPage("EditAccount/EditAccount", {userId})
             },
             no: button => {
                 py.callCoro("saved_accounts.delete", [userId])
-                pageStack.showPage("Default")
+                pageStack.showPage("EditAccount/EditAccount", {userId})
             },
         })
 
