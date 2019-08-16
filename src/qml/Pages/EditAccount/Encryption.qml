@@ -20,8 +20,8 @@ HColumnLayout {
     HLabel {
         wrapMode: Text.Wrap
         text: qsTr(
-            "The decryption keys for the messages you received in " +
-            "encrypted rooms can be exported to a file.%1" +
+            "The decryption keys for messages you received in encrypted " +
+            "rooms can be exported to a passphrase-protected file.%1" +
             "You will then be able to import this file in another " +
             "Matrix client."
         ).arg(pageStack.isWide ? "\n" :"\n\n")

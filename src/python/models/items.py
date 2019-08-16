@@ -112,7 +112,6 @@ class Event(ModelItem):
         # Local echoes always stay first.
         if self.is_local_echo and not other.is_local_echo:
             return True
-
         if other.is_local_echo and not self.is_local_echo:
             return False
 

@@ -14,7 +14,7 @@ Qt 5.12+, including:
 
 - olm-python3 >= 3.1
 
-[pyotherside](https://github.com/thp/pyotherside):
+Install [pyotherside](https://github.com/thp/pyotherside):
 
     git clone https://github.com/thp/pyotherside
     cd pyotherside
@@ -25,13 +25,13 @@ After this, verify the permissions of the installed plugin files.
     sudo chmod 644 /usr/lib/qt5/qml/io/thp/pyotherside/*
     sudo chmod 755 /usr/lib/qt5/qml/io/thp/pyotherside/*.so
 
-Dependencies on Pypi:
+Install the dependencies from Pypi:
 
     pip3 install --user --upgrade \
         Pillow aiofiles dataclasses filetype hsluv html_sanitizer \
         lxml mistune uvloop
 
-Dependencies on Github (most recent version needed):
+Install the dependencies from Github:
 
 [matrix-nio](https://github.com/mirukan/matrix-nio):
 

@@ -11,6 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - (Left?)Banner binding loop
   - Reloading config files (cache)
   - Ignore @ when filtering members
   - Tiny invisible scrollbar
