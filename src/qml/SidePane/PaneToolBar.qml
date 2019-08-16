@@ -29,8 +29,6 @@ HRowLayout {
 
         onTextChanged: {
             if (window.uiState.sidePaneFilter == text) return
-
-            print("save")
             window.uiState.sidePaneFilter = text
             window.uiStateChanged()
         }

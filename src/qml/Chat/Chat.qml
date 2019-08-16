@@ -18,7 +18,6 @@ HPage {
     readonly property var roomInfo: Utils.getItem(
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
-    onRoomInfoChanged: if (! roomInfo) { pageStack.showPage("Default") }
 
     readonly property bool hasUnknownDevices: false
 
