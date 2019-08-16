@@ -53,7 +53,7 @@ colors:
     color halfDimText: hsluv(0, 0, intensity * 70)
     color dimText:     hsluv(0, 0, intensity * 55)
     color dimmerText:  hsluv(0, 0, intensity * 30)
-    color accentText:  hsluv(hue - 10, saturation * 2.25, 60)
+    color accentText:  hsluv(hue - 80, saturation * 2.25, 60)
     color link:        accentText
     color code:        hsluv(hue + 5, saturation * 1.5, intensity * 60)
 
