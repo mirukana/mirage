@@ -15,7 +15,7 @@ HInteractiveRectangle {
         id: rowLayout
         x: sidePane.currentSpacing
         width: parent.width - sidePane.currentSpacing * 1.5
-        height: roomLabel.height + subtitleLabel.height +
+        height: roomName.height + subtitle.height +
                 sidePane.currentSpacing / 1.5
         spacing: sidePane.currentSpacing
 
@@ -28,23 +28,53 @@ HInteractiveRectangle {
         HColumnLayout {
             Layout.fillWidth: true
 
-            HLabel {
-                id: roomLabel
-                color: theme.sidePane.room.name
-                text: model.display_name || "<i>Empty room</i>"
-                textFormat:
-                    model.display_name? Text.PlainText : Text.StyledText
-                elide: Text.ElideRight
-                verticalAlignment: Qt.AlignVCenter
+            HRowLayout {
+                spacing: theme.spacing / 2
 
-                Layout.fillWidth: true
+                HLabel {
+                    id: roomName
+                    color: theme.sidePane.room.name
+                    text: model.display_name || "<i>Empty room</i>"
+                    textFormat:
+                        model.display_name? Text.PlainText : Text.StyledText
+                    elide: Text.ElideRight
+                    verticalAlignment: Qt.AlignVCenter
+
+                    Layout.fillWidth: true
+                }
+
+                HLabel {
+                    readonly property var evDate:
+                        model.last_event ? model.last_event.date : null
+
+                    id: lastEventDate
+                    font.pixelSize: theme.fontSize.small
+                    color: theme.sidePane.room.lastEventDate
+
+                    text: ! evDate ?  "" :
+
+                          Utils.dateIsToday(evDate) ?
+                          Utils.formatTime(evDate, false) :  // no seconds
+
+                          Utils.dateIsYesterday(evDate) ? qsTr("Yesterday") :
+
+                          Qt.formatDate(evDate, "dd MMM") // e.g. "24 Nov"
+
+                    visible: Layout.maximumWidth > 0
+                    Layout.maximumWidth:
+                        text && roomDelegate.width >= 200 ? implicitWidth : 0
+                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
+
+                }
             }
 
             HRichLabel {
-                id: subtitleLabel
+                id: subtitle
                 color: theme.sidePane.room.subtitle
                 visible: Boolean(text)
                 textFormat: Text.StyledText
+                font.pixelSize: theme.fontSize.small
+                elide: Text.ElideRight
 
                 text: {
                     if (! model.last_event) { return "" }
@@ -60,10 +90,6 @@ HInteractiveRectangle {
                         ev.sender_name, ev.sender_id
                     ) + ": " + ev.inline_content
                 }
-
-
-                font.pixelSize: theme.fontSize.small
-                elide: Text.ElideRight
 
                 Layout.fillWidth: true
             }

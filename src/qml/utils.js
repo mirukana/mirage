@@ -123,6 +123,38 @@ function minutesBetween(date1, date2) {
 }
 
 
+function dateIsDay(date, dayDate) {
+    return date.getDate() == dayDate.getDate() &&
+           date.getMonth() == dayDate.getMonth() &&
+           date.getFullYear() == dayDate.getFullYear()
+}
+
+
+function dateIsToday(date) {
+    return dateIsDay(date, new Date())
+}
+
+
+function dateIsYesterday(date) {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    return dateIsDay(date, yesterday)
+}
+
+
+function formatTime(time, seconds=true) {
+    return Qt.formatTime(
+        time,
+
+        Qt.locale().timeFormat(
+            seconds ? Locale.LongFormat : Locale.NarrowFormat
+        ).replace(/\./g, ":").replace(/ t$/, "")
+        // en_DK.UTF-8 locale wrongfully gives "." separators;
+        // remove the timezone at the end
+    )
+}
+
+
 function getItem(array, mainKey, value) {
     for (let i = 0; i < array.length; i++) {
         if (array[i][mainKey] === value) { return array[i] }

@@ -48,13 +48,14 @@ colors:
     color inputBackground:
         hsluv(hue, saturation, intensity * 2, Math.min(0.6, opacity))
 
-    color brightText: hsluv(0, 0, intensity * 100)
-    color text:       hsluv(0, 0, intensity * 80)
-    color dimText:    hsluv(0, 0, intensity * 55)
-    color dimmerText: hsluv(0, 0, intensity * 30)
-    color accentText: hsluv(hue - 10, saturation * 2.25, 60)
-    color link:       accentText
-    color code:       hsluv(hue + 5, saturation * 1.5, intensity * 60)
+    color brightText:  hsluv(0, 0, intensity * 100)
+    color text:        hsluv(0, 0, intensity * 80)
+    color halfDimText: hsluv(0, 0, intensity * 70)
+    color dimText:     hsluv(0, 0, intensity * 55)
+    color dimmerText:  hsluv(0, 0, intensity * 30)
+    color accentText:  hsluv(hue - 10, saturation * 2.25, 60)
+    color link:        accentText
+    color code:        hsluv(hue + 5, saturation * 1.5, intensity * 60)
 
     // Example of an animation, set running: true to enable
     NumberAnimation on hue
@@ -159,9 +160,10 @@ sidePane:
         color name:       colors.text
 
     room:
-        color background: "transparent"
-        color name:       colors.text
-        color subtitle:   colors.dimText
+        color background:    "transparent"
+        color name:          colors.text
+        color subtitle:      colors.dimText
+        color lastEventDate: colors.halfDimText
 
     settingsButton:
         color background: colors.inputBackground

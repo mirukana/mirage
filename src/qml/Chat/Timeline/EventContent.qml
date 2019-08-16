@@ -70,7 +70,7 @@ Row {
                       // time
                       "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + ">" +
-                      Qt.formatDateTime(model.date, "hh:mm:ss") +
+                      Utils.formatTime(model.date) +
                       "</font>" +
                       // local echo icon
                       (model.is_local_echo ?
