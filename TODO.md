@@ -13,7 +13,6 @@
 - Fixes
   - (Left?)Banner binding loop
   - Reloading config files (cache)
-  - Ignore @ when filtering members
   - Tiny invisible scrollbar
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors

@@ -70,7 +70,10 @@ HInteractiveRectangle {
 
                           Utils.dateIsYesterday(evDate) ? qsTr("Yesterday") :
 
-                          Qt.formatDate(evDate, "dd MMM") // e.g. "24 Nov"
+                          evDate.getFullYear() == new Date().getFullYear() ?
+                          Qt.formatDate(evDate, "dd MMM") : // e.g. "24 Nov"
+
+                          evDate.getFullYear()
 
                     visible: Layout.maximumWidth > 0
                     Layout.maximumWidth:
