@@ -160,10 +160,12 @@ sidePane:
         color name:       colors.text
 
     room:
-        color background:    "transparent"
-        color name:          colors.text
-        color subtitle:      colors.dimText
-        color lastEventDate: colors.halfDimText
+        real leftRoomOpacity: 0.65
+
+        color background:     "transparent"
+        color name:           colors.text
+        color subtitle:       colors.dimText
+        color lastEventDate:  colors.halfDimText
 
     settingsButton:
         color background: colors.inputBackground

@@ -9,6 +9,9 @@ HInteractiveRectangle {
     height: rowLayout.height
     color: theme.sidePane.room.background
 
+    opacity: model.left ? theme.sidePane.room.leftRoomOpacity : 1
+    Behavior on opacity { HNumberAnimation {} }
+
     TapHandler { onTapped: pageStack.showRoom(userId, model.room_id) }
 
     HRowLayout {
@@ -47,7 +50,8 @@ HInteractiveRectangle {
                     svgName: "invite-received"
 
                     visible: Layout.maximumWidth > 0
-                    Layout.maximumWidth: model.inviter_id ? implicitWidth : 0
+                    Layout.maximumWidth:
+                        model.inviter_id && ! model.left ? implicitWidth : 0
                     Behavior on Layout.maximumWidth { HNumberAnimation {} }
                 }
 
