@@ -39,7 +39,6 @@
 
   - Combine events so they take less space
     - After combining is implemented, no need to hide our own profile changes.
-  - Room last activity time in RoomDelegate
   - When starting a long task, e.g. importing keys, quitting the page,
     and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode

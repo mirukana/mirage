@@ -198,6 +198,8 @@ class MatrixClient(nio.AsyncClient):
             if user_id in self.models[Member, room_id]:
                 self.models[Event, user_id, room_id][f"echo-{uuid}"] = local
 
+        await self.set_room_last_event(room_id, local)
+
         async with self.send_locks[room_id]:
             response = await self.room_send(
                 room_id                   = room_id,
