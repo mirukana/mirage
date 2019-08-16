@@ -8,6 +8,8 @@ from .models import SyncId
 
 @dataclass
 class PyOtherSideEvent:
+    """Event that will be sent to QML by PyOtherSide."""
+
     def __post_init__(self) -> None:
         # CPython >= 3.6 or any Python >= 3.7 needed for correct dict order
         args = [
@@ -27,17 +29,36 @@ class PyOtherSideEvent:
 
 @dataclass
 class ExitRequested(PyOtherSideEvent):
+    """Request for the application to exit."""
+
     exit_code: int = 0
 
 
 @dataclass
+class AlertRequested(PyOtherSideEvent):
+    """Request an alert to be shown for msec milliseconds.
+    If msec is 0 (default), the alert should be shown indefinitely until
+    the window is focused.
+
+    The Alert state for example sets the urgency hint on X11/Wayland,
+    or flashes the taskbar icon on Windows.
+    """
+
+    msec: int = 0
+
+
+@dataclass
 class CoroutineDone(PyOtherSideEvent):
+    """Indicate that an asyncio coroutine finished."""
+
     uuid:   str = field()
     result: Any = None
 
 
 @dataclass
 class ModelUpdated(PyOtherSideEvent):
+    """Indicate that a backend model's data changed."""
+
     sync_id: SyncId               = field()
     data:    List[Dict[str, Any]] = field()
 

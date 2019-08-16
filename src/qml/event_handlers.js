@@ -6,6 +6,11 @@ function onExitRequested(exitCode) {
 }
 
 
+function onAlertRequested(msec) {
+    window.alert(msec)
+}
+
+
 function onCoroutineDone(uuid, result) {
     py.pendingCoroutines[uuid](result)
     delete pendingCoroutines[uuid]

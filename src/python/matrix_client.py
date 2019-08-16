@@ -19,6 +19,7 @@ from . import __about__, utils
 from .html_filter import HTML_FILTER
 from .models.items import Account, Event, Member, Room, TypeSpecifier
 from .models.model_store import ModelStore
+from .pyotherside_events import AlertRequested
 
 
 class UploadError(Enum):
@@ -52,6 +53,7 @@ class MatrixClient(nio.AsyncClient):
 
         self.sync_task:           Optional[asyncio.Future] = None
         self.first_sync_happened: asyncio.Event            = asyncio.Event()
+        self.first_sync_date:     Optional[datetime]       = None
 
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
@@ -299,6 +301,17 @@ class MatrixClient(nio.AsyncClient):
 
     # Functions to register data into models
 
+    async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
+        if not self.first_sync_date:
+            return True
+
+        if isinstance(ev, Event):
+            return ev.date < self.first_sync_date
+
+        date = datetime.fromtimestamp(ev.server_timestamp / 1000)
+        return date < self.first_sync_date
+
+
     async def set_room_last_event(self, room_id: str, item: Event) -> None:
         room = self.models[Room, self.user_id][room_id]
 
@@ -446,6 +459,9 @@ class MatrixClient(nio.AsyncClient):
             with suppress(KeyError):
                 item.client_id = f"echo-{client.resolved_echoes[ev.event_id]}"
 
+        elif not await self.event_is_past(ev):
+            AlertRequested()
+
         self.models[Event, self.user_id, room.room_id][item.client_id] = item
 
         await self.set_room_last_event(room.room_id, item)
@@ -476,7 +492,8 @@ class MatrixClient(nio.AsyncClient):
         if not self.first_sync_happened.is_set():
             asyncio.ensure_future(self.load_rooms_without_visible_events())
 
-        self.first_sync_happened.set()
+            self.first_sync_happened.set()
+            self.first_sync_date = datetime.now()
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
