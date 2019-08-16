@@ -19,7 +19,6 @@ HPage {
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
     onRoomInfoChanged: {
-        print( JSON.stringify( roomInfo, null, 4))
         if (roomInfo.left) {
             // The room will most likely be gone on client restart
             window.uiState.page           = "Pages/Default.qml"

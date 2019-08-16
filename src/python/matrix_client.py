@@ -453,15 +453,16 @@ class MatrixClient(nio.AsyncClient):
         for room_id, info in resp.rooms.leave.items():
             # TODO: handle in nio, these are rooms that were left before
             # starting the client.
-            if room_id not in self.rooms:
+            if room_id not in self.all_rooms:
+                log.warning("Left room not in MatrixClient.rooms: %r", room_id)
                 continue
 
             # TODO: handle left events in nio async client
             for ev in info.timeline.events:
                 if isinstance(ev, nio.RoomMemberEvent):
-                    await self.onRoomMemberEvent(self.rooms[room_id], ev)
+                    await self.onRoomMemberEvent(self.all_rooms[room_id], ev)
 
-            await self.register_nio_room(self.rooms[room_id], left=True)
+            await self.register_nio_room(self.all_rooms[room_id], left=True)
 
         if not self.first_sync_happened.is_set():
             asyncio.ensure_future(self.load_rooms_without_visible_events())

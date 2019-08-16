@@ -14,18 +14,14 @@
   - Reloading config files (cache)
   - Ignore @ when filtering members
   - Tiny invisible scrollbar
-  - Update state.json page when accepting an invite
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
-  - Update the room subtitle when a message is decrypted/edited
 
   - Don't linkify images for outgoing html
-  - state: If last page is a room and the account for it is no longer present,
-    load Default.qml instead
-
   - Message position after daybreak delegate
   - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
+
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
@@ -53,6 +49,8 @@
   - Adapt shortcuts flicking speed to font size and DPI
   - Show error box if uploading avatar fails
   - EditAccount page:
+    - Remove account from client
+      - state: Set UI state page to Default.qml when account is removed
     - Device settings
     - Multiaccount aliases:
       - Warn when conflict with another alias
