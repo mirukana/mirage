@@ -47,10 +47,17 @@ class Room(ModelItem):
         if other.left and not self.left:
             return True
 
-        if other.inviter_id and not self.inviter_id:
-            return False
         if self.inviter_id and not other.inviter_id:
             return True
+        if other.inviter_id and not self.inviter_id:
+            return False
+
+        if self.last_event and other.last_event:
+            return self.last_event["date"] > other.last_event["date"]
+        if self.last_event and not other.last_event:
+            return True
+        if other.last_event and not self.last_event:
+            return False
 
         name       = self.display_name or self.room_id
         other_name = other.display_name or other.room_id
