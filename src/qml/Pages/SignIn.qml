@@ -26,8 +26,14 @@ Item {
                 button.loading = true
                 let args = [idField.text, passwordField.text]
 
-                py.callCoro("login_client", args, userId => {
-                    pageStack.showPage("RememberAccount", {loginWith, userId})
+                py.callCoro("login_client", args, ([success, data]) => {
+                    if (success) {
+                        // data = userId
+                        errorMessage.text = ""
+                        pageStack.showPage("RememberAccount", {loginWith,data})
+                    } else {
+                        errorMessage.text = qsTr(data)
+                    }
                     button.loading = false
                 })
             },
@@ -73,6 +79,20 @@ Item {
             placeholderText: qsTr("Password")
             echoMode: HTextField.Password
             onAccepted: signInBox.clickEnterButtonTarget()
+
+            Layout.fillWidth: true
+            Layout.margins: signInBox.margins
+        }
+
+        HLabel {
+            id: errorMessage
+            wrapMode: Text.Wrap
+            horizontalAlignment: Text.AlignHCenter
+            color: theme.colors.errorText
+
+            visible: Layout.maximumHeight > 0
+            Layout.maximumHeight: text ? implicitHeight : 0
+            Behavior on Layout.maximumHeight { HNumberAnimation {} }
 
             Layout.fillWidth: true
             Layout.margins: signInBox.margins

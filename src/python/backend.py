@@ -46,17 +46,22 @@ class Backend:
     # Clients management
 
     async def login_client(self,
-                           user:       str,
-                           password:   str,
-                           device_id:  Optional[str] = None,
-                           homeserver: str = "https://matrix.org") -> str:
+        user:       str,
+        password:   str,
+        device_id:  Optional[str] = None,
+        homeserver: str = "https://matrix.org",
+    ) -> Tuple[bool, str]:
         client = MatrixClient(
             self, user=user, homeserver=homeserver, device_id=device_id,
         )
-        await client.login(password)
+        try:
+            await client.login(password)
+        except RuntimeError as err:
+            return (False, err.args[0].message)
+
         self.clients[client.user_id]         = client
         self.models[Account][client.user_id] = Account(client.user_id)
-        return client.user_id
+        return (True, client.user_id)
 
 
     async def resume_client(self,

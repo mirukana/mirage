@@ -41,6 +41,7 @@
   - When starting a long task, e.g. importing keys, quitting the page,
     and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode
+  - Responses
   - Messages editing
   - Code highlighting
   - Support GIF avatars
@@ -100,6 +101,7 @@
     - Accent color from background
   - Settings page
   - Message/text selection
+  - Notifications
 
   - Custom file picker for Linux...
 

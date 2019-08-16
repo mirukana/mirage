@@ -112,7 +112,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         if isinstance(response, nio.LoginError):
-            log.error(response)
+            raise RuntimeError(response)
         else:
             await self.start()
 
@@ -497,7 +497,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
-        # TODO: show something in the client
+        # TODO: show something in the client, must be seen on login screen too
         try:
             log.warning("%s - %s", resp, json.dumps(resp.__dict__, indent=4))
         except Exception:
