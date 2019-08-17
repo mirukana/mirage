@@ -68,8 +68,6 @@ HInteractiveRectangle {
                           Utils.dateIsToday(evDate) ?
                           Utils.formatTime(evDate, false) :  // no seconds
 
-                          Utils.dateIsYesterday(evDate) ? qsTr("Yesterday") :
-
                           evDate.getFullYear() == new Date().getFullYear() ?
                           Qt.formatDate(evDate, "dd MMM") : // e.g. "24 Nov"
 
