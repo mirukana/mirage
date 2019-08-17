@@ -43,4 +43,7 @@ def guess_mime(file: IO) -> Optional[str]:
 
 
 def plain2html(text: str) -> str:
-    return "<pre>%s</pre>" % html.escape(text)
+    return html.escape(text)\
+               .replace(" ", "&nbsp;")\
+               .replace("\n", "<br>")\
+               .replace("\t", "&nbsp;" * 4)
