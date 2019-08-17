@@ -358,7 +358,8 @@ class MatrixClient(nio.AsyncClient):
             topic          = room.topic or "",
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
-            inviter_avatar = room.avatar_url(inviter) if inviter else "",
+            inviter_avatar =
+                (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
             filter_string  = " ".join({
                 name,
