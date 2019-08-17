@@ -2,6 +2,9 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 ListView {
+    interactive: false
+    currentIndex: -1
+
     add: Transition {
         HNumberAnimation { properties: "x,y"; from: 100 }
     }
@@ -20,6 +23,4 @@ ListView {
             HNumberAnimation { properties: "x,y"; to: 100 }
         }
     }
-
-    interactive: false
 }

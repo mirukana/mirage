@@ -10,6 +10,7 @@ HRectangle {
 
     color: theme.sidePane.background
 
+    property alias accountList: accountList
     property alias paneToolBar: paneToolBar
 
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
@@ -73,6 +74,7 @@ HRectangle {
         anchors.fill: parent
 
         AccountList {
+            id: accountList
             Layout.fillWidth: true
             Layout.fillHeight: true
 

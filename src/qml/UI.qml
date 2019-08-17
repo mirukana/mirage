@@ -79,17 +79,17 @@ HRectangle {
                 if (page == "Chat/Chat.qml") {
                     pageStack.showRoom(props.userId, props.roomId)
                 } else {
-                    pageStack.show(page, props)
+                    pageStack._show(page, props)
                 }
             }
 
-            function show(componentUrl, properties={}) {
+            function _show(componentUrl, properties={}) {
                 pageStack.replace(componentUrl, properties)
             }
 
             function showPage(name, properties={}) {
                 let path = "Pages/" + name + ".qml"
-                show(path, properties)
+                _show(path, properties)
 
                 window.uiState.page           = path
                 window.uiState.pageProperties = properties
@@ -97,7 +97,7 @@ HRectangle {
             }
 
             function showRoom(userId, roomId) {
-                show("Chat/Chat.qml", {userId, roomId})
+                _show("Chat/Chat.qml", {userId, roomId})
 
                 window.uiState.page           = "Chat/Chat.qml"
                 window.uiState.pageProperties = {userId, roomId}

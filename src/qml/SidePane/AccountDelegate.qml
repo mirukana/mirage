@@ -28,6 +28,10 @@ Column {
         height: childrenRect.height
         color: theme.sidePane.account.background
 
+        checked:
+            window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
+            window.uiState.pageProperties.userId == model.user_id
+
         TapHandler {
             onTapped: pageStack.showPage(
                 "EditAccount/EditAccount", { "userId": model.user_id }
