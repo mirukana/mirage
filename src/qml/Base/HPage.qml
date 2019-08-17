@@ -18,12 +18,13 @@ SwipeView {
         Math.min(theme.spacing * width / 400, theme.spacing)
 
     id: swipeView
-    currentIndex: 1
     clip: true
     interactive: sidePane.reduce
+    currentIndex: 1
 
     SidePane {
         implicitWidth: swipeView.width
+        animateWidth: false  // Without this, the SidePane gets auto-focused
         collapse: false
         reduce: false
         visible: swipeView.interactive

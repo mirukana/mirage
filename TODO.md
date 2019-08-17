@@ -2,7 +2,6 @@
   - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
     - Choose a better default easing type for animations
-    - Use overshoot for the scale login thing
   - Sendbox
   - HButton
     - Control: hovered, visualFocus, enaled

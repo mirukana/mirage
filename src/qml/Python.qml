@@ -7,10 +7,8 @@ Python {
     id: py
 
     property bool ready: false
+    property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
-
-    signal willLoadAccounts(bool will)
-    property bool loadingAccounts: false
 
     function callSync(name, args=[]) {
         return call_sync("APP.backend." + name, args)
@@ -59,15 +57,10 @@ Python {
         importNames("python", ["APP"], () => {
             loadSettings(() => {
                 callCoro("saved_accounts.any_saved", [], any => {
-                    py.ready = true
-                    willLoadAccounts(any)
+                    if (any) { py.callCoro("load_saved_accounts", []) }
 
-                    if (any) {
-                        py.loadingAccounts = true
-                        py.callCoro("load_saved_accounts", [], () => {
-                            py.loadingAccounts = false
-                        })
-                    }
+                    py.startupAnyAccountsSaved = any
+                    py.ready                   = true
                 })
             })
         })

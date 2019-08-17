@@ -30,7 +30,12 @@ CheckBox {
 
             visible: scale > 0
             scale: box.checked ? 1 : 0
-            Behavior on scale { HNumberAnimation { overshoot: 4 } }
+            Behavior on scale {
+                HNumberAnimation {
+                    overshoot: 4
+                    easing.type: Easing.InOutBack
+                }
+            }
         }
     }
 

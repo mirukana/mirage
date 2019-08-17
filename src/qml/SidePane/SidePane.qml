@@ -14,6 +14,7 @@ HRectangle {
     property bool manuallyResizing: false
     property bool manuallyResized: false
     property int manualWidth: 0
+    property bool animateWidth: true
 
     Component.onCompleted: {
         if (window.uiState.sidePaneManualWidth) {
@@ -61,7 +62,9 @@ HRectangle {
         0 : theme.spacing
 
     Behavior on currentSpacing { HNumberAnimation {} }
-    Behavior on implicitWidth  { HNumberAnimation {} }
+    Behavior on implicitWidth  {
+        HNumberAnimation { factor: animateWidth ? 1 : 0 }
+    }
 
 
     HColumnLayout {

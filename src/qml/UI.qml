@@ -22,27 +22,9 @@ HRectangle {
         }
     }
 
-    Connections {
-        target: py
-        onWillLoadAccounts: will => {
-            if (! will) {
-                pageStack.showPage("SignIn")
-                return
-            }
-
-            let page  = window.uiState.page
-            let props = window.uiState.pageProperties
-
-            if (page == "Chat/Chat.qml") {
-                pageStack.showRoom(props.userId, props.roomId)
-            } else {
-                pageStack.show(page, props)
-            }
-        }
-    }
-
     property bool accountsPresent:
-        (modelSources["Account"] || []).length > 0 || py.loadingAccounts
+        (modelSources["Account"] || []).length > 0 ||
+        py.startupAnyAccountsSaved
 
     HImage {
         id: mainUIBackground
@@ -74,7 +56,7 @@ HRectangle {
             width: implicitWidth
             Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
             Layout.maximumWidth:
-                window.width -theme.minimumSupportedWidthPlusSpacing
+                window.width - theme.minimumSupportedWidthPlusSpacing
 
             Behavior on Layout.minimumWidth { HNumberAnimation {} }
         }
@@ -82,6 +64,22 @@ HRectangle {
         StackView {
             id: pageStack
             property bool isWide: width > theme.contentIsWideAbove
+
+            Component.onCompleted: {
+                if (! py.startupAnyAccountsSaved) {
+                    pageStack.showPage("SignIn")
+                    return
+                }
+
+                let page  = window.uiState.page
+                let props = window.uiState.pageProperties
+
+                if (page == "Chat/Chat.qml") {
+                    pageStack.showRoom(props.userId, props.roomId)
+                } else {
+                    pageStack.show(page, props)
+                }
+            }
 
             function show(componentUrl, properties={}) {
                 pageStack.replace(componentUrl, properties)
