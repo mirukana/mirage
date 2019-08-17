@@ -1,11 +1,13 @@
 - Refactoring
+  - Use HInterfaceBox for EditAccount Profile and Encryption 
+  - HButton
+    - Control: hovered, visualFocus, enaled
+    - Border and pressed color in theme / checkbox theming
+
   - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
     - Choose a better default easing type for animations
   - Sendbox
-  - HButton
-    - Control: hovered, visualFocus, enaled
-    - Border and pressed color in theme / checkbox theming
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size

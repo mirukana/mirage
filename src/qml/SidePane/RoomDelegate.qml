@@ -69,7 +69,7 @@ HInteractiveRectangle {
                           Utils.formatTime(evDate, false) :  // no seconds
 
                           evDate.getFullYear() == new Date().getFullYear() ?
-                          Qt.formatDate(evDate, "dd MMM") : // e.g. "24 Nov"
+                          Qt.formatDate(evDate, "d MMM") : // e.g. "5 Dec"
 
                           evDate.getFullYear()
 
