@@ -8,9 +8,10 @@ Column {
     spacing: theme.spacing / 2
 
     opacity:
-        paneToolBar.roomFilter && roomList.model.count < 1 ? 0.35 : 1
+        paneToolBar.roomFilter && roomList.model.count < 1 ? 0.3 : 1
     Behavior on opacity { HNumberAnimation {} }
 
+    property bool forceExpand: paneToolBar.roomFilter && roomList.model.count
     property bool expanded: true
     readonly property var modelItem: model
 
@@ -59,6 +60,7 @@ Column {
 
             ExpandButton {
                 id: expandButton
+                opacity: paneToolBar.roomFilter ? 0 : 1
                 expandableItem: accountDelegate
                 Layout.preferredHeight: row.height
             }
@@ -69,7 +71,9 @@ Column {
         id: roomList
         visible: height > 0
         width: parent.width
-        height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
+        height:
+            childrenRect.height *
+            (accountDelegate.expanded || accountDelegate.forceExpand ? 1 : 0)
         clip: heightAnimation.running
 
         userId: modelItem.user_id
