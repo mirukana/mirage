@@ -23,7 +23,7 @@ int animationDuration:  100
 string preferredIconPack: "light-thin"
 
 fontSize:
-    int smaller: 8  * fontScale
+    int smaller: 13  * fontScale
     int small:   13 * fontScale
     int normal:  16 * fontScale
     int big:     22 * fontScale
