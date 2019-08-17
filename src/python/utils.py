@@ -1,4 +1,5 @@
 import collections
+import html
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
 from enum import auto as autostr
@@ -39,3 +40,7 @@ def guess_mime(file: IO) -> Optional[str]:
 
     file.seek(0, 0)
     return filetype.guess_mime(file)
+
+
+def plain2html(text: str) -> str:
+    return "<pre>%s</pre>" % html.escape(text)

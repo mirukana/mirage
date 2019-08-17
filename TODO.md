@@ -1,4 +1,7 @@
 - Refactoring
+  - Make all icon SVG files white/black, since we can now use ColorOverlay
+    - Make the icon blue in EditAccount when hovering and no avatar set
+
   - Use HInterfaceBox for EditAccount Profile and Encryption 
   - HButton
     - Control: hovered, visualFocus, enaled
@@ -91,7 +94,6 @@
   - Spinner when loading account, past room events, images or clicking buttons
     - Show account page as loading until profile initially retrieved
   - Theming
-    - Make all icons white/black, since we can now use ColorOverlay
     - Don't create additional lines in theme conversion (braces)
     - Recursively merge default and user theme
     - Distribute fonts

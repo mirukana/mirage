@@ -510,7 +510,8 @@ class MatrixClient(nio.AsyncClient):
     async def onRoomMessageText(self, room, ev) -> None:
         co = HTML_FILTER.filter(
             ev.formatted_body
-            if ev.format == "org.matrix.custom.html" else html.escape(ev.body),
+            if ev.format == "org.matrix.custom.html" else
+            utils.plain2html(ev.body),
         )
         await self.register_nio_event(room, ev, content=co)
 
@@ -518,7 +519,8 @@ class MatrixClient(nio.AsyncClient):
     async def onRoomMessageEmote(self, room, ev) -> None:
         co = HTML_FILTER.filter_inline(
             ev.formatted_body
-            if ev.format == "org.matrix.custom.html" else html.escape(ev.body),
+            if ev.format == "org.matrix.custom.html" else
+            utils.plain2html(ev.body),
         )
         await self.register_nio_event(room, ev, content=co)
 
