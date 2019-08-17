@@ -9,12 +9,9 @@ Image {
 
     property color colorize: "transparent"
 
-    layer {
-        enabled: ! Qt.colorEqual(colorize, "transparent")
-        effect: ColorOverlay {
-            color: image.colorize
-            cached: image.cache
-        }
+    layer.enabled: ! Qt.colorEqual(colorize, "transparent")
+    layer.effect: ColorOverlay {
+        color: image.colorize
+        cached: image.cache
     }
-
 }

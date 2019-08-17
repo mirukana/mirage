@@ -7,6 +7,10 @@ Column {
     width: parent.width
     spacing: theme.spacing / 2
 
+    opacity:
+        paneToolBar.roomFilter && roomList.model.count < 1 ? 0.35 : 1
+    Behavior on opacity { HNumberAnimation {} }
+
     property bool expanded: true
     readonly property var modelItem: model
 
@@ -62,7 +66,7 @@ Column {
     }
 
     RoomList {
-        id: roomCategoriesList
+        id: roomList
         visible: height > 0
         width: parent.width
         height: childrenRect.height * (accountDelegate.expanded ? 1 : 0)
