@@ -95,13 +95,13 @@ controls:
     interactiveRectangle:
         color background: "transparent"
 
-        color hoveredOverlay: hsluv(0, 0, 80)
-        color pressedOverlay: hsluv(0, 0, 80)
-        color checkedOverlay: hsluv(0, 0, 80)
+        color hoveredOverlay: hsluv(0, 0, 100)
+        color pressedOverlay: hsluv(0, 0, 100)
+        color checkedOverlay: hsluv(0, 0, 100)
 
         real hoveredOpacity: 0.1
         real pressedOpacity: 0.2
-        real checkedOpacity: 0.1
+        real checkedOpacity: 0.08
 
     textField:
         color background:        colors.inputBackground
