@@ -5,6 +5,7 @@ import "../Base"
 HRowLayout {
     id: toolBar
 
+    property alias filterField: filterField
     property alias roomFilter: filterField.text
 
     Layout.fillWidth: true

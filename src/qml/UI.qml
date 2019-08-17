@@ -10,6 +10,8 @@ HRectangle {
     color: theme.ui.background
     Component.onCompleted: window.mainUI = mainUI
 
+    property alias sidePane: sidePane
+    property alias pageStack: pageStack
     property alias pressAnimation: _pressAnimation
 
     SequentialAnimation {

@@ -30,6 +30,11 @@ Item {
     }
 
     Shortcut {
+        sequences: settings.keys ? settings.keys.filterRooms : []
+        onActivated: mainUI.sidePane.paneToolBar.filterField.forceActiveFocus()
+    }
+
+    Shortcut {
         sequences: settings.keys ? settings.keys.startDebugger : []
         onActivated: if (debugMode) { py.call("APP.pdb") }
     }

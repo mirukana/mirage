@@ -10,6 +10,8 @@ HRectangle {
 
     color: theme.sidePane.background
 
+    property alias paneToolBar: paneToolBar
+
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
     property bool manuallyResizing: false
     property bool manuallyResized: false

@@ -33,6 +33,8 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Highlight selected account/room
+
   - Popup:
       - label size
       - Accept/cancel buttons
