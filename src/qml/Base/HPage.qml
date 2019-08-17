@@ -38,12 +38,13 @@ SwipeView {
             implicitWidth: parent ? parent.width : 0
             color: theme.controls.header.background
 
-            height: ! hideHeaderUnderHeight ||
-                    window.height >=
-                    hideHeaderUnderHeight +
-                    theme.baseElementsHeight +
-                    currentSpacing * 2 ?
-                    theme.baseElementsHeight : 0
+            height: innerHeaderLabel.text && (
+                ! hideHeaderUnderHeight ||
+                window.height >=
+                hideHeaderUnderHeight +
+                theme.baseElementsHeight +
+                currentSpacing * 2
+            ) ?  theme.baseElementsHeight : 0
 
             Behavior on height { HNumberAnimation {} }
             visible: height > 0

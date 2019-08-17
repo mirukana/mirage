@@ -1,8 +1,23 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
-HScalingBox {
+HRectangle {
     id: interfaceBox
+    color: theme.controls.box.background
+    implicitWidth: Math.min(
+        parent.width, theme.minimumSupportedWidthPlusSpacing * multiplyWidth
+    )
+    implicitHeight: childrenRect.height
+
+    property real multiplyWidth: 1.0
+    property real multiplyHorizontalSpacing: 1.5
+    property real multiplyVerticalSpacing: 1.5
+
+    property int horizontalSpacing:
+        Math.min(theme.spacing * width / 400, theme.spacing) *
+        multiplyHorizontalSpacing
+
+    property int verticalSpacing: theme.spacing * multiplyVerticalSpacing
 
     property alias title: interfaceTitle.text
     property alias buttonModel: interfaceButtonsRepeater.model
@@ -18,25 +33,35 @@ HScalingBox {
         }
     }
 
+    Keys.onReturnPressed: clickEnterButtonTarget()
+    Keys.onEnterPressed: clickEnterButtonTarget()
+
     HColumnLayout {
-        anchors.fill: parent
         id: mainColumn
+        width: parent.width
+        spacing: interfaceBox.verticalSpacing
 
-        HRowLayout {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.margins: interfaceBox.margins
+        HLabel {
+            id: interfaceTitle
+            visible: Boolean(text)
+            font.pixelSize: theme.fontSize.bigger
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
 
-            HLabel {
-                id: interfaceTitle
-                font.pixelSize: theme.fontSize.bigger
-            }
+            Layout.fillWidth: true
+            Layout.topMargin: interfaceBox.verticalSpacing
+            Layout.leftMargin: interfaceBox.horizontalSpacing
+            Layout.rightMargin: interfaceBox.horizontalSpacing
         }
 
-        HSpacer {}
+        HColumnLayout {
+            id: interfaceBody
+            spacing: interfaceBox.verticalSpacing
 
-        HColumnLayout { id: interfaceBody }
-
-        HSpacer {}
+            Layout.fillWidth: true
+            Layout.leftMargin: interfaceBox.horizontalSpacing
+            Layout.rightMargin: interfaceBox.horizontalSpacing
+        }
 
         HRowLayout {
             Repeater {
@@ -53,7 +78,7 @@ HScalingBox {
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: theme.controls.avatar.size
+                    Layout.preferredHeight: theme.baseElementsHeight
                 }
             }
         }

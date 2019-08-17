@@ -1,10 +1,12 @@
 - Refactoring
+  - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
+    - Choose a better default easing type for animations
+    - Use overshoot for the scale login thing
   - Sendbox
-  - SignIn/RememberAccount screens
-    - SignIn must be in a flickable
-  - Unfinished work in button-refactor branch
-    - Button can get "hoverEnabled: false" to let HoverHandlers work
+  - HButton
+    - Control: hovered, visualFocus, enaled
+    - Border and pressed color in theme / checkbox theming
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size
@@ -88,7 +90,7 @@
   - Spinner when loading account, past room events, images or clicking buttons
     - Show account page as loading until profile initially retrieved
   - Theming
-    - Support SVG hue via image provider for icons
+    - Make all icons white/black, since we can now use ColorOverlay
     - Don't create additional lines in theme conversion (braces)
     - Recursively merge default and user theme
     - Distribute fonts
@@ -121,6 +123,7 @@
   - Links preview
 
 - Client improvements
+  - Logout previous session if adding an account that's already connected
   - Image provider: on failed conversion, way to show a "broken image" thumb?
   - Config file format
   - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`

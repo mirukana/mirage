@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
-Item {
+HPage {
     property string loginWith: "username"
     readonly property bool canLogin: idField.text && passwordField.text
 
@@ -10,15 +10,16 @@ Item {
 
     HInterfaceBox {
         id: signInBox
-        title: "Sign in"
-        anchors.centerIn: parent
+        Layout.alignment: Qt.AlignCenter
 
+        multiplyWidth: 0.85
+        title: qsTr("Sign in")
         enterButtonTarget: "login"
 
         buttonModel: [
             { name: "register", text: qsTr("Register"), enabled: false },
             { name: "login", text: qsTr("Login"), enabled: canLogin },
-            { name: "forgot", text: qsTr("Forgot?"), enabled: false }
+            { name: "forgot", text: qsTr("Forgot?"), enabled: false },
         ]
 
         buttonCallbacks: ({
@@ -29,14 +30,23 @@ Item {
                 let args = [idField.text, passwordField.text]
 
                 py.callCoro("login_client", args, ([success, data]) => {
-                    if (success) {
-                        // data = userId
-                        errorMessage.text = ""
-                        pageStack.showPage("RememberAccount", {loginWith,data})
-                    } else {
+                    if (! success) {
                         errorMessage.text = qsTr(data)
+                        button.loading = false
+                        return
                     }
-                    button.loading = false
+
+                    py.callCoro(
+                        "saved_accounts." +
+                        (rememberAccount.checked ? "add": "delete"),
+                        [data]
+                    )
+                    pageStack.showPage(
+                        "EditAccount/EditAccount", {userId: data}
+                    )
+
+                    errorMessage.text = ""
+                    button.loading    = false
                 })
             },
 
@@ -44,9 +54,10 @@ Item {
         })
 
         HRowLayout {
-            spacing: signInBox.margins * 1.25
-            Layout.margins: signInBox.margins
+            spacing: signInBox.horizontalSpacing * 1.25
             Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: signInBox.verticalSpacing / 2
+            Layout.bottomMargin: Layout.topMargin
 
             Repeater {
                 model: ["username", "email", "phone"]
@@ -70,20 +81,26 @@ Item {
                 loginWith === "phone" ? "Phone" :
                 "Username"
             )
-            onAccepted: signInBox.clickEnterButtonTarget()
 
             Layout.fillWidth: true
-            Layout.margins: signInBox.margins
         }
 
         HTextField {
             id: passwordField
             placeholderText: qsTr("Password")
             echoMode: HTextField.Password
-            onAccepted: signInBox.clickEnterButtonTarget()
 
             Layout.fillWidth: true
-            Layout.margins: signInBox.margins
+        }
+
+        HCheckBox {
+            id: rememberAccount
+            text: qsTr("Automatically sign in")
+            checked: true
+            spacing: signInBox.horizontalSpacing
+
+            Layout.maximumWidth: parent.width
+            Layout.alignment: Qt.AlignHCenter
         }
 
         HLabel {
@@ -97,7 +114,6 @@ Item {
             Behavior on Layout.maximumHeight { HNumberAnimation {} }
 
             Layout.fillWidth: true
-            Layout.margins: signInBox.margins
         }
     }
 }
