@@ -20,6 +20,12 @@ function onCoroutineDone(uuid, result) {
 
 
 function onModelUpdated(syncId, data, serializedSyncId) {
+    if (serializedSyncId == ["Account"] || serializedSyncId[0] == "Room") {
+        py.callCoro("get_flat_sidepane_data", [], data => {
+            print( JSON.stringify( data, null, 4))
+        })
+    }
+
     window.modelSources[serializedSyncId] = data
     window.modelSourcesChanged()
 }

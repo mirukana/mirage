@@ -1,7 +1,7 @@
 import asyncio
 import logging as log
 import random
-from typing import DefaultDict, Dict, List, Optional, Tuple, Union
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import hsluv
 
@@ -122,6 +122,13 @@ class Backend:
 
     # General functions
 
+
+    @staticmethod
+    def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
+        # (0-360, 0-100, 0-100) -> [0-1, 0-1, 0-1]
+        return hsluv.hsluv_to_rgb([hue, saturation, lightness])
+
+
     async def load_settings(self) -> tuple:
         from .config_files import Theme
         settings = await self.ui_settings.read()
@@ -153,7 +160,21 @@ class Backend:
             return response
 
 
-    @staticmethod
-    def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
-        # (0-360, 0-100, 0-100) -> [0-1, 0-1, 0-1]
-        return hsluv.hsluv_to_rgb([hue, saturation, lightness])
+    async def get_flat_sidepane_data(self) -> List[Dict[str, Any]]:
+        data = []
+
+        for account in sorted(self.models[Account].values()):
+            data.append({
+                "type": "Account",
+                "id":   account.user_id,
+                "data": account.__dict__,
+            })
+
+            for room in sorted(self.models[Room, account.user_id].values()):
+                data.append({
+                    "type": "Room",
+                    "id":   (account.user_id, room.room_id),
+                    "data": room.__dict__,
+                })
+
+        return data

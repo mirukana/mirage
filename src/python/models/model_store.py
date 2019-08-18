@@ -25,7 +25,7 @@ class ModelStore(MutableMapping):
                         raise ValueError(f"Empty string in key: {key!r}")
 
                 key_type  = (key[0],) + \
-                            tuple(type(el) for el in key[1:])  # type: ignore
+                            tuple(type(el) for el in key[1:])
             else:
                 key_type = key  # type: ignore
 

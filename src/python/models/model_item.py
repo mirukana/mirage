@@ -2,15 +2,6 @@ from typing import ClassVar, Optional
 
 
 class ModelItem:
-    main_key: ClassVar[str] = ""
-
-    def __init_subclass__(cls) -> None:
-        if not cls.main_key:
-            raise ValueError("Must specify main_key str class attribute.")
-
-        super().__init_subclass__()
-
-
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
         from .model import Model
         cls.parent_model: Optional[Model] = None

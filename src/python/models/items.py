@@ -9,8 +9,6 @@ from .model_item import ModelItem
 
 @dataclass
 class Account(ModelItem):
-    main_key = "user_id"
-
     user_id:         str      = field()
     display_name:    str      = ""
     avatar_url:      str      = ""
@@ -24,8 +22,6 @@ class Account(ModelItem):
 
 @dataclass
 class Room(ModelItem):
-    main_key = "room_id"
-
     room_id:        str       = field()
     display_name:   str       = ""
     avatar_url:     str       = ""
@@ -66,8 +62,6 @@ class Room(ModelItem):
 
 @dataclass
 class Member(ModelItem):
-    main_key = "user_id"
-
     user_id:       str  = field()
     display_name:  str  = ""
     avatar_url:    str  = ""
@@ -89,8 +83,6 @@ class TypeSpecifier(AutoStrEnum):
 
 @dataclass
 class Event(ModelItem):
-    main_key = "event_id"
-
     client_id:      str      = field()
     event_id:       str      = field()
     event_type:     str      = field()  # Type[nio.Event]
@@ -127,8 +119,6 @@ class Event(ModelItem):
 
 @dataclass
 class Device(ModelItem):
-    main_key = "device_id"
-
     device_id:      str  = field()
     ed25519_key:    str  = field()
     trusted:        bool = False

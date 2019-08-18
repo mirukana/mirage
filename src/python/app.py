@@ -80,11 +80,12 @@ class App:
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
-        ad = additional_data  # noqa
-        rl = self.run_in_loop  # noqa
-        ba = self.backend  # noqa
-        mo = self.backend.models # noqa
-        cl = self.backend.clients
+        ad  = additional_data              # noqa
+        rl  = self.run_in_loop             # noqa
+        ba  = self.backend                 # noqa
+        mo  = self.backend.models          # noqa
+        smo = self.backend.sidepane_model  # noqa
+        cl  = self.backend.clients
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]  # noqa
 
         from .models.items import Account, Room, Member, Event, Device  # noqa

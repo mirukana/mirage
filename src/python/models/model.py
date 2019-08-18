@@ -1,7 +1,7 @@
 import logging as log
 import time
 from threading import Lock, Thread
-from typing import Any, Dict, Iterator, List, MutableMapping, Optional
+from typing import Any, Dict, Iterator, List, MutableMapping
 
 from . import SyncId
 from ..pyotherside_events import ModelUpdated
@@ -11,7 +11,6 @@ from .model_item import ModelItem
 class Model(MutableMapping):
     def __init__(self, sync_id: SyncId) -> None:
         self.sync_id:  SyncId               = sync_id
-        self.sortable: Optional[bool]       = None
         self._data:    Dict[Any, ModelItem] = {}
 
         self._changed:     bool   = False
@@ -27,22 +26,22 @@ class Model(MutableMapping):
             from pprint import pformat  # type: ignore
 
         if isinstance(self.sync_id, tuple):
-            sid = (self.sync_id[0].__name__, *self.sync_id[1:])  # type: ignore
+            sid = (self.sync_id[0].__name__, *self.sync_id[1:])
         else:
             sid = self.sync_id.__name__  # type: ignore
 
-        return "%s(sync_id=%s, sortable=%r, %s)" % (
-            type(self).__name__, sid, self.sortable, pformat(self._data),
+        return "%s(sync_id=%s, %s)" % (
+            type(self).__name__, sid, pformat(self._data),
         )
 
 
     def __str__(self) -> str:
         if isinstance(self.sync_id, tuple):
             reprs = tuple(repr(s) for s in self.sync_id[1:])
-            sid = ", ".join((self.sync_id[0].__name__, *reprs))  # type: ignore
+            sid = ", ".join((self.sync_id[0].__name__, *reprs))
             sid = f"({sid})"
         else:
-            sid = self.sync_id.__name__  # type: ignore
+            sid = self.sync_id.__name__
 
         return f"{sid!s}: {len(self)} items"
 
@@ -64,7 +63,7 @@ class Model(MutableMapping):
             if merged == existing:
                 return
 
-            new = type(value)(**merged)  # type: ignore
+            new = type(value)(**merged)
 
         new.parent_model = self
 
@@ -99,20 +98,7 @@ class Model(MutableMapping):
 
 
     def serialized(self) -> List[Dict[str, Any]]:
-        if self.sortable is True:
-            return [item.__dict__ for item in sorted(self._data.values())]
-
-        if self.sortable is False or len(self) < 2:
-            return [item.__dict__ for item in self._data.values()]
-
-        try:
-            return [item.__dict__ for item in sorted(self._data.values())]
-        except TypeError:
-            self.sortable = False
-        else:
-            self.sortable = True
-
-        return self.serialized()
+        return [item.__dict__ for item in sorted(self._data.values())]
 
 
     def __lt__(self, other: "Model") -> bool:
