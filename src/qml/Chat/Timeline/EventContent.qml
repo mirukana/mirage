@@ -77,7 +77,7 @@ Row {
                        "&nbsp;<font size=" + theme.fontSize.small +
                        "px>⏳</font>" : "")
 
-                lineHeight: 1.1
+                lineHeight: 1.3
                 color: theme.chat.message.body
                 wrapMode: Text.Wrap
 
