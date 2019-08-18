@@ -5,49 +5,58 @@ import "../utils.js" as Utils
 
 HInteractiveRectangle {
     id: roomDelegate
-    width: roomList.width
-    height: rowLayout.height
     color: theme.sidePane.room.background
 
-    opacity: model.left ? theme.sidePane.room.leftRoomOpacity : 1
+    readonly property bool collapsed:
+        ! accountRoomList.forceExpand &&
+        window.uiState.collapseAccounts[model.user_id] || false
+
+    visible: height > 0
+    height: collapsed ? 0 : rowLayout.height
+    Behavior on height { HNumberAnimation {} }
+
+    opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
     Behavior on opacity { HNumberAnimation {} }
 
     checked: isCurrent
     readonly property bool isCurrent:
         window.uiState.page == "Chat/Chat.qml" &&
-        window.uiState.pageProperties.userId == userId &&
-        window.uiState.pageProperties.roomId == model.room_id
+        window.uiState.pageProperties.userId == model.user_id &&
+        window.uiState.pageProperties.roomId == model.data.room_id
 
-    function activate() { pageStack.showRoom(userId, model.room_id) }
+    function activate() {
+        pageStack.showRoom(model.user_id, model.data.room_id)
+        print(model.user_id, model.data.room_id)
+    }
 
     TapHandler { onTapped: activate() }
 
     HRowLayout {
         id: rowLayout
-        x: sidePane.currentSpacing
-        width: parent.width - sidePane.currentSpacing * 1.5
-        height: roomName.height + subtitle.height +
-                sidePane.currentSpacing
         spacing: sidePane.currentSpacing
+        x: spacing
+        width: parent.width - spacing * 1.75
+        height: roomName.height + subtitle.height + spacing
 
         HRoomAvatar {
             id: roomAvatar
-            displayName: model.display_name
-            avatarUrl: model.avatar_url
+            displayName: model.data.display_name
+            avatarUrl: model.data.avatar_url
         }
 
         HColumnLayout {
             Layout.fillWidth: true
 
             HRowLayout {
-                spacing: theme.spacing / 2
+                spacing: rowLayout.spacing
 
                 HLabel {
                     id: roomName
                     color: theme.sidePane.room.name
-                    text: model.display_name || "<i>Empty room</i>"
+                    text: model.data.display_name || "<i>Empty room</i>"
                     textFormat:
-                        model.display_name? Text.PlainText : Text.StyledText
+                        model.data.display_name?
+                        Text.PlainText : Text.StyledText
                     elide: Text.ElideRight
                     verticalAlignment: Qt.AlignVCenter
 
@@ -59,13 +68,15 @@ HInteractiveRectangle {
 
                     visible: Layout.maximumWidth > 0
                     Layout.maximumWidth:
-                        model.inviter_id && ! model.left ? implicitWidth : 0
+                        model.data.inviter_id && ! model.data.left ?
+                        implicitWidth : 0
                     Behavior on Layout.maximumWidth { HNumberAnimation {} }
                 }
 
                 HLabel {
                     readonly property var evDate:
-                        model.last_event ? model.last_event.date : null
+                        model.data.last_event ?
+                        model.data.last_event.date : null
 
                     id: lastEventDate
                     font.pixelSize: theme.fontSize.small
@@ -97,9 +108,9 @@ HInteractiveRectangle {
                 elide: Text.ElideRight
 
                 text: {
-                    if (! model.last_event) { return "" }
+                    if (! model.data.last_event) { return "" }
 
-                    let ev = model.last_event
+                    let ev = model.data.last_event
 
                     if (ev.event_type === "RoomMessageEmote" ||
                         ! ev.event_type.startsWith("RoomMessage")) {

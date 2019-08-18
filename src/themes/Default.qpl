@@ -48,6 +48,12 @@ colors:
     color inputBackground:
         hsluv(hue, saturation, intensity * 2, Math.min(0.6, opacity))
 
+    color accentBackground:
+        hsluv(hue, saturation * 1.25, intensity * 42, Math.min(0.6, opacity))
+
+    color strongAccentBackground:
+        hsluv(hue, saturation * 2, intensity * 52, Math.min(0.6, opacity))
+
     color brightText:  hsluv(0, 0, intensity * 100)
     color text:        hsluv(0, 0, intensity * 80)
     color halfDimText: hsluv(0, 0, intensity * 70)
@@ -83,10 +89,9 @@ controls:
 
     button:
         color background: colors.inputBackground
+        color checkedBackground: colors.accentBackground
         color disabledBackground:
             hsluv(0, 0, colors.intensity * 2, Math.min(0.6, opacity))
-        color checkedBackground:
-            hsluv(0, 0, colors.intensity * 40, Math.min(0.6, opacity))
 
         color hoveredOverlay: hsluv(0, 0, 100)
         color text:           colors.text
@@ -95,13 +100,13 @@ controls:
     interactiveRectangle:
         color background: "transparent"
 
-        color hoveredOverlay: hsluv(0, 0, 100)
-        color pressedOverlay: hsluv(0, 0, 100)
-        color checkedOverlay: hsluv(0, 0, 100)
+        color hoveredOverlay: hsluv(0, 0, 50)
+        color pressedOverlay: hsluv(0, 0, 50)
+        color checkedOverlay: hsluv(0, 0, 50)
 
-        real hoveredOpacity: 0.1
+        real hoveredOpacity: 0.3
         real pressedOpacity: 0.2
-        real checkedOpacity: 0.08
+        real checkedOpacity: 0.2
 
     textField:
         color background:        colors.inputBackground
@@ -109,7 +114,7 @@ controls:
 
         int borderWidth:     1
         color border:        "transparent"
-        color focusedBorder: colors.accentText
+        color focusedBorder: colors.strongAccentBackground
 
         color text:        colors.text
         color focusedText: colors.text
@@ -158,8 +163,9 @@ sidePane:
     color background: colors.strongBackground
 
     account:
-        color background: "transparent"
-        color name:       colors.text
+        real collapsedOpacity: 0.3
+        color background:      "transparent"
+        color name:            colors.text
 
     room:
         real leftRoomOpacity: 0.65

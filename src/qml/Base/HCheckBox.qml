@@ -26,7 +26,7 @@ CheckBox {
             anchors.centerIn: parent
             dimension: parent.width - 2
             svgName: "check-mark"
-            colorize: theme.colors.accentText
+            colorize: theme.colors.strongAccentBackground
 
             visible: scale > 0
             scale: box.checked ? 1 : 0

@@ -165,16 +165,18 @@ class Backend:
 
         for account in sorted(self.models[Account].values()):
             data.append({
-                "type": "Account",
-                "id":   account.user_id,
-                "data": account.__dict__,
+                "type":    "Account",
+                "id":      account.user_id,
+                "user_id": account.user_id,
+                "data":    account.__dict__,
             })
 
             for room in sorted(self.models[Room, account.user_id].values()):
                 data.append({
-                    "type": "Room",
-                    "id":   (account.user_id, room.room_id),
-                    "data": room.__dict__,
+                    "type":    "Room",
+                    "id":      "/".join((account.user_id, room.room_id)),
+                    "user_id": account.user_id,
+                    "data":    room.__dict__,
                 })
 
         return data

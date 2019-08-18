@@ -5,13 +5,13 @@ import "../utils.js" as Utils
 
 HRectangle {
     id: sidePane
-    clip: true  // Avoid artifacts when collapsed
+    clip: true
     opacity: mainUI.accountsPresent && ! reduce ? 1 : 0
     visible: opacity > 0
 
     color: theme.sidePane.background
 
-    property alias accountList: accountList
+    property alias accountRoomList: accountRoomList
     property alias paneToolBar: paneToolBar
 
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
@@ -142,13 +142,12 @@ HRectangle {
     HColumnLayout {
         anchors.fill: parent
 
-        AccountList {
-            id: accountList
+        AccountRoomList {
+            id: accountRoomList
+            clip: true
+
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            spacing: currentSpacing
-            bottomMargin: currentSpacing
         }
 
         PaneToolBar {

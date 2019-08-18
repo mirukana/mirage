@@ -33,7 +33,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - Highlight selected account/room
+  - Remove first html lists left margin
 
   - Popup:
       - label size
