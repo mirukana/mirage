@@ -6,7 +6,17 @@ import "../../utils.js" as Utils
 Row {
     id: eventContent
     spacing: theme.spacing / 2
-    // layoutDirection: onRight ? Qt.RightToLeft : Qt.LeftToRight
+
+    readonly property string eventText: Utils.processedEventText(model)
+    readonly property real lineHeight:
+        ! eventText.match(/<img .+\/?>/) && multiline ? 1.25 : 1.0
+    readonly property bool multiline:
+        (eventText.match(/(\n|<br\/?>)/) || []).length > 0 ||
+        contentLabel.contentWidth < (
+            contentLabel.implicitWidth -
+            contentLabel.leftPadding -
+            contentLabel.rightPadding
+        )
 
     Item {
         width: hideAvatar ? 0 : 48
@@ -43,7 +53,6 @@ Row {
         y: parent.height / 2 - height / 2
 
         Column {
-            spacing: 0
             anchors.fill: parent
 
             HLabel {
@@ -55,10 +64,11 @@ Row {
                 textFormat: Text.StyledText
                 elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
+                lineHeight: eventContent.lineHeight
 
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
-                topPadding: theme.spacing / 2
+                topPadding: theme.spacing / 2 * lineHeight
             }
 
             HRichLabel {
@@ -66,7 +76,7 @@ Row {
                 width: parent.width
 
                 text: theme.chat.message.styleInclude +
-                      Utils.processedEventText(model) +
+                      eventContent.eventText +
                       // time
                       "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + ">" +
@@ -77,14 +87,14 @@ Row {
                        "&nbsp;<font size=" + theme.fontSize.small +
                        "px>⏳</font>" : "")
 
-                lineHeight: 1.3
+                lineHeight: eventContent.lineHeight
                 color: theme.chat.message.body
                 wrapMode: Text.Wrap
 
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
                 topPadding: nameLabel.visible ? 0 : bottomPadding
-                bottomPadding: theme.spacing / 2
+                bottomPadding: theme.spacing / 2 * lineHeight
             }
         }
     }
