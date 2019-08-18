@@ -11,9 +11,15 @@ Column {
         paneToolBar.roomFilter && roomList.model.count < 1 ? 0.3 : 1
     Behavior on opacity { HNumberAnimation {} }
 
+    property alias roomList: roomList
+
     property bool forceExpand: paneToolBar.roomFilter && roomList.model.count
     property bool expanded: true
     readonly property var modelItem: model
+
+    readonly property bool isCurrent:
+        window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
+        window.uiState.pageProperties.userId == model.user_id
 
     Component.onCompleted:
         expanded = ! window.uiState.collapseAccounts[model.user_id]
@@ -23,20 +29,21 @@ Column {
         window.uiStateChanged()
     }
 
+    function activate() {
+        pageStack.showPage(
+            "EditAccount/EditAccount", { "userId": model.user_id }
+        )
+    }
+
     HInteractiveRectangle {
+        id: rectangle
         width: parent.width
         height: childrenRect.height
         color: theme.sidePane.account.background
 
-        checked:
-            window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
-            window.uiState.pageProperties.userId == model.user_id
+        checked: accountDelegate.isCurrent
 
-        TapHandler {
-            onTapped: pageStack.showPage(
-                "EditAccount/EditAccount", { "userId": model.user_id }
-            )
-        }
+        TapHandler { onTapped: accountDelegate.activate() }
 
         HRowLayout {
             id: row

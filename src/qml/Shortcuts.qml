@@ -39,6 +39,11 @@ Item {
         onActivated: if (debugMode) { py.call("APP.pdb") }
     }
 
+    Shortcut {
+        sequences: ["Ctrl+N"]
+        onActivated: mainUI.sidePane.activateNext()
+    }
+
     /*
     Shortcut {
         sequence: "Ctrl+-"

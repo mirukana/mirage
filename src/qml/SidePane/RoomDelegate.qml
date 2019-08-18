@@ -12,12 +12,15 @@ HInteractiveRectangle {
     opacity: model.left ? theme.sidePane.room.leftRoomOpacity : 1
     Behavior on opacity { HNumberAnimation {} }
 
-    checked:
+    checked: isCurrent
+    readonly property bool isCurrent:
         window.uiState.page == "Chat/Chat.qml" &&
         window.uiState.pageProperties.userId == userId &&
         window.uiState.pageProperties.roomId == model.room_id
 
-    TapHandler { onTapped: pageStack.showRoom(userId, model.room_id) }
+    function activate() { pageStack.showRoom(userId, model.room_id) }
+
+    TapHandler { onTapped: activate() }
 
     HRowLayout {
         id: rowLayout

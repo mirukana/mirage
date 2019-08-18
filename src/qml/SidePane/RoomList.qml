@@ -4,6 +4,7 @@ import "../utils.js" as Utils
 
 HFixedListView {
     id: roomList
+
     property string userId: ""
 
     model: HListModel {
