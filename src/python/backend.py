@@ -168,7 +168,7 @@ class Backend:
                 "type":    "Account",
                 "id":      account.user_id,
                 "user_id": account.user_id,
-                "data":    account.__dict__,
+                "data":    account.serialized,
             })
 
             for room in sorted(self.models[Room, account.user_id].values()):
@@ -176,7 +176,7 @@ class Backend:
                     "type":    "Room",
                     "id":      "/".join((account.user_id, room.room_id)),
                     "user_id": account.user_id,
-                    "data":    room.__dict__,
+                    "data":    room.serialized,
                 })
 
         return data

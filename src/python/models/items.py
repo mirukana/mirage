@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -13,16 +14,15 @@ class Account(ModelItem):
     display_name:    str      = ""
     avatar_url:      str      = ""
     profile_updated: datetime = field(default_factory=datetime.now)
-    filter_string:   str      = ""
 
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
         return name < other_name
 
-    # @property
-    # def filter_string(self) -> str:  # TODO: support serializing properties
-        # return " ".join((self.user_id, self.display_name))
+    @property
+    def filter_string(self) -> str:
+        return self.display_name
 
 
 @dataclass
@@ -35,7 +35,6 @@ class Room(ModelItem):
     inviter_name:   str       = ""
     inviter_avatar: str       = ""
     left:           bool      = False
-    filter_string:  str       = ""
     typing_members: List[str] = field(default_factory=list)
 
     # Event __dict__
@@ -64,20 +63,33 @@ class Room(ModelItem):
         other_name = other.display_name or other.room_id
         return name < other_name
 
+    @property
+    def filter_string(self) -> str:
+        return " ".join((
+            self.display_name,
+            self.topic,
+            re.sub(r"<.*?>", "", self.last_event["inline_content"])
+            if self.last_event else "",
+        ))
+
 
 @dataclass
 class Member(ModelItem):
-    user_id:       str  = field()
-    display_name:  str  = ""
-    avatar_url:    str  = ""
-    typing:        bool = False
-    power_level:   int  = 0
-    filter_string: str  = ""
+    user_id:      str  = field()
+    display_name: str  = ""
+    avatar_url:   str  = ""
+    typing:       bool = False
+    power_level:  int  = 0
 
     def __lt__(self, other: "Member") -> bool:
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
         return name < other_name
+
+
+    @property
+    def filter_string(self) -> str:
+        return self.display_name
 
 
 class TypeSpecifier(AutoStrEnum):

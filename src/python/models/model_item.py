@@ -1,4 +1,4 @@
-from typing import ClassVar, Optional
+from typing import Any, Dict, Optional
 
 
 class ModelItem:
@@ -15,5 +15,16 @@ class ModelItem:
             with self.parent_model._sync_lock:
                 self.parent_model._changed = True
 
+
     def __delattr__(self, name: str) -> None:
         raise NotImplementedError()
+
+
+    @property
+    def serialized(self) -> Dict[str, Any]:
+        return {
+            name: getattr(self, name) for name in dir(self)
+            if not (
+                name.startswith("_") or name in ("parent_model", "serialized")
+            )
+        }

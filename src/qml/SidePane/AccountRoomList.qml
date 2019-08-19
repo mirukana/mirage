@@ -29,7 +29,9 @@ HListView {
             {
                 if (filter && show.length && item.type == "Account" &&
                     show[show.length - 1].type == "Account" &&
-                    ! Utils.filterMatches(filter, item.data.filter_string)) {
+                    ! Utils.filterMatches(
+                        filter, show[show.length - 1].data.filter_string)
+                ) {
                     // If current and previous items are both accounts,
                     // that means the previous account had no matching rooms.
                     show.pop()

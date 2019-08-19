@@ -1,6 +1,6 @@
 - Refactoring
   - filter string serialize thing
-  - set client max timeout to 10s
+  - `x.__dict__` → `vars(x)`
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 

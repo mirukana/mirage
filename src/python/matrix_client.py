@@ -4,7 +4,6 @@ import inspect
 import json
 import logging as log
 import platform
-import re
 from contextlib import suppress
 from datetime import datetime
 from enum import Enum
@@ -364,13 +363,6 @@ class MatrixClient(nio.AsyncClient):
             inviter_avatar =
                 (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
-            filter_string  = " ".join({
-                name,
-                room.topic or "",
-                re.sub(
-                    r"<.*?>", "", last_ev["inline_content"],
-                ) if last_ev else "",
-            }).strip(),
             last_event     = last_ev,
         )
 
@@ -383,9 +375,6 @@ class MatrixClient(nio.AsyncClient):
                 avatar_url    = member.avatar_url or "",
                 typing        = user_id in room.typing_users,
                 power_level   = member.power_level,
-                filter_string = " ".join({
-                    member.name, room.user_name(user_id),
-                }).strip(),
             ) for user_id, member in room.users.items()
         }
         self.models[Member, room.room_id].update(new_dict)

@@ -26,7 +26,6 @@ HInteractiveRectangle {
 
     function activate() {
         pageStack.showRoom(model.user_id, model.data.room_id)
-        print(model.user_id, model.data.room_id)
     }
 
 

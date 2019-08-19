@@ -98,7 +98,7 @@ class Model(MutableMapping):
 
 
     def serialized(self) -> List[Dict[str, Any]]:
-        return [item.__dict__ for item in sorted(self._data.values())]
+        return [item.serialized for item in sorted(self._data.values())]
 
 
     def __lt__(self, other: "Model") -> bool:
