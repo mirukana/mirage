@@ -1,11 +1,12 @@
 - Refactoring
-  - Don't show the highlight rectangle sliding when clicking room
+  - Use HInterfaceBox for EditAccount Profile and Encryption 
+  - Use ItemDelegate
+
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 
-  - Use HInterfaceBox for EditAccount Profile and Encryption 
   - HButton
-    - Control: hovered, visualFocus, enaled
+    - Control: hovered, visualFocus, enabled
     - Border and pressed color in theme / checkbox theming
 
   - `^property type name$`

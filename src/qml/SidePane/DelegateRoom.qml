@@ -45,7 +45,15 @@ HInteractiveRectangle {
         onTriggered: if (isCurrent) beHighlighted()
     }
 
-    TapHandler { onTapped: activate() }
+    TapHandler {
+        onTapped: {
+            accountRoomList.highlightRangeMode = ListView.NoHighlightRange
+            accountRoomList.highlightMoveDuration = 0
+            activate()
+            accountRoomList.highlightRangeMode = ListView.ApplyRange
+            accountRoomList.highlightMoveDuration = theme.animationDuration
+        }
+    }
 
     HRowLayout {
         id: rowLayout
