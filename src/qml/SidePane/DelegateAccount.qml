@@ -16,8 +16,10 @@ HInteractiveRectangle {
     readonly property bool forceExpand:
         Boolean(accountRoomList.filter)
 
-    readonly property bool collapsed:
-        accountRoomList.collapseAccounts[model.data.user_id] || false
+    // Hide harmless error when a filter matches nothing
+    readonly property bool collapsed: try {
+        return accountRoomList.collapseAccounts[model.data.user_id] || false
+    } catch (err) {}
 
 
     onIsCurrentChanged: if (isCurrent) beHighlighted()
