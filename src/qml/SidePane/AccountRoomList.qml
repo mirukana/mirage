@@ -35,7 +35,8 @@ HListView {
                     ! Utils.filterMatches(
                         filter, show[show.length - 1].data.filter_string)
                 ) {
-                    // If current and previous items are both accounts,
+                    // If filter active, current and previous items are
+                    // both accounts and previous account doesn't match filter,
                     // that means the previous account had no matching rooms.
                     show.pop()
                 }
@@ -44,8 +45,14 @@ HListView {
             }
         }
 
-        // If last item is an account, that account had no matching rooms.
-        if (show.length && show[show.length - 1].type == "Account") show.pop()
+        let last = show[show.length - 1]
+        if (show.length && filter && last.type == "Account" &&
+            ! Utils.filterMatches(filter, last.data.filter_string))
+        {
+            // If filter active, last item is an account and last item
+            // doesn't match filter, that account had no matching rooms.
+            show.pop()
+        }
 
         model.source = show
     }
