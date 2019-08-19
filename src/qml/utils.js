@@ -74,12 +74,15 @@ function processedEventText(ev) {
 
 
 function filterMatches(filter, text) {
-    filter = filter.toLowerCase()
-    text   = text.toLowerCase()
+    let filter_lower = filter.toLowerCase()
 
-    let words = filter.split(" ")
+    if (filter_lower == filter) {
+        // Consider case only if filter isn't all lowercase (smart case)
+        filter = filter_lower
+        text   = text.toLowerCase()
+    }
 
-    for (let word of words) {
+    for (let word of filter.split(" ")) {
         if (word && ! text.includes(word)) {
             return false
         }
