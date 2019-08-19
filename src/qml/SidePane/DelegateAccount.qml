@@ -17,7 +17,6 @@ HInteractiveRectangle {
         Boolean(accountRoomList.filter)
 
     readonly property bool collapsed:
-        ! forceExpand &&
         accountRoomList.collapseAccounts[model.data.user_id] || false
 
 
@@ -45,7 +44,8 @@ HInteractiveRectangle {
             displayName: model.data.display_name
             avatarUrl: model.data.avatar_url
 
-            opacity: collapsed ? theme.sidePane.account.collapsedOpacity : 1
+            opacity: collapsed && ! forceExpand ?
+                     theme.sidePane.account.collapsedOpacity : 1
             Behavior on opacity { HNumberAnimation {} }
 
             Layout.topMargin: model.index > 0 ? sidePane.currentSpacing / 2 : 0
@@ -62,7 +62,8 @@ HInteractiveRectangle {
             leftPadding: sidePane.currentSpacing
             verticalAlignment: Text.AlignVCenter
 
-            opacity: collapsed ? theme.sidePane.account.collapsedOpacity : 1
+            opacity: collapsed && ! forceExpand ?
+                     theme.sidePane.account.collapsedOpacity : 1
             Behavior on opacity { HNumberAnimation {} }
 
             Layout.fillWidth: true
