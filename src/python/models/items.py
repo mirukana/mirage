@@ -37,7 +37,7 @@ class Room(ModelItem):
     left:           bool      = False
     typing_members: List[str] = field(default_factory=list)
 
-    # Event __dict__
+    # Event.serialized
     last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
 
     def __lt__(self, other: "Room") -> bool:

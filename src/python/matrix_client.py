@@ -318,7 +318,7 @@ class MatrixClient(nio.AsyncClient):
         room = self.models[Room, self.user_id][room_id]
 
         if room.last_event is None:
-            room.last_event = item.__dict__
+            room.last_event = item.serialized
             return
 
         for_us        = item.target_id in self.backend.clients
@@ -334,7 +334,7 @@ class MatrixClient(nio.AsyncClient):
         if item.date < room.last_event["date"]:  # If this is a past event
             return
 
-        room.last_event = item.__dict__
+        room.last_event = item.serialized
 
 
     async def register_nio_room(self, room: nio.MatrixRoom, left: bool = False,
@@ -492,7 +492,7 @@ class MatrixClient(nio.AsyncClient):
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
         # TODO: show something in the client, must be seen on login screen too
         try:
-            log.warning("%s - %s", resp, json.dumps(resp.__dict__, indent=4))
+            log.warning("%s - %s", resp, json.dumps(vars(resp), indent=4))
         except Exception:
             log.warning(repr(resp))
 
@@ -549,7 +549,7 @@ class MatrixClient(nio.AsyncClient):
         else:
             to = "???"
             log.warning("Invalid visibility - %s",
-                        json.dumps(ev.__dict__, indent=4))
+                        json.dumps(vars(ev), indent=4))
 
         co = f"%1 made future room history visible to {to}."
         await self.register_nio_event(room, ev, content=co)
@@ -642,7 +642,7 @@ class MatrixClient(nio.AsyncClient):
             )
 
         log.warning("Invalid member event - %s",
-                    json.dumps(ev.__dict__, indent=4))
+                    json.dumps(vars(ev), indent=4))
         return None
 
 

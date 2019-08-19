@@ -54,8 +54,8 @@ class Model(MutableMapping):
         new = value
 
         if key in self:
-            existing = dict(self[key].__dict__)  # copy to not alter with pop
-            merged   = {**existing, **value.__dict__}
+            existing = dict(self[key].serialized)  # copy to not alter with pop
+            merged   = {**existing, **value.serialized}
 
             existing.pop("parent_model", None)
             merged.pop("parent_model", None)
@@ -63,7 +63,9 @@ class Model(MutableMapping):
             if merged == existing:
                 return
 
-            new = type(value)(**merged)
+            merged_init_kwargs = {**vars(self[key]), **vars(value)}
+            merged_init_kwargs.pop("parent_model", None)
+            new = type(value)(**merged_init_kwargs)
 
         new.parent_model = self
 
