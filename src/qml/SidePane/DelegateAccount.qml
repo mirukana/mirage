@@ -9,6 +9,8 @@ HInteractiveRectangle {
     height: row.height
 
 
+    readonly property var delegateModel: model
+
     readonly property bool isCurrent:
         window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
         window.uiState.pageProperties.userId == model.data.user_id

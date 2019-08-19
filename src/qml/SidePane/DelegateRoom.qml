@@ -14,6 +14,8 @@ HInteractiveRectangle {
     Behavior on opacity { HNumberAnimation {} }
 
 
+    readonly property var delegateModel: model
+
     readonly property bool forceExpand:
         Boolean(accountRoomList.filter)
 

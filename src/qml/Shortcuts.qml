@@ -56,6 +56,11 @@ Item {
         onActivated: mainUI.sidePane.accountRoomList.next()
     }
 
+    Shortcut {
+        sequences: settings.keys ? settings.keys.toggleCollapseAccount : []
+        onActivated: mainUI.sidePane.accountRoomList.toggleCollapseAccount()
+    }
+
     /*
     Shortcut {
         sequence: "Ctrl+-"

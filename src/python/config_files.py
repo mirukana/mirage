@@ -122,6 +122,12 @@ class UISettings(JSONConfigFile):
                 "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
                 "goToPreviousRoom": ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":     ["Alt+Shift+Down", "Alt+Shift+J"],
+
+                "toggleCollapseAccount": [
+                    "Alt+Shift+Left", "Alt+Shift+Right",
+                    "Alt+Shift+H", "Alt+Shift+R",
+                ],
+
                 "startDebugger":    ["Alt+Shift+D"],
             },
         }

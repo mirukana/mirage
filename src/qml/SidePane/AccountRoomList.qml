@@ -51,13 +51,33 @@ HListView {
     }
 
     function previous() {
-        accountRoomList.decrementCurrentIndex()
-        accountRoomList.currentItem.item.activate()
+        decrementCurrentIndex()
+        currentItem.item.activate()
     }
 
     function next() {
-        accountRoomList.incrementCurrentIndex()
-        accountRoomList.currentItem.item.activate()
+        incrementCurrentIndex()
+        currentItem.item.activate()
+    }
+
+    function toggleCollapseAccount() {
+        if (! currentItem) return
+
+        if (currentItem.item.delegateModel.type == "Account") {
+            currentItem.item.toggleCollapse()
+            return
+        }
+
+        for (let i = 0;  i < model.source.length; i++) {
+            let item = model.source[i]
+
+            if (item.type == "Account" && item.user_id ==
+                currentItem.item.delegateModel.user_id)
+            {
+                currentIndex = i
+                currentItem.item.toggleCollapse()
+            }
+        }
     }
 
 
