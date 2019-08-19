@@ -13,7 +13,7 @@ Banner {
     avatar.displayName: inviterName
     avatar.avatarUrl: inviterAvatar
 
-    labelText: qsTr("%1 invited you to the room.").arg(
+    labelText: qsTr("%1 invited you to this room.").arg(
         Utils.coloredNameHtml(inviterName, inviterId)
     )
 
