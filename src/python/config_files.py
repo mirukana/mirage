@@ -115,11 +115,13 @@ class UISettings(JSONConfigFile):
             "theme": "Default.qpl",
             "writeAliases": {},
             "keys": {
-                "reloadConfig":  ["Alt+Shift+R"],
-                "scrollUp":      ["Alt+Up", "Alt+K"],
-                "scrollDown":    ["Alt+Down", "Alt+J"],
-                "filterRooms":   ["Alt+R", "Ctrl+R"],
-                "startDebugger": ["Alt+Shift+D"],
+                "reloadConfig":     ["Alt+Shift+R"],
+                "scrollUp":         ["Alt+Up", "Alt+K"],
+                "scrollDown":       ["Alt+Down", "Alt+J"],
+                "filterRooms":      ["Alt+R", "Ctrl+R"],
+                "goToPreviousRoom": ["Alt+Shift+Up", "Alt+Shift+K"],
+                "goToNextRoom":     ["Alt+Shift+Down", "Alt+Shift+J"],
+                "startDebugger":    ["Alt+Shift+D"],
             },
         }
 

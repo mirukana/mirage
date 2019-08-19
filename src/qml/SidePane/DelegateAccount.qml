@@ -5,7 +5,7 @@ import "../Base"
 HInteractiveRectangle {
     id: accountDelegate
     color: theme.sidePane.account.background
-    checked: isCurrent
+    // checked: isCurrent
     height: row.height
 
 
@@ -20,6 +20,13 @@ HInteractiveRectangle {
         accountRoomList.collapseAccounts[model.data.user_id] || false
 
 
+    onIsCurrentChanged: if (isCurrent) beHighlighted()
+
+
+    function beHighlighted() {
+        accountRoomList.currentIndex = model.index
+    }
+
     function toggleCollapse() {
         window.uiState.collapseAccounts[model.data.user_id] = ! collapsed
         window.uiStateChanged()
@@ -31,6 +38,14 @@ HInteractiveRectangle {
         )
     }
 
+
+    // Component.onCompleted won't work for this
+    Timer {
+        interval: 100
+        repeat: true
+        running: accountRoomList.currentIndex == -1
+        onTriggered: if (isCurrent) beHighlighted()
+    }
 
     TapHandler { onTapped: accountDelegate.activate() }
 

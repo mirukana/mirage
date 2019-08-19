@@ -19,6 +19,9 @@ HListView {
     function filterSource() {
         let show = []
 
+        // Hide a harmless error when activating a DelegateRoom
+        try { window.sidePaneModelSource } catch (err) { return }
+
         for (let i = 0;  i < window.sidePaneModelSource.length; i++) {
             let item = window.sidePaneModelSource[i]
 
@@ -45,6 +48,16 @@ HListView {
         if (show.length && show[show.length - 1].type == "Account") show.pop()
 
         model.source = show
+    }
+
+    function previous() {
+        accountRoomList.decrementCurrentIndex()
+        accountRoomList.currentItem.item.activate()
+    }
+
+    function next() {
+        accountRoomList.incrementCurrentIndex()
+        accountRoomList.currentItem.item.activate()
     }
 
 

@@ -5,8 +5,5 @@ HFixedListView {
     interactive: true
     keyNavigationWraps: true
 
-    // This is used to smooth scroll when currentIndex is changed
-    highlightMoveDuration: theme.animationDuration * 4
-
     ScrollBar.vertical: ScrollBar {}
 }

@@ -4,6 +4,12 @@ import QtQuick.Controls 2.12
 ListView {
     interactive: false
     currentIndex: -1
+    highlightMoveDuration: theme.animationDuration
+
+    highlight: HRectangle {
+        color: theme.controls.interactiveRectangle.checkedOverlay
+        opacity: theme.controls.interactiveRectangle.checkedOpacity
+    }
 
     add: Transition {
         HNumberAnimation { properties: "x,y"; from: 100 }

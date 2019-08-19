@@ -9,7 +9,6 @@ HInteractiveRectangle {
     visible: height > 0
     height: rowLayout.height
     opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
-    checked: isCurrent
 
 
     Behavior on opacity { HNumberAnimation {} }
@@ -24,10 +23,25 @@ HInteractiveRectangle {
         window.uiState.pageProperties.roomId == model.data.room_id
 
 
+    onIsCurrentChanged: if (isCurrent) beHighlighted()
+
+
+    function beHighlighted() {
+        accountRoomList.currentIndex = model.index
+    }
+
     function activate() {
         pageStack.showRoom(model.user_id, model.data.room_id)
     }
 
+
+    // Component.onCompleted won't work for this
+    Timer {
+        interval: 100
+        repeat: true
+        running: accountRoomList.currentIndex == -1
+        onTriggered: if (isCurrent) beHighlighted()
+    }
 
     TapHandler { onTapped: activate() }
 

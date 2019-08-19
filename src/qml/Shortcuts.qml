@@ -40,8 +40,13 @@ Item {
     }
 
     Shortcut {
-        sequences: ["Ctrl+N"]
-        onActivated: mainUI.sidePane.activateNext()
+        sequences: settings.keys ? settings.keys.goToPreviousRoom : []
+        onActivated: mainUI.sidePane.accountRoomList.previous()
+    }
+
+    Shortcut {
+        sequences: settings.keys ? settings.keys.goToNextRoom : []
+        onActivated: mainUI.sidePane.accountRoomList.next()
     }
 
     /*
