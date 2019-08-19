@@ -11,7 +11,7 @@ HRectangle {
     Component.onCompleted: window.mainUI = mainUI
 
     property alias sidePane: sidePane
-    property alias pageStack: pageStack
+    property alias pageLoader: pageLoader
     property alias pressAnimation: _pressAnimation
 
     SequentialAnimation {
@@ -63,13 +63,13 @@ HRectangle {
             Behavior on Layout.minimumWidth { HNumberAnimation {} }
         }
 
-        StackView {
-            id: pageStack
+        HLoader {
+            id: pageLoader
             property bool isWide: width > theme.contentIsWideAbove
 
             Component.onCompleted: {
                 if (! py.startupAnyAccountsSaved) {
-                    pageStack.showPage("SignIn")
+                    pageLoader.showPage("SignIn")
                     return
                 }
 
@@ -77,14 +77,14 @@ HRectangle {
                 let props = window.uiState.pageProperties
 
                 if (page == "Chat/Chat.qml") {
-                    pageStack.showRoom(props.userId, props.roomId)
+                    pageLoader.showRoom(props.userId, props.roomId)
                 } else {
-                    pageStack._show(page, props)
+                    pageLoader._show(page, props)
                 }
             }
 
             function _show(componentUrl, properties={}) {
-                pageStack.replace(componentUrl, properties)
+                pageLoader.setSource(componentUrl, properties)
             }
 
             function showPage(name, properties={}) {
@@ -104,14 +104,20 @@ HRectangle {
                 window.uiStateChanged()
             }
 
-            onCurrentItemChanged: if (currentItem) {
-                currentItem.forceActiveFocus()
+            onStatusChanged: if (status == Loader.Ready) {
+                item.forceActiveFocus()
+                appearAnimation.start()
             }
 
-            // Buggy
-            replaceExit: null
-            popExit: null
-            pushExit: null
+            clip: appearAnimation.running
+            XAnimator {
+                id: appearAnimation
+                target: pageLoader.item
+                from: -300
+                to: 0
+                easing.type: Easing.OutBack
+                duration: theme.animationDuration * 2
+            }
         }
     }
 }

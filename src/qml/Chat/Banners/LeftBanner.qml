@@ -24,7 +24,7 @@ Banner {
             py.callClientCoro(
                 chatPage.userId, "room_forget", [chatPage.roomId], () => {
                     button.loading = false
-                    Qt.callLater(pageStack.showPage, "Default")
+                    Qt.callLater(pageLoader.showPage, "Default")
             })
         }
     })

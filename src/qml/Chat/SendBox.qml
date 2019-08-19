@@ -49,7 +49,7 @@ HRectangle {
     Layout.fillWidth: true
     Layout.minimumHeight: theme.baseElementsHeight
     Layout.preferredHeight: areaScrollView.implicitHeight
-    Layout.maximumHeight: pageStack.height / 2
+    Layout.maximumHeight: pageLoader.height / 2
     color: theme.chat.sendBox.background
 
     HRowLayout {

@@ -46,7 +46,7 @@ HGridLayout {
     }
 
     columns: 2
-    flow: pageStack.isWide ? GridLayout.LeftToRight : GridLayout.TopToBottom
+    flow: pageLoader.isWide ? GridLayout.LeftToRight : GridLayout.TopToBottom
     rowSpacing: currentSpacing
 
     Component.onCompleted: nameField.field.forceActiveFocus()

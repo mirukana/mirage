@@ -16,7 +16,7 @@ HRowLayout {
         backgroundColor: theme.sidePane.settingsButton.background
         Layout.preferredHeight: parent.height
 
-        onClicked: pageStack.showPage("SignIn")
+        onClicked: pageLoader.showPage("SignIn")
     }
 
     HTextField {

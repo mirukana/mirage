@@ -41,7 +41,7 @@ HPage {
                         (rememberAccount.checked ? "add": "delete"),
                         [data]
                     )
-                    pageStack.showPage(
+                    pageLoader.showPage(
                         "EditAccount/EditAccount", {userId: data}
                     )
 

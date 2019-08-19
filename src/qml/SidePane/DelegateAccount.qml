@@ -37,7 +37,7 @@ HInteractiveRectangle {
     }
 
     function activate() {
-        pageStack.showPage(
+        pageLoader.showPage(
             "EditAccount/EditAccount", { "userId": model.data.user_id }
         )
     }

@@ -33,7 +33,7 @@ HInteractiveRectangle {
     }
 
     function activate() {
-        pageStack.showRoom(model.user_id, model.data.room_id)
+        pageLoader.showRoom(model.user_id, model.data.room_id)
     }
 
 

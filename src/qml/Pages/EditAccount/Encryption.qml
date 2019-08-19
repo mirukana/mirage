@@ -24,7 +24,7 @@ HColumnLayout {
             "rooms can be exported to a passphrase-protected file.%1" +
             "You will then be able to import this file in another " +
             "Matrix client."
-        ).arg(pageStack.isWide ? "\n" :"\n\n")
+        ).arg(pageLoader.isWide ? "\n" :"\n\n")
 
         Layout.fillWidth: true
         Layout.margins: currentSpacing

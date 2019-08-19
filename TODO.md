@@ -139,7 +139,6 @@
   - Direct chats category
   - Markdown: don't turn #things (no space) and `thing\n---` into title,
     disable `__` syntax for bold/italic
-  - Push instead of replacing in stack view (remove getMemberFilter when done)
   - `<pre>` scrollbar on overflow
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
