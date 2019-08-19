@@ -52,12 +52,13 @@ HListView {
 
     function previous() {
         decrementCurrentIndex()
-        currentItem.item.activate()
+        activateLimiter.requestFire()
+
     }
 
     function next() {
         incrementCurrentIndex()
-        currentItem.item.activate()
+        activateLimiter.requestFire()
     }
 
     function toggleCollapseAccount() {
@@ -90,5 +91,12 @@ HListView {
         width: accountRoomList.width
         source: "Delegate" +
                 (model.type == "Account" ? "Account.qml" : "Room.qml")
+    }
+
+
+    HRateLimiter {
+        id: activateLimiter
+        onFired: currentItem.item.activate()
+        extendOnRequestWhileCooldownActive: true
     }
 }
