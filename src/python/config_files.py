@@ -119,6 +119,7 @@ class UISettings(JSONConfigFile):
                 "scrollUp":         ["Alt+Up", "Alt+K"],
                 "scrollDown":       ["Alt+Down", "Alt+J"],
                 "focusSidePane":    ["Alt+S", "Ctrl+S"],
+                "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
                 "goToPreviousRoom": ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":     ["Alt+Shift+Down", "Alt+Shift+J"],
                 "startDebugger":    ["Alt+Shift+D"],

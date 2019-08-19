@@ -42,6 +42,11 @@ Item {
     }
 
     Shortcut {
+        sequences: settings.keys ? settings.keys.clearRoomFilter : []
+        onActivated: mainUI.sidePane.paneToolBar.roomFilter = ""
+    }
+
+    Shortcut {
         sequences: settings.keys ? settings.keys.goToPreviousRoom : []
         onActivated: mainUI.sidePane.accountRoomList.previous()
     }
