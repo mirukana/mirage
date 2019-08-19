@@ -1,16 +1,54 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../utils.js" as Utils
 
 HListView {
     id: accountRoomList
 
-    // property bool forceExpand: paneToolBar.roomFilter && roomList.model.count
-    property bool forceExpand: false
+
+    readonly property var originSource: window.sidePaneModelSource
+    readonly property var collapseAccounts: window.uiState.collapseAccounts
+    readonly property string filter: paneToolBar.roomFilter
+
+    onOriginSourceChanged: Qt.callLater(filterSource)
+    onFilterChanged: Qt.callLater(filterSource)
+    onCollapseAccountsChanged: Qt.callLater(filterSource)
+
+
+    function filterSource() {
+        let show = []
+
+        for (let i = 0;  i < window.sidePaneModelSource.length; i++) {
+            let item = window.sidePaneModelSource[i]
+
+            if (item.type == "Account" ||
+                (filter ?
+                 Utils.filterMatches(filter, item.data.filter_string) :
+                 ! window.uiState.collapseAccounts[item.user_id]))
+            {
+                if (filter && show.length && item.type == "Account" &&
+                    show[show.length - 1].type == "Account" &&
+                    ! Utils.filterMatches(filter, item.data.filter_string)) {
+                    // If current and previous items are both accounts,
+                    // that means the previous account had no matching rooms.
+                    show.pop()
+                }
+
+                show.push(item)
+            }
+        }
+
+        // If last item is an account, that account had no matching rooms.
+        if (show.length && show[show.length - 1].type == "Account") show.pop()
+
+        model.source = show
+    }
+
 
     model: HListModel {
         keyField: "id"
-        source: window.sidePaneModelSource
+        source: originSource
     }
 
     delegate: Loader {

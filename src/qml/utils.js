@@ -89,11 +89,13 @@ function filterMatches(filter, text) {
 
 
 function filterModelSource(source, filter_text, property="filter_string") {
-    if (! filter_text) { return source }
-
+    if (! filter_text) return source
     let results = []
-    for (let item of source) {
-        if (filterMatches(filter_text, item[property])) { results.push(item) }
+
+    for (let i = 0;  i < source.length; i++) {
+        if (filterMatches(filter_text, source[i][property])) {
+            results.push(item)
+        }
     }
     return results
 }

@@ -6,28 +6,29 @@ import "../utils.js" as Utils
 HInteractiveRectangle {
     id: roomDelegate
     color: theme.sidePane.room.background
-
-    readonly property bool collapsed:
-        ! accountRoomList.forceExpand &&
-        window.uiState.collapseAccounts[model.user_id] || false
-
     visible: height > 0
-    height: collapsed ? 0 : rowLayout.height
-    Behavior on height { HNumberAnimation {} }
-
+    height: rowLayout.height
     opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
+    checked: isCurrent
+
+
     Behavior on opacity { HNumberAnimation {} }
 
-    checked: isCurrent
+
+    readonly property bool forceExpand:
+        Boolean(accountRoomList.filter)
+
     readonly property bool isCurrent:
         window.uiState.page == "Chat/Chat.qml" &&
         window.uiState.pageProperties.userId == model.user_id &&
         window.uiState.pageProperties.roomId == model.data.room_id
 
+
     function activate() {
         pageStack.showRoom(model.user_id, model.data.room_id)
         print(model.user_id, model.data.room_id)
     }
+
 
     TapHandler { onTapped: activate() }
 

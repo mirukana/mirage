@@ -13,11 +13,16 @@ class Account(ModelItem):
     display_name:    str      = ""
     avatar_url:      str      = ""
     profile_updated: datetime = field(default_factory=datetime.now)
+    filter_string:   str      = ""
 
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
         return name < other_name
+
+    # @property
+    # def filter_string(self) -> str:  # TODO: support serializing properties
+        # return " ".join((self.user_id, self.display_name))
 
 
 @dataclass

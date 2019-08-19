@@ -84,7 +84,6 @@ class App:
         rl  = self.run_in_loop             # noqa
         ba  = self.backend                 # noqa
         mo  = self.backend.models          # noqa
-        smo = self.backend.sidepane_model  # noqa
         cl  = self.backend.clients
         tcl = lambda user: cl[f"@test_{user}:matrix.org"]  # noqa
 

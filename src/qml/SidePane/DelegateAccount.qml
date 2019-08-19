@@ -4,17 +4,22 @@ import "../Base"
 
 HInteractiveRectangle {
     id: accountDelegate
-    height: row.height
     color: theme.sidePane.account.background
+    checked: isCurrent
+    height: row.height
 
-    checked: accountDelegate.isCurrent
+
     readonly property bool isCurrent:
         window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
         window.uiState.pageProperties.userId == model.data.user_id
 
+    readonly property bool forceExpand:
+        Boolean(accountRoomList.filter)
+
     readonly property bool collapsed:
-        ! accountRoomList.forceExpand &&
-        window.uiState.collapseAccounts[model.data.user_id] || false
+        ! forceExpand &&
+        accountRoomList.collapseAccounts[model.data.user_id] || false
+
 
     function toggleCollapse() {
         window.uiState.collapseAccounts[model.data.user_id] = ! collapsed
@@ -26,6 +31,7 @@ HInteractiveRectangle {
             "EditAccount/EditAccount", { "userId": model.data.user_id }
         )
     }
+
 
     TapHandler { onTapped: accountDelegate.activate() }
 
@@ -74,7 +80,7 @@ HInteractiveRectangle {
 
             visible: opacity > 0
             opacity:
-                accountRoomList.forceExpand ? 0 :
+                accountDelegate.forceExpand ? 0 :
                 collapsed ? theme.sidePane.account.collapsedOpacity + 0.2 :
                 1
             Behavior on opacity { HNumberAnimation {} }
