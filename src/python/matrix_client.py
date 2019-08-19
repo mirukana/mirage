@@ -45,6 +45,9 @@ class MatrixClient(nio.AsyncClient):
             user       = user,
             device_id  = device_id,
             store_path = store,
+            config     = nio.AsyncClientConfig(
+                max_timeout_retry_wait_time = 10,
+            ),
         )
 
         from .backend import Backend
