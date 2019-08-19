@@ -72,11 +72,25 @@ HRectangle {
         onYPosChanged: if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
 
         function loadPastEvents() {
-            eventList.canLoad = false
-            py.callClientCoro(
-                chatPage.userId, "load_past_events", [chatPage.roomId],
-                moreToLoad => { eventList.canLoad = moreToLoad }
-            )
+            // try/catch blocks to hide pyotherside error when the
+            // component is destroyed but func is still running
+
+            try {
+                eventList.canLoad = false
+
+                py.callClientCoro(
+                    chatPage.userId, "load_past_events", [chatPage.roomId],
+                    moreToLoad => {
+                        try {
+                            eventList.canLoad = moreToLoad
+                        } catch (err) {
+                            return
+                        }
+                    }
+                )
+            } catch (err) {
+                return
+            }
         }
 
         property string inviter: chatPage.roomInfo.inviter || ""
