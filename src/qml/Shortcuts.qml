@@ -3,6 +3,7 @@ import QtQuick 2.12
 Item {
     property Item flickTarget: Item {}
 
+
     function smartVerticalFlick(baseVelocity, fastMultiply=3) {
         if (! flickTarget.interactive) { return }
 
@@ -12,6 +13,12 @@ Item {
                        (baseVelocity > 0 && vel > baseVelocity / 2)
 
         flickTarget.flick(0, baseVelocity * (fast ? fastMultiply : 1))
+    }
+
+
+    Shortcut {
+        sequences: settings.keys ? settings.keys.startDebugger : []
+        onActivated: if (debugMode) { py.call("APP.pdb") }
     }
 
     Shortcut {
@@ -30,13 +37,8 @@ Item {
     }
 
     Shortcut {
-        sequences: settings.keys ? settings.keys.filterRooms : []
-        onActivated: mainUI.sidePane.paneToolBar.filterField.forceActiveFocus()
-    }
-
-    Shortcut {
-        sequences: settings.keys ? settings.keys.startDebugger : []
-        onActivated: if (debugMode) { py.call("APP.pdb") }
+        sequences: settings.keys ? settings.keys.focusSidePane : []
+        onActivated: mainUI.sidePane.forceActiveFocus()
     }
 
     Shortcut {

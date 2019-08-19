@@ -118,7 +118,7 @@ class UISettings(JSONConfigFile):
                 "reloadConfig":     ["Alt+Shift+R"],
                 "scrollUp":         ["Alt+Up", "Alt+K"],
                 "scrollDown":       ["Alt+Down", "Alt+J"],
-                "filterRooms":      ["Alt+S", "Ctrl+S"],
+                "focusSidePane":    ["Alt+S", "Ctrl+S"],
                 "goToPreviousRoom": ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":     ["Alt+Shift+Down", "Alt+Shift+J"],
                 "startDebugger":    ["Alt+Shift+D"],

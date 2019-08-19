@@ -1,4 +1,5 @@
 - Refactoring
+  - Filter smart case
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 

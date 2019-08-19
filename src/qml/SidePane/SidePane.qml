@@ -11,6 +11,7 @@ HRectangle {
 
     color: theme.sidePane.background
 
+    property bool hasFocus: paneToolBar.filterField.activeFocus
     property alias accountRoomList: accountRoomList
     property alias paneToolBar: paneToolBar
 
@@ -26,6 +27,8 @@ HRectangle {
             manuallyResized = true
         }
     }
+
+    onFocusChanged: if (focus) paneToolBar.filterField.forceActiveFocus()
 
     onManualWidthChanged: {
         window.uiState.sidePaneManualWidth = manualWidth
