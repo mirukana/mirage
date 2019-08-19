@@ -6,6 +6,16 @@ ListView {
     currentIndex: -1
     highlightMoveDuration: theme.animationDuration
 
+    // Keep highlighted delegate at the center
+    highlightRangeMode: ListView.ApplyRange
+    preferredHighlightBegin: height / 2 - currentItemHeight
+    preferredHighlightEnd: height / 2 + currentItemHeight
+
+
+    readonly property int currentItemHeight:
+        currentItem ? currentItem.height : 0
+
+
     highlight: HRectangle {
         color: theme.controls.interactiveRectangle.checkedOverlay
         opacity: theme.controls.interactiveRectangle.checkedOpacity
