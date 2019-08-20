@@ -68,13 +68,13 @@ HRectangle {
                 id: interfaceButtonsRepeater
                 model: []
 
-                HUIButton {
+                HButton {
                     property string name: modelData.name
 
                     id: button
                     text: modelData.text
                     iconName: modelData.iconName || ""
-                    enabled: modelData.enabled === false ? false : true
+                    enabled: modelData.enabled
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true

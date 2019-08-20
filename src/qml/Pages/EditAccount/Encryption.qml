@@ -31,7 +31,7 @@ HColumnLayout {
     }
 
     HRowLayout {
-        HUIButton {
+        HButton {
             id: exportButton
             iconName: "export-keys"
             text: qsTr("Export")
@@ -41,7 +41,7 @@ HColumnLayout {
             Layout.alignment: Qt.AlignBottom
         }
 
-        HUIButton {
+        HButton {
             id: importButton
             iconName: "import-keys"
             text: qsTr("Import")

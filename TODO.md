@@ -6,8 +6,8 @@
     - Make the icon blue in EditAccount when hovering and no avatar set
 
   - HButton
-    - Control: hovered, visualFocus, enabled
-    - Border and pressed color in theme / checkbox theming
+    - visualFocus
+  - Checkbox theming
 
   - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)

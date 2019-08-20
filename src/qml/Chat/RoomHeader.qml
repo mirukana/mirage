@@ -73,14 +73,15 @@ HRectangle {
                 model: [
                     "members", "files", "notifications", "history", "settings"
                 ]
-                HUIButton {
-                    backgroundColor: theme.chat.selectViewBar.background
+                HButton {
+                    backgroundColor: "transparent"
                     iconName: "room-view-" + modelData
-                    iconDimension: 22
+                    ico.dimension: 22
+                    height: parent.height
                     autoExclusive: true
                     checked: activeButton == modelData
-                    onClicked: activeButton = activeButton == modelData ?
-                                              null : modelData
+                    onClicked: activeButton =
+                        activeButton == modelData ?  null : modelData
                 }
             }
 
@@ -90,16 +91,16 @@ HRectangle {
         }
     }
 
-    HUIButton {
+    HButton {
         id: expandButton
         z: 1
-        width: theme.controls.avatar.size
-        height: width
+        width: height
+        height: parent.height
         anchors.right: parent.right
         opacity: collapseButtons ? 1 : 0
         visible: opacity > 0
 
-        backgroundColor: theme.chat.selectViewBar.background
+        backgroundColor: "transparent"
         iconName: "reduced-room-buttons"
 
         Behavior on opacity {

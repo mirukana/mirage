@@ -62,13 +62,12 @@ HPage {
             Repeater {
                 model: ["username", "email", "phone"]
 
-                HUIButton {
+                HButton {
                     iconName: modelData
                     circle: true
                     checked: loginWith == modelData
                     enabled: modelData == "username"
                     autoExclusive: true
-                    checkedLightens: true
                     onClicked: loginWith = modelData
                 }
             }

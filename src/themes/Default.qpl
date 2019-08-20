@@ -88,14 +88,13 @@ controls:
         color background: colors.strongBackground
 
     button:
-        color background: colors.inputBackground
-        color checkedBackground: colors.accentBackground
-        color disabledBackground:
-            hsluv(0, 0, colors.intensity * 2, Math.min(0.6, opacity))
-
-        color hoveredOverlay: hsluv(0, 0, 100)
+        color background:     colors.inputBackground
         color text:           colors.text
-        color disabledText:   colors.dimmerText
+        real disabledOpacity: 0.3
+
+        color hoveredOverlay: hsluv(0, 0, 50, 0.3)
+        color pressedOverlay: hsluv(0, 0, 50, 0.6)
+        color checkedOverlay: colors.accentBackground
 
     interactiveRectangle:
         color background: "transparent"
@@ -190,9 +189,6 @@ chat:
 
     roomSidePane:
         color background: colors.mediumBackground
-
-    selectViewBar:
-        color background: chat.roomHeader.background
 
     eventList:
         int ownEventsOnRightUnderWidth: 768

@@ -1,6 +1,8 @@
 import QtQuick 2.12
 
 HImage {
+    visible: Boolean(svgName)
+
     property string svgName: ""
     property int dimension: 20
 

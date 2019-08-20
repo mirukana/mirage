@@ -11,12 +11,12 @@ HRowLayout {
     Layout.fillWidth: true
     Layout.preferredHeight: theme.baseElementsHeight
 
-    HUIButton {
+    HButton {
         iconName: "add-account"
         backgroundColor: theme.sidePane.settingsButton.background
-        Layout.preferredHeight: parent.height
-
         onClicked: pageLoader.showPage("SignIn")
+
+        Layout.preferredHeight: parent.height
     }
 
     HTextField {

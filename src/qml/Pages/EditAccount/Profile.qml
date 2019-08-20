@@ -173,7 +173,7 @@ HGridLayout {
         HRowLayout {
             Layout.alignment: Qt.AlignBottom
 
-            HUIButton {
+            HButton {
                 property bool nameChangeRunning: false
                 property bool avatarChangeRunning: false
 
@@ -183,22 +183,20 @@ HGridLayout {
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled:
                     nameField.changed || aliasField.changed || avatar.changed
+                onClicked: applyChanges()
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
-
-                onClicked: applyChanges()
             }
 
-            HUIButton {
+            HButton {
                 iconName: "cancel"
                 text: qsTr("Cancel")
                 enabled: saveButton.enabled && ! saveButton.loading
+                onClicked: cancelChanges()
 
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
-
-                onClicked: cancelChanges()
             }
         }
     }

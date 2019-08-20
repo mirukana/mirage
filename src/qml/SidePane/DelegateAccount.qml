@@ -102,10 +102,10 @@ HInteractiveRectangle {
             Layout.fillHeight: true
         }
 
-        HUIButton {
+        HButton {
             id: expandButton
             iconName: "expand"
-            iconDimension: 16
+            ico.dimension: 16
             backgroundColor: "transparent"
             leftPadding: sidePane.currentSpacing
             rightPadding: leftPadding
@@ -118,9 +118,9 @@ HInteractiveRectangle {
                 1
             Behavior on opacity { HNumberAnimation {} }
 
-            iconTransform: Rotation {
-                origin.x: expandButton.iconDimension / 2
-                origin.y: expandButton.iconDimension / 2
+            ico.transform: Rotation {
+                origin.x: expandButton.ico.dimension / 2
+                origin.y: expandButton.ico.dimension / 2
 
                 angle: collapsed ? 180 : 90
                 Behavior on angle { HNumberAnimation {} }
