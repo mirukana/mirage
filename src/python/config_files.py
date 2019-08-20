@@ -125,7 +125,7 @@ class UISettings(JSONConfigFile):
 
                 "toggleCollapseAccount": [
                     "Alt+Shift+Left", "Alt+Shift+Right",
-                    "Alt+Shift+H", "Alt+Shift+R",
+                    "Alt+Shift+H", "Alt+Shift+L",
                 ],
 
                 "startDebugger":    ["Alt+Shift+D"],
