@@ -30,7 +30,7 @@ Button {
                    button.enabled && button.pressed ?
                    theme.controls.button.pressedOverlay :
 
-                   button.enabled && button.hovered ?
+                   (button.enabled && button.hovered) || button.visualFocus ?
                    theme.controls.button.hoveredOverlay :
 
                    "transparent"

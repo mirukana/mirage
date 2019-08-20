@@ -5,8 +5,6 @@
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 
-  - HButton
-    - visualFocus
   - Checkbox theming
 
   - `^property type name$`
