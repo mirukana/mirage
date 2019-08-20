@@ -11,9 +11,9 @@ HListView {
     readonly property var collapseAccounts: window.uiState.collapseAccounts
     readonly property string filter: paneToolBar.roomFilter
 
-    onOriginSourceChanged: Qt.callLater(filterSource)
-    onFilterChanged: Qt.callLater(filterSource)
-    onCollapseAccountsChanged: Qt.callLater(filterSource)
+    onOriginSourceChanged: filterLimiter.requestFire()
+    onFilterChanged: filterLimiter.requestFire()
+    onCollapseAccountsChanged: filterLimiter.requestFire()
 
 
     function filterSource() {
@@ -100,6 +100,12 @@ HListView {
                 (model.type == "Account" ? "Account.qml" : "Room.qml")
     }
 
+
+    HRateLimiter {
+        id: filterLimiter
+        cooldown: 16
+        onFired: filterSource()
+    }
 
     HRateLimiter {
         id: activateLimiter

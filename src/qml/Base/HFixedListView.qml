@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 ListView {
+    id: listView
     interactive: false
     currentIndex: -1
     highlightMoveDuration: theme.animationDuration
@@ -21,16 +22,24 @@ ListView {
         opacity: theme.controls.interactiveRectangle.checkedOpacity
     }
 
+    // Important:
+    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html#handling-interrupted-animations
+
+    populate: add
+    displaced: move
+
     add: Transition {
-        HNumberAnimation { properties: "x,y"; from: 100 }
+        ParallelAnimation {
+            HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+            HNumberAnimation { properties: "x,y"; from: 100 }
+        }
     }
 
     move: Transition {
-        HNumberAnimation { properties: "x,y" }
-    }
-
-    displaced: Transition {
-        HNumberAnimation { properties: "x,y" }
+        ParallelAnimation {
+            HNumberAnimation { property: "opacity"; to: 1 }
+            HNumberAnimation { properties: "x,y" }
+        }
     }
 
     remove: Transition {
