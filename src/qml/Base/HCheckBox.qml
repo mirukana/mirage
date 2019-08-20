@@ -5,8 +5,11 @@ import "../utils.js" as Utils
 CheckBox {
     id: box
     spacing: theme.spacing
+    opacity: enabled ? 1 : theme.disabledElementsOpacity
 
-    property bool highlight: enabled && (hovered || visualFocus)
+
+    Behavior on opacity { HNumberAnimation { factor: 2 } }
+
 
     indicator: Rectangle {
         implicitWidth: implicitHeight
@@ -15,10 +18,15 @@ CheckBox {
         y: box.topPadding + box.availableHeight / 2 - height / 2
         radius: theme.radius / 1.5
 
-        color: theme.controls.button.background
-        border.color: Utils.hsluv(
-            180, highlight ? 80 : 0, highlight ? 80 : 40, highlight ? 1 : 0.7
-        )
+        color: theme.controls.checkBox.boxBackground
+        border.color:
+            box.enabled && box.pressed ?
+            theme.controls.checkBox.boxPressedBorder :
+
+            (box.enabled && box.hovered) || box.visualFocus ?
+            theme.controls.checkBox.boxHoveredBorder :
+
+            theme.controls.checkBox.boxBorder
 
         Behavior on border.color { HColorAnimation { factor: 0.5 } }
 
@@ -26,7 +34,7 @@ CheckBox {
             anchors.centerIn: parent
             dimension: parent.width - 2
             svgName: "check-mark"
-            colorize: theme.colors.strongAccentBackground
+            colorize: theme.controls.checkBox.checkIconColor
 
             visible: scale > 0
             scale: box.checked ? 1 : 0
@@ -41,9 +49,7 @@ CheckBox {
 
     contentItem: HLabel {
         text: box.text
-        color: box.enabled ?
-               theme.controls.button.text :
-               theme.controls.button.disabledText
+        color: theme.controls.checkBox.text
 
         // Set a width on CheckBox for wrapping to work, e.g. Layout.fillWidth
         wrapMode: Text.Wrap

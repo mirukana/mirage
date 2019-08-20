@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 
 Button {
     id: button
-    opacity: enabled ? 1 : theme.controls.button.disabledOpacity
+    opacity: enabled ? 1 : theme.disabledElementsOpacity
     onVisibleChanged: if (! visible) loading = false
 
 
@@ -15,6 +15,9 @@ Button {
     property color backgroundColor: theme.controls.button.background
     property bool loading: false
     property bool circle: false
+
+
+    Behavior on opacity { HNumberAnimation {} }
 
 
     background: HRectangle {

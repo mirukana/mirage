@@ -5,8 +5,6 @@
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 
-  - Checkbox theming
-
   - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
     - Choose a better default easing type for animations

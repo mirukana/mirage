@@ -15,10 +15,11 @@ int contentIsWideAbove:     439 * uiScale
 int minimumSupportedWidthPlusSpacing:  minimumSupportedWidth + spacing * 2
 int minimumSupportedHeightPlusSpacing: minimumSupportedHeight + spacing * 2
 
-int baseElementsHeight: 36 * uiScale
-int spacing:            12 * uiScale
-int radius:             5
-int animationDuration:  100
+int baseElementsHeight:       36 * uiScale
+int spacing:                  12 * uiScale
+int radius:                   5
+int animationDuration:        100
+real disabledElementsOpacity: 0.3
 
 string preferredIconPack: "light-thin"
 
@@ -88,13 +89,22 @@ controls:
         color background: colors.strongBackground
 
     button:
-        color background:     colors.inputBackground
-        color text:           colors.text
-        real disabledOpacity: 0.3
+        color background: colors.inputBackground
+        color text:       colors.text
 
         color hoveredOverlay: hsluv(0, 0, 50, 0.3)
         color pressedOverlay: hsluv(0, 0, 50, 0.6)
         color checkedOverlay: colors.accentBackground
+
+    checkBox:
+        color checkIconColor: colors.strongAccentBackground
+        color boxBackground:  colors.inputBackground
+
+        color boxBorder:        hsluv(0, 0, 50, 0.3)
+        color boxHoveredBorder: colors.accentBackground
+        color boxPressedBorder: colors.strongAccentBackground
+
+        color text:             colors.text
 
     interactiveRectangle:
         color background: "transparent"
