@@ -82,6 +82,17 @@ HRectangle {
     }
 
 
+    Keys.enabled: sidePane.hasFocus
+    Keys.onUpPressed: accountRoomList.previous(false)  // do not activate
+    Keys.onDownPressed: accountRoomList.next(false)
+    Keys.onEnterPressed: Keys.onReturnPressed(event)
+    Keys.onReturnPressed: if (event.modifiers & Qt.ShiftModifier) {
+        accountRoomList.toggleCollapseAccount()
+    } else {
+        accountRoomList.activate()
+    }
+
+
     HColumnLayout {
         anchors.fill: parent
 

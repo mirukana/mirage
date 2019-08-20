@@ -57,15 +57,19 @@ HListView {
         model.source = show
     }
 
-    function previous() {
+    function previous(activate=true) {
         decrementCurrentIndex()
-        activateLimiter.requestFire()
+        if (activate) activateLimiter.requestFire()
 
     }
 
-    function next() {
+    function next(activate=true) {
         incrementCurrentIndex()
-        activateLimiter.requestFire()
+        if (activate) activateLimiter.requestFire()
+    }
+
+    function activate() {
+        currentItem.item.activate()
     }
 
     function toggleCollapseAccount() {
@@ -109,7 +113,7 @@ HListView {
 
     HRateLimiter {
         id: activateLimiter
-        onFired: currentItem.item.activate()
+        onFired: activate()
         extendOnRequestWhileCooldownActive: true
     }
 }
