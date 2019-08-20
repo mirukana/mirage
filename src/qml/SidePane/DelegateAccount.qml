@@ -51,6 +51,11 @@ HInteractiveRectangle {
         onTriggered: if (isCurrent) beHighlighted()
     }
 
+    Connections {
+        target: accountRoomList
+        onHideHoverHighlight: accountDelegate.hovered = false
+    }
+
     TapHandler {
         onTapped: {
             accountRoomList.highlightRangeMode = ListView.NoHighlightRange

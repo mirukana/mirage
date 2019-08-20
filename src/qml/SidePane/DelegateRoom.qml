@@ -45,6 +45,11 @@ HInteractiveRectangle {
         onTriggered: if (isCurrent) beHighlighted()
     }
 
+    Connections {
+        target: accountRoomList
+        onHideHoverHighlight: roomDelegate.hovered = false
+    }
+
     TapHandler {
         onTapped: {
             accountRoomList.highlightRangeMode = ListView.NoHighlightRange
@@ -57,8 +62,6 @@ HInteractiveRectangle {
 
     HRowLayout {
         id: rowLayout
-        property var pr: sidePane.currentSpacing
-        onPrChanged: print("pr changed:", pr, spacing, x)
 
         spacing: sidePane.currentSpacing
         x: sidePane.currentSpacing

@@ -1,10 +1,12 @@
 import QtQuick 2.12
 
 HRectangle {
+    id: rectangle
+
     property bool checkable: false  // TODO
     property bool checked: false
-    property alias pressed: tap.pressed
-    property alias hovered: hover.hovered
+    property bool hovered: false
+    readonly property alias pressed: tap.pressed
 
     readonly property QtObject _ir: theme.controls.interactiveRectangle
     color: _ir.background
@@ -26,6 +28,10 @@ HRectangle {
                "transparent"
     }
 
-    HoverHandler { id: hover }
+    HoverHandler {
+        id: hover
+        onHoveredChanged: rectangle.hovered = hovered
+    }
+
     TapHandler { id: tap }
 }

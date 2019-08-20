@@ -7,6 +7,10 @@ HListView {
     id: accountRoomList
 
 
+    signal hideHoverHighlight()
+    onHideHoverHighlight: hoverBlocker.enabled = true
+
+
     readonly property var originSource: window.sidePaneModelSource
     readonly property var collapseAccounts: window.uiState.collapseAccounts
     readonly property string filter: paneToolBar.roomFilter
@@ -58,12 +62,14 @@ HListView {
     }
 
     function previous(activate=true) {
+        hideHoverHighlight()
         decrementCurrentIndex()
         if (activate) activateLimiter.requestFire()
 
     }
 
     function next(activate=true) {
+        hideHoverHighlight()
         incrementCurrentIndex()
         if (activate) activateLimiter.requestFire()
     }
@@ -104,6 +110,17 @@ HListView {
                 (model.type == "Account" ? "Account.qml" : "Room.qml")
     }
 
+
+    MouseArea {
+        id: hoverBlocker
+        anchors.fill: parent
+        enabled: false
+        hoverEnabled: enabled
+        propagateComposedEvents: true
+
+        onMouseXChanged: enabled = false
+        onMouseYChanged: enabled = false
+    }
 
     HRateLimiter {
         id: filterLimiter
