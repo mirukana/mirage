@@ -38,7 +38,7 @@ Item {
 
     Shortcut {
         sequences: settings.keys ? settings.keys.focusSidePane : []
-        onActivated: mainUI.sidePane.forceActiveFocus()
+        onActivated: mainUI.sidePane.setFocus()
     }
 
     Shortcut {

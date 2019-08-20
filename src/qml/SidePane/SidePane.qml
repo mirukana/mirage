@@ -74,6 +74,14 @@ HRectangle {
     }
 
 
+    function setFocus() {
+        forceActiveFocus()
+        if (reduce) {
+            pageLoader.item.currentIndex = 0
+        }
+    }
+
+
     HColumnLayout {
         anchors.fill: parent
 
