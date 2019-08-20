@@ -57,10 +57,13 @@ HInteractiveRectangle {
 
     HRowLayout {
         id: rowLayout
+        property var pr: sidePane.currentSpacing
+        onPrChanged: print("pr changed:", pr, spacing, x)
+
         spacing: sidePane.currentSpacing
-        x: spacing
-        width: parent.width - spacing * 1.75
-        height: roomName.height + subtitle.height + spacing
+        x: sidePane.currentSpacing
+        width: parent.width - sidePane.currentSpacing * 1.75
+        height: roomName.height + subtitle.height + sidePane.currentSpacing
 
         HRoomAvatar {
             id: roomAvatar
