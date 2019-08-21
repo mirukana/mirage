@@ -52,8 +52,6 @@ Button {
 
         HIcon {
             id: ico
-            x: button.leftPadding
-            y: button.topPadding + button.availableHeight / 2 - height / 2
             svgName: loading ? "hourglass" : iconName
 
             Layout.fillHeight: true
