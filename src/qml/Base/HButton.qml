@@ -9,65 +9,29 @@ Button {
     rightPadding: spacing / 1.5
     topPadding: spacing / 2
     bottomPadding: spacing / 2
-    opacity: enabled ? 1 : theme.disabledElementsOpacity
+    iconItem.svgName: loading ? "hourglass" : icon.name
+
     onVisibleChanged: if (! visible) loading = false
 
 
-    readonly property alias ico: ico
-    readonly property alias label: label
+    readonly property alias iconItem: contentItem.icon
+    readonly property alias label: contentItem.label
 
-    property string iconName: ""
     property color backgroundColor: theme.controls.button.background
     property bool loading: false
     property bool circle: false
 
 
-    Behavior on opacity { HNumberAnimation {} }
-
-
-    background: HRectangle {
+    background: HButtonBackground {
+        button: button
+        buttonTheme: theme.controls.button
         radius: circle ? height : 0
         color: backgroundColor
-
-        HRectangle {
-            anchors.fill: parent
-            radius: parent.radius
-            color: button.checked ?
-                   theme.controls.button.checkedOverlay :
-
-                   button.enabled && button.pressed ?
-                   theme.controls.button.pressedOverlay :
-
-                   (button.enabled && button.hovered) || button.visualFocus ?
-                   theme.controls.button.hoveredOverlay :
-
-                   "transparent"
-
-            Behavior on color { HColorAnimation { factor: 0.5 } }
-        }
     }
 
-    contentItem: HRowLayout {
-        spacing: button.spacing
-
-        HIcon {
-            id: ico
-            svgName: loading ? "hourglass" : iconName
-
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        HLabel {
-            id: label
-            text: button.text
-            visible: Boolean(text)
-            color: theme.controls.button.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+    contentItem: HButtonContent {
+        id: contentItem
+        button: button
+        buttonTheme: theme.controls.button
     }
 }

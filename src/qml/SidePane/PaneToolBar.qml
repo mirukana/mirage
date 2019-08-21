@@ -12,7 +12,7 @@ HRowLayout {
     Layout.preferredHeight: theme.baseElementsHeight
 
     HButton {
-        iconName: "add-account"
+        icon.name: "add-account"
         backgroundColor: theme.sidePane.settingsButton.background
         onClicked: pageLoader.showPage("SignIn")
 

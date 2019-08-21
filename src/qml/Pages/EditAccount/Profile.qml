@@ -178,7 +178,7 @@ HGridLayout {
                 property bool avatarChangeRunning: false
 
                 id: saveButton
-                iconName: "apply"
+                icon.name: "apply"
                 text: qsTr("Apply")
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled:
@@ -190,7 +190,7 @@ HGridLayout {
             }
 
             HButton {
-                iconName: "cancel"
+                icon.name: "cancel"
                 text: qsTr("Cancel")
                 enabled: saveButton.enabled && ! saveButton.loading
                 onClicked: cancelChanges()

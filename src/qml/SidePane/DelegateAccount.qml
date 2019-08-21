@@ -51,7 +51,7 @@ HTileDelegate {
 
     HButton {
         id: expand
-        iconName: "expand"
+        icon.name: "expand"
         backgroundColor: "transparent"
         padding: sidePane.currentSpacing / 1.5
         rightPadding: leftPadding
@@ -60,9 +60,9 @@ HTileDelegate {
         visible: opacity > 0
         opacity: accountDelegate.forceExpand ? 0 : 1
 
-        ico.transform: Rotation {
-            origin.x: expand.ico.dimension / 2
-            origin.y: expand.ico.dimension / 2
+        iconItem.transform: Rotation {
+            origin.x: expand.iconItem.dimension / 2
+            origin.y: expand.iconItem.dimension / 2
 
             angle: collapsed ? 180 : 90
             Behavior on angle { HNumberAnimation {} }

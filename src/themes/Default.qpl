@@ -96,15 +96,23 @@ controls:
         color pressedOverlay: hsluv(0, 0, 50, 0.6)
         color checkedOverlay: colors.accentBackground
 
+    menuItem:
+        color background: controls.button.background
+        color text:       controls.button.text
+
+        color hoveredOverlay: controls.button.hoveredOverlay
+        color pressedOverlay: controls.button.hoveredOverlay
+        color checkedOverlay: controls.button.hoveredOverlay
+
     checkBox:
         color checkIconColor: colors.strongAccentBackground
-        color boxBackground:  colors.inputBackground
+        color boxBackground:  controls.button.background
 
         color boxBorder:        hsluv(0, 0, 50, 0.3)
         color boxHoveredBorder: colors.accentBackground
         color boxPressedBorder: colors.strongAccentBackground
 
-        color text:             colors.text
+        color text: controls.button.text
 
     listView:
         color highlight: hsluv(0, 0, 50, 0.3)

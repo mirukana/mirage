@@ -33,7 +33,7 @@ HColumnLayout {
     HRowLayout {
         HButton {
             id: exportButton
-            iconName: "export-keys"
+            icon.name: "export-keys"
             text: qsTr("Export")
             enabled: false
 
@@ -43,7 +43,7 @@ HColumnLayout {
 
         HButton {
             id: importButton
-            iconName: "import-keys"
+            icon.name: "import-keys"
             text: qsTr("Import")
 
             Layout.fillWidth: true

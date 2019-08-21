@@ -75,8 +75,8 @@ HRectangle {
                 ]
                 HButton {
                     backgroundColor: "transparent"
-                    iconName: "room-view-" + modelData
-                    ico.dimension: 22
+                    icon.name: "room-view-" + modelData
+                    iconItem.dimension: 22
                     height: parent.height
                     autoExclusive: true
                     checked: activeButton == modelData
@@ -101,7 +101,7 @@ HRectangle {
         visible: opacity > 0
 
         backgroundColor: "transparent"
-        iconName: "reduced-room-buttons"
+        icon.name: "reduced-room-buttons"
 
         Behavior on opacity {
             HNumberAnimation { duration: buttonsAnimation.duration * 2 }

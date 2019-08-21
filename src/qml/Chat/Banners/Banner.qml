@@ -71,7 +71,7 @@ HRectangle {
                     HButton {
                         id: button
                         text: modelData.text
-                        iconName: modelData.iconName
+                        icon.name: modelData.iconName
                         onClicked: buttonCallbacks[modelData.name](button)
 
                         Layout.preferredHeight: theme.baseElementsHeight

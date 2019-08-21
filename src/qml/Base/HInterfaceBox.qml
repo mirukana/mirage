@@ -73,7 +73,7 @@ HRectangle {
 
                     id: button
                     text: modelData.text
-                    iconName: modelData.iconName || ""
+                    icon.name: modelData.iconName || ""
                     enabled: modelData.enabled
                     onClicked: buttonCallbacks[modelData.name](button)
 

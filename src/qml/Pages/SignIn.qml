@@ -63,8 +63,8 @@ HPage {
                 model: ["username", "email", "phone"]
 
                 HButton {
-                    iconName: modelData
-                    ico.dimension: 24
+                    icon.name: modelData
+                    iconItem.dimension: 24
                     circle: true
                     checked: loginWith == modelData
                     enabled: modelData == "username"
