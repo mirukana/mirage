@@ -131,6 +131,7 @@ class MatrixClient(nio.AsyncClient):
             with suppress(asyncio.CancelledError):
                 await self.sync_task
 
+        await super().logout()
         await self.close()
 
 
@@ -146,13 +147,14 @@ class MatrixClient(nio.AsyncClient):
         ft = asyncio.ensure_future(self.backend.get_profile(self.user_id))
         ft.add_done_callback(on_profile_response)
 
-        def on_unexpected_sync_stop(future) -> None:
-            raise future.exception()
+        def on_sync_stop(future) -> None:
+            if isinstance(future.exception(), BaseException):
+                raise future.exception()
 
         self.sync_task = asyncio.ensure_future(
             self.sync_forever(timeout=10_000),
         )
-        self.sync_task.add_done_callback(on_unexpected_sync_stop)
+        self.sync_task.add_done_callback(on_sync_stop)
 
 
     @property

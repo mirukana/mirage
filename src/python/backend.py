@@ -99,14 +99,10 @@ class Backend:
     async def logout_client(self, user_id: str) -> None:
         client = self.clients.pop(user_id, None)
         if client:
-            self.models[Account].pop(client.user_id, None)
+            self.models[Account].pop(user_id, None)
             await client.logout()
 
-
-    async def logout_all_clients(self) -> None:
-        await asyncio.gather(*(
-            self.logout_client(user_id) for user_id in self.clients.copy()
-        ))
+        await self.saved_accounts.delete(user_id)
 
 
     async def wait_until_client_exists(self, user_id: str = "") -> None:

@@ -19,6 +19,7 @@ HTileDelegate {
     Behavior on opacity { HNumberAnimation {} }
 
 
+    property bool disconnecting: false
     readonly property bool forceExpand: Boolean(accountRoomList.filter)
 
     // Hide harmless error when a filter matches nothing
@@ -27,9 +28,11 @@ HTileDelegate {
     } catch (err) {}
 
 
-    onActivated: pageLoader.showPage(
-        "EditAccount/EditAccount", { "userId": model.data.user_id }
-    )
+    onActivated: if (! disconnecting) {
+        pageLoader.showPage(
+            "EditAccount/EditAccount", { "userId": model.data.user_id }
+        )
+    }
 
 
     function toggleCollapse() {
@@ -69,5 +72,30 @@ HTileDelegate {
         }
 
         Behavior on opacity { HNumberAnimation {} }
+    }
+
+    contextMenu: HMenu {
+        HMenuItem {
+            icon.name: "logout"
+            text: qsTr("Logout")
+            onTriggered: {
+                disconnecting = true
+
+                let page   = window.uiState.page
+                let userId = model.data.user_id
+
+                if ((modelSources["Account"] || []).length < 2) {
+                    pageLoader.showPage("SignIn")
+                }
+                else if ((page == "Pages/EditAccount/EditAccount.qml" ||
+                     page == "Chat/Chat.qml") &&
+                     window.uiState.pageProperties.userId == userId)
+                {
+                    pageLoader.showPage("Default")
+                }
+
+                py.callCoro("logout_client", [userId])
+            }
+        }
     }
 }

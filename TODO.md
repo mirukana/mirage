@@ -18,7 +18,10 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Restore previous focus after right click
+  - Button loading icon with only text
+  - Highlight when adding new account
+
+  - Restore previous focus after closing right click context menu
 
   - Reloading config files (cache)
   - Run import in thread and AsyncClient.olm functions, they block async loop
@@ -82,6 +85,7 @@
     blank space
 
   - Sidepane
+    - Animate when logging out last account and sidepane turns invisible
     - Header back button when reduced
     - Better look for arrows and option button when collapsed
     - Show it when hovering/hitting focus keybind on the left when collapsed
@@ -91,7 +95,7 @@
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Add room
-  - Leave/forget room warning popup
+  - Logout & leave/forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading account, past room events, images or clicking buttons
