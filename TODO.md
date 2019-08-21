@@ -1,6 +1,5 @@
 - Refactoring
   - Use HInterfaceBox for EditAccount Profile and Encryption 
-  - Use ItemDelegate
 
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
@@ -12,6 +11,7 @@
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size
+    - Is auto-sizing actually needed, or can we just set a default manual size?
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes

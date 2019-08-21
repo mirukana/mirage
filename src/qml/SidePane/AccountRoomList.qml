@@ -75,7 +75,7 @@ HListView {
     }
 
     function activate() {
-        currentItem.item.activate()
+        currentItem.item.activated()
     }
 
     function toggleCollapseAccount() {

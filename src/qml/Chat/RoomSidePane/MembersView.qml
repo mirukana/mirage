@@ -6,7 +6,6 @@ import "../../utils.js" as Utils
 HColumnLayout {
     HListView {
         id: memberList
-        bottomMargin: currentSpacing
 
         model: HListModel {
             keyField: "user_id"
@@ -16,7 +15,9 @@ HColumnLayout {
             )
         }
 
-        delegate: MemberDelegate {}
+        delegate: MemberDelegate {
+            width: memberList.width
+        }
 
         Layout.fillWidth: true
         Layout.fillHeight: true

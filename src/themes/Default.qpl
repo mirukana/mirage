@@ -106,17 +106,6 @@ controls:
 
         color text:             colors.text
 
-    interactiveRectangle:
-        color background: "transparent"
-
-        color hoveredOverlay: hsluv(0, 0, 50)
-        color pressedOverlay: hsluv(0, 0, 50)
-        color checkedOverlay: hsluv(0, 0, 50)
-
-        real hoveredOpacity: 0.3
-        real pressedOpacity: 0.2
-        real checkedOpacity: 0.2
-
     textField:
         color background:        colors.inputBackground
         color focusedBackground: background
@@ -183,6 +172,10 @@ sidePane:
         color name:           colors.text
         color subtitle:       colors.dimText
         color lastEventDate:  colors.halfDimText
+
+    member:
+        color background:      "transparent"
+        color name:            colors.text
 
     settingsButton:
         color background: colors.inputBackground

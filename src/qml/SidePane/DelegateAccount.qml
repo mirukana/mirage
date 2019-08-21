@@ -2,21 +2,24 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
-HInteractiveRectangle {
+HTileDelegate {
     id: accountDelegate
-    color: theme.sidePane.account.background
-    // checked: isCurrent
-    height: row.height
+    spacing: 0
+    topPadding: model.index > 0 ? sidePane.currentSpacing / 2 : 0
+    bottomPadding: topPadding
+    backgroundColor: theme.sidePane.account.background
+
+    opacity: collapsed && ! forceExpand ?
+             theme.sidePane.account.collapsedOpacity : 1
+
+    isCurrent: window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
+               window.uiState.pageProperties.userId == model.data.user_id
 
 
-    readonly property var delegateModel: model
+    Behavior on opacity { HNumberAnimation {} }
 
-    readonly property bool isCurrent:
-        window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
-        window.uiState.pageProperties.userId == model.data.user_id
 
-    readonly property bool forceExpand:
-        Boolean(accountRoomList.filter)
+    readonly property bool forceExpand: Boolean(accountRoomList.filter)
 
     // Hide harmless error when a filter matches nothing
     readonly property bool collapsed: try {
@@ -24,109 +27,50 @@ HInteractiveRectangle {
     } catch (err) {}
 
 
-    onIsCurrentChanged: if (isCurrent) beHighlighted()
+    onActivated: pageLoader.showPage(
+        "EditAccount/EditAccount", { "userId": model.data.user_id }
+    )
 
-
-    function beHighlighted() {
-        accountRoomList.currentIndex = model.index
-    }
 
     function toggleCollapse() {
         window.uiState.collapseAccounts[model.data.user_id] = ! collapsed
         window.uiStateChanged()
     }
 
-    function activate() {
-        pageLoader.showPage(
-            "EditAccount/EditAccount", { "userId": model.data.user_id }
-        )
+
+    image: HUserAvatar {
+        userId: model.data.user_id
+        displayName: model.data.display_name
+        avatarUrl: model.data.avatar_url
     }
 
+    title.color: theme.sidePane.account.name
+    title.text: model.data.display_name || model.data.user_id
+    title.font.pixelSize: theme.fontSize.big
+    title.leftPadding: sidePane.currentSpacing
 
-    // Component.onCompleted won't work for this
-    Timer {
-        interval: 100
-        repeat: true
-        running: accountRoomList.currentIndex == -1
-        onTriggered: if (isCurrent) beHighlighted()
-    }
+    HButton {
+        id: expand
+        iconName: "expand"
+        ico.dimension: 16
+        backgroundColor: "transparent"
+        leftPadding: sidePane.currentSpacing / 1.5
+        rightPadding: leftPadding
+        onClicked: accountDelegate.toggleCollapse()
 
-    Connections {
-        target: accountRoomList
-        onHideHoverHighlight: accountDelegate.hovered = false
-    }
+        visible: opacity > 0
+        opacity: accountDelegate.forceExpand ? 0 : 1
 
-    TapHandler {
-        onTapped: {
-            accountRoomList.highlightRangeMode = ListView.NoHighlightRange
-            accountRoomList.highlightMoveDuration = 0
-            activate()
-            accountRoomList.highlightRangeMode = ListView.ApplyRange
-            accountRoomList.highlightMoveDuration = theme.animationDuration
-        }
-    }
+        ico.transform: Rotation {
+            origin.x: expand.ico.dimension / 2
+            origin.y: expand.ico.dimension / 2
 
-    HRowLayout {
-        id: row
-        width: parent.width
-
-        HUserAvatar {
-            id: avatar
-            userId: model.data.user_id
-            displayName: model.data.display_name
-            avatarUrl: model.data.avatar_url
-
-            opacity: collapsed && ! forceExpand ?
-                     theme.sidePane.account.collapsedOpacity : 1
-            Behavior on opacity { HNumberAnimation {} }
-
-            Layout.topMargin: model.index > 0 ? sidePane.currentSpacing / 2 : 0
-            Layout.bottomMargin: Layout.topMargin
+            angle: collapsed ? 180 : 90
+            Behavior on angle { HNumberAnimation {} }
         }
 
-        HLabel {
-            id: accountLabel
-            color: theme.sidePane.account.name
-            text: model.data.display_name || model.data.user_id
-            font.pixelSize: theme.fontSize.big
-            elide: HLabel.ElideRight
+        Behavior on opacity { HNumberAnimation {} }
 
-            leftPadding: sidePane.currentSpacing
-            verticalAlignment: Text.AlignVCenter
-
-            opacity: collapsed && ! forceExpand ?
-                     theme.sidePane.account.collapsedOpacity : 1
-            Behavior on opacity { HNumberAnimation {} }
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-
-        HButton {
-            id: expandButton
-            iconName: "expand"
-            ico.dimension: 16
-            backgroundColor: "transparent"
-            leftPadding: sidePane.currentSpacing
-            rightPadding: leftPadding
-            onClicked: accountDelegate.toggleCollapse()
-
-            visible: opacity > 0
-            opacity:
-                accountDelegate.forceExpand ? 0 :
-                collapsed ? theme.sidePane.account.collapsedOpacity + 0.2 :
-                1
-            Behavior on opacity { HNumberAnimation {} }
-
-            ico.transform: Rotation {
-                origin.x: expandButton.ico.dimension / 2
-                origin.y: expandButton.ico.dimension / 2
-
-                angle: collapsed ? 180 : 90
-                Behavior on angle { HNumberAnimation {} }
-            }
-
-            Layout.fillHeight: true
-        }
+        Layout.fillHeight: true
     }
 }

@@ -4,6 +4,11 @@ import QtQuick.Layouts 1.12
 
 Button {
     id: button
+    spacing: theme.spacing
+    leftPadding: spacing / 1.5
+    rightPadding: spacing / 1.5
+    topPadding: spacing / 2
+    bottomPadding: spacing / 2
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     onVisibleChanged: if (! visible) loading = false
 
