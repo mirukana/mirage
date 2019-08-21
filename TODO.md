@@ -1,4 +1,7 @@
 - Refactoring
+  - Repair timer/connection
+  - Repair filter members field and retest its performance
+
   - Use HInterfaceBox for EditAccount Profile and Encryption 
 
   - Make all icon SVG files white/black, since we can now use ColorOverlay

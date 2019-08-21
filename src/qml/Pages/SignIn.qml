@@ -64,6 +64,7 @@ HPage {
 
                 HButton {
                     iconName: modelData
+                    ico.dimension: 24
                     circle: true
                     checked: loginWith == modelData
                     enabled: modelData == "username"
