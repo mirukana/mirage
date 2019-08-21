@@ -89,8 +89,7 @@
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Add room
-  - Leave room
-  - Forget room warning popup
+  - Leave/forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading account, past room events, images or clicking buttons

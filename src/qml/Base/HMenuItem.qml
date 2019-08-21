@@ -6,8 +6,8 @@ MenuItem {
     spacing: theme.spacing
     leftPadding: spacing
     rightPadding: spacing
-    topPadding: spacing / 1.5
-    bottomPadding: spacing / 1.5
+    topPadding: spacing / 1.75
+    bottomPadding: spacing / 1.75
 
 
     readonly property alias iconItem: contentItem.icon
