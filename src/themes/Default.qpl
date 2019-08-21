@@ -129,7 +129,7 @@ controls:
         int radius: theme.radius
 
         background:
-            int saturation: colors.saturation - 5
+            int saturation: colors.saturation + 10
             int lightness:  Math.min(50, colors.intensity * 20)
             real opacity:   1.0
 

@@ -17,7 +17,7 @@ HRectangle {
 
     readonly property var params: Utils.thumbnailParametersFor(width, height)
 
-    color: avatarImage.visible ? "transparent" : Utils.hsla(
+    color: avatarImage.visible ? "transparent" : Utils.hsluv(
        name ? Utils.hueFrom(name) : 0,
        name ? theme.controls.avatar.background.saturation : 0,
        theme.controls.avatar.background.lightness,
