@@ -1,9 +1,50 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-HFixedListView {
-    interactive: true
+ListView {
+    id: listView
+    currentIndex: -1
     keyNavigationWraps: true
+    highlightMoveDuration: theme.animationDuration
 
-    ScrollBar.vertical: ScrollBar {}
+    // Keep highlighted delegate at the center
+    highlightRangeMode: ListView.ApplyRange
+    preferredHighlightBegin: height / 2 - currentItemHeight
+    preferredHighlightEnd: height / 2 + currentItemHeight
+
+
+    readonly property int currentItemHeight:
+        currentItem ? currentItem.height : 0
+
+
+    highlight: HRectangle {
+        color: theme.controls.listView.highlight
+    }
+
+    ScrollBar.vertical: ScrollBar { visible: listView.interactive }
+
+    add: Transition {
+        ParallelAnimation {
+            HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+            HNumberAnimation { properties: "x,y"; from: 100 }
+        }
+    }
+
+    move: Transition {
+        ParallelAnimation {
+            // Ensure opacity goes to 1 if add/remove transition is interrupted
+            HNumberAnimation { property: "opacity"; to: 1 }
+            HNumberAnimation { properties: "x,y" }
+        }
+    }
+
+    remove: Transition {
+        ParallelAnimation {
+            HNumberAnimation { property: "opacity"; to: 0 }
+            HNumberAnimation { properties: "x,y"; to: 100 }
+        }
+    }
+
+    populate: add
+    displaced: move
 }
