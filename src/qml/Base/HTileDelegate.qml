@@ -4,9 +4,7 @@ import QtQuick.Layouts 1.12
 HButton {
     id: tile
 
-
     signal activated()
-
 
     property HListView view: ListView.view
     property bool shouldBeCurrent: false
@@ -81,7 +79,7 @@ HButton {
     Timer {
         interval: 100
         repeat: true
-        running: view.currentIndex == -1
+        running: true
         // Component.onCompleted won't work for this
         onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
     }

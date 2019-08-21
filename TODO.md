@@ -18,9 +18,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Button loading icon with only text
-  - Highlight when adding new account
-
   - Restore previous focus after closing right click context menu
 
   - Reloading config files (cache)
