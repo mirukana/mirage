@@ -4,10 +4,10 @@ import QtQuick.Controls 2.12
 MenuItem {
     id: menuItem
     spacing: theme.spacing
-    leftPadding: spacing / 1.5
-    rightPadding: spacing / 1.5
-    topPadding: spacing / 2
-    bottomPadding: spacing / 2
+    leftPadding: spacing
+    rightPadding: spacing
+    topPadding: spacing / 1.5
+    bottomPadding: spacing / 1.5
 
 
     readonly property alias iconItem: contentItem.icon
@@ -23,5 +23,6 @@ MenuItem {
         id: contentItem
         button: menuItem
         buttonTheme: theme.controls.menuItem
+        label.horizontalAlignment: Label.AlignLeft
     }
 }

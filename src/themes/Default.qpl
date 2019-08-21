@@ -96,6 +96,10 @@ controls:
         color pressedOverlay: hsluv(0, 0, 50, 0.6)
         color checkedOverlay: colors.accentBackground
 
+    menu:
+        color border: "black"
+        real borderWidth: 2
+
     menuItem:
         color background: controls.button.background
         color text:       controls.button.text

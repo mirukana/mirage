@@ -78,7 +78,8 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
-            text: invited ? qsTr("&Decline invite") : qsTr("&Leave")
+            icon.name: invited ? "invite-decline" : "room-leave"
+            text: invited ? qsTr("Decline invite") : qsTr("Leave")
             onTriggered: py.callClientCoro(
                 model.user_id, "room_leave", [model.data.room_id]
             )

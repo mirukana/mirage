@@ -17,6 +17,8 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - Restore previous focus after right click
+
   - Reloading config files (cache)
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
