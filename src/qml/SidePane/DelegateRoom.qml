@@ -18,6 +18,9 @@ HTileDelegate {
     Behavior on opacity { HNumberAnimation {} }
 
 
+    readonly property bool invited:
+        model.data.inviter_id && ! model.data.left
+
     readonly property var eventDate:
         model.data.last_event ? model.data.last_event.date : null
 
@@ -38,9 +41,7 @@ HTileDelegate {
         svgName: "invite-received"
 
         visible: Layout.maximumWidth > 0
-        Layout.maximumWidth:
-            model.data.inviter_id && ! model.data.left ?
-            implicitWidth : 0
+        Layout.maximumWidth: invited ? implicitWidth : 0
 
         Behavior on Layout.maximumWidth { HNumberAnimation {} }
     }
@@ -73,5 +74,14 @@ HTileDelegate {
         return Utils.coloredNameHtml(
             ev.sender_name, ev.sender_id
         ) + ": " + ev.inline_content
+    }
+
+    contextMenu: HMenu {
+        HMenuItem {
+            text: invited ? qsTr("&Decline invite") : qsTr("&Leave")
+            onTriggered: py.callClientCoro(
+                model.user_id, "room_leave", [model.data.room_id]
+            )
+        }
     }
 }

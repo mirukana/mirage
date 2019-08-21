@@ -13,16 +13,19 @@
     - Hide when window too small
     - Also save/load its size
     - Is auto-sizing actually needed, or can we just set a default manual size?
+    - Reducable room sidepane, swipe to show full-window
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
   - Reloading config files (cache)
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
+  - Show error box if uploading avatar fails
 
   - Don't strip user spacing in html
-  - Keyboard flicking against top/bottom edge
   - Do something when access token is invalid
+  - Keyboard flicking against top/bottom edge
+
   - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
@@ -49,13 +52,12 @@
   - When starting a long task, e.g. importing keys, quitting the page,
     and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode
-  - Responses
+  - Replies
   - Messages editing
   - Code highlighting
   - Support GIF avatars
-  - When reduced, show the full-window sidepane instead of Default page
   - Adapt shortcuts flicking speed to font size and DPI
-  - Show error box if uploading avatar fails
+
   - EditAccount page:
     - Remove account from client
       - state: Set UI state page to Default.qml when account is removed
@@ -66,22 +68,20 @@
       - Add an explanation tooltip
       - Prevent sending messages with an user not in room
       - Support \ escaping
-  - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
-  - Accept drag and dropping a picture in account settings to set avatar
+    - Accept drag and dropping a picture to set avatar
 
+  - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
   - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
   - Conversation breaks: show time of first new msg after break instead of big
     blank space
-  - Replies
+
   - Sidepane
     - Header back button when reduced
     - Better look for arrows and option button when collapsed
-    - Way to put it back to auto-sizing (snap)
-    - Show it when hovering on the left when collapsed/reduced
+    - Show it when hovering/hitting focus keybind on the left when collapsed
     - Ability to drag on any place of the pane to resize
-  - Reducable room sidepane, swipe to show full-window
 
   - Invite to room
   - Server selection

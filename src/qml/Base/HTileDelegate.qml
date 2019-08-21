@@ -20,6 +20,8 @@ HButton {
     readonly property alias rightInfo: rightInfo
     readonly property alias subtitle: subtitle
 
+    property HMenu contextMenu: HMenu {}
+
     property Item image
 
     property Item details: HColumnLayout {
@@ -75,14 +77,6 @@ HButton {
 
     onActivated: view.currentIndex = model.index
 
-    onClicked: {
-        view.highlightRangeMode    = ListView.NoHighlightRange
-        view.highlightMoveDuration = 0
-        activated()
-        view.highlightRangeMode    = ListView.ApplyRange
-        view.highlightMoveDuration = theme.animationDuration
-    }
-
 
     Timer {
         interval: 100
@@ -90,5 +84,26 @@ HButton {
         running: view.currentIndex == -1
         // Component.onCompleted won't work for this
         onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onTapped: {
+            view.highlightRangeMode    = ListView.NoHighlightRange
+            view.highlightMoveDuration = 0
+            activated()
+            view.highlightRangeMode    = ListView.ApplyRange
+            view.highlightMoveDuration = theme.animationDuration
+        }
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: if (contextMenu.count > 0) contextMenu.popup()
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onLongPressed: if (contextMenu.count > 0) contextMenu.popup()
     }
 }
