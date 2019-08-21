@@ -134,13 +134,13 @@ controls:
             real opacity:   1.0
 
         letter:
-            int saturation: colors.saturation * 1.5
+            int saturation: 10 + colors.saturation * 1.5
             int lightness:  colors.intensity * 60
             real opacity:   1.0
 
     displayName:
-        int saturation: colors.saturation
-        int lightness:  Math.min(55, colors.intensity * 55)
+        int saturation: colors.saturation + 25
+        int lightness:  Math.min(60, colors.intensity * 60)
 
 
 // Special UI parts
