@@ -1,5 +1,4 @@
 - Refactoring
-  - Use HInterfaceBox for EditAccount Profile and Encryption 
   - Banners
 
   - Theming
@@ -21,10 +20,8 @@
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
 
-  - Don't linkify images for outgoing html
-  - Keyboard flicking against top/bottom edge
   - Don't strip user spacing in html
-
+  - Keyboard flicking against top/bottom edge
   - Do something when access token is invalid
   - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
@@ -33,6 +30,7 @@
 - UI
   - Make HListView scrollbars visible
   - Remove first html lists left margin
+  - Adapt UI for small heights
 
   - Popup:
       - label size
@@ -77,7 +75,6 @@
   - Conversation breaks: show time of first new msg after break instead of big
     blank space
   - Replies
-  - `pyotherside.atexit()`
   - Sidepane
     - Header back button when reduced
     - Better look for arrows and option button when collapsed
@@ -129,6 +126,7 @@
   - Links preview
 
 - Client improvements
+  - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
   - Image provider: on failed conversion, way to show a "broken image" thumb?
   - Config file format

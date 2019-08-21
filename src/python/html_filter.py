@@ -51,16 +51,20 @@ class HtmlFilter:
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
         text = self._inline_sanitizer.sanitize(html).strip("\n")
 
-        if not outgoing:
-            text = re.sub(
-                r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text,
-            )
+        if outgoing:
+            return text
 
-        return text
+        return re.sub(
+            r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text,
+        )
 
 
     def filter(self, html: str, outgoing: bool = False) -> str:
         html = self._sanitizer.sanitize(html)
+
+        if outgoing:
+            return html
+
         tree = etree.fromstring(html, parser=etree.HTMLParser())
 
         if tree is None:
@@ -77,14 +81,11 @@ class HtmlFilter:
 
         text = str(result, "utf-8").strip("\n")
 
-        if not outgoing:
-            text = re.sub(
-                r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
-                r'<\1><span class="greentext">\2</span>\3',
-                text,
-            )
-
-        return text
+        return re.sub(
+            r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
+            r'<\1><span class="greentext">\2</span>\3',
+            text,
+        )
 
 
     def sanitize_settings(self, inline: bool = False) -> dict:
