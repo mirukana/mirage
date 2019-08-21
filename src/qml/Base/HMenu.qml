@@ -17,7 +17,7 @@ Menu {
             rightPadding = Math.max(item.rightPadding, rightPadding)
         }
         return Math.min(
-            result + leftPadding + rightPadding, theme.minimumSupportedWidth
+            result + leftPadding + rightPadding, window.width
         )
     }
 

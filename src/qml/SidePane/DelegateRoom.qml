@@ -78,9 +78,23 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
+            visible: invited
+            icon.name: "invite-accept"
+            text: qsTr("Accept %1's invite").arg(Utils.coloredNameHtml(
+                model.data.inviter_name, model.data.inviter_id
+            ))
+            label.textFormat: Text.StyledText
+
+            onTriggered: py.callClientCoro(
+                model.user_id, "join", [model.data.room_id]
+            )
+        }
+
+        HMenuItem {
             visible: ! model.data.left
             icon.name: invited ? "invite-decline" : "room-leave"
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
+
             onTriggered: py.callClientCoro(
                 model.user_id, "room_leave", [model.data.room_id]
             )
@@ -89,6 +103,7 @@ HTileDelegate {
         HMenuItem {
             icon.name: "room-forget"
             text: qsTr("Forget")
+
             onTriggered: py.callClientCoro(
                 model.user_id, "room_forget", [model.data.room_id]
             )

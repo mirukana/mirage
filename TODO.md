@@ -5,6 +5,7 @@
     - File format
     - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
+    - Remove the filled theme
 
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
     - Choose a better default easing type for animations
@@ -33,6 +34,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Use a Loader for context menus
   - Make HListView scrollbars visible
   - Remove first html lists left margin
   - Adapt UI for small heights
