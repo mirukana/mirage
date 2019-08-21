@@ -1,4 +1,10 @@
+function numberWrapAround(num, max) {
+    return num < 0 ? max + (num % max) : (num % max)
+}
+
+
 function hsluv(hue, saturation, lightness, alpha=1.0) {
+    hue = numberWrapAround(hue, 360)
     let rgb = py.callSync("hsluv", [hue, saturation, lightness])
     return Qt.rgba(rgb[0], rgb[1], rgb[2], alpha)
 }
@@ -11,6 +17,7 @@ function hsl(hue, saturation, lightness) {
 
 function hsla(hue, saturation, lightness, alpha=1.0) {
     // Convert standard hsla(0-360, 1-100, 1-100, 0-1) to Qt format
+    hue = numberWrapAround(hue, 360)
     return Qt.hsla(hue / 360, saturation / 100, lightness / 100, alpha)
 }
 

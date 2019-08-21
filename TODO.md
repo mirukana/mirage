@@ -2,10 +2,11 @@
   - Use HInterfaceBox for EditAccount Profile and Encryption 
   - Banners
 
-  - Make all icon SVG files white/black, since we can now use ColorOverlay
+  - Theming
+    - File format
+    - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
 
-  - `^property type name$`
   - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
     - Choose a better default easing type for animations
   - Sendbox
@@ -95,9 +96,8 @@
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading account, past room events, images or clicking buttons
     - Show account page as loading until profile initially retrieved
+
   - Theming
-    - Don't create additional lines in theme conversion (braces)
-    - Recursively merge default and user theme
     - Distribute fonts
     - preferredIconPack: accept multiple values
     - Find icon packs in user data dir
@@ -107,6 +107,7 @@
     - Way to round avatar corners to allow box radius
     - If avatar is set, name color from average color?
     - Accent color from background
+
   - Settings page
   - Message/text selection
   - Notifications
