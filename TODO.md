@@ -1,7 +1,6 @@
 - Refactoring
-  - Repair filter members field and retest its performance
-
   - Use HInterfaceBox for EditAccount Profile and Encryption 
+  - Banners
 
   - Make all icon SVG files white/black, since we can now use ColorOverlay
     - Make the icon blue in EditAccount when hovering and no avatar set
@@ -17,7 +16,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - (Left?)Banner binding loop
   - Reloading config files (cache)
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
@@ -45,6 +43,8 @@
     - Which element was focused
     - Room member filter field
 
+  - Prevent others from having a too similar hue as us, or our own accounts
+    from sharing a too similar hue
   - Combine events so they take less space
     - After combining is implemented, no need to hide our own profile changes.
   - When starting a long task, e.g. importing keys, quitting the page,

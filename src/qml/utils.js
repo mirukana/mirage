@@ -97,9 +97,10 @@ function filterModelSource(source, filter_text, property="filter_string") {
 
     for (let i = 0;  i < source.length; i++) {
         if (filterMatches(filter_text, source[i][property])) {
-            results.push(item)
+            results.push(source[i])
         }
     }
+
     return results
 }
 
