@@ -5,6 +5,10 @@ import "../utils.js" as Utils
 CheckBox {
     id: box
     spacing: theme.spacing
+    leftPadding: spacing / 1.5
+    rightPadding: spacing / 1.5
+    topPadding: spacing / 2
+    bottomPadding: spacing / 2
     opacity: enabled ? 1 : theme.disabledElementsOpacity
 
 
