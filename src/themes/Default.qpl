@@ -106,6 +106,9 @@ controls:
 
         color text:             colors.text
 
+    listView:
+        color highlight: hsluv(0, 0, 50, 0.3)
+
     textField:
         color background:        colors.inputBackground
         color focusedBackground: background

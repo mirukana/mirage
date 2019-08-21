@@ -18,7 +18,7 @@ ListView {
 
 
     highlight: HRectangle {
-        color: theme.controls.button.checkedOverlay
+        color: theme.controls.listView.highlight
     }
 
     // Important:
