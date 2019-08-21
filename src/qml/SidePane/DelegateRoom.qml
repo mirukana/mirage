@@ -8,9 +8,11 @@ HTileDelegate {
     spacing: sidePane.currentSpacing
     backgroundColor: theme.sidePane.room.background
     opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
-    isCurrent: window.uiState.page == "Chat/Chat.qml" &&
-               window.uiState.pageProperties.userId == model.user_id &&
-               window.uiState.pageProperties.roomId == model.data.room_id
+
+    shouldBeCurrent:
+        window.uiState.page == "Chat/Chat.qml" &&
+        window.uiState.pageProperties.userId == model.user_id &&
+        window.uiState.pageProperties.roomId == model.data.room_id
 
 
     Behavior on opacity { HNumberAnimation {} }

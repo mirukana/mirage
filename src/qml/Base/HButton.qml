@@ -55,6 +55,7 @@ Button {
             svgName: loading ? "hourglass" : iconName
 
             Layout.fillHeight: true
+            Layout.alignment: Qt.AlignCenter
         }
 
         HLabel {

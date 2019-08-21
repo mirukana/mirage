@@ -1,5 +1,4 @@
 - Refactoring
-  - Repair timer/connection
   - Repair filter members field and retest its performance
 
   - Use HInterfaceBox for EditAccount Profile and Encryption 
@@ -20,7 +19,6 @@
 - Fixes
   - (Left?)Banner binding loop
   - Reloading config files (cache)
-  - Tiny invisible scrollbar
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
 
@@ -34,6 +32,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Make HListView scrollbars visible
   - Remove first html lists left margin
 
   - Popup:

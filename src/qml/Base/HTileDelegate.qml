@@ -6,10 +6,10 @@ HButton {
 
 
     signal activated()
-    signal highlightMe()
 
 
-    property bool isCurrent: false
+    property HListView view: ListView.view
+    property bool shouldBeCurrent: false
 
     readonly property var delegateModel: model
 
@@ -30,7 +30,7 @@ HButton {
 
             HLabel {
                 id: title
-                text: "Title"
+                text: "Missing title"
                 elide: Text.ElideRight
                 verticalAlignment: Qt.AlignVCenter
 
@@ -73,29 +73,22 @@ HButton {
         children: [image, details].concat(additionalItems)
     }
 
-    onIsCurrentChanged: if (isCurrent) highlightMe()
-    onHighlightMe: accountRoomList.currentIndex = model.index
+    onActivated: view.currentIndex = model.index
 
     onClicked: {
-        ListView.highlightRangeMode = ListView.NoHighlightRange
-        ListView.highlightMoveDuration = 0
+        view.highlightRangeMode    = ListView.NoHighlightRange
+        view.highlightMoveDuration = 0
         activated()
-        ListView.highlightRangeMode = ListView.ApplyRange
-        ListView.highlightMoveDuration = theme.animationDuration
+        view.highlightRangeMode    = ListView.ApplyRange
+        view.highlightMoveDuration = theme.animationDuration
     }
 
 
     Timer {
         interval: 100
         repeat: true
-        running: ListView.currentIndex == -1
+        running: view.currentIndex == -1
         // Component.onCompleted won't work for this
-        onTriggered: if (isCurrent) highlightMe()
+        onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
     }
-
-    // Connections {
-        // target: ListView
-        // onHideHoverHighlight: tile.hovered = false
-    // }
-
 }

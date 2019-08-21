@@ -8,12 +8,12 @@ HTileDelegate {
     topPadding: model.index > 0 ? sidePane.currentSpacing / 2 : 0
     bottomPadding: topPadding
     backgroundColor: theme.sidePane.account.background
-
     opacity: collapsed && ! forceExpand ?
              theme.sidePane.account.collapsedOpacity : 1
 
-    isCurrent: window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
-               window.uiState.pageProperties.userId == model.data.user_id
+    shouldBeCurrent:
+        window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
+        window.uiState.pageProperties.userId == model.data.user_id
 
 
     Behavior on opacity { HNumberAnimation {} }
@@ -52,9 +52,8 @@ HTileDelegate {
     HButton {
         id: expand
         iconName: "expand"
-        ico.dimension: 16
         backgroundColor: "transparent"
-        leftPadding: sidePane.currentSpacing / 1.5
+        padding: sidePane.currentSpacing / 1.5
         rightPadding: leftPadding
         onClicked: accountDelegate.toggleCollapse()
 
@@ -70,7 +69,5 @@ HTileDelegate {
         }
 
         Behavior on opacity { HNumberAnimation {} }
-
-        Layout.fillHeight: true
     }
 }
