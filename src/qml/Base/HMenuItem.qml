@@ -8,6 +8,7 @@ MenuItem {
     rightPadding: spacing
     topPadding: spacing / 1.75
     bottomPadding: spacing / 1.75
+    height: visible ? implicitHeight : 0
 
 
     readonly property alias iconItem: contentItem.icon

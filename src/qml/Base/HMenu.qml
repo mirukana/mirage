@@ -11,7 +11,9 @@ Menu {
         let rightPadding = 0
 
         for (let i = 0; i < count; ++i) {
-            let item     = itemAt(i)
+            let item = itemAt(i)
+            if (! item.visible) continue
+
             result       = Math.max(item.contentItem.implicitWidth, result)
             leftPadding  = Math.max(item.leftPadding, leftPadding)
             rightPadding = Math.max(item.rightPadding, rightPadding)
