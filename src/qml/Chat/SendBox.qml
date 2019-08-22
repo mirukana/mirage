@@ -169,13 +169,6 @@ HRectangle {
                 })
 
                 area.Keys.onPressed.connect(event => {
-                    if (event.modifiers == Qt.MetaModifier) {
-                        // Prevent super+key from sending the key as text
-                        // on xwayland
-                        event.accepted = true
-                        return
-                    }
-
                     if (event.modifiers == Qt.NoModifier &&
                         event.key == Qt.Key_Backspace &&
                         ! textArea.selectedText)

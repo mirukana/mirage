@@ -28,5 +28,11 @@ TextField {
     }
 
     selectByMouse: true
+
+    Keys.onPressed: if (
+        event.modifiers & Qt.AltModifier ||
+        event.modifiers & Qt.MetaModifier
+    ) event.accepted = true
+
     Keys.forwardTo: mainUI.shortcuts
 }
