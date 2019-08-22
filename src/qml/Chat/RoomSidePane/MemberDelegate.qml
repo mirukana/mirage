@@ -5,7 +5,7 @@ HTileDelegate {
     id: memberDelegate
     spacing: roomSidePane.currentSpacing
     rightPadding: 0
-    backgroundColor: theme.sidePane.member.background
+    backgroundColor: theme.chat.roomSidePane.member.background
 
     image: HUserAvatar {
         userId: model.user_id
@@ -13,6 +13,9 @@ HTileDelegate {
         avatarUrl: model.avatar_url
     }
 
-    title.color: theme.sidePane.member.name
     title.text: model.display_name || model.user_id
+    title.color: theme.chat.roomSidePane.member.name
+
+    subtitle.text: model.user_id
+    subtitle.color: theme.chat.roomSidePane.member.subtitle
 }

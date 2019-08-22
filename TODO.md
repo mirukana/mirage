@@ -63,8 +63,6 @@
   - Adapt shortcuts flicking speed to font size and DPI
 
   - EditAccount page:
-    - Remove account from client
-      - state: Set UI state page to Default.qml when account is removed
     - Device settings
     - Multiaccount aliases:
       - Warn when conflict with another alias

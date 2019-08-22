@@ -188,10 +188,6 @@ sidePane:
         color subtitle:       colors.dimText
         color lastEventDate:  colors.halfDimText
 
-    member:
-        color background:      "transparent"
-        color name:            colors.text
-
     settingsButton:
         color background: colors.inputBackground
 
@@ -207,6 +203,11 @@ chat:
 
     roomSidePane:
         color background: colors.mediumBackground
+
+        member:
+            color background: "transparent"
+            color name:       colors.text
+            color subtitle:   colors.dimText
 
     eventList:
         int ownEventsOnRightUnderWidth: 768
