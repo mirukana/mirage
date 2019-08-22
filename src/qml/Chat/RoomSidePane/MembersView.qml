@@ -58,7 +58,9 @@ HColumnLayout {
 
         HButton {
             icon.name: "room-send-invite"
-            iconItem.dimension: parent.height
+            iconItem.dimension: parent.height - 10
+            topPadding: 0
+            bottomPadding: 0
             toolTip.text: qsTr("Invite to this room")
             backgroundColor: theme.chat.roomSidePane.inviteButton.background
 
