@@ -150,6 +150,8 @@ HGridLayout {
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
+
+                Keys.onEscapePressed: cancelChanges()
             }
 
             HLabeledTextField {
@@ -165,6 +167,8 @@ HGridLayout {
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
+
+                Keys.onEscapePressed: cancelChanges()
             }
         }
 

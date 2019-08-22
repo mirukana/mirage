@@ -34,7 +34,9 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - Use a Loader for context menus
+  - Make invite icon blink if there's no one but ourself in the room,
+    but never do it again once the user hovered it long enough to show tooltip
+    or clicked on it once 
   - Make HListView scrollbars visible
   - Remove first html lists left margin
   - Adapt UI for small heights
@@ -86,7 +88,6 @@
     - Show it when hovering/hitting focus keybind on the left when collapsed
     - Ability to drag on any place of the pane to resize
 
-  - Invite to room
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Add room
