@@ -11,9 +11,9 @@ HListView {
     readonly property var collapseAccounts: window.uiState.collapseAccounts
     readonly property string filter: paneToolBar.roomFilter
 
-    onOriginSourceChanged: filterLimiter.requestFire()
-    onFilterChanged: filterLimiter.requestFire()
-    onCollapseAccountsChanged: filterLimiter.requestFire()
+    onOriginSourceChanged: filterLimiter.restart()
+    onFilterChanged: filterLimiter.restart()
+    onCollapseAccountsChanged: filterLimiter.restart()
 
 
     function filterSource() {
@@ -59,13 +59,12 @@ HListView {
 
     function previous(activate=true) {
         decrementCurrentIndex()
-        if (activate) activateLimiter.requestFire()
-
+        if (activate) activateLimiter.restart()
     }
 
     function next(activate=true) {
         incrementCurrentIndex()
-        if (activate) activateLimiter.requestFire()
+        if (activate) activateLimiter.restart()
     }
 
     function activate() {
@@ -108,15 +107,15 @@ HListView {
     }
 
 
-    HRateLimiter {
+    Timer {
         id: filterLimiter
-        cooldown: 16
-        onFired: filterSource()
+        interval: 16
+        onTriggered: filterSource()
     }
 
-    HRateLimiter {
+    Timer {
         id: activateLimiter
-        onFired: activate()
-        extendOnRequestWhileCooldownActive: true
+        interval: 300
+        onTriggered: activate()
     }
 }

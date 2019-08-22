@@ -79,7 +79,7 @@ HButton {
     Timer {
         interval: 100
         repeat: true
-        running: true
+        // running: true
         // Component.onCompleted won't work for this
         onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
     }

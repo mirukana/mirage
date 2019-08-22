@@ -5,6 +5,7 @@ import "utils.js" as Utils
 HShortcutHandler {
     property Item flickTarget: Item {}
 
+    // App
 
     HShortcut {
         enabled: debugMode
@@ -17,15 +18,21 @@ HShortcutHandler {
         onPressed: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
+    // Page scrolling
+
     HShortcut {
         sequences: settings.keys.scrollUp
         onPressed: Utils.smartVerticalFlick(flickTarget, -335)
+        onHeld: pressed(event)
     }
 
     HShortcut {
         sequences: settings.keys.scrollDown
         onPressed: Utils.smartVerticalFlick(flickTarget, 335)
+        onHeld: pressed(event)
     }
+
+    // SidePane
 
     HShortcut {
         sequences: settings.keys.focusSidePane
@@ -40,11 +47,13 @@ HShortcutHandler {
     HShortcut {
         sequences: settings.keys.goToPreviousRoom
         onPressed: mainUI.sidePane.accountRoomList.previous()
+        onHeld: pressed(event)
     }
 
     HShortcut {
         sequences: settings.keys.goToNextRoom
         onPressed: mainUI.sidePane.accountRoomList.next()
+        onHeld: pressed(event)
     }
 
     HShortcut {
