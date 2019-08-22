@@ -28,4 +28,5 @@ TextField {
     }
 
     selectByMouse: true
+    Keys.forwardTo: mainUI.shortcuts
 }

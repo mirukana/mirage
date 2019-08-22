@@ -1,80 +1,54 @@
 import QtQuick 2.12
+import "Base"
+import "utils.js" as Utils
 
-Item {
+HShortcutHandler {
     property Item flickTarget: Item {}
 
 
-    function smartVerticalFlick(baseVelocity, fastMultiply=3) {
-        if (! flickTarget.interactive) { return }
-
-        baseVelocity = -baseVelocity
-        let vel      = -flickTarget.verticalVelocity
-        let fast     = (baseVelocity < 0 && vel < baseVelocity / 2) ||
-                       (baseVelocity > 0 && vel > baseVelocity / 2)
-
-        flickTarget.flick(0, baseVelocity * (fast ? fastMultiply : 1))
+    HShortcut {
+        enabled: debugMode
+        sequences: settings.keys.startDebugger
+        onPressed: py.call("APP.pdb")
     }
 
-
-    Shortcut {
-        sequences: settings.keys ? settings.keys.startDebugger : []
-        onActivated: if (debugMode) { py.call("APP.pdb") }
+    HShortcut {
+        sequences: settings.keys.reloadConfig
+        onPressed: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.reloadConfig : []
-        onActivated: py.loadSettings(() => { mainUI.pressAnimation.start() })
+    HShortcut {
+        sequences: settings.keys.scrollUp
+        onPressed: Utils.smartVerticalFlick(flickTarget, -335)
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.scrollUp : []
-        onActivated: smartVerticalFlick(-335)
+    HShortcut {
+        sequences: settings.keys.scrollDown
+        onPressed: Utils.smartVerticalFlick(flickTarget, 335)
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.scrollDown : []
-        onActivated: smartVerticalFlick(335)
+    HShortcut {
+        sequences: settings.keys.focusSidePane
+        onPressed: mainUI.sidePane.setFocus()
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.focusSidePane : []
-        onActivated: mainUI.sidePane.setFocus()
+    HShortcut {
+        sequences: settings.keys.clearRoomFilter
+        onPressed: mainUI.sidePane.paneToolBar.roomFilter = ""
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.clearRoomFilter : []
-        onActivated: mainUI.sidePane.paneToolBar.roomFilter = ""
+    HShortcut {
+        sequences: settings.keys.goToPreviousRoom
+        onPressed: mainUI.sidePane.accountRoomList.previous()
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.goToPreviousRoom : []
-        onActivated: mainUI.sidePane.accountRoomList.previous()
+    HShortcut {
+        sequences: settings.keys.goToNextRoom
+        onPressed: mainUI.sidePane.accountRoomList.next()
     }
 
-    Shortcut {
-        sequences: settings.keys ? settings.keys.goToNextRoom : []
-        onActivated: mainUI.sidePane.accountRoomList.next()
+    HShortcut {
+        sequences: settings.keys.toggleCollapseAccount
+        onPressed: mainUI.sidePane.accountRoomList.toggleCollapseAccount()
     }
-
-    Shortcut {
-        sequences: settings.keys ? settings.keys.toggleCollapseAccount : []
-        onActivated: mainUI.sidePane.accountRoomList.toggleCollapseAccount()
-    }
-
-    /*
-    Shortcut {
-        sequence: "Ctrl+-"
-        onActivated: theme.fontScale = Math.max(0.1, theme.fontScale - 0.1)
-    }
-
-    Shortcut {
-        sequence: "Ctrl++"
-        onActivated: theme.fontScale = Math.min(10, theme.fontScale + 0.1)
-    }
-
-    Shortcut {
-        sequence: "Ctrl+="
-        onActivated: theme.fontScale = 1.0
-    }
-    */
 }

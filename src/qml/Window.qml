@@ -27,8 +27,7 @@ ApplicationWindow {
 
     property var theme: null
 
-    Shortcuts { id: shortcuts}
-    Python    { id: py }
+    Python { id: py }
 
     HLoader {
         anchors.fill: parent

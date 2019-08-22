@@ -26,5 +26,7 @@ ScrollView {
             id: textAreaBackground
             color: theme.controls.textArea.background
         }
+
+        Keys.forwardTo: mainUI.shortcuts
     }
 }

@@ -162,3 +162,15 @@ function getItem(array, mainKey, value) {
     }
     return undefined
 }
+
+
+function smartVerticalFlick(flickTarget, baseVelocity, fastMultiply=3) {
+    if (! flickTarget.interactive) { return }
+
+    baseVelocity = -baseVelocity
+    let vel      = -flickTarget.verticalVelocity
+    let fast     = (baseVelocity < 0 && vel < baseVelocity / 2) ||
+                   (baseVelocity > 0 && vel > baseVelocity / 2)
+
+    flickTarget.flick(0, baseVelocity * (fast ? fastMultiply : 1))
+}

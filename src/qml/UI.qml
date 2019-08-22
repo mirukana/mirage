@@ -10,6 +10,7 @@ HRectangle {
     color: theme.ui.background
     Component.onCompleted: window.mainUI = mainUI
 
+    property alias shortcuts: shortcuts
     property alias sidePane: sidePane
     property alias pageLoader: pageLoader
     property alias pressAnimation: _pressAnimation
@@ -27,6 +28,9 @@ HRectangle {
     property bool accountsPresent:
         (modelSources["Account"] || []).length > 0 ||
         py.startupAnyAccountsSaved
+
+
+    Shortcuts { id: shortcuts }
 
     HImage {
         id: mainUIBackground
