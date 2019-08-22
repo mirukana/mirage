@@ -5,9 +5,9 @@ MenuItem {
     id: menuItem
     spacing: theme.spacing
     leftPadding: spacing
-    rightPadding: spacing
+    rightPadding: leftPadding
     topPadding: spacing / 1.75
-    bottomPadding: spacing / 1.75
+    bottomPadding: topPadding
     height: visible ? implicitHeight : 0
 
 

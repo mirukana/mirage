@@ -136,6 +136,13 @@ controls:
         color background: colors.inputBackground
         color text:       colors.text
 
+    toolTip:
+        int delay:        500
+        color background: colors.inputBackground
+        color text:       colors.text
+        color border:     "black"
+        int borderWidth:  2
+
     avatar:
         int size:   baseElementsHeight
         int radius: theme.radius
@@ -208,6 +215,12 @@ chat:
             color background: "transparent"
             color name:       colors.text
             color subtitle:   colors.dimText
+
+        inviteButton:
+            color background: colors.inputBackground
+
+        filterMembers:
+            color background: colors.inputBackground
 
     eventList:
         int ownEventsOnRightUnderWidth: 768

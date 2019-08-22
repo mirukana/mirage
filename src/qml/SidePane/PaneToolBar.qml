@@ -9,14 +9,16 @@ HRowLayout {
     property alias roomFilter: filterField.text
 
     Layout.fillWidth: true
-    Layout.preferredHeight: theme.baseElementsHeight
+    Layout.minimumHeight: theme.baseElementsHeight
+    Layout.maximumHeight: Layout.minimumHeight
 
     HButton {
         icon.name: "add-account"
+        toolTip.text: qsTr("Add another account")
         backgroundColor: theme.sidePane.settingsButton.background
         onClicked: pageLoader.showPage("SignIn")
 
-        Layout.preferredHeight: parent.height
+        Layout.fillHeight: true
     }
 
     HTextField {
@@ -26,7 +28,7 @@ HRowLayout {
         bordered: false
 
         Layout.fillWidth: true
-        Layout.preferredHeight: parent.height
+        Layout.fillHeight: true
 
         onTextChanged: {
             if (window.uiState.sidePaneFilter == text) return

@@ -80,6 +80,10 @@ HRectangle {
                     height: parent.height
                     autoExclusive: true
                     checked: activeButton == modelData
+                    enabled: modelData == "members"
+                    toolTip.text: qsTr(
+                        modelData.charAt(0).toUpperCase() + modelData.slice(1)
+                    )
                     onClicked: activeButton =
                         activeButton == modelData ?  null : modelData
                 }

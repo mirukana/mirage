@@ -50,9 +50,7 @@ HRectangle {
         fillMode: Image.PreserveAspectCrop
         source: Qt.resolvedUrl(imageUrl)
 
-        HoverHandler {
-            id: hoverHandler
-        }
+        HoverHandler { id: hoverHandler }
 
         HToolTip {
             id: avatarToolTip
@@ -65,17 +63,10 @@ HRectangle {
             height: width
             delay: 1000
 
-            background: HRectangle {
-                id: background
-                border.color: "black"
-                border.width: 2
-            }
-
             HImage {
                 id: avatarToolTipImage
-                anchors.centerIn: parent
-                sourceSize.width: parent.width - background.border.width * 2
-                sourceSize.height: parent.height - background.border.width * 2
+                sourceSize.width: parent.width
+                sourceSize.height: parent.height
                 width: sourceSize.width
                 height: sourceSize.width
                 fillMode: Image.PreserveAspectCrop

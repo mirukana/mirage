@@ -40,15 +40,29 @@ HColumnLayout {
         }
     }
 
-    HTextField {
-        id: filterField
-        placeholderText: qsTr("Filter members")
-        backgroundColor: theme.sidePane.filterRooms.background
-        bordered: false
+    HRowLayout {
+        Layout.minimumHeight: theme.baseElementsHeight
+        Layout.maximumHeight: Layout.minimumHeight
 
-        onTextChanged: filterLimiter.requestFire()
+        HTextField {
+            id: filterField
+            placeholderText: qsTr("Filter members")
+            backgroundColor: theme.chat.roomSidePane.filterMembers.background
+            bordered: false
 
-        Layout.fillWidth: true
-        Layout.preferredHeight: theme.baseElementsHeight
+            onTextChanged: filterLimiter.requestFire()
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        HButton {
+            icon.name: "room-send-invite"
+            iconItem.dimension: parent.height
+            toolTip.text: qsTr("Invite to this room")
+            backgroundColor: theme.chat.roomSidePane.inviteButton.background
+
+            Layout.fillHeight: true
+        }
     }
 }

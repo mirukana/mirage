@@ -58,6 +58,7 @@ HTileDelegate {
         backgroundColor: "transparent"
         padding: sidePane.currentSpacing / 1.5
         rightPadding: leftPadding
+        toolTip.text: collapsed ? qsTr("Expand") : qsTr("Collapse")
         onClicked: accountDelegate.toggleCollapse()
 
         visible: opacity > 0

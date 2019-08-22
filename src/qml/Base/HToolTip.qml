@@ -2,12 +2,25 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 ToolTip {
-    // Be sure to have a width and height set, to prevent the tooltip from
-    // going out of the window's boundaries
-
     id: toolTip
-    delay: 150
-    padding: 0
+    delay: theme.controls.toolTip.delay
+    padding: background.border.width
+
+    background: HRectangle {
+        id: background
+        color: theme.controls.toolTip.background
+        border.color: theme.controls.toolTip.border
+        border.width: theme.controls.toolTip.borderWidth
+    }
+
+    contentItem: HLabel {
+        color: theme.controls.toolTip.text
+        text: toolTip.text
+        leftPadding: theme.spacing / 1.5
+        rightPadding: leftPadding
+        topPadding: theme.spacing / 2
+        bottomPadding: topPadding
+    }
 
     enter: Transition {
         HNumberAnimation { property: "opacity"; from: 0.0; to: 1.0 }
@@ -21,6 +34,6 @@ ToolTip {
     }
 
     HoverHandler {
-        onHoveredChanged: if (!hovered) { toolTip.hide() }
+        onHoveredChanged: if (! hovered) toolTip.hide()
     }
 }

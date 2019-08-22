@@ -21,6 +21,11 @@ Button {
     property bool loading: false
     property bool circle: false
 
+    property HToolTip toolTip: HToolTip {
+        id: toolTip
+        visible: text && hovered
+    }
+
 
     background: HButtonBackground {
         button: button
