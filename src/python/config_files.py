@@ -115,20 +115,22 @@ class UISettings(JSONConfigFile):
             "theme": "Default.qpl",
             "writeAliases": {},
             "keys": {
+                "startDebugger":    ["Alt+Shift+D"],
                 "reloadConfig":     "Alt+Shift+R",
+
                 "scrollUp":         ["Alt+Up", "Alt+K"],
                 "scrollDown":       ["Alt+Down", "Alt+J"],
+
                 "focusSidePane":    ["Alt+S", "Ctrl+S"],
                 "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
-                "goToPreviousRoom": ["Alt+Shift+Up", "Alt+Shift+K"],
-                "goToNextRoom":     ["Alt+Shift+Down", "Alt+Shift+J"],
+                "addNewAccount":    ["Alt+N"],
 
+                "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
+                "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [
                     "Alt+Shift+Left", "Alt+Shift+Right",
                     "Alt+Shift+H", "Alt+Shift+L",
                 ],
-
-                "startDebugger":    ["Alt+Shift+D"],
             },
         }
 

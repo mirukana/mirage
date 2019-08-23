@@ -5,7 +5,8 @@ import "../Base"
 HRowLayout {
     id: toolBar
 
-    property alias filterField: filterField
+    readonly property alias addAccountButton: addAccountButton
+    readonly property alias filterField: filterField
     property alias roomFilter: filterField.text
 
     Layout.fillWidth: true
@@ -13,6 +14,7 @@ HRowLayout {
     Layout.maximumHeight: Layout.minimumHeight
 
     HButton {
+        id: addAccountButton
         icon.name: "add-account"
         toolTip.text: qsTr("Add another account")
         backgroundColor: theme.sidePane.settingsButton.background

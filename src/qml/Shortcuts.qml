@@ -45,6 +45,11 @@ HShortcutHandler {
     }
 
     HShortcut {
+        sequences: settings.keys.addNewAccount
+        onPressed: mainUI.sidePane.paneToolBar.addAccountButton.clicked()
+    }
+
+    HShortcut {
         sequences: settings.keys.goToPreviousRoom
         onPressed: mainUI.sidePane.accountRoomList.previous()
         onHeld: pressed(event)
