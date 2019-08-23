@@ -15,6 +15,8 @@ HTileDelegate {
         window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
         window.uiState.pageProperties.userId == model.data.user_id
 
+    setCurrentTimer.running: ! accountRoomList.activateLimiter.running
+
 
     Behavior on opacity { HNumberAnimation {} }
 
