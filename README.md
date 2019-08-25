@@ -43,6 +43,6 @@ Install the dependencies from Github:
 
     git clone <TODO>
     cd harmonyqml
-    qmake && make && sudo make install
+    qmake harmonyqml.pro && make && sudo make install
 
 After this if no errors happened, run `harmonyqml`.

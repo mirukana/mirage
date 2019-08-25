@@ -129,6 +129,7 @@
   - Links preview
 
 - Client improvements
+  - Check if username exists on login screen
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
   - Image provider: on failed conversion, way to show a "broken image" thumb?

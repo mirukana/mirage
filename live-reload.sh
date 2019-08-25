@@ -10,6 +10,8 @@ export QT_QPA_PLATFORM=xcb
 
 CFG='dev no_embedded'
 
+qmake harmonyqml.pro CONFIG+="$CFG" && make
+
 while true; do
     find src harmonyqml.pro -type f |
     entr -cdnr sh -c \
