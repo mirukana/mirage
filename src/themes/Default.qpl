@@ -79,6 +79,10 @@ colors:
 // Generic UI controls
 
 controls:
+    loader:
+        int defaultDimension: 80
+        color colorize: "white"
+
     box:
         color background: colors.strongBackground
         int radius:       theme.radius

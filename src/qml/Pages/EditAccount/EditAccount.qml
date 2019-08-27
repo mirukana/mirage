@@ -49,6 +49,7 @@ HPage {
             Layout.preferredHeight: childrenRect.height
 
             HLoader {
+                anchors.centerIn: parent
                 width: parent.width
                 source: ready ?
                         modelData :

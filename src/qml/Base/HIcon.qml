@@ -8,7 +8,9 @@ HImage {
 
     source:
         svgName ?
-        ("../../icons/" + theme.preferredIconPack + "/" + svgName + ".svg") :
+        ("../../icons/" +
+         (theme ? theme.preferredIconPack : "light-thin") +
+         "/" + svgName + ".svg") :
         ""
 
     sourceSize.width: svgName ? dimension : 0

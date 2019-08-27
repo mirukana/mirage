@@ -1,36 +1,27 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Shapes 1.12
 
 BusyIndicator {
     id: indicator
-    implicitWidth: Math.min(192, Math.max(64, parent.width / 5))
-    implicitHeight: 10
+    implicitWidth: theme ? theme.controls.loader.defaultDimension : 96
+    implicitHeight: implicitWidth
 
-    contentItem: Item {
-        Rectangle {
-            id: circle
-            width: height
-            height: indicator.height
-            radius: height / 2
+    contentItem: HIcon {
+        svgName: "loader"
+        dimension: indicator.width
+        property var pr: dimension
+        colorize: theme ? theme.controls.loader.colorize : "white"
+        mipmap: true
 
-            ColorAnimation on color {
-                // Can't swap direct colors values
-                property string c1: "white"
-                property string c2: theme ? theme.colors.accentText : "cyan"
-
-                id: colorAnimation
-                from: c1
-                to: c2
-                duration: 1000
-                onStopped: {[c1, c2] = [c2, c1]; start()}
-            }
-
-            XAnimator on x {
-                from: 0
-                to: indicator.width - circle.width
-                duration: colorAnimation.duration / 2
-                onStopped: {[from, to] = [to, from]; start()}
-            }
+        RotationAnimation on rotation {
+            id: rotationAnimation
+            from: 0
+            to: 360
+            running: true
+            loops: Animation.Infinite
+            duration: theme ? (theme.animationDuration * 6) : 600
+            easing.type: Easing.Linear
         }
     }
 }
