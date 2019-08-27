@@ -57,6 +57,7 @@ HColumnLayout {
         }
 
         HButton {
+            enabled: false  // TODO
             icon.name: "room-send-invite"
             iconItem.dimension: parent.height - 10
             topPadding: 0

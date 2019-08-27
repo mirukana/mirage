@@ -103,6 +103,7 @@ HRectangle {
         anchors.right: parent.right
         opacity: collapseButtons ? 1 : 0
         visible: opacity > 0
+        enabled: false  // TODO
 
         backgroundColor: "transparent"
         icon.name: "reduced-room-buttons"
