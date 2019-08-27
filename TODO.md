@@ -34,6 +34,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Disable buttons when loading, disable edit profile when account loading
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
     or clicked on it once 

@@ -25,6 +25,54 @@ HRowLayout {
 
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
+
+        HNumberAnimation {
+            id: blink
+            target: icon
+            property: "opacity"
+            from: 1
+            to: 0.3
+            factor: 2
+            running: button.loading || false
+            onStopped: { [from, to] = [to, from]; start() }
+        }
+
+        HNumberAnimation {
+            target: icon
+            property: "scale"
+            from: 1
+            to: 0.92
+            factor: blink.factor
+            running: blink.running
+            onStopped: { [from, to] = [to, from]; start() }
+        }
+
+
+        SequentialAnimation {
+            running: blink.running
+            loops: Animation.Infinite
+
+            HPauseAnimation { factor: blink.factor * 8 }
+
+            HNumberAnimation {
+                id: rotation1
+                target: icon
+                property: "rotation"
+                from: 0
+                to: 180
+                factor: blink.factor
+            }
+
+            HPauseAnimation { factor: blink.factor * 8 }
+
+            HNumberAnimation {
+                target: rotation1.target
+                property: rotation1.property
+                from: rotation1.to
+                to: 360
+                factor: rotation1.factor
+            }
+        }
     }
 
     HLabel {
