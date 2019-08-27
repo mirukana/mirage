@@ -74,7 +74,7 @@ HRectangle {
                     id: button
                     text: modelData.text
                     icon.name: modelData.iconName || ""
-                    enabled: modelData.enabled
+                    enabled: modelData.enabled && ! button.loading
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true

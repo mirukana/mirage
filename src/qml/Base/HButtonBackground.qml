@@ -2,7 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 HRectangle {
-    opacity: enabled ? 1 : theme.disabledElementsOpacity
+    opacity: loading ? theme.loadingElementsOpacity :
+             enabled ? 1 : theme.disabledElementsOpacity
 
 
     property AbstractButton button

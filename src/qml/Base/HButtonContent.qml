@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.12
 
 HRowLayout {
     spacing: button.spacing
-    opacity: enabled ? 1 : theme.disabledElementsOpacity
+    opacity: loading ? theme.loadingElementsOpacity :
+             enabled ? 1 : theme.disabledElementsOpacity
 
 
     property AbstractButton button

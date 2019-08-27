@@ -6,10 +6,11 @@ Button {
     id: button
     spacing: theme.spacing
     leftPadding: spacing / 1.5
-    rightPadding: spacing / 1.5
+    rightPadding: leftPadding
     topPadding: spacing / 2
-    bottomPadding: spacing / 2
+    bottomPadding: topPadding
     iconItem.svgName: loading ? "hourglass" : icon.name
+    enabled: ! loading
 
     onVisibleChanged: if (! visible) loading = false
 
