@@ -51,12 +51,15 @@ class Backend:
         device_id:  Optional[str] = None,
         homeserver: str = "https://matrix.org",
     ) -> Tuple[bool, str]:
+
         client = MatrixClient(
             self, user=user, homeserver=homeserver, device_id=device_id,
         )
+
         try:
             await client.login(password)
         except RuntimeError as err:
+            await client.close()
             return (False, err.args[0].message)
 
         self.clients[client.user_id]         = client
