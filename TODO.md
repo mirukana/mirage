@@ -34,7 +34,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - Disable buttons when loading, disable edit profile when account loading
+  - Disable edit profile when account loading
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
     or clicked on it once 
@@ -95,8 +95,7 @@
   - Logout & leave/forget room warning popup
   - Prevent using the SendBox if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
-  - Spinner when loading account, past room events, images or clicking buttons
-    - Show account page as loading until profile initially retrieved
+  - Spinner when loading past room events or images 
 
   - Theming
     - Distribute fonts

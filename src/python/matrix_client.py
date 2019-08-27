@@ -53,9 +53,9 @@ class MatrixClient(nio.AsyncClient):
         self.backend: Backend    = backend
         self.models:  ModelStore = self.backend.models
 
-        self.sync_task:           Optional[asyncio.Future] = None
-        self.first_sync_happened: asyncio.Event            = asyncio.Event()
-        self.first_sync_date:     Optional[datetime]       = None
+        self.sync_task:       Optional[asyncio.Future] = None
+        self.first_sync_done: asyncio.Event            = asyncio.Event()
+        self.first_sync_date: Optional[datetime]       = None
 
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
@@ -224,7 +224,7 @@ class MatrixClient(nio.AsyncClient):
         if room_id in self.fully_loaded_rooms or room_id in self.invited_rooms:
             return False
 
-        await self.first_sync_happened.wait()
+        await self.first_sync_done.wait()
 
         response = await self.room_messages(
             room_id = room_id,
@@ -484,11 +484,12 @@ class MatrixClient(nio.AsyncClient):
 
             await self.register_nio_room(self.all_rooms[room_id], left=True)
 
-        if not self.first_sync_happened.is_set():
+        if not self.first_sync_done.is_set():
             asyncio.ensure_future(self.load_rooms_without_visible_events())
 
-            self.first_sync_happened.set()
+            self.first_sync_done.set()
             self.first_sync_date = datetime.now()
+            self.models[Account][self.user_id].first_sync_done = True
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
@@ -628,8 +629,9 @@ class MatrixClient(nio.AsyncClient):
             # Update our account profile if the event is newer than last update
             if ev.state_key == self.user_id:
                 account = self.models[Account][self.user_id]
+                updated = account.profile_updated
 
-                if account.profile_updated < ev_date:
+                if not updated or updated < ev_date:
                     account.profile_updated = ev_date
                     account.display_name    = now["displayname"] or ""
                     account.avatar_url      = now["avatar_url"] or ""
@@ -712,7 +714,7 @@ class MatrixClient(nio.AsyncClient):
     async def onTypingNoticeEvent(self, room, ev) -> None:
         # Prevent recent past typing notices from being shown for a split
         # second on client startup:
-        if not self.first_sync_happened.is_set():
+        if not self.first_sync_done.is_set():
             return
 
         self.models[Room, self.user_id][room.room_id].typing_members = sorted(

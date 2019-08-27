@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 HRowLayout {
+    id: buttonContent
     spacing: button.spacing
     opacity: loading ? theme.loadingElementsOpacity :
              enabled ? 1 : theme.disabledElementsOpacity
@@ -32,25 +33,14 @@ HRowLayout {
             target: icon
             property: "opacity"
             from: 1
-            to: 0.3
+            to: 0.5
             factor: 2
             running: button.loading || false
-            onStopped: { [from, to] = [to, from]; start() }
+            onFinished: { [from, to] = [to, from]; start() }
         }
-
-        HNumberAnimation {
-            target: icon
-            property: "scale"
-            from: 1
-            to: 0.92
-            factor: blink.factor
-            running: blink.running
-            onStopped: { [from, to] = [to, from]; start() }
-        }
-
 
         SequentialAnimation {
-            running: blink.running
+            running: button.loading || false
             loops: Animation.Infinite
 
             HPauseAnimation { factor: blink.factor * 8 }

@@ -56,6 +56,7 @@ HTileDelegate {
 
     HButton {
         id: expand
+        loading: ! model.data.first_sync_done || ! model.data.profile_updated
         icon.name: "expand"
         backgroundColor: "transparent"
         padding: sidePane.currentSpacing / 1.5
@@ -64,13 +65,13 @@ HTileDelegate {
         onClicked: accountDelegate.toggleCollapse()
 
         visible: opacity > 0
-        opacity: accountDelegate.forceExpand ? 0 : 1
+        opacity: ! loading && accountDelegate.forceExpand ? 0 : 1
 
         iconItem.transform: Rotation {
             origin.x: expand.iconItem.dimension / 2
             origin.y: expand.iconItem.dimension / 2
+            angle: expand.loading ? 0 : collapsed ? 180 : 90
 
-            angle: collapsed ? 180 : 90
             Behavior on angle { HNumberAnimation {} }
         }
 

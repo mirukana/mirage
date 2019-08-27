@@ -10,10 +10,11 @@ from .model_item import ModelItem
 
 @dataclass
 class Account(ModelItem):
-    user_id:         str      = field()
-    display_name:    str      = ""
-    avatar_url:      str      = ""
-    profile_updated: datetime = field(default_factory=datetime.now)
+    user_id:         str                = field()
+    display_name:    str                = ""
+    avatar_url:      str                = ""
+    first_sync_done: bool               = False
+    profile_updated: Optional[datetime] = None
 
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]
