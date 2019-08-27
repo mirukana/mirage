@@ -12,7 +12,8 @@ HPage {
 
     property string userId: ""
 
-    readonly property bool ready: accountInfo !== "waiting"
+    readonly property bool ready:
+        accountInfo !== "waiting" && Boolean(accountInfo.profile_updated)
 
     readonly property var accountInfo: Utils.getItem(
         modelSources["Account"] || [], "user_id", userId
