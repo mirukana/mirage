@@ -21,7 +21,6 @@
 - Fixes
   - Restore previous focus after closing right click context menu
 
-  - Reloading config files (cache)
   - Run import in thread and AsyncClient.olm functions, they block async loop
   - Handle import keys errors
   - Show error box if uploading avatar fails

@@ -22,8 +22,6 @@ class ConfigFile:
     backend:  Backend = field(repr=False)
     filename: str     = field()
 
-    _cached_read: str = field(default="", init=False, compare=False)
-
     @property
     def path(self) -> Path:
         return Path(self.backend.app.appdirs.user_config_dir) / self.filename
@@ -34,13 +32,8 @@ class ConfigFile:
 
 
     async def read(self):
-        if self._cached_read:
-            log.debug("Returning cached config %s", type(self).__name__)
-            return self._cached_read
-
         log.debug("Reading config %s at %s", type(self).__name__, self.path)
-        self._cached_read = self.path.read_text()
-        return self._cached_read
+        return self.path.read_text()
 
 
     async def write(self, data) -> None:
