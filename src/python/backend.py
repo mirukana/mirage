@@ -128,12 +128,26 @@ class Backend:
 
 
     @staticmethod
-    def check_exported_keys_password(file_path: str, password: str) -> bool:
+    async def check_exported_keys_passphrase(file_path: str, passphrase: str,
+                                            ) -> Union[bool, Tuple[str, bool]]:
+        """Check if the exported keys file can be decrypted with passphrase.
+
+        Returns True on success, False is the passphrase is invalid, or
+        an (error_message, error_is_translated) tuple if another error occured.
+        """
+
         try:
-            nio.crypto.key_export.decrypt_and_read(file_path, password)
+            nio.crypto.key_export.decrypt_and_read(file_path, passphrase)
             return True
-        except (FileNotFoundError, ValueError):
-            return False
+
+        except OSError as err:
+            return (f"{file_path}: {err.strerror}", True)
+
+        except ValueError as err:
+            if str(err).startswith("HMAC check failed"):
+                return False
+
+            return (str(err), False)
 
 
     async def load_settings(self) -> tuple:

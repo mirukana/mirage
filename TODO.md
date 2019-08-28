@@ -1,3 +1,5 @@
+rename hinterfacebox
+translated arg for avatar upload and login
 - Refactoring
   - Banners
 

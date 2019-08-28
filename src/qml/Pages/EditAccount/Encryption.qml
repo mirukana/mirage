@@ -8,10 +8,11 @@ HColumnLayout {
     function importKeys(file, passphrase) {
         importButton.loading = true
 
-        let path = Qt.resolvedUrl(file).replace(/^file:\/\//, "")
+        let path = file.toString().replace(/^file:\/\//, "")
 
         py.callClientCoro(
             editAccount.userId, "import_keys", [path, passphrase], () => {
+                print("import done")
                 importButton.loading = false
             }
         )
@@ -63,9 +64,11 @@ HColumnLayout {
     HPasswordPopup {
         property url file: ""
 
-        function verifyPassword(pass) {
-            return py.callSync(
-                "check_exported_keys_password", [file.toString(), pass]
+        function verifyPassword(pass, callback) {
+            return py.callCoro(
+                "check_exported_keys_passphrase",
+                [file.toString().replace(/^file:\/\//, ""), pass],
+                callback
             )
         }
 
@@ -73,6 +76,6 @@ HColumnLayout {
         label.text: qsTr(
             "Please enter the passphrase that was used to protect this file:"
         )
-        onAcceptedPasswordChanged: importKeys(file, password)
+        onAcceptedPasswordChanged: importKeys(file, acceptedPassword)
     }
 }

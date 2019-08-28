@@ -9,8 +9,13 @@ Popup {
     modal: true
     padding: 0
 
+    onAboutToShow: {
+        acceptedPassword  = ""
+        passwordValid     = null
+        okClicked         = false
+        errorMessage.text = ""
+    }
     onOpened: passwordField.forceActiveFocus()
-
 
     property bool validateWhileTyping: false
 
@@ -22,9 +27,11 @@ Popup {
     property alias field: passwordField
 
 
-    function verifyPassword(pass) {
-        // Implement me when using this component
-        return false
+    function verifyPassword(pass, callback) {
+        // Implement this function when using this component.
+        // Return true on success, false on invalid password, or
+        // a [error message, translated] array for any other error.
+        return ["Verification not implemented", false]
     }
 
 
@@ -56,15 +63,20 @@ Popup {
                 okClicked      = true
                 button.loading = true
 
-                if (verifyPassword(password)) {
-                    passwordValid          = true
-                    popup.acceptedPassword = password
-                    popup.close()
-                } else {
-                    passwordValid = false
-                }
+                verifyPassword(password, result => {
+                    if (result === true) {
+                        passwordValid          = true
+                        popup.acceptedPassword = password
+                        popup.close()
+                    } else if (result === false) {
+                        passwordValid = false
+                    } else {
+                        let [msg, translated] = result
+                        errorMessage.text     = translated ? msg : qsTr(msg)
+                    }
 
-                button.loading = false
+                    button.loading = false
+                })
             },
             cancel: button => { popup.close() },
         })
@@ -104,6 +116,18 @@ Popup {
 
                 Behavior on Layout.preferredWidth { HNumberAnimation {} }
             }
+        }
+
+        HLabel {
+            id: errorMessage
+            wrapMode: Text.Wrap
+            color: theme.colors.errorText
+
+            visible: Layout.maximumHeight > 0
+            Layout.maximumHeight: text ? implicitHeight : 0
+            Behavior on Layout.maximumHeight { HNumberAnimation {} }
+
+            Layout.fillWidth: true
         }
     }
 }
