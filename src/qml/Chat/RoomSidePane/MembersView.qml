@@ -15,7 +15,7 @@ HColumnLayout {
                 modelSources[["Member", chatPage.roomId]] || []
 
 
-        onOriginSourceChanged: filterLimiter.requestFire()
+        onOriginSourceChanged: filterLimiter.restart()
 
 
         function filterSource() {
@@ -26,17 +26,17 @@ HColumnLayout {
 
         model: HListModel {
             keyField: "user_id"
-            source: originSource
+            source: memberList.originSource
         }
 
         delegate: MemberDelegate {
             width: memberList.width
         }
 
-        HRateLimiter {
+        Timer {
             id: filterLimiter
-            cooldown: 16
-            onFired: memberList.filterSource()
+            interval: 16
+            onTriggered: memberList.filterSource()
         }
     }
 
@@ -50,7 +50,7 @@ HColumnLayout {
             backgroundColor: theme.chat.roomSidePane.filterMembers.background
             bordered: false
 
-            onTextChanged: filterLimiter.requestFire()
+            onTextChanged: filterLimiter.restart()
 
             Layout.fillWidth: true
             Layout.fillHeight: true
