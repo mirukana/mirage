@@ -15,6 +15,7 @@ Banner {
             name: "forget",
             text: qsTr("Forget"),
             iconName: "room-forget",
+            iconColor: theme.colors.negativeBackground
         }
     ]
 

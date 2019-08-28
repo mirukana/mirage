@@ -183,6 +183,7 @@ HGridLayout {
 
                 id: saveButton
                 icon.name: "apply"
+                icon.color: theme.colors.positiveBackground
                 text: qsTr("Apply")
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled:
@@ -195,6 +196,7 @@ HGridLayout {
 
             HButton {
                 icon.name: "cancel"
+                icon.color: theme.colors.negativeBackground
                 text: qsTr("Cancel")
                 enabled: saveButton.enabled && ! saveButton.loading
                 onClicked: cancelChanges()

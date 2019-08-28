@@ -73,6 +73,7 @@ Rectangle {
                         id: button
                         text: modelData.text
                         icon.name: modelData.iconName
+                        icon.color: modelData.iconColor || theme.icons.colorize
                         onClicked: buttonCallbacks[modelData.name](button)
 
                         Layout.preferredHeight: theme.baseElementsHeight

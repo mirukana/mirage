@@ -22,11 +22,13 @@ Banner {
             name: "accept",
             text: qsTr("Join"),
             iconName: "invite-accept",
+            iconColor: theme.colors.positiveBackground
         },
         {
             name: "decline",
             text: qsTr("Decline"),
             iconName: "invite-decline",
+            iconColor: theme.colors.negativeBackground
         }
     ]
 

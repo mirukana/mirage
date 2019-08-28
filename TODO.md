@@ -3,8 +3,7 @@
 
   - Theming
     - File format
-    - Make all icon SVG files white/black, since we can now use ColorOverlay
-      - Gray colored buttons when disabled
+    - Gray colored buttons when disabled
     - Make the icon blue in EditAccount when hovering and no avatar set
     - Remove the filled theme
     - Have a default background
@@ -89,7 +88,7 @@
 
   - Theming
     - Distribute fonts
-    - preferredIconPack: accept multiple values
+    - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir
     - Correctly implement uiScale/fontScale + ctrl+-= keys
       - See `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`

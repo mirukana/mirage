@@ -81,6 +81,7 @@ HTileDelegate {
     contextMenu: HMenu {
         HMenuItem {
             icon.name: "logout"
+            icon.color: theme.colors.negativeBackground
             text: qsTr("Logout")
             onTriggered: {
                 disconnecting = true

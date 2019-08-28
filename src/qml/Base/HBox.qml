@@ -78,6 +78,16 @@ Rectangle {
                     id: button
                     text: modelData.text
                     icon.name: modelData.iconName || ""
+                    icon.color: modelData.iconColor || (
+                        name == "ok" || name == "apply" || name == "retry" ?
+                        theme.colors.positiveBackground :
+
+                        name == "cancel" ?
+                        theme.colors.negativeBackground :
+
+                        theme.icons.colorize
+                    )
+
                     enabled: (modelData.enabled == undefined ?
                               true : modelData.enabled) &&
                              ! button.loading

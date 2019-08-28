@@ -41,6 +41,7 @@ HTileDelegate {
 
     additionalInfo.children: HIcon {
         svgName: "invite-received"
+        colorize: theme.colors.alertBackground
 
         visible: Layout.maximumWidth > 0
         Layout.maximumWidth: invited ? implicitWidth : 0
@@ -82,6 +83,7 @@ HTileDelegate {
         HMenuItem {
             visible: invited
             icon.name: "invite-accept"
+            icon.color: theme.colors.positiveBackground
             text: qsTr("Accept %1's invite").arg(Utils.coloredNameHtml(
                 model.data.inviter_name, model.data.inviter_id
             ))
@@ -95,6 +97,7 @@ HTileDelegate {
         HMenuItem {
             visible: ! model.data.left
             icon.name: invited ? "invite-decline" : "room-leave"
+            icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
 
             onTriggered: py.callClientCoro(
@@ -104,6 +107,7 @@ HTileDelegate {
 
         HMenuItem {
             icon.name: "room-forget"
+            icon.color: theme.colors.negativeBackground
             text: qsTr("Forget")
 
             onTriggered: py.callClientCoro(
