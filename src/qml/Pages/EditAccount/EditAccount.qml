@@ -33,7 +33,7 @@ HPage {
         id: repeater
         model: ["Profile.qml", "Encryption.qml"]
 
-        HRectangle {
+        Rectangle {
             color: ready ? theme.controls.box.background : "transparent"
             Behavior on color { HColorAnimation {} }
 

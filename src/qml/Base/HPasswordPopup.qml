@@ -36,7 +36,7 @@ Popup {
         HNumberAnimation { property: "scale"; to: 0 }
     }
 
-    background: HRectangle {
+    background: Rectangle {
         color: theme.controls.popup.background
     }
 

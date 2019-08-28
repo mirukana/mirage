@@ -2,9 +2,10 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-HRectangle {
+Rectangle {
     id: banner
     implicitHeight: childrenRect.height
+    color: theme.controls.box.background
 
     property alias avatar: bannerAvatar
     property alias icon: bannerIcon
@@ -25,7 +26,7 @@ HRectangle {
         HRowLayout {
             id: bannerRow
 
-            HRectangle {
+            Rectangle {
                 id: bannerAvatarWrapper
                 color: "black"
 
@@ -79,7 +80,7 @@ HRectangle {
                 }
             }
 
-            HRectangle {
+            Rectangle {
                 id: buttonsRightPadding
                 color: theme.controls.button.background
                 visible: bannerGrid.flow == GridLayout.TopToBottom

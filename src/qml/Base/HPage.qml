@@ -35,7 +35,7 @@ SwipeView {
         id: innerPage
         background: null
 
-        header: HRectangle {
+        header: Rectangle {
             implicitWidth: parent ? parent.width : 0
             color: theme.controls.header.background
 

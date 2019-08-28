@@ -17,7 +17,7 @@ ListView {
         currentItem ? currentItem.height : 0
 
 
-    highlight: HRectangle {
+    highlight: Rectangle {
         color: theme.controls.listView.highlight
     }
 

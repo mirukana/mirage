@@ -6,7 +6,7 @@ ToolTip {
     delay: theme.controls.toolTip.delay
     padding: background.border.width
 
-    background: HRectangle {
+    background: Rectangle {
         id: background
         color: theme.controls.toolTip.background
         border.color: theme.controls.toolTip.border

@@ -1,6 +1,6 @@
 import QtQuick 2.12
 
-HRectangle {
+Rectangle {
     id: rectangle
 
     property bool checkable: false  // TODO
@@ -11,7 +11,7 @@ HRectangle {
     readonly property QtObject _ir: theme.controls.interactiveRectangle
     color: _ir.background
 
-    HRectangle {
+    Rectangle {
         anchors.fill: parent
 
         visible: opacity > 0

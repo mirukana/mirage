@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-HRectangle {
+Rectangle {
     color: buttonTheme.background
     opacity: loading ? theme.loadingElementsOpacity :
              enabled ? 1 : theme.disabledElementsOpacity
@@ -14,7 +14,7 @@ HRectangle {
     Behavior on opacity { HNumberAnimation {} }
 
 
-    HRectangle {
+    Rectangle {
         anchors.fill: parent
         radius: parent.radius
         color: button.checked ? buttonTheme.checkedOverlay :

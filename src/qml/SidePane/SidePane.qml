@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
 
-HRectangle {
+Rectangle {
     id: sidePane
     clip: true
     opacity: mainUI.accountsPresent && ! reduce ? 1 : 0

@@ -66,7 +66,7 @@ HGridLayout {
         Layout.preferredWidth: Math.min(flickable.height, avatarPreferredSize)
         Layout.preferredHeight: Layout.preferredWidth
 
-        HRectangle {
+        Rectangle {
             z: 10
             visible: opacity > 0
             opacity: ! fileDialog.dialog.visible &&

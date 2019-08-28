@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
-HRectangle {
+Rectangle {
     property alias buttonsImplicitWidth: viewButtons.implicitWidth
     property int buttonsWidth: viewButtons.Layout.preferredWidth
     property var activeButton: "members"

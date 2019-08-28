@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import "../Base"
 import "../utils.js" as Utils
 
-HRectangle {
+Rectangle {
     id: avatar
     implicitWidth: theme.controls.avatar.size
     implicitHeight: theme.controls.avatar.size

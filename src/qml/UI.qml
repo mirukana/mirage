@@ -5,7 +5,7 @@ import QtQuick.Window 2.7
 import "Base"
 import "SidePane"
 
-HRectangle {
+Rectangle {
     id: mainUI
     color: theme.ui.background
     Component.onCompleted: window.mainUI = mainUI

@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
-HRectangle {
+Rectangle {
     id: interfaceBox
     color: theme.controls.box.background
     implicitWidth: Math.min(

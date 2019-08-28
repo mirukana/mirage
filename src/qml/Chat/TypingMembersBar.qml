@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
-HRectangle {
+Rectangle {
     id: typingMembersBar
 
     property alias label: typingLabel

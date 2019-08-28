@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
 
-HRectangle {
+Rectangle {
     function setFocus() { areaScrollView.forceActiveFocus() }
 
     property string indent: "    "

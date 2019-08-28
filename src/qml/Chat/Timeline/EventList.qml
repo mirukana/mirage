@@ -2,7 +2,7 @@ import QtQuick 2.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HRectangle {
+Rectangle {
     property alias listView: eventList
 
     color: theme.chat.eventList.background
