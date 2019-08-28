@@ -7,7 +7,7 @@ import "RoomSidePane"
 
 HSplitView {
     id: chatSplitView
-    Component.onCompleted: sendBox.setFocus()
+    Component.onCompleted: composer.setFocus()
 
     HColumnLayout {
         Layout.fillWidth: true
@@ -30,8 +30,8 @@ HSplitView {
             Layout.fillWidth: true
         }
 
-        SendBox {
-            id: sendBox
+        Composer {
+            id: composer
             visible: ! inviteBanner.visible && ! leftBanner.visible
         }
 

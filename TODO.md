@@ -4,11 +4,12 @@
   - Theming
     - File format
     - Make all icon SVG files white/black, since we can now use ColorOverlay
+      - Gray colored buttons when disabled
     - Make the icon blue in EditAccount when hovering and no avatar set
     - Remove the filled theme
     - Have a default background
 
-  - Sendbox
+  - Composer
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size
@@ -32,6 +33,9 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - When starting a long task, e.g. importing keys, quitting the page,
+    and coming back, show the buttons as still loading until operation is done
+
   - Choose a better default easing type for animations
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
@@ -40,11 +44,8 @@
   - Remove first html lists left margin
   - Adapt UI for small heights
 
-  - Popup:
-    - Transitions
-
   - Restoring UI state:
-    - Sendbox content
+    - Composer content
     - Which element was focused
     - Room member filter field
 
@@ -52,8 +53,6 @@
     from sharing a too similar hue
   - Combine events so they take less space
     - After combining is implemented, no need to hide our own profile changes.
-  - When starting a long task, e.g. importing keys, quitting the page,
-    and coming back, show the buttons as still loading until operation is done
   - Make invite/left banners look better in column mode
   - Replies
   - Messages editing
@@ -89,7 +88,7 @@
   - Register/Forgot? for SignIn dialog
   - Add room
   - Logout & leave/forget room warning popup
-  - Prevent using the SendBox if no permission (power levels)
+  - Prevent using the composer if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading past room events or images 
 
@@ -116,7 +115,7 @@
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
-    - Import/export keys
+    - Export keys
   - Uploads & proper http thumbnails
     - Reduce messages ListView cacheBuffer height once http thumbnails
       downloading is implemented 

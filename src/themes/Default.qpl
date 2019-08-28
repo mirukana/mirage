@@ -282,5 +282,5 @@ chat:
     typingMembers:
         color background: colors.mediumBackground
 
-    sendBox:
+    composer:
         color background: colors.strongBackground

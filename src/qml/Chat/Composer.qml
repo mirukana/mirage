@@ -45,12 +45,12 @@ Rectangle {
     //      "ltuc <" + lineTextUntilCursor + ">", "dob",
     //      deleteCharsOnBackspace, "m", lineTextUntilCursor.match(/^ +$/))
 
-    id: sendBox
+    id: composer
     Layout.fillWidth: true
     Layout.minimumHeight: theme.baseElementsHeight
     Layout.preferredHeight: areaScrollView.implicitHeight
     Layout.maximumHeight: pageLoader.height / 2
-    color: theme.chat.sendBox.background
+    color: theme.chat.composer.background
 
     HRowLayout {
         anchors.fill: parent
@@ -65,7 +65,7 @@ Rectangle {
         HScrollableTextArea {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.topMargin: Math.max(0, sendBox.Layout.minimumHeight - 34)
+            Layout.topMargin: Math.max(0, composer.Layout.minimumHeight - 34)
 
             id: areaScrollView
             placeholderText: qsTr("Type a message...")
