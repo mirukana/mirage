@@ -3,8 +3,6 @@
 
   - Theming
     - File format
-    - Make the icon blue in EditAccount when hovering and no avatar set
-    - Remove the filled theme
     - Have a default background
 
   - Composer

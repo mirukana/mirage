@@ -74,22 +74,25 @@ HGridLayout {
 
             anchors.fill: parent
             color: Utils.hsluv(0, 0, 0,
-                (! avatar.imageUrl && overlayHover.hovered) ? 0.9 : 0.7
+                (! avatar.imageUrl && overlayHover.hovered) ? 0.8 : 0.7
             )
 
             Behavior on opacity { HNumberAnimation {} }
             Behavior on color { HColorAnimation {} }
+
+            HoverHandler { id: overlayHover }
 
             HColumnLayout {
                 anchors.centerIn: parent
                 spacing: currentSpacing
                 width: parent.width
 
-                HoverHandler { id: overlayHover }
-
                 HIcon {
                     svgName: "upload-avatar"
+                    colorize: (! avatar.imageUrl && overlayHover.hovered) ?
+                              theme.colors.accentText : theme.icons.colorize
                     dimension: 64
+
                     Layout.alignment: Qt.AlignCenter
                 }
 
@@ -98,8 +101,7 @@ HGridLayout {
                 HLabel {
                     text: qsTr("Upload profile picture")
                     color: (! avatar.imageUrl && overlayHover.hovered) ?
-                           Qt.lighter(theme.colors.accentText, 1.2) :
-                           Utils.hsluv(0, 0, 90, 1)
+                           theme.colors.accentText : theme.colors.brightText
                     Behavior on color { HColorAnimation {} }
 
                     font.pixelSize: theme.fontSize.big *
