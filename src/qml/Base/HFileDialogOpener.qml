@@ -3,7 +3,9 @@ import Qt.labs.platform 1.1
 
 Item {
     id: opener
-    anchors.fill: parent
+    anchors.fill: fill ? parent : undefined
+
+    property bool fill: true
 
     property alias dialog: fileDialog
     property string selectedFile: ""
@@ -12,7 +14,7 @@ Item {
     enum FileType { All, Images }
     property int fileType: HFileDialogOpener.FileType.All
 
-    TapHandler { onTapped: fileDialog.open() }
+    TapHandler { enabled: fill; onTapped: fileDialog.open() }
 
     FileDialog {
         id: fileDialog

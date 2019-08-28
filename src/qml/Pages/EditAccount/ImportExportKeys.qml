@@ -4,7 +4,22 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HColumnLayout {
+HInterfaceBox {
+    horizontalSpacing: currentSpacing
+    verticalSpacing: currentSpacing
+
+    buttonModel: [
+        { name: "export", text: qsTr("Export"), iconName: "export-keys",
+          enabled: false },
+        { name: "import", text: qsTr("Import"), iconName: "import-keys"},
+    ]
+
+    buttonCallbacks: ({
+        export: button => {},
+        import: button => { fileDialog.open() },
+    })
+
+
     HLabel {
         wrapMode: Text.Wrap
         text: qsTr(
@@ -15,36 +30,15 @@ HColumnLayout {
         ).arg(pageLoader.isWide ? "\n" :"\n\n")
 
         Layout.fillWidth: true
-        Layout.margins: currentSpacing
     }
 
-    HRowLayout {
-        HButton {
-            id: exportButton
-            icon.name: "export-keys"
-            text: qsTr("Export")
-            enabled: false
-
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignBottom
-        }
-
-        HButton {
-            id: importButton
-            icon.name: "import-keys"
-            text: qsTr("Import")
-
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignBottom
-
-            HFileDialogOpener {
-                id: fileDialog
-                dialog.title: qsTr("Select a decryption key file to import")
-                onFileChanged: {
-                    importPasswordPopup.file = file
-                    importPasswordPopup.open()
-                }
-            }
+    HFileDialogOpener {
+        id: fileDialog
+        fill: false
+        dialog.title: qsTr("Select a decryption key file to import")
+        onFileChanged: {
+            importPasswordPopup.file = file
+            importPasswordPopup.open()
         }
     }
 

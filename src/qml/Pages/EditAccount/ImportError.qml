@@ -5,6 +5,9 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 HInterfaceBox {
+    horizontalSpacing: currentSpacing
+    verticalSpacing: currentSpacing
+
     buttonModel: [
         { name: "retry", text: qsTr("Retry"), iconName: "retry" },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },

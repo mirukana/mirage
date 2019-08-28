@@ -24,7 +24,7 @@ Rectangle {
     property var buttonCallbacks: []
     property string enterButtonTarget: ""
 
-    default property alias body: interfaceBody.children
+    default property alias body: interfaceBody.data
 
     function clickEnterButtonTarget() {
         for (let i = 0; i < buttonModel.length; i++) {
