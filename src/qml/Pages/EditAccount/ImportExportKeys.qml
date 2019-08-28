@@ -16,7 +16,7 @@ HBox {
 
     buttonCallbacks: ({
         export: button => {},
-        import: button => { fileDialog.open() },
+        import: button => { fileDialog.dialog.open() },
     })
 
 
@@ -58,6 +58,6 @@ HBox {
             "Please enter the passphrase that was used to protect this file:"
         )
         onAcceptedPasswordChanged:
-            encryptionUI.importKeys(file, acceptedPassword, importButton)
+            encryptionUI.importKeys(file, acceptedPassword)
     }
 }
