@@ -170,12 +170,10 @@ class MatrixClient(nio.AsyncClient):
             text   = text[1:]
 
         if text.startswith("/me ") and not escape:
-            event_type = nio.RoomMessageEmote.__name__
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
             to_html    = HTML_FILTER.from_markdown_inline(text, outgoing=True)
         else:
-            event_type = nio.RoomMessageText.__name__
             content    = {"body": text, "msgtype": "m.text"}
             to_html    = HTML_FILTER.from_markdown(text, outgoing=True)
 
@@ -190,9 +188,9 @@ class MatrixClient(nio.AsyncClient):
         display_content = content.get("formatted_body") or content["body"]
 
         local = Event(
+            source         = None,
             client_id      = f"echo-{uuid}",
             event_id       = "",
-            event_type     = event_type,
             date           = datetime.now(),
             content        = display_content,
             inline_content = HTML_FILTER.filter_inline(display_content),
@@ -331,11 +329,38 @@ class MatrixClient(nio.AsyncClient):
 
         account.importing_key        = 0
         account.total_keys_to_import = 0
-        return None
+
+        await self.retry_decrypting_events()
 
 
     async def clear_import_error(self) -> None:
         self.models[Account][self.user_id].import_error = ("", "", "")
+
+
+    async def retry_decrypting_events(self) -> None:
+        for sync_id, model in self.models.items():
+            if not (isinstance(sync_id, tuple) and
+                    sync_id[0:2] == (Event, self.user_id)):
+                continue
+
+            _, _, room_id = sync_id
+
+            for ev in model.values():
+                room = self.all_rooms[room_id]
+
+                if isinstance(ev.source, nio.MegolmEvent):
+                    try:
+                        decrypted = self.decrypt_event(ev.source)
+
+                        if not decrypted:
+                            raise nio.EncryptionError()
+
+                    except nio.EncryptionError:
+                        continue
+
+                    for cb in self.event_callbacks:
+                        if not cb.filter or isinstance(decrypted, cb.filter):
+                            await asyncio.coroutine(cb.func)(room, decrypted)
 
 
     # Functions to register data into models
@@ -363,7 +388,7 @@ class MatrixClient(nio.AsyncClient):
 
         # If there were no better events available to show previously
         prev_is_member_ev = \
-            room.last_event["event_type"] == nio.RoomMemberEvent.__name__
+            isinstance(room.last_event["source"], nio.RoomMemberEvent)
 
         if is_profile_ev and for_us and not prev_is_member_ev:
             return
@@ -452,9 +477,9 @@ class MatrixClient(nio.AsyncClient):
 
         # Create Event ModelItem
         item = Event(
+            source         = ev,
             client_id      = ev.event_id,
             event_id       = ev.event_id,
-            event_type     = type(ev).__name__,
             content        = content,
             inline_content = HTML_FILTER.filter_inline(content),
             date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
@@ -715,11 +740,6 @@ class MatrixClient(nio.AsyncClient):
 
     async def onRoomEncryptionEvent(self, room, ev) -> None:
         co = "%1 turned on encryption for this room."
-        await self.register_nio_event(room, ev, content=co)
-
-
-    async def onOlmEvent(self, room, ev) -> None:
-        co = "%1 sent an undecryptable olm message."
         await self.register_nio_event(room, ev, content=co)
 
 

@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
+import nio
+
 from ..html_filter import HTML_FILTER
 from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
@@ -105,12 +107,12 @@ class TypeSpecifier(AutoStrEnum):
 
 @dataclass
 class Event(ModelItem):
-    client_id:      str      = field()
-    event_id:       str      = field()
-    event_type:     str      = field()  # Type[nio.Event]
-    content:        str      = field()
-    inline_content: str      = field()
-    date:           datetime = field()
+    source:         Optional[nio.Event] = field()
+    client_id:      str                 = field()
+    event_id:       str                 = field()
+    content:        str                 = field()
+    inline_content: str                 = field()
+    date:           datetime            = field()
 
     sender_id:     str = field()
     sender_name:   str = field()
@@ -137,6 +139,10 @@ class Event(ModelItem):
             return False
 
         return self.date > other.date
+
+    @property
+    def event_type(self) -> str:
+        return type(self.source).__name__
 
 
 @dataclass

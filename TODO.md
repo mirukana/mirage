@@ -33,7 +33,7 @@ translated arg for avatar upload and login
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - Decrypt messages again after importing keys
+  - HProgressBar
   - Choose a better default easing type for animations
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
