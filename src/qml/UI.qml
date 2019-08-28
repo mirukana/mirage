@@ -7,7 +7,8 @@ import "SidePane"
 
 Rectangle {
     id: mainUI
-    color: theme.ui.background
+    color: "transparent"
+
     Component.onCompleted: window.mainUI = mainUI
 
     property alias shortcuts: shortcuts
@@ -42,6 +43,20 @@ Rectangle {
         anchors.fill: parent
         asynchronous: false
     }
+
+    Rectangle {
+        id: mainUIGradient
+        anchors.fill: parent
+        scale: Math.max(
+            1.6, Math.ceil(parent.parent.width / parent.parent.height)
+        )
+        rotation: theme.ui.gradientRotation
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: theme.ui.gradientLeft }
+            GradientStop { position: 1.0; color: theme.ui.gradientRight }
+        }
+    }
+
 
     HSplitView {
         id: uiSplitView

@@ -1,10 +1,6 @@
 - Refactoring
   - Banners
 
-  - Theming
-    - File format
-    - Have a default background
-
   - Composer
   - Room Sidepane
     - Hide when window too small
@@ -84,6 +80,7 @@
   - Spinner when loading past room events or images 
 
   - Theming
+    - File format
     - Distribute fonts
     - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir

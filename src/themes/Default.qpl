@@ -37,7 +37,7 @@ fontFamily:
     string mono:  "Hack"
 
 colors:
-    int hue:        260
+    int hue:        264
     int saturation: 40
     real intensity: 1.0
     real opacity:   1.0
@@ -192,9 +192,21 @@ controls:
 // Special UI parts
 
 ui:
-    // Supported: local file path or web URL
+    // Image can be an URL or local file path.
+    // If not specified, the gradient will be shown instead.
     url image: ""
-    color background: colors.weakBackground
+
+    int gradientRotation: 45 * 3
+    color gradientRight:
+        Utils.hsluv(colors.hue - 50, 100, colors.intensity * 8, colors.opacity)
+    color gradientLeft:
+        Utils.hsluv(colors.hue + 20, 31, colors.intensity * 22, colors.opacity)
+
+    // To have a solid color instead,
+    // set gradientLeft and gradientRight to the same value.
+    // color gradientLeft: colors.weakBackground
+    // color gradientRight: colors.weakBackground
+
 
 
 sidePane:
@@ -257,13 +269,13 @@ chat:
         int radius:          theme.radius
         color background:    colors.strongBackground
         color ownBackground: hsluv(
-            colors.hue, colors.saturation + 30, colors.intensity * 6, opacity
+            colors.hue, colors.saturation + 25, colors.intensity * 6, opacity
         )
 
-        color body:          colors.text
-        color date:          colors.dimText
+        color body: colors.text
+        color date: colors.dimText
 
-        color greenText: hsluv(135, colors.saturation * 2.25, 80)
+        color greenText: hsluv(135, colors.saturation * 2.25, 75)
         color link:      colors.link
         color code:      colors.code
 
