@@ -149,6 +149,11 @@ controls:
         color border:     "black"
         int borderWidth:  2
 
+    progressBar:
+        int height:       Math.max(2, spacing / 2)
+        color background: colors.inputBackground
+        color foreground: colors.accentBackground
+
     avatar:
         int size:   baseElementsHeight
         int radius: theme.radius
