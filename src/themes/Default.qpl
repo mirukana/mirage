@@ -47,7 +47,7 @@ colors:
     color strongBackground: hsluv(hue, saturation, intensity * 6, opacity)
 
     color inputBackground:
-        hsluv(hue, saturation, intensity * 2, Math.max(0.6, opacity))
+        hsluv(hue, saturation * 1.25, intensity * 2, Math.max(0.6, opacity))
 
     color accentBackground:
         hsluv(hue, saturation * 1.25, intensity * 42, Math.max(0.6, opacity))
