@@ -124,7 +124,8 @@ class Event(ModelItem):
     target_name:   str = ""
     target_avatar: str = ""
 
-    is_local_echo: bool = False
+    is_local_echo:    bool = False
+    local_event_type: str  = ""
 
     def __post_init__(self) -> None:
         self.inline_content = HTML_FILTER.filter_inline(self.content)
@@ -142,7 +143,7 @@ class Event(ModelItem):
 
     @property
     def event_type(self) -> str:
-        return type(self.source).__name__
+        return self.local_event_type or type(self.source).__name__
 
 
 @dataclass

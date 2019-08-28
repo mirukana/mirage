@@ -170,10 +170,12 @@ class MatrixClient(nio.AsyncClient):
             text   = text[1:]
 
         if text.startswith("/me ") and not escape:
+            event_type = nio.RoomMessageEmote.__name__
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
             to_html    = HTML_FILTER.from_markdown_inline(text, outgoing=True)
         else:
+            event_type = nio.RoomMessageText.__name__
             content    = {"body": text, "msgtype": "m.text"}
             to_html    = HTML_FILTER.from_markdown(text, outgoing=True)
 
@@ -188,13 +190,14 @@ class MatrixClient(nio.AsyncClient):
         display_content = content.get("formatted_body") or content["body"]
 
         local = Event(
-            source         = None,
-            client_id      = f"echo-{uuid}",
-            event_id       = "",
-            date           = datetime.now(),
-            content        = display_content,
-            inline_content = HTML_FILTER.filter_inline(display_content),
-            is_local_echo  = True,
+            source           = None,
+            client_id        = f"echo-{uuid}",
+            event_id         = "",
+            date             = datetime.now(),
+            content          = display_content,
+            inline_content   = HTML_FILTER.filter_inline(display_content),
+            is_local_echo    = True,
+            local_event_type = event_type,
 
             sender_id     = self.user_id,
             sender_name   = our_info.display_name,
