@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HInterfaceBox {
+HBox {
     horizontalSpacing: currentSpacing
     verticalSpacing: currentSpacing
 

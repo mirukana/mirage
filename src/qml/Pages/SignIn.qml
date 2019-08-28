@@ -8,7 +8,7 @@ HPage {
 
     onFocusChanged: idField.forceActiveFocus()
 
-    HInterfaceBox {
+    HBox {
         id: signInBox
         Layout.alignment: Qt.AlignCenter
 

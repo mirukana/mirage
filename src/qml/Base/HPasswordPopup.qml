@@ -47,7 +47,7 @@ Popup {
         color: theme.controls.popup.background
     }
 
-    contentItem: HInterfaceBox {
+    contentItem: HBox {
         id: box
         implicitWidth: theme.minimumSupportedWidthPlusSpacing
         enterButtonTarget: "ok"
