@@ -1,5 +1,3 @@
-rename hinterfacebox
-translated arg for avatar upload and login
 - Refactoring
   - Banners
 
@@ -33,7 +31,6 @@ translated arg for avatar upload and login
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - HProgressBar
   - Choose a better default easing type for animations
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
@@ -122,6 +119,7 @@ translated arg for avatar upload and login
   - Links preview
 
 - Client improvements
+  - `translated` arg for avatar upload and login errors
   - Check if username exists on login screen
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
