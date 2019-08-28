@@ -1,17 +1,16 @@
 - Refactoring
   - Banners
-
   - Composer
+
   - Room Sidepane
     - Hide when window too small
     - Also save/load its size
     - Is auto-sizing actually needed, or can we just set a default manual size?
     - Reducable room sidepane, swipe to show full-window
+
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Restore previous focus after closing right click context menu
-
   - Show error if uploading avatar fails
 
   - Don't strip user spacing in html
@@ -23,13 +22,16 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
-  - Make invite icon blink if there's no one but ourself in the room,
-    but never do it again once the user hovered it long enough to show tooltip
-    or clicked on it once 
   - Make HListView scrollbars visible
   - Remove first html lists left margin
   - Adapt UI for small heights
+
+  - Inviting members to a room
+    - Make invite icon blink if there's no one but ourself in the room,
+      but never do it again once the user hovered it long enough to show 
+      tooltip or clicked on it once 
 
   - Restoring UI state:
     - Composer content
@@ -40,7 +42,6 @@
     from sharing a too similar hue
   - Combine events so they take less space
     - After combining is implemented, no need to hide our own profile changes.
-  - Make invite/left banners look better in column mode
   - Replies
   - Messages editing
   - Code highlighting

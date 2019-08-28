@@ -113,8 +113,8 @@ controls:
         color background: colors.inputBackground
         color text:       colors.text
 
-        color hoveredOverlay: hsluv(0, 0, 50, 0.3)
-        color pressedOverlay: hsluv(0, 0, 50, 0.6)
+        color hoveredOverlay: hsluv(0, 0, 50, 0.2)
+        color pressedOverlay: hsluv(0, 0, 50, 0.5)
         color checkedOverlay: colors.accentBackground
 
     menu:
