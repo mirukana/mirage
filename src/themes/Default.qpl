@@ -48,13 +48,13 @@ colors:
     color strongBackground: hsluv(hue, saturation, intensity * 6, opacity)
 
     color inputBackground:
-        hsluv(hue, saturation, intensity * 2, Math.min(0.6, opacity))
+        hsluv(hue, saturation, intensity * 2, Math.max(0.6, opacity))
 
     color accentBackground:
-        hsluv(hue, saturation * 1.25, intensity * 42, Math.min(0.6, opacity))
+        hsluv(hue, saturation * 1.25, intensity * 42, Math.max(0.6, opacity))
 
     color strongAccentBackground:
-        hsluv(hue, saturation * 2, intensity * 52, Math.min(0.6, opacity))
+        hsluv(hue, saturation * 2, intensity * 52, Math.max(0.6, opacity))
 
     color brightText:  hsluv(0, 0, intensity * 100)
     color text:        hsluv(0, 0, intensity * 80)
@@ -63,7 +63,7 @@ colors:
     color dimmerText:  hsluv(0, 0, intensity * 30)
 
     color errorText:   hsluv(0, saturation * 2.25, 50)
-    color accentText:  hsluv(hue - 80, saturation * 2.25, 60)
+    color accentText:  hsluv(hue, saturation * 2.25, 60)
     color link:        accentText
     color code:        hsluv(hue + 5, saturation * 1.5, intensity * 60)
 
@@ -114,7 +114,7 @@ controls:
         color checkedOverlay: controls.button.hoveredOverlay
 
     checkBox:
-        color checkIconColor: colors.strongAccentBackground
+        color checkIconColor: colors.accentBackground
         color boxBackground:  controls.button.background
 
         color boxBorder:        hsluv(0, 0, 50, 0.3)
@@ -132,7 +132,7 @@ controls:
 
         int borderWidth:     1
         color border:        "transparent"
-        color focusedBorder: colors.strongAccentBackground
+        color focusedBorder: colors.accentBackground
         color errorBorder:   colors.errorText
 
         color text:        colors.text

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 HRectangle {
+    color: buttonTheme.background
     opacity: loading ? theme.loadingElementsOpacity :
              enabled ? 1 : theme.disabledElementsOpacity
 
