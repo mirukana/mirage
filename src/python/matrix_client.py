@@ -7,6 +7,7 @@ import platform
 from contextlib import suppress
 from datetime import datetime
 from enum import Enum
+from functools import partial
 from pathlib import Path
 from types import ModuleType
 from typing import DefaultDict, Dict, Optional, Set, Tuple, Type, Union
@@ -301,6 +302,32 @@ class MatrixClient(nio.AsyncClient):
 
         await self.set_avatar(resp)
         return True
+
+
+    async def import_keys(self, infile: str, passphrase: str) -> Optional[str]:
+        # Reimplemented until better solutions are worked on in nio
+        loop = asyncio.get_event_loop()
+
+        import_keys = partial(self.olm.import_keys_static, infile, passphrase)
+        try:
+            sessions = await loop.run_in_executor(None, import_keys)
+        except nio.EncryptionError as err:
+            return str(err)
+
+        account                      = self.models[Account][self.user_id]
+        account.importing_key        = 0
+        account.total_keys_to_import = len(sessions)
+
+        for session in sessions:
+            if self.olm.inbound_group_store.add(session):
+                await loop.run_in_executor(
+                    None, self.store.save_inbound_group_session, session,
+                )
+                account.importing_key += 1
+
+        account.importing_key        = 0
+        account.total_keys_to_import = 0
+        return None
 
 
     # Functions to register data into models

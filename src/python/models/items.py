@@ -16,6 +16,9 @@ class Account(ModelItem):
     first_sync_done: bool               = False
     profile_updated: Optional[datetime] = None
 
+    importing_key:        int = 0
+    total_keys_to_import: int = 0
+
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
