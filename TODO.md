@@ -22,9 +22,7 @@ translated arg for avatar upload and login
 - Fixes
   - Restore previous focus after closing right click context menu
 
-  - Run import in thread and AsyncClient.olm functions, they block async loop
-  - Handle import keys errors
-  - Show error box if uploading avatar fails
+  - Show error if uploading avatar fails
 
   - Don't strip user spacing in html
   - Do something when access token is invalid
@@ -35,9 +33,7 @@ translated arg for avatar upload and login
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
-  - When starting a long task, e.g. importing keys, quitting the page,
-    and coming back, show the buttons as still loading until operation is done
-
+  - Decrypt messages again after importing keys
   - Choose a better default easing type for animations
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip

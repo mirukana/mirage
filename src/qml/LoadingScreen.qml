@@ -10,7 +10,7 @@ Item {
         rotation: 45 * 3
         gradient: Gradient {
             GradientStop { position: 0.0; color: Qt.hsla(0.73, 0.25, 0.25, 1) }
-            GradientStop { position: 1.0; color: Qt.hsla(0.52, 1, 0.08, 1) }
+            GradientStop { position: 1.0; color: Qt.hsla(0.52, 1, 0.06, 1) }
         }
     }
 

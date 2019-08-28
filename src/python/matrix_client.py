@@ -304,17 +304,21 @@ class MatrixClient(nio.AsyncClient):
         return True
 
 
-    async def import_keys(self, infile: str, passphrase: str) -> Optional[str]:
+    async def import_keys(self, infile: str, passphrase: str) -> None:
         # Reimplemented until better solutions are worked on in nio
+        await self.clear_import_error()
+
         loop = asyncio.get_event_loop()
 
+        account     = self.models[Account][self.user_id]
         import_keys = partial(self.olm.import_keys_static, infile, passphrase)
+
         try:
             sessions = await loop.run_in_executor(None, import_keys)
         except nio.EncryptionError as err:
-            return str(err)
+            account.import_error = (infile, passphrase, str(err))
+            return
 
-        account                      = self.models[Account][self.user_id]
         account.importing_key        = 0
         account.total_keys_to_import = len(sessions)
 
@@ -328,6 +332,10 @@ class MatrixClient(nio.AsyncClient):
         account.importing_key        = 0
         account.total_keys_to_import = 0
         return None
+
+
+    async def clear_import_error(self) -> None:
+        self.models[Account][self.user_id].import_error = ("", "", "")
 
 
     # Functions to register data into models

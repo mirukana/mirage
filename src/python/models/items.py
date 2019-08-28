@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from ..html_filter import HTML_FILTER
 from ..utils import AutoStrEnum, auto
@@ -16,8 +16,9 @@ class Account(ModelItem):
     first_sync_done: bool               = False
     profile_updated: Optional[datetime] = None
 
-    importing_key:        int = 0
-    total_keys_to_import: int = 0
+    importing_key:        int                  = 0
+    total_keys_to_import: int                  = 0
+    import_error:         Tuple[str, str, str] = ("", "", "")  # path,pw,err
 
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]

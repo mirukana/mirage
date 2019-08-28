@@ -5,18 +5,6 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 HColumnLayout {
-    function importKeys(file, passphrase) {
-        importButton.loading = true
-
-        let path = file.toString().replace(/^file:\/\//, "")
-
-        py.callClientCoro(
-            editAccount.userId, "import_keys", [path, passphrase], () => {
-                if (importButton) importButton.loading = false
-            }
-        )
-    }
-
     HLabel {
         wrapMode: Text.Wrap
         text: qsTr(
@@ -75,6 +63,7 @@ HColumnLayout {
         label.text: qsTr(
             "Please enter the passphrase that was used to protect this file:"
         )
-        onAcceptedPasswordChanged: importKeys(file, acceptedPassword)
+        onAcceptedPasswordChanged:
+            encryptionUI.importKeys(file, acceptedPassword, importButton)
     }
 }
