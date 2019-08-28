@@ -1,15 +1,16 @@
 import QtQuick 2.12
 
 HImage {
-    visible: Boolean(svgName)
-
     property string svgName: ""
     property int dimension: 20
 
+
+    visible: Boolean(svgName)
+    colorize: theme.icons.colorize
+
     source:
         svgName ?
-        ("../../icons/" +
-         (theme ? theme.preferredIconPack : "light-thin") +
+        ("../../icons/" + (theme ? theme.icons.preferredPack : "thin") +
          "/" + svgName + ".svg") :
         ""
 

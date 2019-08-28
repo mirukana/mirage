@@ -10,6 +10,7 @@ Button {
     topPadding: spacing / 2
     bottomPadding: topPadding
     iconItem.svgName: loading ? "hourglass" : icon.name
+    icon.color: theme.icons.colorize
     enabled: ! loading
 
     onVisibleChanged: if (! visible) loading = false

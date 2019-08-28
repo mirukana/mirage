@@ -22,7 +22,9 @@ int animationDuration:        100
 real loadingElementsOpacity:  0.8
 real disabledElementsOpacity: 0.3
 
-string preferredIconPack: "light-thin"
+icons:
+    string preferredPack: "thin"
+    color colorize: "white"  // "transparent" to disable
 
 fontSize:
     int smaller: 13  * fontScale
@@ -114,8 +116,8 @@ controls:
         color checkedOverlay: controls.button.hoveredOverlay
 
     checkBox:
-        color checkIconColor: colors.accentBackground
-        color boxBackground:  controls.button.background
+        color checkIconColorize: colors.accentBackground
+        color boxBackground:     controls.button.background
 
         color boxBorder:        hsluv(0, 0, 50, 0.3)
         color boxHoveredBorder: colors.accentBackground
