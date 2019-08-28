@@ -20,18 +20,28 @@ HRowLayout {
 
 
     HIcon {
+        property bool loading: button.loading || false
+
         id: icon
         svgName: button.icon.name
         colorize: button.icon.color
         cache: button.icon.cache
 
+        onLoadingChanged: if (! loading) resetAnimations.start()
+
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
 
-        HNumberAnimation {
+
+        ParallelAnimation {
+            id: resetAnimations
+            HNumberAnimation { target: icon; property: "opacity"; to: 1 }
+            HNumberAnimation { target: icon; property: "rotation"; to: 0 }
+        }
+
+
+        HNumberAnimation on opacity {
             id: blink
-            target: icon
-            property: "opacity"
             from: 1
             to: 0.5
             factor: 2
