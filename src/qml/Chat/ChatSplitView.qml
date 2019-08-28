@@ -27,12 +27,14 @@ HSplitView {
             id: inviteBanner
             visible: ! chatPage.roomInfo.left && inviterId
             inviterId: chatPage.roomInfo.inviter_id
+
             Layout.fillWidth: true
         }
 
         Composer {
             id: composer
-            visible: ! inviteBanner.visible && ! leftBanner.visible
+            visible: ! chatPage.roomInfo.left &&
+                     ! chatPage.roomInfo.inviter_id
         }
 
         LeftBanner {
