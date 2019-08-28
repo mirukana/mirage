@@ -86,7 +86,10 @@ colors:
 
 icons:
     string preferredPack: "thin"
-    color colorize: "white"  // "transparent" to disable
+
+    // "transparent" to disable colorizing
+    color colorize:         "white"
+    color disabledColorize: "white"
 
 
 // Generic UI controls
