@@ -63,14 +63,16 @@ HColumnLayout {
     HPasswordPopup {
         property url file: ""
 
+        function verifyPassword(pass) {
+            return py.callSync(
+                "check_exported_keys_password", [file.toString(), pass]
+            )
+        }
+
         id: importPasswordPopup
         label.text: qsTr(
-            "Please enter the passphrase that was used to protect this " +
-            "file.\n\n" +
-            "The import can take a few minutes. " +
-            "You can leave the account settings page while it is running. " +
-            "Messages may not be sent or received until the operation is done."
+            "Please enter the passphrase that was used to protect this file:"
         )
-        onPasswordChanged: importKeys(file, password)
+        onAcceptedPasswordChanged: importKeys(file, password)
     }
 }

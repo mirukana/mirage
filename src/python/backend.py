@@ -121,11 +121,19 @@ class Backend:
 
     # General functions
 
-
     @staticmethod
     def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
         # (0-360, 0-100, 0-100) -> [0-1, 0-1, 0-1]
         return hsluv.hsluv_to_rgb([hue, saturation, lightness])
+
+
+    @staticmethod
+    def check_exported_keys_password(file_path: str, password: str) -> bool:
+        try:
+            nio.crypto.key_export.decrypt_and_read(file_path, password)
+            return True
+        except (FileNotFoundError, ValueError):
+            return False
 
 
     async def load_settings(self) -> tuple:

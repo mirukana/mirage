@@ -59,11 +59,15 @@ HRectangle {
             spacing: interfaceBox.verticalSpacing
 
             Layout.fillWidth: true
+            Layout.topMargin:
+                interfaceTitle.visible ? 0 : interfaceBox.verticalSpacing
             Layout.leftMargin: interfaceBox.horizontalSpacing
             Layout.rightMargin: interfaceBox.horizontalSpacing
         }
 
         HRowLayout {
+            visible: buttonModel.length > 0
+
             Repeater {
                 id: interfaceButtonsRepeater
                 model: []
@@ -74,7 +78,9 @@ HRectangle {
                     id: button
                     text: modelData.text
                     icon.name: modelData.iconName || ""
-                    enabled: modelData.enabled && ! button.loading
+                    enabled: (modelData.enabled == undefined ?
+                              true : modelData.enabled) &&
+                             ! button.loading
                     onClicked: buttonCallbacks[modelData.name](button)
 
                     Layout.fillWidth: true

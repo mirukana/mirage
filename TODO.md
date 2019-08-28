@@ -8,8 +8,6 @@
     - Remove the filled theme
     - Have a default background
 
-  - Use [Animators](https://doc.qt.io/qt-5/qml-qtquick-animator.html)
-    - Choose a better default easing type for animations
   - Sendbox
   - Room Sidepane
     - Hide when window too small
@@ -34,6 +32,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Choose a better default easing type for animations
   - Make invite icon blink if there's no one but ourself in the room,
     but never do it again once the user hovered it long enough to show tooltip
     or clicked on it once 
@@ -42,9 +41,7 @@
   - Adapt UI for small heights
 
   - Popup:
-      - label size
-      - Accept/cancel buttons
-      - Transitions
+    - Transitions
 
   - Restoring UI state:
     - Sendbox content

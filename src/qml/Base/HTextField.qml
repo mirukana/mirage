@@ -8,9 +8,12 @@ TextField {
 
     readonly property QtObject _tf: theme.controls.textField
 
+    property bool error: false
+
     property bool bordered: true
     property color backgroundColor: _tf.background
     property color borderColor: _tf.border
+    property color errorBorder: _tf.errorBorder
     property color focusedBackgroundColor: _tf.focusedBackground
     property color focusedBorderColor: _tf.focusedBorder
     property alias radius: textFieldBackground.radius
@@ -20,7 +23,8 @@ TextField {
     background: Rectangle {
         id: textFieldBackground
         color: field.activeFocus ? focusedBackgroundColor : backgroundColor
-        border.color: field.activeFocus ? focusedBorderColor : borderColor
+        border.color: error ? errorBorder :
+                      field.activeFocus ? focusedBorderColor : borderColor
         border.width: bordered ? theme.controls.textField.borderWidth : 0
 
         Behavior on color { HColorAnimation { factor: 0.25 } }

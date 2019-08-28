@@ -133,6 +133,7 @@ controls:
         int borderWidth:     1
         color border:        "transparent"
         color focusedBorder: colors.strongAccentBackground
+        color errorBorder:   colors.errorText
 
         color text:        colors.text
         color focusedText: colors.text
