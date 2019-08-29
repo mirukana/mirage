@@ -404,12 +404,6 @@ class MatrixClient(nio.AsyncClient):
 
     async def register_nio_room(self, room: nio.MatrixRoom, left: bool = False,
                                ) -> None:
-        # Generate the room name
-        name = room.name or room.canonical_alias
-        if not name:
-            name = room.group_name()
-            name = "" if name == "Empty room?" else name
-
         # Add room
         try:
             last_ev = self.models[Room, self.user_id][room.room_id].last_event
@@ -420,7 +414,7 @@ class MatrixClient(nio.AsyncClient):
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
-            display_name   = name,
+            display_name   = room.display_name,
             avatar_url     = room.gen_avatar_url or "",
             topic          = room.topic or "",
             inviter_id     = inviter,
