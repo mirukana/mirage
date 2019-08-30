@@ -12,7 +12,6 @@
 
 - Fixes
   - Icons on KDE
-  - Greentext for local echo
 
   - Show error if uploading avatar fails
 
