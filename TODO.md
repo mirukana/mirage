@@ -11,11 +11,9 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - make install
+  - `make install`
   - Make uvloop optional
-  - Distribute fonts
   - Backspace bug
-  - Add missing shortcuts to config file
 
   - Show error if uploading avatar fails or file is corrupted
 
@@ -92,6 +90,7 @@
   - Spinner when loading past room events or images 
 
   - Theming
+    - Bundle fonts
     - File format
     - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir

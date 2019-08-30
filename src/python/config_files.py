@@ -59,7 +59,7 @@ class JSONConfigFile(ConfigFile):
         all_data = await self.default_data()
         dict_update_recursive(all_data, data)
 
-        if len(data) != len(all_data):
+        if data != all_data:
             await self.write(all_data)
 
         return all_data
