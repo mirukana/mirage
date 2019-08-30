@@ -11,7 +11,10 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - alt+n
   - Icons on KDE
+  - Backspace bug
+  - Add missing shortcuts to config file
 
   - Show error if uploading avatar fails or file is corrupted
 
@@ -25,6 +28,8 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Just use Shortcut onHeld instead of analyzing the current velocity
+    in `smartVerticalFlick()`
   - Reduce icons brightness
     - Thinner expand arrow
   - Restore previous focus after closing right click context menu

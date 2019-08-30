@@ -32,6 +32,23 @@ HShortcutHandler {
         onHeld: pressed(event)
     }
 
+    HShortcut {
+        sequences: settings.keys.scrollPageUp
+        onPressed: Utils.smartVerticalFlick(
+            flickTarget, -2.3 * flickTarget.height, 10,
+        )
+        onHeld: pressed(event)
+    }
+
+    HShortcut {
+        sequences: settings.keys.scrollPageDown
+        onPressed: Utils.smartVerticalFlick(
+            flickTarget, 2.3 * flickTarget.height, 10,
+        )
+        onHeld: pressed(event)
+    }
+
+
     // SidePane
 
     HShortcut {

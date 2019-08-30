@@ -111,8 +111,10 @@ class UISettings(JSONConfigFile):
                 "startDebugger":    ["Alt+Shift+D"],
                 "reloadConfig":     "Alt+Shift+R",
 
-                "scrollUp":         ["Alt+Up", "Alt+K"],
-                "scrollDown":       ["Alt+Down", "Alt+J"],
+                "scrollUp":       ["Alt+Up", "Alt+K"],
+                "scrollDown":     ["Alt+Down", "Alt+J"],
+                "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PageUp"],
+                "scrollPageDown": ["Alt+Ctrl+Down", "Alt+Ctrl+J", "PageDown"],
 
                 "focusSidePane":    ["Alt+S", "Ctrl+S"],
                 "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
