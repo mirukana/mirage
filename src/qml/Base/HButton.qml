@@ -13,8 +13,6 @@ Button {
     icon.color: theme.icons.colorize
     enabled: ! loading
 
-    onVisibleChanged: if (! visible) loading = false
-
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label

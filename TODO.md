@@ -11,12 +11,12 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Missing hourglass when changing avatar and applying
   - Icons on KDE
   - Greentext for local echo
 
   - Show error if uploading avatar fails
 
+  - If account not in config anymore, discard ui state last page on startup
   - Don't strip user spacing in html
   - Do something when access token is invalid
   - Keyboard flicking against top/bottom edge
@@ -138,6 +138,7 @@
     it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition
   - Room subtitle: show things like "*Image*" instead of blank, etc
+  - Live-reloading accounts.json
 
 - nio
   - `AsyncClient.share_group_session`: send device batches concurrently
