@@ -13,6 +13,12 @@ Button {
     icon.color: theme.icons.colorize
     enabled: ! loading
 
+    // Must be explicitely set to display correctly on KDE, but no need on i3?
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                        implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                         implicitContentHeight + topPadding + bottomPadding)
+
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
