@@ -11,7 +11,14 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - Daybreak?
+  - Collapsing last account with shortcut when focused on room
+  - Using up/down when sidepane focused
+  - Missing hourglass when changing avatar and applying
+  - Icons on KDE
+  - Send typing state when no alias
   - Greentext for local echo
+
   - Show error if uploading avatar fails
 
   - Don't strip user spacing in html
@@ -24,6 +31,7 @@
 
 - UI
   - Reduce icons brightness
+    - Thinner expand arrow
   - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
   - Make HListView scrollbars visible

@@ -386,17 +386,20 @@ class MatrixClient(nio.AsyncClient):
             room.last_event = item.serialized
             return
 
-        for_us        = item.target_id in self.backend.clients
         is_profile_ev = item.type_specifier == TypeSpecifier.profile_change
 
         # If there were no better events available to show previously
-        prev_is_member_ev = \
-            isinstance(room.last_event["source"], nio.RoomMemberEvent)
+        prev_is_profile_ev = \
+            room.last_event["type_specifier"] == TypeSpecifier.profile_change
 
-        if is_profile_ev and for_us and not prev_is_member_ev:
+        # If this is a profile event, only replace the currently shown one if
+        # it was also a profile event (we had nothing better to show).
+        if is_profile_ev and not prev_is_profile_ev:
             return
 
-        if item.date < room.last_event["date"]:  # If this is a past event
+        # If this event is older than the currently shown one, only replace
+        # it if the previous was a profile event.
+        if item.date < room.last_event["date"] and not prev_is_profile_ev:
             return
 
         room.last_event = item.serialized
@@ -693,9 +696,9 @@ class MatrixClient(nio.AsyncClient):
                     account.display_name    = now["displayname"] or ""
                     account.avatar_url      = now["avatar_url"] or ""
 
-            if ev.state_key in self.backend.clients or len(room.users) > 50:
-                self.skipped_events[room.room_id] += 1
-                return None
+            # Hide profile events from the timeline - XXX
+            self.skipped_events[room.room_id] += 1
+            return None
 
             return (
                 TypeSpecifier.profile_change,
