@@ -82,6 +82,14 @@ Rectangle {
             }
 
             onTextChanged: {
+                if (Utils.isEmptyObject(aliases)) {
+                    writingUserId = Qt.binding(() => chatPage.userId)
+                    toSend        = text
+                    setTyping(Boolean(text))
+                    textChangedSinceLostFocus = true
+                    return
+                }
+
                 let foundAlias = null
 
                 for (let [user, writing_alias] of Object.entries(aliases)) {

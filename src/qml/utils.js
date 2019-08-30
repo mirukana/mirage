@@ -1,3 +1,8 @@
+function isEmptyObject(obj) {
+    return Object.entries(obj).length === 0 && obj.constructor === Object
+}
+
+
 function numberWrapAround(num, max) {
     return num < 0 ? max + (num % max) : (num % max)
 }

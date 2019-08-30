@@ -15,7 +15,6 @@
   - Using up/down when sidepane focused
   - Missing hourglass when changing avatar and applying
   - Icons on KDE
-  - Send typing state when no alias
   - Greentext for local echo
 
   - Show error if uploading avatar fails
