@@ -237,13 +237,13 @@ class MatrixClient(nio.AsyncClient):
         self.loaded_once_rooms.add(room_id)
         more_to_load = True
 
-        if self.past_tokens[room_id] == response.end:
-            self.fully_loaded_rooms.add(room_id)
-            more_to_load = False
-
         self.past_tokens[room_id] = response.end
 
         for event in response.chunk:
+            if isinstance(event, nio.RoomCreateEvent):
+                self.fully_loaded_rooms.add(room_id)
+                more_to_load = False
+
             for cb in self.event_callbacks:
                 if (cb.filter is None or isinstance(event, cb.filter)):
                     await cb.func(self.all_rooms[room_id], event)
