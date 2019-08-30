@@ -5,9 +5,8 @@ import QtQuick.Window 2.7
 import "Base"
 import "SidePane"
 
-Rectangle {
+Item {
     id: mainUI
-    color: "transparent"
 
     Component.onCompleted: window.mainUI = mainUI
 
