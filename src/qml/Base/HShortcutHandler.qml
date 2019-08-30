@@ -43,12 +43,15 @@ Item {
 
             if (! shortcut.enabled) continue
 
-            if (typeof(shortcut.sequences) == "string" &&
-                sequenceMatches(event, shortcut.sequences)) return shortcut
+            if (typeof(shortcut.sequences) == "string") {
+                return sequenceMatches(event, shortcut.sequences) ?
+                       shortcut : null
+            }
 
             for (let i = 0;  i < shortcut.sequences.length; i++) {
-                if (sequenceMatches(event, shortcut.sequences[i]))
+                if (sequenceMatches(event, shortcut.sequences[i])) {
                     return shortcut
+                }
             }
         }
         return null

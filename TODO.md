@@ -13,7 +13,6 @@
 - Fixes
   - make install
   - Make uvloop optional
-  - Icons on KDE
   - Distribute fonts
   - Backspace bug
   - Add missing shortcuts to config file

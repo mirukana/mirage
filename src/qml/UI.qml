@@ -14,10 +14,10 @@ Rectangle {
     property alias shortcuts: shortcuts
     property alias sidePane: sidePane
     property alias pageLoader: pageLoader
-    property alias pressAnimation: _pressAnimation
+    property alias pressAnimation: pressAnimation
 
     SequentialAnimation {
-        id: _pressAnimation
+        id: pressAnimation
         HNumberAnimation {
             target: mainUI; property: "scale"; from: 1.0; to: 0.9
         }
