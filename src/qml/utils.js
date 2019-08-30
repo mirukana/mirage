@@ -61,7 +61,6 @@ function processedEventText(ev) {
     )
 
     if (text.includes("%2") && ev.target_id) {
-        print(2)
         text = text.arg(coloredNameHtml(ev.target_name, ev.target_id))
     }
 
