@@ -16,18 +16,18 @@ HTileDelegate {
         window.uiState.pageProperties.userId == model.data.user_id
 
     setCurrentTimer.running:
-        ! accountRoomList.activateLimiter.running && ! sidePane.hasFocus
+        ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
 
 
     Behavior on opacity { HNumberAnimation {} }
 
 
     property bool disconnecting: false
-    readonly property bool forceExpand: Boolean(accountRoomList.filter)
+    readonly property bool forceExpand: Boolean(sidePaneList.filter)
 
     // Hide harmless error when a filter matches nothing
     readonly property bool collapsed: try {
-        return accountRoomList.collapseAccounts[model.data.user_id] || false
+        return sidePaneList.collapseAccounts[model.data.user_id] || false
     } catch (err) {}
 
 

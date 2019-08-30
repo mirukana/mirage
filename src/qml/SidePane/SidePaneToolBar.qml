@@ -40,7 +40,7 @@ HRowLayout {
 
         Connections {
             target: window
-            // Keep multiple instances of PaneToolBar in sync.
+            // Keep multiple instances of SidePaneToolBar in sync.
             // This also sets the text on startup.
             onUiStateChanged: filterField.text = uiState.sidePaneFilter
         }

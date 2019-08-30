@@ -43,32 +43,32 @@ HShortcutHandler {
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.clearRoomFilter
-        onPressed: mainUI.sidePane.paneToolBar.roomFilter = ""
+        onPressed: mainUI.sidePane.toolBar.roomFilter = ""
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewAccount
-        onPressed: mainUI.sidePane.paneToolBar.addAccountButton.clicked()
+        onPressed: mainUI.sidePane.toolBar.addAccountButton.clicked()
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
-        onPressed: mainUI.sidePane.accountRoomList.previous()
+        onPressed: mainUI.sidePane.sidePaneList.previous()
         onHeld: pressed(event)
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToNextRoom
-        onPressed: mainUI.sidePane.accountRoomList.next()
+        onPressed: mainUI.sidePane.sidePaneList.next()
         onHeld: pressed(event)
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.toggleCollapseAccount
-        onPressed: mainUI.sidePane.accountRoomList.toggleCollapseAccount()
+        onPressed: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
     }
 }

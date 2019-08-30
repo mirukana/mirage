@@ -15,7 +15,7 @@ HTileDelegate {
         window.uiState.pageProperties.roomId == model.data.room_id
 
     setCurrentTimer.running:
-        ! accountRoomList.activateLimiter.running && ! sidePane.hasFocus
+        ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
 
 
     Behavior on opacity { HNumberAnimation {} }

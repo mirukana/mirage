@@ -11,9 +11,9 @@ Rectangle {
 
     color: theme.sidePane.background
 
-    property bool hasFocus: paneToolBar.filterField.activeFocus
-    property alias accountRoomList: accountRoomList
-    property alias paneToolBar: paneToolBar
+    property bool hasFocus: toolbar.filterField.activeFocus
+    property alias sidePaneList: sidePaneList
+    property alias toolbar: toolbar
 
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
     property bool manuallyResizing: false
@@ -28,7 +28,7 @@ Rectangle {
         }
     }
 
-    onFocusChanged: if (focus) paneToolBar.filterField.forceActiveFocus()
+    onFocusChanged: if (focus) toolbar.filterField.forceActiveFocus()
 
     onManualWidthChanged: {
         window.uiState.sidePaneManualWidth = manualWidth
@@ -83,29 +83,29 @@ Rectangle {
 
 
     Keys.enabled: sidePane.hasFocus
-    Keys.onUpPressed: accountRoomList.previous(false)  // do not activate
-    Keys.onDownPressed: accountRoomList.next(false)
+    Keys.onUpPressed: sidePaneList.previous(false)  // do not activate
+    Keys.onDownPressed: sidePaneList.next(false)
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     Keys.onReturnPressed: if (event.modifiers & Qt.ShiftModifier) {
-        accountRoomList.toggleCollapseAccount()
+        sidePaneList.toggleCollapseAccount()
     } else {
-        accountRoomList.activate()
+        sidePaneList.activate()
     }
 
 
     HColumnLayout {
         anchors.fill: parent
 
-        AccountRoomList {
-            id: accountRoomList
+        SidePaneList {
+            id: sidePaneList
             clip: true
 
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
-        PaneToolBar {
-            id: paneToolBar
+        SidePaneToolBar {
+            id: toolbar
         }
     }
 }
