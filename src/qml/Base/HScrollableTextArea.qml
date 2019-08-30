@@ -14,6 +14,11 @@ ScrollView {
 
     TextArea {
         id: textArea
+        leftPadding: theme.spacing
+        rightPadding: leftPadding
+        topPadding: theme.spacing / 1.5
+        bottomPadding: topPadding
+
         readOnly: ! visible
         selectByMouse: true
 

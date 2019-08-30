@@ -3,6 +3,11 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
+    leftPadding: theme.spacing
+    rightPadding: leftPadding
+    topPadding: theme.spacing / 1.5
+    bottomPadding: topPadding
+
     font.family: theme.fontFamily.sans
     font.pixelSize: theme.fontSize.normal
     font.pointSize: -1

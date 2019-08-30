@@ -5,10 +5,11 @@ import QtQuick.Layouts 1.12
 Button {
     id: button
     spacing: theme.spacing
-    leftPadding: spacing / 1.5
+    leftPadding: spacing / (circle ? 1.5 : 1)
     rightPadding: leftPadding
-    topPadding: spacing / 2
+    topPadding: spacing / (circle ? 1.75 : 1.5)
     bottomPadding: topPadding
+
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
     enabled: ! loading
