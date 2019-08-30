@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Collapsing last account with shortcut when focused on room
   - Missing hourglass when changing avatar and applying
   - Icons on KDE
   - Greentext for local echo
