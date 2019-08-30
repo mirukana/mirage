@@ -191,7 +191,9 @@ class HtmlFilter:
     @staticmethod
     def _is_image_path(link: str) -> bool:
         return bool(re.match(
-            r".+\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$", link, re.IGNORECASE,
+            r"(https?|s?ftp)://.+/.+\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$",
+            link,
+            re.IGNORECASE,
         ))
 
 
