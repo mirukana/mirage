@@ -20,6 +20,7 @@ ScrollView {
         wrapMode: TextEdit.Wrap
         font.family: theme.fontFamily.sans
         font.pixelSize: theme.fontSize.normal
+        font.pointSize: -1
 
         color: theme.controls.textArea.text
         background: Rectangle {

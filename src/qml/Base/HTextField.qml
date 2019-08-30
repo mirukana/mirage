@@ -5,6 +5,7 @@ TextField {
     id: field
     font.family: theme.fontFamily.sans
     font.pixelSize: theme.fontSize.normal
+    font.pointSize: -1
 
     readonly property QtObject _tf: theme.controls.textField
 
