@@ -75,9 +75,14 @@ HTileDelegate {
             return Utils.processedEventText(ev)
         }
 
-        return Utils.coloredNameHtml(
+        let text = Utils.coloredNameHtml(
             ev.sender_name, ev.sender_id
         ) + ": " + ev.inline_content
+
+        return text.replace(
+            /< *span +class=['"]?greentext['"]? *>(.+)<\/ *span *>/,
+            '<font color="' + theme.chat.message.greenText + '">$1</font>',
+        )
     }
 
     contextMenu: HMenu {
