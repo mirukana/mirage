@@ -5,12 +5,12 @@ Item {
     Rectangle {
         anchors.fill: parent
         scale: Math.max(
-            1.6, Math.ceil(parent.parent.width / parent.parent.height)
+            2.25, Math.ceil(parent.parent.width / parent.parent.height)
         )
-        rotation: 45 * 3
+        rotation: -45
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Qt.hsla(0.73, 0.25, 0.25, 1) }
-            GradientStop { position: 1.0; color: Qt.hsla(0.52, 1, 0.06, 1) }
+            GradientStop { position: 0.0; color: "#001b20" }
+            GradientStop { position: 1.0; color: "#3c2f4b" }
         }
     }
 

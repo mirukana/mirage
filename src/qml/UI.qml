@@ -48,12 +48,12 @@ Rectangle {
         id: mainUIGradient
         anchors.fill: parent
         scale: Math.max(
-            1.6, Math.ceil(parent.parent.width / parent.parent.height)
+            2.25, Math.ceil(parent.parent.width / parent.parent.height)
         )
         rotation: theme.ui.gradientRotation
         gradient: Gradient {
-            GradientStop { position: 0.0; color: theme.ui.gradientLeft }
-            GradientStop { position: 1.0; color: theme.ui.gradientRight }
+            GradientStop { position: 0.0; color: theme.ui.gradientStart }
+            GradientStop { position: 1.0; color: theme.ui.gradientEnd }
         }
     }
 

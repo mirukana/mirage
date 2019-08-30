@@ -196,16 +196,16 @@ ui:
     // If not specified, the gradient will be shown instead.
     url image: ""
 
-    int gradientRotation: 45 * 3
-    color gradientRight:
-        Utils.hsluv(colors.hue - 50, 100, colors.intensity * 8, colors.opacity)
-    color gradientLeft:
-        Utils.hsluv(colors.hue + 20, 31, colors.intensity * 22, colors.opacity)
+    int gradientRotation: -45
+    color gradientStart:
+        hsluv(colors.hue - 50, 100, colors.intensity * 8, 1.0)
+    color gradientEnd:
+        hsluv(colors.hue + 20, 30, colors.intensity * 22, 1.0)
 
     // To have a solid color instead,
-    // set gradientLeft and gradientRight to the same value.
-    // color gradientLeft: colors.weakBackground
-    // color gradientRight: colors.weakBackground
+    // set gradientStart and gradientEnd to the same value. Example:
+    // color gradientStart: hsluv(0, 0, 0, 0.8)
+    // color gradientEnd: hsluv(0, 0, 0, 0.8)
 
 
 
@@ -269,7 +269,10 @@ chat:
         int radius:          theme.radius
         color background:    colors.strongBackground
         color ownBackground: hsluv(
-            colors.hue, colors.saturation + 25, colors.intensity * 6, opacity
+            colors.hue,
+            colors.saturation + 25,
+            colors.intensity * 6,
+            colors.opacity + 0.2
         )
 
         color body: colors.text
