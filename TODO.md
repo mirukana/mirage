@@ -12,7 +12,6 @@
 
 - Fixes
   - Collapsing last account with shortcut when focused on room
-  - Using up/down when sidepane focused
   - Missing hourglass when changing avatar and applying
   - Icons on KDE
   - Greentext for local echo

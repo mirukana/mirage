@@ -15,7 +15,8 @@ HTileDelegate {
         window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
         window.uiState.pageProperties.userId == model.data.user_id
 
-    setCurrentTimer.running: ! accountRoomList.activateLimiter.running
+    setCurrentTimer.running:
+        ! accountRoomList.activateLimiter.running && ! sidePane.hasFocus
 
 
     Behavior on opacity { HNumberAnimation {} }
