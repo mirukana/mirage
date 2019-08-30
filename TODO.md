@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - alt+n
   - Icons on KDE
   - Backspace bug
   - Add missing shortcuts to config file

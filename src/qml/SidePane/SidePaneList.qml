@@ -9,7 +9,7 @@ HListView {
 
     readonly property var originSource: window.sidePaneModelSource
     readonly property var collapseAccounts: window.uiState.collapseAccounts
-    readonly property string filter: toolbar.roomFilter
+    readonly property string filter: toolBar.roomFilter
     readonly property alias activateLimiter: activateLimiter
 
     onOriginSourceChanged: filterLimiter.restart()

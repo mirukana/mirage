@@ -11,9 +11,9 @@ Rectangle {
 
     color: theme.sidePane.background
 
-    property bool hasFocus: toolbar.filterField.activeFocus
+    property bool hasFocus: toolBar.filterField.activeFocus
     property alias sidePaneList: sidePaneList
-    property alias toolbar: toolbar
+    property alias toolBar: toolBar
 
     property real autoWidthRatio: theme.sidePane.autoWidthRatio
     property bool manuallyResizing: false
@@ -28,7 +28,7 @@ Rectangle {
         }
     }
 
-    onFocusChanged: if (focus) toolbar.filterField.forceActiveFocus()
+    onFocusChanged: if (focus) toolBar.filterField.forceActiveFocus()
 
     onManualWidthChanged: {
         window.uiState.sidePaneManualWidth = manualWidth
@@ -105,7 +105,7 @@ Rectangle {
         }
 
         SidePaneToolBar {
-            id: toolbar
+            id: toolBar
         }
     }
 }
