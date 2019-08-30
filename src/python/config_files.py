@@ -115,6 +115,10 @@ class UISettings(JSONConfigFile):
                 "scrollDown":     ["Alt+Down", "Alt+J"],
                 "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PageUp"],
                 "scrollPageDown": ["Alt+Ctrl+Down", "Alt+Ctrl+J", "PageDown"],
+                "scrollToTop":
+                    ["Alt+Ctrl+Shift+Up", "Alt+Ctrl+Shift+K", "Home"],
+                "scrollToBottom":
+                    ["Alt+Ctrl+Shift+Down", "Alt+Ctrl+Shift+J", "End"],
 
                 "focusSidePane":    ["Alt+S", "Ctrl+S"],
                 "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],

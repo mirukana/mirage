@@ -169,13 +169,31 @@ function getItem(array, mainKey, value) {
 }
 
 
-function smartVerticalFlick(flickTarget, baseVelocity, fastMultiply=3) {
-    if (! flickTarget.interactive) { return }
+function smartVerticalFlick(flickable, baseVelocity, fastMultiply=3) {
+    if (! flickable.interactive) { return }
 
     baseVelocity = -baseVelocity
-    let vel      = -flickTarget.verticalVelocity
+    let vel      = -flickable.verticalVelocity
     let fast     = (baseVelocity < 0 && vel < baseVelocity / 2) ||
                    (baseVelocity > 0 && vel > baseVelocity / 2)
 
-    flickTarget.flick(0, baseVelocity * (fast ? fastMultiply : 1))
+    flickable.flick(0, baseVelocity * (fast ? fastMultiply : 1))
+}
+
+function flickToTop(flickable) {
+    if (! flickable.interactive) return
+    if (flickable.visibleArea.yPosition < 0) return
+
+    flickable.contentY -= flickable.contentHeight
+    flickable.returnToBounds()
+    flickable.flick(0, -100)  // Force the delegates to load
+}
+
+function flickToBottom(flickable) {
+    if (! flickable.interactive) return
+    if (flickable.visibleArea.yPosition < 0) return
+
+    flickable.contentY = flickTarget.contentHeight - flickTarget.height
+    flickable.returnToBounds()
+    flickable.flick(0, 100)
 }

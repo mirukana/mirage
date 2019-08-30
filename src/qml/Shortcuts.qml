@@ -48,6 +48,18 @@ HShortcutHandler {
         onHeld: pressed(event)
     }
 
+    HShortcut {
+        sequences: settings.keys.scrollToTop
+        onPressed: Utils.flickToTop(flickTarget)
+        onHeld: pressed(event)
+    }
+
+    HShortcut {
+        sequences: settings.keys.scrollToBottom
+        onPressed: Utils.flickToBottom(flickTarget)
+        onHeld: pressed(event)
+    }
+
 
     // SidePane
 
