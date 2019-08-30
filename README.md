@@ -11,8 +11,15 @@ Qt 5.12+, including:
 - qt5-svg-devel
 - qt5-graphicaleffects
 - qt5-qmake
+- qt5-devel
 
+- python3
+- python3-devel
 - olm-python3 >= 3.1
+
+Make sure the right version of Qt is used:
+
+    export QT_SELECT=5
 
 Install [pyotherside](https://github.com/thp/pyotherside):
 
@@ -28,7 +35,7 @@ After this, verify the permissions of the installed plugin files.
 Install the dependencies from Pypi:
 
     pip3 install --user --upgrade \
-        Pillow aiofiles dataclasses filetype hsluv html_sanitizer \
+        Pillow aiofiles appdirs dataclasses filetype hsluv html_sanitizer \
         lxml mistune uvloop
 
 Install the dependencies from Github:
