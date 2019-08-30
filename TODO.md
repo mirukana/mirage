@@ -11,9 +11,13 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - make install
+  - Make uvloop optional
   - Icons on KDE
+  - Distribute fonts
   - Backspace bug
   - Add missing shortcuts to config file
+  - Zoom animation with gradient
 
   - Show error if uploading avatar fails or file is corrupted
 
@@ -91,7 +95,6 @@
 
   - Theming
     - File format
-    - Distribute fonts
     - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir
     - Correctly implement uiScale/fontScale + ctrl+-= keys
