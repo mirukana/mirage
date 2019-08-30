@@ -1,3 +1,7 @@
+- Message selection
+  - Make scroll wheel usable
+  - Copying messages (menu & shortcut)
+
 - Refactoring
   - Banners
   - Composer

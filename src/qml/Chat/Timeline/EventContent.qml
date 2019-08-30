@@ -8,15 +8,6 @@ Row {
     spacing: theme.spacing / 2
 
     readonly property string eventText: Utils.processedEventText(model)
-    readonly property real lineHeight:
-        ! eventText.match(/<img .+\/?>/) && multiline ? 1.25 : 1.0
-    readonly property bool multiline:
-        (eventText.match(/(\n|<br\/?>)/) || []).length > 0 ||
-        contentLabel.contentWidth < (
-            contentLabel.implicitWidth -
-            contentLabel.leftPadding -
-            contentLabel.rightPadding
-        )
 
     Item {
         width: hideAvatar ? 0 : 48
@@ -64,16 +55,17 @@ Row {
                 textFormat: Text.StyledText
                 elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
-                lineHeight: eventContent.lineHeight
 
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
                 topPadding: theme.spacing / 2 * lineHeight
             }
 
-            HRichLabel {
+            HSelectableLabel {
                 id: contentLabel
                 width: parent.width
+                container: selectableLabelContainer
+                index: model.index
 
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
@@ -87,14 +79,14 @@ Row {
                        "&nbsp;<font size=" + theme.fontSize.small +
                        "px>⏳</font>" : "")
 
-                lineHeight: eventContent.lineHeight
                 color: theme.chat.message.body
                 wrapMode: Text.Wrap
+                textFormat: Text.RichText
 
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
                 topPadding: nameLabel.visible ? 0 : bottomPadding
-                bottomPadding: theme.spacing / 2 * lineHeight
+                bottomPadding: theme.spacing / 2
             }
         }
     }

@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 ListView {
     id: listView
+    interactive: enableFlicking
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -13,6 +14,8 @@ ListView {
     preferredHighlightEnd: height / 2 + currentItemHeight
 
 
+    property bool enableFlicking: true
+
     readonly property int currentItemHeight:
         currentItem ? currentItem.height : 0
 
@@ -21,7 +24,9 @@ ListView {
         color: theme.controls.listView.highlight
     }
 
-    ScrollBar.vertical: ScrollBar { visible: listView.interactive }
+    ScrollBar.vertical: ScrollBar {
+        visible: listView.interactive || ! listView.enableFlicking
+    }
 
     add: Transition {
         ParallelAnimation {
@@ -45,6 +50,5 @@ ListView {
         }
     }
 
-    populate: add
     displaced: move
 }

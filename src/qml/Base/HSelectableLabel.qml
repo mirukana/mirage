@@ -1,0 +1,119 @@
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+
+TextEdit {
+    id: label
+    font.family: theme.fontFamily.sans
+    font.pixelSize: theme.fontSize.normal
+    color: theme.colors.text
+
+    textFormat: Label.PlainText
+    tabStopDistance: 4 * 4  // 4 spaces
+
+    readOnly: true
+    persistentSelection: true
+
+    onLinkActivated: Qt.openUrlExternally(link)
+
+
+    property HSelectableLabelContainer container
+    property int index
+
+
+    function updateSelection() {
+        if (! container.reversed &&
+            container.selectionStart <= container.selectionEnd ||
+
+            container.reversed &&
+            container.selectionStart > container.selectionEnd)
+        {
+            var first    = container.selectionStart
+            var firstPos = container.selectionStartPosition
+            var last     = container.selectionEnd
+            var lastPos  = container.selectionEndPosition
+        } else {
+            var first    = container.selectionEnd
+            var firstPos = container.selectionEndPosition
+            var last     = container.selectionStart
+            var lastPos  = container.selectionStartPosition
+        }
+
+        if (first == index && last == index) {
+            select(
+                label.positionAt(firstPos.x, firstPos.y),
+                label.positionAt(lastPos.x, lastPos.y),
+            )
+
+        } else if ((! container.reversed && first < index && index < last) ||
+                   (container.reversed && first > index && index > last))
+        {
+            label.selectAll()
+
+        } else if (first == index) {
+            label.select(positionAt(firstPos.x, firstPos.y), length)
+
+        } else if (last == index) {
+            label.select(0, positionAt(lastPos.x, lastPos.y))
+
+        } else {
+            label.deselect()
+        }
+
+        updateContainerSelectedTexts()
+    }
+
+    function updateContainerSelectedTexts() {
+        container.selectedTexts[index] = selectedText
+        container.selectedTextsChanged()
+    }
+
+    function selectWordAt(position) {
+        container.clearSelection()
+        label.cursorPosition = positionAt(position.x, position.y)
+        label.selectWord()
+        updateContainerSelectedTexts()
+    }
+
+    function selectAllText() {
+        container.clearSelection()
+        label.selectAll()
+        updateContainerSelectedTexts()
+    }
+
+
+    Connections {
+        target: container
+        onSelectionInfoChanged: updateSelection()
+        onDeselectAll: deselect()
+    }
+
+    DropArea {
+        anchors.fill: parent
+        onPositionChanged: {
+            if (! container.selecting) {
+                container.clearSelection()
+                container.selectionStart         = index
+                container.selectionStartPosition = Qt.point(drag.x, drag.y)
+                container.selecting              = true
+            } else {
+                container.selectionEnd         = index
+                container.selectionEndPosition = Qt.point(drag.x, drag.y)
+            }
+        }
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onTapped: {
+            tapCount == 2 ? selectWordAt(eventPoint.position) :
+            tapCount == 3 ? selectAllText() :
+            container.clearSelection()
+        }
+    }
+
+    MouseArea {
+        anchors.fill: label
+        acceptedButtons: Qt.NoButton
+        cursorShape: label.hoveredLink ? Qt.PointingHandCursor : Qt.IBeamCursor
+    }
+}
