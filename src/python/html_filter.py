@@ -26,8 +26,9 @@ class HtmlFilter:
         self._inline_sanitizer = Sanitizer(self.sanitize_settings(inline=True))
 
         # The whitespace remover doesn't take <pre> into account
-        sanitizer.normalize_overall_whitespace         = lambda html: html
-        sanitizer.normalize_whitespace_in_text_or_tail = lambda el: el
+        sanitizer.normalize_overall_whitespace = lambda html, *args, **kw: html
+        sanitizer.normalize_whitespace_in_text_or_tail = \
+            lambda el, *args, **kw: el
 
         # hard_wrap: convert all \n to <br> without required two spaces
         self._markdown_to_html = mistune.Markdown(

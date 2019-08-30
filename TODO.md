@@ -11,6 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - Greentext for local echo
   - Show error if uploading avatar fails
 
   - Don't strip user spacing in html
@@ -22,6 +23,7 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Reduce icons brightness
   - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
   - Make HListView scrollbars visible
@@ -113,6 +115,9 @@
   - Links preview
 
 - Client improvements
+  - Prevent starting multiple instances, causes problems with E2E DB
+    (sending new messages from second instances makes them undecryptable to
+     first instance until it's restarted)
   - `translated` arg for avatar upload and login errors
   - Check if username exists on login screen
   - `pyotherside.atexit()`
