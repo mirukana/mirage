@@ -16,7 +16,6 @@
   - Distribute fonts
   - Backspace bug
   - Add missing shortcuts to config file
-  - Zoom animation with gradient
 
   - Show error if uploading avatar fails or file is corrupted
 

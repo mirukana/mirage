@@ -196,16 +196,18 @@ ui:
     // If not specified, the gradient will be shown instead.
     url image: ""
 
-    int gradientRotation: -45
-    color gradientStart:
+    point gradientStart: Qt.point(0, 0)
+    point gradientEnd:   Qt.point(window.width, window.height)
+
+    color gradientStartColor:
         hsluv(colors.hue - 50, 100, colors.intensity * 8, 1.0)
-    color gradientEnd:
+    color gradientEndColor:
         hsluv(colors.hue + 20, 30, colors.intensity * 22, 1.0)
 
     // To have a solid color instead,
-    // set gradientStart and gradientEnd to the same value. Example:
-    // color gradientStart: hsluv(0, 0, 0, 0.8)
-    // color gradientEnd: hsluv(0, 0, 0, 0.8)
+    // set gradientStartColor and gradientEndColor to the same value, e.g.:
+    // color gradientStartColor: hsluv(0, 0, 0, 0.8)
+    // color gradientEndColor: hsluv(0, 0, 0, 0.8)
 
 
 

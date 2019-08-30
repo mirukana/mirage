@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Window 2.7
+import QtGraphicalEffects 1.12
 import "Base"
 import "SidePane"
 
@@ -43,16 +44,15 @@ Item {
         asynchronous: false
     }
 
-    Rectangle {
+    LinearGradient {
         id: mainUIGradient
         anchors.fill: parent
-        scale: Math.max(
-            2.25, Math.ceil(parent.parent.width / parent.parent.height)
-        )
-        rotation: theme.ui.gradientRotation
+        start: theme.ui.gradientStart
+        end: theme.ui.gradientEnd
+
         gradient: Gradient {
-            GradientStop { position: 0.0; color: theme.ui.gradientStart }
-            GradientStop { position: 1.0; color: theme.ui.gradientEnd }
+            GradientStop { position: 0.0; color: theme.ui.gradientStartColor }
+            GradientStop { position: 1.0; color: theme.ui.gradientEndColor }
         }
     }
 
