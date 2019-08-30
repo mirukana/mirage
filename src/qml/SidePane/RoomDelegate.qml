@@ -80,8 +80,8 @@ HTileDelegate {
         ) + ": " + ev.inline_content
 
         return text.replace(
-            /< *span +class=['"]?greentext['"]? *>(.+)<\/ *span *>/,
-            '<font color="' + theme.chat.message.greenText + '">$1</font>',
+            /< *span +class=['"]?quote['"]? *>(.+)<\/ *span *>/,
+            '<font color="' + theme.chat.message.quote + '">$1</font>',
         )
     }
 

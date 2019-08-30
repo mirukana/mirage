@@ -278,9 +278,9 @@ chat:
         color body: colors.text
         color date: colors.dimText
 
-        color greenText: hsluv(135, colors.saturation * 2.25, 75)
-        color link:      colors.link
-        color code:      colors.code
+        color quote: hsluv(135, colors.saturation * 2.25, 75)
+        color link:  colors.link
+        color code:  colors.code
 
         string styleSheet:
             "a { color: " + link  + " }" +
@@ -296,7 +296,7 @@ chat:
             "h5 { font-size: " + fontSize.small + "px }" +
             "h6 { font-size: " + fontSize.smaller + "px }" +
 
-            ".greentext { color: " + greenText + " }"
+            ".quote { color: " + quote + " }"
 
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'

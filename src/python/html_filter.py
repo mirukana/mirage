@@ -56,7 +56,7 @@ class HtmlFilter:
             return text
 
         return re.sub(
-            r"(^\s*&gt;.*)", r'<span class="greentext">\1</span>', text,
+            r"(^\s*&gt;.*)", r'<span class="quote">\1</span>', text,
         )
 
 
@@ -84,7 +84,7 @@ class HtmlFilter:
 
         return re.sub(
             r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
-            r'<\1><span class="greentext">\2</span>\3',
+            r'<\1><span class="quote">\2</span>\3',
             text,
         )
 

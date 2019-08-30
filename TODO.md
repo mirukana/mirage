@@ -13,7 +13,7 @@
 - Fixes
   - Icons on KDE
 
-  - Show error if uploading avatar fails
+  - Show error if uploading avatar fails or file is corrupted
 
   - If account not in config anymore, discard ui state last page on startup
   - Don't strip user spacing in html
