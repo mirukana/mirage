@@ -13,7 +13,7 @@ Rectangle {
         Component.onCompleted: shortcuts.flickTarget = eventList
 
         function canCombine(item, itemAfter) {
-            if (! item || ! itemAfter) { return false }
+            if (! item || ! itemAfter) return false
 
             return Boolean(
                 ! canTalkBreak(item, itemAfter) &&
@@ -24,7 +24,7 @@ Rectangle {
         }
 
         function canTalkBreak(item, itemAfter) {
-            if (! item || ! itemAfter) { return false }
+            if (! item || ! itemAfter) return false
 
             return Boolean(
                 ! canDayBreak(item, itemAfter) &&
@@ -33,14 +33,13 @@ Rectangle {
         }
 
         function canDayBreak(item, itemAfter) {
-            if (! item || ! itemAfter || ! item.date || ! itemAfter.date) {
-                return false
-            }
+            if (itemAfter && itemAfter.event_type == "RoomCreateEvent")
+                return true
 
-            return Boolean(
-                itemAfter.event_type == "RoomCreateEvent" ||
-                item.date.getDate() != itemAfter.date.getDate()
-            )
+            if (! item || ! itemAfter || ! item.date || ! itemAfter.date)
+                return false
+
+            return item.date.getDate() != itemAfter.date.getDate()
         }
 
         model: HListModel {

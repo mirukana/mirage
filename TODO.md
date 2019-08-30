@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Daybreak?
   - Collapsing last account with shortcut when focused on room
   - Using up/down when sidepane focused
   - Missing hourglass when changing avatar and applying
