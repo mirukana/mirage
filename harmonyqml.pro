@@ -57,7 +57,7 @@ defineReplace(glob_filenames) {
 
 # Generate resource file
 
-RESOURCE_FILES *= $$glob_filenames(qmldir, *.qml, *.js, *.py)
+RESOURCE_FILES *= $$glob_filenames(qmldir, *.qml, *.qpl, *.js, *.py)
 RESOURCE_FILES *= $$glob_filenames( *.jpg, *.jpeg, *.png, *.svg)
 
 file_content += '<!-- vim: set ft=xml : -->'
