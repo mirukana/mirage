@@ -95,8 +95,12 @@ class Model(MutableMapping):
             if self._changed:
                 with self._sync_lock:
                     log.debug("Syncing %s", self)
-                    ModelUpdated(self.sync_id, self.serialized())
-                    self._changed = False
+                    self.sync_now()
+
+
+    def sync_now(self) -> None:
+        ModelUpdated(self.sync_id, self.serialized())
+        self._changed = False
 
 
     def serialized(self) -> List[Dict[str, Any]]:

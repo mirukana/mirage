@@ -207,6 +207,7 @@ class MatrixClient(nio.AsyncClient):
         for user_id in self.models[Account]:
             if user_id in self.models[Member, room_id]:
                 self.models[Event, user_id, room_id][f"echo-{uuid}"] = local
+                self.models[Event, user_id, room_id].sync_now()
 
         await self.set_room_last_event(room_id, local)
 
@@ -381,10 +382,15 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_room_last_event(self, room_id: str, item: Event) -> None:
-        room = self.models[Room, self.user_id][room_id]
+        model = self.models[Room, self.user_id]
+        room  = model[room_id]
 
         if room.last_event is None:
             room.last_event = item.serialized
+
+            if item.is_local_echo:
+                model.sync_now()
+
             return
 
         is_profile_ev = item.type_specifier == TypeSpecifier.profile_change
@@ -404,6 +410,9 @@ class MatrixClient(nio.AsyncClient):
             return
 
         room.last_event = item.serialized
+
+        if item.is_local_echo:
+            model.sync_now()
 
 
     async def register_nio_room(self, room: nio.MatrixRoom, left: bool = False,
