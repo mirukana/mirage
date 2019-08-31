@@ -11,9 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Backspace bug
-
-  - Show error if uploading avatar fails or file is corrupted
+  - Pressing backspace in composer sometimes doesn't work
 
   - If account not in config anymore, discard ui state last page on startup
   - Don't strip user spacing in html
@@ -25,10 +23,11 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Show error if uploading avatar fails or file is corrupted
+
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
-  - Reduce icons brightness
-    - Thinner expand arrow
+  - Thinner expand arrow icon
   - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
   - Make HListView scrollbars visible

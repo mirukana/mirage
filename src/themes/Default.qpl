@@ -88,7 +88,7 @@ icons:
     string preferredPack: "thin"
 
     // "transparent" to disable colorizing
-    color colorize:         "white"
+    color colorize:         hsluv(0, 0, colors.intensity * 90)
     color disabledColorize: "white"
 
 
