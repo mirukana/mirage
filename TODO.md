@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - `make install`
   - Make uvloop optional
   - Backspace bug
 

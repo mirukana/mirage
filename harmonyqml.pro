@@ -1,25 +1,39 @@
-TEMPLATE = app
 # widgets: Make native file dialogs available to QML (must use QApplication)
-QT = quick widgets
-DEFINES += QT_DEPRECATED_WARNINGS
-CONFIG += warn_off c++11 release
+QT        = quick widgets
+DEFINES  += QT_DEPRECATED_WARNINGS
+CONFIG   += warn_off c++11 release
+TEMPLATE  = app
+
+BUILD_DIR   = build
+MOC_DIR     = $$BUILD_DIR/moc
+OBJECTS_DIR = $$BUILD_DIR/obj
+RCC_DIR     = $$BUILD_DIR/rcc
+
+QRC_FILE = $$BUILD_DIR/resources.qrc
+
+SOURCES += src/main.cpp
+TARGET   = harmonyqml
+
+
+# Custom CONFIG options
+
+!no_embedded {
+    RESOURCES += $$QRC_FILE
+}
+
 dev {
     CONFIG -= warn_off release
     CONFIG += debug qml_debug declarative_debug
 }
 
-BUILD_DIR = build
-MOC_DIR = $$BUILD_DIR/moc
-OBJECTS_DIR = $$BUILD_DIR/obj
-RCC_DIR = $$BUILD_DIR/rcc
 
-QRC_FILE = $$BUILD_DIR/resources.qrc
-!no_embedded {
-    RESOURCES += $$QRC_FILE
-}
+# Files to copy for `make install`
 
-SOURCES += src/main.cpp
-TARGET = harmonyqml
+win32:executables.path  = "C:/Program Files"
+!win32:executables.path = /usr/local/bin
+executables.files       = $$TARGET
+
+INSTALLS += executables
 
 
 # Libraries includes
@@ -62,7 +76,7 @@ write_file($$QRC_FILE, file_content)
 
 # Allow cleaning folders instead of just files
 win32:QMAKE_DEL_FILE = rmdir /q /s
-unix:QMAKE_DEL_FILE = rm -rf
+!win32:QMAKE_DEL_FILE = rm -rf
 
 for(file, $$list($$glob_filenames(*.py))) {
     PYCACHE_DIRS *= $$dirname(file)/__pycache__
