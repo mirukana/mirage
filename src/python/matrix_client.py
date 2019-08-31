@@ -531,6 +531,9 @@ class MatrixClient(nio.AsyncClient):
 
         await self.set_room_last_event(room.room_id, item)
 
+        if item.sender_id == self.user_id:
+            self.models[Event, self.user_id, room.room_id].sync_now()
+
 
     # Callbacks for nio responses
 
