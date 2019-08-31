@@ -22,6 +22,25 @@ Item {
     })
 
 
+    function match(event) {
+        for (let i = 0;  i < shortcutHandler.resources.length; i++) {
+            let shortcut = shortcutHandler.resources[i]
+
+            if (! shortcut.enabled) continue
+
+            if (typeof(shortcut.sequences) == "string") {
+                shortcut.sequences = [shortcut.sequences]
+            }
+
+            for (let i = 0;  i < shortcut.sequences.length; i++) {
+                if (sequenceMatches(event, shortcut.sequences[i])) {
+                    return shortcut
+                }
+            }
+        }
+        return null
+    }
+
     function sequenceMatches(event, sequence) {
         let [key, ...mods] = sequence.split("+").reverse()
 
@@ -37,23 +56,4 @@ Item {
         return true
     }
 
-    function match(event) {
-        for (let i = 0;  i < shortcutHandler.resources.length; i++) {
-            let shortcut = shortcutHandler.resources[i]
-
-            if (! shortcut.enabled) continue
-
-            if (typeof(shortcut.sequences) == "string") {
-                return sequenceMatches(event, shortcut.sequences) ?
-                       shortcut : null
-            }
-
-            for (let i = 0;  i < shortcut.sequences.length; i++) {
-                if (sequenceMatches(event, shortcut.sequences[i])) {
-                    return shortcut
-                }
-            }
-        }
-        return null
-    }
 }
