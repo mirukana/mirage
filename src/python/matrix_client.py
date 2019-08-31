@@ -189,7 +189,6 @@ class MatrixClient(nio.AsyncClient):
         self.local_echoes_uuid.add(uuid)
 
         our_info = self.models[Member, room_id][self.user_id]
-        import remote_pdb; remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
         local = Event(
             source           = None,
