@@ -80,6 +80,7 @@ win32:QMAKE_DEL_FILE = rmdir /q /s
 
 for(file, $$list($$glob_filenames(*.py))) {
     PYCACHE_DIRS *= $$dirname(file)/__pycache__
+    PYCACHE_DIRS *= $$dirname(file)/.mypy_cache
 }
 
 QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
