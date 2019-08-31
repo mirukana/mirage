@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Make uvloop optional
   - Backspace bug
 
   - Show error if uploading avatar fails or file is corrupted

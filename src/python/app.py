@@ -6,13 +6,21 @@ from operator import attrgetter
 from threading import Thread
 from typing import Coroutine, Sequence
 
-import uvloop
 from appdirs import AppDirs
 
 from . import __about__, pyotherside
 from .pyotherside_events import CoroutineDone
 
 log.getLogger().setLevel(log.INFO)
+
+try:
+    import uvloop
+except ModuleNotFoundError:
+    UVLOOP = False
+    log.info("uvloop not available, using default asyncio loop.")
+else:
+    UVLOOP = True
+    log.info("uvloop is available.")
 
 
 class App:
@@ -51,7 +59,10 @@ class App:
 
     def _loop_starter(self) -> None:
         asyncio.set_event_loop(self.loop)
-        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+        if UVLOOP:
+            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
         self.loop.run_forever()
 
 

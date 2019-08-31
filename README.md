@@ -42,7 +42,11 @@ Install the Python 3 dependencies from Pypi:
 
     pip3 install --user --upgrade \
         Pillow aiofiles appdirs dataclasses filetype hsluv html_sanitizer \
-        lxml mistune uvloop
+        lxml mistune
+
+Optional dependency for performance improvements:
+
+    pip3 install --user --upgrade uvloop
 
 Install the Python 3 dependencies from Github:
 
