@@ -33,7 +33,11 @@ win32:executables.path  = "C:/Program Files"
 !win32:executables.path = /usr/local/bin
 executables.files       = $$TARGET
 
-INSTALLS += executables
+no_embedded {
+    warning(make install cannot be used with the no_embedded CONFIG option.)
+}
+
+!no_embedded:INSTALLS += executables
 
 
 # Libraries includes
