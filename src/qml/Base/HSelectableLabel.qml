@@ -13,6 +13,8 @@ TextEdit {
 
     readOnly: true
     persistentSelection: true
+    activeFocusOnPress: false
+    focus: false
 
     onLinkActivated: Qt.openUrlExternally(link)
 
