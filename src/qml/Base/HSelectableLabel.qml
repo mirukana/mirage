@@ -92,6 +92,11 @@ TextEdit {
         updateContainerSelectedTexts()
     }
 
+    function selectAllTextPlus() {
+        // Unimplemented by default
+        container.clearSelection()
+    }
+
 
     Connections {
         target: container
@@ -119,6 +124,7 @@ TextEdit {
         onTapped: {
             tapCount == 2 ? selectWordAt(eventPoint.position) :
             tapCount == 3 ? selectAllText() :
+            tapCount == 4 ? selectAllTextPlus() :
             container.clearSelection()
         }
     }

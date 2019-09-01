@@ -8,6 +8,8 @@ Row {
     spacing: theme.spacing / 2
 
     readonly property string eventText: Utils.processedEventText(model)
+    readonly property string eventTime: Utils.formatTime(model.date)
+    readonly property int eventTimeSpaces: 2
 
     Item {
         width: hideAvatar ? 0 : 48
@@ -64,6 +66,10 @@ Row {
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
                 topPadding: theme.spacing / 2
+
+                function selectAllTextPlus() {
+                    contentLabel.selectAllTextPlus()
+                }
             }
 
             HSelectableLabel {
@@ -75,9 +81,10 @@ Row {
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
                       // time
-                      "&nbsp;&nbsp;<font size=" + theme.fontSize.small +
+                      "&nbsp;".repeat(eventTimeSpaces) +
+                      "<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + ">" +
-                      Utils.formatTime(model.date) +
+                      eventTime +
                       "</font>" +
                       // local echo icon
                       (model.is_local_echo ?
@@ -92,6 +99,27 @@ Row {
                 rightPadding: leftPadding
                 topPadding: nameLabel.visible ? 0 : bottomPadding
                 bottomPadding: theme.spacing / 2
+
+
+                function selectAllText() {
+                    // Select the message body without the date or name
+                    container.clearSelection()
+                    contentLabel.select(
+                        0,
+                        contentLabel.length -
+                        eventTime.length - eventTimeSpaces,
+                    )
+                    contentLabel.updateContainerSelectedTexts()
+                }
+
+                function selectAllTextPlus() {
+                    // select the sender name, body and date
+                    container.clearSelection()
+                    nameLabel.selectAll()
+                    contentLabel.selectAll()
+                    contentLabel.updateContainerSelectedTexts()
+                }
+
             }
         }
     }

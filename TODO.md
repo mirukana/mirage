@@ -2,6 +2,7 @@
   - Copy text with triple click, copy text + name + date with quadruple click
   - Copy to X11 selection
   - Make scroll wheel usable
+  - Copy links
 
 - Refactoring
   - Banners
@@ -27,7 +28,6 @@
   - Don't strip user spacing in html
   - Do something when access token is invalid
 
-  - Don't store states in delegates
   - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
@@ -39,10 +39,9 @@
   - Way to open context menus without a right mouse button
   - Room header descriptions: styled text
 
-  - Single message context menu
-    - Copy text
-    - Copy link
-  - Single message selection
+  - Message selection
+    - Make scroll wheel usable
+    - Copy to X11 selection
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
