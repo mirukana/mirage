@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
     objectContext->setContextProperty("debugMode", false);
 #endif
 
-    QFileInfo qrcPath(":/qml/Window.qml");
+    QFileInfo qrcPath(":src/qml/Window.qml");
 
     QQmlComponent component(
         &engine,
-        qrcPath.exists() ? "qrc:/qml/Window.qml" : "src/qml/Window.qml"
+        qrcPath.exists() ? "qrc:/src/qml/Window.qml" : "src/qml/Window.qml"
     );
     component.create(objectContext);
 

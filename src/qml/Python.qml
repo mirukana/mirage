@@ -53,7 +53,7 @@ Python {
         }
 
         addImportPath("src")
-        addImportPath("qrc:/")
+        addImportPath("qrc:/src")
         importNames("python", ["APP"], () => {
             loadSettings(() => {
                 callCoro("saved_accounts.any_saved", [], any => {

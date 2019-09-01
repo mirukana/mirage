@@ -163,7 +163,7 @@ class Theme(ConfigFile):
 
 
     async def default_data(self) -> str:
-        async with aiofiles.open("src/themes/Default.qpl", "r") as file:
+        async with aiofiles.open("src/themes/Default.qpl") as file:
             return await file.read()
 
 

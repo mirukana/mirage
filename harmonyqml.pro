@@ -66,8 +66,7 @@ file_content += '<RCC version="1.0">'
 file_content += '<qresource prefix="/">'
 
 for(file, RESOURCE_FILES) {
-    alias = $$replace(file, src/, '')
-    file_content += '    <file alias="$$alias">../$$file</file>'
+    file_content += '    <file alias="$$file">../$$file</file>'
 }
 
 file_content += '</qresource>'
