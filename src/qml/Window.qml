@@ -27,7 +27,16 @@ ApplicationWindow {
 
     property var theme: null
 
+    readonly property alias py: py
+    readonly property alias pseudoClipboard: pseudoClipboard
+
     Python { id: py }
+
+    TextEdit {
+        id: pseudoClipboard
+        visible: false
+        readOnly: true
+    }
 
     HLoader {
         anchors.fill: parent
@@ -38,7 +47,6 @@ ApplicationWindow {
         // true makes the initially loaded chat page invisible for some reason
         asynchronous: false
 
-        id: uiLoader
         anchors.fill: parent
         scale: py.ready ? 1 : 0.5
         source: py.ready ? (Qt.application.arguments[1] || "UI.qml") : ""

@@ -25,6 +25,7 @@ Rectangle {
                 0
         }
 
+
         Timer {
             id: dragFlicker
             interval: 100

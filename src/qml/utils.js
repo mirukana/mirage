@@ -182,6 +182,7 @@ function smartVerticalFlick(flickable, baseVelocity, fastMultiply=4) {
     flickable.flick(0, baseVelocity * (fast ? fastMultiply : 1))
 }
 
+
 function flickToTop(flickable) {
     if (! flickable.interactive) return
     if (flickable.visibleArea.yPosition < 0) return
@@ -191,6 +192,7 @@ function flickToTop(flickable) {
     flickable.flick(0, -100)  // Force the delegates to load
 }
 
+
 function flickToBottom(flickable) {
     if (! flickable.interactive) return
     if (flickable.visibleArea.yPosition < 0) return
@@ -198,4 +200,11 @@ function flickToBottom(flickable) {
     flickable.contentY = flickTarget.contentHeight - flickTarget.height
     flickable.returnToBounds()
     flickable.flick(0, 100)
+}
+
+
+function copyToClipboard(text) {
+    window.pseudoClipboard.text = text
+    window.pseudoClipboard.selectAll()
+    window.pseudoClipboard.copy()
 }

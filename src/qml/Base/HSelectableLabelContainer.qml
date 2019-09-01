@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import "../utils.js" as Utils
 
 Item {
     signal deselectAll()
@@ -20,8 +21,21 @@ Item {
         selectionEnd, selectionEndPosition,
     ]
 
+    readonly property string joinedSelection: {
+        let toCopy = []
+
+        for (let key of Object.keys(selectedTexts).sort()) {
+            if (selectedTexts[key]) toCopy.push(selectedTexts[key])
+        }
+
+        if (reversed) toCopy.reverse()
+
+        return toCopy.join("\n\n")
+    }
+
     readonly property alias dragPoint: dragHandler.centroid
     readonly property alias dragPosition: dragHandler.centroid.position
+    readonly property alias contextMenu: contextMenu
 
 
     function clearSelection() {
@@ -31,17 +45,6 @@ Item {
         selectionStartPosition = Qt.point(-1, -1)
         selectionEndPosition   = Qt.point(-1, -1)
         deselectAll()
-    }
-
-    function copySelection() {
-        let toCopy = []
-
-        for (let key of Object.keys(selectedTexts).sort()) {
-            if (selectedTexts[key]) toCopy.push(selectedTexts[key])
-        }
-
-        // Call some function to copy to clipboard here instead
-        print("Copy: <" + toCopy.join("\n\n") + ">")
     }
 
 
@@ -61,12 +64,30 @@ Item {
         }
     }
 
+    PointHandler {
+        id: pointHandler
+    }
+
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: clearSelection()
+        onLongPressed: contextMenu.popup()
     }
 
-    PointHandler {
-        id: pointHandler
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: contextMenu.popup()
+        onLongPressed: contextMenu.popup()
+    }
+
+    HMenu {
+        id: contextMenu
+
+        HMenuItem {
+            icon.name: "copy"
+            text: qsTr("Copy")
+            enabled: Boolean(joinedSelection)
+            onTriggered: Utils.copyToClipboard(joinedSelection)
+        }
     }
 }

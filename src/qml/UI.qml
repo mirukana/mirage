@@ -8,7 +8,6 @@ import "SidePane"
 
 Item {
     id: mainUI
-
     Component.onCompleted: window.mainUI = mainUI
 
     property alias shortcuts: shortcuts
