@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import "../utils.js" as Utils
 
 TextEdit {
     id: label
@@ -14,6 +15,15 @@ TextEdit {
     persistentSelection: true
 
     onLinkActivated: Qt.openUrlExternally(link)
+
+    Keys.onPressed: ev => {
+        if (ev.matches(StandardKey.Copy)) {
+            ev.accepted = true
+            Utils.copyToClipboard(container.joinedSelection)
+            return
+        }
+        ev.accepted = false
+    }
 
 
     property HSelectableLabelContainer container

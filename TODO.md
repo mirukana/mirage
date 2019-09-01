@@ -1,9 +1,9 @@
 - Message selection
-  - Copying messages (shortcut)
   - Copy names
   - Copy text with triple click, copy text + name + date with quadruple click
   - Copy to X11 selection
   - Make scroll wheel usable
+  - Clear selection when focusing composer
 
 - Refactoring
   - Banners
