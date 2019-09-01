@@ -140,13 +140,17 @@ Rectangle {
                 }
             }
 
-            Component.onCompleted: {
-                area.Keys.onReturnPressed.connect(event => {
-                    event.accepted = true
+            area.onSelectedTextChanged: if (area.selectedText) {
+                eventList.selectableLabelContainer.clearSelection()
+            }
 
-                    if (event.modifiers & Qt.ShiftModifier ||
-                        event.modifiers & Qt.ControlModifier ||
-                        event.modifiers & Qt.AltModifier)
+            Component.onCompleted: {
+                area.Keys.onReturnPressed.connect(ev => {
+                    ev.accepted = true
+
+                    if (ev.modifiers & Qt.ShiftModifier ||
+                        ev.modifiers & Qt.ControlModifier ||
+                        ev.modifiers & Qt.AltModifier)
                     {
                         let indents = 0
                         let parts   = lineText.split(indent)
@@ -171,17 +175,27 @@ Rectangle {
 
                 area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
 
-                area.Keys.onTabPressed.connect(event => {
-                    event.accepted = true
+                area.Keys.onTabPressed.connect(ev => {
+                    ev.accepted = true
                     textArea.insert(cursorPosition, indent)
                 })
 
-                area.Keys.onPressed.connect(event => {
-                    if (event.modifiers == Qt.NoModifier &&
-                        event.key == Qt.Key_Backspace &&
+                area.Keys.onPressed.connect(ev => {
+                    if (ev.matches(StandardKey.Copy) &&
+                        eventList.selectableLabelContainer.joinedSelection
+                    ) {
+                        ev.accepted = true
+                        Utils.copyToClipboard(
+                            eventList.selectableLabelContainer.joinedSelection,
+                        )
+                        return
+                    }
+
+                    if (ev.modifiers == Qt.NoModifier &&
+                        ev.key == Qt.Key_Backspace &&
                         ! textArea.selectedText)
                     {
-                        event.accepted = true
+                        ev.accepted = true
                         textArea.remove(
                             cursorPosition - deleteCharsOnBackspace,
                             cursorPosition

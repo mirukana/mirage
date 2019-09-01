@@ -3,7 +3,8 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 Rectangle {
-    property alias listView: eventList
+    property alias selectableLabelContainer: selectableLabelContainer
+    property alias eventList: eventList
 
     color: theme.chat.eventList.background
 

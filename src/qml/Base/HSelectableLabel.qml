@@ -18,15 +18,6 @@ TextEdit {
 
     onLinkActivated: Qt.openUrlExternally(link)
 
-    Keys.onPressed: ev => {
-        if (ev.matches(StandardKey.Copy)) {
-            ev.accepted = true
-            Utils.copyToClipboard(container.joinedSelection)
-            return
-        }
-        ev.accepted = false
-    }
-
 
     // If index is a whole number, the label will get two \n before itself
     // in container.joinedSelection. If it's a decimal number, if gets one \n.
