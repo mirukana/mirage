@@ -13,6 +13,8 @@ Rectangle {
         reversed: eventList.verticalLayoutDirection == ListView.BottomToTop
 
         onDragPositionChanged: {
+            let vel = dragPoint.velocity.y
+
             let boost = 20 * (
                 dragPosition.y < 50 ?
                 -dragPosition.y : -(height - dragPosition.y)
@@ -20,8 +22,8 @@ Rectangle {
 
             dragFlicker.speed =
                 dragPosition.x == 0 && dragPosition.y == 0 ? 0 :
-                dragPosition.y < 50                        ? 1000 + boost:
-                dragPosition.y > height - 50               ? -1000 + -boost :
+                vel && dragPosition.y < 50                 ? 1000 + boost:
+                vel && dragPosition.y > height - 50        ? -1000 + -boost :
                 0
         }
 

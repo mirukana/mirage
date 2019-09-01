@@ -54,11 +54,11 @@ FocusScope {
     }
 
 
-    Item { id: dragPoint }
+    Item { id: dragCursor }
 
     DragHandler {
         id: dragHandler
-        target: dragPoint
+        target: dragCursor
         onActiveChanged: {
             if (active) {
                 target.Drag.active = true

@@ -44,6 +44,7 @@ Column {
         combine   ? theme.spacing / 2 :
         theme.spacing * 2
 
+
     Daybreak {
         visible: dayBreak
         width: eventDelegate.width
