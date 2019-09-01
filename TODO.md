@@ -11,6 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - `# > quote` doesn't color
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,
@@ -19,8 +20,8 @@
   - If account not in config anymore, discard ui state last page on startup
   - Don't strip user spacing in html
   - Do something when access token is invalid
-  - Keyboard flicking against top/bottom edge
 
+  - Don't store states in delegates
   - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
@@ -29,6 +30,11 @@
   - Set an explicit placeholder text color for text field/area
   - Change typing bar background
   - Show error if uploading avatar fails or file is corrupted
+
+  - Single message context menu
+    - Copy text
+    - Copy link
+  - Single message selection
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
@@ -93,7 +99,8 @@
 
   - Theming
     - Bundle fonts
-    - File format
+    - Standard file format, see *~ppy/qml_dict_theme.qml*
+    - https://doc.qt.io/qt-5/qtquickcontrols2-customize.html#creating-a-custom-style
     - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir
     - Correctly implement uiScale/fontScale + ctrl+-= keys
@@ -104,7 +111,6 @@
     - Accent color from background
 
   - Settings page
-  - Message/text selection
   - Notifications
 
   - Custom file picker for Linux...
@@ -125,6 +131,7 @@
   - Opening links with keyboard
 
 - Client improvements
+  - Refetch profile after manual profile change, don't wait for a room event
   - Prevent starting multiple instances, causes problems with E2E DB
     (sending new messages from second instances makes them undecryptable to
      first instance until it's restarted)
