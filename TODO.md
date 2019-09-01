@@ -12,6 +12,9 @@
 
 - Fixes
   - Pressing backspace in composer sometimes doesn't work
+  - Message order isn't preserved when sending a first message in a E2E
+    room, then while keys are being shared sending one with another account,
+    then sending one with the first account again
 
   - If account not in config anymore, discard ui state last page on startup
   - Don't strip user spacing in html
@@ -23,6 +26,8 @@
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 
 - UI
+  - Set an explicit placeholder text color for text field/area
+  - Change typing bar background
   - Show error if uploading avatar fails or file is corrupted
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
@@ -117,6 +122,7 @@
   - Read receipts
   - Status message and presence
   - Links preview
+  - Opening links with keyboard
 
 - Client improvements
   - Prevent starting multiple instances, causes problems with E2E DB
