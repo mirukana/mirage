@@ -1,7 +1,10 @@
 import QtQuick 2.12
 import "../utils.js" as Utils
 
-Item {
+FocusScope {
+    onFocusChanged: if (! focus) clearSelection()
+
+
     signal deselectAll()
 
 
