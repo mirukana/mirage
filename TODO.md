@@ -35,9 +35,6 @@
   - Room header descriptions: styled text
 
   - Message selection
-    - ctrl-c
-    - Copy appending copies?
-    - Don't copy combined message names
     - Copy link
     - Make scroll wheel usable
     - Copy to X11 selection
