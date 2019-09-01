@@ -2,9 +2,6 @@ import QtQuick 2.12
 import "../utils.js" as Utils
 
 FocusScope {
-    onSelectedTextsChanged: if (selectedTexts) composer.textArea.deselect()
-
-
     signal deselectAll()
 
 

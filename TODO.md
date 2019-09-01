@@ -1,9 +1,3 @@
-- Message selection
-  - Copy text with triple click, copy text + name + date with quadruple click
-  - Copy to X11 selection
-  - Make scroll wheel usable
-  - Copy links
-
 - Refactoring
   - Banners
   - Composer
@@ -44,7 +38,6 @@
     - Copy link
     - Make scroll wheel usable
     - Copy to X11 selection
-    - Make events copiable
     - Images don't load correctly in TextEdit
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
