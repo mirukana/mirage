@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     QApplication::setOrganizationName("harmonyqml");
     QApplication::setApplicationName("harmonyqml");
     QApplication::setApplicationDisplayName("HarmonyQML");
-    QApplication::setApplicationVersion("0.1.3");
+    QApplication::setApplicationVersion("0.2.0");
 
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());
