@@ -26,6 +26,7 @@
   - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
+  - Verify big avatars aren't downloaded uselessly
 
 - UI
   - Set an explicit placeholder text color for text field/area
@@ -35,7 +36,6 @@
   - Room header descriptions: styled text
 
   - Message selection
-    - Copy link
     - Make scroll wheel usable
     - Copy to X11 selection
     - Make events copiable
