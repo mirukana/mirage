@@ -38,7 +38,6 @@ FocusScope {
 
     readonly property alias dragPoint: dragHandler.centroid
     readonly property alias dragPosition: dragHandler.centroid.position
-    readonly property alias contextMenu: contextMenu
 
 
     function clearSelection() {
@@ -74,23 +73,5 @@ FocusScope {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: clearSelection()
-        onLongPressed: contextMenu.popup()
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.RightButton
-        onTapped: contextMenu.popup()
-        onLongPressed: contextMenu.popup()
-    }
-
-    HMenu {
-        id: contextMenu
-
-        HMenuItem {
-            icon.name: "copy"
-            text: qsTr("Copy")
-            enabled: Boolean(joinedSelection)
-            onTriggered: Utils.copyToClipboard(joinedSelection)
-        }
     }
 }

@@ -7,6 +7,9 @@ Row {
     id: eventContent
     spacing: theme.spacing / 2
 
+    readonly property string hoveredLink:
+        nameLabel.hoveredLink || contentLabel.hoveredLink
+
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date)
     readonly property int eventTimeSpaces: 2
