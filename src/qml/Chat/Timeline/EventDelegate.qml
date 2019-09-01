@@ -35,6 +35,9 @@ Column {
         onRight ||
         combine
 
+    readonly property bool unselectableNameLine:
+        hideNameLine && ! (onRight && ! combine)
+
     width: eventList.width
 
     topPadding:

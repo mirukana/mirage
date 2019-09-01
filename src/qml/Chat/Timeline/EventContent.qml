@@ -53,6 +53,7 @@ Row {
                 width: parent.width
                 visible: ! hideNameLine
                 container: selectableLabelContainer
+                selectable: ! unselectableNameLine
 
                 // This is +0.1 and content is +0 instead of the opposite,
                 // because the eventList is reversed

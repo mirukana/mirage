@@ -23,9 +23,18 @@ TextEdit {
     // in container.joinedSelection. If it's a decimal number, if gets one \n.
     property real index
     property HSelectableLabelContainer container
+    property bool selectable: true
 
 
     function updateSelection() {
+        if (! selectable && label.selectedText) {
+            label.deselect()
+            updateContainerSelectedTexts()
+            return
+        }
+
+        if (! selectable) return
+
         if (! container.reversed &&
             container.selectionStart <= container.selectionEnd ||
 
