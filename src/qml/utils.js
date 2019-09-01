@@ -204,7 +204,8 @@ function flickToBottom(flickable) {
 
 
 function copyToClipboard(text) {
-    window.pseudoClipboard.text = text
+    window.pseudoClipboard.clear()
+    window.pseudoClipboard.insert(0, text)
     window.pseudoClipboard.selectAll()
     window.pseudoClipboard.copy()
 }

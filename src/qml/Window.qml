@@ -36,6 +36,7 @@ ApplicationWindow {
         id: pseudoClipboard
         visible: false
         readOnly: true
+        textFormat: Text.PlainText
     }
 
     HLoader {
