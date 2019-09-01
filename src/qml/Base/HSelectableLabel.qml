@@ -26,8 +26,10 @@ TextEdit {
     }
 
 
+    // If index is a whole number, the label will get two \n before itself
+    // in container.joinedSelection. If it's a decimal number, if gets one \n.
+    property real index
     property HSelectableLabelContainer container
-    property int index
 
 
     function updateSelection() {

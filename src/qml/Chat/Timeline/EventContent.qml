@@ -46,19 +46,24 @@ Row {
         Column {
             anchors.fill: parent
 
-            HLabel {
+            HSelectableLabel {
                 id: nameLabel
                 width: parent.width
                 visible: ! hideNameLine
+                container: selectableLabelContainer
+
+                // This is +0.1 and content is +0 instead of the opposite,
+                // because the eventList is reversed
+                index: model.index + 0.1
 
                 text: Utils.coloredNameHtml(model.sender_name, model.sender_id)
-                textFormat: Text.StyledText
-                elide: Text.ElideRight
+                textFormat: Text.RichText
+                // elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
 
                 leftPadding: theme.spacing
                 rightPadding: leftPadding
-                topPadding: theme.spacing / 2 * lineHeight
+                topPadding: theme.spacing / 2
             }
 
             HSelectableLabel {

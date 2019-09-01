@@ -11,10 +11,9 @@ FocusScope {
     property bool reversed: false
 
     readonly property bool dragging: pointHandler.active || dragHandler.active
-    // onDraggingChanged: print(dragging)
     property bool selecting: false
-    property int selectionStart: -1
-    property int selectionEnd: -1
+    property real selectionStart: -1
+    property real selectionEnd: -1
     property point selectionStartPosition: Qt.point(-1, -1)
     property point selectionEndPosition: Qt.point(-1, -1)
     property var selectedTexts: ({})
@@ -28,12 +27,16 @@ FocusScope {
         let toCopy = []
 
         for (let key of Object.keys(selectedTexts).sort()) {
-            if (selectedTexts[key]) toCopy.push(selectedTexts[key])
+            if (! selectedTexts[key]) continue
+
+            // For some dumb reason, Object.keys convert the floats to strings
+            toCopy.push(Number.isInteger(parseFloat(key)) ? "\n\n" : "\n")
+            toCopy.push(selectedTexts[key])
         }
 
         if (reversed) toCopy.reverse()
 
-        return toCopy.join("\n\n")
+        return toCopy.join("").trim()
     }
 
     readonly property alias dragPoint: dragHandler.centroid

@@ -1,5 +1,4 @@
 - Message selection
-  - Copy names
   - Copy text with triple click, copy text + name + date with quadruple click
   - Copy to X11 selection
   - Make scroll wheel usable
