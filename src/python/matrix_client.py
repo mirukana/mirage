@@ -639,6 +639,10 @@ class MatrixClient(nio.AsyncClient):
     async def process_room_member_event(
         self, room, ev,
     ) -> Optional[Tuple[TypeSpecifier, str]]:
+
+        if ev.prev_content == ev.content:
+            return None
+
         prev            = ev.prev_content
         now             = ev.content
         membership      = ev.membership
@@ -718,8 +722,7 @@ class MatrixClient(nio.AsyncClient):
                 "%1 changed their {}.".format(" and ".join(changed)),
             )
 
-        log.warning("Invalid member event - %s",
-                    json.dumps(vars(ev), indent=4))
+        log.warning("Unknown member event: %s", json.dumps(vars(ev), indent=4))
         return None
 
 
