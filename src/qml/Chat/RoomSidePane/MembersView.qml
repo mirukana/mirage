@@ -6,6 +6,7 @@ import "../../utils.js" as Utils
 HColumnLayout {
     HListView {
         id: memberList
+        clip: true
 
         Layout.fillWidth: true
         Layout.fillHeight: true
