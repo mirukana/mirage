@@ -11,6 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - `minutesBetween()` for 13:13:58 and 14:15:07
   - `# > quote` doesn't color
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
@@ -30,6 +31,7 @@
   - Set an explicit placeholder text color for text field/area
   - Change typing bar background
   - Show error if uploading avatar fails or file is corrupted
+  - Way to open context menus without a right mouse button
 
   - Single message context menu
     - Copy text

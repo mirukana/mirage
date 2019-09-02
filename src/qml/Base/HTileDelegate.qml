@@ -104,6 +104,6 @@ HButton {
 
     TapHandler {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onLongPressed: if (contextMenu.count > 0) contextMenu.popup()
+        // onLongPressed: if (contextMenu.count > 0) contextMenu.popup()
     }
 }
