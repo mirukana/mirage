@@ -78,6 +78,9 @@ Rectangle {
                     icon.name: "room-view-" + modelData
                     iconItem.dimension: 22
                     height: parent.height
+                    spacing: theme.spacing / 1.5
+                    topPadding: 0
+                    bottomPadding: topPadding
                     autoExclusive: true
                     checked: activeButton == modelData
                     enabled: modelData == "members"
@@ -100,6 +103,9 @@ Rectangle {
         z: 1
         width: height
         height: parent.height
+        spacing: theme.spacing / 1.5
+        topPadding: 0
+        bottomPadding: topPadding
         anchors.right: parent.right
         opacity: collapseButtons ? 1 : 0
         visible: opacity > 0
