@@ -1,9 +1,19 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 Column {
     id: eventDelegate
+    width: eventList.width
+
+    topPadding:
+        model.event_type == "RoomCreateEvent" ? 0 :
+        dayBreak  ? theme.spacing * 4 :
+        talkBreak ? theme.spacing * 6 :
+        combine   ? theme.spacing / 2 :
+        theme.spacing * 2
+
 
     // Remember timeline goes from newest message at index 0 to oldest
     property var previousItem: eventList.model.get(model.index + 1)
@@ -38,14 +48,9 @@ Column {
     readonly property bool unselectableNameLine:
         hideNameLine && ! (onRight && ! combine)
 
-    width: eventList.width
+    readonly property var previewLinks: model.preview_links
 
-    topPadding:
-        model.event_type == "RoomCreateEvent" ? 0 :
-        dayBreak  ? theme.spacing * 4 :
-        talkBreak ? theme.spacing * 6 :
-        combine   ? theme.spacing / 2 :
-        theme.spacing * 2
+    property string hoveredImage: ""
 
 
     Daybreak {
@@ -70,15 +75,8 @@ Column {
     TapHandler {
         acceptedButtons: Qt.RightButton
         onTapped: {
-            contextMenu.link = eventContent.hoveredLink
-            contextMenu.popup()
-        }
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onLongPressed: {
-            contextMenu.link = eventContent.hoveredLink
+            contextMenu.link  = eventContent.hoveredLink
+            contextMenu.image = eventDelegate.hoveredImage
             contextMenu.popup()
         }
     }
@@ -87,8 +85,17 @@ Column {
         id: contextMenu
 
         property string link: ""
+        property string image: ""
 
-        onClosed: link = ""
+        onClosed: { link = ""; image = "" }
+
+        HMenuItem {
+            id: copyImage
+            icon.name: "copy-link"
+            text: qsTr("Copy image address")
+            visible: Boolean(contextMenu.image)
+            onTriggered: Utils.copyToClipboard(contextMenu.image)
+        }
 
         HMenuItem {
             id: copyLink
@@ -101,10 +108,23 @@ Column {
         HMenuItem {
             icon.name: "copy-text"
             text: qsTr("Copy text")
-            visible: enabled || ! copyLink.visible
+            visible: enabled || (! copyLink.visible && ! copyImage.visible)
             enabled: Boolean(selectableLabelContainer.joinedSelection)
             onTriggered:
                 Utils.copyToClipboard(selectableLabelContainer.joinedSelection)
+        }
+
+        HMenuItem {
+            icon.name: "settings"
+            text: qsTr("Print event item")
+            visible: debugMode
+            onTriggered: print(JSON.stringify(Utils.getItem(
+                modelSources[[
+                    "Event", chatPage.userId, chatPage.roomId
+                ]],
+                "client_id",
+                model.client_id
+            ), null, 4))
         }
 
         HMenuItem {
@@ -114,6 +134,6 @@ Column {
             onTriggered: {
                 mainUI.debugConsole.target = [eventDelegate, eventContent]
             }
-        }
+        }  
     }
 }

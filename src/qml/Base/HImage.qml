@@ -3,6 +3,7 @@ import QtGraphicalEffects 1.12
 
 Image {
     id: image
+    autoTransform: true
     asynchronous: true
     cache: true
     fillMode: Image.PreserveAspectFit

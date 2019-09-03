@@ -11,6 +11,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
+  - Scroll to begin/end
   - `minutesBetween()` for 13:13:58 and 14:15:07
   - `# > quote` doesn't color
   - Pressing backspace in composer sometimes doesn't work
@@ -29,6 +30,7 @@
   - Verify big avatars aren't downloaded uselessly
 
 - UI
+  - Esc in sidepane to focus chat again
   - Set an explicit placeholder text color for text field/area
   - Change typing bar background
   - Show error if uploading avatar fails or file is corrupted
@@ -38,8 +40,8 @@
   - Message selection
     - Make scroll wheel usable
     - Copy to X11 selection
-    - Make events copiable
-    - Images don't load correctly in TextEdit
+  - Link previews
+    - Take the previews into account to calculate delegate min height
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`

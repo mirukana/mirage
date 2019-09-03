@@ -7,7 +7,6 @@ Row {
     id: eventContent
     spacing: theme.spacing / 2
 
-
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date)
     readonly property int eventTimeSpaces: 2
@@ -29,8 +28,8 @@ Row {
     HoverHandler { id: hover }
 
     Item {
-        width: hideAvatar ? 0 : 48
-        height: hideAvatar ? 0 : collapseAvatar ? 1 : smallAvatar ? 28 : 48
+        width: hideAvatar ? 0 : 58
+        height: hideAvatar ? 0 : collapseAvatar ? 1 : smallAvatar ? 28 : 58
         opacity: hideAvatar || collapseAvatar ? 0 : 1
         visible: width > 0
 
@@ -39,8 +38,8 @@ Row {
             userId: model.sender_id
             displayName: model.sender_name
             avatarUrl: model.sender_avatar
-            width: hideAvatar ? 0 : 48
-            height: hideAvatar ? 0 : collapseAvatar ? 1 : 48
+            width: hideAvatar ? 0 : 58
+            height: hideAvatar ? 0 : collapseAvatar ? 1 : 58
         }
     }
 
@@ -55,15 +54,18 @@ Row {
             theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
             Math.max(
                 nameLabel.visible ? nameLabel.implicitWidth : 0,
-                contentLabel.implicitWidth
+                contentLabel.implicitWidth,
             )
         )
-        height: (nameLabel.visible ? nameLabel.height : 0) +
-                contentLabel.implicitHeight
+        height: childrenRect.height
         y: parent.height / 2 - height / 2
 
         Column {
-            anchors.fill: parent
+            id: mainColumn
+            width: parent.width
+            spacing: theme.spacing / 1.75
+            topPadding: theme.spacing / 1.75
+            bottomPadding: topPadding
 
             HSelectableLabel {
                 id: nameLabel
@@ -71,6 +73,8 @@ Row {
                 visible: ! hideNameLine
                 container: selectableLabelContainer
                 selectable: ! unselectableNameLine
+                leftPadding: eventContent.spacing
+                rightPadding: leftPadding
 
                 // This is +0.1 and content is +0 instead of the opposite,
                 // because the eventList is reversed
@@ -80,10 +84,6 @@ Row {
                 textFormat: Text.RichText
                 // elide: Text.ElideRight
                 horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
-
-                leftPadding: theme.spacing
-                rightPadding: leftPadding
-                topPadding: theme.spacing / 2
 
                 function selectAllTextPlus() {
                     contentLabel.selectAllTextPlus()
@@ -97,6 +97,10 @@ Row {
                 width: parent.width
                 container: selectableLabelContainer
                 index: model.index
+                leftPadding: eventContent.spacing
+                rightPadding: leftPadding
+                bottomPadding: previewLinksRepeater.count > 0 ?
+                               mainColumn.bottomPadding : 0
 
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
@@ -114,12 +118,6 @@ Row {
                 color: theme.chat.message.body
                 wrapMode: Text.Wrap
                 textFormat: Text.RichText
-
-                leftPadding: theme.spacing
-                rightPadding: leftPadding
-                topPadding: nameLabel.visible ? 0 : bottomPadding
-                bottomPadding: theme.spacing / 2
-
 
                 function selectAllText() {
                     // Select the message body without the date or name
@@ -141,6 +139,22 @@ Row {
                 }
 
                 HoverHandler { id: contentHover }
+            }
+
+            Repeater {
+                id: previewLinksRepeater
+                model: previewLinks
+
+                HLoader {
+                    Component.onCompleted: {
+                        if (modelData[0] == "image") {
+                            setSource(
+                                "EventImage.qml",
+                                { source: modelData[1] },
+                            )
+                        }
+                    }
+                }
             }
         }
     }

@@ -177,7 +177,7 @@ Rectangle {
     }
 
     HNoticePage {
-        text: qsTr("No messages visible yet.")
+        text: qsTr("No messages visible yet")
 
         visible: eventList.model.count < 1
         anchors.fill: parent
