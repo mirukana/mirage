@@ -137,6 +137,10 @@ Rectangle {
                         moreToLoad => {
                             try {
                                 eventList.canLoad = moreToLoad
+
+                                // If loaded messages aren't enough to fill
+                                // the screen, ensure this function runs again
+                                if (moreToLoad) yPosChanged()
                             } catch (err) {
                                 return
                             }
