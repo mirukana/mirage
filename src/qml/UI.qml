@@ -15,6 +15,7 @@ Item {
     property alias sidePane: sidePane
     property alias pageLoader: pageLoader
     property alias pressAnimation: pressAnimation
+    property alias debugConsole: debugConsoleLoader.item
 
     SequentialAnimation {
         id: pressAnimation
@@ -137,5 +138,10 @@ Item {
                 duration: theme.animationDuration * 2
             }
         }
+    }
+
+    HLoader {
+        id: debugConsoleLoader
+        source: debugMode ? "DebugConsole.qml" : ""
     }
 }

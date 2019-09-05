@@ -9,8 +9,14 @@ HShortcutHandler {
 
     HShortcut {
         enabled: debugMode
-        sequences: settings.keys.startDebugger
+        sequences: settings.keys.startPythonDebugger
         onPressed: py.call("APP.pdb")
+    }
+
+    HShortcut {
+        enabled: debugMode
+        sequences: settings.keys.toggleDebugConsole
+        onPressed: mainUI.debugConsole.visible = ! mainUI.debugConsole.visible
     }
 
     HShortcut {
