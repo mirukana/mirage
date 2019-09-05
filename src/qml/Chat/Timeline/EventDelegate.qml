@@ -106,5 +106,14 @@ Column {
             onTriggered:
                 Utils.copyToClipboard(selectableLabelContainer.joinedSelection)
         }
+
+        HMenuItem {
+            icon.name: "settings"
+            text: qsTr("Set as debug console target")
+            visible: debugMode
+            onTriggered: {
+                mainUI.debugConsole.target = [eventDelegate, eventContent]
+            }
+        }
     }
 }

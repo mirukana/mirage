@@ -13,6 +13,20 @@ Window {
     color: "transparent"
 
 
+    property var target: null
+    property alias t: debugConsole.target
+
+
+    onTargetChanged: {
+        commandsView.model.insert(0, {
+            input: "t = " + String(target),
+            output: "",
+            error: false,
+        })
+        visible = true
+    }
+
+
     function runJS(input) {
         let error = false
 
@@ -40,7 +54,7 @@ Window {
             topMargin: theme.spacing
             bottomMargin: topMargin
             leftMargin: theme.spacing
-            rightMargin: rightMargin
+            rightMargin: leftMargin
             clip: true
             verticalLayoutDirection: ListView.BottomToTop
 
@@ -50,12 +64,14 @@ Window {
             model: ListModel {}
 
             delegate: HColumnLayout {
-                width: commandsView.width
+                width: commandsView.width -
+                       commandsView.leftMargin - commandsView.rightMargin
 
                 HLabel {
                     text: "> " + model.input
                     wrapMode: Text.Wrap
                     color: theme.chat.message.quote
+                    font.family: theme.fontFamily.mono
                     visible: model.input
 
                     Layout.fillWidth: true
@@ -66,6 +82,7 @@ Window {
                     wrapMode: Text.Wrap
                     color: model.error ?
                            theme.colors.errorText : theme.colors.text
+                    font.family: theme.fontFamily.mono
                     visible: model.output
 
                     Layout.fillWidth: true
@@ -85,6 +102,7 @@ Window {
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
             placeholderText: qsTr("Type some JavaScript...")
+            font.family: theme.fontFamily.mono
 
             Layout.fillWidth: true
 
