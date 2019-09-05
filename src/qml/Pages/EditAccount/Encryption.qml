@@ -2,24 +2,6 @@ import QtQuick 2.12
 import "../../Base"
 
 HLoader {
-    property bool importing: false
-
-
-    function importKeys(file, passphrase, button=null) {
-        if (button) button.loading = true
-        importing = true
-
-        let path = file.toString().replace(/^file:\/\//, "")
-
-        py.callClientCoro(
-            editAccount.userId, "import_keys", [path, passphrase], () => {
-                importing = false
-                if (button) button.loading = false
-            }
-        )
-    }
-
-
     id: encryptionUI
     source:
         accountInfo.import_error[0] ? "ImportError.qml" :
@@ -27,6 +9,27 @@ HLoader {
         "ImportExportKeys.qml"
 
     onSourceChanged: animation.running = true
+
+
+    property bool importing: false
+
+
+    function importKeys(file, passphrase, button=null) {
+        if (button) button.loading = true
+        encryptionUI.importing = true
+
+        let path = file.toString().replace(/^file:\/\//, "")
+
+        py.callClientCoro(
+            editAccount.userId, "import_keys", [path, passphrase], () => {
+                if (encryptionUI !== null) {  // null: user is on another page
+                    encryptionUI.importing = false
+                    if (button) button.loading = false
+                }
+            }
+        )
+    }
+
 
     SequentialAnimation {
         id: animation
