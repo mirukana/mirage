@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.12
 import "Base"
 
 Window {
+    id: debugConsole
     title: qsTr("Debug console")
     width: 640
     height: 480
@@ -30,6 +31,8 @@ Window {
 
     HColumnLayout {
         anchors.fill: parent
+
+        Keys.onEscapePressed: debugConsole.visible = false
 
         HListView {
             id: commandsView
