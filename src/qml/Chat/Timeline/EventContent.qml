@@ -5,7 +5,7 @@ import "../../utils.js" as Utils
 
 Row {
     id: eventContent
-    spacing: theme.spacing / 2
+    spacing: theme.spacing / 1.25
 
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date)

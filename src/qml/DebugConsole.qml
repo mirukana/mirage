@@ -72,7 +72,7 @@ Window {
                     wrapMode: Text.Wrap
                     color: theme.chat.message.quote
                     font.family: theme.fontFamily.mono
-                    visible: model.input
+                    visible: Boolean(model.input)
 
                     Layout.fillWidth: true
                 }
@@ -83,7 +83,7 @@ Window {
                     color: model.error ?
                            theme.colors.errorText : theme.colors.text
                     font.family: theme.fontFamily.mono
-                    visible: model.output
+                    visible: Boolean(model.output)
 
                     Layout.fillWidth: true
                 }

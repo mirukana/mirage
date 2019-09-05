@@ -53,6 +53,19 @@ Column {
     property string hoveredImage: ""
 
 
+    function json() {
+        return JSON.stringify(
+            Utils.getItem(
+                modelSources[[
+                    "Event", chatPage.userId, chatPage.roomId
+                ]],
+                "client_id",
+                model.client_id
+            ),
+        null, 4)
+    }
+
+
     Daybreak {
         visible: dayBreak
         width: eventDelegate.width
@@ -116,24 +129,12 @@ Column {
 
         HMenuItem {
             icon.name: "settings"
-            text: qsTr("Print event item")
-            visible: debugMode
-            onTriggered: print(JSON.stringify(Utils.getItem(
-                modelSources[[
-                    "Event", chatPage.userId, chatPage.roomId
-                ]],
-                "client_id",
-                model.client_id
-            ), null, 4))
-        }
-
-        HMenuItem {
-            icon.name: "settings"
             text: qsTr("Set as debug console target")
             visible: debugMode
             onTriggered: {
                 mainUI.debugConsole.target = [eventDelegate, eventContent]
+                mainUI.debugConsole.runJS("t[0].json()")
             }
-        }  
+        }
     }
 }

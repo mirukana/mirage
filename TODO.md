@@ -11,7 +11,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use them
 
 - Fixes
-  - Scroll to begin/end
   - `minutesBetween()` for 13:13:58 and 14:15:07
   - `# > quote` doesn't color
   - Pressing backspace in composer sometimes doesn't work
@@ -42,6 +41,7 @@
     - Copy to X11 selection
   - Link previews
     - Take the previews into account to calculate delegate min height
+    - Support images not just at the end of the message
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
