@@ -171,8 +171,6 @@ function getItem(array, mainKey, value) {
 
 function smartVerticalFlick(flickable, baseVelocity, fastMultiply=4) {
     if (! flickable.interactive && flickable.enableFlicking) return
-    if (flickable.verticalOvershoot != 0) return
-    if (baseVelocity > 0 && flickable.atYEnd) return
 
     baseVelocity = -baseVelocity
     let vel      = -flickable.verticalVelocity
