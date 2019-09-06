@@ -233,8 +233,10 @@ sidePane:
 
         color background:     "transparent"
         color name:           colors.text
-        color subtitle:       colors.dimText
         color lastEventDate:  colors.halfDimText
+
+        color subtitle:      colors.dimText
+        color subtitleQuote: hsluv(135, colors.saturation * 2.25, 65)
 
     settingsButton:
         color background: colors.inputBackground

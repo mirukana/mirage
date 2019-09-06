@@ -81,7 +81,9 @@ HTileDelegate {
 
         return text.replace(
             /< *span +class=['"]?quote['"]? *>(.+)<\/ *span *>/,
-            '<font color="' + theme.chat.message.quote + '">$1</font>',
+            '<font color="' +
+            theme.sidePane.room.subtitleQuote +
+            '">$1</font>',
         )
     }
 
