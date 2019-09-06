@@ -90,7 +90,8 @@ Row {
                 text: Utils.coloredNameHtml(model.sender_name, model.sender_id)
                 textFormat: Text.RichText
                 // elide: Text.ElideRight
-                horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
+                // horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
+                horizontalAlignment: Text.AlignLeft
 
                 function selectAllTextPlus() {
                     contentLabel.selectAllTextPlus()

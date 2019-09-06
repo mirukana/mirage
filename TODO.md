@@ -23,7 +23,6 @@
   - Do something when access token is invalid
 
   - Don't store states in delegates
-  - Message position after daybreak delegate  (fixed by commit 57b1313 ?)
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
   - Verify big avatars aren't downloaded uselessly
