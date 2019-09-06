@@ -40,7 +40,6 @@
     - Make scroll wheel usable
     - Copy to X11 selection
   - Link previews
-    - Take the previews into account to calculate delegate min height
     - Support images not just at the end of the message
 
   - Just use Shortcut onHeld instead of analyzing the current velocity

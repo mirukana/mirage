@@ -307,6 +307,8 @@ chat:
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
 
+        int thumbnailWidth: 256
+
     daybreak:
         color background: colors.strongBackground
         color text:       colors.text

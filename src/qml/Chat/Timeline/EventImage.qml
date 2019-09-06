@@ -4,15 +4,13 @@ import "../../Base"
 HImage {
     id: image
     x: eventContent.spacing
-    sourceSize.width: maxDimension
-    sourceSize.height: maxDimension
+    sourceSize.width: theme.chat.message.thumbnailWidth
+    sourceSize.height: theme.chat.message.thumbnailWidth
     width: Math.min(
         mainColumn.width - eventContent.spacing * 2,
         implicitWidth,
-        maxDimension,
+        theme.chat.message.thumbnailWidth,
     )
-
-    property int maxDimension: window.settings.messageImageMaxThumbnailSize
 
     TapHandler {
         onTapped: Qt.openUrlExternally(image.source)

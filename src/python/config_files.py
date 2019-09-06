@@ -105,7 +105,6 @@ class UISettings(JSONConfigFile):
     async def default_data(self) -> JsonData:
         return {
             "alertOnMessageForMsec": 4000,
-            "messageImageMaxThumbnailSize": 256,
             "theme": "Default.qpl",
             "writeAliases": {},
             "keys": {

@@ -54,9 +54,14 @@ Row {
         width: Math.min(
             eventList.width - avatar.width - eventContent.spacing,
             theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
+
             Math.max(
                 nameLabel.visible ? (nameLabel.implicitWidth + 1) : 0,
+
                 contentLabel.implicitWidth + 1,
+
+                previewLinksRepeater.count > 0 ?
+                theme.chat.message.thumbnailWidth : 0,
             )
         )
         height: childrenRect.height
