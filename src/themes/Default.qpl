@@ -172,8 +172,9 @@ controls:
         color foreground: colors.accentBackground
 
     avatar:
-        int size:   baseElementsHeight
-        int radius: theme.radius
+        int size:        baseElementsHeight
+        int radius:      theme.radius
+        int hoveredSize: 192
 
         background:
             int saturation: colors.saturation + 10

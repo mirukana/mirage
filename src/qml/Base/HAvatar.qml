@@ -58,7 +58,7 @@ Rectangle {
             width: Math.min(
                 mainUI.width / 1.25,
                 mainUI.height / 1.25,
-                192 + background.border.width * 2
+                theme.controls.avatar.hoveredSize + background.border.width * 2
             )
             height: width
             delay: 1000
