@@ -40,6 +40,7 @@ HButton {
 
             HRowLayout {
                 id: additionalInfo
+                visible: visibleChildren.length > 0
             }
 
             HLabel {
@@ -48,7 +49,7 @@ HButton {
 
                 visible: Layout.maximumWidth > 0
                 Layout.maximumWidth:
-                    text && tile.width >= 200 ? implicitWidth : 0
+                    text && tile.width >= 160 ? implicitWidth : 0
 
                 Behavior on Layout.maximumWidth { HNumberAnimation {} }
             }

@@ -44,7 +44,7 @@ HTileDelegate {
         svgName: "invite-received"
         colorize: theme.colors.alertBackground
 
-        visible: Layout.maximumWidth > 0
+        visible: invited
         Layout.maximumWidth: invited ? implicitWidth : 0
 
         Behavior on Layout.maximumWidth { HNumberAnimation {} }
