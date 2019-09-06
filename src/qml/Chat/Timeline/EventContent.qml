@@ -7,12 +7,26 @@ Row {
     id: eventContent
     spacing: theme.spacing / 2
 
-    readonly property string hoveredLink:
-        nameLabel.hoveredLink || contentLabel.hoveredLink
 
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date)
     readonly property int eventTimeSpaces: 2
+
+    readonly property string hoveredLink:
+        nameLabel.hoveredLink || contentLabel.hoveredLink
+
+    readonly property int cursorShape:
+        hoveredLink                               ? Qt.PointingHandCursor :
+        nameHover.hovered || contentHover.hovered ? Qt.IBeamCursor :
+        Qt.ArrowCursor
+
+
+    // Needed because of eventList's MouseArea which steals the
+    // HSelectableLabel's MouseArea hover events
+    onCursorShapeChanged: eventList.cursorShape = cursorShape
+
+
+    HoverHandler { id: hover }
 
     Item {
         width: hideAvatar ? 0 : 48
@@ -74,6 +88,8 @@ Row {
                 function selectAllTextPlus() {
                     contentLabel.selectAllTextPlus()
                 }
+
+                HoverHandler { id: nameHover }
             }
 
             HSelectableLabel {
@@ -124,6 +140,7 @@ Row {
                     contentLabel.updateContainerSelectedTexts()
                 }
 
+                HoverHandler { id: contentHover }
             }
         }
     }

@@ -92,6 +92,8 @@ Rectangle {
             property bool ownEventsOnRight:
                 width < theme.chat.eventList.ownEventsOnRightUnderWidth
 
+            property alias cursorShape: mouseArea.cursorShape
+
 
             function canCombine(item, itemAfter) {
                 if (! item || ! itemAfter) return false
@@ -154,6 +156,19 @@ Rectangle {
             }
 
             delegate: EventDelegate {}
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+
+                onWheel: Utils.smartVerticalFlick(
+                    eventList,
+                    200 * Qt.styleHints.wheelScrollLines *
+                    (wheel.angleDelta.y < 0 ? 1 : -1),
+                    3
+                )
+            }
         }
     }
 

@@ -36,7 +36,6 @@
   - Room header descriptions: styled text
 
   - Message selection
-    - Make scroll wheel usable
     - Copy to X11 selection
     - Images don't load correctly in TextEdit
 
