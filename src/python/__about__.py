@@ -2,7 +2,7 @@
 
 __pkg_name__    = "harmonyqml"
 __pretty_name__ = "Harmony QML"
-__version__     = "0.1.0"
+__version__     = "0.1.3"
 __status__      = "Development"
 # __status__    = "Production"
 
