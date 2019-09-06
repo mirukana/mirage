@@ -182,7 +182,7 @@ function smartVerticalFlick(flickable, baseVelocity, fastMultiply=4) {
 
 
 function flickToTop(flickable) {
-    if (! flickable.interactive) return
+    if (! flickable.interactive && flickable.enableFlicking) return
     if (flickable.visibleArea.yPosition < 0) return
 
     flickable.contentY -= flickable.contentHeight
@@ -192,7 +192,7 @@ function flickToTop(flickable) {
 
 
 function flickToBottom(flickable) {
-    if (! flickable.interactive) return
+    if (! flickable.interactive && flickable.enableFlicking) return
     if (flickable.visibleArea.yPosition < 0) return
 
     flickable.contentY = flickTarget.contentHeight - flickTarget.height
