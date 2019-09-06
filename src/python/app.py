@@ -1,6 +1,7 @@
 import asyncio
 import logging as log
 import signal
+import sys
 from concurrent.futures import Future
 from operator import attrgetter
 from threading import Thread
@@ -8,10 +9,14 @@ from typing import Coroutine, Sequence
 
 from appdirs import AppDirs
 
+import nio
+
 from . import __about__, pyotherside
 from .pyotherside_events import CoroutineDone
 
 log.getLogger().setLevel(log.INFO)
+nio.logger_group.level = nio.log.logbook.ERROR
+nio.log.logbook.StreamHandler(sys.stderr).push_application()
 
 try:
     import uvloop
@@ -47,6 +52,7 @@ class App:
     def set_debug(self, enable: bool, verbose: bool = False) -> None:
         if verbose:
             log.getLogger().setLevel(log.DEBUG)
+            nio.logger_group.level = nio.log.logbook.DEBUGG
 
         if enable:
             log.info("Debug mode enabled.")
