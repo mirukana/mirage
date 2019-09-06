@@ -118,11 +118,12 @@ controls:
         color checkedOverlay: colors.accentBackground
 
     menu:
-        color border: "black"
+        color background: controls.button.background
+        color border:     "black"
         real borderWidth: 2
 
     menuItem:
-        color background: controls.button.background
+        color background: "transparent"
         color text:       controls.button.text
 
         color hoveredOverlay: controls.button.hoveredOverlay

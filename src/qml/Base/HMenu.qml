@@ -24,7 +24,7 @@ Menu {
     }
 
     background: Rectangle {
-        color: "transparent"
+        color: theme.controls.menu.background
         border.color: theme.controls.menu.border
         border.width: theme.controls.menu.borderWidth
     }
