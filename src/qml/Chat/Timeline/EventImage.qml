@@ -20,7 +20,8 @@ HImage {
 
     HoverHandler {
         id: hover
-        onHoveredChanged: eventDelegate.hoveredImage = hovered ? image.source : ""
+        onHoveredChanged:
+            eventContent.hoveredImage = hovered ? image.source : ""
     }
 
     MouseArea {

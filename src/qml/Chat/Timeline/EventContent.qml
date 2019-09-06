@@ -14,8 +14,10 @@ Row {
     readonly property string hoveredLink:
         nameLabel.hoveredLink || contentLabel.hoveredLink
 
+    property string hoveredImage: ""
+
     readonly property int cursorShape:
-        hoveredLink                               ? Qt.PointingHandCursor :
+        hoveredLink || hoveredImage               ? Qt.PointingHandCursor :
         nameHover.hovered || contentHover.hovered ? Qt.IBeamCursor :
         Qt.ArrowCursor
 

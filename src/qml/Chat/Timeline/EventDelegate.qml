@@ -50,8 +50,6 @@ Column {
 
     readonly property var previewLinks: model.preview_links
 
-    property string hoveredImage: ""
-
 
     function json() {
         return JSON.stringify(
@@ -89,7 +87,7 @@ Column {
         acceptedButtons: Qt.RightButton
         onTapped: {
             contextMenu.link  = eventContent.hoveredLink
-            contextMenu.image = eventDelegate.hoveredImage
+            contextMenu.image = eventContent.hoveredImage
             contextMenu.popup()
         }
     }
