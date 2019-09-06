@@ -41,17 +41,20 @@ HShortcutHandler {
     HShortcut {
         sequences: settings.keys.scrollPageUp
         onPressed: Utils.smartVerticalFlick(
-            flickTarget, -2.3 * flickTarget.height, 10,
+            flickTarget, -2.3 * flickTarget.height, 8,
         )
         onHeld: pressed(event)
+        // Ensure only a slight slip after releasing the key
+        onReleased: Utils.smartVerticalFlick(flickTarget, -335)
     }
 
     HShortcut {
         sequences: settings.keys.scrollPageDown
         onPressed: Utils.smartVerticalFlick(
-            flickTarget, 2.3 * flickTarget.height, 10,
+            flickTarget, 2.3 * flickTarget.height, 8,
         )
         onHeld: pressed(event)
+        onReleased: Utils.smartVerticalFlick(flickTarget, 335)
     }
 
     HShortcut {

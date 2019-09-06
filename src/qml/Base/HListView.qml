@@ -13,7 +13,7 @@ ListView {
     preferredHighlightBegin: height / 2 - currentItemHeight
     preferredHighlightEnd: height / 2 + currentItemHeight
 
-    maximumFlickVelocity: 5000
+    maximumFlickVelocity: 4000
 
     property bool enableFlicking: true
 
