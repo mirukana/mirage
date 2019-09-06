@@ -24,9 +24,9 @@ ListView {
         color: theme.controls.listView.highlight
     }
 
-    // ScrollBar.vertical: ScrollBar {
-        // visible: listView.interactive || ! listView.enableFlicking
-    // }
+    ScrollBar.vertical: ScrollBar {
+        visible: listView.interactive || ! listView.enableFlicking
+    }
 
     add: Transition {
         ParallelAnimation {
