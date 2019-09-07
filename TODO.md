@@ -12,7 +12,6 @@
 
 - Fixes
   - `minutesBetween()` for 13:13:58 and 14:15:07
-  - `# > quote` doesn't color
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,

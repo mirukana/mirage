@@ -20,6 +20,12 @@ class HtmlFilter:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
     ]]
 
+    inline_quote_regex = re.compile(r"(^\s*&gt;.*)")
+
+    quote_regex = re.compile(
+        r"(^|<p/?>|<br/?>|<h\d/?>)(\s*&gt;.*?)(<p/?>|<br/?>|<h\d/?>|$)",
+    )
+
 
     def __init__(self) -> None:
         self._sanitizer        = Sanitizer(self.sanitize_settings())
@@ -55,8 +61,8 @@ class HtmlFilter:
         if outgoing:
             return text
 
-        return re.sub(
-            r"(^\s*&gt;.*)", r'<span class="quote">\1</span>', text,
+        return self.inline_quote_regex.sub(
+            r'<span class="quote">\1</span>', text,
         )
 
 
@@ -66,10 +72,8 @@ class HtmlFilter:
         if outgoing:
             return html
 
-        return re.sub(
-            r"<(p|br/?)>(\s*&gt;.*)(!?</?(?:br|p)/?>)",
-            r'<\1><span class="quote">\2</span>\3',
-            html,
+        return self.quote_regex.sub(
+            r'\1<span class="quote">\2</span>\3', html, re.MULTILINE,
         )
 
 
