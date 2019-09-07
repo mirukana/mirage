@@ -325,7 +325,9 @@ chat:
         color background: colors.mediumBackground
 
     typingMembers:
-        color background: colors.mediumBackground
+        color background: hsluv(
+            colors.hue, colors.saturation, colors.intensity * 9, 0.52
+        )
 
     composer:
         color background: colors.strongBackground
