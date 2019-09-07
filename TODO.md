@@ -35,10 +35,10 @@
   - Room header descriptions: styled text
 
   - Message selection
-    - Make scroll wheel usable
     - Copy to X11 selection
   - Link previews
-    - Support images not just at the end of the message
+    - Support showing images at the place they should be instead of always
+      at the end of the message
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
@@ -159,6 +159,7 @@
 
 - nio
   - `AsyncClient.share_group_session`: send device batches concurrently
+  - Guard against asyncio OSError Network unreachable
 
   - downloads API
   - MatrixRoom invited members list

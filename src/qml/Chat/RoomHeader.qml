@@ -43,6 +43,8 @@ Rectangle {
                 viewButtons.width -
                 (expandButton.visible ? expandButton.width : 0)
             )
+
+            HoverHandler { id: nameHover }
         }
 
         HLabel {
@@ -60,6 +62,20 @@ Rectangle {
                 roomName.width - viewButtons.width -
                 (expandButton.visible ? expandButton.width : 0)
             )
+
+            HoverHandler { id: topicHover }
+        }
+
+        HToolTip {
+            text: name && topic ? (name + "<br>" + topic) : (name || topic)
+            label.textFormat: Text.StyledText
+            visible: text && (nameHover.hovered || topicHover.hovered)
+
+            readonly property string name:
+                roomName.truncated ?
+                ("<b>" + chatPage.roomInfo.display_name + "</b>") : ""
+            readonly property string topic:
+                roomTopic.truncated ?  chatPage.roomInfo.topic : ""
         }
 
         HSpacer {}

@@ -11,6 +11,10 @@ ToolTip {
         theme.fontSize.normal * 0.5 * 75,
     )
 
+
+    property alias label: label
+
+
     background: Rectangle {
         id: background
         color: theme.controls.toolTip.background
@@ -19,6 +23,7 @@ ToolTip {
     }
 
     contentItem: HLabel {
+        id: label
         color: theme.controls.toolTip.text
         text: toolTip.text
         wrapMode: Text.Wrap
