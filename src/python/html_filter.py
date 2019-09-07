@@ -23,7 +23,7 @@ class HtmlFilter:
     inline_quote_regex = re.compile(r"(^\s*&gt;.*)")
 
     quote_regex = re.compile(
-        r"(^|<p/?>|<br/?>|<h\d/?>)(\s*&gt;.*?)(<p/?>|<br/?>|<h\d/?>|$)",
+        r"(^|<p/?>|<br/?>|<h\d/?>)(\s*&gt;.*?)(</?p>|<br/?>|</?h\d>|$)",
     )
 
 
