@@ -5,6 +5,11 @@ ToolTip {
     id: toolTip
     delay: theme.controls.toolTip.delay
     padding: background.border.width
+    contentWidth: Math.min(
+        mainUI.width / 1.25,
+        contentItem.implicitWidth,
+        theme.fontSize.normal * 0.5 * 75,
+    )
 
     background: Rectangle {
         id: background
@@ -16,6 +21,9 @@ ToolTip {
     contentItem: HLabel {
         color: theme.controls.toolTip.text
         text: toolTip.text
+        wrapMode: Text.Wrap
+        property var pr: width
+
         leftPadding: theme.spacing / 1.5
         rightPadding: leftPadding
         topPadding: theme.spacing / 2
