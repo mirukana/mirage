@@ -61,7 +61,7 @@ class HtmlFilter:
 
 
     def filter(self, html: str, outgoing: bool = False) -> str:
-        html = self._sanitizer.sanitize(html)
+        html = self._sanitizer.sanitize(html).rstrip("\n")
 
         if outgoing:
             return html
