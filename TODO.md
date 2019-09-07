@@ -150,7 +150,7 @@
   - Direct chats category
   - Markdown: don't turn #things (no space) and `thing\n---` into title,
     disable `__` syntax for bold/italic
-  - `<pre>` scrollbar on overflow
+  - Better `<pre>` 
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition

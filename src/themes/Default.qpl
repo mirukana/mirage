@@ -289,6 +289,7 @@ chat:
         color code:  colors.code
 
         string styleSheet:
+            "* { white-space: pre-wrap }" +
             "a { color: " + link  + " }" +
 
             "code { font-family: " + fontFamily.mono + "; " +
