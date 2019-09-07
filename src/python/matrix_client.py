@@ -338,6 +338,17 @@ class MatrixClient(nio.AsyncClient):
         await self.retry_decrypting_events()
 
 
+    async def export_keys(self, outfile: str, passphrase: str) -> None:
+        path = Path(outfile)
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Remove any existing file
+        # (the QML dialog asks the user if he wants to overwrite before this)
+        path.unlink()
+
+        await super().export_keys(outfile, passphrase)
+
+
     async def clear_import_error(self) -> None:
         self.models[Account][self.user_id].import_error = ("", "", "")
 

@@ -121,7 +121,6 @@
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
-    - Export keys
   - Uploads & proper http thumbnails
     - Reduce messages ListView cacheBuffer height once http thumbnails
       downloading is implemented 

@@ -28,10 +28,10 @@ Popup {
 
 
     function verifyPassword(pass, callback) {
-        // Implement this function when using this component.
-        // Return true on success, false on invalid password, or
+        // Can be reimplemented when using this component.
+        // Pass to the callback true on success, false on invalid password, or
         // a [error message, translated] array for any other error.
-        return ["Verification not implemented", false]
+        callback(true)
     }
 
 
