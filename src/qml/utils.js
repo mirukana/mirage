@@ -125,7 +125,7 @@ function thumbnailParametersFor(width, height) {
 
 
 function minutesBetween(date1, date2) {
-    return Math.round((((date2 - date1) % 86400000) % 3600000) / 60000)
+    return ((date2 - date1) / 1000) / 60
 }
 
 

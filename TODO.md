@@ -8,10 +8,9 @@
     - Is auto-sizing actually needed, or can we just set a default manual size?
     - Reducable room sidepane, swipe to show full-window
 
-  - When qml syntax highlighting supports ES6 string interpolation, use them
+  - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - `minutesBetween()` for 13:13:58 and 14:15:07
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,
