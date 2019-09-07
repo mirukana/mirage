@@ -106,6 +106,7 @@ class UISettings(JSONConfigFile):
         return {
             "alertOnMessageForMsec": 4000,
             "clearRoomFilterOnEnter": True,
+            "clearRoomFilterOnEscape": True,
             "theme": "Default.qpl",
             "writeAliases": {},
             "keys": {

@@ -26,7 +26,6 @@
   - Verify big avatars aren't downloaded uselessly
 
 - UI
-  - Esc in sidepane to focus chat again
   - Set an explicit placeholder text color for text field/area
   - Change typing bar background
   - Show error if uploading avatar fails or file is corrupted

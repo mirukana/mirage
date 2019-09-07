@@ -95,6 +95,12 @@ Rectangle {
 
         sidePaneList.activate()
     }
+    Keys.onEscapePressed: {
+        if (window.settings.clearRoomFilterOnEscape) {
+            mainUI.sidePane.toolBar.roomFilter = ""
+        }
+        mainUI.pageLoader.forceActiveFocus()
+    }
 
 
     HColumnLayout {
