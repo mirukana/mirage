@@ -8,7 +8,7 @@ Row {
     spacing: theme.spacing / 1.25
 
     readonly property string eventText: Utils.processedEventText(model)
-    readonly property string eventTime: Utils.formatTime(model.date)
+    readonly property string eventTime: Utils.formatTime(model.date, false)
     readonly property int eventTimeSpaces: 2
 
     readonly property string hoveredLink:
@@ -113,9 +113,10 @@ Row {
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
                       // time
-                      "&nbsp;".repeat(eventTimeSpaces) +
+                      " ".repeat(eventTimeSpaces) +
                       "<font size=" + theme.fontSize.small +
-                      "px color=" + theme.chat.message.date + ">" +
+                      "px color=" + theme.chat.message.date +
+                      ' style="vertical-align: middle">' +
                       eventTime +
                       "</font>" +
                       // local echo icon

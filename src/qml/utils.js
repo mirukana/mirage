@@ -156,7 +156,7 @@ function formatTime(time, seconds=true) {
             seconds ? Locale.LongFormat : Locale.NarrowFormat
         ).replace(/\./g, ":").replace(/ t$/, "")
         // en_DK.UTF-8 locale wrongfully gives "." separators;
-        // remove the timezone at the end
+        // also remove the timezone at the end
     )
 }
 
