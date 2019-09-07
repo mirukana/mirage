@@ -89,6 +89,10 @@ Rectangle {
     Keys.onReturnPressed: if (event.modifiers & Qt.ShiftModifier) {
         sidePaneList.toggleCollapseAccount()
     } else {
+        if (window.settings.clearRoomFilterOnEnter) {
+            mainUI.sidePane.toolBar.roomFilter = ""
+        }
+
         sidePaneList.activate()
     }
 
