@@ -12,20 +12,25 @@ TextField {
     font.pixelSize: theme.fontSize.normal
     font.pointSize: -1
 
-    readonly property QtObject _tf: theme.controls.textField
+    placeholderTextColor: theme.controls.textField.placeholderText
+    color: activeFocus ?
+           theme.controls.textField.focusedText :
+           theme.controls.textField.text
+
 
     property bool error: false
 
-    property bool bordered: true
-    property color backgroundColor: _tf.background
-    property color borderColor: _tf.border
-    property color errorBorder: _tf.errorBorder
-    property color focusedBackgroundColor: _tf.focusedBackground
-    property color focusedBorderColor: _tf.focusedBorder
     property alias radius: textFieldBackground.radius
+    property bool bordered: true
 
-    placeholderTextColor: _tf.placeholderText
-    color: activeFocus ? _tf.focusedText : _tf.text
+    property color backgroundColor: theme.controls.textField.background
+    property color borderColor: theme.controls.textField.border
+    property color errorBorder: theme.controls.textField.errorBorder
+
+    property color focusedBackgroundColor:
+        theme.controls.textField.focusedBackground
+    property color focusedBorderColor: theme.controls.textField.focusedBorder
+
 
     background: Rectangle {
         id: textFieldBackground
