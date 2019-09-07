@@ -63,15 +63,15 @@ Rectangle {
         }
 
         HScrollableTextArea {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.topMargin: Math.max(0, composer.Layout.minimumHeight - 34)
-
             id: areaScrollView
             placeholderText: qsTr("Type a message...")
             backgroundColor: "transparent"
             area.tabStopDistance: 4 * 4  // 4 spaces
             area.focus: true
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
 
             function setTyping(typing) {
                 py.callClientCoro(

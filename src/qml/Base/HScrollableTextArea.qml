@@ -2,15 +2,18 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 ScrollView {
+    id: scrollView
+    clip: true
+    ScrollBar.vertical.visible: contentHeight > height
+
+
+    default property alias textAreaData: textArea.data
+
     property alias backgroundColor: textAreaBackground.color
     property alias placeholderText: textArea.placeholderText
     property alias text: textArea.text
     property alias area: textArea
 
-    default property alias textAreaData: textArea.data
-
-    id: scrollView
-    clip: true
 
     TextArea {
         id: textArea
