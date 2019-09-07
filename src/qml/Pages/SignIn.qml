@@ -4,7 +4,8 @@ import "../Base"
 
 HPage {
     property string loginWith: "username"
-    readonly property bool canLogin: idField.text && passwordField.text
+    readonly property bool canLogin:
+        serverField.text && idField.text && passwordField.text
 
     onFocusChanged: idField.forceActiveFocus()
 
@@ -27,7 +28,10 @@ HPage {
 
             login: button => {
                 button.loading = true
-                let args = [idField.text, passwordField.text]
+                let args = [
+                    idField.text, passwordField.text,
+                    undefined, serverField.text,
+                ]
 
                 py.callCoro("login_client", args, ([success, data]) => {
                     if (! success) {
@@ -72,6 +76,14 @@ HPage {
                     onClicked: loginWith = modelData
                 }
             }
+        }
+
+        HTextField {
+            id: serverField
+            placeholderText: qsTr("Homeserver URL")
+            text: "https://matrix.org"
+
+            Layout.fillWidth: true
         }
 
         HTextField {

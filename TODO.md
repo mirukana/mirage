@@ -58,11 +58,11 @@
   - Prevent others from having a too similar hue as us, or our own accounts
     from sharing a too similar hue
   - Combine events so they take less space
-    - After combining is implemented, no need to hide our own profile changes.
+    - After combining is implemented, no need to hide profile changes anymore.
   - Replies
   - Messages editing
   - Code highlighting
-  - Support GIF avatars
+  - Support GIF avatars and images
   - Adapt shortcuts flicking speed to font size and DPI
 
   - EditAccount page:

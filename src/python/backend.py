@@ -49,7 +49,7 @@ class Backend:
         user:       str,
         password:   str,
         device_id:  Optional[str] = None,
-        homeserver: str = "https://matrix.org",
+        homeserver: str           = "https://matrix.org",
     ) -> Tuple[bool, str]:
 
         client = MatrixClient(
