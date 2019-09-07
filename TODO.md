@@ -26,7 +26,6 @@
   - Verify big avatars aren't downloaded uselessly
 
 - UI
-  - Set an explicit placeholder text color for text field/area
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
   - Room header descriptions: styled text

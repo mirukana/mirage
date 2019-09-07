@@ -152,12 +152,14 @@ controls:
         color focusedBorder: colors.accentBackground
         color errorBorder:   colors.negativeBackground
 
-        color text:        colors.text
-        color focusedText: colors.text
+        color text:            colors.text
+        color focusedText:     colors.text
+        color placeholderText: colors.dimText
 
     textArea:
-        color background: colors.inputBackground
-        color text:       colors.text
+        color background:      colors.inputBackground
+        color text:            colors.text
+        color placeholderText: controls.textField.placeholderText
 
     toolTip:
         int delay:        500

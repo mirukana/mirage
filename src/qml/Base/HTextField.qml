@@ -24,6 +24,7 @@ TextField {
     property color focusedBorderColor: _tf.focusedBorder
     property alias radius: textFieldBackground.radius
 
+    placeholderTextColor: _tf.placeholderText
     color: activeFocus ? _tf.focusedText : _tf.text
 
     background: Rectangle {

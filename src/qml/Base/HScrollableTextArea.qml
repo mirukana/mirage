@@ -30,6 +30,7 @@ ScrollView {
         font.pixelSize: theme.fontSize.normal
         font.pointSize: -1
 
+        placeholderTextColor: theme.controls.textArea.placeholderText
         color: theme.controls.textArea.text
         background: Rectangle {
             id: textAreaBackground
