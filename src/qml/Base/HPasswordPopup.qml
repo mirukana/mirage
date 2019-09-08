@@ -73,8 +73,11 @@ HOkCancelPopup {
         }
 
         HIcon {
-            svgName: passwordValid ? "ok" : "cancel"
             visible: Layout.preferredWidth > 0
+            svgName: passwordValid ? "ok" : "cancel"
+            colorize: passwordValid ?
+                      theme.colors.positiveBackground :
+                      theme.colors.negativeBackground
 
             Layout.preferredWidth:
                 passwordValid == null ||
