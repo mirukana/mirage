@@ -99,7 +99,10 @@ HGridLayout {
                 Item { Layout.preferredHeight: theme.spacing }
 
                 HLabel {
-                    text: qsTr("Upload profile picture")
+                    text: avatar.imageUrl ?
+                          qsTr("Change profile picture") :
+                          qsTr("Upload profile picture")
+
                     color: (! avatar.imageUrl && overlayHover.hovered) ?
                            theme.colors.accentText : theme.colors.brightText
                     Behavior on color { HColorAnimation {} }
