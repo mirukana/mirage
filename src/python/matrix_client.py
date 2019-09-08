@@ -345,9 +345,9 @@ class MatrixClient(nio.AsyncClient):
         path = Path(outfile)
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Remove any existing file
-        # (the QML dialog asks the user if he wants to overwrite before this)
-        path.unlink()
+        # The QML dialog asks the user if he wants to overwrite before this
+        if path.exists():
+            path.unlink()
 
         await super().export_keys(outfile, passphrase)
 
