@@ -12,6 +12,7 @@ export QT_QPA_PLATFORM=xcb
 
 CFG='dev no_embedded'
 
+make clean
 qmake harmonyqml.pro CONFIG+="$CFG" && make
 
 while true; do
