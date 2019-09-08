@@ -109,4 +109,17 @@ HShortcutHandler {
         sequences: settings.keys.toggleCollapseAccount
         onPressed: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
     }
+
+
+    // Chat
+
+    HShortcut {
+        enabled: window.uiState.page == "Chat/Chat.qml"
+        sequences: settings.keys.clearRoomMessages
+        onPressed: py.callClientCoro(
+            window.uiState.pageProperties.userId,
+            "clear_events",
+            [window.uiState.pageProperties.roomId],
+        )
+    }
 }

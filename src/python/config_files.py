@@ -133,6 +133,8 @@ class UISettings(JSONConfigFile):
                     "Alt+Shift+Left", "Alt+Shift+Right",
                     "Alt+Shift+H", "Alt+Shift+L",
                 ],
+
+                "clearRoomMessages": ["Ctrl+L"],
             },
         }
 

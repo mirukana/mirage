@@ -385,8 +385,9 @@ class MatrixClient(nio.AsyncClient):
     async def clear_events(self, room_id: str) -> None:
         self.cleared_events_rooms.add(room_id)
         model = self.models[Event, self.user_id, room_id]
-        model.clear()
-        model.sync_now()
+        if model:
+            model.clear()
+            model.sync_now()
 
 
     # Functions to register data into models
