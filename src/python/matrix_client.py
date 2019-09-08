@@ -61,9 +61,10 @@ class MatrixClient(nio.AsyncClient):
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
-        self.past_tokens:        Dict[str, str] = {}     # {room_id: token}
-        self.fully_loaded_rooms: Set[str]       = set()  # {room_id}
-        self.loaded_once_rooms:  Set[str]       = set()  # {room_id}
+        self.past_tokens:          Dict[str, str] = {}     # {room_id: token}
+        self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
+        self.loaded_once_rooms:    Set[str]       = set()  # {room_id}
+        self.cleared_events_rooms: Set[str]       = set()  # {room_id}
 
         self.local_echoes_uuid: Set[str]       = set()
         self.resolved_echoes:   Dict[str, str] = {}  # {event_id: echo_uuid}
@@ -225,7 +226,9 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_past_events(self, room_id: str) -> bool:
-        if room_id in self.fully_loaded_rooms or room_id in self.invited_rooms:
+        if room_id in self.fully_loaded_rooms or \
+           room_id in self.invited_rooms or \
+           room_id in self.cleared_events_rooms:
             return False
 
         await self.first_sync_done.wait()
@@ -377,6 +380,13 @@ class MatrixClient(nio.AsyncClient):
                     for cb in self.event_callbacks:
                         if not cb.filter or isinstance(decrypted, cb.filter):
                             await asyncio.coroutine(cb.func)(room, decrypted)
+
+
+    async def clear_events(self, room_id: str) -> None:
+        self.cleared_events_rooms.add(room_id)
+        model = self.models[Event, self.user_id, room_id]
+        model.clear()
+        model.sync_now()
 
 
     # Functions to register data into models

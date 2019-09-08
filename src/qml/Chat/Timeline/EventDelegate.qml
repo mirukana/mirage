@@ -6,7 +6,6 @@ import "../../utils.js" as Utils
 Column {
     id: eventDelegate
     width: eventList.width
-
     topPadding:
         model.event_type == "RoomCreateEvent" ? 0 :
         dayBreak  ? theme.spacing * 4 :
@@ -123,6 +122,14 @@ Column {
             enabled: Boolean(selectableLabelContainer.joinedSelection)
             onTriggered:
                 Utils.copyToClipboard(selectableLabelContainer.joinedSelection)
+        }
+
+        HMenuItem {
+            icon.name: "clear-messages"
+            text: qsTr("Clear messages")
+            onTriggered: py.callClientCoro(
+                chatPage.userId, "clear_events", [chatPage.roomId],
+            )
         }
 
         HMenuItem {
