@@ -27,7 +27,7 @@ CheckBox {
             box.enabled && box.pressed ?
             theme.controls.checkBox.boxPressedBorder :
 
-            (box.enabled && box.hovered) || box.visualFocus ?
+            (box.enabled && box.hovered) || box.activeFocus ?
             theme.controls.checkBox.boxHoveredBorder :
 
             theme.controls.checkBox.boxBorder

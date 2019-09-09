@@ -21,7 +21,7 @@ Rectangle {
 
                button.enabled && button.pressed ? buttonTheme.pressedOverlay :
 
-               (button.enabled && button.hovered) || button.visualFocus ?
+               (button.enabled && button.hovered) || button.activeFocus ?
                buttonTheme.hoveredOverlay :
 
                "transparent"
