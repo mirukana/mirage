@@ -20,7 +20,7 @@ HPopup {
 
     box.clickButtonOnEnter: "ok"
     box.buttonModel: [
-        { name: "ok", text: okText, iconName: "ok" , enabled: okEnabled},
+        { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
     box.buttonCallbacks: ({

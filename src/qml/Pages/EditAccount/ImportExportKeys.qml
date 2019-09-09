@@ -63,6 +63,8 @@ HBox {
 
         id: exportPasswordPopup
         details.text: qsTr("Please enter a passphrase to protect this file:")
+        okText: qsTr("Export")
+
         onAcceptedPasswordChanged:
             encryptionUI.exportKeys(file, acceptedPassword, exportButton)
     }
@@ -82,6 +84,8 @@ HBox {
         details.text: qsTr(
             "Please enter the passphrase that was used to protect this file:"
         )
+        okText: qsTr("Import")
+
         onAcceptedPasswordChanged:
             encryptionUI.importKeys(file, acceptedPassword)
     }
