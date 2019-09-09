@@ -6,21 +6,15 @@ Menu {
     padding: theme.controls.menu.borderWidth
 
     implicitWidth: {
-        let result       = 0
-        let leftPadding  = 0
-        let rightPadding = 0
+        let result = 0
 
         for (let i = 0; i < count; ++i) {
             let item = itemAt(i)
             if (! item.visible) continue
 
-            result       = Math.max(item.contentItem.implicitWidth, result)
-            leftPadding  = Math.max(item.leftPadding, leftPadding)
-            rightPadding = Math.max(item.rightPadding, rightPadding)
+            result = Math.max(item.implicitWidth, result)
         }
-        return Math.min(
-            result + leftPadding + rightPadding, window.width
-        )
+        return Math.min(result + menu.padding * 2, window.width)
     }
 
     background: Rectangle {
