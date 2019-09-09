@@ -89,7 +89,7 @@ Row {
 
                 text: Utils.coloredNameHtml(model.sender_name, model.sender_id)
                 textFormat: Text.RichText
-                // elide: Text.ElideRight
+                wrapMode: Text.Wrap
                 // horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
                 horizontalAlignment: Text.AlignLeft
 
