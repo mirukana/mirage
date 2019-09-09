@@ -1,4 +1,6 @@
 - Refactoring
+  - Room header elide detection
+  - Use HBox for Profile
   - Banners
   - Composer
 
@@ -94,7 +96,6 @@
   - Server selection
   - Register/Forgot? for SignIn dialog
   - Add room
-  - Logout & leave/forget room warning popup
   - Prevent using the composer if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading past room events or images 
@@ -132,6 +133,7 @@
   - Opening links with keyboard
 
 - Client improvements
+  - More error details
   - Refetch profile after manual profile change, don't wait for a room event
   - Prevent starting multiple instances, causes problems with E2E DB
     (sending new messages from second instances makes them undecryptable to

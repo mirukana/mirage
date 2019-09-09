@@ -70,10 +70,13 @@ Rectangle {
             Layout.rightMargin: interfaceBox.horizontalSpacing
         }
 
-        HRowLayout {
+        HGridLayout {
+            id: buttonGrid
             visible: buttonModel.length > 0
+            flow: width >= buttonRepeater.childrenImplicitWidth ?
+                  GridLayout.LeftToRight : GridLayout.TopToBottom
 
-            Repeater {
+            HRepeater {
                 id: buttonRepeater
                 model: []
 
