@@ -83,6 +83,7 @@ HRowLayout {
         color: buttonTheme.text
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
 
         Layout.fillWidth: true
         Layout.fillHeight: true
