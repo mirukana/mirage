@@ -15,7 +15,8 @@ HPopup {
     property bool okClicked: false
 
 
-    box.enterButtonTarget: "ok"
+    box.focusButton: "ok"
+    box.clickButtonOnEnter: "ok"
     box.buttonModel: [
         { name: "ok", text: qsTr("OK"), iconName: "ok" },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },

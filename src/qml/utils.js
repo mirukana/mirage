@@ -45,13 +45,13 @@ function isEmptyObject(obj) {
 }
 
 
-function numberWrapAround(num, max) {
+function numberWrapAt(num, max) {
     return num < 0 ? max + (num % max) : (num % max)
 }
 
 
 function hsluv(hue, saturation, lightness, alpha=1.0) {
-    hue = numberWrapAround(hue, 360)
+    hue = numberWrapAt(hue, 360)
     let rgb = py.callSync("hsluv", [hue, saturation, lightness])
     return Qt.rgba(rgb[0], rgb[1], rgb[2], alpha)
 }

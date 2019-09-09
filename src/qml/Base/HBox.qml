@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../utils.js" as Utils
 
 Rectangle {
     id: interfaceBox
@@ -8,6 +9,10 @@ Rectangle {
         parent.width, theme.minimumSupportedWidthPlusSpacing * multiplyWidth
     )
     implicitHeight: childrenRect.height
+
+    Keys.onReturnPressed: if (clickButtonOnEnter) enterClickButton()
+    Keys.onEnterPressed: Keys.onReturnPressed(event)
+
 
     property real multiplyWidth: 1.0
     property real multiplyHorizontalSpacing: 1.5
@@ -20,21 +25,21 @@ Rectangle {
     property int verticalSpacing: theme.spacing * multiplyVerticalSpacing
 
     property alias title: interfaceTitle.text
-    property alias buttonModel: interfaceButtonsRepeater.model
+    property alias buttonModel: buttonRepeater.model
     property var buttonCallbacks: []
-    property string enterButtonTarget: ""
+    property string focusButton: ""
+    property string clickButtonOnEnter: ""
 
     default property alias body: interfaceBody.data
 
-    function clickEnterButtonTarget() {
+
+    function enterClickButton() {
         for (let i = 0; i < buttonModel.length; i++) {
-            let btn = interfaceButtonsRepeater.itemAt(i)
-            if (btn.enabled && btn.name === enterButtonTarget) btn.clicked()
+            let btn = buttonRepeater.itemAt(i)
+            if (btn.enabled && btn.name === clickButtonOnEnter) btn.clicked()
         }
     }
 
-    Keys.onReturnPressed: clickEnterButtonTarget()
-    Keys.onEnterPressed: clickEnterButtonTarget()
 
     HColumnLayout {
         id: mainColumn
@@ -69,12 +74,10 @@ Rectangle {
             visible: buttonModel.length > 0
 
             Repeater {
-                id: interfaceButtonsRepeater
+                id: buttonRepeater
                 model: []
 
                 HButton {
-                    property string name: modelData.name
-
                     id: button
                     text: modelData.text
                     icon.name: modelData.iconName || ""
@@ -91,10 +94,31 @@ Rectangle {
                     enabled: (modelData.enabled == undefined ?
                               true : modelData.enabled) &&
                              ! button.loading
+
                     onClicked: buttonCallbacks[modelData.name](button)
+
+                    Keys.onLeftPressed: previous.forceActiveFocus()
+                    Keys.onUpPressed: previous.forceActiveFocus()
+                    Keys.onRightPressed: next.forceActiveFocus()
+                    Keys.onDownPressed: next.forceActiveFocus()
+                    Keys.onReturnPressed: if (button.enabled) button.clicked()
+                    Keys.onEnterPressed: Keys.onReturnPressed(event)
+
+                    Component.onCompleted:
+                        if (modelData.name == focusButton) forceActiveFocus()
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: theme.baseElementsHeight
+
+
+                    property string name: modelData.name
+
+                    property Item next: buttonRepeater.itemAt(
+                        Utils.numberWrapAt(index + 1, buttonRepeater.count),
+                    )
+                    property Item previous: buttonRepeater.itemAt(
+                        Utils.numberWrapAt(index - 1, buttonRepeater.count),
+                    )
                 }
             }
         }

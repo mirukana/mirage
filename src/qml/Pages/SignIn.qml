@@ -15,7 +15,7 @@ HPage {
 
         multiplyWidth: 0.85
         title: qsTr("Sign in")
-        enterButtonTarget: "login"
+        clickButtonOnEnter: "login"
 
         buttonModel: [
             { name: "register", text: qsTr("Register"), enabled: false },
