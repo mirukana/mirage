@@ -128,7 +128,7 @@ Column {
             icon.name: "clear-messages"
             text: qsTr("Clear messages")
             onTriggered: Utils.makePopup(
-                "Chat/ClearMessagesPopup.qml",
+                "Popups/ClearMessagesPopup.qml",
                 chatPage,
                 {userId: chatPage.userId, roomId: chatPage.roomId},
             )

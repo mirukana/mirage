@@ -117,7 +117,7 @@ HShortcutHandler {
         enabled: window.uiState.page == "Chat/Chat.qml"
         sequences: settings.keys.clearRoomMessages
         onPressed: Utils.makePopup(
-            "Chat/ClearMessagesPopup.qml",
+            "Popups/ClearMessagesPopup.qml",
             mainUI,
             {
                 userId: window.uiState.pageProperties.userId,

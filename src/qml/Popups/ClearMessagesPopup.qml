@@ -1,7 +1,6 @@
 import QtQuick 2.12
-import "../Base"
 
-HBoxPopup {
+BoxPopup {
     summary.text: qsTr("Clear this room's messages?")
     details.text: qsTr(
         "The messages will only be removed on your side. " +

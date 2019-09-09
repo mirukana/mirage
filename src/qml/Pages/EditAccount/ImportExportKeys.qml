@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Qt.labs.platform 1.1
 import "../../Base"
+import "../../Popups"
 import "../../utils.js" as Utils
 
 HBox {
@@ -58,7 +59,7 @@ HBox {
         }
     }
 
-    HPasswordPopup {
+    PasswordPopup {
         property url file: ""
 
         id: exportPasswordPopup
@@ -69,7 +70,7 @@ HBox {
             encryptionUI.exportKeys(file, acceptedPassword, exportButton)
     }
 
-    HPasswordPopup {
+    PasswordPopup {
         property url file: ""
 
         function verifyPassword(pass, callback) {
