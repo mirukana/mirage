@@ -18,7 +18,6 @@ HPopup {
     property bool okEnabled: true
 
 
-    box.focusButton: "ok"
     box.clickButtonOnEnter: "ok"
     box.buttonModel: [
         { name: "ok", text: okText, iconName: "ok" , enabled: okEnabled},

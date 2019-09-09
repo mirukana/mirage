@@ -95,7 +95,7 @@ Rectangle {
                               true : modelData.enabled) &&
                              ! button.loading
 
-                    onClicked: buttonCallbacks[modelData.name](button)
+                    onClicked: buttonCallbacks[name](button)
 
                     Keys.onLeftPressed: previous.forceActiveFocus()
                     Keys.onUpPressed: previous.forceActiveFocus()
@@ -105,7 +105,7 @@ Rectangle {
                     Keys.onEnterPressed: Keys.onReturnPressed(event)
 
                     Component.onCompleted:
-                        if (modelData.name == focusButton) forceActiveFocus()
+                        if (name == focusButton) forceActiveFocus()
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: theme.baseElementsHeight

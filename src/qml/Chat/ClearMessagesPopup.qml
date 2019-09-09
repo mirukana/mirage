@@ -7,6 +7,7 @@ HBoxPopup {
         "The messages will only be removed on your side. " +
         "They will be available again after you restart the application."
     )
+    box.focusButton: "ok"
 
     onOk: py.callClientCoro(userId, "clear_events", [roomId])
 
