@@ -6,7 +6,7 @@ Rectangle {
     id: interfaceBox
     color: theme.controls.box.background
     implicitWidth: Math.min(
-        parent.width, theme.minimumSupportedWidthPlusSpacing * multiplyWidth
+        window.width, theme.minimumSupportedWidthPlusSpacing * multiplyWidth
     )
     implicitHeight: childrenRect.height
 

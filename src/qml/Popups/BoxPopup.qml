@@ -11,6 +11,9 @@ HPopup {
     signal cancel()
 
 
+    default property alias boxData: box.body
+    property alias box: box
+
     property alias summary: summary
     property alias details: details
     property bool okClicked: false
@@ -19,31 +22,38 @@ HPopup {
     property bool okEnabled: true
 
 
-    box.clickButtonOnEnter: "ok"
-    box.buttonModel: [
-        { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
-    ]
-    box.buttonCallbacks: ({
-        ok:     button => { okClicked = true; popup.ok(); popup.close() },
-        cancel: button => { okClicked = false; popup.cancel(); popup.close() },
-    })
+    contentItem: HBox {
+        id: box
+        clickButtonOnEnter: "ok"
+
+        buttonModel: [
+            { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},
+            { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
+        ]
+
+        buttonCallbacks: ({
+            ok:     button => { okClicked = true; popup.ok(); popup.close() },
+            cancel: button => {
+                okClicked = false; popup.cancel(); popup.close()
+            },
+        })
 
 
-    HLabel {
-        id: summary
-        wrapMode: Text.Wrap
-        font.bold: true
-        visible: Boolean(text)
+        HLabel {
+            id: summary
+            wrapMode: Text.Wrap
+            font.bold: true
+            visible: Boolean(text)
 
-        Layout.fillWidth: true
-    }
+            Layout.fillWidth: true
+        }
 
-    HLabel {
-        id: details
-        wrapMode: Text.Wrap
-        visible: Boolean(text)
+        HLabel {
+            id: details
+            wrapMode: Text.Wrap
+            visible: Boolean(text)
 
-        Layout.fillWidth: true
+            Layout.fillWidth: true
+        }
     }
 }

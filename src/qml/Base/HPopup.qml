@@ -9,10 +9,6 @@ Popup {
     padding: 0
 
 
-    default property alias boxData: box.body
-    property alias box: box
-
-
     enter: Transition {
         HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 4 }
     }
@@ -23,10 +19,5 @@ Popup {
 
     background: Rectangle {
         color: theme.controls.popup.background
-    }
-
-    contentItem: HBox {
-        id: box
-        implicitWidth: theme.minimumSupportedWidthPlusSpacing
     }
 }
