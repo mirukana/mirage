@@ -1,14 +1,9 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
-import Qt.labs.platform 1.1
 import "../../Base"
-import "../../Popups"
 import "../../utils.js" as Utils
 
 HBox {
-    property var exportButton: null
-
     horizontalSpacing: currentSpacing
     verticalSpacing: currentSpacing
 
@@ -19,10 +14,24 @@ HBox {
 
     buttonCallbacks: ({
         export: button => {
-            exportButton = button
-            exportFileDialog.dialog.open()
+            Utils.makeObject(
+                "Dialogs/ExportKeys.qml",
+                editAccount,
+                { userId: editAccount.userId },
+                obj => {
+                    button.loading = Qt.binding(() => obj.exporting)
+                    obj.dialog.open()
+                }
+            )
         },
-        import: button => { importFileDialog.dialog.open() },
+        import: button => {
+            Utils.makeObject(
+                "Dialogs/ImportKeys.qml",
+                editAccount,
+                { userId: editAccount.userId },
+                obj => { obj.dialog.open() }
+            )
+        },
     })
 
 
@@ -37,58 +46,5 @@ HBox {
         )
 
         Layout.fillWidth: true
-    }
-
-    HFileDialogOpener {
-        id: exportFileDialog
-        fill: false
-        dialog.title: qsTr("Save decryption keys file as...")
-        dialog.fileMode: FileDialog.SaveFile
-        onFileChanged: {
-            exportPasswordPopup.file = file
-            exportPasswordPopup.open()
-        }
-    }
-
-    HFileDialogOpener {
-        id: importFileDialog
-        fill: false
-        dialog.title: qsTr("Select a decryption keys file to import")
-        onFileChanged: {
-            importPasswordPopup.file = file
-            importPasswordPopup.open()
-        }
-    }
-
-    PasswordPopup {
-        property url file: ""
-
-        id: exportPasswordPopup
-        details.text: qsTr("Please enter a passphrase to protect this file:")
-        okText: qsTr("Export")
-
-        onAcceptedPasswordChanged:
-            encryptionUI.exportKeys(file, acceptedPassword, exportButton)
-    }
-
-    PasswordPopup {
-        property url file: ""
-
-        function verifyPassword(pass, callback) {
-            py.callCoro(
-                "check_exported_keys_passphrase",
-                [file.toString().replace(/^file:\/\//, ""), pass],
-                callback
-            )
-        }
-
-        id: importPasswordPopup
-        details.text: qsTr(
-            "Please enter the passphrase that was used to protect this file:"
-        )
-        okText: qsTr("Import")
-
-        onAcceptedPasswordChanged:
-            encryptionUI.importKeys(file, acceptedPassword)
     }
 }

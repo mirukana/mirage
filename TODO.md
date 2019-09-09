@@ -33,6 +33,7 @@
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
   - Room header descriptions: styled text
+  - Indeterminate progress bar
 
   - Message selection
     - Copy to X11 selection

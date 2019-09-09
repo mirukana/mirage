@@ -34,7 +34,9 @@ HColumnLayout {
         }
 
         HLabel {
-            text: qsTr("%1/%2")
+            text: progressBar.indeterminate ?
+                  qsTr("Preparing...") :
+                  qsTr("%1/%2")
                   .arg(Math.ceil(progressBar.value)).arg(progressBar.to)
 
             Layout.margins: currentSpacing
@@ -46,6 +48,7 @@ HColumnLayout {
         from: 0
         value: progress
         to: accountInfo.total_keys_to_import
+        indeterminate: accountInfo.total_keys_to_import < 0
 
         Behavior on value { HNumberAnimation { factor: 5 } }
 
