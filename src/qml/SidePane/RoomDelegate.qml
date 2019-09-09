@@ -108,8 +108,14 @@ HTileDelegate {
             icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
 
-            onTriggered: py.callClientCoro(
-                model.user_id, "room_leave", [model.data.room_id]
+            onTriggered: Utils.makePopup(
+                "Popups/LeaveRoomPopup.qml",
+                sidePane,
+                {
+                    userId: model.user_id,
+                    roomId: model.data.room_id,
+                    roomName: model.data.display_name,
+                }
             )
         }
 
