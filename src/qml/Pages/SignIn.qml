@@ -13,7 +13,7 @@ HPage {
         id: signInBox
         Layout.alignment: Qt.AlignCenter
 
-        multiplyWidth: 0.85
+        multiplyWidth: 0.9
         title: qsTr("Sign in")
         clickButtonOnEnter: "login"
 
