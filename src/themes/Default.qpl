@@ -58,6 +58,9 @@ colors:
     color positiveBackground:
         hsluv(155, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
 
+    color middleBackground:
+        hsluv(60, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+
     color negativeBackground:
         hsluv(0, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
 

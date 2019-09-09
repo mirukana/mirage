@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../utils.js" as Utils
 
 HTileDelegate {
     id: accountDelegate
@@ -84,24 +85,12 @@ HTileDelegate {
             icon.name: "logout"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Logout")
-            onTriggered: {
-                disconnecting = true
-
-                let page   = window.uiState.page
-                let userId = model.data.user_id
-
-                if ((modelSources["Account"] || []).length < 2) {
-                    pageLoader.showPage("SignIn")
-                }
-                else if ((page == "Pages/EditAccount/EditAccount.qml" ||
-                     page == "Chat/Chat.qml") &&
-                     window.uiState.pageProperties.userId == userId)
-                {
-                    pageLoader.showPage("Default")
-                }
-
-                py.callCoro("logout_client", [userId])
-            }
+            onTriggered: Utils.makePopup(
+                "Popups/LogoutPopup.qml",
+                mainUI,
+                { "userId": model.data.user_id },
+                popup => { popup.ok.connect(() => { disconnecting = true }) },
+            )
         }
     }
 }

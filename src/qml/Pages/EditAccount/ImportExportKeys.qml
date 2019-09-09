@@ -30,8 +30,9 @@ HBox {
         wrapMode: Text.Wrap
         text: qsTr(
             "The decryption keys for messages you received in encrypted " +
-            "rooms can be exported to a passphrase-protected file.\n" +
-            "You can then import this file on another Matrix account or " +
+            "rooms can be exported to a passphrase-protected file.\n\n" +
+
+            "You can then import this file on any Matrix account or " +
             "client, to be able to decrypt these messages again."
         )
 
