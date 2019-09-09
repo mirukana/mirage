@@ -5,6 +5,7 @@ import "../SidePane"
 
 HBoxPopup {
     id: popup
+    okEnabled: Boolean(passwordField.text)
 
     onAboutToShow: {
         okClicked         = false

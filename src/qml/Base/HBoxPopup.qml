@@ -14,11 +14,14 @@ HPopup {
     property alias details: details
     property bool okClicked: false
 
+    property string okText: qsTr("OK")
+    property bool okEnabled: true
+
 
     box.focusButton: "ok"
     box.clickButtonOnEnter: "ok"
     box.buttonModel: [
-        { name: "ok", text: qsTr("OK"), iconName: "ok" },
+        { name: "ok", text: okText, iconName: "ok" , enabled: okEnabled},
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
     box.buttonCallbacks: ({
