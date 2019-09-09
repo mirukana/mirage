@@ -189,7 +189,7 @@ HGridLayout {
                 id: saveButton
                 icon.name: "apply"
                 icon.color: theme.colors.positiveBackground
-                text: qsTr("Apply")
+                text: qsTr("Save")
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled:
                     nameField.changed || aliasField.changed || avatar.changed

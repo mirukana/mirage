@@ -10,7 +10,7 @@ Behavior on fontScale { HNumberAnimation {} }
 
 int minimumSupportedWidth:  240 * uiScale
 int minimumSupportedHeight: 120 * uiScale
-int contentIsWideAbove:     439 * uiScale
+int contentIsWideAbove:     472 * uiScale
 
 int minimumSupportedWidthPlusSpacing:  minimumSupportedWidth + spacing * 2
 int minimumSupportedHeightPlusSpacing: minimumSupportedHeight + spacing * 2
