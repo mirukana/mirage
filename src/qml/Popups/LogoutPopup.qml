@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import "../utils.js" as Utils
 
 BoxPopup {
     id: popup
@@ -24,7 +25,18 @@ BoxPopup {
     ]
     box.buttonCallbacks: ({
         ok: button => {
-            console.error("Not implemented yet")
+            Utils.makeObject(
+                "Dialogs/ExportKeys.qml",
+                mainUI,
+                { userId },
+                obj => {
+                    button.loading = Qt.binding(() => obj.exporting)
+                    obj.done.connect(() => {
+                        box.buttonCallbacks["signout"](button)
+                    })
+                    obj.dialog.open()
+                }
+            )
         },
 
         signout: button => {

@@ -12,6 +12,9 @@ HFileDialogOpener {
     }
 
 
+    signal done()
+
+
     property string userId: ""
     property bool exporting: false
 
@@ -23,6 +26,7 @@ HFileDialogOpener {
 
         py.callClientCoro(userId, "export_keys", [path, passphrase], () => {
             exporting = false
+            done()
         })
     }
 
