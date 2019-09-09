@@ -124,8 +124,14 @@ HTileDelegate {
             icon.color: theme.colors.negativeBackground
             text: qsTr("Forget")
 
-            onTriggered: py.callClientCoro(
-                model.user_id, "room_forget", [model.data.room_id]
+            onTriggered: Utils.makePopup(
+                "Popups/ForgetRoomPopup.qml",
+                sidePane,
+                {
+                    userId: model.user_id,
+                    roomId: model.data.room_id,
+                    roomName: model.data.display_name,
+                }
             )
         }
     }
