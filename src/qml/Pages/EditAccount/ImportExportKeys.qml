@@ -62,7 +62,7 @@ HBox {
         property url file: ""
 
         id: exportPasswordPopup
-        label.text: qsTr("Please enter a passphrase to protect this file:")
+        details.text: qsTr("Please enter a passphrase to protect this file:")
         onAcceptedPasswordChanged:
             encryptionUI.exportKeys(file, acceptedPassword, exportButton)
     }
@@ -79,7 +79,7 @@ HBox {
         }
 
         id: importPasswordPopup
-        label.text: qsTr(
+        details.text: qsTr(
             "Please enter the passphrase that was used to protect this file:"
         )
         onAcceptedPasswordChanged:

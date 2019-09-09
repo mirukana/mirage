@@ -10,8 +10,8 @@ HPopup {
     signal cancel()
 
 
-    property alias label: label
-    property alias text: label.text
+    property alias summary: summary
+    property alias details: details
     property bool okClicked: false
 
 
@@ -27,8 +27,18 @@ HPopup {
 
 
     HLabel {
-        id: label
+        id: summary
         wrapMode: Text.Wrap
+        font.bold: true
+        visible: Boolean(text)
+
+        Layout.fillWidth: true
+    }
+
+    HLabel {
+        id: details
+        wrapMode: Text.Wrap
+        visible: Boolean(text)
 
         Layout.fillWidth: true
     }
