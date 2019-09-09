@@ -5,6 +5,7 @@ Popup {
     id: popup
     anchors.centerIn: Overlay.overlay
     modal: true
+    focus: true
     padding: 0
 
 

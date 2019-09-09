@@ -49,6 +49,7 @@ ApplicationWindow {
         asynchronous: false
 
         anchors.fill: parent
+        focus: true
         scale: py.ready ? 1 : 0.5
         source: py.ready ? (Qt.application.arguments[1] || "UI.qml") : ""
 

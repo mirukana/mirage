@@ -6,10 +6,16 @@ Item {
     Keys.onPressed: {
         let shortcut = match(event)
         if (! shortcut) return
+
+        event.accepted = true
         event.isAutoRepeat ? shortcut.held(event) : shortcut.pressed(event)
     }
     Keys.onReleased: {
+        if (event.isAutoRepeat) return
         let shortcut = match(event)
+        if (! shortcut) return
+
+        event.accepted = true
         if (shortcut && ! event.isAutoRepeat) shortcut.released(event)
     }
 

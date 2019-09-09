@@ -8,7 +8,9 @@ import "SidePane"
 
 Item {
     id: mainUI
+    focus: true
     Component.onCompleted: window.mainUI = mainUI
+    Keys.forwardTo: [shortcuts]
 
     property alias shortcuts: shortcuts
     property alias sidePane: sidePane
