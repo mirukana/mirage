@@ -116,10 +116,13 @@ HShortcutHandler {
     HShortcut {
         enabled: window.uiState.page == "Chat/Chat.qml"
         sequences: settings.keys.clearRoomMessages
-        onPressed: py.callClientCoro(
-            window.uiState.pageProperties.userId,
-            "clear_events",
-            [window.uiState.pageProperties.roomId],
+        onPressed: Utils.makePopup(
+            "Chat/ClearMessagesPopup.qml",
+            mainUI,
+            {
+                userId: window.uiState.pageProperties.userId,
+                roomId: window.uiState.pageProperties.roomId,
+            }
         )
     }
 }

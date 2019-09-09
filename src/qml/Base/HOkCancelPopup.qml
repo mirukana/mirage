@@ -2,10 +2,16 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
 HPopup {
+    id: popup
     onAboutToShow: okClicked = false
 
 
+    signal ok()
+    signal cancel()
+
+
     property alias label: label
+    property alias text: label.text
     property bool okClicked: false
 
 
@@ -15,8 +21,8 @@ HPopup {
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
     box.buttonCallbacks: ({
-        ok:     button => { okClicked = true; popup.close() },
-        cancel: button => { okClicked = false; popup.close() },
+        ok:     button => { okClicked = true; popup.ok(); popup.close() },
+        cancel: button => { okClicked = false; popup.cancel(); popup.close() },
     })
 
 

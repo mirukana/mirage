@@ -127,8 +127,10 @@ Column {
         HMenuItem {
             icon.name: "clear-messages"
             text: qsTr("Clear messages")
-            onTriggered: py.callClientCoro(
-                chatPage.userId, "clear_events", [chatPage.roomId],
+            onTriggered: Utils.makePopup(
+                "Chat/ClearMessagesPopup.qml",
+                chatPage,
+                {userId: chatPage.userId, roomId: chatPage.roomId},
             )
         }
 

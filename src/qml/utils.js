@@ -1,3 +1,45 @@
+function makeObject(url, parent=null, properties={}, callback=null) {
+    let comp  = Qt.createComponent(url, Component.Asynchronous)
+    let ready = false
+
+    comp.statusChanged.connect(status => {
+        if ([Component.Null, Component.Error].includes(status)) {
+           console.error("Failed creating component: ", comp.errorString())
+
+        } else if (status == Component.Ready) {
+            let incu = comp.incubateObject(parent, properties, Qt.Asynchronous)
+
+            if (incu.status == Component.Ready) {
+                if (callback) callback(incu.object)
+                return
+            }
+
+            incu.onStatusChanged = (istatus) => {
+                if (incu.status == Component.Error) {
+                    console.error("Failed incubating object: ",
+                                  incu.errorString())
+
+                } else if (istatus == Component.Ready && callback && ! ready) {
+                    if (callback) callback(incu.object)
+                    ready = true
+                }
+            }
+        }
+    })
+
+    if (comp.status == Component.Ready) comp.statusChanged(comp.status)
+}
+
+
+function makePopup(url, parent=null, properties={}, callback=null) {
+    makeObject(url, parent, properties, (popup) => {
+        popup.open()
+        popup.closed.connect(() => { popup.destroy() })
+        if (callback) callback(popup)
+    })
+}
+
+
 function isEmptyObject(obj) {
     return Object.entries(obj).length === 0 && obj.constructor === Object
 }
