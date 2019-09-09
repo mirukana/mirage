@@ -222,7 +222,7 @@ class MatrixClient(nio.AsyncClient):
             )
 
             if isinstance(response, nio.RoomSendError):
-                log.error("Failed to send message: %s", response)
+                log.error("Sending message failed: %s", response)
 
 
     async def load_past_events(self, room_id: str) -> bool:
@@ -238,6 +238,11 @@ class MatrixClient(nio.AsyncClient):
             start   = self.past_tokens[room_id],
             limit   = 100 if room_id in self.loaded_once_rooms else 25,
         )
+
+        if isinstance(response, nio.RoomMessagesError):
+            log.error("Loading past messages for room %s failed: %s",
+                      room_id, response)
+            return True
 
         self.loaded_once_rooms.add(room_id)
         more_to_load = True
