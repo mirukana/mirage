@@ -277,6 +277,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def room_forget(self, room_id: str) -> None:
+        await super().room_leave(room_id)
         await super().room_forget(room_id)
         self.models[Room, self.user_id].pop(room_id, None)
         self.models.pop((Event, self.user_id, room_id), None)

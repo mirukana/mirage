@@ -1,5 +1,3 @@
-- ! Banner forget room popup
-
 - Refactoring
   - Room header elide detection
   - Use HBox for Profile
