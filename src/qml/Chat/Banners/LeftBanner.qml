@@ -24,19 +24,16 @@ Banner {
         forget: button => {
             Utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
-                chatPage,
+                mainUI,  // Must not be destroyed with chatPage
                 {
-                    userId:            chatPage.userId,
-                    roomId:            chatPage.roomId,
-                    roomName:          chatPage.roomInfo.display_name,
-                    forgottenCallback: () => {
-                        button.loading = false
-                        Qt.callLater(pageLoader.showPage, "Default")
-                    },
+                    userId:   chatPage.userId,
+                    roomId:   chatPage.roomId,
+                    roomName: chatPage.roomInfo.display_name,
                 },
                 obj => {
                     obj.onOk.connect(() => { button.loading = true })
                 },
+                false,
             )
         }
     })

@@ -817,6 +817,9 @@ class MatrixClient(nio.AsyncClient):
         if not self.first_sync_done.is_set():
             return
 
+        if room.room_id not in self.models[Room, self.user_id]:
+            return
+
         self.models[Room, self.user_id][room.room_id].typing_members = sorted(
             room.user_name(user_id) for user_id in ev.users
             if user_id not in self.backend.clients

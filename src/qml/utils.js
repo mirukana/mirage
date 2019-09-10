@@ -31,11 +31,12 @@ function makeObject(url, parent=null, properties={}, callback=null) {
 }
 
 
-function makePopup(url, parent=null, properties={}, callback=null) {
+function makePopup(url, parent=null, properties={}, callback=null,
+                   autoDestruct=true) {
     makeObject(url, parent, properties, (popup) => {
         popup.open()
-        popup.closed.connect(() => { popup.destroy() })
-        if (callback) callback(popup)
+        if (autoDestruct) popup.closed.connect(() => { popup.destroy() })
+        if (callback)     callback(popup)
     })
 }
 
