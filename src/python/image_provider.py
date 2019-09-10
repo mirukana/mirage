@@ -12,12 +12,14 @@ import aiofiles
 from PIL import Image as PILImage
 
 import nio
+import pyotherside
 from nio.api import ResizingMethod
 
-from . import pyotherside, utils
-from .pyotherside import ImageData, Size
+from . import utils
 
 POSFormat = int
+Size      = Tuple[int, int]
+ImageData = Tuple[bytearray, Size, int]  # last int: pyotherside format enum
 
 CONCURRENT_DOWNLOADS_LIMIT = asyncio.BoundedSemaphore(8)
 

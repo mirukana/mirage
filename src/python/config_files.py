@@ -1,13 +1,14 @@
 import asyncio
 import json
 import logging as log
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict
 
 import aiofiles
-from dataclasses import dataclass, field
 
-from . import pyotherside
+import pyotherside
+
 from .backend import Backend
 from .theme_parser import convert_to_qml
 from .utils import dict_update_recursive
@@ -172,9 +173,6 @@ class Theme(ConfigFile):
 
 
     async def read(self) -> str:
-        if not pyotherside.AVAILABLE:
-            return ""
-
         if not self.path.exists():
             await self.write(await self.default_data())
 

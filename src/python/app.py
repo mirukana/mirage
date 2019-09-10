@@ -10,8 +10,9 @@ from typing import Coroutine, Sequence
 from appdirs import AppDirs
 
 import nio
+import pyotherside
 
-from . import __about__, pyotherside
+from . import __about__
 from .pyotherside_events import CoroutineDone
 
 log.getLogger().setLevel(log.INFO)
@@ -42,25 +43,8 @@ class App:
 
         self.loop = asyncio.get_event_loop()
 
-        if not pyotherside.AVAILABLE:
-            self.set_debug(True, verbose=True)
-
         self.loop_thread = Thread(target=self._loop_starter)
         self.loop_thread.start()
-
-
-    def set_debug(self, enable: bool, verbose: bool = False) -> None:
-        if verbose:
-            log.getLogger().setLevel(log.DEBUG)
-            nio.logger_group.level = nio.log.logbook.DEBUGG
-
-        if enable:
-            log.info("Debug mode enabled.")
-            self.loop.set_debug(True)
-            self.debug = True
-        else:
-            self.loop.set_debug(False)
-            self.debug = False
 
 
     def _loop_starter(self) -> None:
@@ -113,11 +97,6 @@ class App:
                  "to connect to pdb.")
         import remote_pdb
         remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
-
-
-    def test_run(self) -> None:
-        self.call_backend_coro("load_settings", "")
-        self.call_backend_coro("load_saved_accounts", "")
 
 
 # Make CTRL-C work again
