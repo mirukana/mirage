@@ -11,19 +11,19 @@ RCC_DIR     = $$BUILD_DIR/rcc
 
 QRC_FILE = $$BUILD_DIR/resources.qrc
 
-SOURCES += src/main.cpp
-TARGET   = harmonyqml
+RESOURCES += $$QRC_FILE
+SOURCES   += src/main.cpp
+TARGET     = harmonyqml
 
 
 # Custom CONFIG options
 
-!no_embedded {
-    RESOURCES += $$QRC_FILE
-}
-
 dev {
-    CONFIG -= warn_off release
-    CONFIG += debug qml_debug declarative_debug
+    CONFIG    -= warn_off release
+    CONFIG    += debug qml_debug declarative_debug
+    RESOURCES -= $$QRC_FILE
+
+    warning(make install cannot be used with the dev CONFIG option.)
 }
 
 
@@ -33,11 +33,7 @@ win32:executables.path  = "C:/Program Files"
 !win32:executables.path = /usr/local/bin
 executables.files       = $$TARGET
 
-no_embedded {
-    warning(make install cannot be used with the no_embedded CONFIG option.)
-}
-
-!no_embedded:INSTALLS += executables
+!dev:INSTALLS += executables
 
 
 # Libraries includes

@@ -10,14 +10,12 @@
 
 export QT_QPA_PLATFORM=xcb
 
-CFG='dev no_embedded'
-
 make clean
-qmake harmonyqml.pro CONFIG+="$CFG" && make
+qmake harmonyqml.pro CONFIG+=dev && make
 
 while true; do
     find src harmonyqml.pro -type f |
     entr -cdnr sh -c \
-        "qmake harmonyqml.pro CONFIG+='$CFG' && make && ./harmonyqml $*"
+        "qmake harmonyqml.pro CONFIG+=dev && make && ./harmonyqml $*"
     sleep 0.2
 done
