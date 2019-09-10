@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 Banner {
     color: theme.chat.leftBanner.background
@@ -21,12 +22,22 @@ Banner {
 
     buttonCallbacks: ({
         forget: button => {
-            button.loading = true
-            py.callClientCoro(
-                chatPage.userId, "room_forget", [chatPage.roomId], () => {
-                    button.loading = false
-                    Qt.callLater(pageLoader.showPage, "Default")
-            })
+            Utils.makePopup(
+                "Popups/ForgetRoomPopup.qml",
+                chatPage,
+                {
+                    userId:            chatPage.userId,
+                    roomId:            chatPage.roomId,
+                    roomName:          chatPage.roomInfo.display_name,
+                    forgottenCallback: () => {
+                        button.loading = false
+                        Qt.callLater(pageLoader.showPage, "Default")
+                    },
+                },
+                obj => {
+                    obj.onOk.connect(() => { button.loading = true })
+                },
+            )
         }
     })
 }

@@ -8,10 +8,11 @@ BoxPopup {
     okText: qsTr("Leave")
     box.focusButton: "ok"
 
-    onOk: py.callClientCoro(userId, "room_leave", [roomId])
+    onOk: py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
 
 
     property string userId: ""
     property string roomId: ""
     property string roomName: ""
+    property var leftCallback: null
 }

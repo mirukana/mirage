@@ -12,10 +12,11 @@ BoxPopup {
     okText: qsTr("Forget")
     box.focusButton: "ok"
 
-    onOk: py.callClientCoro(userId, "room_forget", [roomId])
+    onOk: py.callClientCoro(userId, "room_forget", [roomId], forgottenCallback)
 
 
     property string userId: ""
     property string roomId: ""
     property string roomName: ""
+    property var forgottenCallback: null
 }
