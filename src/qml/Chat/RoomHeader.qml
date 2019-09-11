@@ -47,9 +47,10 @@ Rectangle {
             HoverHandler { id: nameHover }
         }
 
-        HLabel {
+        HRichLabel {
             id: roomTopic
             text: chatPage.roomInfo.topic
+            textFormat: Text.StyledText
             font.pixelSize: theme.fontSize.small
             color: theme.chat.roomHeader.topic
             elide: Text.ElideRight

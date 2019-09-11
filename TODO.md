@@ -36,8 +36,6 @@
 - UI
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
-  - Room header descriptions: support URLs
-    - Also support URLs for "room topic changed" event messages
   - Indeterminate progress bar
 
   - Message selection

@@ -459,7 +459,7 @@ class MatrixClient(nio.AsyncClient):
             room_id        = room.room_id,
             display_name   = room.display_name,
             avatar_url     = room.gen_avatar_url or "",
-            topic          = room.topic or "",
+            topic          = HTML_FILTER.filter_inline(room.topic or ""),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
             inviter_avatar =
@@ -780,7 +780,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomTopicEvent(self, room, ev) -> None:
-        co = f"%1 changed the room's topic to \"{ev.topic}\"."
+        topic = HTML_FILTER.filter_inline(ev.topic)
+        co    = f"%1 changed the room's topic to \"{topic}\"."
         await self.register_nio_event(room, ev, content=co)
 
 

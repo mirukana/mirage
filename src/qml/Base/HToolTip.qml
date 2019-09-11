@@ -7,7 +7,7 @@ ToolTip {
     padding: background.border.width
     contentWidth: Math.min(
         mainUI.width / 1.25,
-        contentItem.implicitWidth,
+        // contentItem.implicitWidth,
         theme.fontSize.normal * 0.5 * 75,
     )
 
