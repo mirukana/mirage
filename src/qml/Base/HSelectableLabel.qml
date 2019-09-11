@@ -131,6 +131,12 @@ TextEdit {
         }
     }
 
+    PointHandler {
+        onActiveChanged:
+            active ? container.dragStarted() : container.dragStopped()
+        onPointChanged: container.dragPointChanged(point)
+    }
+
     MouseArea {
         anchors.fill: label
         acceptedButtons: Qt.NoButton

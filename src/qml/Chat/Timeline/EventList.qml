@@ -13,22 +13,22 @@ Rectangle {
         anchors.fill: parent
         reversed: eventList.verticalLayoutDirection == ListView.BottomToTop
 
-        onDragPositionChanged: {
-            let left = dragPoint.pressedButtons & Qt.LeftButton
-            let vel  = dragPoint.velocity.y
+        DragHandler {
+            target: null
+            onActiveChanged: if (! active) dragFlicker.speed = 0
+            onCentroidChanged: {
+                let left  = centroid.pressedButtons & Qt.LeftButton
+                let vel   = centroid.velocity.y
+                let pos   = centroid.position.y
+                let dist  = Math.min(selectableLabelContainer.height / 4, 50)
+                let boost = 20 * (pos < dist ?  -pos : -(height - pos))
 
-            let boost = 20 * (
-                dragPosition.y < 50 ?
-                -dragPosition.y : -(height - dragPosition.y)
-            )
-
-            dragFlicker.speed =
-                dragPosition.x == 0 && dragPosition.y == 0  ? 0 :
-                left && vel && dragPosition.y < 50          ? 1000 + boost:
-                left && vel && dragPosition.y > height - 50 ? -1000 + -boost :
-                0
+                dragFlicker.speed =
+                    left && vel && pos < dist          ? 1000 + boost :
+                    left && vel && pos > height - dist ? -1000 + -boost :
+                    0
+            }
         }
-
 
         Timer {
             id: dragFlicker

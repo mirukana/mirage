@@ -3,11 +3,13 @@ import "../utils.js" as Utils
 
 FocusScope {
     signal deselectAll()
+    signal dragStarted()
+    signal dragStopped()
+    signal dragPointChanged(var eventPoint)
 
 
     property bool reversed: false
 
-    readonly property bool dragging: pointHandler.active || dragHandler.active
     property bool selecting: false
     property real selectionStart: -1
     property real selectionEnd: -1
@@ -36,8 +38,22 @@ FocusScope {
         return toCopy.join("").trim()
     }
 
-    readonly property alias dragPoint: dragHandler.centroid
-    readonly property alias dragPosition: dragHandler.centroid.position
+
+    onDragStarted: {
+        draggedItem.Drag.active = true
+    }
+    onDragStopped: {
+        draggedItem.Drag.drop()
+        draggedItem.Drag.active = false
+        selecting               = false
+    }
+    onDragPointChanged: {
+        let pos = mapFromItem(
+            mainUI, eventPoint.scenePosition.x, eventPoint.scenePosition.y,
+        )
+        draggedItem.x = pos.x
+        draggedItem.y = pos.y
+    }
 
 
     function clearSelection() {
@@ -50,28 +66,21 @@ FocusScope {
     }
 
 
-    Item { id: dragCursor }
-
-    DragHandler {
-        id: dragHandler
-        target: dragCursor
-        onActiveChanged: {
-            if (active) {
-                target.Drag.active = true
-            } else {
-                target.Drag.drop()
-                target.Drag.active = false
-                selecting          = false
-            }
-        }
-    }
+    // PointHandler and TapHandler won't activate if the press occurs inside
+    // a label child, so we need a Point/TapHandler inside them too.
 
     PointHandler {
+        // We don't use a DragHandler because they have an unchangable minimum
+        // drag distance before they activate.
         id: pointHandler
+        onActiveChanged: active ? dragStarted() : dragStopped()
+        onPointChanged: dragPointChanged(point)
     }
 
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: clearSelection()
     }
+
+    Item { id: draggedItem }
 }
