@@ -13,7 +13,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - Quote links color in room subtitles
+  - Missing members pane right padding
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,
@@ -27,11 +27,13 @@
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
   - Verify big avatars aren't downloaded uselessly
+  - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - UI
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
-  - Room header descriptions: styled text
+  - Room header descriptions: support URLs
+    - Also support URLs for "room topic changed" event messages
   - Indeterminate progress bar
 
   - Message selection
@@ -135,17 +137,30 @@
 - Client improvements
   - More error details
   - Refetch profile after manual profile change, don't wait for a room event
+
   - Prevent starting multiple instances, causes problems with E2E DB
     (sending new messages from second instances makes them undecryptable to
      first instance until it's restarted)
+    - Could be fixed by "listening for a `RoomKeyEvent`that has the same
+      session id as the undecryptable `MegolmEvent`, then retry decrypting
+      the message with `decrypt_event()`"  - poljar
+
+  - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
   - `translated` arg for avatar upload and login errors
   - Check if username exists on login screen
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
   - Image provider: on failed conversion, way to show a "broken image" thumb?
   - Config file format
-  - Initial sync filter and lazy load, see weechat-matrix `_handle_login()`
-    - See also `handle_response()`'s `keys_query` request
+
+  - Startup improvements
+    - Initial sync filter to get more events on first sync
+    - Lazy loading members
+    - Store profiles, room events and states
+    - Use AsyncClient `store_sync_tokens`
+      - Make sure to all members are fetched before sending an E2E message 
+      - Fetch all members when using the filter members bar
+
   - Direct chats category
   - Markdown: don't turn #things (no space) and `thing\n---` into title,
     disable `__` syntax for bold/italic
@@ -158,14 +173,14 @@
 
 - nio
   - `AsyncClient.share_group_session`: send device batches concurrently
+  - Running blocking DB function calls in executor
   - Guard against asyncio OSError Network unreachable
 
   - downloads API
   - MatrixRoom invited members list
-  - Invite events are missing their timestamps (needed for sorting)
   - Left room events after client reboot
-  - `org.matrix.room.preview_urls` event
-  - `m.room.aliases` event
+  - `org.matrix.room.preview_urls` events
+  - `m.room.aliases` events
   - Support "Empty room (was ...)" after peer left
   - Previewing room without joining
 
