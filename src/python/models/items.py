@@ -153,10 +153,12 @@ class Event(ModelItem):
         if not self.content.strip():
             return []
 
-        return [
+        links = [
             (self._get_preview_type(link[0], link[2]), link[2])
             for link in lxml.html.iterlinks(self.content)
         ]
+
+        return [l for l in links if l[0] != "page"]   # TODO
 
     @staticmethod
     def _get_preview_type(el: lxml.html.HtmlElement, link: str) -> str:
