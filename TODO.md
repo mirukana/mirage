@@ -18,6 +18,7 @@
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,
     then sending one with the first account again
+  - Left rooms reappear as joined rooms
 
   - If account not in config anymore, discard ui state last page on startup
   - Do something when access token is invalid
@@ -169,5 +170,6 @@
   - Previewing room without joining
 
 - Distribution
+  - requirements file
   - Include python dependencies in binary with rcc?
   - README.md

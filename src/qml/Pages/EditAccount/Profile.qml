@@ -57,7 +57,7 @@ HGridLayout {
 
         id: avatar
         userId: editAccount.userId
-        displayName: accountInfo.display_name
+        displayName: nameField.field.text
         avatarUrl: accountInfo.avatar_url
         imageUrl: fileDialog.selectedFile || fileDialog.file || defaultImageUrl
         toolTipImageUrl: ""
@@ -146,18 +146,19 @@ HGridLayout {
             HLabeledTextField {
                 property bool changed: field.text != accountInfo.display_name
 
-                property string fText: field.text
+                readonly property string fText: field.text
                 onFTextChanged: editAccount.headerName = field.text
 
                 id: nameField
                 label.text: qsTr("Display name:")
-                field.text: accountInfo.display_name
                 field.onAccepted: applyChanges()
+
+                Component.onCompleted: field.text = accountInfo.display_name
+
+                Keys.onEscapePressed: cancelChanges()
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
-
-                Keys.onEscapePressed: cancelChanges()
             }
 
             HLabeledTextField {
@@ -168,8 +169,9 @@ HGridLayout {
 
                 id: aliasField
                 label.text: qsTr("Write alias:")
-                field.text: currentAlias
                 field.onAccepted: applyChanges()
+
+                Component.onCompleted: field.text = currentAlias
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
