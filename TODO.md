@@ -13,6 +13,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - Quote links color in room subtitles
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
     room, then while keys are being shared sending one with another account,

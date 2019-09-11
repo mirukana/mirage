@@ -9,7 +9,6 @@ Row {
 
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date, false)
-    readonly property int eventTimeSpaces: 2
 
     readonly property string hoveredLink:
         nameLabel.hoveredLink || contentLabel.hoveredLink
@@ -113,10 +112,9 @@ Row {
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
                       // time
-                      " ".repeat(eventTimeSpaces) +
+                      " " +
                       "<font size=" + theme.fontSize.small +
-                      "px color=" + theme.chat.message.date +
-                      ' style="vertical-align: middle">' +
+                      "px color=" + theme.chat.message.date + '>' +
                       eventTime +
                       "</font>" +
                       // local echo icon
@@ -134,7 +132,7 @@ Row {
                     contentLabel.select(
                         0,
                         contentLabel.length -
-                        eventTime.length - eventTimeSpaces,
+                        eventTime.length - 1  // - 1: separating space
                     )
                     contentLabel.updateContainerSelectedTexts()
                 }
