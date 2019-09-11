@@ -16,6 +16,7 @@
   - Time on their own lines
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
+  - Mouse wheel scrolling speed in event list
 
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
@@ -67,7 +68,7 @@
   - Combine events so they take less space
     - After combining is implemented, no need to hide profile changes anymore.
   - Replies
-  - Messages editing
+  - Messages editing and redaction
   - Code highlighting
   - Support GIF avatars and images
   - Adapt shortcuts flicking speed to font size and DPI
@@ -127,7 +128,7 @@
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
-  - Uploads & proper http thumbnails
+  - Uploads
     - Reduce messages ListView cacheBuffer height once http thumbnails
       downloading is implemented 
   - Read receipts
@@ -163,8 +164,6 @@
       - Fetch all members when using the filter members bar
 
   - Direct chats category
-  - Markdown: don't turn #things (no space) and `thing\n---` into title,
-    disable `__` syntax for bold/italic
   - Better `<pre>` 
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.

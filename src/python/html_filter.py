@@ -7,8 +7,22 @@ import html_sanitizer.sanitizer as sanitizer
 from html_sanitizer.sanitizer import Sanitizer
 
 
-class MarkdownRenderer(mistune.Renderer):
-    pass
+class MarkdownInlineGrammar(mistune.InlineGrammar):
+    # Enable *word* but not _word_ syntaxes (TODO: config option for that)
+    emphasis        = re.compile(r"^\*((?:\*\*|[^\*])+?)\*(?!\*)")
+    double_emphasis = re.compile(r"^\*{2}([\s\S]+?)\*{2}(?!\*)")
+
+
+class MarkdownInlineLexer(mistune.InlineLexer):
+    grammar_class = MarkdownInlineGrammar
+
+
+    def output_double_emphasis(self, m):
+        return self.renderer.double_emphasis(self.output(m.group(1)))
+
+
+    def output_emphasis(self, m):
+        return self.renderer.emphasis(self.output(m.group(1)))
 
 
 class HtmlFilter:
@@ -41,7 +55,7 @@ class HtmlFilter:
 
         # hard_wrap: convert all \n to <br> without required two spaces
         self._markdown_to_html = mistune.Markdown(
-            hard_wrap=True, renderer=MarkdownRenderer(),
+            hard_wrap=True, inline=MarkdownInlineLexer,
         )
 
         self._markdown_to_html.block.default_rules = [
