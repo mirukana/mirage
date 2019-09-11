@@ -18,6 +18,8 @@ TextEdit {
 
     onLinkActivated: Qt.openUrlExternally(link)
 
+    Component.onCompleted: updateSelection()
+
 
     // If index is a whole number, the label will get two \n before itself
     // in container.joinedSelection. If it's a decimal number, if gets one \n.

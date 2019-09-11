@@ -82,5 +82,6 @@ FocusScope {
         onTapped: clearSelection()
     }
 
+    // This item will trigger the children labels's DropAreas
     Item { id: draggedItem }
 }
