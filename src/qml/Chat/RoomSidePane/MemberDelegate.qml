@@ -4,7 +4,6 @@ import "../../Base"
 HTileDelegate {
     id: memberDelegate
     spacing: roomSidePane.currentSpacing
-    rightPadding: 0
     backgroundColor: theme.chat.roomSidePane.member.background
 
     image: HUserAvatar {
