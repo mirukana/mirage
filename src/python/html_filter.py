@@ -27,6 +27,8 @@ class HtmlFilter:
         re.MULTILINE,
     )
 
+    newlines_regex = re.compile(r"\n(\n*)")
+
 
     def __init__(self) -> None:
         self._sanitizer        = Sanitizer(self.sanitize_settings())
@@ -57,15 +59,24 @@ class HtmlFilter:
 
 
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
-        text = self._inline_sanitizer.sanitize(html).strip("\n")
+        html = self._inline_sanitizer.sanitize(html)
 
+        # Remove excess newlines to avoid additional blank lines with
+        # HTML/CSS using `white-space: pre`
+        html = self.newlines_regex.sub(r"\1", html)
+
+        if outgoing:
+            return html
+
+        # Client-side modifications
         return self.inline_quote_regex.sub(
-            r'<span class="quote">\1</span>', text,
+            r'<span class="quote">\1</span>', html,
         )
 
 
     def filter(self, html: str, outgoing: bool = False) -> str:
         html = self._sanitizer.sanitize(html).rstrip("\n")
+        html = self.newlines_regex.sub(r"\1", html)
 
         if outgoing:
             return html

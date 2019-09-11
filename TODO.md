@@ -13,7 +13,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - Quote newline spacing
   - 256 min width when a non-image link preview is present
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
@@ -21,7 +20,6 @@
     then sending one with the first account again
 
   - If account not in config anymore, discard ui state last page on startup
-  - Don't strip user spacing in html
   - Do something when access token is invalid
 
   - Don't store states in delegates
