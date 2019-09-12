@@ -35,8 +35,6 @@ Image {
 
             cache: true  // Needed to allow GIFs to loop
             paused: ! visible || window.hidden || userPaused
-            property var pr: frameCount
-            onPrChanged: print(source, pr)
 
             property bool userPaused: ! window.settings.autoPlayGIF
 
