@@ -185,6 +185,5 @@
   - Previewing room without joining
 
 - Distribution
-  - requirements file
   - Include python dependencies in binary with rcc?
   - README.md

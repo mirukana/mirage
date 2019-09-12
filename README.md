@@ -1,5 +1,6 @@
 # harmonyqml
 
+
 ## Dependencies setup
 
 From your distribution's package manager, install:
@@ -38,23 +39,14 @@ To ensure that they're correctly set:
     sudo chmod 644 /usr/lib/qt5/qml/io/thp/pyotherside/*
     sudo chmod 755 /usr/lib/qt5/qml/io/thp/pyotherside/*.so
 
-Install the Python 3 dependencies from Pypi:
+Install the Python 3 dependencies:
 
-    pip3 install --user --upgrade \
-        Pillow aiofiles appdirs dataclasses filetype hsluv html_sanitizer \
-        lxml mistune
+    pip3 install --user -Ur requirements.txt
 
 Optional dependency for performance improvements:
 
-    pip3 install --user --upgrade uvloop
+    pip3 install --user -U uvloop==0.13.0
 
-Install the Python 3 dependencies from Github:
-
-[matrix-nio](https://github.com/mirukan/matrix-nio):
-
-    git clone https://github.com/mirukan/matrix-nio
-    cd matrix-nio
-    pip3 install --user --upgrade -e '.[e2e]'
 
 ## Building
 
