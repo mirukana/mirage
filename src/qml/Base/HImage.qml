@@ -7,12 +7,17 @@ Image {
     asynchronous: true
     fillMode: Image.PreserveAspectFit
 
-    cache: ! loader.sourceComponent &&
+    cache: ! (animate && animated) &&
            (sourceSize.width + sourceSize.height) <= 512
 
 
     property bool animate: true
     property color colorize: "transparent"
+
+    readonly property bool animated:
+        image.source.toString()
+        .split("/").splice(-1)[0].split("?")[0].toLowerCase()
+        .endsWith(".gif")
 
 
     layer.enabled: ! Qt.colorEqual(colorize, "transparent")
@@ -37,17 +42,19 @@ Image {
             verticalAlignment: image.verticalAlignment
 
             cache: true  // Needed to allow GIFs to loop
-            paused: ! visible || window.hidden
+            paused: ! visible || window.hidden || userPaused
+
+            property bool userPaused: false
+
+            TapHandler {
+                onTapped: parent.userPaused = ! parent.userPaused
+            }
         }
     }
 
     HLoader {
         id: loader
         anchors.fill: parent
-        sourceComponent:
-            animate &&
-            image.source.toString()
-            .split("/").splice(-1)[0].split("?")[0].toLowerCase()
-            .endsWith(".gif") ? animatedImage : null
+        sourceComponent: animate && animated ? animatedImage : null
     }
 }

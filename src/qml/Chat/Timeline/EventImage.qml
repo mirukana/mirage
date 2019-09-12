@@ -13,7 +13,8 @@ HImage {
     )
 
     TapHandler {
-        onTapped: Qt.openUrlExternally(image.source)
+        onTapped: if (! image.animated) Qt.openUrlExternally(image.source)
+        onDoubleTapped: Qt.openUrlExternally(image.source)
     }
 
     HoverHandler {
