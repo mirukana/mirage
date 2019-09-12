@@ -57,22 +57,23 @@ Rectangle {
         HToolTip {
             id: avatarToolTip
             visible: toolTipImageUrl && hoverHandler.hovered
-            width: Math.min(
+            delay: 1000
+
+            readonly property int dimension: Math.min(
                 mainUI.width / 1.25,
                 mainUI.height / 1.25,
                 theme.controls.avatar.hoveredSize + background.border.width * 2
             )
-            height: width
-            delay: 1000
 
-            HImage {
+            contentItem: HImage {
                 id: avatarToolTipImage
-                sourceSize.width: parent.width
-                sourceSize.height: parent.height
-                width: sourceSize.width
-                height: sourceSize.width
                 fillMode: Image.PreserveAspectCrop
                 source: Qt.resolvedUrl(toolTipImageUrl)
+
+                sourceSize.width: avatarToolTip.dimension
+                sourceSize.height: avatarToolTip.dimension
+                width: avatarToolTip.dimension
+                height: avatarToolTip.dimension
             }
         }
     }

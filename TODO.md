@@ -13,7 +13,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - Image tooltips
   - Time on their own lines
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
