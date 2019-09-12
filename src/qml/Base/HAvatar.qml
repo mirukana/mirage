@@ -12,6 +12,7 @@ Rectangle {
     property var imageUrl: ""
     property var toolTipImageUrl: imageUrl
     property alias fillMode: avatarImage.fillMode
+    property alias animate: avatarImage.animate
 
     readonly property alias hovered: hoverHandler.hovered
 
@@ -49,6 +50,7 @@ Rectangle {
         sourceSize.height: params.height
         fillMode: Image.PreserveAspectCrop
         source: Qt.resolvedUrl(imageUrl)
+        animate: false
 
         HoverHandler { id: hoverHandler }
 

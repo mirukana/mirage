@@ -61,6 +61,7 @@ HGridLayout {
         avatarUrl: accountInfo.avatar_url
         imageUrl: fileDialog.selectedFile || fileDialog.file || defaultImageUrl
         toolTipImageUrl: ""
+        animate: true  // note: matrix doesn't actually support gif avatars
 
         Layout.alignment: Qt.AlignHCenter
 
