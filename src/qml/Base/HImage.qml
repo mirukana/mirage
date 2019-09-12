@@ -38,22 +38,22 @@ Image {
             property var pr: frameCount
             onPrChanged: print(source, pr)
 
-            property bool userPaused: false
+            property bool userPaused: ! window.settings.autoPlayGIF
 
             TapHandler {
                 onTapped: parent.userPaused = ! parent.userPaused
             }
 
             HIcon {
+                anchors.centerIn: parent
                 svgName: "play"
                 colorize: "transparent"
-                anchors.centerIn: parent
                 dimension: Math.min(
                     parent.width - theme.spacing * 2,
                     parent.height - theme.spacing * 2,
                     theme.controls.image.maxPauseIndicatorSize,
                 )
-                scale: parent.paused ? 1 : 0
+                scale: parent.status == Image.Ready && parent.paused ? 1 : 0
                 visible: scale > 0
 
                 Behavior on scale { HNumberAnimation { overshoot: 4 } }

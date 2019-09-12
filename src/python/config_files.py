@@ -106,6 +106,7 @@ class UISettings(JSONConfigFile):
     async def default_data(self) -> JsonData:
         return {
             "alertOnMessageForMsec": 4000,
+            "autoPlayGIF": True,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "theme": "Default.qpl",
