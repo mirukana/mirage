@@ -176,6 +176,9 @@ controls:
         color background: colors.inputBackground
         color foreground: colors.accentBackground
 
+    image:
+        int maxPauseIndicatorSize: 64
+
     avatar:
         int size:        baseElementsHeight
         int radius:      theme.radius
