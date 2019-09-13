@@ -112,7 +112,9 @@ Row {
                 text: theme.chat.message.styleInclude +
                       eventContent.eventText +
                       // time
-                      " " +
+                      // for some reason, if there's only one space,
+                      // times will be on their own lines most of the time.
+                      "  " +
                       "<font size=" + theme.fontSize.small +
                       "px color=" + theme.chat.message.date + '>' +
                       eventTime +
