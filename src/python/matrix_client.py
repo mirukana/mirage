@@ -624,6 +624,11 @@ class MatrixClient(nio.AsyncClient):
         await self.register_nio_event(room, ev, content=co)
 
 
+    async def onRoomMessageUnknown(self, room, ev) -> None:
+        co = "%1 sent a message this client doesn't understand."
+        await self.register_nio_event(room, ev, content=co)
+
+
     async def onRoomCreateEvent(self, room, ev) -> None:
         co = "%1 allowed users on other matrix servers to join this room." \
              if ev.federate else \
