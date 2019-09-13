@@ -58,11 +58,13 @@ Rectangle {
             id: avatarToolTip
             visible: toolTipImageUrl && hoverHandler.hovered
             delay: 1000
+            backgroundColor: theme.controls.avatar.hoveredImage.background
 
             readonly property int dimension: Math.min(
                 mainUI.width / 1.25,
                 mainUI.height / 1.25,
-                theme.controls.avatar.hoveredSize + background.border.width * 2
+                theme.controls.avatar.hoveredImage.size +
+                background.border.width * 2,
             )
 
             contentItem: HImage {

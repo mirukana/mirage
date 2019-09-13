@@ -9,6 +9,7 @@ ToolTip {
 
 
     property alias label: label
+    property alias backgroundColor: background.color
 
 
     background: Rectangle {

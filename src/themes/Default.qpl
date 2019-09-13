@@ -182,7 +182,10 @@ controls:
     avatar:
         int size:        baseElementsHeight
         int radius:      theme.radius
-        int hoveredSize: 192
+
+        hoveredImage:
+            int size: 192
+            color background: hsluv(0, 0, 0, 0.4)
 
         background:
             int saturation: colors.saturation + 10
