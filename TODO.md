@@ -15,7 +15,6 @@
 - Fixes
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
-  - Mouse wheel scrolling speed in event list
 
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E
@@ -36,6 +35,7 @@
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
   - Indeterminate progress bar
+  - `smartVerticalFlick()` gradual acceleration
 
   - Message selection
     - Copy to X11 selection

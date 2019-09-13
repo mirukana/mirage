@@ -170,7 +170,7 @@ Rectangle {
                     eventList,
                     200 * Qt.styleHints.wheelScrollLines *
                     (wheel.angleDelta.y < 0 ? 1 : -1),
-                    3
+                    2,
                 )
             }
         }
