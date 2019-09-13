@@ -92,8 +92,12 @@ Row {
                 // horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
                 horizontalAlignment: Text.AlignLeft
 
-                function selectAllTextPlus() {
-                    contentLabel.selectAllTextPlus()
+                function selectAllText() {
+                    // select the sender name, body and date
+                    container.clearSelection()
+                    nameLabel.selectAll()
+                    contentLabel.selectAll()
+                    contentLabel.updateContainerSelectedTexts()
                 }
 
                 HoverHandler { id: nameHover }
@@ -136,14 +140,6 @@ Row {
                         contentLabel.length -
                         eventTime.length - 1  // - 1: separating space
                     )
-                    contentLabel.updateContainerSelectedTexts()
-                }
-
-                function selectAllTextPlus() {
-                    // select the sender name, body and date
-                    container.clearSelection()
-                    nameLabel.selectAll()
-                    contentLabel.selectAll()
                     contentLabel.updateContainerSelectedTexts()
                 }
 
