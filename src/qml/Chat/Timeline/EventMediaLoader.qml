@@ -4,6 +4,7 @@ import "../../utils.js" as Utils
 
 HLoader {
     id: loader
+    x: eventContent.spacing
 
 
     enum Type { Page, File, Image, Video, Audio }
@@ -56,9 +57,17 @@ HLoader {
         if (type === EventMediaLoader.Type.Image) {
             var file  = "EventImage.qml"
             var props = { source: previewUrl, fullSource: mediaUrl }
-        } else {
-            return
-        }
+
+        } else if (type === EventMediaLoader.Type.File) {
+            var file  = "EventFile.qml"
+            var props = {
+                thumbnailUrl: previewUrl,
+                fileUrl:      mediaUrl,
+                fileTitle:    info.media_title,
+                fileSize:     info.media_size,
+            }
+
+        } else { return }
 
         loader.setSource(file, props)
     }

@@ -3,7 +3,6 @@ import "../../Base"
 
 HImage {
     id: image
-    x: eventContent.spacing
     sourceSize.width: theme.chat.message.thumbnailWidth
     sourceSize.height: theme.chat.message.thumbnailWidth
     width: Math.min(
