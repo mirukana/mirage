@@ -196,14 +196,12 @@ class MatrixClient(nio.AsyncClient):
             client_id        = f"echo-{uuid}",
             event_id         = "",
             date             = datetime.now(),
+            sender_id        = self.user_id,
+            sender_name      = our_info.display_name,
+            sender_avatar    = our_info.avatar_url,
             content          = echo_body,
-            inline_content   = HTML_FILTER.filter_inline(echo_body),
             is_local_echo    = True,
             local_event_type = event_type,
-
-            sender_id     = self.user_id,
-            sender_name   = our_info.display_name,
-            sender_avatar = our_info.avatar_url,
         )
         for user_id in self.models[Account]:
             if user_id in self.models[Member, room_id]:
@@ -497,12 +495,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def register_nio_event(
-        self,
-        room:           nio.MatrixRoom,
-        ev:             nio.Event,
-        content:        str,
-        type_specifier: TypeSpecifier = TypeSpecifier.none,
-        **fields,
+        self, room: nio.MatrixRoom, ev: nio.Event, **fields,
     ) -> None:
 
         await self.register_nio_room(room)
@@ -518,23 +511,16 @@ class MatrixClient(nio.AsyncClient):
 
         # Create Event ModelItem
         item = Event(
-            source         = ev,
-            client_id      = ev.event_id,
-            event_id       = ev.event_id,
-            content        = content,
-            inline_content = HTML_FILTER.filter_inline(content),
+            source        = ev,
+            client_id     = ev.event_id,
+            event_id      = ev.event_id,
             date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
-
             sender_id     = ev.sender,
             sender_name   = sender_name,
             sender_avatar = sender_avatar,
-
-            type_specifier = type_specifier,
-
             target_id     = target_id,
             target_name   = target_name,
             target_avatar = target_avatar,
-
             **fields,
         )
 
@@ -639,7 +625,9 @@ class MatrixClient(nio.AsyncClient):
         await self.register_nio_event(
             room,
             ev,
-            content          = ev.url,
+            content          = "",
+            inline_content   = ev.body,
+            media_url        = ev.url,
             media_title      = ev.body,
             media_width      = info.get("w") or 0,
             media_height     = info.get("h") or 0,

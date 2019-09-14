@@ -109,16 +109,16 @@ class TypeSpecifier(AutoStrEnum):
 
 @dataclass
 class Event(ModelItem):
-    source:         Optional[nio.Event] = field()
-    client_id:      str                 = field()
-    event_id:       str                 = field()
-    content:        str                 = field()
-    inline_content: str                 = field()
-    date:           datetime            = field()
+    source:        Optional[nio.Event] = field()
+    client_id:     str                 = field()
+    event_id:      str                 = field()
+    date:          datetime            = field()
+    sender_id:     str                 = field()
+    sender_name:   str                 = field()
+    sender_avatar: str                 = field()
 
-    sender_id:     str = field()
-    sender_name:   str = field()
-    sender_avatar: str = field()
+    content:        str = ""
+    inline_content: str = ""
 
     type_specifier: TypeSpecifier = TypeSpecifier.none
 
@@ -129,6 +129,7 @@ class Event(ModelItem):
     is_local_echo:    bool = False
     local_event_type: str  = ""
 
+    media_url:      str = ""
     media_title:    str = ""
     media_width:    int = 0
     media_height:   int = 0
@@ -141,7 +142,8 @@ class Event(ModelItem):
     thumbnail_height: int = 0
 
     def __post_init__(self) -> None:
-        self.inline_content = HTML_FILTER.filter_inline(self.content)
+        if not self.inline_content:
+            self.inline_content = HTML_FILTER.filter_inline(self.content)
 
 
     def __lt__(self, other: "Event") -> bool:
