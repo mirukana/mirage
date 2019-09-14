@@ -55,7 +55,7 @@ HLoader {
     onPreviewUrlChanged: {
         if (type === EventMediaLoader.Type.Image) {
             var file  = "EventImage.qml"
-            var props = { source: previewUrl }
+            var props = { source: previewUrl, fullSource: mediaUrl }
         } else {
             return
         }

@@ -1,10 +1,12 @@
 - Media
   - Caching
   - Downloading
+  - Uploading (+local echo)
   - GIF thumbnails: load the real animated image
   - Files, links, video, audio
   - Encrypted media
   - Loading animation
+  - Copy thumbnail URL in context menu?
 
 - RoomMessageNotice
 

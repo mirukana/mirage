@@ -12,15 +12,20 @@ HImage {
         theme.chat.message.thumbnailWidth,
     )
 
+
+    // source = thumbnail, fullSource = full original image
+    property url fullSource: source
+
+
     TapHandler {
-        onTapped: if (! image.animated) Qt.openUrlExternally(image.source)
-        onDoubleTapped: Qt.openUrlExternally(image.source)
+        onTapped: if (! image.animated) Qt.openUrlExternally(image.fullSource)
+        onDoubleTapped: Qt.openUrlExternally(image.fullSource)
     }
 
     HoverHandler {
         id: hover
         onHoveredChanged:
-            eventContent.hoveredImage = hovered ? image.source : ""
+            eventContent.hoveredImage = hovered ? image.fullSource : ""
     }
 
     MouseArea {
