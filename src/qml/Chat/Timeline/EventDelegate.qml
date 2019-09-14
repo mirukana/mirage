@@ -14,11 +14,14 @@ Column {
         theme.spacing * 2
 
 
+    enum Media { Page, File, Image, Video, Audio }
+
+    property var hoveredMediaTypeUrl: []
+
     // Remember timeline goes from newest message at index 0 to oldest
     property var previousItem: eventList.model.get(model.index + 1)
     property var nextItem: eventList.model.get(model.index - 1)
     readonly property QtObject currentItem: model
-
     property int modelIndex: model.index
     onModelIndexChanged: {
         previousItem = eventList.model.get(model.index + 1)
@@ -47,6 +50,18 @@ Column {
 
     readonly property bool unselectableNameLine:
         hideNameLine && ! (onRight && ! combine)
+
+    readonly property int cursorShape:
+        eventContent.hoveredLink || hoveredMediaTypeUrl.length > 0 ?
+        Qt.PointingHandCursor :
+
+        eventContent.hoveredSelectable ? Qt.IBeamCursor :
+
+        Qt.ArrowCursor
+
+    // Needed because of eventList's MouseArea which steals the
+    // HSelectableLabel's MouseArea hover events
+    onCursorShapeChanged: eventList.cursorShape = cursorShape
 
 
     function json() {
@@ -84,8 +99,8 @@ Column {
     TapHandler {
         acceptedButtons: Qt.RightButton
         onTapped: {
+            contextMenu.media = eventDelegate.hoveredMediaTypeUrl
             contextMenu.link  = eventContent.hoveredLink
-            contextMenu.image = eventContent.hoveredImage
             contextMenu.popup()
         }
     }
@@ -93,17 +108,36 @@ Column {
     HMenu {
         id: contextMenu
 
+        property var media: []
         property string link: ""
-        property string image: ""
 
-        onClosed: { link = ""; image = "" }
+        onClosed: { media = []; link = "" }
 
         HMenuItem {
-            id: copyImage
+            id: copyMedia
             icon.name: "copy-link"
-            text: qsTr("Copy image address")
-            visible: Boolean(contextMenu.image)
-            onTriggered: Utils.copyToClipboard(contextMenu.image)
+            text:
+                contextMenu.media.length < 1 ? "" :
+
+                contextMenu.media[0] === EventDelegate.Media.Page ?
+                qsTr("Copy page address") :
+
+                contextMenu.media[0] === EventDelegate.Media.File ?
+                qsTr("Copy file address") :
+
+                contextMenu.media[0] === EventDelegate.Media.Image ?
+                qsTr("Copy image address") :
+
+                contextMenu.media[0] === EventDelegate.Media.Video ?
+                qsTr("Copy video address") :
+
+                contextMenu.media[0] === EventDelegate.Media.Audio ?
+                qsTr("Copy audio address") :
+
+                qsTr("Copy media address")
+
+            visible: Boolean(text)
+            onTriggered: Utils.copyToClipboard(contextMenu.media[1])
         }
 
         HMenuItem {
@@ -117,7 +151,7 @@ Column {
         HMenuItem {
             icon.name: "copy-text"
             text: qsTr("Copy text")
-            visible: enabled || (! copyLink.visible && ! copyImage.visible)
+            visible: enabled || (! copyLink.visible && ! copyMedia.visible)
             enabled: Boolean(selectableLabelContainer.joinedSelection)
             onTriggered:
                 Utils.copyToClipboard(selectableLabelContainer.joinedSelection)

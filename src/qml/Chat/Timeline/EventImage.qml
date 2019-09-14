@@ -17,19 +17,14 @@ HImage {
 
 
     TapHandler {
-        onTapped: if (! image.animated) Qt.openUrlExternally(image.fullSource)
-        onDoubleTapped: Qt.openUrlExternally(image.fullSource)
+        onTapped: if (! image.animated) Qt.openUrlExternally(fullSource)
+        onDoubleTapped: Qt.openUrlExternally(fullSource)
     }
 
     HoverHandler {
         id: hover
         onHoveredChanged:
-            eventContent.hoveredImage = hovered ? image.fullSource : ""
-    }
-
-    MouseArea {
-        anchors.fill: image
-        acceptedButtons: Qt.NoButton
-        cursorShape: Qt.PointingHandCursor
+            eventDelegate.hoveredMediaTypeUrl =
+                hovered ? [EventDelegate.Media.Image, fullSource] : []
     }
 }

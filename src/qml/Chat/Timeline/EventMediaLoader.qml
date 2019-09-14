@@ -7,8 +7,6 @@ HLoader {
     x: eventContent.spacing
 
 
-    enum Type { Page, File, Image, Video, Audio }
-
     property QtObject info
     property url mediaUrl
 
@@ -30,35 +28,35 @@ HLoader {
     readonly property int type: {
         let main_type = info.media_mime.split("/")[0].toLowerCase()
 
-        if (main_type === "image") return EventMediaLoader.Type.Image
-        if (main_type === "video") return EventMediaLoader.Type.Video
-        if (main_type === "audio") return EventMediaLoader.Type.Audio
+        if (main_type === "image") return EventDelegate.Media.Image
+        if (main_type === "video") return EventDelegate.Media.Video
+        if (main_type === "audio") return EventDelegate.Media.Audio
 
         if (info.event_type === "RoomMessageFile")
-            return EventMediaLoader.Type.File
+            return EventDelegate.Media.File
 
         let ext = Utils.urlExtension(mediaUrl)
 
-        if (imageExtensions.includes(ext)) return EventMediaLoader.Type.Image
-        if (videoExtensions.includes(ext)) return EventMediaLoader.Type.Video
-        if (audioExtensions.includes(ext)) return EventMediaLoader.Type.Audio
+        if (imageExtensions.includes(ext)) return EventDelegate.Media.Image
+        if (videoExtensions.includes(ext)) return EventDelegate.Media.Video
+        if (audioExtensions.includes(ext)) return EventDelegate.Media.Audio
 
-        return EventMediaLoader.Type.Page
+        return EventDelegate.Media.Page
     }
 
     readonly property url previewUrl: (
-        type === EventMediaLoader.Type.File ||
-        type === EventMediaLoader.Type.Image ?
+        type === EventDelegate.Media.File ||
+        type === EventDelegate.Media.Image ?
         info.thumbnail_url : ""
     ) || mediaUrl
 
 
     onPreviewUrlChanged: {
-        if (type === EventMediaLoader.Type.Image) {
+        if (type === EventDelegate.Media.Image) {
             var file  = "EventImage.qml"
             var props = { source: previewUrl, fullSource: mediaUrl }
 
-        } else if (type === EventMediaLoader.Type.File) {
+        } else if (type === EventDelegate.Media.File) {
             var file  = "EventFile.qml"
             var props = {
                 thumbnailUrl: previewUrl,

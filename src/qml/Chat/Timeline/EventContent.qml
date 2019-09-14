@@ -7,26 +7,16 @@ Row {
     id: eventContent
     spacing: theme.spacing / 1.25
 
+
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date, false)
 
     readonly property string hoveredLink:
         nameLabel.hoveredLink || contentLabel.hoveredLink
 
-    property string hoveredImage: ""
+    readonly property bool hoveredSelectable:
+        nameHover.hovered || contentHover.hovered
 
-    readonly property int cursorShape:
-        hoveredLink || hoveredImage               ? Qt.PointingHandCursor :
-        nameHover.hovered || contentHover.hovered ? Qt.IBeamCursor :
-        Qt.ArrowCursor
-
-
-    // Needed because of eventList's MouseArea which steals the
-    // HSelectableLabel's MouseArea hover events
-    onCursorShapeChanged: eventList.cursorShape = cursorShape
-
-
-    HoverHandler { id: hover }
 
     Item {
         width: hideAvatar ? 0 : 58

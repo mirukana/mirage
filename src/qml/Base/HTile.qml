@@ -71,7 +71,8 @@ HButton {
 
 
     TapHandler {
+        enabled: contextMenu.count > 0
         acceptedButtons: Qt.RightButton
-        onTapped: if (contextMenu.count > 0) contextMenu.popup()
+        onTapped: contextMenu.popup()
     }
 }

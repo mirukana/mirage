@@ -8,6 +8,12 @@ HTile {
         theme.chat.message.thumbnailWidth,
     )
 
+    onClicked: Qt.openUrlExternally(fileUrl)
+
+    onHoveredChanged:
+        eventDelegate.hoveredMediaTypeUrl =
+            hovered ? [EventDelegate.Media.File, fileUrl] : []
+
 
     property url thumbnailUrl
     property url fileUrl
@@ -22,17 +28,5 @@ HTile {
 
     image: HIcon {
         svgName: "download"
-    }
-
-
-    TapHandler {
-        acceptedButtons: Qt.LeftButton
-        onTapped: Qt.openUrlExternally(file.fileUrl)
-    }
-
-    HoverHandler {
-        id: hover
-        onHoveredChanged:
-            eventContent.hoveredImage = hovered ? file.fileUrl : ""
     }
 }
