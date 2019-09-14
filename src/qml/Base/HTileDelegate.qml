@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 HTile {
     id: tile
     onActivated: view.currentIndex = model.index
-    onClicked: {
+    onLeftClicked: {
         view.highlightRangeMode    = ListView.NoHighlightRange
         view.highlightMoveDuration = 0
         activated()
@@ -30,10 +30,5 @@ HTile {
         running: true
         // Component.onCompleted won't work for this
         onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.RightButton
-        onTapped: if (contextMenu.count > 0) contextMenu.popup()
     }
 }

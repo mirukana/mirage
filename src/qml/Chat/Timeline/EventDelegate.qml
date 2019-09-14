@@ -76,6 +76,12 @@ Column {
         null, 4)
     }
 
+    function openContextMenu() {
+        contextMenu.media = eventDelegate.hoveredMediaTypeUrl
+        contextMenu.link  = eventContent.hoveredLink
+        contextMenu.popup()
+    }
+
 
     Daybreak {
         visible: dayBreak
@@ -98,11 +104,7 @@ Column {
 
     TapHandler {
         acceptedButtons: Qt.RightButton
-        onTapped: {
-            contextMenu.media = eventDelegate.hoveredMediaTypeUrl
-            contextMenu.link  = eventContent.hoveredLink
-            contextMenu.popup()
-        }
+        onTapped: openContextMenu()
     }
 
     HMenu {

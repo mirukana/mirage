@@ -4,6 +4,9 @@ import QtQuick.Layouts 1.12
 HButton {
     id: tile
 
+    signal leftClicked()
+    signal rightClicked()
+
     default property var additionalItems: []
 
     readonly property alias title: title
@@ -69,10 +72,16 @@ HButton {
         children: [image, details].concat(additionalItems)
     }
 
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onTapped: leftClicked()
+    }
 
     TapHandler {
-        enabled: contextMenu.count > 0
         acceptedButtons: Qt.RightButton
-        onTapped: contextMenu.popup()
+        onTapped: {
+            rightClicked()
+            if (contextMenu.count > 0) contextMenu.popup()
+        }
     }
 }

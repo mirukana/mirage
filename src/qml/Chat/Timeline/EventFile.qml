@@ -8,7 +8,8 @@ HTile {
         theme.chat.message.thumbnailWidth,
     )
 
-    onClicked: Qt.openUrlExternally(fileUrl)
+    onLeftClicked: Qt.openUrlExternally(fileUrl)
+    onRightClicked: eventDelegate.openContextMenu()
 
     onHoveredChanged:
         eventDelegate.hoveredMediaTypeUrl =
