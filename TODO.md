@@ -11,6 +11,11 @@
   - GIF thumbnails: load the real animated image
   - Copy thumbnail URL in context menu?
 
+  - Refactor EventContent
+    - No background/padding around medias
+
+  - Copy to X11 selection with new CppUtils class
+
 - RoomMessageNotice
 
 - Refactoring
@@ -53,8 +58,6 @@
   - Indeterminate progress bar
   - `smartVerticalFlick()` gradual acceleration
 
-  - Message selection
-    - Copy to X11 selection
   - Link previews
     - Support showing images at the place they should be instead of always
       at the end of the message
@@ -182,7 +185,6 @@
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition
-  - Room subtitle: show things like "*Image*" instead of blank, etc
   - Live-reloading accounts.json
 
 - nio
