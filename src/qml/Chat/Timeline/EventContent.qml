@@ -105,6 +105,7 @@ Row {
 
             HSelectableLabel {
                 id: contentLabel
+                visible: Boolean(eventContent.eventText)
                 width: parent.width
                 container: selectableLabelContainer
                 index: model.index

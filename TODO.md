@@ -1,9 +1,12 @@
 - Media
   - Caching
   - Downloading
+  - GIF thumbnails: load the real animated image
   - Files, links, video, audio
   - Encrypted media
   - Loading animation
+
+- RoomMessageNotice
 
 - Refactoring
   - Room header elide detection
