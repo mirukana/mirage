@@ -2,7 +2,6 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
-from urllib.parse import urlparse
 
 import lxml  # nosec
 
@@ -130,6 +129,17 @@ class Event(ModelItem):
     is_local_echo:    bool = False
     local_event_type: str  = ""
 
+    media_title:    str = ""
+    media_width:    int = 0
+    media_height:   int = 0
+    media_duration: int = 0
+    media_size:     int = 0
+    media_mime:     str = ""
+
+    thumbnail_url:    str = ""
+    thumbnail_width:  int = 0
+    thumbnail_height: int = 0
+
     def __post_init__(self) -> None:
         self.inline_content = HTML_FILTER.filter_inline(self.content)
 
@@ -149,27 +159,14 @@ class Event(ModelItem):
         return self.local_event_type or type(self.source).__name__
 
     @property
-    def preview_links(self) -> List[Tuple[str, str]]:
+    def links(self) -> List[str]:
         if not self.content.strip():
             return []
 
-        links = [
-            (self._get_preview_type(link[0], link[2]), link[2])
-            for link in lxml.html.iterlinks(self.content)
-        ]
+        if isinstance(self.source, nio.RoomMessageMedia):
+            return [self.thumbnail_url or self.content]
 
-        return [l for l in links if l[0] != "page"]   # TODO
-
-    @staticmethod
-    def _get_preview_type(el: lxml.html.HtmlElement, link: str) -> str:
-        path = urlparse(link).path.lower()
-
-        for ext in ("jpg", "jpeg", "png", "gif", "bmp", "webp", "tiff", "svg"):
-            if el.tag == "img" or path.endswith(ext):
-                return "image"
-
-        return "page"
-
+        return [link[2] for link in lxml.html.iterlinks(self.content)]
 
 
 @dataclass

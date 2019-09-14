@@ -502,6 +502,7 @@ class MatrixClient(nio.AsyncClient):
         ev:             nio.Event,
         content:        str,
         type_specifier: TypeSpecifier = TypeSpecifier.none,
+        **fields,
     ) -> None:
 
         await self.register_nio_room(room)
@@ -533,6 +534,8 @@ class MatrixClient(nio.AsyncClient):
             target_id     = target_id,
             target_name   = target_name,
             target_avatar = target_avatar,
+
+            **fields,
         )
 
         # Add the Event to model
@@ -627,6 +630,26 @@ class MatrixClient(nio.AsyncClient):
     async def onRoomMessageUnknown(self, room, ev) -> None:
         co = "%1 sent a message this client doesn't understand."
         await self.register_nio_event(room, ev, content=co)
+
+
+    async def onRoomMessageMedia(self, room, ev) -> None:
+        info       = ev.source["content"].get("info", {})
+        thumb_info = info.get("thumbnail_info", {})
+
+        await self.register_nio_event(
+            room,
+            ev,
+            content          = ev.url,
+            media_title      = ev.body,
+            media_width      = info.get("w") or 0,
+            media_height     = info.get("h") or 0,
+            media_duration   = info.get("duration") or 0,
+            media_size       = info.get("size") or 0,
+            media_mime       = info.get("mimetype") or 0,
+            thumbnail_url    = info.get("thumbnail_url") or "",
+            thumbnail_width  = thumb_info.get("w") or 0,
+            thumbnail_height = thumb_info.get("h") or 0,
+        )
 
 
     async def onRoomCreateEvent(self, room, ev) -> None:

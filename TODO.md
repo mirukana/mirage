@@ -170,6 +170,7 @@
   - Live-reloading accounts.json
 
 - nio
+  - RoomMessageMedia info attribute
   - `AsyncClient.share_group_session`: send device batches concurrently
   - Running blocking DB function calls in executor
   - Guard against asyncio OSError Network unreachable

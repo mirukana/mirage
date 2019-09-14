@@ -148,16 +148,14 @@ Row {
 
             Repeater {
                 id: previewLinksRepeater
-                model: previewLinks
+                model: eventDelegate.links
 
                 HLoader {
                     Component.onCompleted: {
-                        if (modelData[0] == "image") {
-                            setSource(
-                                "EventImage.qml",
-                                { source: modelData[1] },
-                            )
-                        }
+                        setSource(
+                            "EventImage.qml",
+                            { source: modelData },
+                        )
                     }
                 }
             }

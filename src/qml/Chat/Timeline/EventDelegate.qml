@@ -47,7 +47,7 @@ Column {
     readonly property bool unselectableNameLine:
         hideNameLine && ! (onRight && ! combine)
 
-    readonly property var previewLinks: model.preview_links
+    readonly property var links: model.links
 
 
     function json() {
