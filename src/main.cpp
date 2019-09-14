@@ -4,6 +4,9 @@
 #include <QQmlComponent>
 #include <QFileInfo>
 #include <QUrl>
+#include <QLocale>
+
+#include "utils.h"
 
 
 int main(int argc, char *argv[]) {
@@ -22,6 +25,8 @@ int main(int argc, char *argv[]) {
 #else
     objectContext->setContextProperty("debugMode", false);
 #endif
+
+    objectContext->setContextProperty("CppUtils", new Utils());
 
     QFileInfo qrcPath(":src/qml/Window.qml");
 

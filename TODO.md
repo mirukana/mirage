@@ -1,11 +1,14 @@
 - Media
   - Caching
   - Downloading
+    - Bottom/top bar
   - Uploading (+local echo)
-  - GIF thumbnails: load the real animated image
+    - Deduplicate uploads
   - Files, links, video, audio
+  - File thumbnails, ask matrix API?
   - Encrypted media
   - Loading animation
+  - GIF thumbnails: load the real animated image
   - Copy thumbnail URL in context menu?
 
 - RoomMessageNotice
