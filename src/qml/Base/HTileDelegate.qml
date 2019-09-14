@@ -4,6 +4,13 @@ import QtQuick.Layouts 1.12
 HTile {
     id: tile
     onActivated: view.currentIndex = model.index
+    onClicked: {
+        view.highlightRangeMode    = ListView.NoHighlightRange
+        view.highlightMoveDuration = 0
+        activated()
+        view.highlightRangeMode    = ListView.ApplyRange
+        view.highlightMoveDuration = theme.animationDuration
+    }
 
 
     signal activated()
@@ -23,17 +30,6 @@ HTile {
         running: true
         // Component.onCompleted won't work for this
         onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.LeftButton
-        onTapped: {
-            view.highlightRangeMode    = ListView.NoHighlightRange
-            view.highlightMoveDuration = 0
-            activated()
-            view.highlightRangeMode    = ListView.ApplyRange
-            view.highlightMoveDuration = theme.animationDuration
-        }
     }
 
     TapHandler {

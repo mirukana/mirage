@@ -24,6 +24,9 @@ Button {
         implicitContentHeight + topPadding + bottomPadding
     )
 
+    // Prevent button from gaining focus and being highlighted on click
+    focusPolicy: Qt.TabFocus
+
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label

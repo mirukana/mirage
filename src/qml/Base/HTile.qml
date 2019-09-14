@@ -38,6 +38,7 @@ HButton {
             HLabel {
                 id: rightInfo
                 font.pixelSize: theme.fontSize.small
+                color: theme.colors.halfDimText
 
                 visible: Layout.maximumWidth > 0
                 Layout.maximumWidth:
@@ -52,6 +53,7 @@ HButton {
             textFormat: Text.StyledText
             font.pixelSize: theme.fontSize.small
             elide: Text.ElideRight
+            color: theme.colors.dimText
 
             visible: Layout.maximumHeight > 0
             Layout.maximumHeight: text ? implicitWidth : 0
