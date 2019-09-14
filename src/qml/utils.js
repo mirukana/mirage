@@ -250,3 +250,9 @@ function copyToClipboard(text) {
     window.pseudoClipboard.selectAll()
     window.pseudoClipboard.copy()
 }
+
+
+function urlExtension(url) {
+    return url.toString().split("/").splice(-1)[0].split("?")[0].split(".")
+              .splice(-1)[0].toLowerCase()
+}

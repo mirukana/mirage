@@ -17,6 +17,7 @@ Column {
     // Remember timeline goes from newest message at index 0 to oldest
     property var previousItem: eventList.model.get(model.index + 1)
     property var nextItem: eventList.model.get(model.index - 1)
+    readonly property QtObject currentItem: model
 
     property int modelIndex: model.index
     onModelIndexChanged: {
@@ -46,8 +47,6 @@ Column {
 
     readonly property bool unselectableNameLine:
         hideNameLine && ! (onRight && ! combine)
-
-    readonly property var links: model.links
 
 
     function json() {

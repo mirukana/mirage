@@ -166,7 +166,7 @@ class Event(ModelItem):
             return []
 
         if isinstance(self.source, nio.RoomMessageMedia):
-            return [self.thumbnail_url or self.content]
+            return [self.media_url]
 
         return [link[2] for link in lxml.html.iterlinks(self.content)]
 

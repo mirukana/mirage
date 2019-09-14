@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import "../utils.js" as Utils
 
 Image {
     id: image
@@ -12,10 +13,7 @@ Image {
 
     property bool animate: true
 
-    readonly property bool animated:
-        image.source.toString()
-        .split("/").splice(-1)[0].split("?")[0].toLowerCase()
-        .endsWith(".gif")
+    readonly property bool animated: Utils.urlExtension(image.source) == "gif"
 
 
     Component {
