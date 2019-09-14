@@ -1,3 +1,10 @@
+- Media
+  - Caching
+  - Downloading
+  - Files, links, video, audio
+  - Encrypted media
+  - Loading animation
+
 - Refactoring
   - Room header elide detection
   - Use HBox for Profile
@@ -13,6 +20,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - GIF glitchy border
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
 

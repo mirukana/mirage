@@ -162,11 +162,11 @@ class Event(ModelItem):
 
     @property
     def links(self) -> List[str]:
-        if not self.content.strip():
-            return []
-
         if isinstance(self.source, nio.RoomMessageMedia):
             return [self.media_url]
+
+        if not self.content.strip():
+            return []
 
         return [link[2] for link in lxml.html.iterlinks(self.content)]
 

@@ -625,16 +625,19 @@ class MatrixClient(nio.AsyncClient):
         await self.register_nio_event(
             room,
             ev,
-            content          = "",
-            inline_content   = ev.body,
-            media_url        = ev.url,
-            media_title      = ev.body,
-            media_width      = info.get("w") or 0,
-            media_height     = info.get("h") or 0,
-            media_duration   = info.get("duration") or 0,
-            media_size       = info.get("size") or 0,
-            media_mime       = info.get("mimetype") or 0,
-            thumbnail_url    = info.get("thumbnail_url") or "",
+            content        = "",
+            inline_content = ev.body,
+            media_url      = nio.Api.mxc_to_http(ev.url),
+            media_title    = ev.body,
+            media_width    = info.get("w") or 0,
+            media_height   = info.get("h") or 0,
+            media_duration = info.get("duration") or 0,
+            media_size     = info.get("size") or 0,
+            media_mime     = info.get("mimetype") or 0,
+
+            thumbnail_url =
+                nio.Api.mxc_to_http(info.get("thumbnail_url") or ""),
+
             thumbnail_width  = thumb_info.get("w") or 0,
             thumbnail_height = thumb_info.get("h") or 0,
         )
