@@ -359,6 +359,9 @@ chat:
 
 
 mediaPlayer:
+    hoverPreview:
+        int maxHeight: 192
+
     progress:
         int height:        8
         color background:  hsluv(0, 0, 0, 0.5)

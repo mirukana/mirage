@@ -97,7 +97,7 @@ HColumnLayout {
             contentItem: VideoPreview {
                 id: preview
                 implicitHeight: Math.min(
-                    window.settings.media.hoverPreviewHeight,
+                    theme.mediaPlayer.hoverPreview.maxHeight,
                     media.height - osd.height - theme.spacing
                 )
                 implicitWidth: Math.min(

@@ -115,7 +115,6 @@ class UISettings(JSONConfigFile):
                 "autoHideOSDAfterMsec": 3000,
                 "defaultVolume": 100,
                 "startMuted": False,
-                "hoverPreviewHeight": 192,
             },
             "keys": {
                 "startPythonDebugger": "Alt+Shift+D",
