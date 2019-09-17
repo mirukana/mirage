@@ -65,6 +65,10 @@ HLoader {
                 fileSize:     info.media_size,
             }
 
+        } else if (type === EventDelegate.Media.Video) {
+            var file  = "EventVideo.qml"
+            var props = { source: mediaUrl }
+
         } else { return }
 
         loader.setSource(file, props)

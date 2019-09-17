@@ -14,6 +14,8 @@ Qt 5.12+, including:
 - qt5-qmake
 - qt5-devel
 
+- qtav
+
 - python3
 - python3-devel
 - olm-python3 >= 3.1

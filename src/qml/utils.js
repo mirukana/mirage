@@ -204,6 +204,26 @@ function formatTime(time, seconds=true) {
 }
 
 
+function formatDuration(milliseconds) {
+    let totalSeconds = milliseconds / 1000
+
+    let hours   = Math.floor(totalSeconds / 3600)
+    let minutes = Math.floor((totalSeconds % 3600) / 60)
+    let seconds = Math.floor(totalSeconds % 60)
+
+    if (seconds < 10) seconds = "0" + seconds
+    if (hours < 1)    return minutes + ":" + seconds
+
+    if (minutes < 10) minutes = "0" + minutes
+	return hours + ":" + minutes + ":" + seconds
+}
+
+
+function round(float) {
+    return parseFloat(float.toFixed(2))
+}
+
+
 function getItem(array, mainKey, value) {
     for (let i = 0; i < array.length; i++) {
         if (array[i][mainKey] === value) { return array[i] }

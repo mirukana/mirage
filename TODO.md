@@ -1,5 +1,7 @@
 - Media
   - Caching
+    - What effect will it have on GIFs? Can we set `cache:false` on them or get
+      the frame count once they're cached?
   - Downloading
     - Bottom/top bar
   - Uploading (+local echo)
@@ -10,6 +12,11 @@
   - Loading animation
   - GIF thumbnails: load the real animated image
   - Copy thumbnail URL in context menu?
+
+  - GIFs can use the video player
+  - Video bug: when media is done playing, clicking on progress slider always
+    bring back to the beginning no matter where
+  - Video: missing buttons and small size problems
 
   - Refactor EventContent
     - No background/padding around medias

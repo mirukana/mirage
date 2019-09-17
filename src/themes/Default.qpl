@@ -24,7 +24,7 @@ real disabledElementsOpacity: 0.3
 
 
 fontSize:
-    int smaller: 13  * fontScale
+    int smaller: 13 * fontScale
     int small:   13 * fontScale
     int normal:  16 * fontScale
     int big:     22 * fontScale
@@ -176,6 +176,19 @@ controls:
         color background: colors.inputBackground
         color foreground: colors.accentBackground
 
+    slider:
+        int radius:       2
+        int height:       controls.progressBar.height
+        color background: controls.progressBar.background
+        color foreground: controls.progressBar.foreground
+
+        handle:
+            int size: 20
+            color inside: hsluv(0, 0, 90)
+            color pressedInside: "white"
+            color border: "black"
+            color pressedBorder: colors.strongAccentBackground
+
     image:
         int maxPauseIndicatorSize: 64
 
@@ -320,6 +333,7 @@ chat:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
 
         int thumbnailWidth: 256
+        int videoWidth: 512
 
     daybreak:
         color background: colors.strongBackground
@@ -342,3 +356,17 @@ chat:
 
     composer:
         color background: colors.strongBackground
+
+
+mediaPlayer:
+    progress:
+        int height:        8
+        color background:  hsluv(0, 0, 0, 0.5)
+
+    controls:
+        int iconHeight:        20
+        int volumeSliderWidth: 100
+        int speedSliderWidth:  100
+        color background:      hsluv(
+            colors.hue, colors.saturation * 1.25, colors.intensity * 2, 0.85,
+        )

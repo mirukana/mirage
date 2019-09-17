@@ -32,7 +32,7 @@ ToolTip {
             bottomPadding: topPadding
 
             Layout.maximumWidth: Math.min(
-                mainUI.width / 1.25, theme.fontSize.normal * 0.5 * 75,
+                window.width / 1.25, theme.fontSize.normal * 0.5 * 75,
             )
         }
     }
@@ -41,7 +41,7 @@ ToolTip {
         HNumberAnimation { property: "opacity"; from: 0.0; to: 1.0 }
     }
     exit: Transition {
-        HNumberAnimation { property: "opacity"; from: 1.0; to: 0.0 }
+        HNumberAnimation { property: "opacity"; to: 0.0 }
     }
 
     TapHandler {

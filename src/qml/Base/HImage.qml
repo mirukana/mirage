@@ -34,7 +34,7 @@ Image {
             cache: true  // Needed to allow GIFs to loop
             paused: ! visible || window.hidden || userPaused
 
-            property bool userPaused: ! window.settings.autoPlayGIF
+            property bool userPaused: ! window.settings.media.autoPlayGIF
 
             TapHandler {
                 onTapped: parent.userPaused = ! parent.userPaused
@@ -42,7 +42,7 @@ Image {
 
             HIcon {
                 anchors.centerIn: parent
-                svgName: "play"
+                svgName: "play-overlay"
                 colorize: "transparent"
                 dimension: Math.min(
                     parent.width - theme.spacing * 2,

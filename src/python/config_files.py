@@ -7,8 +7,6 @@ from typing import Any, Dict
 
 import aiofiles
 
-import pyotherside
-
 from .backend import Backend
 from .theme_parser import convert_to_qml
 from .utils import dict_update_recursive
@@ -106,11 +104,19 @@ class UISettings(JSONConfigFile):
     async def default_data(self) -> JsonData:
         return {
             "alertOnMessageForMsec": 4000,
-            "autoPlayGIF": True,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "theme": "Default.qpl",
             "writeAliases": {},
+            "media": {
+                "autoLoad": True,
+                "autoPlay": False,
+                "autoPlayGIF": True,
+                "autoHideOSDAfterMsec": 3000,
+                "defaultVolume": 100,
+                "startMuted": False,
+                "hoverPreviewHeight": 192,
+            },
             "keys": {
                 "startPythonDebugger": "Alt+Shift+D",
                 "toggleDebugConsole":  "Alt+Shift+C",

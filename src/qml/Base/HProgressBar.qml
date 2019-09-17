@@ -4,10 +4,13 @@ import QtQuick.Controls 2.12
 ProgressBar {
     id: bar
 
+    property color backgroundColor: theme.controls.progressBar.background
+    property color foregroundColor: theme.controls.progressBar.foreground
+
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: theme.controls.progressBar.height
-        color: theme.controls.progressBar.background
+        color: backgroundColor
     }
 
     contentItem: Item {
@@ -17,7 +20,7 @@ ProgressBar {
         Rectangle {
             width: bar.visualPosition * parent.width
             height: parent.height
-            color: theme.controls.progressBar.foreground
+            color: foregroundColor
         }
     }
 }

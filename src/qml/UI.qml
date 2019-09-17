@@ -12,11 +12,12 @@ Item {
     Component.onCompleted: window.mainUI = mainUI
     Keys.forwardTo: [shortcuts]
 
-    property alias shortcuts: shortcuts
-    property alias sidePane: sidePane
-    property alias pageLoader: pageLoader
-    property alias pressAnimation: pressAnimation
-    property alias debugConsole: debugConsoleLoader.item
+    readonly property alias shortcuts: shortcuts
+    readonly property alias sidePane: sidePane
+    readonly property alias pageLoader: pageLoader
+    readonly property alias pressAnimation: pressAnimation
+    readonly property alias debugConsole: debugConsoleLoader.item
+    readonly property alias fullScreenPopup: fullScreenPopup
 
     SequentialAnimation {
         id: pressAnimation
@@ -144,5 +145,12 @@ Item {
     HLoader {
         id: debugConsoleLoader
         source: debugMode ? "DebugConsole.qml" : ""
+    }
+
+    HPopup {
+        id: fullScreenPopup
+        dim: false
+        width: window.width
+        height: window.height
     }
 }
