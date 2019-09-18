@@ -12,8 +12,7 @@ VideoPlayer {
         theme.chat.message.videoWidth,
     )
 
-    onHoveredChanged: {
+    onHoveredChanged:
         eventDelegate.hoveredMediaTypeUrl =
             hovered ? [EventDelegate.Media.Video, video.source] : []
-    }
 }

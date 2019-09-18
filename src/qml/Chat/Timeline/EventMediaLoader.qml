@@ -69,6 +69,10 @@ HLoader {
             var file  = "EventVideo.qml"
             var props = { source: mediaUrl }
 
+        } else if (type === EventDelegate.Media.Audio) {
+            var file  = "EventAudio.qml"
+            var props = { source: mediaUrl }
+
         } else { return }
 
         loader.setSource(file, props)

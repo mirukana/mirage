@@ -17,6 +17,7 @@
   - Video bug: when media is done playing, clicking on progress slider always
     bring back to the beginning no matter where
   - Video: missing buttons and small size problems
+  - Audio: online playback is buggy, must download+play file
 
   - Refactor EventContent
     - No background/padding around medias

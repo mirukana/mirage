@@ -334,6 +334,7 @@ chat:
 
         int thumbnailWidth: 256
         int videoWidth: 512
+        int audioWidth: 512
 
     daybreak:
         color background: colors.strongBackground

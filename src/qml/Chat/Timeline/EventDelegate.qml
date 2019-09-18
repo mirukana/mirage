@@ -130,6 +130,12 @@ Column {
                 contextMenu.media[0] === EventDelegate.Media.Image ?
                 qsTr("Copy image address") :
 
+                contextMenu.media[0] === EventDelegate.Media.Video ?
+                qsTr("Copy video address") :
+
+                contextMenu.media[0] === EventDelegate.Media.Audio ?
+                qsTr("Copy audio address") :
+
                 qsTr("Copy media address")
 
             visible: Boolean(text)

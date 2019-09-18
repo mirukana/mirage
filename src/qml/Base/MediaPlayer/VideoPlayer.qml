@@ -9,7 +9,7 @@ Video {
     volume: window.settings.media.defaultVolume / 100
     muted: window.settings.media.startMuted
     implicitWidth: fullScreen ? window.width : 640
-    implicitHeight: fullScreen ? window.height : (width / savedAspectRatio)
+    implicitHeight: fullScreen ? window.height : (width / osd.savedAspectRatio)
 
 
     property bool hovered: false
@@ -18,11 +18,6 @@ Video {
     property int oldVisibility: Window.Windowed
     property QtObject oldParent: video.parent
 
-    property real savedAspectRatio: 16 / 9
-
-
-    onSourceAspectRatioChanged:
-        if (sourceAspectRatio) savedAspectRatio = sourceAspectRatio
 
     onFullScreenChanged: {
         if (fullScreen) {
@@ -69,6 +64,5 @@ Video {
         id: osd
         width: parent.width
         anchors.bottom: parent.bottom
-        enableFullScreen: true
     }
 }

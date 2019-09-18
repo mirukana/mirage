@@ -10,7 +10,8 @@ HColumnLayout {
 
     transform: Scale {
         id: osdScaleTransform
-        yScale: osdHover.hovered ||
+        yScale: audioOnly ||
+                osdHover.hovered ||
                 media.playbackState !== MediaPlayer.PlayingState ||
                 osd.showup ?
                 1 : 0
@@ -20,19 +21,23 @@ HColumnLayout {
     }
 
 
-    property Item media: parent  // QtAV.Video or QtAV.Audio
+    property QtObject media: parent  // QtAV.Video or QtAV.MediaPlayer
+    property bool audioOnly: false
     property bool showup: false
-    property bool enableFullScreen: false
     property bool fullScreen: false
 
+    property real savedAspectRatio: 16 / 9
     property int savedDuration: 0
+    readonly property real aspectRatio: media.sourceAspectRatio || 0
     readonly property int duration: media.duration
     readonly property int boundPosition:
-        Math.min(media.position, savedDuration)
+        savedDuration ?
+        Math.min(media.position, savedDuration) : media.position
 
 
     onShowupChanged: if (showup) osdHideTimer.restart()
     onDurationChanged: if (duration) savedDuration = duration
+    onAspectRatioChanged: if (aspectRatio) savedAspectRatio = aspectRatio
 
 
     function togglePlay() {
@@ -42,7 +47,7 @@ HColumnLayout {
 
     function seekToPosition(pos) {  // pos: 0.0 to 1.0
         if (media.playbackState === MediaPlayer.StoppedState) media.play()
-        if (media.seekable) media.seek(pos * savedDuration)
+        if (media.seekable) media.seek(pos * (savedDuration || boundPosition))
     }
 
 
@@ -72,7 +77,9 @@ HColumnLayout {
         HToolTip {
             id: previewToolTip
             x: timeSlider.mouseArea.mouseX - width / 2
-            visible: preview.implicitWidth >=
+            visible: ! audioOnly &&
+
+                     preview.implicitWidth >=
                      previewLabel.implicitWidth + previewLabel.padding &&
 
                      preview.implicitHeight >=
@@ -101,7 +108,7 @@ HColumnLayout {
                     media.height - osd.height - theme.spacing
                 )
                 implicitWidth: Math.min(
-                    implicitHeight * media.savedAspectRatio,
+                    implicitHeight * savedAspectRatio,
                     media.width - theme.spacing,
                 )
                 file: media.source
@@ -217,16 +224,16 @@ HColumnLayout {
             }
 
             OSDLabel {
-                text: boundPosition && savedDuration ?
+                text:  boundPosition && savedDuration ?
 
-                      qsTr("%1 / %2")
-                      .arg(Utils.formatDuration(boundPosition))
-                      .arg(Utils.formatDuration(savedDuration)) :
+                       qsTr("%1 / %2")
+                       .arg(Utils.formatDuration(boundPosition))
+                       .arg(Utils.formatDuration(savedDuration)) :
 
-                      boundPosition || savedDuration ?
-                      Utils.formatDuration(boundPosition || savedDuration) :
+                       boundPosition || savedDuration ?
+                       Utils.formatDuration(boundPosition || savedDuration) :
 
-                      ""
+                       ""
             }
 
             HSpacer {}
@@ -258,6 +265,7 @@ HColumnLayout {
 
             OSDButton {
                 id: fullScreenButton
+                visible: ! audioOnly
                 icon.name: "player-fullscreen" + (fullScreen ? "-exit" : "")
                 toolTip.text: fullScreen ?
                               qsTr("Exit fullscreen") : qsTr("Fullscreen")
