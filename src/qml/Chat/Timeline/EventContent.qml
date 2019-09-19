@@ -11,7 +11,7 @@ HRowLayout {
 
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date, false)
-    readonly property bool pureMedia: ! eventText && previewLinksRepeater.count
+    readonly property bool pureMedia: ! eventText && linksRepeater.count
 
     readonly property string hoveredLink: contentLabel.hoveredLink
     readonly property bool hoveredSelectable: contentHover.hovered
@@ -20,14 +20,18 @@ HRowLayout {
         width - (avatarWrapper.visible ? avatarWrapper.width : 0) -
         totalSpacing
 
+    readonly property int xOffset:
+        onRight ?
+        contentLabel.width - contentLabel.paintedWidth -
+        contentLabel.leftPadding - contentLabel.rightPadding :
+        0
 
-            TapHandler {
-                enabled: debugMode
-                onDoubleTapped:
-                    Utils.debug(eventContent, con => { con.runJS("json()") })
-            }
 
-
+    TapHandler {
+        enabled: debugMode
+        onDoubleTapped:
+            Utils.debug(eventContent, con => { con.runJS("json()") })
+    }
 
     Item {
         id: avatarWrapper
@@ -93,12 +97,7 @@ HRowLayout {
                  "&nbsp;<font size=" + theme.fontSize.small +
                  "px>⏳</font>" : "")
 
-            transform: Translate {
-                x: onRight ?
-                   contentLabel.width - contentLabel.paintedWidth -
-                   contentLabel.leftPadding - contentLabel.rightPadding :
-                   0
-            }
+            transform: Translate { x: xOffset }
 
             Layout.maximumWidth: Math.min(
                 // 600px with 16px font
@@ -124,7 +123,7 @@ HRowLayout {
                     parent.paintedWidth +
                     parent.leftPadding + parent.rightPadding,
 
-                    previewLinksRepeater.childrenWidth +
+                    linksRepeater.childrenWidth +
                     (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
                 )
                 height: contentColumn.height
@@ -136,12 +135,14 @@ HRowLayout {
         }
 
         HRepeater {
-            id: previewLinksRepeater
+            id: linksRepeater
             model: eventDelegate.currentItem.links
 
             EventMediaLoader {
                 info: eventDelegate.currentItem
                 mediaUrl: modelData
+
+                transform: Translate { x: xOffset }
 
                 Layout.bottomMargin: contentLabel.bottomPadding * multiply
                 Layout.leftMargin: contentLabel.leftPadding * multiply
