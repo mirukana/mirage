@@ -42,6 +42,7 @@ HRowLayout {
         Layout.minimumHeight: collapseAvatar ? 1 : smallAvatar ? 28 : 58
         Layout.maximumWidth: Layout.minimumWidth
         Layout.maximumHeight: Layout.minimumHeight
+        Layout.alignment: Qt.AlignTop
 
         HUserAvatar {
             id: avatar

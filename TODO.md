@@ -19,13 +19,11 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
 
-  - With this as eventText: `https://0x0.st/ztXe.png`, shrinking the window
-    near its minimum size (seen at 262px) makes the image preview
-    left padding wrong
+  - Shrinking the window near its minimum size (seen at 262px) makes
+    image preview position/padding wrong
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - GIF glitchy border
   - Combined pure media events time looks bad
-  - Avatars shouldn't be vertically centered
 
   - Copy to X11 selection with new CppUtils class
 
