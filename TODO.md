@@ -46,6 +46,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - Remove usage of `splice()`
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied

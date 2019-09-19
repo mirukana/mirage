@@ -16,9 +16,12 @@ Window {
     property var target: null
     property alias t: debugConsole.target
 
+    property var history: []
+    property alias his: debugConsole.history
+    property int historyEntry: -1
+
 
     Component.onCompleted: {
-        print(parent)
         mainUI.shortcuts.debugConsole = debugConsole
         commandsView.model.insert(0, {
             input: "target = " + String(target),
@@ -28,14 +31,26 @@ Window {
         visible = true
     }
 
+    onHistoryEntryChanged:
+        inputField.text =
+            historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
+
 
     function runJS(input) {
+        if (history.slice(-1)[0] !== input) history.push(input)
+
         let error = false
 
         try {
-            var output = input.startsWith("j ") ?
-                         JSON.stringify(eval(input.substring(2)), null, 4) :
-                         String(eval(input))
+            if (input.startsWith("j ")) {
+                var output = JSON.stringify(eval(input.substring(2)), null, 4)
+
+            } else {
+                let result = eval(input)
+                var output = result instanceof Array ?
+                             "[" + String(result) + "]" : String(result)
+            }
+
         } catch (err) {
             error = true
             var output = err.toString()
@@ -99,12 +114,18 @@ Window {
         }
 
         HTextField {
+            id: inputField
             focus: true
-            onAccepted: if (text) runJS(text)
+            onAccepted: if (text) { runJS(text); text = "" }
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
             placeholderText: qsTr("Type some JavaScript...")
             font.family: theme.fontFamily.mono
+
+            Keys.onUpPressed:
+                if (historyEntry + 1 < history.length ) historyEntry += 1
+            Keys.onDownPressed:
+                if (historyEntry - 1 >= -1) historyEntry -= 1
 
             Layout.fillWidth: true
 
