@@ -6,8 +6,8 @@
     - Bottom/top bar
   - Uploading (+local echo)
     - Deduplicate uploads
-  - Files, links, video, audio
-  - File thumbnails, ask matrix API?
+  - EventLink
+  - File thumbnails + ask matrix API?
   - Encrypted media
   - Loading animation
   - GIF thumbnails: load the real animated image
@@ -19,8 +19,13 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
 
-  - Refactor EventContent
-    - No background/padding around medias
+  - With this as eventText: `https://0x0.st/ztXe.png`, shrinking the window
+    near its minimum size (seen at 262px) makes the image preview
+    left padding wrong
+  - In the "Leave me" room, "join > Hi > left" aren't combined
+  - GIF glitchy border
+  - Combined pure media events time looks bad
+  - Avatars shouldn't be vertically centered
 
   - Copy to X11 selection with new CppUtils class
 
@@ -41,7 +46,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - GIF glitchy border
+  - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
 

@@ -3,11 +3,6 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HTile {
-    width: Math.min(
-        mainColumn.width - eventContent.spacing * 2,
-        theme.chat.message.thumbnailWidth,
-    )
-
     onLeftClicked: Qt.openUrlExternally(fileUrl)
     onRightClicked: eventDelegate.openContextMenu()
 

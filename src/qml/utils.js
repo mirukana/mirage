@@ -167,6 +167,16 @@ function thumbnailParametersFor(width, height) {
 }
 
 
+function fitSize(width, height, max) {
+    if (width >= height) {
+        let new_width = Math.min(width, max)
+        return Qt.size(new_width, height / (width / new_width))
+    }
+    let new_height = Math.min(height, max)
+    return Qt.size(width / (height / new_height), new_height)
+}
+
+
 function minutesBetween(date1, date2) {
     return ((date2 - date1) / 1000) / 60
 }

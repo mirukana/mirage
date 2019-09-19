@@ -315,6 +315,7 @@ chat:
         string styleSheet:
             "* { white-space: pre-wrap }" +
             "a { color: " + link  + " }" +
+            "p { margin-top: 0 }" +
 
             "code { font-family: " + fontFamily.mono + "; " +
                    "color: "       + code            + " }" +
@@ -327,14 +328,17 @@ chat:
             "h5 { font-size: " + fontSize.small + "px }" +
             "h6 { font-size: " + fontSize.smaller + "px }" +
 
-            ".quote { color: " + quote + " }"
+            ".sender { margin-bottom: " + spacing / 2 + " }" +
+            ".quote  { color: " + quote + " }"
 
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
 
+        // TODO rename
+        int fileMinWidth: 256
         int thumbnailWidth: 256
-        int videoWidth: 512
-        int audioWidth: 512
+        int videoWidth: 640
+        int audioWidth: 320
 
     daybreak:
         color background: colors.strongBackground

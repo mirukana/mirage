@@ -7,10 +7,6 @@ import "../../utils.js" as Utils
 
 VideoPlayer {
     id: video
-    width: fullScreen ? implicitWidth : Math.min(
-        mainColumn.width - eventContent.spacing * 2,
-        theme.chat.message.videoWidth,
-    )
 
     onHoveredChanged:
         eventDelegate.hoveredMediaTypeUrl =

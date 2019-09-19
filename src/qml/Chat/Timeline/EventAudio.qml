@@ -7,10 +7,6 @@ import "../../utils.js" as Utils
 
 AudioPlayer {
     id: audio
-    width: Math.min(
-        mainColumn.width - eventContent.spacing * 2,
-        theme.chat.message.audioWidth,
-    )
 
     HoverHandler {
         onHoveredChanged:

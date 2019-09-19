@@ -9,7 +9,19 @@ Repeater {
         let total = 0
 
         for (let i = 0;  i < repeater.count; i++) {
-            total += repeater.itemAt(i).implicitWidth
+            let item = repeater.itemAt(i)
+            if (item && item.width) total += item.width
+        }
+
+        return total
+    }
+
+    readonly property int childrenWidth: {
+        let total = 0
+
+        for (let i = 0;  i < repeater.count; i++) {
+            let item = repeater.itemAt(i)
+            if (item && item.width) total += item.width
         }
 
         return total

@@ -3,149 +3,173 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-Row {
+HRowLayout {
     id: eventContent
     spacing: theme.spacing / 1.25
+    layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date, false)
+    readonly property bool pureMedia: ! eventText && previewLinksRepeater.count
 
-    readonly property string hoveredLink:
-        nameLabel.hoveredLink || contentLabel.hoveredLink
+    readonly property string hoveredLink: contentLabel.hoveredLink
+    readonly property bool hoveredSelectable: contentHover.hovered
 
-    readonly property bool hoveredSelectable:
-        nameHover.hovered || contentHover.hovered
+    readonly property int messageBodyWidth:
+        width - (avatarWrapper.visible ? avatarWrapper.width : 0) -
+        totalSpacing
 
 
     Item {
-        width: hideAvatar ? 0 : 58
-        height: hideAvatar ? 0 : collapseAvatar ? 1 : smallAvatar ? 28 : 58
-        opacity: hideAvatar || collapseAvatar ? 0 : 1
-        visible: width > 0
+        id: avatarWrapper
+        opacity: collapseAvatar ? 0 : 1
+        visible: ! hideAvatar
+
+        Layout.minimumWidth: 58
+        Layout.minimumHeight: collapseAvatar ? 1 : smallAvatar ? 28 : 58
+        Layout.maximumWidth: Layout.minimumWidth
+        Layout.maximumHeight: Layout.minimumHeight
 
         HUserAvatar {
             id: avatar
             userId: model.sender_id
             displayName: model.sender_name
             avatarUrl: model.sender_avatar
-            width: hideAvatar ? 0 : 58
-            height: hideAvatar ? 0 : collapseAvatar ? 1 : 58
+            width: parent.width
+            height: collapseAvatar ? 1 : 58
         }
     }
 
-    Rectangle {
-        color: isOwn?
-               theme.chat.message.ownBackground :
-               theme.chat.message.background
+    HColumnLayout {
+        id: contentColumn
+        Layout.alignment: Qt.AlignVCenter
 
-        //width: nameLabel.implicitWidth
-        width: Math.min(
-            eventList.width - avatar.width - eventContent.spacing,
-            theme.fontSize.normal * 0.5 * 75,  // 600 with 16px font
+        HSelectableLabel {
+            id: contentLabel
+            container: selectableLabelContainer
+            index: model.index
 
-            Math.max(
-                nameLabel.visible ? (nameLabel.implicitWidth + 1) : 0,
-
-                contentLabel.implicitWidth + 1,
-
-                previewLinksRepeater.count > 0 ?
-                theme.chat.message.thumbnailWidth : 0,
-            )
-        )
-        height: childrenRect.height
-        y: parent.height / 2 - height / 2
-
-        Column {
-            id: mainColumn
-            width: parent.width
-            spacing: theme.spacing / 1.75
             topPadding: theme.spacing / 1.75
             bottomPadding: topPadding
+            leftPadding: eventContent.spacing
+            rightPadding: leftPadding
 
-            HSelectableLabel {
-                id: nameLabel
-                width: parent.width
-                visible: ! hideNameLine
-                container: selectableLabelContainer
-                selectable: ! unselectableNameLine
-                leftPadding: eventContent.spacing
-                rightPadding: leftPadding
+            color: theme.chat.message.body
+            wrapMode: TextEdit.Wrap
+            textFormat: Text.RichText
+            text:
+                // CSS
+                theme.chat.message.styleInclude +
 
-                // This is +0.1 and content is +0 instead of the opposite,
-                // because the eventList is reversed
-                index: model.index + 0.1
+                // Sender name
+                (hideNameLine ? "" : (
+                "<div class='sender'>" +
+                Utils.coloredNameHtml(model.sender_name, model.sender_id) +
+                "</div>")) +
 
-                text: Utils.coloredNameHtml(model.sender_name, model.sender_id)
-                textFormat: Text.RichText
-                wrapMode: Text.Wrap
-                // horizontalAlignment: onRight ? Text.AlignRight : Text.AlignLeft
-                horizontalAlignment: Text.AlignLeft
+                // Message body
+                eventContent.eventText +
 
-                function selectAllText() {
-                    // select the sender name, body and date
-                    container.clearSelection()
-                    nameLabel.selectAll()
-                    contentLabel.selectAll()
-                    contentLabel.updateContainerSelectedTexts()
-                }
+                // Time
+                // For some reason, if there's only one space,
+                // times will be on their own lines most of the time.
+                "  " +
+                "<font size=" + theme.fontSize.small +
+                "px color=" + theme.chat.message.date + '>' +
+                eventTime +
+                "</font>" +
 
-                HoverHandler { id: nameHover }
+                // Local echo icon
+                (model.is_local_echo ?
+                 "&nbsp;<font size=" + theme.fontSize.small +
+                 "px>⏳</font>" : "")
+
+            transform: Translate {
+                x: onRight ?
+                   contentLabel.width - contentLabel.paintedWidth -
+                   contentLabel.leftPadding - contentLabel.rightPadding :
+                   0
             }
 
-            HSelectableLabel {
-                id: contentLabel
-                visible: Boolean(eventContent.eventText)
-                width: parent.width
-                container: selectableLabelContainer
-                index: model.index
-                leftPadding: eventContent.spacing
-                rightPadding: leftPadding
-                bottomPadding: previewLinksRepeater.count > 0 ?
-                               mainColumn.bottomPadding : 0
+            Layout.maximumWidth: Math.min(
+                // 600px with 16px font
+                theme.fontSize.normal * 0.5 * 75,
+                messageBodyWidth - leftPadding - rightPadding,
+            )
 
-                text: theme.chat.message.styleInclude +
-                      eventContent.eventText +
-                      // time
-                      // for some reason, if there's only one space,
-                      // times will be on their own lines most of the time.
-                      "  " +
-                      "<font size=" + theme.fontSize.small +
-                      "px color=" + theme.chat.message.date + '>' +
-                      eventTime +
-                      "</font>" +
-                      // local echo icon
-                      (model.is_local_echo ?
-                       "&nbsp;<font size=" + theme.fontSize.small +
-                       "px>⏳</font>" : "")
-
-                color: theme.chat.message.body
-                wrapMode: Text.Wrap
-                textFormat: Text.RichText
-
-                function selectAllText() {
-                    // Select the message body without the date or name
-                    container.clearSelection()
-                    contentLabel.select(
-                        0,
-                        contentLabel.length -
-                        eventTime.length - 1  // - 1: separating space
-                    )
-                    contentLabel.updateContainerSelectedTexts()
-                }
-
-                HoverHandler { id: contentHover }
+            function selectAllText() {
+                // Select the message body without the date or name
+                container.clearSelection()
+                contentLabel.select(
+                    0,
+                    contentLabel.length -
+                    eventTime.length - 1  // - 1: separating space
+                )
+                contentLabel.updateContainerSelectedTexts()
             }
 
-            Repeater {
-                id: previewLinksRepeater
-                model: eventDelegate.currentItem.links
+            HoverHandler { id: contentHover }
 
-                EventMediaLoader {
-                    info: eventDelegate.currentItem
-                    mediaUrl: modelData
-                }
+            Rectangle {
+                width: Math.max(
+                    parent.paintedWidth +
+                    parent.leftPadding + parent.rightPadding,
+
+                    previewLinksRepeater.childrenWidth +
+                    (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
+                )
+                height: contentColumn.height
+                z: -1
+                color: isOwn?
+                       theme.chat.message.ownBackground :
+                       theme.chat.message.background
+            }
+        }
+
+        HRepeater {
+            id: previewLinksRepeater
+            model: eventDelegate.currentItem.links
+
+            EventMediaLoader {
+                info: eventDelegate.currentItem
+                mediaUrl: modelData
+
+                Layout.bottomMargin: contentLabel.bottomPadding * multiply
+                Layout.leftMargin: contentLabel.leftPadding * multiply
+                Layout.rightMargin: contentLabel.rightPadding * multiply
+
+                Layout.minimumWidth:
+                    type === EventDelegate.Media.File ?
+                    theme.chat.message.fileMinWidth : -1
+
+                Layout.preferredWidth:
+                    type === EventDelegate.Media.Image ?
+                    (item ? item.fitSize.width : 0) :
+
+                    type === EventDelegate.Media.Video ?
+                    theme.chat.message.videoWidth :
+
+                    type === EventDelegate.Media.Audio ?
+                    theme.chat.message.audioWidth :
+
+                    -1
+
+                Layout.maximumWidth:
+                    messageBodyWidth - Layout.leftMargin - Layout.rightMargin
+
+                Layout.maximumHeight:
+                    type === EventDelegate.Media.Image && item ?
+                    Utils.fitSize(
+                        Layout.maximumWidth,
+                        item.fitSize.height,
+                        Layout.maximumWidth
+                    ).height : -1
+
+                readonly property int multiply: pureMedia ? 0 : 1
             }
         }
     }
+
+    HSpacer {}
 }

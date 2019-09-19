@@ -48,9 +48,6 @@ Column {
         onRight ||
         combine
 
-    readonly property bool unselectableNameLine:
-        hideNameLine && ! (onRight && ! combine)
-
     readonly property int cursorShape:
         eventContent.hoveredLink || hoveredMediaTypeUrl.length > 0 ?
         Qt.PointingHandCursor :
@@ -96,7 +93,7 @@ Column {
 
     EventContent {
         id: eventContent
-        x: onRight ? parent.width - width : 0
+        width: parent.width
 
         Behavior on x { HNumberAnimation {} }
     }
