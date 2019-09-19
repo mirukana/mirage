@@ -3,7 +3,8 @@ import "Base"
 import "utils.js" as Utils
 
 HShortcutHandler {
-    property Item flickTarget: Item {}
+    property Item flickTarget
+    property DebugConsole debugConsole
 
     // App
 
@@ -14,9 +15,9 @@ HShortcutHandler {
     }
 
     HShortcut {
-        enabled: debugMode
+        enabled: debugMode && debugConsole
         sequences: settings.keys.toggleDebugConsole
-        onPressed: mainUI.debugConsole.visible = ! mainUI.debugConsole.visible
+        onPressed: debugConsole.visible = ! debugConsole.visible
     }
 
     HShortcut {
@@ -27,18 +28,21 @@ HShortcutHandler {
     // Page scrolling
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollUp
         onPressed: Utils.smartVerticalFlick(flickTarget, -335)
         onHeld: pressed(event)
     }
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollDown
         onPressed: Utils.smartVerticalFlick(flickTarget, 335)
         onHeld: pressed(event)
     }
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollPageUp
         onPressed: Utils.smartVerticalFlick(
             flickTarget, -2.3 * flickTarget.height, 8,
@@ -49,6 +53,7 @@ HShortcutHandler {
     }
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollPageDown
         onPressed: Utils.smartVerticalFlick(
             flickTarget, 2.3 * flickTarget.height, 8,
@@ -58,12 +63,14 @@ HShortcutHandler {
     }
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollToTop
         onPressed: Utils.flickToTop(flickTarget)
         onHeld: pressed(event)
     }
 
     HShortcut {
+        enabled: flickTarget
         sequences: settings.keys.scrollToBottom
         onPressed: Utils.flickToBottom(flickTarget)
         onHeld: pressed(event)

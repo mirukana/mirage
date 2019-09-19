@@ -5,6 +5,7 @@ import QtQuick.Window 2.7
 import QtGraphicalEffects 1.12
 import "Base"
 import "SidePane"
+import "utils.js" as Utils
 
 Item {
     id: mainUI
@@ -16,7 +17,6 @@ Item {
     readonly property alias sidePane: sidePane
     readonly property alias pageLoader: pageLoader
     readonly property alias pressAnimation: pressAnimation
-    readonly property alias debugConsole: debugConsoleLoader.item
     readonly property alias fullScreenPopup: fullScreenPopup
 
     SequentialAnimation {
@@ -32,7 +32,6 @@ Item {
     property bool accountsPresent:
         (modelSources["Account"] || []).length > 0 ||
         py.startupAnyAccountsSaved
-
 
     Shortcuts { id: shortcuts }
 
@@ -140,11 +139,6 @@ Item {
                 duration: theme.animationDuration * 2
             }
         }
-    }
-
-    HLoader {
-        id: debugConsoleLoader
-        source: debugMode ? "DebugConsole.qml" : ""
     }
 
     HPopup {

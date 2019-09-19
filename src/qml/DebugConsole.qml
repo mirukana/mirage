@@ -17,9 +17,11 @@ Window {
     property alias t: debugConsole.target
 
 
-    onTargetChanged: {
+    Component.onCompleted: {
+        print(parent)
+        mainUI.shortcuts.debugConsole = debugConsole
         commandsView.model.insert(0, {
-            input: "t = " + String(target),
+            input: "target = " + String(target),
             output: "",
             error: false,
         })

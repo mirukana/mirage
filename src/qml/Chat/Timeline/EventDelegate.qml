@@ -170,10 +170,8 @@ Column {
             icon.name: "settings"
             text: qsTr("Set as debug console target")
             visible: debugMode
-            onTriggered: {
-                mainUI.debugConsole.target = [eventDelegate, eventContent]
-                mainUI.debugConsole.runJS("t[0].json()")
-            }
+            onTriggered:
+                Utils.debug(eventDelegate, con => { con.runJS("json()") })
         }
     }
 }

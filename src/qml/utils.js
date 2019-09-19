@@ -41,6 +41,11 @@ function makePopup(url, parent=null, properties={}, callback=null,
 }
 
 
+function debug(target, callback=null) {
+    return Utils.makeObject("DebugConsole.qml", target, { target }, callback)
+}
+
+
 function isEmptyObject(obj) {
     return Object.entries(obj).length === 0 && obj.constructor === Object
 }
