@@ -31,6 +31,8 @@ Window {
         visible = true
     }
 
+    property var pr: historyEntry
+    onPrChanged: print("pr changed:", pr)
     onHistoryEntryChanged:
         inputField.text =
             historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
@@ -116,7 +118,7 @@ Window {
         HTextField {
             id: inputField
             focus: true
-            onAccepted: if (text) { runJS(text); text = "" }
+            onAccepted: if (text) { runJS(text); text = ""; historyEntry = -1 }
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
             placeholderText: qsTr("Type some JavaScript...")
