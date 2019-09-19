@@ -21,6 +21,14 @@ HRowLayout {
         totalSpacing
 
 
+            TapHandler {
+                enabled: debugMode
+                onDoubleTapped:
+                    Utils.debug(eventContent, con => { con.runJS("json()") })
+            }
+
+
+
     Item {
         id: avatarWrapper
         opacity: collapseAvatar ? 0 : 1

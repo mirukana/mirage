@@ -165,13 +165,5 @@ Column {
                 {userId: chatPage.userId, roomId: chatPage.roomId},
             )
         }
-
-        HMenuItem {
-            icon.name: "settings"
-            text: qsTr("Set as debug console target")
-            visible: debugMode
-            onTriggered:
-                Utils.debug(eventDelegate, con => { con.runJS("json()") })
-        }
     }
 }
