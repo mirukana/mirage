@@ -3,8 +3,6 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 #include <QFileInfo>
-#include <QUrl>
-#include <QLocale>
 
 #include "utils.h"
 
