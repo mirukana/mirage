@@ -6,20 +6,21 @@ function makeObject(url, parent=null, properties={}, callback=null) {
         if ([Component.Null, Component.Error].includes(status)) {
            console.error("Failed creating component: ", comp.errorString())
 
-        } else if (status == Component.Ready) {
+        } else if (! ready && status === Component.Ready) {
             let incu = comp.incubateObject(parent, properties, Qt.Asynchronous)
 
-            if (incu.status == Component.Ready) {
+            if (incu.status === Component.Ready) {
                 if (callback) callback(incu.object)
+                ready = true
                 return
             }
 
             incu.onStatusChanged = (istatus) => {
-                if (incu.status == Component.Error) {
+                if (incu.status === Component.Error) {
                     console.error("Failed incubating object: ",
                                   incu.errorString())
 
-                } else if (istatus == Component.Ready && callback && ! ready) {
+                } else if (istatus === Component.Ready && callback && ! ready) {
                     if (callback) callback(incu.object)
                     ready = true
                 }
@@ -27,7 +28,7 @@ function makeObject(url, parent=null, properties={}, callback=null) {
         }
     })
 
-    if (comp.status == Component.Ready) comp.statusChanged(comp.status)
+    if (comp.status === Component.Ready) comp.statusChanged(comp.status)
 }
 
 
