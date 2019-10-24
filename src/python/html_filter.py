@@ -42,7 +42,7 @@ class HtmlFilter:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
     ]]
 
-    inline_quote_regex = re.compile(r"(^\s*&gt;.*)", re.MULTILINE)
+    inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
 
     quote_regex = re.compile(
         r"(^|<p/?>|<br/?>|<h\d/?>)(\s*&gt;.*?)(</?p>|<br/?>|</?h\d>|$)",
@@ -90,7 +90,7 @@ class HtmlFilter:
 
         # Client-side modifications
         return self.inline_quote_regex.sub(
-            r'<span class="quote">\1</span>', html,
+            r'\1<span class="quote">\2</span>', html,
         )
 
 

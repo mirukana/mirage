@@ -80,7 +80,7 @@ HTileDelegate {
         ) + ": " + ev.inline_content
 
         return text.replace(
-            /< *span +class=['"]?quote['"]? *>(.+)<\/ *span *>/g,
+            /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
             '<font color="' +
             theme.sidePane.room.subtitleQuote +
             '">$1</font>',
