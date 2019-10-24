@@ -26,6 +26,14 @@ class MarkdownInlineLexer(mistune.InlineLexer):
 
 
 class HtmlFilter:
+    inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
+
+    block_tags = {
+        "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
+        "p", "ul", "ol", "li", "hr", "br",
+        "table", "thead", "tbody", "tr", "th", "td", "pre",
+    }
+
     link_regexes = [re.compile(r, re.IGNORECASE) for r in [
         (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
@@ -41,7 +49,7 @@ class HtmlFilter:
         re.MULTILINE,
     )
 
-    newlines_regex = re.compile(r"\n(\n*)")
+    extra_newlines_regex = re.compile(r"\n(\n*)")
 
 
     def __init__(self) -> None:
@@ -99,12 +107,8 @@ class HtmlFilter:
         # https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
         # TODO: mx-reply and the new hidden thing
 
-        inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
-        tags        = inline_tags | {
-            "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
-            "p", "ul", "ol", "li", "hr", "br",
-            "table", "thead", "tbody", "tr", "th", "td", "pre",
-        }
+        inline_tags = self.inline_tags
+        all_tags    = inline_tags | self.block_tags
 
         inlines_attributes = {
             "font": {"color"},
@@ -117,7 +121,7 @@ class HtmlFilter:
         }}
 
         return {
-            "tags": inline_tags if inline else tags,
+            "tags": inline_tags if inline else all_tags,
             "attributes": inlines_attributes if inline else attributes,
             "empty": {} if inline else {"hr", "br"},
             "separate": {"a"} if inline else {
@@ -145,6 +149,7 @@ class HtmlFilter:
                 self._process_span_font,
                 self._img_to_a,
                 self._remove_extra_newlines,
+                self._newlines_to_return_symbol if inline else lambda el: el,
             ],
             "element_postprocessors": [],
             "is_mergeable": lambda e1, e2: e1.attrib == e2.attrib,
@@ -182,9 +187,31 @@ class HtmlFilter:
 
         if el.tag != "pre" and not pre_parent:
             if el.text:
-                el.text = self.newlines_regex.sub(r"\1", el.text)
+                el.text = self.extra_newlines_regex.sub(r"\1", el.text)
             if el.tail:
-                el.tail = self.newlines_regex.sub(r"\1", el.tail)
+                el.tail = self.extra_newlines_regex.sub(r"\1", el.tail)
+
+        return el
+
+
+    def _newlines_to_return_symbol(self, el: HtmlElement) -> HtmlElement:
+        # Add a return unicode symbol (U+23CE) to blocks with siblings
+        # (e.g. a <p> followed by another <p>) or <br>.
+        # The <br> themselves will be removed by the inline sanitizer.
+
+        is_block_with_siblings = (el.tag in self.block_tags and
+                                  next(el.itersiblings(), None) is not None)
+
+        if el.tag == "br" or is_block_with_siblings:
+            el.tail = f" ⏎ {el.tail or ''}"
+
+
+        # Replace left \n in text/tail of <pre> content by the return symbol.
+        if el.text:
+            el.text = re.sub(r"\n", r" ⏎ ", el.text)
+
+        if el.tail:
+            el.tail = re.sub(r"\n", r" ⏎ ", el.tail)
 
         return el
 
