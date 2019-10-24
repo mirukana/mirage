@@ -36,7 +36,7 @@ Rectangle {
 
     readonly property int deleteCharsOnBackspace:
         lineTextUntilCursor.match(/^ +$/) ?
-        lineTextUntilCursor.match(/ {1,4}/g).splice(-1)[0].length :
+        lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
         1
 
     // property var pr: lineTextUntilCursor

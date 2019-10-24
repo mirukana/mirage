@@ -289,6 +289,6 @@ function copyToClipboard(text) {
 
 
 function urlExtension(url) {
-    return url.toString().split("/").splice(-1)[0].split("?")[0].split(".")
-              .splice(-1)[0].toLowerCase()
+    return url.toString().split("/").slice(-1)[0].split("?")[0].split(".")
+              .slice(-1)[0].toLowerCase()
 }

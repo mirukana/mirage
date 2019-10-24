@@ -45,7 +45,6 @@
 
 - Fixes
   - Newlines and quote after newline in room subtitle
-  - Remove usage of `splice()`
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
