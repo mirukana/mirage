@@ -1,10 +1,10 @@
+import html
 import re
 
-import mistune
-from lxml.html import HtmlElement  # nosec
-
 import html_sanitizer.sanitizer as sanitizer
+import mistune
 from html_sanitizer.sanitizer import Sanitizer
+from lxml.html import HtmlElement  # nosec
 
 
 class MarkdownInlineGrammar(mistune.InlineGrammar):
@@ -65,11 +65,13 @@ class HtmlFilter:
 
 
     def from_markdown(self, text: str, outgoing: bool = False) -> str:
-        return self.filter(self._markdown_to_html(text), outgoing)
+        return self.filter(self._markdown_to_html(html.escape(text)), outgoing)
 
 
     def from_markdown_inline(self, text: str, outgoing: bool = False) -> str:
-        return self.filter_inline(self._markdown_to_html(text), outgoing)
+        return self.filter_inline(
+            self._markdown_to_html(html.escape(text)), outgoing,
+        )
 
 
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
