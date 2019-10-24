@@ -47,6 +47,7 @@
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied
+    - Multiple messages are currently copied out of order
 
   - Pressing backspace in composer sometimes doesn't work
   - Message order isn't preserved when sending a first message in a E2E

@@ -148,12 +148,6 @@ class Event(ModelItem):
 
     def __lt__(self, other: "Event") -> bool:
         # Sort events from newest to oldest. return True means return False.
-        # Local echoes always stay first.
-        if self.is_local_echo and not other.is_local_echo:
-            return True
-        if other.is_local_echo and not self.is_local_echo:
-            return False
-
         return self.date > other.date
 
     @property
