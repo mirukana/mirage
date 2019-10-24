@@ -77,10 +77,6 @@ class HtmlFilter:
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
         html = self._inline_sanitizer.sanitize(html)
 
-        # Remove excess newlines to avoid additional blank lines with
-        # HTML/CSS using `white-space: pre`
-        html = self.newlines_regex.sub(r"\1", html)
-
         if outgoing:
             return html
 
@@ -92,7 +88,6 @@ class HtmlFilter:
 
     def filter(self, html: str, outgoing: bool = False) -> str:
         html = self._sanitizer.sanitize(html).rstrip("\n")
-        html = self.newlines_regex.sub(r"\1", html)
 
         if outgoing:
             return html
@@ -149,6 +144,7 @@ class HtmlFilter:
                 sanitizer.target_blank_noopener,
                 self._process_span_font,
                 self._img_to_a,
+                self._remove_extra_newlines,
             ],
             "element_postprocessors": [],
             "is_mergeable": lambda e1, e2: e1.attrib == e2.attrib,
@@ -174,6 +170,21 @@ class HtmlFilter:
             el.tag            = "a"
             el.attrib["href"] = el.attrib.pop("src", "")
             el.text           = el.attrib.pop("alt", None) or el.attrib["href"]
+
+        return el
+
+
+    def _remove_extra_newlines(self, el: HtmlElement) -> HtmlElement:
+        # Remove excess \n characters to avoid additional blank lines with
+        # HTML/CSS using `white-space: pre`, except in <pre> content.
+
+        pre_parent = any(parent.tag == "pre" for parent in el.iterancestors())
+
+        if el.tag != "pre" and not pre_parent:
+            if el.text:
+                el.text = self.newlines_regex.sub(r"\1", el.text)
+            if el.tail:
+                el.tail = self.newlines_regex.sub(r"\1", el.tail)
 
         return el
 

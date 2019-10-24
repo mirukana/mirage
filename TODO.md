@@ -45,8 +45,6 @@
 
 - Fixes
   - Newlines and quote after newline in room subtitle
-  - Newlines in code blocks
-  - Sending a message with `<thing>`
   - Remove usage of `splice()`
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
