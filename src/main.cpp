@@ -5,6 +5,7 @@
 #include <QFileInfo>
 
 #include "utils.h"
+#include "clipboard.h"
 
 
 int main(int argc, char *argv[]) {
@@ -25,6 +26,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     objectContext->setContextProperty("CppUtils", new Utils());
+    objectContext->setContextProperty("Clipboard", new Clipboard());
 
     QFileInfo qrcPath(":src/qml/Window.qml");
 
