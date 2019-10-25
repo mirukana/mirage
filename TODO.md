@@ -25,8 +25,6 @@
   - GIF glitchy border
   - Combined pure media events time looks bad
 
-  - Copy to X11 selection with new CppUtils class
-
 - RoomMessageNotice
 
 - Refactoring

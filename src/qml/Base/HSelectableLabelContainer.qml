@@ -39,6 +39,8 @@ FocusScope {
     }
 
 
+    onJoinedSelectionChanged: Clipboard.selection = joinedSelection
+
     onDragStarted: {
         draggedItem.Drag.active = true
     }
