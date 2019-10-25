@@ -39,7 +39,8 @@ FocusScope {
     }
 
 
-    onJoinedSelectionChanged: Clipboard.selection = joinedSelection
+    onJoinedSelectionChanged:
+        if (joinedSelection) Clipboard.selection = joinedSelection
 
     onDragStarted: {
         draggedItem.Drag.active = true
