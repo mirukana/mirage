@@ -35,16 +35,8 @@ ApplicationWindow {
     property var theme: null
 
     readonly property alias py: py
-    readonly property alias pseudoClipboard: pseudoClipboard
 
     Python { id: py }
-
-    TextEdit {
-        id: pseudoClipboard
-        visible: false
-        readOnly: true
-        textFormat: Text.PlainText
-    }
 
     HLoader {
         anchors.fill: parent

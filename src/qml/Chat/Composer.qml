@@ -185,9 +185,8 @@ Rectangle {
                         eventList.selectableLabelContainer.joinedSelection
                     ) {
                         ev.accepted = true
-                        Utils.copyToClipboard(
-                            eventList.selectableLabelContainer.joinedSelection,
-                        )
+                        Clipboard.text =
+                            eventList.selectableLabelContainer.joinedSelection
                         return
                     }
 

@@ -136,7 +136,7 @@ Column {
                 qsTr("Copy media address")
 
             visible: Boolean(text)
-            onTriggered: Utils.copyToClipboard(contextMenu.media[1])
+            onTriggered: Clipboard.text = contextMenu.media[1]
         }
 
         HMenuItem {
@@ -144,7 +144,7 @@ Column {
             icon.name: "copy-link"
             text: qsTr("Copy link address")
             visible: Boolean(contextMenu.link)
-            onTriggered: Utils.copyToClipboard(contextMenu.link)
+            onTriggered: Clipboard.text = contextMenu.link
         }
 
         HMenuItem {
@@ -153,7 +153,7 @@ Column {
             visible: enabled || (! copyLink.visible && ! copyMedia.visible)
             enabled: Boolean(selectableLabelContainer.joinedSelection)
             onTriggered:
-                Utils.copyToClipboard(selectableLabelContainer.joinedSelection)
+                Clipboard.text = selectableLabelContainer.joinedSelection
         }
 
         HMenuItem {

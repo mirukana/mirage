@@ -280,14 +280,6 @@ function flickToBottom(flickable) {
 }
 
 
-function copyToClipboard(text) {
-    window.pseudoClipboard.clear()
-    window.pseudoClipboard.insert(0, text)
-    window.pseudoClipboard.selectAll()
-    window.pseudoClipboard.copy()
-}
-
-
 function urlExtension(url) {
     return url.toString().split("/").slice(-1)[0].split("?")[0].split(".")
               .slice(-1)[0].toLowerCase()
