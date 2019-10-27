@@ -56,22 +56,22 @@ HLoader {
             var file  = "EventImage.qml"
             var props = { source: previewUrl, fullSource: mediaUrl }
 
-        } else if (type === EventDelegate.Media.File) {
-            var file  = "EventFile.qml"
-            var props = {
-                thumbnailUrl: previewUrl,
-                fileUrl:      mediaUrl,
-                fileTitle:    info.media_title,
-                fileSize:     info.media_size,
-            }
+        // } else if (type === EventDelegate.Media.File) {
+        //     var file  = "EventFile.qml"
+        //     var props = {
+        //         thumbnailUrl: previewUrl,
+        //         fileUrl:      mediaUrl,
+        //         fileTitle:    info.media_title,
+        //         fileSize:     info.media_size,
+        //     }
 
-        } else if (type === EventDelegate.Media.Video) {
-            var file  = "EventVideo.qml"
-            var props = { source: mediaUrl }
+        // } else if (type === EventDelegate.Media.Video) {
+        //     var file  = "EventVideo.qml"
+        //     var props = { source: mediaUrl }
 
-        } else if (type === EventDelegate.Media.Audio) {
-            var file  = "EventAudio.qml"
-            var props = { source: mediaUrl }
+        // } else if (type === EventDelegate.Media.Audio) {
+        //     var file  = "EventAudio.qml"
+        //     var props = { source: mediaUrl }
 
         } else { return }
 
