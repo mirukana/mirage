@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../Dialogs"
 import "../utils.js" as Utils
 
 Rectangle {
@@ -201,6 +202,18 @@ Rectangle {
                         )
                     }
                 })
+            }
+        }
+
+        HButton {
+            icon.name: "upload-file"
+            backgroundColor: theme.chat.composer.uploadButton.background
+            toolTip.text: qsTr("Upload files")
+
+            Layout.fillHeight: true
+
+            HFileDialogOpener {
+                dialog.title: qsTr("Select files to upload")
             }
         }
     }

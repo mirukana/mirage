@@ -6,20 +6,18 @@
     - Bottom/top bar
   - Uploading (+local echo)
     - Deduplicate uploads
-  - EventLink
   - File thumbnails + ask matrix API?
   - Encrypted media
   - Loading animation
   - GIF thumbnails: load the real animated image
-  - Copy thumbnail URL in context menu?
 
+  - EventLink
   - GIFs can use the video player
   - Video bug: when media is done playing, clicking on progress slider always
     bring back to the beginning no matter where
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
 
-  - In the "Leave me" room, "join > Hi > left" aren't combined
   - Combined pure media events time looks bad
 
 - RoomMessageNotice
@@ -39,6 +37,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
     - Ensure all the text that should be copied is copied

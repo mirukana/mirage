@@ -362,6 +362,9 @@ chat:
     composer:
         color background: colors.strongBackground
 
+        uploadButton:
+            color background: "transparent"
+
 
 mediaPlayer:
     hoverPreview:
