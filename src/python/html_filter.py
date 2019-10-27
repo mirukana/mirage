@@ -1,4 +1,3 @@
-import html
 import re
 
 import html_sanitizer.sanitizer as sanitizer
@@ -62,8 +61,9 @@ class HtmlFilter:
             lambda el, *args, **kw: el
 
         # hard_wrap: convert all \n to <br> without required two spaces
+        # escape: escape HTML characters in the input string, e.g. tags
         self._markdown_to_html = mistune.Markdown(
-            hard_wrap=True, inline=MarkdownInlineLexer,
+            hard_wrap=True, escape=True, inline=MarkdownInlineLexer,
         )
 
         self._markdown_to_html.block.default_rules = [
@@ -73,13 +73,11 @@ class HtmlFilter:
 
 
     def from_markdown(self, text: str, outgoing: bool = False) -> str:
-        return self.filter(self._markdown_to_html(html.escape(text)), outgoing)
+        return self.filter(self._markdown_to_html(text), outgoing)
 
 
     def from_markdown_inline(self, text: str, outgoing: bool = False) -> str:
-        return self.filter_inline(
-            self._markdown_to_html(html.escape(text)), outgoing,
-        )
+        return self.filter_inline(self._markdown_to_html(text), outgoing)
 
 
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
