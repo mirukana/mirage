@@ -149,6 +149,16 @@ HRowLayout {
                 Layout.leftMargin: pureMedia ? 0 : contentLabel.leftPadding
                 Layout.rightMargin: pureMedia ? 0 : contentLabel.rightPadding
 
+                Layout.minimumWidth:
+                    type === EventDelegate.Media.Image ?
+                    (info.media_width ||
+                     (item ? item.loadingLabel.implicitWidth : -1)) : -1
+
+                Layout.minimumHeight:
+                    type === EventDelegate.Media.Image ?
+                    (info.media_height ||
+                     (item ? item.loadingLabel.implicitHeight : -1)) : -1
+
                 // Layout.minimumWidth:
                 //     type === EventDelegate.Media.File ?
                 //     theme.chat.message.fileMinWidth : -1
@@ -163,7 +173,7 @@ HRowLayout {
                 //     -1
 
                 Layout.maximumWidth: messageBodyWidth
-                Layout.maximumHeight: eventList.height / 1.5
+                Layout.maximumHeight: eventList.height / 2
             }
         }
     }

@@ -14,6 +14,7 @@ Image {
     property bool animate: true
 
     readonly property bool animated: Utils.urlExtension(image.source) == "gif"
+    readonly property alias loadingLabel: loadingLabel
 
 
     Component {
@@ -58,8 +59,19 @@ Image {
     }
 
     HLoader {
-        id: loader
         anchors.fill: parent
         sourceComponent: animate && animated ? animatedImageComponent : null
+    }
+
+
+    HLabel {
+        id: loadingLabel
+        anchors.centerIn: parent
+        visible: image.status === Image.Loading
+        text: qsTr("%1%").arg(progress)
+
+        property int progress: Math.round(image.progress * 100)
+
+        Behavior on progress { HNumberAnimation { factor: 2 } }
     }
 }

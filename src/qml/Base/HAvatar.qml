@@ -51,6 +51,7 @@ Rectangle {
         fillMode: Image.PreserveAspectCrop
         source: Qt.resolvedUrl(imageUrl)
         animate: false
+        loadingLabel.font.pixelSize: theme.fontSize.small
 
         HoverHandler { id: hoverHandler }
 

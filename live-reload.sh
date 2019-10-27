@@ -12,8 +12,6 @@ make clean
 qmake harmonyqml.pro CONFIG+=dev && make
 
 while true; do
-    killall -9 harmonyqml
-
     find src harmonyqml.pro -type f |
     entr -cdnr sh -c \
         "qmake harmonyqml.pro CONFIG+=dev && make && ./harmonyqml $*"
