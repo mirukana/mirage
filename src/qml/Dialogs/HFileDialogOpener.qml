@@ -11,6 +11,9 @@ Item {
     property string selectedFile: ""
     property string file: ""
 
+    property string selectSubject:
+        dialog.fileMode === FileDialog.SaveFile ? qsTr("file") : qsTr("open")
+
     enum FileType { All, Images }
     property int fileType: HFileDialogOpener.FileType.All
 
@@ -36,7 +39,17 @@ Item {
                 StandardPaths.HomeLocation
             )
 
-        title: "Select file"
+        title: fileMode === FileDialog.OpenFile ?
+               qsTr("Select a file to open") :
+
+               fileMode === FileDialog.OpenFiles ?
+               qsTr("Select files to open") :
+
+               fileMode === FileDialog.SaveFile ?
+               qsTr("Save as...") :
+
+               ""
+
         modality: Qt.NonModal
 
         onVisibleChanged: if (visible) {
