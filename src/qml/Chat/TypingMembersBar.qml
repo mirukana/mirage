@@ -9,6 +9,7 @@ Rectangle {
 
     color: theme.chat.typingMembers.background
     implicitHeight: typingLabel.text ? rowLayout.height : 0
+    opacity: implicitHeight ? 1 : 0
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
