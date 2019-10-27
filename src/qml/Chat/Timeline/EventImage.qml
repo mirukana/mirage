@@ -4,22 +4,12 @@ import "../../utils.js" as Utils
 
 HImage {
     id: image
-    sourceSize.width: theme.chat.message.thumbnailWidth
-    sourceSize.height: theme.chat.message.thumbnailWidth
-    width: fitSize.width
-    height: fitSize.height
-
-    // Leaving PreserveAspectFit creates a binding loop, and is uneeded
-    // since we calculate ourself the right size.
-    fillMode: Image.Pad
+    horizontalAlignment: Image.AlignLeft
+    sourceSize.width: theme.chat.message.thumbnailWidth  // FIXME
 
 
     // source = thumbnail, fullSource = full original image
     property url fullSource: source
-
-    readonly property size fitSize: Utils.fitSize(
-        implicitWidth, implicitHeight, theme.chat.message.thumbnailWidth,
-    )
 
 
     TapHandler {

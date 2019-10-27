@@ -145,38 +145,25 @@ HRowLayout {
 
                 transform: Translate { x: xOffset }
 
-                Layout.bottomMargin: contentLabel.bottomPadding * multiply
-                Layout.leftMargin: contentLabel.leftPadding * multiply
-                Layout.rightMargin: contentLabel.rightPadding * multiply
+                Layout.bottomMargin: pureMedia ? 0 : contentLabel.bottomPadding
+                Layout.leftMargin: pureMedia ? 0 : contentLabel.leftPadding
+                Layout.rightMargin: pureMedia ? 0 : contentLabel.rightPadding
 
-                Layout.minimumWidth:
-                    type === EventDelegate.Media.File ?
-                    theme.chat.message.fileMinWidth : -1
+                // Layout.minimumWidth:
+                //     type === EventDelegate.Media.File ?
+                //     theme.chat.message.fileMinWidth : -1
 
-                Layout.preferredWidth:
-                    type === EventDelegate.Media.Image ?
-                    (item ? item.fitSize.width : 0) :
+                // Layout.preferredWidth:
+                //     type === EventDelegate.Media.Video ?
+                //     theme.chat.message.videoWidth :
 
-                    type === EventDelegate.Media.Video ?
-                    theme.chat.message.videoWidth :
+                //     type === EventDelegate.Media.Audio ?
+                //     theme.chat.message.audioWidth :
 
-                    type === EventDelegate.Media.Audio ?
-                    theme.chat.message.audioWidth :
+                //     -1
 
-                    -1
-
-                Layout.maximumWidth:
-                    messageBodyWidth - Layout.leftMargin - Layout.rightMargin
-
-                Layout.maximumHeight:
-                    type === EventDelegate.Media.Image && item ?
-                    Utils.fitSize(
-                        Layout.maximumWidth,
-                        item.fitSize.height,
-                        Layout.maximumWidth
-                    ).height : -1
-
-                readonly property int multiply: pureMedia ? 0 : 1
+                Layout.maximumWidth: messageBodyWidth
+                Layout.maximumHeight: eventList.height / 1.5
             }
         }
     }

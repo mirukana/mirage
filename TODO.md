@@ -19,10 +19,7 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
 
-  - Shrinking the window near its minimum size (seen at 262px) makes
-    image preview position/padding wrong
   - In the "Leave me" room, "join > Hi > left" aren't combined
-  - GIF glitchy border
   - Combined pure media events time looks bad
 
 - RoomMessageNotice
