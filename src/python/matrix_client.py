@@ -180,13 +180,13 @@ class MatrixClient(nio.AsyncClient):
             text   = text[1:]
 
         if text.startswith("/me ") and not escape:
-            event_type = nio.RoomMessageEmote.__name__
+            event_type = nio.RoomMessageEmote
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
             to_html    = HTML_FILTER.from_markdown_inline(text, outgoing=True)
             echo_body  = HTML_FILTER.from_markdown_inline(text)
         else:
-            event_type = nio.RoomMessageText.__name__
+            event_type = nio.RoomMessageText
             content    = {"body": text, "msgtype": "m.text"}
             to_html    = HTML_FILTER.from_markdown(text, outgoing=True)
             echo_body  = HTML_FILTER.from_markdown(text)
@@ -196,11 +196,19 @@ class MatrixClient(nio.AsyncClient):
             content["formatted_body"] = to_html
 
         uuid = str(uuid4())
-        self.local_echoes_uuid.add(uuid)
+
+        await self._local_echo(room_id, uuid, echo_body, event_type)
+        await self._send_message(room_id, uuid, content)
+
+
+    async def _local_echo(
+        self, room_id: str, uuid: str, content: str,
+        event_type: Type[nio.Event], **event_fields,
+    ) -> None:
 
         our_info = self.models[Member, room_id][self.user_id]
 
-        local = Event(
+        event = Event(
             source           = None,
             client_id        = f"echo-{uuid}",
             event_id         = "",
@@ -208,17 +216,19 @@ class MatrixClient(nio.AsyncClient):
             sender_id        = self.user_id,
             sender_name      = our_info.display_name,
             sender_avatar    = our_info.avatar_url,
-            content          = echo_body,
+            content          = content,
             is_local_echo    = True,
-            local_event_type = event_type,
+            local_event_type = event_type.__name__,
         )
+
+        self.local_echoes_uuid.add(uuid)
+
         for user_id in self.models[Account]:
             if user_id in self.models[Member, room_id]:
-                self.models[Event, user_id, room_id][f"echo-{uuid}"] = local
+                self.models[Event, user_id, room_id][f"echo-{uuid}"] = event
                 self.models[Event, user_id, room_id].sync_now()
 
-        await self.set_room_last_event(room_id, local)
-        await self._send_message(room_id, uuid, content)
+        await self.set_room_last_event(room_id, event)
 
 
     async def _send_message(self, room_id: str, uuid: str, content: dict,
