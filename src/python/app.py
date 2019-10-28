@@ -61,9 +61,17 @@ class App:
 
 
     def _call_coro(self, coro: Coroutine, uuid: str) -> None:
-        self.run_in_loop(coro).add_done_callback(
-            lambda future: CoroutineDone(uuid=uuid, result=future.result()),
-        )
+        def on_done(future: Future) -> None:
+            try:
+                result    = future.result()
+                exception = None
+            except Exception as err:
+                result    = None
+                exception = err
+
+            CoroutineDone(uuid, result, exception)
+
+        self.run_in_loop(coro).add_done_callback(on_done)
 
 
     def call_backend_coro(self, name: str, uuid: str, args: Sequence[str] = (),

@@ -13,8 +13,20 @@ function onAlertRequested() {
 }
 
 
-function onCoroutineDone(uuid, result) {
-    py.pendingCoroutines[uuid](result)
+function onCoroutineDone(uuid, result, error) {
+    let onSuccess = py.pendingCoroutines[uuid].onSuccess
+    let onError   = py.pendingCoroutines[uuid].onError
+
+    if (error) {
+        let type = py.getattr(py.getattr(error, "__class__"), "__name__")
+        let args = py.getattr(error, "args")
+
+        onError ?
+        onError(type, args, error) :
+        console.error(uuid + ": " + type + ": " + args)
+
+    } else if (onSuccess) { onSuccess(result) }
+
     delete pendingCoroutines[uuid]
 }
 

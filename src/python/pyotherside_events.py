@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 import pyotherside
 
@@ -47,8 +47,9 @@ class AlertRequested(PyOtherSideEvent):
 class CoroutineDone(PyOtherSideEvent):
     """Indicate that an asyncio coroutine finished."""
 
-    uuid:   str = field()
-    result: Any = None
+    uuid:   str                    = field()
+    result: Any                    = None
+    exception: Optional[Exception] = None
 
 
 @dataclass

@@ -14,18 +14,20 @@ Python {
         return call_sync("APP.backend." + name, args)
     }
 
-    function callCoro(name, args=[], callback=null) {
+    function callCoro(name, args=[], onSuccess=null, onError=null) {
         let uuid = Math.random() + "." + name
 
-        pendingCoroutines[uuid] = callback || function() {}
+        pendingCoroutines[uuid] = {onSuccess, onError}
         call("APP.call_backend_coro", [name, uuid, args])
     }
 
-    function callClientCoro(accountId, name, args=[], callback=null) {
+    function callClientCoro(
+        accountId, name, args=[], onSuccess=null, onError=null
+    ) {
         callCoro("wait_until_client_exists", [accountId], () => {
             let uuid = Math.random() + "." + name
 
-            pendingCoroutines[uuid] = callback || function() {}
+            pendingCoroutines[uuid] = {onSuccess, onError}
             call("APP.call_client_coro", [accountId, name, uuid, args])
         })
     }
