@@ -58,7 +58,7 @@ class Backend:
 
         try:
             await client.login(password)
-        except RuntimeError as err:
+        except RuntimeError as err:  # XXX raise
             await client.close()
             return (False, err.args[0].message)
 
@@ -140,10 +140,10 @@ class Backend:
             nio.crypto.key_export.decrypt_and_read(file_path, passphrase)
             return True
 
-        except OSError as err:
+        except OSError as err:  # XXX raise
             return (f"{file_path}: {err.strerror}", True)
 
-        except ValueError as err:
+        except ValueError as err:  # XXX raise
             if str(err).startswith("HMAC check failed"):
                 return False
 

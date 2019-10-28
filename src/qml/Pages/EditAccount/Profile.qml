@@ -28,12 +28,12 @@ HGridLayout {
             saveButton.avatarChangeRunning = true
             let path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
 
-            py.callClientCoro(
-                userId, "set_avatar_from_file", [path], response => {
-                    saveButton.avatarChangeRunning = false
-                    if (response != true) { print(response) }
-                }
-            )
+            py.callClientCoro(userId, "set_avatar_from_file", [path], () => {
+                saveButton.avatarChangeRunning = false
+            }, (errType, [httpCode]) => {
+                console.error("Avatar upload failed:", httpCode, errType)
+                saveButton.avatarChangeRunning = false
+            })
         }
     }
 

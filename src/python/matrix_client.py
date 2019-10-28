@@ -5,8 +5,8 @@ import json
 import logging as log
 import platform
 from contextlib import suppress
+from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from functools import partial
 from pathlib import Path
 from types import ModuleType
@@ -22,10 +22,19 @@ from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
 
 
-class UploadError(Enum):
-    forbidden = "M_FORBIDDEN"
-    too_large = "M_TOO_LARGE"
-    unknown   = "UNKNOWN"
+@dataclass
+class UploadError(Exception):
+    http_code: Optional[int] = None
+
+
+@dataclass
+class UploadForbidden(UploadError):
+    http_code: Optional[int] = 403
+
+
+@dataclass
+class UploadTooLarge(UploadError):
+    http_code: Optional[int] = 413
 
 
 class MatrixClient(nio.AsyncClient):
@@ -295,23 +304,16 @@ class MatrixClient(nio.AsyncClient):
             return resp.content_uri
 
         if resp.status_code == 403:
-            return UploadError.forbidden.value
+            raise UploadForbidden()
 
         if resp.status_code == 413:
-            return UploadError.too_large.value
+            raise UploadTooLarge()
 
-        return UploadError.unknown.value
+        raise UploadError(resp.status_code)
 
 
-    async def set_avatar_from_file(self, path: Union[Path, str],
-                                  ) -> Union[bool, str]:
-        resp = await self.upload_file(path)
-
-        if resp in (i.value for i in UploadError):
-            return resp
-
-        await self.set_avatar(resp)
-        return True
+    async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
+        await self.set_avatar(await self.upload_file(path))
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
@@ -328,7 +330,7 @@ class MatrixClient(nio.AsyncClient):
 
         try:
             sessions = await loop.run_in_executor(None, import_keys)
-        except nio.EncryptionError as err:
+        except nio.EncryptionError as err:  # XXX raise
             account.import_error = (infile, passphrase, str(err))
             return
 
