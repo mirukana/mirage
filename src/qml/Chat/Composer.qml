@@ -169,7 +169,7 @@ Rectangle {
                     if (textArea.text === "") { return }
 
                     let args = [chatPage.roomId, toSend]
-                    py.callClientCoro(writingUserId, "send_markdown", args)
+                    py.callClientCoro(writingUserId, "send_text", args)
 
                     area.clear()
                 })

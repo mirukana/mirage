@@ -173,7 +173,7 @@ class MatrixClient(nio.AsyncClient):
         return {**self.invited_rooms, **self.rooms}
 
 
-    async def send_markdown(self, room_id: str, text: str) -> None:
+    async def send_text(self, room_id: str, text: str) -> None:
         escape = False
         if text.startswith("//") or text.startswith(r"\/"):
             escape = True
