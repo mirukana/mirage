@@ -218,6 +218,11 @@ class MatrixClient(nio.AsyncClient):
                 self.models[Event, user_id, room_id].sync_now()
 
         await self.set_room_last_event(room_id, local)
+        await self._send_message(room_id, uuid, content)
+
+
+    async def _send_message(self, room_id: str, uuid: str, content: dict,
+                           ) -> None:
 
         async with self.send_locks[room_id]:
             response = await self.room_send(
