@@ -208,12 +208,17 @@ Rectangle {
         HButton {
             icon.name: "upload-file"
             backgroundColor: theme.chat.composer.uploadButton.background
-            toolTip.text: qsTr("Upload files")
+            toolTip.text: qsTr("Send files")
 
             Layout.fillHeight: true
 
             HFileDialogOpener {
                 dialog.title: qsTr("Select files to upload")
+                onFileChanged: {
+                    let path = Qt.resolvedUrl(file).replace(/^file:/, "")
+                    let args = [chatPage.roomId, path]
+                    py.callClientCoro(chatPage.userId, "send_file", args)
+                }
             }
         }
     }

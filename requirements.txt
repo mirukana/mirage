@@ -1,5 +1,6 @@
 hsluv          == 0.0.2
 Pillow         >= 5.4.1, < 6
+pymediainfo    >= 4.1,   < 5
 aiofiles       >= 0.4.0, < 0.5
 appdirs        >= 1.4.3, < 2
 filetype       >= 1.0.5, < 2

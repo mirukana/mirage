@@ -14,6 +14,8 @@ from typing import DefaultDict, Dict, Optional, Set, Tuple, Type, Union
 from uuid import uuid4
 
 import nio
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
 
 from . import __about__, utils
 from .html_filter import HTML_FILTER
@@ -197,12 +199,77 @@ class MatrixClient(nio.AsyncClient):
 
         uuid = str(uuid4())
 
-        await self._local_echo(room_id, uuid, echo_body, event_type)
+        await self._local_echo(room_id, uuid, event_type, content=echo_body)
+        await self._send_message(room_id, uuid, content)
+
+
+    async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
+        path          = Path(path)
+        url, mime     = await self.upload_file(path)
+        kind          = (mime or "").split("/")[0]
+        content: dict = {
+            "body": path.name,
+            "url":  url,
+            "info": {
+                "mimetype": mime,
+                "size":     path.resolve().stat().st_size,
+            },
+        }
+
+        if kind == "image":
+            event_type         = nio.RoomMessageImage
+            content["msgtype"] = "m.image"
+
+            content["info"]["w"], content["info"]["h"] = \
+                PILImage.open(path).size
+
+        elif kind == "audio":
+            event_type                  = nio.RoomMessageAudio
+            content["msgtype"]          = "m.audio"
+            content["info"]["duration"] = getattr(
+                MediaInfo.parse(path).tracks[0], "duration", 0,
+            ) or 0
+
+        elif kind == "video":
+            event_type         = nio.RoomMessageVideo
+            content["msgtype"] = "m.video"
+
+            tracks = MediaInfo.parse(path).tracks
+
+            content["info"]["duration"] = \
+                getattr(tracks[0], "duration", 0) or 0
+
+            content["info"]["w"] = max(
+                getattr(t, "width", 0) or 0 for t in tracks
+            )
+            content["info"]["h"] = max(
+                getattr(t, "height", 0) or 0 for t in tracks
+            )
+
+        else:
+            event_type          = nio.RoomMessageFile
+            content["msgtype"]  = "m.file"
+            content["filename"] = path.name
+
+        uuid = str(uuid4())
+
+        await self._local_echo(
+            room_id, uuid, event_type,
+            inline_content = path.name,
+            media_url      = url,
+            media_title    = path.name,
+            media_width    = content["info"].get("w", 0),
+            media_height   = content["info"].get("h", 0),
+            media_duration = content["info"].get("duration", 0),
+            media_size     = content["info"]["size"],
+            media_mime     = content["info"]["mimetype"],
+        )
+
         await self._send_message(room_id, uuid, content)
 
 
     async def _local_echo(
-        self, room_id: str, uuid: str, content: str,
+        self, room_id: str, uuid: str,
         event_type: Type[nio.Event], **event_fields,
     ) -> None:
 
@@ -216,9 +283,9 @@ class MatrixClient(nio.AsyncClient):
             sender_id        = self.user_id,
             sender_name      = our_info.display_name,
             sender_avatar    = our_info.avatar_url,
-            content          = content,
             is_local_echo    = True,
             local_event_type = event_type.__name__,
+            **event_fields,
         )
 
         self.local_echoes_uuid.add(uuid)
@@ -306,7 +373,8 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((Member, room_id), None)
 
 
-    async def upload_file(self, path: Union[Path, str]) -> str:
+    async def upload_file(self, path: Union[Path, str],
+                         ) -> Tuple[str, Optional[str]]:
         path = Path(path)
 
         with open(path, "rb") as file:
@@ -316,7 +384,7 @@ class MatrixClient(nio.AsyncClient):
             resp = await self.upload(file, mime, path.name)
 
         if not isinstance(resp, nio.ErrorResponse):
-            return resp.content_uri
+            return (resp.content_uri, mime)
 
         if resp.status_code == 403:
             raise UploadForbidden()
@@ -328,7 +396,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
-        await self.set_avatar(await self.upload_file(path))
+        # TODO: check if mime is image
+        await self.set_avatar((await self.upload_file(path))[0])
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
