@@ -13,7 +13,8 @@ qmake harmonyqml.pro CONFIG+=dev && make
 
 while true; do
     find src harmonyqml.pro -type f |
+    # -name affects the first part of the WM_CLASS returned by xprop on Linux
     entr -cdnr sh -c \
-        "qmake harmonyqml.pro CONFIG+=dev && make && ./harmonyqml $*"
+        "qmake harmonyqml.pro CONFIG+=dev && make && ./harmonyqml -name dev $*"
     sleep 0.2
 done
