@@ -13,7 +13,7 @@ function onAlertRequested() {
 }
 
 
-function onCoroutineDone(uuid, result, error) {
+function onCoroutineDone(uuid, result, error, traceback) {
     let onSuccess = py.pendingCoroutines[uuid].onSuccess
     let onError   = py.pendingCoroutines[uuid].onError
 
@@ -22,8 +22,8 @@ function onCoroutineDone(uuid, result, error) {
         let args = py.getattr(error, "args")
 
         onError ?
-        onError(type, args, error) :
-        console.error(uuid + ": " + type + ": " + args)
+            onError(type, args, error, traceback) :
+            console.error("python:\n" + traceback)
 
     } else if (onSuccess) { onSuccess(result) }
 

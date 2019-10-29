@@ -2,14 +2,15 @@ import asyncio
 import logging as log
 import signal
 import sys
+import traceback
 from concurrent.futures import Future
 from operator import attrgetter
 from threading import Thread
 from typing import Coroutine, Sequence
 
+import nio
 from appdirs import AppDirs
 
-import nio
 import pyotherside
 
 from . import __about__
@@ -62,14 +63,15 @@ class App:
 
     def _call_coro(self, coro: Coroutine, uuid: str) -> None:
         def on_done(future: Future) -> None:
-            try:
-                result    = future.result()
-                exception = None
-            except Exception as err:
-                result    = None
-                exception = err
+            result = exception = trace = None
 
-            CoroutineDone(uuid, result, exception)
+            try:
+                result = future.result()
+            except Exception as err:
+                exception = err
+                trace     = traceback.format_exc().rstrip()
+
+            CoroutineDone(uuid, result, exception, trace)
 
         self.run_in_loop(coro).add_done_callback(on_done)
 

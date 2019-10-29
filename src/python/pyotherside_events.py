@@ -50,6 +50,7 @@ class CoroutineDone(PyOtherSideEvent):
     uuid:   str                    = field()
     result: Any                    = None
     exception: Optional[Exception] = None
+    traceback: Optional[str]       = None
 
 
 @dataclass
