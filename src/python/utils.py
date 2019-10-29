@@ -34,12 +34,12 @@ def is_svg(file: IO) -> bool:
         return False
 
 
-def guess_mime(file: IO) -> Optional[str]:
+def guess_mime(file: IO) -> str:
     if is_svg(file):
         return "image/svg+xml"
 
     file.seek(0, 0)
-    return filetype.guess_mime(file)
+    return filetype.guess_mime(file) or "application/octet-stream"
 
 
 def plain2html(text: str) -> str:

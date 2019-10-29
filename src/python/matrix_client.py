@@ -1,6 +1,7 @@
 import asyncio
 import html
 import inspect
+import io
 import json
 import logging as log
 import platform
@@ -37,6 +38,14 @@ class UploadForbidden(UploadError):
 @dataclass
 class UploadTooLarge(UploadError):
     http_code: Optional[int] = 413
+
+@dataclass
+class UneededThumbnail(Exception):
+    pass
+
+@dataclass
+class UnthumbnailableError(Exception):
+    exception: Optional[Exception] = None
 
 
 class MatrixClient(nio.AsyncClient):
@@ -223,6 +232,14 @@ class MatrixClient(nio.AsyncClient):
             content["info"]["w"], content["info"]["h"] = \
                 PILImage.open(path).size
 
+            try:
+                thumb_url, thumb_info = await self.upload_thumbnail(path)
+            except (UneededThumbnail, UnthumbnailableError):
+                pass
+            else:
+                content["info"]["thumbnail_url"]  = thumb_url
+                content["info"]["thumbnail_info"] = thumb_info
+
         elif kind == "audio":
             event_type                  = nio.RoomMessageAudio
             content["msgtype"]          = "m.audio"
@@ -373,26 +390,66 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((Member, room_id), None)
 
 
-    async def upload_file(self, path: Union[Path, str],
-                         ) -> Tuple[str, Optional[str]]:
-        path = Path(path)
+    async def upload_thumbnail(self, path: Union[Path, str],
+                              ) -> Tuple[str, Dict[str, Union[str, int]]]:
+        try:
+            thumb = PILImage.open(path)
 
+            small      = thumb.width <= 512 and thumb.height <= 512
+            is_jpg_png = thumb.format in ("JPEG", "PNG")
+            opaque_png = thumb.format == "PNG" and thumb.mode != "RGBA"
+
+            if small and is_jpg_png and not opaque_png:
+                raise UneededThumbnail()
+
+            thumb.thumbnail((512, 512))
+
+            with io.BytesIO() as out:
+                if thumb.mode == "RGBA":
+                    thumb.save(out, "PNG")
+                    mime = "image/png"
+                else:
+                    thumb.convert("RGB").save(out, "JPEG")
+                    mime = "image/jpeg"
+
+                content = out.getvalue()
+
+                return (
+                    await self.upload(content, mime, Path(path).name),
+                    {
+                        "w":        thumb.width,
+                        "h":        thumb.height,
+                        "mimetype": mime,
+                        "size":     len(content),
+                    },
+                )
+
+        except OSError as err:
+            raise UnthumbnailableError(err)
+
+
+    async def upload_file(self, path: Union[Path, str]) -> Tuple[str, str]:
         with open(path, "rb") as file:
             mime = utils.guess_mime(file)
             file.seek(0, 0)
 
-            resp = await self.upload(file, mime, path.name)
+            return (await self.upload(file, mime, Path(path).name), mime)
 
-        if not isinstance(resp, nio.ErrorResponse):
-            return (resp.content_uri, mime)
 
-        if resp.status_code == 403:
+    async def upload(self, data, mime: str, filename: Optional[str] = None,
+                    ) -> str:
+        response = await super().upload(data, mime, filename)
+
+        if not isinstance(response, nio.ErrorResponse):
+            return response.content_uri
+
+        if response.status_code == 403:
             raise UploadForbidden()
 
-        if resp.status_code == 413:
+        if response.status_code == 413:
             raise UploadTooLarge()
 
-        raise UploadError(resp.status_code)
+        raise UploadError(response.status_code)
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:

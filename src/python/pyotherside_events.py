@@ -47,8 +47,8 @@ class AlertRequested(PyOtherSideEvent):
 class CoroutineDone(PyOtherSideEvent):
     """Indicate that an asyncio coroutine finished."""
 
-    uuid:   str                    = field()
-    result: Any                    = None
+    uuid:      str                 = field()
+    result:    Any                 = None
     exception: Optional[Exception] = None
     traceback: Optional[str]       = None
 
