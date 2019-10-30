@@ -13,7 +13,7 @@ Image {
 
     property bool animate: true
 
-    readonly property bool animated: Utils.urlExtension(image.source) == "gif"
+    property bool animated: Utils.urlExtension(image.source) === "gif"
     readonly property alias loadingLabel: loadingLabel
 
 

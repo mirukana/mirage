@@ -140,7 +140,7 @@ HRowLayout {
             model: eventDelegate.currentItem.links
 
             EventMediaLoader {
-                info: eventDelegate.currentItem
+                singleMediaInfo: eventDelegate.currentItem
                 mediaUrl: modelData
 
                 transform: Translate { x: xOffset }
@@ -151,12 +151,12 @@ HRowLayout {
 
                 Layout.minimumWidth:
                     type === EventDelegate.Media.Image ?
-                    (info.media_width ||
+                    (singleMediaInfo.media_width ||
                      (item ? item.loadingLabel.implicitWidth : -1)) : -1
 
                 Layout.minimumHeight:
                     type === EventDelegate.Media.Image ?
-                    (info.media_height ||
+                    (singleMediaInfo.media_height ||
                      (item ? item.loadingLabel.implicitHeight : -1)) : -1
 
                 // Layout.minimumWidth:

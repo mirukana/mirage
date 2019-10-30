@@ -7,7 +7,7 @@ HLoader {
     x: eventContent.spacing
 
 
-    property QtObject info
+    property QtObject singleMediaInfo
     property url mediaUrl
 
     readonly property var imageExtensions: [
@@ -26,15 +26,16 @@ HLoader {
     ]
 
     readonly property int type: {
-        let main_type = info.media_mime.split("/")[0].toLowerCase()
+        let main_type = singleMediaInfo.media_mime.split("/")[0].toLowerCase()
 
         if (main_type === "image") return EventDelegate.Media.Image
         if (main_type === "video") return EventDelegate.Media.Video
         if (main_type === "audio") return EventDelegate.Media.Audio
 
-        if (info.event_type === "RoomMessageFile")
+        if (singleMediaInfo.event_type === "RoomMessageFile")
             return EventDelegate.Media.File
 
+        // If this is a preview for a link in a normal message
         let ext = Utils.urlExtension(mediaUrl)
 
         if (imageExtensions.includes(ext)) return EventDelegate.Media.Image
@@ -47,15 +48,19 @@ HLoader {
     readonly property url previewUrl: (
         type === EventDelegate.Media.File ||
         type === EventDelegate.Media.Image ?
-        info.thumbnail_url : ""
+        singleMediaInfo.thumbnail_url : ""
     ) || mediaUrl
 
 
     onPreviewUrlChanged: {
-        print( mediaUrl)
         if (type === EventDelegate.Media.Image) {
             var file  = "EventImage.qml"
-            var props = { source: previewUrl, fullSource: mediaUrl }
+            var props = {
+                thumbnailUrl: previewUrl,
+                fullImageUrl: mediaUrl,
+                animated:     singleMediaInfo.media_mime === "image/gif" ||
+                              Utils.urlExtension(mediaUrl) === "gif",
+            }
 
         // } else if (type === EventDelegate.Media.File) {
         //     var file  = "EventFile.qml"
