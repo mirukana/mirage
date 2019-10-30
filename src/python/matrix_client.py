@@ -11,10 +11,11 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from types import ModuleType
-from typing import DefaultDict, Dict, Optional, Set, Tuple, Type, Union
+from typing import Any, DefaultDict, Dict, Optional, Set, Tuple, Type, Union
 from uuid import uuid4
 
 import nio
+from nio.crypto.attachments import encrypt_attachment
 from PIL import Image as PILImage
 from pymediainfo import MediaInfo
 
@@ -213,17 +214,25 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
-        path          = Path(path)
-        url, mime     = await self.upload_file(path)
-        kind          = (mime or "").split("/")[0]
+        path    = Path(path)
+        encrypt = room_id in self.encrypted_rooms
+
+        url, mime, crypt_dict = await self.upload_file(path, encrypt=encrypt)
+
+        kind = (mime or "").split("/")[0]
+
         content: dict = {
             "body": path.name,
-            "url":  url,
             "info": {
                 "mimetype": mime,
                 "size":     path.resolve().stat().st_size,
             },
         }
+
+        if encrypt:
+            content["file"] = {"url": url, **crypt_dict}
+        else:
+            content["url"] = url
 
         if kind == "image":
             event_type         = nio.RoomMessageImage
@@ -233,11 +242,19 @@ class MatrixClient(nio.AsyncClient):
                 PILImage.open(path).size
 
             try:
-                thumb_url, thumb_info = await self.upload_thumbnail(path)
+                thumb_url, thumb_info, thumb_crypt_dict = \
+                    await self.upload_thumbnail(path, encrypt=encrypt)
             except (UneededThumbnail, UnthumbnailableError):
                 pass
             else:
-                content["info"]["thumbnail_url"]  = thumb_url
+                if encrypt:
+                    content["info"]["thumbnail_file"]  = {
+                        "url": thumb_url,
+                        **thumb_crypt_dict,
+                    }
+                else:
+                    content["info"]["thumbnail_url"]  = thumb_url
+
                 content["info"]["thumbnail_info"] = thumb_info
 
         elif kind == "audio":
@@ -390,8 +407,9 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((Member, room_id), None)
 
 
-    async def upload_thumbnail(self, path: Union[Path, str],
-                              ) -> Tuple[str, Dict[str, Union[str, int]]]:
+    async def upload_thumbnail(
+        self, path: Union[Path, str], encrypt: bool = False,
+    ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
         try:
             thumb = PILImage.open(path)
 
@@ -403,7 +421,7 @@ class MatrixClient(nio.AsyncClient):
                 raise UneededThumbnail()
 
             if not small:
-                thumb.thumbnail((512, 512), filter=PILImage.LANCZOS)
+                thumb.thumbnail((512, 512), PILImage.LANCZOS)
 
             with io.BytesIO() as out:
                 if thumb.mode == "RGBA":
@@ -413,16 +431,24 @@ class MatrixClient(nio.AsyncClient):
                     thumb.convert("RGB").save(out, "JPEG", optimize=True)
                     mime = "image/jpeg"
 
-                content = out.getvalue()
+                data = out.getvalue()
+
+                if encrypt:
+                    data, crypt_dict = encrypt_attachment(data)
+                    upload_mime      = "application/octet-stream"
+                else:
+                    crypt_dict, upload_mime = {}, mime
+
 
                 return (
-                    await self.upload(content, mime, Path(path).name),
+                    await self.upload(data, upload_mime, Path(path).name),
                     {
                         "w":        thumb.width,
                         "h":        thumb.height,
                         "mimetype": mime,
-                        "size":     len(content),
+                        "size":     len(data),
                     },
+                    crypt_dict,
                 )
 
         except OSError as err:
@@ -430,12 +456,23 @@ class MatrixClient(nio.AsyncClient):
             raise UnthumbnailableError(err)
 
 
-    async def upload_file(self, path: Union[Path, str]) -> Tuple[str, str]:
+    async def upload_file(self, path: Union[Path, str], encrypt: bool = False,
+                         ) -> Tuple[str, str, Dict[str, Any]]:
         with open(path, "rb") as file:
             mime = utils.guess_mime(file)
             file.seek(0, 0)
 
-            return (await self.upload(file, mime, Path(path).name), mime)
+            if encrypt:
+                data, crypt_dict = encrypt_attachment(file.read())
+                upload_mime      = "application/octet-stream"
+            else:
+                data, crypt_dict, upload_mime = file, {}, mime
+
+            return (
+                await self.upload(data, upload_mime, Path(path).name),
+                mime,
+                crypt_dict,
+            )
 
 
     async def upload(self, data, mime: str, filename: Optional[str] = None,

@@ -8,8 +8,9 @@
     - Deduplicate uploads
   - Encrypted media
   - Loading progress bar
-  - Support m.file thumbnails
 
+  - Support m.file thumbnails
+  - Generate video thumbnails
   - GIFs can use the video player
   - Display GIF static thumbnails while the real GIF is loading
   - Video bug: when media is done playing, clicking on progress slider always
@@ -35,6 +36,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - Restart sync is exception occurs
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
