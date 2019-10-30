@@ -403,14 +403,14 @@ class MatrixClient(nio.AsyncClient):
                 raise UneededThumbnail()
 
             if not small:
-                thumb.thumbnail((512, 512))
+                thumb.thumbnail((512, 512), filter=PILImage.LANCZOS)
 
             with io.BytesIO() as out:
                 if thumb.mode == "RGBA":
-                    thumb.save(out, "PNG")
+                    thumb.save(out, "PNG", optimize=True)
                     mime = "image/png"
                 else:
-                    thumb.convert("RGB").save(out, "JPEG")
+                    thumb.convert("RGB").save(out, "JPEG", optimize=True)
                     mime = "image/jpeg"
 
                 content = out.getvalue()
