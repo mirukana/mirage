@@ -5,6 +5,7 @@ import io
 import json
 import logging as log
 import platform
+import traceback
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import datetime
@@ -139,13 +140,13 @@ class MatrixClient(nio.AsyncClient):
         if isinstance(response, nio.LoginError):
             raise RuntimeError(response)
         else:
-            await self.start()
+            asyncio.ensure_future(self.start())
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
-        await self.start()
+        asyncio.ensure_future(self.start())
 
 
     async def logout(self) -> None:
@@ -170,14 +171,13 @@ class MatrixClient(nio.AsyncClient):
         ft = asyncio.ensure_future(self.backend.get_profile(self.user_id))
         ft.add_done_callback(on_profile_response)
 
-        def on_sync_stop(future) -> None:
-            if isinstance(future.exception(), BaseException):
-                raise future.exception()
-
-        self.sync_task = asyncio.ensure_future(
-            self.sync_forever(timeout=10_000),
-        )
-        self.sync_task.add_done_callback(on_sync_stop)
+        while True:
+            try:
+                await self.sync_forever(timeout=10_000)
+            except Exception:
+                trace = traceback.format_exc().rstrip()
+                log.error("Exception during sync, will restart:\n%s", trace)
+                await asyncio.sleep(2)
 
 
     @property

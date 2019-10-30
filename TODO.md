@@ -2,12 +2,12 @@
   - Caching
     - What effect will it have on GIFs? Can we set `cache:false` on them or get
       the frame count once they're cached?
+  - Reading encrypted media
+  - Uploading progress (+local echo)
+    - Deduplicate uploads
+  - Loading progress bar
   - Downloading
     - Bottom/top bar
-  - Uploading (+local echo)
-    - Deduplicate uploads
-  - Encrypted media
-  - Loading progress bar
 
   - Support m.file thumbnails
   - Generate video thumbnails
@@ -36,7 +36,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - Restart sync is exception occurs
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
