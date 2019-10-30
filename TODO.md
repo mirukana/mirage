@@ -6,19 +6,17 @@
     - Bottom/top bar
   - Uploading (+local echo)
     - Deduplicate uploads
-  - File thumbnails + ask matrix API?
   - Encrypted media
-  - Loading animation
-  - GIF thumbnails: load the real animated image
+  - Loading progress bar
+  - Support m.file thumbnails
 
-  - EventLink
   - GIFs can use the video player
+  - Display GIF static thumbnails while the real GIF is loading
   - Video bug: when media is done playing, clicking on progress slider always
     bring back to the beginning no matter where
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
-
-  - Combined pure media events time looks bad
+  - EventLink
 
 - RoomMessageNotice
 

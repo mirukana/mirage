@@ -9,6 +9,8 @@ HLoader {
 
     property QtObject singleMediaInfo
     property url mediaUrl
+    property string showSender: ""
+    property string showDate: ""
 
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
@@ -55,12 +57,6 @@ HLoader {
     onPreviewUrlChanged: {
         if (type === EventDelegate.Media.Image) {
             var file  = "EventImage.qml"
-            var props = {
-                thumbnailUrl: previewUrl,
-                fullImageUrl: mediaUrl,
-                animated:     singleMediaInfo.media_mime === "image/gif" ||
-                              Utils.urlExtension(mediaUrl) === "gif",
-            }
 
         // } else if (type === EventDelegate.Media.File) {
         //     var file  = "EventFile.qml"
@@ -81,6 +77,6 @@ HLoader {
 
         } else { return }
 
-        loader.setSource(file, props)
+        loader.setSource(file, {loader})
     }
 }

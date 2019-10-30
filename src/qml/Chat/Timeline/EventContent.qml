@@ -9,6 +9,12 @@ HRowLayout {
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
+    readonly property string eventSender:
+        hideNameLine ? "" : (
+            "<div class='sender'>" +
+            Utils.coloredNameHtml(model.sender_name, model.sender_id) +
+            "</div>"
+        )
     readonly property string eventText: Utils.processedEventText(model)
     readonly property string eventTime: Utils.formatTime(model.date, false)
     readonly property bool pureMedia: ! eventText && linksRepeater.count
@@ -62,6 +68,7 @@ HRowLayout {
             id: contentLabel
             container: selectableLabelContainer
             index: model.index
+            visible: ! pureMedia
 
             topPadding: theme.spacing / 1.75
             bottomPadding: topPadding
@@ -76,10 +83,7 @@ HRowLayout {
                 theme.chat.message.styleInclude +
 
                 // Sender name
-                (hideNameLine ? "" : (
-                "<div class='sender'>" +
-                Utils.coloredNameHtml(model.sender_name, model.sender_id) +
-                "</div>")) +
+                eventContent.eventSender +
 
                 // Message body
                 eventContent.eventText +
@@ -142,6 +146,8 @@ HRowLayout {
             EventMediaLoader {
                 singleMediaInfo: eventDelegate.currentItem
                 mediaUrl: modelData
+                showSender: pureMedia ? eventSender : ""
+                showDate: pureMedia ? eventTime : ""
 
                 transform: Translate { x: xOffset }
 
