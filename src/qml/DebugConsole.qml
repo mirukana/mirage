@@ -31,8 +31,6 @@ Window {
         visible = true
     }
 
-    property var pr: historyEntry
-    onPrChanged: print("pr changed:", pr)
     onHistoryEntryChanged:
         inputField.text =
             historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
