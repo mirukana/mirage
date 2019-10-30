@@ -426,6 +426,7 @@ class MatrixClient(nio.AsyncClient):
                 )
 
         except OSError as err:
+            log.warning("Error when creating thumbnail: %s", err)
             raise UnthumbnailableError(err)
 
 
