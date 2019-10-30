@@ -402,7 +402,8 @@ class MatrixClient(nio.AsyncClient):
             if small and is_jpg_png and not opaque_png:
                 raise UneededThumbnail()
 
-            thumb.thumbnail((512, 512))
+            if not small:
+                thumb.thumbnail((512, 512))
 
             with io.BytesIO() as out:
                 if thumb.mode == "RGBA":
