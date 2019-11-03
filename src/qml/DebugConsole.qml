@@ -24,7 +24,7 @@ Window {
     Component.onCompleted: {
         mainUI.shortcuts.debugConsole = debugConsole
         commandsView.model.insert(0, {
-            input: "target = " + String(target),
+            input: "t = " + String(target),
             output: "",
             error: false,
         })
