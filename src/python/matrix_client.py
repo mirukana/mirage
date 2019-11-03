@@ -417,7 +417,7 @@ class MatrixClient(nio.AsyncClient):
         try:
             thumb = PILImage.open(path)
 
-            small      = thumb.width <= 512 and thumb.height <= 512
+            small      = thumb.width <= 800 and thumb.height <= 600
             is_jpg_png = thumb.format in ("JPEG", "PNG")
             opaque_png = thumb.format == "PNG" and thumb.mode != "RGBA"
 
@@ -425,7 +425,7 @@ class MatrixClient(nio.AsyncClient):
                 raise UneededThumbnail()
 
             if not small:
-                thumb.thumbnail((512, 512), PILImage.LANCZOS)
+                thumb.thumbnail((800, 600), PILImage.LANCZOS)
 
             with io.BytesIO() as out:
                 if thumb.mode == "RGBA":
