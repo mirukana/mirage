@@ -109,6 +109,7 @@ class Backend:
 
 
     async def wait_until_client_exists(self, user_id: str = "") -> None:
+        loops = 0
         while True:
             if user_id and user_id in self.clients:
                 return
@@ -116,7 +117,12 @@ class Backend:
             if not user_id and self.clients:
                 return
 
+            if loops and loops % 100 == 0:  # every 10s except first time
+                log.warning("Waiting for account %s to exist, %ds passed",
+                            user_id, loops // 10)
+
             await asyncio.sleep(0.1)
+            loops += 1
 
 
     # General functions

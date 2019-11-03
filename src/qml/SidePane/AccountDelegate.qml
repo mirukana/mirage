@@ -46,9 +46,10 @@ HTileDelegate {
 
 
     image: HUserAvatar {
+        clientUserId: model.data.user_id
         userId: model.data.user_id
         displayName: model.data.display_name
-        avatarUrl: model.data.avatar_url
+        mxc: model.data.avatar_url
     }
 
     title.color: theme.sidePane.account.name

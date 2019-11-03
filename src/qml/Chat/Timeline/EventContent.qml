@@ -52,9 +52,10 @@ HRowLayout {
 
         HUserAvatar {
             id: avatar
+            clientUserId: chatPage.userId
             userId: model.sender_id
             displayName: model.sender_name
-            avatarUrl: model.sender_avatar
+            mxc: model.sender_avatar
             width: parent.width
             height: collapseAvatar ? 1 : 58
         }

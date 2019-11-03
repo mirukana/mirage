@@ -26,7 +26,9 @@ HGridLayout {
 
         if (avatar.changed) {
             saveButton.avatarChangeRunning = true
-            let path = Qt.resolvedUrl(avatar.imageUrl).replace(/^file:/, "")
+
+            let path =
+                Qt.resolvedUrl(avatar.sourceOverride).replace(/^file:/, "")
 
             py.callClientCoro(userId, "set_avatar_from_file", [path], () => {
                 saveButton.avatarChangeRunning = false
@@ -53,14 +55,15 @@ HGridLayout {
     Component.onCompleted: nameField.field.forceActiveFocus()
 
     HUserAvatar {
-        property bool changed: avatar.imageUrl != avatar.defaultImageUrl
+        property bool changed: Boolean(sourceOverride)
 
         id: avatar
+        clientUserId: editAccount.userId
         userId: editAccount.userId
         displayName: nameField.field.text
-        avatarUrl: accountInfo.avatar_url
-        imageUrl: fileDialog.selectedFile || fileDialog.file || defaultImageUrl
-        toolTipImageUrl: ""
+        mxc: accountInfo.avatar_url
+        toolTipMxc: ""
+        sourceOverride: fileDialog.selectedFile || fileDialog.file
 
         Layout.alignment: Qt.AlignHCenter
 
@@ -71,11 +74,11 @@ HGridLayout {
             z: 10
             visible: opacity > 0
             opacity: ! fileDialog.dialog.visible &&
-                     (! avatar.imageUrl || avatar.hovered) ? 1 : 0
+                     (! avatar.mxc || avatar.hovered) ? 1 : 0
 
             anchors.fill: parent
             color: Utils.hsluv(0, 0, 0,
-                (! avatar.imageUrl && overlayHover.hovered) ? 0.8 : 0.7
+                (! avatar.mxc && overlayHover.hovered) ? 0.8 : 0.7
             )
 
             Behavior on opacity { HNumberAnimation {} }
@@ -90,7 +93,7 @@ HGridLayout {
 
                 HIcon {
                     svgName: "upload-avatar"
-                    colorize: (! avatar.imageUrl && overlayHover.hovered) ?
+                    colorize: (! avatar.mxc && overlayHover.hovered) ?
                               theme.colors.accentText : theme.icons.colorize
                     dimension: 64
 
@@ -100,11 +103,11 @@ HGridLayout {
                 Item { Layout.preferredHeight: theme.spacing }
 
                 HLabel {
-                    text: avatar.imageUrl ?
+                    text: avatar.mxc ?
                           qsTr("Change profile picture") :
                           qsTr("Upload profile picture")
 
-                    color: (! avatar.imageUrl && overlayHover.hovered) ?
+                    color: (! avatar.mxc && overlayHover.hovered) ?
                            theme.colors.accentText : theme.colors.brightText
                     Behavior on color { HColorAnimation {} }
 

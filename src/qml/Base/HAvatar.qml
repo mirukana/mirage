@@ -8,22 +8,24 @@ Rectangle {
     implicitWidth: theme.controls.avatar.size
     implicitHeight: theme.controls.avatar.size
 
-    property string name: ""
-    property var imageUrl: ""
-    property var toolTipImageUrl: imageUrl
-    property alias fillMode: avatarImage.fillMode
-    property alias animate: avatarImage.animate
-
-    readonly property alias hovered: hoverHandler.hovered
-
-    readonly property var params: Utils.thumbnailParametersFor(width, height)
-
     color: avatarImage.visible ? "transparent" : Utils.hsluv(
        name ? Utils.hueFrom(name) : 0,
        name ? theme.controls.avatar.background.saturation : 0,
        theme.controls.avatar.background.lightness,
        theme.controls.avatar.background.opacity
    )
+
+    property string clientUserId
+    property string name
+    property alias mxc: avatarImage.mxc
+
+    property alias toolTipMxc: avatarToolTipImage.mxc
+    property alias sourceOverride: avatarImage.sourceOverride
+    property alias toolTipSourceOverride: avatarToolTipImage.sourceOverride
+    property alias fillMode: avatarImage.fillMode
+    property alias animate: avatarImage.animate
+
+    readonly property alias hovered: hoverHandler.hovered
 
     HLabel {
         z: 1
@@ -41,23 +43,24 @@ Rectangle {
        )
     }
 
-    HImage {
+    HMxcImage {
         id: avatarImage
         anchors.fill: parent
-        visible: imageUrl
+        visible: Boolean(sourceOverride || mxc)
         z: 2
-        sourceSize.width: params.width
-        sourceSize.height: params.height
+        sourceSize.width: parent.width
+        sourceSize.height: parent.height
         fillMode: Image.PreserveAspectCrop
-        source: Qt.resolvedUrl(imageUrl)
         animate: false
+        clientUserId: avatar.clientUserId
         loadingLabel.font.pixelSize: theme.fontSize.small
 
         HoverHandler { id: hoverHandler }
 
         HToolTip {
             id: avatarToolTip
-            visible: toolTipImageUrl && hoverHandler.hovered
+            visible: (toolTipSourceOverride || toolTipMxc) &&
+                     hoverHandler.hovered
             delay: 1000
             backgroundColor: theme.controls.avatar.hoveredImage.background
 
@@ -68,10 +71,11 @@ Rectangle {
                 background.border.width * 2,
             )
 
-            contentItem: HImage {
+            contentItem: HMxcImage {
                 id: avatarToolTipImage
                 fillMode: Image.PreserveAspectCrop
-                source: Qt.resolvedUrl(toolTipImageUrl)
+                clientUserId: avatar.clientUserId
+                mxc: avatarImage.mxc
 
                 sourceSize.width: avatarToolTip.dimension
                 sourceSize.height: avatarToolTip.dimension

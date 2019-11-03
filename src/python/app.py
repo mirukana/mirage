@@ -38,12 +38,7 @@ class App:
         self.backend = Backend(app=self)
         self.debug   = False
 
-        from .image_provider import ImageProvider
-        self.image_provider = ImageProvider(self)
-        pyotherside.set_image_provider(self.image_provider.get)
-
-        self.loop = asyncio.get_event_loop()
-
+        self.loop        = asyncio.get_event_loop()
         self.loop_thread = Thread(target=self._loop_starter)
         self.loop_thread.start()
 

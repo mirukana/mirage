@@ -32,8 +32,9 @@ HTileDelegate {
 
 
     image: HRoomAvatar {
+        clientUserId: model.user_id
         displayName: model.data.display_name
-        avatarUrl: model.data.avatar_url
+        mxc: model.data.avatar_url
     }
 
     title.color: theme.sidePane.room.name

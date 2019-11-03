@@ -7,9 +7,12 @@ HTileDelegate {
     backgroundColor: theme.chat.roomSidePane.member.background
 
     image: HUserAvatar {
+        clientUserId: chatPage.userId
         userId: model.user_id
         displayName: model.display_name
-        avatarUrl: model.avatar_url
+        mxc: model.avatar_url
+        width: height
+        height: memberDelegate.height
     }
 
     title.text: model.display_name || model.user_id

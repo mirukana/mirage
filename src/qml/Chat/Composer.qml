@@ -58,9 +58,10 @@ Rectangle {
 
         HUserAvatar {
             id: avatar
+            clientUserId: chatPage.userId
             userId: writingUserId
             displayName: writingUserInfo.display_name
-            avatarUrl: writingUserInfo.avatar_url
+            mxc: writingUserInfo.avatar_url
         }
 
         HScrollableTextArea {

@@ -8,7 +8,7 @@ Banner {
     // TODO: avatar func auto
     avatar.userId: chatPage.userId
     avatar.displayName: chatPage.userInfo.display_name
-    avatar.avatarUrl: chatPage.userInfo.avatar_url
+    avatar.mxc: chatPage.userInfo.avatar_url
     labelText: qsTr("You are not part of this room anymore.")
 
     buttonModel: [

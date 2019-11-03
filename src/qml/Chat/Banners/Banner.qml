@@ -36,6 +36,7 @@ Rectangle {
 
                 HUserAvatar {
                     id: bannerAvatar
+                    clientUserId: chatPage.userId
                     anchors.centerIn: parent
                 }
             }
