@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import "../utils.js" as Utils
 
 HImage {
     id: image
@@ -13,6 +12,7 @@ HImage {
     property string clientUserId
     property string mxc
     property string sourceOverride: ""
+    property bool thumbnail: true
 
     property bool show: false
     property string cachedPath: ""
@@ -27,8 +27,6 @@ HImage {
             return
         }
 
-        let arg = [image.mxc, w, h]
-
         if (! image) return  // if it was destroyed
 
         if (! image.mxc.startsWith("mxc://")) {
@@ -37,8 +35,11 @@ HImage {
             return
         }
 
+        let method = image.thumbnail ? "get_thumbnail" : "get_media"
+        let args = image.thumbnail ? [image.mxc, w, h] : [image.mxc]
+
         py.callClientCoro(
-            clientUserId, "media_cache.get_thumbnail", [mxc, w, h], path => {
+            clientUserId, "media_cache." + method, args, path => {
                 if (! image) return
                 image.cachedPath = path
                 show             = image.visible

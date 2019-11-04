@@ -10,7 +10,8 @@ HMxcImage {
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
               Utils.urlExtension(loader.mediaUrl) === "gif"
     clientUserId: chatPage.userId
-    mxc: animated ? openUrl : (loader.thumbnailMxc || loader.mediaUrl)
+    thumbnail: ! animated
+    mxc: thumbnail ? (loader.thumbnailMxc || loader.mediaUrl) : openUrl
 
 
     property EventMediaLoader loader
