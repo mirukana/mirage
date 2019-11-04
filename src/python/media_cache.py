@@ -79,7 +79,17 @@ class Media:
 
 
     async def _get_remote_data(self) -> bytes:
-        raise NotImplementedError()
+        parsed = urlparse(self.mxc)
+
+        resp = await self.cache.client.download(
+            server_name = parsed.netloc,
+            media_id    = parsed.path.lstrip("/"),
+        )
+
+        if isinstance(resp, nio.DownloadError):
+            raise DownloadFailed(resp.message, resp.status_code)
+
+        return resp.body
 
 
 @dataclass
@@ -178,6 +188,10 @@ class MediaCache:
 
         self.thumbs_dir.mkdir(parents=True, exist_ok=True)
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
+
+
+    async def get_media(self, mxc: str) -> str:
+        return str(await Media(self, mxc, data=None).get())
 
 
     async def get_thumbnail(self, mxc: str, width: int, height: int) -> str:
