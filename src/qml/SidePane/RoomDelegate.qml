@@ -73,7 +73,8 @@ HTileDelegate {
 
         // If it's an emote or non-message/media event
         if (ev.event_type === "RoomMessageEmote" ||
-            ! ev.event_type.startsWith("RoomMessage")) {
+            (! ev.event_type.startsWith("RoomMessage") &&
+             ! ev.event_type.startsWith("RoomEncrypted"))) {
             return Utils.processedEventText(ev)
         }
 
