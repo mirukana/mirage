@@ -10,7 +10,9 @@ HImage {
         Qt.callLater(update)
 
         if (mxc.startsWith("mxc://")) {
-            py.callCoro("mxc_to_http", [mxc], http => { httpUrl = http || "" })
+            py.callCoro("mxc_to_http", [mxc], http => {
+                image.httpUrl = http || ""
+            })
         } else {
             httpUrl = mxc
         }
