@@ -1,8 +1,6 @@
 - Media
-  - Caching
-    - What effect will it have on GIFs? Can we set `cache:false` on them or get
-      the frame count once they're cached?
-  - Reading encrypted media
+  - Encrypt file for upload in thread
+  - Cache our own uploads
   - Uploading progress (+local echo)
     - Deduplicate uploads
   - Loading progress bar
@@ -198,7 +196,6 @@
   - Running blocking DB function calls in executor
   - Guard against asyncio OSError Network unreachable
 
-  - downloads API
   - MatrixRoom invited members list
   - Left room events after client reboot
   - `org.matrix.room.preview_urls` events

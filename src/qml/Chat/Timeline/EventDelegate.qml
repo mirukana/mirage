@@ -36,14 +36,14 @@ Column {
 
     readonly property bool smallAvatar:
         eventList.canCombine(model, nextItem) &&
-        (model.event_type == "RoomMessageEmote" ||
+        (model.event_type === "RoomMessageEmote" ||
          ! model.event_type.startsWith("RoomMessage"))
 
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight
 
     readonly property bool hideNameLine:
-        model.event_type == "RoomMessageEmote" ||
+        model.event_type === "RoomMessageEmote" ||
         ! model.event_type.startsWith("RoomMessage") ||
         onRight ||
         combine

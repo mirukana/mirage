@@ -109,6 +109,7 @@ function processedEventText(ev) {
     }
 
     if (ev.event_type.startsWith("RoomMessage")) { return ev.content }
+    if (ev.event_type.startsWith("RoomEncrypted")) { return ev.content }
 
     let text = qsTr(ev.content).arg(
         coloredNameHtml(ev.sender_name, ev.sender_id)

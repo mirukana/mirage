@@ -239,7 +239,9 @@ class MatrixClient(nio.AsyncClient):
             content["url"] = url
 
         if kind == "image":
-            event_type         = nio.RoomMessageImage
+            event_type = \
+                nio.RoomEncryptedImage if encrypt else nio.RoomMessageImage
+
             content["msgtype"] = "m.image"
 
             content["info"]["w"], content["info"]["h"] = \
@@ -262,14 +264,18 @@ class MatrixClient(nio.AsyncClient):
                 content["info"]["thumbnail_info"] = thumb_info
 
         elif kind == "audio":
-            event_type                  = nio.RoomMessageAudio
+            event_type = \
+                nio.RoomEncryptedAudio if encrypt else nio.RoomMessageAudio
+
             content["msgtype"]          = "m.audio"
             content["info"]["duration"] = getattr(
                 MediaInfo.parse(path).tracks[0], "duration", 0,
             ) or 0
 
         elif kind == "video":
-            event_type         = nio.RoomMessageVideo
+            event_type = \
+                nio.RoomEncryptedVideo if encrypt else nio.RoomMessageVideo
+
             content["msgtype"] = "m.video"
 
             tracks = MediaInfo.parse(path).tracks
@@ -285,7 +291,9 @@ class MatrixClient(nio.AsyncClient):
             )
 
         else:
-            event_type          = nio.RoomMessageFile
+            event_type = \
+                nio.RoomEncryptedFile if encrypt else nio.RoomMessageFile
+
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
@@ -414,21 +422,24 @@ class MatrixClient(nio.AsyncClient):
     async def upload_thumbnail(
         self, path: Union[Path, str], encrypt: bool = False,
     ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
+
+        png_modes = ("1", "L", "P", "RGBA")
+
         try:
             thumb = PILImage.open(path)
 
-            small      = thumb.width <= 800 and thumb.height <= 600
-            is_jpg_png = thumb.format in ("JPEG", "PNG")
-            opaque_png = thumb.format == "PNG" and thumb.mode != "RGBA"
+            small       = thumb.width <= 800 and thumb.height <= 600
+            is_jpg_png  = thumb.format in ("JPEG", "PNG")
+            jpgable_png = thumb.format == "PNG" and thumb.mode not in png_modes
 
-            if small and is_jpg_png and not opaque_png:
+            if small and is_jpg_png and not jpgable_png:
                 raise UneededThumbnail()
 
             if not small:
                 thumb.thumbnail((800, 600), PILImage.LANCZOS)
 
             with io.BytesIO() as out:
-                if thumb.mode == "RGBA":
+                if thumb.mode in png_modes:
                     thumb.save(out, "PNG", optimize=True)
                     mime = "image/png"
                 else:
@@ -804,26 +815,37 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def onRoomMessageMedia(self, room, ev) -> None:
-        info       = ev.source["content"].get("info", {})
-        thumb_info = info.get("thumbnail_info", {})
+        info             = ev.source["content"].get("info", {})
+        media_crypt_dict = ev.source["content"].get("file", {})
+        thumb_info       = info.get("thumbnail_info", {})
+        thumb_crypt_dict = info.get("thumbnail_file", {})
 
         await self.register_nio_event(
             room,
             ev,
             content        = "",
             inline_content = ev.body,
-            media_url      = ev.url,
-            media_title    = ev.body,
-            media_width    = info.get("w") or 0,
-            media_height   = info.get("h") or 0,
-            media_duration = info.get("duration") or 0,
-            media_size     = info.get("size") or 0,
-            media_mime     = info.get("mimetype") or 0,
 
-            thumbnail_url    = info.get("thumbnail_url") or "",
-            thumbnail_width  = thumb_info.get("w") or 0,
-            thumbnail_height = thumb_info.get("h") or 0,
+            media_url        = ev.url,
+            media_title      = ev.body,
+            media_width      = info.get("w") or 0,
+            media_height     = info.get("h") or 0,
+            media_duration   = info.get("duration") or 0,
+            media_size       = info.get("size") or 0,
+            media_mime       = info.get("mimetype") or 0,
+            media_crypt_dict = media_crypt_dict,
+
+            thumbnail_url =
+                info.get("thumbnail_url") or thumb_crypt_dict.get("url") or "",
+
+            thumbnail_width      = thumb_info.get("w") or 0,
+            thumbnail_height     = thumb_info.get("h") or 0,
+            thumbnail_crypt_dict = thumb_crypt_dict,
         )
+
+
+    async def onRoomEncryptedMedia(self, room, ev) -> None:
+        await self.onRoomMessageMedia(room, ev)
 
 
     async def onRoomCreateEvent(self, room, ev) -> None:

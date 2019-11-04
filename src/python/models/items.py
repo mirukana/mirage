@@ -129,17 +129,19 @@ class Event(ModelItem):
     is_local_echo:    bool = False
     local_event_type: str  = ""
 
-    media_url:      str = ""
-    media_title:    str = ""
-    media_width:    int = 0
-    media_height:   int = 0
-    media_duration: int = 0
-    media_size:     int = 0
-    media_mime:     str = ""
+    media_url:        str            = ""
+    media_title:      str            = ""
+    media_width:      int            = 0
+    media_height:     int            = 0
+    media_duration:   int            = 0
+    media_size:       int            = 0
+    media_mime:       str            = ""
+    media_crypt_dict: Dict[str, Any] = field(default_factory=dict)
 
-    thumbnail_url:    str = ""
-    thumbnail_width:  int = 0
-    thumbnail_height: int = 0
+    thumbnail_url:        str            = ""
+    thumbnail_width:      int            = 0
+    thumbnail_height:     int            = 0
+    thumbnail_crypt_dict: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if not self.inline_content:
@@ -156,7 +158,8 @@ class Event(ModelItem):
 
     @property
     def links(self) -> List[str]:
-        if isinstance(self.source, nio.RoomMessageMedia):
+        if isinstance(self.source,
+                      (nio.RoomMessageMedia, nio.RoomEncryptedMedia)):
             return [self.media_url]
 
         if not self.content.strip():

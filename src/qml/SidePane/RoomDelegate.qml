@@ -71,6 +71,7 @@ HTileDelegate {
 
         let ev = model.data.last_event
 
+        // If it's an emote or non-message/media event
         if (ev.event_type === "RoomMessageEmote" ||
             ! ev.event_type.startsWith("RoomMessage")) {
             return Utils.processedEventText(ev)

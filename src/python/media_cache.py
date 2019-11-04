@@ -1,18 +1,21 @@
 import asyncio
+import functools
 import io
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import DefaultDict, Optional, Tuple
+from typing import Any, DefaultDict, Dict, Optional, Tuple
 from urllib.parse import urlparse
 
 import aiofiles
-import nio
 from PIL import Image as PILImage
+
+import nio
 
 from .matrix_client import MatrixClient
 
-Size = Tuple[int, int]
+CryptDict = Optional[Dict[str, Any]]
+Size      = Tuple[int, int]
 
 CONCURRENT_DOWNLOADS_LIMIT                   = asyncio.BoundedSemaphore(8)
 ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
@@ -26,9 +29,10 @@ class DownloadFailed(Exception):
 
 @dataclass
 class Media:
-    cache: "MediaCache"    = field()
-    mxc:   str             = field()
-    data:  Optional[bytes] = field(repr=False)
+    cache:      "MediaCache"    = field()
+    mxc:        str             = field()
+    data:       Optional[bytes] = field(repr=False)
+    crypt_dict: CryptDict       = field(repr=False)
 
 
     def __post_init__(self) -> None:
@@ -89,7 +93,23 @@ class Media:
         if isinstance(resp, nio.DownloadError):
             raise DownloadFailed(resp.message, resp.status_code)
 
-        return resp.body
+        return await self._decrypt(resp.body)
+
+
+    async def _decrypt(self, data: bytes) -> bytes:
+        if not self.crypt_dict:
+            return data
+
+        func = functools.partial(
+            nio.crypto.attachments.decrypt_attachment,
+            data,
+            self.crypt_dict["key"]["k"],
+            self.crypt_dict["hashes"]["sha256"],
+            self.crypt_dict["iv"],
+        )
+
+        # Run in a separate thread
+        return await asyncio.get_event_loop().run_in_executor(None, func)
 
 
 @dataclass
@@ -97,6 +117,7 @@ class Thumbnail(Media):
     cache:       "MediaCache"    = field()
     mxc:         str             = field()
     data:        Optional[bytes] = field(repr=False)
+    crypt_dict:  CryptDict       = field(repr=False)
     wanted_size: Size            = field()
 
     server_size: Optional[Size] = field(init=False, repr=False, default=None)
@@ -159,21 +180,29 @@ class Thumbnail(Media):
     async def _get_remote_data(self) -> bytes:
         parsed = urlparse(self.mxc)
 
-        resp = await self.cache.client.thumbnail(
-            server_name = parsed.netloc,
-            media_id    = parsed.path.lstrip("/"),
-            width       = self.wanted_size[0],
-            height      = self.wanted_size[1],
-        )
+        if self.crypt_dict:
+            resp = await self.cache.client.download(
+                server_name = parsed.netloc,
+                media_id    = parsed.path.lstrip("/"),
+            )
+        else:
+            resp = await self.cache.client.thumbnail(
+                server_name = parsed.netloc,
+                media_id    = parsed.path.lstrip("/"),
+                width       = self.wanted_size[0],
+                height      = self.wanted_size[1],
+            )
 
-        if isinstance(resp, nio.ThumbnailError):
+        if isinstance(resp, (nio.DownloadError, nio.ThumbnailError)):
             raise DownloadFailed(resp.message, resp.status_code)
 
-        with io.BytesIO(resp.body) as img:
+        decrypted = await self._decrypt(resp.body)
+
+        with io.BytesIO(decrypted) as img:
             # The server may return a thumbnail bigger than what we asked for
             self.server_size = PILImage.open(img).size
 
-        return resp.body
+        return decrypted
 
 
 @dataclass
@@ -190,9 +219,13 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def get_media(self, mxc: str) -> str:
-        return str(await Media(self, mxc, data=None).get())
+    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> str:
+        return str(await Media(self, mxc, None, crypt_dict).get())
 
 
-    async def get_thumbnail(self, mxc: str, width: int, height: int) -> str:
-        return str(await Thumbnail(self, mxc, None, (width, height)).get())
+    async def get_thumbnail(
+        self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
+    ) -> str:
+
+        thumb = Thumbnail(self, mxc, None, crypt_dict, (width, height))
+        return str(await thumb.get())
