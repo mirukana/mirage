@@ -2,17 +2,19 @@ import QtQuick 2.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-HImage {
+HMxcImage {
     id: image
     horizontalAlignment: Image.AlignLeft
-    sourceSize.width: theme.chat.message.thumbnailWidth  // FIXME
-    source: animated ? openUrl : loader.previewUrl
+    sourceSize.width: 640  // FIXME
+    sourceSize.height: 480  // FIXME
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
               Utils.urlExtension(loader.mediaUrl) === "gif"
+    clientUserId: chatPage.userId
+    mxc: animated ? openUrl : (loader.thumbnailMxc || loader.mediaUrl)
 
 
     property EventMediaLoader loader
-    readonly property url openUrl: loader.mediaUrl || loader.previewUrl
+    readonly property url openUrl: loader.mediaUrl || loader.thumbnailMxc
 
 
     TapHandler {

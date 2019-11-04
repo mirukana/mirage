@@ -31,10 +31,18 @@ HImage {
 
         if (! image) return  // if it was destroyed
 
-        py.callClientCoro(clientUserId, "media_cache.thumbnail", arg, path => {
-            if (! image) return
-            image.cachedPath = path
-            show             = image.visible
-        })
+        if (! image.mxc.startsWith("mxc://")) {
+            source = mxc
+            show   = image.visible
+            return
+        }
+
+        py.callClientCoro(
+            clientUserId, "media_cache.get_thumbnail", [mxc, w, h], path => {
+                if (! image) return
+                image.cachedPath = path
+                show             = image.visible
+            }
+        )
     }
 }

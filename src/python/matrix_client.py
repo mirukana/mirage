@@ -443,7 +443,6 @@ class MatrixClient(nio.AsyncClient):
                 else:
                     crypt_dict, upload_mime = {}, mime
 
-
                 return (
                     await self.upload(data, upload_mime, Path(path).name),
                     {
@@ -813,7 +812,7 @@ class MatrixClient(nio.AsyncClient):
             ev,
             content        = "",
             inline_content = ev.body,
-            media_url      = nio.Api.mxc_to_http(ev.url),
+            media_url      = ev.url,
             media_title    = ev.body,
             media_width    = info.get("w") or 0,
             media_height   = info.get("h") or 0,
@@ -821,9 +820,7 @@ class MatrixClient(nio.AsyncClient):
             media_size     = info.get("size") or 0,
             media_mime     = info.get("mimetype") or 0,
 
-            thumbnail_url =
-                nio.Api.mxc_to_http(info.get("thumbnail_url") or ""),
-
+            thumbnail_url    = info.get("thumbnail_url") or "",
             thumbnail_width  = thumb_info.get("w") or 0,
             thumbnail_height = thumb_info.get("h") or 0,
         )

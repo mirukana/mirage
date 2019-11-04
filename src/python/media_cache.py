@@ -26,8 +26,9 @@ class DownloadFailed(Exception):
 
 @dataclass
 class Media:
-    cache: "MediaCache" = field()
-    mxc:   str          = field()
+    cache: "MediaCache"    = field()
+    mxc:   str             = field()
+    data:  Optional[bytes] = field(repr=False)
 
 
     def __post_init__(self) -> None:
@@ -54,7 +55,7 @@ class Media:
             try:
                 return await self._get_local_existing_file()
             except FileNotFoundError:
-                return await self._download()
+                return await self.create()
 
 
     async def _get_local_existing_file(self) -> Path:
@@ -64,14 +65,15 @@ class Media:
         return self.local_path
 
 
-    async def _download(self) -> Path:
-        async with CONCURRENT_DOWNLOADS_LIMIT:
-            body = await self._get_remote_data()
+    async def create(self) -> Path:
+        if self.data is None:
+            async with CONCURRENT_DOWNLOADS_LIMIT:
+                self.data = await self._get_remote_data()
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         async with aiofiles.open(self.local_path, "wb") as file:
-            await file.write(body)
+            await file.write(self.data)
 
         return self.local_path
 
@@ -82,9 +84,10 @@ class Media:
 
 @dataclass
 class Thumbnail(Media):
-    cache:       "MediaCache" = field()
-    mxc:         str          = field()
-    wanted_size: Size         = field()
+    cache:       "MediaCache"    = field()
+    mxc:         str             = field()
+    data:        Optional[bytes] = field(repr=False)
+    wanted_size: Size            = field()
 
     server_size: Optional[Size] = field(init=False, repr=False, default=None)
 
@@ -143,7 +146,6 @@ class Thumbnail(Media):
         raise FileNotFoundError()
 
 
-
     async def _get_remote_data(self) -> bytes:
         parsed = urlparse(self.mxc)
 
@@ -154,12 +156,12 @@ class Thumbnail(Media):
             height      = self.wanted_size[1],
         )
 
+        if isinstance(resp, nio.ThumbnailError):
+            raise DownloadFailed(resp.message, resp.status_code)
+
         with io.BytesIO(resp.body) as img:
             # The server may return a thumbnail bigger than what we asked for
             self.server_size = PILImage.open(img).size
-
-        if isinstance(resp, nio.ErrorResponse):
-            raise DownloadFailed(resp.message, resp.status_code)
 
         return resp.body
 
@@ -178,5 +180,5 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def thumbnail(self, mxc: str, width: int, height: int) -> str:
-        return str(await Thumbnail(self, mxc, (width, height)).get())
+    async def get_thumbnail(self, mxc: str, width: int, height: int) -> str:
+        return str(await Thumbnail(self, mxc, None, (width, height)).get())

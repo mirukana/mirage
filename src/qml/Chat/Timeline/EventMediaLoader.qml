@@ -8,7 +8,7 @@ HLoader {
 
 
     property QtObject singleMediaInfo
-    property url mediaUrl
+    property string mediaUrl
     property string showSender: ""
     property string showDate: ""
 
@@ -47,21 +47,17 @@ HLoader {
         return EventDelegate.Media.Page
     }
 
-    readonly property url previewUrl: (
-        type === EventDelegate.Media.File ||
-        type === EventDelegate.Media.Image ?
-        singleMediaInfo.thumbnail_url : ""
-    ) || mediaUrl
+    readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
 
 
-    onPreviewUrlChanged: {
+    onTypeChanged: {
         if (type === EventDelegate.Media.Image) {
-            var file  = "EventImage.qml"
+            var file = "EventImage.qml"
 
         // } else if (type === EventDelegate.Media.File) {
         //     var file  = "EventFile.qml"
         //     var props = {
-        //         thumbnailUrl: previewUrl,
+        //         thumbnailMxc: thumbnailMxc,
         //         fileUrl:      mediaUrl,
         //         fileTitle:    info.media_title,
         //         fileSize:     info.media_size,
