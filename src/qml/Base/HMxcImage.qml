@@ -3,10 +3,18 @@ import QtQuick 2.12
 HImage {
     id: image
     source: sourceOverride || (show ? cachedPath : "")
-    onMxcChanged: Qt.callLater(update)
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
     onVisibleChanged: Qt.callLater(update)
+    onMxcChanged: {
+        Qt.callLater(update)
+
+        if (mxc.startsWith("mxc://")) {
+            py.callCoro("mxc_to_http", [mxc], http => { httpUrl = http || "" })
+        } else {
+            httpUrl = mxc
+        }
+    }
 
 
     property string clientUserId
@@ -16,6 +24,7 @@ HImage {
 
     property bool show: false
     property string cachedPath: ""
+    property string httpUrl: ""
 
 
     function update() {

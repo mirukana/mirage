@@ -139,6 +139,11 @@ class Backend:
 
 
     @staticmethod
+    async def mxc_to_http(mxc: str) -> Optional[str]:
+        return nio.Api.mxc_to_http(mxc)
+
+
+    @staticmethod
     async def check_exported_keys_passphrase(file_path: str, passphrase: str,
                                             ) -> Union[bool, Tuple[str, bool]]:
         """Check if the exported keys file can be decrypted with passphrase.

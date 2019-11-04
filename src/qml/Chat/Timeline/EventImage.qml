@@ -11,23 +11,24 @@ HMxcImage {
               Utils.urlExtension(loader.mediaUrl) === "gif"
     clientUserId: chatPage.userId
     thumbnail: ! animated
-    mxc: thumbnail ? (loader.thumbnailMxc || loader.mediaUrl) : openUrl
+    mxc: thumbnail ?
+         (loader.thumbnailMxc || loader.mediaUrl) :
+         (loader.mediaUrl || loader.thumbnailMxc)
 
 
     property EventMediaLoader loader
-    readonly property url openUrl: loader.mediaUrl || loader.thumbnailMxc
 
 
     TapHandler {
-        onTapped: if (! image.animated) Qt.openUrlExternally(openUrl)
-        onDoubleTapped: Qt.openUrlExternally(openUrl)
+        onTapped: if (! image.animated) Qt.openUrlExternally(image.httpUrl)
+        onDoubleTapped: Qt.openUrlExternally(image.httpUrl)
     }
 
     HoverHandler {
         id: hover
         onHoveredChanged:
             eventDelegate.hoveredMediaTypeUrl =
-                hovered ? [EventDelegate.Media.Image, openUrl] : []
+                hovered ? [EventDelegate.Media.Image, image.httpUrl] : []
     }
 
     EventImageTextBubble {
