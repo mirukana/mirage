@@ -32,7 +32,9 @@ Image {
             horizontalAlignment: image.horizontalAlignment
             verticalAlignment: image.verticalAlignment
 
-            cache: true  // Needed to allow GIFs to loop
+            // Online GIFs won't be able to loop if cache is set to false,
+            // but caching GIFs is expansive.
+            cache: ! Qt.resolvedUrl(source).startsWith("file://")
             paused: ! visible || window.hidden || userPaused
 
             property bool userPaused: ! window.settings.media.autoPlayGIF
