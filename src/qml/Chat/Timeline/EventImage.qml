@@ -20,18 +20,20 @@ HMxcImage {
 
 
     property EventMediaLoader loader
+    readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
+    readonly property string openUrl: isEncrypted ? cachedPath : image.httpUrl
 
 
     TapHandler {
-        onTapped: if (! image.animated) Qt.openUrlExternally(image.httpUrl)
-        onDoubleTapped: Qt.openUrlExternally(image.httpUrl)
+        onTapped: if (! image.animated) Qt.openUrlExternally(openUrl)
+        onDoubleTapped: Qt.openUrlExternally(openUrl)
     }
 
     HoverHandler {
         id: hover
         onHoveredChanged:
             eventDelegate.hoveredMediaTypeUrl =
-                hovered ? [EventDelegate.Media.Image, image.httpUrl] : []
+                hovered ? [EventDelegate.Media.Image, openUrl] : []
     }
 
     EventImageTextBubble {
