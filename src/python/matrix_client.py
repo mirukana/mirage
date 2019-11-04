@@ -1,4 +1,5 @@
 import asyncio
+import functools
 import html
 import inspect
 import io
@@ -12,19 +13,23 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from types import ModuleType
-from typing import Any, DefaultDict, Dict, Optional, Set, Tuple, Type, Union
+from typing import (
+    Any, BinaryIO, DefaultDict, Dict, Optional, Set, Tuple, Type, Union
+)
 from uuid import uuid4
 
-import nio
-from nio.crypto.attachments import encrypt_attachment
 from PIL import Image as PILImage
 from pymediainfo import MediaInfo
+
+import nio
 
 from . import __about__, utils
 from .html_filter import HTML_FILTER
 from .models.items import Account, Event, Member, Room, TypeSpecifier
 from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
+
+CryptDict = Dict[str, Any]
 
 
 @dataclass
@@ -419,9 +424,19 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((Member, room_id), None)
 
 
+    async def encrypt_attachment(self, data: bytes) -> Tuple[bytes, CryptDict]:
+        func = functools.partial(
+            nio.crypto.attachments.encrypt_attachment,
+            data,
+        )
+
+        # Run in a separate thread
+        return await asyncio.get_event_loop().run_in_executor(None, func)
+
+
     async def upload_thumbnail(
         self, path: Union[Path, str], encrypt: bool = False,
-    ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
+    ) -> Tuple[str, Dict[str, Any], CryptDict]:
 
         png_modes = ("1", "L", "P", "RGBA")
 
@@ -449,7 +464,7 @@ class MatrixClient(nio.AsyncClient):
                 data = out.getvalue()
 
                 if encrypt:
-                    data, crypt_dict = encrypt_attachment(data)
+                    data, crypt_dict = await self.encrypt_attachment(data)
                     upload_mime      = "application/octet-stream"
                 else:
                     crypt_dict, upload_mime = {}, mime
@@ -471,13 +486,15 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def upload_file(self, path: Union[Path, str], encrypt: bool = False,
-                         ) -> Tuple[str, str, Dict[str, Any]]:
+                         ) -> Tuple[str, str, CryptDict]:
         with open(path, "rb") as file:
             mime = utils.guess_mime(file)
             file.seek(0, 0)
 
+            data: Union[BinaryIO, bytes]
+
             if encrypt:
-                data, crypt_dict = encrypt_attachment(file.read())
+                data, crypt_dict = await self.encrypt_attachment(file.read())
                 upload_mime      = "application/octet-stream"
             else:
                 data, crypt_dict, upload_mime = file, {}, mime

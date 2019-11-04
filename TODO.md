@@ -1,9 +1,7 @@
 - Media
-  - Encrypt file for upload in thread
   - Cache our own uploads
-  - Uploading progress (+local echo)
-    - Deduplicate uploads
-  - Loading progress bar
+  - Uploading progress bar (+local echo)
+  - Image loading progress bar
   - Downloading
     - Bottom/top bar
 
