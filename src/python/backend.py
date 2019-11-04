@@ -108,13 +108,18 @@ class Backend:
         await self.saved_accounts.delete(user_id)
 
 
-    async def wait_until_client_exists(self, user_id: str = "") -> None:
-        loops = 0
+    async def wait_until_any_client_exists(self) -> None:
         while True:
-            if user_id and user_id in self.clients:
+            if self.clients:
                 return
 
-            if not user_id and self.clients:
+            await asyncio.sleep(0.1)
+
+
+    async def wait_until_client_exists(self, user_id: str) -> None:
+        loops = 0
+        while True:
+            if user_id in self.clients:
                 return
 
             if loops and loops % 100 == 0:  # every 10s except first time
@@ -171,7 +176,7 @@ class Backend:
 
         async with self.get_profile_locks[user_id]:
             if not self.clients:
-                await self.wait_until_client_exists()
+                await self.wait_until_any_client_exists()
 
             client = self.clients.get(
                 user_id,
