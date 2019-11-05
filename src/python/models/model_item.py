@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Any, Dict, Optional
 
 
@@ -23,8 +24,14 @@ class ModelItem:
     @property
     def serialized(self) -> Dict[str, Any]:
         return {
-            name: getattr(self, name) for name in dir(self)
+            name: self._process_attr(getattr(self, name)) for name in dir(self)
             if not (
                 name.startswith("_") or name in ("parent_model", "serialized")
             )
         }
+
+    @staticmethod
+    def _process_attr(value: Any) -> Any:
+        if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
+            return value.value
+        return value
