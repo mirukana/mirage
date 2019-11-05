@@ -156,15 +156,18 @@ HRowLayout {
                 Layout.leftMargin: pureMedia ? 0 : contentLabel.leftPadding
                 Layout.rightMargin: pureMedia ? 0 : contentLabel.rightPadding
 
-                Layout.minimumWidth:
-                    type === EventDelegate.Media.Image ?
-                    (singleMediaInfo.media_width ||
-                     (item ? item.loadingLabel.implicitWidth : -1)) : -1
+                Layout.preferredWidth: item ? item.width : -1
+                Layout.preferredHeight: item ? item.height : -1
 
-                Layout.minimumHeight:
-                    type === EventDelegate.Media.Image ?
-                    (singleMediaInfo.media_height ||
-                     (item ? item.loadingLabel.implicitHeight : -1)) : -1
+                // Layout.minimumWidth:
+                //     type === EventDelegate.Media.Image ?
+                //     (singleMediaInfo.media_width ||
+                //      (item ? item.loadingLabel.implicitWidth : -1)) : -1
+
+                // Layout.minimumHeight:
+                //     type === EventDelegate.Media.Image ?
+                //     (singleMediaInfo.media_height ||
+                //      (item ? item.loadingLabel.implicitHeight : -1)) : -1
 
                 // Layout.minimumWidth:
                 //     type === EventDelegate.Media.File ?
@@ -179,8 +182,8 @@ HRowLayout {
 
                 //     -1
 
-                Layout.maximumWidth: messageBodyWidth
-                Layout.maximumHeight: eventList.height / 2
+                // Layout.maximumWidth: messageBodyWidth
+                // Layout.maximumHeight: eventList.height / 2
             }
         }
     }

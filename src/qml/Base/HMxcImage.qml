@@ -42,8 +42,8 @@ HImage {
         if (! image) return  // if it was destroyed
 
         if (! image.mxc.startsWith("mxc://")) {
-            source = mxc
-            show   = image.visible
+            if (source != mxc) source = mxc
+            show = image.visible
             return
         }
 
@@ -54,8 +54,8 @@ HImage {
         py.callClientCoro(
             clientUserId, "media_cache." + method, args, path => {
                 if (! image) return
-                image.cachedPath = path
-                show             = image.visible
+                if (image.cachedPath != path) image.cachedPath = path
+                show = image.visible
             }
         )
     }

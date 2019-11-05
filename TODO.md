@@ -1,10 +1,9 @@
 - Media
   - Uploading progress bar (+local echo)
   - Directly create cache files for our uploads before actually uploading
-  - Fix image sizes
-    - Image loading progress bar
   - Downloading
     - Bottom/top bar
+  - Image loading progress bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)
 
   - Support m.file thumbnails
@@ -34,6 +33,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - Code not colored in room subtitle
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while

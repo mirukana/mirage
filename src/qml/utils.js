@@ -155,12 +155,13 @@ function filterModelSource(source, filter_text, property="filter_string") {
 }
 
 
-function fitSize(width, height, max) {
+function fitSize(minWidth, minHeight, width, height, maxWidth, maxHeight) {
     if (width >= height) {
-        let new_width = Math.min(width, max)
+        let new_width = Math.max(Math.min(width, maxWidth), minWidth)
         return Qt.size(new_width, height / (width / new_width))
     }
-    let new_height = Math.min(height, max)
+
+    let new_height = Math.max(Math.min(height, maxHeight), minHeight)
     return Qt.size(width / (height / new_height), new_height)
 }
 

@@ -4,9 +4,9 @@ import "../../utils.js" as Utils
 
 HMxcImage {
     id: image
+    width: fitSize.width
+    height: fitSize.height
     horizontalAlignment: Image.AlignLeft
-    sourceSize.width: 640  // FIXME
-    sourceSize.height: 480  // FIXME
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
               Utils.urlExtension(loader.mediaUrl) === "gif"
     clientUserId: chatPage.userId
@@ -22,6 +22,27 @@ HMxcImage {
     property EventMediaLoader loader
     readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
     readonly property string openUrl: isEncrypted ? cachedPath : image.httpUrl
+
+    readonly property size fitSize: Utils.fitSize(
+        // Minimum display size
+        192,
+        192,
+
+        // Real size
+        loader.singleMediaInfo.thumbnail_width ||
+        loader.singleMediaInfo.media_width ||
+        implicitWidth ||
+        800,
+
+        loader.singleMediaInfo.thumbnail_height ||
+        loader.singleMediaInfo.media_height ||
+        implicitHeight ||
+        600,
+
+        // Maximum display size
+        Math.min(eventList.height / 3, eventContent.messageBodyWidth),
+        eventList.height / 3,
+    )
 
 
     TapHandler {

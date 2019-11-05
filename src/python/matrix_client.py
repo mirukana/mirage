@@ -14,7 +14,7 @@ from functools import partial
 from pathlib import Path
 from types import ModuleType
 from typing import (
-    Any, BinaryIO, DefaultDict, Dict, Optional, Set, Tuple, Type, Union
+    Any, BinaryIO, DefaultDict, Dict, Optional, Set, Tuple, Type, Union,
 )
 from uuid import uuid4
 
