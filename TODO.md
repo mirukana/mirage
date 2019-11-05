@@ -1,4 +1,5 @@
 - Media
+  - SVG uploads
   - Uploading progress bar (+local echo)
   - Directly create cache files for our uploads before actually uploading
   - Downloading

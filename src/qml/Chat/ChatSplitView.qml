@@ -25,6 +25,10 @@ HSplitView {
             Layout.fillWidth: true
         }
 
+        UploadsBar {
+            Layout.fillWidth: true
+        }
+
         InviteBanner {
             id: inviteBanner
             visible: ! chatPage.roomInfo.left && inviterId

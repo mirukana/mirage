@@ -1,7 +1,9 @@
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+from uuid import uuid4
 
 import lxml  # nosec
 
@@ -99,6 +101,38 @@ class Member(ModelItem):
     @property
     def filter_string(self) -> str:
         return self.display_name
+
+
+class UploadStatus(AutoStrEnum):
+    Starting            = auto()
+    Encrypting          = auto()
+    Uploading           = auto()
+    CreatingThumbnail   = auto()
+    EncryptingThumbnail = auto()
+    UploadingThumbnail  = auto()
+    Success             = auto()
+    Failure             = auto()  # TODO
+
+
+@dataclass
+class Upload(ModelItem):
+    filepath:   str          = field()
+    status:     UploadStatus = UploadStatus.Starting
+    total_size: int          = 0
+    uploaded:   int          = 0
+
+    uuid:       str = field(init=False, default_factory=lambda: str(uuid4()))
+    start_date: datetime = field(init=False, default_factory=datetime.now)
+
+
+    def __post_init__(self) -> None:
+        if not self.total_size:
+            self.total_size = Path(self.filepath).resolve().stat().st_size
+
+
+    def __lt__(self, other: "Upload") -> bool:
+        # TODO
+        return self.start_date > other.start_date
 
 
 class TypeSpecifier(AutoStrEnum):

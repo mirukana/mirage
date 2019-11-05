@@ -25,7 +25,9 @@ import nio
 
 from . import __about__, utils
 from .html_filter import HTML_FILTER
-from .models.items import Account, Event, Member, Room, TypeSpecifier
+from .models.items import (
+    Account, Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
+)
 from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
 
@@ -224,9 +226,15 @@ class MatrixClient(nio.AsyncClient):
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
         path    = Path(path)
+        size    = path.resolve().stat().st_size
         encrypt = room_id in self.encrypted_rooms
 
-        url, mime, crypt_dict = await self.upload_file(path, encrypt=encrypt)
+        upload_item = Upload(str(path), total_size=size)
+        self.models[Upload, room_id][upload_item.uuid] = upload_item
+
+        url, mime, crypt_dict = await self.upload_file(
+            path, upload_item, encrypt=encrypt,
+        )
 
         kind = (mime or "").split("/")[0]
 
@@ -234,7 +242,7 @@ class MatrixClient(nio.AsyncClient):
             "body": path.name,
             "info": {
                 "mimetype": mime,
-                "size":     path.resolve().stat().st_size,
+                "size":     size,
             },
         }
 
@@ -254,7 +262,9 @@ class MatrixClient(nio.AsyncClient):
 
             try:
                 thumb_url, thumb_info, thumb_crypt_dict = \
-                    await self.upload_thumbnail(path, encrypt=encrypt)
+                    await self.upload_thumbnail(
+                        path, upload_item, encrypt=encrypt,
+                    )
             except (UneededThumbnail, UnthumbnailableError):
                 pass
             else:
@@ -301,6 +311,9 @@ class MatrixClient(nio.AsyncClient):
 
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
+
+        upload_item.status = UploadStatus.Success
+        del self.models[Upload, room_id]
 
         uuid = str(uuid4())
 
@@ -435,7 +448,10 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def upload_thumbnail(
-        self, path: Union[Path, str], encrypt: bool = False,
+        self,
+        path:    Union[Path, str],
+        item:    Optional[Upload] = None,
+        encrypt: bool             = False,
     ) -> Tuple[str, Dict[str, Any], CryptDict]:
 
         png_modes = ("1", "L", "P", "RGBA")
@@ -449,6 +465,9 @@ class MatrixClient(nio.AsyncClient):
 
             if small and is_jpg_png and not jpgable_png:
                 raise UneededThumbnail()
+
+            if item:
+                item.status = UploadStatus.CreatingThumbnail
 
             if not small:
                 thumb.thumbnail((800, 600), PILImage.LANCZOS)
@@ -464,10 +483,16 @@ class MatrixClient(nio.AsyncClient):
                 data = out.getvalue()
 
                 if encrypt:
+                    if item:
+                        item.status = UploadStatus.EncryptingThumbnail
+
                     data, crypt_dict = await self.encrypt_attachment(data)
                     upload_mime      = "application/octet-stream"
                 else:
                     crypt_dict, upload_mime = {}, mime
+
+                if item:
+                    item.status = UploadStatus.UploadingThumbnail
 
                 return (
                     await self.upload(data, upload_mime, Path(path).name),
@@ -485,8 +510,13 @@ class MatrixClient(nio.AsyncClient):
             raise UnthumbnailableError(err)
 
 
-    async def upload_file(self, path: Union[Path, str], encrypt: bool = False,
-                         ) -> Tuple[str, str, CryptDict]:
+    async def upload_file(
+        self,
+        path:    Union[Path, str],
+        item:    Optional[Upload] = None,
+        encrypt: bool             = False,
+    ) -> Tuple[str, str, CryptDict]:
+
         with open(path, "rb") as file:
             mime = utils.guess_mime(file)
             file.seek(0, 0)
@@ -494,10 +524,16 @@ class MatrixClient(nio.AsyncClient):
             data: Union[BinaryIO, bytes]
 
             if encrypt:
+                if item:
+                    item.status = UploadStatus.Encrypting
+
                 data, crypt_dict = await self.encrypt_attachment(file.read())
                 upload_mime      = "application/octet-stream"
             else:
                 data, crypt_dict, upload_mime = file, {}, mime
+
+            if item:
+                item.status = UploadStatus.Uploading
 
             return (
                 await self.upload(data, upload_mime, Path(path).name),

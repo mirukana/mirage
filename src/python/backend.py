@@ -9,7 +9,7 @@ import nio
 
 from .app import App
 from .matrix_client import MatrixClient
-from .models.items import Account, Device, Event, Member, Room
+from .models.items import Account, Device, Event, Member, Room, Upload
 from .models.model_store import ModelStore
 
 ProfileResponse = Union[nio.ProfileGetResponse, nio.ProfileGetError]
@@ -29,6 +29,7 @@ class Backend:
             (Device, str),       # Devices of user_id
             (Room,   str),       # Rooms for user_id
             (Member, str),       # Members in room_id
+            (Upload, str),       # Uploads running in room_id
             (Event,  str, str),  # Events for account user_id for room_id
         })
 
