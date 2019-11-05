@@ -1,9 +1,11 @@
 - Media
-  - Cache our own uploads
   - Uploading progress bar (+local echo)
-  - Image loading progress bar
+  - Directly create cache files for our uploads before actually uploading
+  - Fix image sizes
+    - Image loading progress bar
   - Downloading
     - Bottom/top bar
+  - Verify things work with chat.privacytools.io (subdomain weirdness)
 
   - Support m.file thumbnails
   - Generate video thumbnails
