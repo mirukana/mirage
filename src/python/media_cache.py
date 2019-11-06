@@ -194,7 +194,6 @@ class Thumbnail(Media):
             )
 
         if isinstance(resp, (nio.DownloadError, nio.ThumbnailError)):
-            import remote_pdb; remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
             raise DownloadFailed(resp.message, resp.status_code)
 
         decrypted = await self._decrypt(resp.body)
