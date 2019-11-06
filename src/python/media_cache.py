@@ -194,6 +194,7 @@ class Thumbnail(Media):
             )
 
         if isinstance(resp, (nio.DownloadError, nio.ThumbnailError)):
+            import remote_pdb; remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
             raise DownloadFailed(resp.message, resp.status_code)
 
         decrypted = await self._decrypt(resp.body)
@@ -227,5 +228,8 @@ class MediaCache:
         self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
     ) -> str:
 
-        thumb = Thumbnail(self, mxc, None, crypt_dict, (width, height))
+        thumb = Thumbnail(
+            # QML sometimes pass float sizes, which matrix API doesn't like.
+            self, mxc, None, crypt_dict, (round(width), round(height)),
+        )
         return str(await thumb.get())
