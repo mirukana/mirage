@@ -2,6 +2,7 @@ import QtQuick 2.12
 
 HImage {
     id: image
+    progressBar.indeterminate: isMxc
     source: sourceOverride || (show ? cachedPath : "")
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
@@ -9,7 +10,7 @@ HImage {
     onMxcChanged: {
         Qt.callLater(update)
 
-        if (mxc.startsWith("mxc://")) {
+        if (isMxc) {
             py.callCoro("mxc_to_http", [mxc], http => {
                 image.httpUrl = http || ""
             })
@@ -28,6 +29,7 @@ HImage {
     property bool show: false
     property string cachedPath: ""
     property string httpUrl: ""
+    readonly property bool isMxc: mxc.startsWith("mxc://")
 
 
     function update() {
@@ -41,7 +43,7 @@ HImage {
 
         if (! image) return  // if it was destroyed
 
-        if (! image.mxc.startsWith("mxc://")) {
+        if (! isMxc) {
             if (source != mxc) source = mxc
             show = image.visible
             return

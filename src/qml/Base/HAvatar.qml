@@ -46,6 +46,7 @@ Rectangle {
     HMxcImage {
         id: avatarImage
         anchors.fill: parent
+        progressBar.visible: false
         visible: Boolean(sourceOverride || mxc)
         z: 2
         sourceSize.width: parent.width
@@ -53,7 +54,6 @@ Rectangle {
         fillMode: Image.PreserveAspectCrop
         animate: false
         clientUserId: avatar.clientUserId
-        loadingLabel.font.pixelSize: theme.fontSize.small
 
         HoverHandler { id: hoverHandler }
 

@@ -12,7 +12,7 @@ RadialBar {
     spanAngle: 360
 
     from: 0
-    to: 100
+    to: 1
     value: 0
 
     showText: true

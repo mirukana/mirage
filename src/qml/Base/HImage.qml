@@ -12,9 +12,8 @@ Image {
 
 
     property bool animate: true
-
     property bool animated: Utils.urlExtension(image.source) === "gif"
-    readonly property alias loadingLabel: loadingLabel
+    property alias progressBar: progressBar
 
 
     Component {
@@ -65,15 +64,15 @@ Image {
         sourceComponent: animate && animated ? animatedImageComponent : null
     }
 
-
-    HLabel {
-        id: loadingLabel
+    HCircleProgressBar {
+        id: progressBar
         anchors.centerIn: parent
+        width: Math.min(parent.width, parent.height) * 0.5
+        height: width
         visible: image.status === Image.Loading
-        text: qsTr("%1%").arg(progress)
+        value: image.progress
+        text: Math.round(value * 100) + "%"
 
-        property int progress: Math.round(image.progress * 100)
-
-        Behavior on progress { HNumberAnimation { factor: 2 } }
+        Behavior on value { HNumberAnimation { factor: 2 } }
     }
 }
