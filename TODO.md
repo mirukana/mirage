@@ -3,7 +3,7 @@
   - Downloading
     - Bottom/top bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)
-  - Show real progression for thumbnail loadings, uploads and downloads
+  - Show real progression for mxc thumbnail loadings, uploads and downloads
 
   - Support m.file thumbnails
   - Generate video thumbnails
@@ -32,7 +32,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - Code not colored in room subtitle
+  - `code` not colored in room subtitle
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
   - When selecting text and scrolling up, selection stops working after a while
@@ -58,10 +58,6 @@
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
-
-  - Link previews
-    - Support showing images at the place they should be instead of always
-      at the end of the message
 
   - Just use Shortcut onHeld instead of analyzing the current velocity
     in `smartVerticalFlick()`
@@ -120,7 +116,7 @@
   - Add room
   - Prevent using the composer if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
-  - Spinner when loading past room events or images 
+  - Spinner when loading past room events
 
   - Theming
     - Bundle fonts
@@ -170,7 +166,6 @@
   - Check if username exists on login screen
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
-  - Image provider: on failed conversion, way to show a "broken image" thumb?
   - Config file format
 
   - Startup improvements
