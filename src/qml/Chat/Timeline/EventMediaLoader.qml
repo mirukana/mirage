@@ -11,6 +11,7 @@ HLoader {
     property string mediaUrl
     property string showSender: ""
     property string showDate: ""
+    property string showLocalEcho: ""
 
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",

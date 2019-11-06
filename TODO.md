@@ -1,7 +1,6 @@
 - Media
-  - Uploading progress bar (+local echo)
+  - Uploading progress bar
   - Text bubbles theming
-  - Directly create cache files for our uploads before actually uploading
   - Downloading
     - Bottom/top bar
   - Image loading progress bar

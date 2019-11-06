@@ -67,6 +67,7 @@ HMxcImage {
     EventImageTextBubble {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        text: loader.showDate
+        text: [loader.showDate, loader.showLocalEcho].join(" ")
+        textFormat: Text.StyledText
     }
 }

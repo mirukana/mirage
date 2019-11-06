@@ -15,9 +15,14 @@ HRowLayout {
             Utils.coloredNameHtml(model.sender_name, model.sender_id) +
             "</div>"
         )
-    readonly property string eventText: Utils.processedEventText(model)
-    readonly property string eventTime: Utils.formatTime(model.date, false)
-    readonly property bool pureMedia: ! eventText && linksRepeater.count
+    readonly property string contentText: Utils.processedEventText(model)
+    readonly property string timeText: Utils.formatTime(model.date, false)
+    readonly property string localEchoText:
+        model.is_local_echo ?
+        "&nbsp;<font size=" + theme.fontSize.small + "px>⏳</font>" :
+        ""
+
+    readonly property bool pureMedia: ! contentText && linksRepeater.count
 
     readonly property string hoveredLink: contentLabel.hoveredLink
     readonly property bool hoveredSelectable: contentHover.hovered
@@ -87,7 +92,7 @@ HRowLayout {
                 eventContent.eventSender +
 
                 // Message body
-                eventContent.eventText +
+                eventContent.contentText +
 
                 // Time
                 // For some reason, if there's only one space,
@@ -95,7 +100,7 @@ HRowLayout {
                 "  " +
                 "<font size=" + theme.fontSize.small +
                 "px color=" + theme.chat.message.date + '>' +
-                eventTime +
+                timeText +
                 "</font>" +
 
                 // Local echo icon
@@ -117,7 +122,7 @@ HRowLayout {
                 contentLabel.select(
                     0,
                     contentLabel.length -
-                    eventTime.length - 1  // - 1: separating space
+                    timeText.length - 1  // - 1: separating space
                 )
                 contentLabel.updateContainerSelectedTexts()
             }
@@ -148,7 +153,8 @@ HRowLayout {
                 singleMediaInfo: eventDelegate.currentItem
                 mediaUrl: modelData
                 showSender: pureMedia ? eventSender : ""
-                showDate: pureMedia ? eventTime : ""
+                showDate: pureMedia ? timeText : ""
+                showLocalEcho: pureMedia ? localEchoText : ""
 
                 transform: Translate { x: xOffset }
 
