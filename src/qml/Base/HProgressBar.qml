@@ -18,9 +18,19 @@ ProgressBar {
         implicitHeight: theme.controls.progressBar.height
 
         Rectangle {
-            width: bar.visualPosition * parent.width
+            id: indicator
+            width: bar.indeterminate ?
+                   parent.width / 8 : bar.visualPosition * parent.width
             height: parent.height
             color: foregroundColor
+
+            XAnimator on x {
+                running: indeterminate
+                duration: theme.animationDuration * 8
+                from: 0
+                to: bar.width - indicator.width
+                onStopped: {[from, to] = [to, from]; start()}
+            }
         }
     }
 }

@@ -58,7 +58,6 @@
 - UI
   - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
-  - Indeterminate progress bar
   - `smartVerticalFlick()` gradual acceleration
 
   - Link previews

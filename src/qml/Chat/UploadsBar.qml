@@ -97,7 +97,7 @@ Rectangle {
 
             HProgressBar {
                 id: progressBar
-
+                indeterminate: true
                 Layout.fillWidth: true
             }
         }
