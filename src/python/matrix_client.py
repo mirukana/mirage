@@ -237,7 +237,12 @@ class MatrixClient(nio.AsyncClient):
             path, upload_item, encrypt=encrypt,
         )
 
+        await self.media_cache.create_media(url, path.read_bytes())
+
         kind = (mime or "").split("/")[0]
+
+        thumb_url:  str            = ""
+        thumb_info: Dict[str, Any] = {}
 
         content: dict = {
             "body": path.name,
@@ -266,13 +271,20 @@ class MatrixClient(nio.AsyncClient):
             )
 
             try:
-                thumb_url, thumb_info, thumb_crypt_dict = \
+                thumb_data, thumb_url, thumb_info, thumb_crypt_dict = \
                     await self.upload_thumbnail(
                         path, upload_item, is_svg=is_svg, encrypt=encrypt,
                     )
             except (UneededThumbnail, UnthumbnailableError):
                 pass
             else:
+                await self.media_cache.create_thumbnail(
+                    thumb_url,
+                    thumb_data,
+                    content["info"]["w"],
+                    content["info"]["h"],
+                )
+
                 if encrypt:
                     content["info"]["thumbnail_file"]  = {
                         "url": thumb_url,
@@ -323,14 +335,17 @@ class MatrixClient(nio.AsyncClient):
 
         await self._local_echo(
             room_id, uuid, event_type,
-            inline_content = path.name,
-            media_url      = url,
-            media_title    = path.name,
-            media_width    = content["info"].get("w", 0),
-            media_height   = content["info"].get("h", 0),
-            media_duration = content["info"].get("duration", 0),
-            media_size     = content["info"]["size"],
-            media_mime     = content["info"]["mimetype"],
+            inline_content   = path.name,
+            media_url        = url,
+            media_title      = path.name,
+            media_width      = content["info"].get("w", 0),
+            media_height     = content["info"].get("h", 0),
+            media_duration   = content["info"].get("duration", 0),
+            media_size       = content["info"]["size"],
+            media_mime       = content["info"]["mimetype"],
+            thumbnail_url    = thumb_url,
+            thumbnail_width  = thumb_info.get("w", 0),
+            thumbnail_height = thumb_info.get("h", 0),
         )
 
         await self._send_message(room_id, uuid, content)
@@ -352,7 +367,7 @@ class MatrixClient(nio.AsyncClient):
             sender_name      = our_info.display_name,
             sender_avatar    = our_info.avatar_url,
             is_local_echo    = True,
-            local_event_type = event_type.__name__,
+            local_event_type = event_type,
             **event_fields,
         )
 
@@ -457,7 +472,7 @@ class MatrixClient(nio.AsyncClient):
         item:    Optional[Upload] = None,
         is_svg:  bool             = False,
         encrypt: bool             = False,
-    ) -> Tuple[str, Dict[str, Any], CryptDict]:
+    ) -> Tuple[bytes, str, Dict[str, Any], CryptDict]:
 
         png_modes = ("1", "L", "P", "RGBA")
 
@@ -511,6 +526,7 @@ class MatrixClient(nio.AsyncClient):
                     item.status = UploadStatus.UploadingThumbnail
 
                 return (
+                    data,
                     await self.upload(data, upload_mime, Path(path).name),
                     {
                         "w":        thumb.width,

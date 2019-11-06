@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Type
 from uuid import uuid4
 
 import lxml  # nosec
@@ -159,8 +159,8 @@ class Event(ModelItem):
     target_name:   str = ""
     target_avatar: str = ""
 
-    is_local_echo:    bool = False
-    local_event_type: str  = ""
+    is_local_echo:    bool                      = False
+    local_event_type: Optional[Type[nio.Event]] = None
 
     media_url:        str            = ""
     media_title:      str            = ""
@@ -187,12 +187,20 @@ class Event(ModelItem):
 
     @property
     def event_type(self) -> str:
-        return self.local_event_type or type(self.source).__name__
+        if self.local_event_type:
+            return self.local_event_type.__name__
+
+        return type(self.source).__name__
 
     @property
     def links(self) -> List[str]:
-        if isinstance(self.source,
-                      (nio.RoomMessageMedia, nio.RoomEncryptedMedia)):
+        local_type    = self.local_event_type
+        media_classes = (nio.RoomMessageMedia, nio.RoomEncryptedMedia)
+
+        if local_type and issubclass(local_type, media_classes):
+            return [self.media_url]
+
+        if isinstance(self.source, media_classes):
             return [self.media_url]
 
         if not self.content.strip():

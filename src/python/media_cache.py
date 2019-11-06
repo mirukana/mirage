@@ -219,8 +219,19 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
+    async def create_media(self, mxc: str, data: bytes) -> None:
+        await Media(self, mxc, data, {}).create()
+
+
     async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> str:
         return str(await Media(self, mxc, None, crypt_dict).get())
+
+
+    async def create_thumbnail(
+        self, mxc: str, data: bytes, width: int, height: int,
+    ) -> None:
+        thumb = Thumbnail(self, mxc, data, {}, (round(width), round(height)))
+        await thumb.create()
 
 
     async def get_thumbnail(
