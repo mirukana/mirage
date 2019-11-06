@@ -62,7 +62,7 @@ Rectangle {
                         qsTr("Failed uploading %1.").arg(fileName) :
 
                         qsTr("Invalid status for %1: %2")
-                        .arg(fileName, model.status)
+                        .arg(fileName).arg(model.status)
 
                     topPadding: theme.spacing / 2
                     bottomPadding: topPadding
