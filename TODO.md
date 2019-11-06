@@ -1,6 +1,6 @@
 - Media
-  - Uploading progress bar
-  - Text bubbles theming
+  - Show upload progression
+  - Theming (upload bar, media text bubbles)
   - Downloading
     - Bottom/top bar
   - Image loading progress bar

@@ -80,8 +80,8 @@ Rectangle {
                 HLabel {
                     id: uploadCountLabel
                     visible: Layout.preferredWidth > 0
-                    text: qsTr("%1/%2")
-                          .arg(model.index + 1).arg(uploadsList.model.count)
+                    text: qsTr("%1")
+                          .arg(CppUtils.formattedBytes(model.total_size))
 
                     topPadding: theme.spacing / 2
                     bottomPadding: topPadding
@@ -89,7 +89,7 @@ Rectangle {
                     rightPadding: leftPadding
 
                     Layout.preferredWidth:
-                        uploadsList.model.count < 2 ? 0 : implicitWidth
+                        model.status === "Uploading" ? implicitWidth : 0
 
                     Behavior on Layout.preferredWidth { HNumberAnimation {} }
                 }
