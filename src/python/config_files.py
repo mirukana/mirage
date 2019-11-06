@@ -143,6 +143,7 @@ class UISettings(JSONConfigFile):
 
                 "clearRoomMessages": ["Ctrl+L"],
                 "sendFile": ["Alt+F"],
+                "sendFileFromPathInClipboard": ["Alt+Shift+F"],
             },
         }
 

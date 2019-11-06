@@ -140,11 +140,21 @@ HShortcutHandler {
             "Dialogs/SendFilePicker.qml",
             mainUI,
             {
-                userId: window.uiState.pageProperties.userId,
-                roomId: window.uiState.pageProperties.roomId,
+                userId:          window.uiState.pageProperties.userId,
+                roomId:          window.uiState.pageProperties.roomId,
                 destroyWhenDone: true,
             },
             picker => { picker.dialog.open() }
+        )
+    }
+
+    HShortcut {
+        enabled: window.uiState.page == "Chat/Chat.qml"
+        sequences: settings.keys.sendFileFromPathInClipboard
+        onPressed: Utils.sendFile(
+            window.uiState.pageProperties.userId,
+            window.uiState.pageProperties.roomId,
+            Clipboard.text.trim(),
         )
     }
 }

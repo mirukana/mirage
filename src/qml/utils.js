@@ -267,3 +267,8 @@ function urlExtension(url) {
     return url.toString().split("/").slice(-1)[0].split("?")[0].split(".")
               .slice(-1)[0].toLowerCase()
 }
+
+
+function sendFile(userId, roomId, path, onSuccess, onError) {
+    py.callClientCoro(userId, "send_file", [roomId, path], onSuccess, onError)
+}

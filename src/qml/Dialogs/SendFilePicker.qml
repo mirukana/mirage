@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import "../utils.js" as Utils
 
 HFileDialogOpener {
     fill: false
@@ -6,7 +7,12 @@ HFileDialogOpener {
 
     onFilePicked: {
         let path = Qt.resolvedUrl(file).replace(/^file:/, "")
-        py.callClientCoro(userId, "send_file", [roomId, path], () => {
+
+        Utils.sendFile(userId, roomId, path, () => {
+            if (destroyWhenDone) destroy()
+        },
+        (type, args, error, traceback) => {
+            console.error("python:\n" + traceback)
             if (destroyWhenDone) destroy()
         })
     }
