@@ -74,7 +74,8 @@ HGridLayout {
             z: 10
             visible: opacity > 0
             opacity: ! fileDialog.dialog.visible &&
-                     (! avatar.mxc || avatar.hovered) ? 1 : 0
+                     ((! avatar.mxc && ! avatar.changed) || avatar.hovered) ?
+                     1 : 0
 
             anchors.fill: parent
             color: Utils.hsluv(0, 0, 0,
