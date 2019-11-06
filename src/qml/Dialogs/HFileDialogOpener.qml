@@ -7,6 +7,7 @@ Item {
 
 
     signal filePicked()
+    signal cancelled()
 
 
     property bool fill: true
@@ -66,6 +67,10 @@ Item {
             opener.file         = file
             opener.filePicked(file)
         }
-        onRejected: { selectedFile = ""; file = ""}
+        onRejected: {
+            selectedFile = ""
+            file         = ""
+            cancelled()
+        }
     }
 }

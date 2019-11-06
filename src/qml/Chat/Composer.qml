@@ -216,6 +216,7 @@ Rectangle {
 
             SendFilePicker {
                 id: sendFilePicker
+                userId: chatPage.userId
                 roomId: chatPage.roomId
             }
         }
