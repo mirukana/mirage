@@ -1,10 +1,9 @@
 - Media
-  - Show upload progression
   - Theming (upload bar, media text bubbles)
   - Downloading
     - Bottom/top bar
-  - Image loading progress bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)
+  - Show real progression for thumbnail loadings, uploads and downloads
 
   - Support m.file thumbnails
   - Generate video thumbnails

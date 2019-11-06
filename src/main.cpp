@@ -4,6 +4,8 @@
 #include <QQmlComponent>
 #include <QFileInfo>
 
+#include "../submodules/RadialBarDemo/radialbar.h"
+
 #include "utils.h"
 #include "clipboard.h"
 
@@ -27,6 +29,8 @@ int main(int argc, char *argv[]) {
 
     objectContext->setContextProperty("CppUtils", new Utils());
     objectContext->setContextProperty("Clipboard", new Clipboard());
+
+    qmlRegisterType<RadialBar>("RadialBar", 1, 0, "RadialBar");
 
     QFileInfo qrcPath(":src/qml/Window.qml");
 

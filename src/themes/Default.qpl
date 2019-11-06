@@ -176,6 +176,13 @@ controls:
         color background: colors.inputBackground
         color foreground: colors.accentBackground
 
+    circleProgressBar:
+        int thickness:          Math.max(2, spacing / 2)
+        color background:       colors.inputBackground
+        color foreground:       colors.accentBackground
+        color text:             colors.text
+        real indeterminateSpan: 0.2  // 0-1
+
     slider:
         int radius:       2
         int height:       controls.progressBar.height

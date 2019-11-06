@@ -12,8 +12,10 @@ RCC_DIR     = $$BUILD_DIR/rcc
 QRC_FILE = $$BUILD_DIR/resources.qrc
 
 RESOURCES += $$QRC_FILE
-HEADERS   += src/utils.h src/clipboard.h
-SOURCES   += src/main.cpp src/utils.cpp src/clipboard.cpp
+HEADERS   += src/utils.h src/clipboard.h \
+             submodules/RadialBarDemo/radialbar.h
+SOURCES   += src/main.cpp src/utils.cpp src/clipboard.cpp \
+             submodules/RadialBarDemo/radialbar.cpp
 TARGET     = harmonyqml
 
 
