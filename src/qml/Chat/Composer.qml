@@ -215,8 +215,7 @@ Rectangle {
 
             HFileDialogOpener {
                 dialog.title: qsTr("Select files to upload")
-                onFileChanged: {
-                    if (! file) return
+                onFilePicked: {
                     let path = Qt.resolvedUrl(file).replace(/^file:/, "")
                     let args = [chatPage.roomId, path]
                     py.callClientCoro(chatPage.userId, "send_file", args)

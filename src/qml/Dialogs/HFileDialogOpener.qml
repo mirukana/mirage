@@ -5,6 +5,10 @@ Item {
     id: opener
     anchors.fill: fill ? parent : undefined
 
+
+    signal filePicked()
+
+
     property bool fill: true
 
     property alias dialog: fileDialog
@@ -16,6 +20,7 @@ Item {
 
     enum FileType { All, Images }
     property int fileType: HFileDialogOpener.FileType.All
+
 
     TapHandler { enabled: fill; onTapped: fileDialog.open() }
 
@@ -56,7 +61,11 @@ Item {
             opener.selectedFile = Qt.binding(() => Qt.resolvedUrl(currentFile))
             opener.file         = Qt.binding(() => Qt.resolvedUrl(file))
         }
-        onAccepted: { opener.selectedFile = currentFile, opener.file = file }
+        onAccepted: {
+            opener.selectedFile = currentFile
+            opener.file         = file
+            opener.filePicked(file)
+        }
         onRejected: { selectedFile = ""; file = ""}
     }
 }

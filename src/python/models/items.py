@@ -130,7 +130,7 @@ class Upload(ModelItem):
 
 
     def __lt__(self, other: "Upload") -> bool:
-        # TODO
+        # Sort from newest upload to oldest.
         return self.start_date > other.start_date
 
 

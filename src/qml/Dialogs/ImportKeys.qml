@@ -5,7 +5,7 @@ import "../Popups"
 HFileDialogOpener {
     fill: false
     dialog.title: qsTr("Select a decryption keys file to import")
-    onFileChanged: {
+    onFilePicked: {
         importPasswordPopup.file = file
         importPasswordPopup.open()
     }

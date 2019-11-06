@@ -9,21 +9,22 @@ Rectangle {
     implicitHeight: firstDelegate ? firstDelegate.height : 0
     color: theme.chat.typingMembers.background
     opacity: implicitHeight ? 1 : 0
+    clip: true
 
 
     property int delegateHeight: 0
-    property int maxShownDelegates: 1
 
     readonly property var firstDelegate:
         uploadsList.contentItem.visibleChildren[0]
+
+    readonly property alias uploadsCount: uploadsList.count
 
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
     HListView {
         id: uploadsList
-        enableFlicking: false
-        width: parent.width
+        anchors.fill: parent
 
         model: HListModel {
             keyField: "uuid"
@@ -33,7 +34,6 @@ Rectangle {
         delegate: HColumnLayout {
             id: delegate
             width: uploadsList.width
-            Component.onCompleted: Utils.debug(delegate)
 
             HRowLayout {
                 HLabel {

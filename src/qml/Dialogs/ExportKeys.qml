@@ -6,7 +6,7 @@ HFileDialogOpener {
     fill: false
     dialog.title: qsTr("Save decryption keys file as...")
     dialog.fileMode: FileDialog.SaveFile
-    onFileChanged: {
+    onFilePicked: {
         exportPasswordPopup.file = file
         exportPasswordPopup.open()
     }

@@ -27,6 +27,11 @@ HSplitView {
 
         UploadsBar {
             Layout.fillWidth: true
+            Layout.minimumHeight: implicitHeight
+            Layout.preferredHeight: implicitHeight * uploadsCount
+            Layout.maximumHeight: chatSplitView.height / 6
+
+            Behavior on Layout.preferredHeight { HNumberAnimation {} }
         }
 
         InviteBanner {
