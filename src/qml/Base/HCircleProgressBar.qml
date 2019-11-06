@@ -3,6 +3,8 @@ import RadialBar 1.0
 
 RadialBar {
     id: bar
+    implicitWidth: 96
+    implicitHeight: implicitWidth
     foregroundColor: theme.controls.circleProgressBar.background
     progressColor: theme.controls.circleProgressBar.foreground
     dialWidth: theme.controls.circleProgressBar.thickness
@@ -14,7 +16,6 @@ RadialBar {
     value: 0
 
     showText: true
-    suffixText: qsTr("%")
     textFont.pixelSize: theme ? theme.fontSize.big : 22
     textColor: theme ? theme.controls.circleProgressBar.text : "white"
 
@@ -38,13 +39,6 @@ RadialBar {
         target: bar
         property: "showText"
         value: false
-        when: bar.indeterminate
-    }
-
-    Binding {
-        target: bar
-        property: "suffixText"
-        value: ""
         when: bar.indeterminate
     }
 

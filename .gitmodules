@@ -1,3 +1,6 @@
 [submodule "submodules/qsyncable"]
 	path = submodules/qsyncable
 	url = https://github.com/benlau/qsyncable
+[submodule "submodules/RadialBarDemo"]
+	path = submodules/RadialBarDemo
+	url = https://github.com/mirukan/RadialBarDemo/
