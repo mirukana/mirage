@@ -7,7 +7,7 @@ Rectangle {
     id: uploadsBar
     implicitWidth: 800
     implicitHeight: firstDelegate ? firstDelegate.height : 0
-    color: theme.chat.typingMembers.background
+    color: theme.chat.uploadsBar.background
     opacity: implicitHeight ? 1 : 0
     clip: true
 

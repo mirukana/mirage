@@ -1,5 +1,4 @@
 - Media
-  - Theming (upload bar, media text bubbles)
   - Downloading
     - Bottom/top bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)

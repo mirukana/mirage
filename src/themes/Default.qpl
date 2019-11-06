@@ -362,6 +362,9 @@ chat:
             colors.hue, colors.saturation, colors.intensity * 9, 0.52
         )
 
+    uploadsBar:
+        color background: chat.typingMembers.background
+
     composer:
         color background: colors.strongBackground
 
