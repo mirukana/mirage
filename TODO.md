@@ -3,6 +3,9 @@
     - Bottom/top bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)
   - Show real progression for mxc thumbnail loadings, uploads and downloads
+  - Confirmation box after picking file to upload
+  - Handle upload errors, file too big, etc
+  - Allow multiple file selection
 
   - Support m.file thumbnails
   - Generate video thumbnails
