@@ -12,7 +12,7 @@ from PIL import Image as PILImage
 
 import nio
 
-from .matrix_client import MatrixClient, CryptDict
+from .matrix_client import MatrixClient
 
 CryptDict = Optional[Dict[str, Any]]
 Size      = Tuple[int, int]
