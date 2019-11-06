@@ -18,6 +18,7 @@ from typing import (
 )
 from uuid import uuid4
 
+import cairosvg
 from PIL import Image as PILImage
 from pymediainfo import MediaInfo
 
@@ -252,18 +253,22 @@ class MatrixClient(nio.AsyncClient):
             content["url"] = url
 
         if kind == "image":
+            is_svg = mime == "image/svg+xml"
+
             event_type = \
                 nio.RoomEncryptedImage if encrypt else nio.RoomMessageImage
 
             content["msgtype"] = "m.image"
 
-            content["info"]["w"], content["info"]["h"] = \
+            content["info"]["w"], content["info"]["h"] = (
+                utils.svg_dimensions(str(path)) if is_svg else
                 PILImage.open(path).size
+            )
 
             try:
                 thumb_url, thumb_info, thumb_crypt_dict = \
                     await self.upload_thumbnail(
-                        path, upload_item, encrypt=encrypt,
+                        path, upload_item, is_svg=is_svg, encrypt=encrypt,
                     )
             except (UneededThumbnail, UnthumbnailableError):
                 pass
@@ -313,7 +318,7 @@ class MatrixClient(nio.AsyncClient):
             content["filename"] = path.name
 
         upload_item.status = UploadStatus.Success
-        del self.models[Upload, room_id]
+        del self.models[Upload, room_id][upload_item.uuid]
 
         uuid = str(uuid4())
 
@@ -451,19 +456,31 @@ class MatrixClient(nio.AsyncClient):
         self,
         path:    Union[Path, str],
         item:    Optional[Upload] = None,
+        is_svg:  bool             = False,
         encrypt: bool             = False,
     ) -> Tuple[str, Dict[str, Any], CryptDict]:
 
         png_modes = ("1", "L", "P", "RGBA")
 
         try:
-            thumb = PILImage.open(path)
+            if is_svg:
+                svg_width, svg_height = utils.svg_dimensions(str(path))
+
+                thumb = PILImage.open(io.BytesIO(
+                    cairosvg.svg2png(
+                        url           = str(path),
+                        parent_width  = svg_width,
+                        parent_height = svg_height,
+                    ),
+                ))
+            else:
+                thumb = PILImage.open(path)
 
             small       = thumb.width <= 800 and thumb.height <= 600
             is_jpg_png  = thumb.format in ("JPEG", "PNG")
             jpgable_png = thumb.format == "PNG" and thumb.mode not in png_modes
 
-            if small and is_jpg_png and not jpgable_png:
+            if small and is_jpg_png and not jpgable_png and not is_svg:
                 raise UneededThumbnail()
 
             if item:

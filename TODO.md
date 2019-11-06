@@ -1,5 +1,4 @@
 - Media
-  - SVG uploads
   - Uploading progress bar (+local echo)
   - Text bubbles theming
   - Directly create cache files for our uploads before actually uploading

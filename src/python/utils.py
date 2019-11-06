@@ -3,7 +3,7 @@ import html
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
 from enum import auto as autostr
-from typing import IO, Optional
+from typing import IO, Tuple, Union
 
 import filetype
 
@@ -26,12 +26,28 @@ def dict_update_recursive(dict1, dict2):
             dict1[k] = dict2[k]
 
 
-def is_svg(file: IO) -> bool:
+def is_svg(file: Union[IO, bytes, str]) -> bool:
     try:
         _, element = next(xml_etree.iterparse(file, ("start",)))
         return element.tag == "{http://www.w3.org/2000/svg}svg"
     except (StopIteration, xml_etree.ParseError):
         return False
+
+
+def svg_dimensions(file: Union[IO, bytes, str]) -> Tuple[int, int]:
+    attrs = xml_etree.parse(file).getroot().attrib
+
+    try:
+        width = round(float(attrs.get("width", attrs["viewBox"].split()[3])))
+    except (KeyError, IndexError, ValueError, TypeError):
+        width = 256
+
+    try:
+        height = round(float(attrs.get("height", attrs["viewBox"].split()[4])))
+    except (KeyError, IndexError, ValueError, TypeError):
+        height = 256
+
+    return (width, height)
 
 
 def guess_mime(file: IO) -> str:
