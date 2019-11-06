@@ -6,7 +6,8 @@ Item {
     anchors.fill: fill ? parent : undefined
 
 
-    signal filePicked()
+    signal filePicked(string file)
+    signal filesPicked(var files)
     signal cancelled()
 
 
@@ -15,6 +16,8 @@ Item {
     property alias dialog: fileDialog
     property string selectedFile: ""
     property string file: ""
+    property var selectedFiles: []
+    property var files: []
 
     property string selectSubject:
         dialog.fileMode === FileDialog.SaveFile ? qsTr("file") : qsTr("open")
@@ -59,17 +62,28 @@ Item {
         modality: Qt.NonModal
 
         onVisibleChanged: if (visible) {
-            opener.selectedFile = Qt.binding(() => Qt.resolvedUrl(currentFile))
-            opener.file         = Qt.binding(() => Qt.resolvedUrl(file))
+            opener.selectedFile   = Qt.binding(() => Qt.resolvedUrl(currentFile))
+            opener.file           = Qt.binding(() => Qt.resolvedUrl(file))
+            opener.files          = Qt.binding(() => Qt.resolvedUrl(files))
+            opener.selectedFiles  =
+                Qt.binding(() => Qt.resolvedUrl(currentFiles))
         }
+
         onAccepted: {
-            opener.selectedFile = currentFile
-            opener.file         = file
+            opener.selectedFile  = currentFile
+            opener.selectedFiles = currentFiles
+            opener.file          = file
+            opener.files         = files
+
             opener.filePicked(file)
+            opener.filesPicked(files)
         }
+
         onRejected: {
-            selectedFile = ""
-            file         = ""
+            selectedFile  = ""
+            file          = ""
+            selectedFiles = ""
+            files         = ""
             cancelled()
         }
     }

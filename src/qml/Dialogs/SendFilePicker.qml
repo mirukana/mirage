@@ -1,20 +1,24 @@
 import QtQuick 2.12
+import Qt.labs.platform 1.1
 import "../utils.js" as Utils
 
 HFileDialogOpener {
     fill: false
     dialog.title: qsTr("Select a file to send")
+    dialog.fileMode: FileDialog.OpenFiles
 
-    onFilePicked: {
-        let path = Qt.resolvedUrl(file).replace(/^file:/, "")
+    onFilesPicked: {
+        for (let file of files) {
+            let path = Qt.resolvedUrl(file).replace(/^file:/, "")
 
-        Utils.sendFile(userId, roomId, path, () => {
-            if (destroyWhenDone) destroy()
-        },
-        (type, args, error, traceback) => {
-            console.error("python:\n" + traceback)
-            if (destroyWhenDone) destroy()
-        })
+            Utils.sendFile(userId, roomId, path, () => {
+                if (destroyWhenDone) destroy()
+            },
+            (type, args, error, traceback) => {
+                console.error("python:\n" + traceback)
+                if (destroyWhenDone) destroy()
+            })
+        }
     }
 
     onCancelled: if (destroyWhenDone) destroy()

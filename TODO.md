@@ -1,11 +1,9 @@
 - Media
-  - Downloading
-    - Bottom/top bar
   - Verify things work with chat.privacytools.io (subdomain weirdness)
-  - Show real progression for mxc thumbnail loadings, uploads and downloads
-  - Confirmation box after picking file to upload
-  - Handle upload errors, file too big, etc
   - Allow multiple file selection
+  - Confirmation box after picking file to upload
+  - Handle upload errors: non existent path, path is a dir, file too big, etc
+  - Show real progression for mxc thumbnail loadings, uploads and downloads
 
   - Support m.file thumbnails
   - Generate video thumbnails
@@ -16,6 +14,7 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
   - EventLink
+  - Downloading (right click on media > save as...)
 
 - RoomMessageNotice
 
