@@ -18,5 +18,9 @@ Item {
         anchors.centerIn: parent
         width: Math.min(160, parent.width - 16, parent.height - 16)
         height: width
+        indeterminateSpan: 0.5
+
+        foregroundColor: Qt.hsla(0, 0, 1, 0.15)
+        progressColor: Qt.hsla(0, 0, 1, 0.4)
     }
 }

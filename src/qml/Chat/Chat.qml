@@ -46,6 +46,8 @@ HPage {
     HLoader {
         source: ready ? "ChatSplitView.qml" : "../Base/HBusyIndicator.qml"
 
+        Layout.preferredWidth: ready ? -1 : 96
+        Layout.preferredHeight: Layout.preferredWidth
         Layout.fillWidth: ready
         Layout.fillHeight: ready
         Layout.alignment: Qt.AlignCenter

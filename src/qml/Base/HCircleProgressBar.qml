@@ -15,19 +15,22 @@ RadialBar {
 
     showText: true
     suffixText: qsTr("%")
-    textFont.pixelSize: theme.fontSize.big
-    textColor: theme.controls.circleProgressBar.text
+    textFont.pixelSize: theme ? theme.fontSize.big : 22
+    textColor: theme ? theme.controls.circleProgressBar.text : "white"
 
 
     property alias from: bar.minValue
     property alias to: bar.maxValue
     property bool indeterminate: false
 
+    property real indeterminateSpan:
+        theme.controls.circleProgressBar.indeterminateSpan
+
 
     Binding {
         target: bar;
         property: "value";
-        value: bar.to * theme.controls.circleProgressBar.indeterminateSpan
+        value: bar.to * bar.indeterminateSpan
         when: bar.indeterminate
     }
 
@@ -35,6 +38,13 @@ RadialBar {
         target: bar
         property: "showText"
         value: false
+        when: bar.indeterminate
+    }
+
+    Binding {
+        target: bar
+        property: "suffixText"
+        value: ""
         when: bar.indeterminate
     }
 

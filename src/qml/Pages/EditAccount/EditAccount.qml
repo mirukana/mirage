@@ -50,7 +50,7 @@ HPage {
 
             HLoader {
                 anchors.centerIn: parent
-                width: parent.width
+                width: ready ? parent.width : 96
                 source: ready ?
                         modelData :
                         (modelData == "Profile.qml" ?

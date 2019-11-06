@@ -98,10 +98,6 @@ icons:
 // Generic UI controls
 
 controls:
-    loader:
-        int defaultDimension: 80
-        color colorize: "white"
-
     box:
         color background: colors.strongBackground
         int radius:       theme.radius
@@ -181,7 +177,7 @@ controls:
         color background:       colors.inputBackground
         color foreground:       colors.accentBackground
         color text:             colors.text
-        real indeterminateSpan: 0.2  // 0-1
+        real indeterminateSpan: 0.5  // 0-1
 
     slider:
         int radius:       2
