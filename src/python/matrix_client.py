@@ -317,7 +317,6 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
-        upload_item.status = UploadStatus.Success
         del self.models[Upload, room_id][upload_item.uuid]
 
         uuid = str(uuid4())

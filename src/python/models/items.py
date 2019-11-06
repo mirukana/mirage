@@ -110,7 +110,6 @@ class UploadStatus(AutoStrEnum):
     CreatingThumbnail   = auto()
     EncryptingThumbnail = auto()
     UploadingThumbnail  = auto()
-    Success             = auto()
     Failure             = auto()  # TODO
 
 
