@@ -58,21 +58,44 @@ HTileDelegate {
     title.leftPadding: sidePane.currentSpacing
 
     HButton {
+        id: addChat
+        iconItem.dimension: 16
+        icon.name: "add-account"  // TODO
+        backgroundColor: "transparent"
+        toolTip.text: qsTr("Add new chat")
+        // onClicked: accountDelegate.toggleCollapse()
+
+        leftPadding: theme.spacing / 2
+        rightPadding: leftPadding
+
+        visible: opacity > 0
+        opacity: expand.loading ? 0 : 1
+
+        Layout.fillHeight: true
+
+        Behavior on opacity { HNumberAnimation {} }
+    }
+
+    HButton {
         id: expand
         loading: ! model.data.first_sync_done || ! model.data.profile_updated
+        iconItem.dimension: 16
         icon.name: "expand"
         backgroundColor: "transparent"
-        padding: sidePane.currentSpacing / 1.5
-        rightPadding: leftPadding
         toolTip.text: collapsed ? qsTr("Expand") : qsTr("Collapse")
         onClicked: accountDelegate.toggleCollapse()
+
+        leftPadding: theme.spacing / 2
+        rightPadding: leftPadding
 
         visible: opacity > 0
         opacity: ! loading && accountDelegate.forceExpand ? 0 : 1
 
+        Layout.fillHeight: true
+
         iconItem.transform: Rotation {
-            origin.x: expand.iconItem.dimension / 2
-            origin.y: expand.iconItem.dimension / 2
+            origin.x: expand.iconItem.width / 2
+            origin.y: expand.iconItem.height / 2
             angle: expand.loading ? 0 : collapsed ? 180 : 90
 
             Behavior on angle { HNumberAnimation {} }
