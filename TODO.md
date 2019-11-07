@@ -1,6 +1,5 @@
 - Media
   - Verify things work with chat.privacytools.io (subdomain weirdness)
-  - Allow multiple file selection
   - Confirmation box after picking file to upload
   - Handle upload errors: non existent path, path is a dir, file too big, etc
   - Show real progression for mxc thumbnail loadings, uploads and downloads

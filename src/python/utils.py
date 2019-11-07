@@ -3,6 +3,7 @@ import html
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
 from enum import auto as autostr
+from pathlib import Path
 from typing import IO, Any, Tuple, Union
 
 import filetype
@@ -67,5 +68,8 @@ def plain2html(text: str) -> str:
 def serialize_value_for_qml(value: Any) -> Any:
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
         return value.value
+
+    if isinstance(value, Path):
+        return f"file://{value!s}"
 
     return value

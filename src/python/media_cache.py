@@ -223,8 +223,8 @@ class MediaCache:
         await Media(self, mxc, data, {}).create()
 
 
-    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> str:
-        return str(await Media(self, mxc, None, crypt_dict).get())
+    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> Path:
+        return await Media(self, mxc, None, crypt_dict).get()
 
 
     async def create_thumbnail(
@@ -236,10 +236,10 @@ class MediaCache:
 
     async def get_thumbnail(
         self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
-    ) -> str:
+    ) -> Path:
 
         thumb = Thumbnail(
             # QML sometimes pass float sizes, which matrix API doesn't like.
             self, mxc, None, crypt_dict, (round(width), round(height)),
         )
-        return str(await thumb.get())
+        return await thumb.get()
