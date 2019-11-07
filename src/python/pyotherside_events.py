@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
 import pyotherside
 
 from .models import SyncId
+from .utils import serialize_value_for_qml
 
 
 @dataclass
@@ -14,18 +14,10 @@ class PyOtherSideEvent:
     def __post_init__(self) -> None:
         # CPython >= 3.6 or any Python >= 3.7 needed for correct dict order
         args = [
-            self._process_field(getattr(self, field))
+            serialize_value_for_qml(getattr(self, field))
             for field in self.__dataclass_fields__  # type: ignore
         ]
         pyotherside.send(type(self).__name__, *args)
-
-
-    @staticmethod
-    def _process_field(value: Any) -> Any:
-        if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
-            return value.value
-
-        return value
 
 
 @dataclass
