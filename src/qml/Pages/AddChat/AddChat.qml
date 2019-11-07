@@ -6,12 +6,11 @@ import "../../Base"
 HPage {
     onFocusChanged: createRoom.forceActiveFocus()
 
-    HBox {
-        id: rootBox
-        multiplyWidth: 1.11
-        multiplyHorizontalSpacing: 0
-        multiplyVerticalSpacing: 0
+    HColumnLayout {
         Layout.alignment: Qt.AlignCenter
+        Layout.minimumWidth: Layout.maximumWidth
+        Layout.maximumWidth:
+            Math.max(tabBar.implicitWidth, swipeView.contentWidth)
 
         TabBar {
             id: tabBar
@@ -27,7 +26,7 @@ HPage {
                     qsTr("Join room"),
                 ]
 
-                TabButton {
+                HTabButton {
                     text: modelData
                 }
             }
@@ -35,6 +34,7 @@ HPage {
 
 
         SwipeView {
+            id: swipeView
             clip: true
             currentIndex: tabBar.currentIndex
 
@@ -44,7 +44,6 @@ HPage {
 
             CreateRoom {
                 id: createRoom
-                color: "transparent"
             }
 
             Item {}

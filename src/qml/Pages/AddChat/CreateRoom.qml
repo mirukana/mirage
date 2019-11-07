@@ -18,7 +18,7 @@ HBox {
 
     HTextField {
         id: nameField
-        placeholderText: qsTr("Name (optional)")
+        placeholderText: qsTr("Name")
 
         Layout.fillWidth: true
     }
@@ -33,7 +33,7 @@ HBox {
     HCheckBox {
         id: publicCheckBox
         text: qsTr("Make this room public")
-        subtitle.text: qsTr("Anyone can join without being invited")
+        subtitle.text: qsTr("Anyone will be able to join without invitation.")
         spacing: addChatBox.horizontalSpacing
 
         Layout.maximumWidth: parent.width
@@ -43,7 +43,8 @@ HBox {
         id: encryptCheckBox
         text: qsTr("Encrypt messages")
         subtitle.text:
-            qsTr("Only you and users you trust will be able to read them") +
+            qsTr("Protect the room against eavesdropper. Only you " +
+                 "and those you trust can read the conversation.") +
             "<br><font color='" + theme.colors.middleBackground + "'>" +
             qsTr("Cannot be disabled later!") +
             "</font>"
