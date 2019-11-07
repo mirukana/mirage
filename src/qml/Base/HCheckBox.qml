@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 import "../utils.js" as Utils
 
 CheckBox {
@@ -12,12 +13,16 @@ CheckBox {
     opacity: enabled ? 1 : theme.disabledElementsOpacity
 
 
+    property alias mainText: mainText
+    property alias subtitle: subtitleText
+
+
     Behavior on opacity { HNumberAnimation { factor: 2 } }
 
 
     indicator: Rectangle {
         implicitWidth: implicitHeight
-        implicitHeight: box.contentItem.font.pixelSize * 1.5
+        implicitHeight: mainText.font.pixelSize * 1.5
         x: box.leftPadding
         y: box.topPadding + box.availableHeight / 2 - height / 2
         radius: theme.radius / 1.5
@@ -51,13 +56,33 @@ CheckBox {
         }
     }
 
-    contentItem: HLabel {
-        text: box.text
-        color: theme.controls.checkBox.text
+    contentItem: HColumnLayout {
+        HLabel {
+            id: mainText
+            text: box.text
+            color: theme.controls.checkBox.text
 
-        // Set a width on CheckBox for wrapping to work, e.g. Layout.fillWidth
-        wrapMode: Text.Wrap
-        leftPadding: box.indicator.width + box.spacing
-        verticalAlignment: Text.AlignVCenter
+            // Set a width on CheckBox for wrapping to work,
+            // e.g. by using Layout.fillWidth
+            wrapMode: Text.Wrap
+            leftPadding: box.indicator.width + box.spacing
+            verticalAlignment: Text.AlignVCenter
+
+            Layout.fillWidth: true
+        }
+
+        HLabel {
+            id: subtitleText
+            visible: Boolean(text)
+            text: box.subtitle
+            color: theme.controls.checkBox.subtitle
+            font.pixelSize: theme.fontSize.small
+
+            wrapMode: mainText.wrapMode
+            leftPadding: mainText.leftPadding
+            verticalAlignment: mainText.verticalAlignment
+
+            Layout.fillWidth: true
+        }
     }
 }

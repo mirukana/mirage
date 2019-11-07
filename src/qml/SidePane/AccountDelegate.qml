@@ -63,7 +63,7 @@ HTileDelegate {
         icon.name: "add-account"  // TODO
         backgroundColor: "transparent"
         toolTip.text: qsTr("Add new chat")
-        // onClicked: accountDelegate.toggleCollapse()
+        onClicked: pageLoader.showPage("AddChat/AddChat")
 
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding

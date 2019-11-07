@@ -78,10 +78,6 @@ HButton {
     }
 
 
-    // Binding { target: details; property: "parent"; value: contentItem }
-    // Binding { target: image; property: "parent"; value: contentItem }
-
-
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: leftClicked()

@@ -4,6 +4,8 @@
   - Handle upload errors: non existent path, path is a dir, file too big, etc
   - Show real progression for mxc thumbnail loadings, uploads and downloads
 
+  - Login: use new exception python/qml mechanism
+
   - Support m.file thumbnails
   - Generate video thumbnails
   - GIFs can use the video player

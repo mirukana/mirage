@@ -138,6 +138,7 @@ controls:
         color boxPressedBorder: colors.strongAccentBackground
 
         color text: controls.button.text
+        color subtitle: colors.dimText
 
     listView:
         color highlight: hsluv(0, 0, 50, 0.3)
