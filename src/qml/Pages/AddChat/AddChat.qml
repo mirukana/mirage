@@ -20,15 +20,15 @@ HPage {
         TabBar {
             id: tabBar
             position: TabBar.Header
-            currentIndex: 1
+            currentIndex: 2
 
             Layout.fillWidth: true
 
             Repeater {
                 model: [
                     qsTr("Find someone"),
-                    qsTr("Create room"),
                     qsTr("Join room"),
+                    qsTr("Create room"),
                 ]
 
                 HTabButton {
@@ -46,12 +46,11 @@ HPage {
             Layout.fillWidth: true
 
             Item {}
+            Item {}
 
             CreateRoom {
                 id: createRoom
             }
-
-            Item {}
         }
     }
 }
