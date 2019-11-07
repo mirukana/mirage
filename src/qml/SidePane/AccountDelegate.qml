@@ -63,7 +63,9 @@ HTileDelegate {
         icon.name: "add-account"  // TODO
         backgroundColor: "transparent"
         toolTip.text: qsTr("Add new chat")
-        onClicked: pageLoader.showPage("AddChat/AddChat")
+        onClicked: pageLoader.showPage(
+            "AddChat/AddChat", {userId: model.data.user_id},
+        )
 
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding

@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 HBox {
     id: addChatBox
@@ -15,6 +16,33 @@ HBox {
 
     buttonCallbacks: ({
     })
+
+    HRoomAvatar {
+        // TODO: click to change the avatar
+        id: avatar
+        clientUserId: addChatPage.userId
+        displayName: nameField.text
+
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 128
+        Layout.preferredHeight: Layout.preferredWidth
+
+        HUserAvatar {
+            anchors.fill: parent
+            z: 10
+            opacity: nameField.text ? 0 : 1
+            visible: opacity > 0
+            clientUserId: parent.clientUserId
+            userId: clientUserId
+            displayName: account ? account.display_name : ""
+            mxc: account ? account.avatar_url : ""
+
+            readonly property var account:
+                Utils.getItem(modelSources["Account"] || [], "user_id", userId)
+
+            Behavior on opacity { HNumberAnimation {} }
+        }
+    }
 
     HTextField {
         id: nameField

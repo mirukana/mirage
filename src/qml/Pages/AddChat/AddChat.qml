@@ -4,13 +4,18 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HPage {
+    id: addChatPage
     onFocusChanged: createRoom.forceActiveFocus()
+
+
+    property string userId
+
 
     HColumnLayout {
         Layout.alignment: Qt.AlignCenter
         Layout.minimumWidth: Layout.maximumWidth
         Layout.maximumWidth:
-            Math.max(tabBar.implicitWidth, swipeView.contentWidth)
+            Math.max(tabBar.contentWidth, swipeView.contentWidth)
 
         TabBar {
             id: tabBar
