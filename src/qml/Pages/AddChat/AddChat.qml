@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 HPage {
     id: addChatPage
@@ -17,9 +18,8 @@ HPage {
         Layout.maximumWidth:
             Math.max(tabBar.contentWidth, swipeView.contentWidth)
 
-        TabBar {
+        HTabBar {
             id: tabBar
-            position: TabBar.Header
             currentIndex: 2
 
             Layout.fillWidth: true

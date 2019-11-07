@@ -116,6 +116,20 @@ controls:
         color pressedOverlay: hsluv(0, 0, 50, 0.5)
         color checkedOverlay: colors.accentBackground
 
+    tab:
+        color text:                controls.button.text
+        color background:          controls.button.background
+        color alternateBackground: hsluv(
+            colors.hue,
+            colors.bgSaturation * 1.25,
+            colors.intensity * 4,
+            Math.max(0.6, colors.opacity)
+        )
+
+        color hoveredOverlay: controls.button.hoveredOverlay
+        color pressedOverlay: controls.button.pressedOverlay
+        color checkedOverlay: controls.button.checkedOverlay
+
     menu:
         color background: controls.button.background
         color border:     "black"

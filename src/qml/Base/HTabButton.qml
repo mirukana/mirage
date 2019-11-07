@@ -32,7 +32,10 @@ TabButton {
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
 
-    property color backgroundColor: theme.controls.tab.background
+    property color backgroundColor:
+        TabBar.index % 2 == 0 ?
+        theme.controls.tab.background : theme.controls.tab.alternateBackground
+
     property bool loading: false
 
     property HToolTip toolTip: HToolTip {
