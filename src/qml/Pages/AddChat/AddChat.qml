@@ -37,11 +37,11 @@ HPage {
             }
         }
 
-
         SwipeView {
             id: swipeView
             clip: true
             currentIndex: tabBar.currentIndex
+            interactive: false
 
             Layout.fillWidth: true
 
