@@ -1,10 +1,12 @@
 import collections
 import html
+import inspect
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
-from typing import IO, Any, Tuple, Union
+from types import ModuleType
+from typing import IO, Any, Dict, Tuple, Type, Union
 
 import filetype
 
@@ -73,3 +75,11 @@ def serialize_value_for_qml(value: Any) -> Any:
         return f"file://{value!s}"
 
     return value
+
+
+def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
+    return {
+        m[0]: m[1] for m in inspect.getmembers(module, inspect.isclass)
+        if not m[0].startswith("_") and
+        m[1].__module__.startswith(module.__name__)
+    }
