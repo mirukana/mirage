@@ -134,6 +134,7 @@ class UISettings(JSONConfigFile):
                 "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
                 "addNewAccount":    ["Alt+N"],
 
+                "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [

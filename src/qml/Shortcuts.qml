@@ -25,6 +25,13 @@ HShortcutHandler {
         onPressed: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
+    // Pages
+
+    HShortcut {
+        sequences: settings.keys.goToLastPage
+        onPressed: mainUI.pageLoader.showPrevious()
+    }
+
     // Page scrolling
 
     HShortcut {
