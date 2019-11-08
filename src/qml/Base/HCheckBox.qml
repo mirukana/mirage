@@ -74,7 +74,6 @@ CheckBox {
         HLabel {
             id: subtitleText
             visible: Boolean(text)
-            text: box.subtitle
             color: theme.controls.checkBox.subtitle
             font.pixelSize: theme.fontSize.small
 
