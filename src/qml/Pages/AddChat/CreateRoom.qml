@@ -15,12 +15,32 @@ HBox {
     ]
 
     buttonCallbacks: ({
+        apply: button => {
+            button.loading = true
+
+            let args = [
+                nameField.text || null,
+                topicField.text || null,
+                publicCheckBox.checked,
+                encryptCheckBox.checked,
+                ! blockOtherServersCheckBox.checked,
+            ]
+
+            py.callClientCoro(userId, "room_create", args, roomId => {
+                button.loading = false
+                pageLoader.showRoom(userId, roomId)
+            })
+        },
     })
+
+
+    readonly property string userId: addChatPage.userId
+
 
     HRoomAvatar {
         // TODO: click to change the avatar
         id: avatar
-        clientUserId: addChatPage.userId
+        clientUserId: userId
         displayName: nameField.text
 
         Layout.alignment: Qt.AlignCenter

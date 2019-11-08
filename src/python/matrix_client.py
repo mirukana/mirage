@@ -33,6 +33,10 @@ CryptDict = Dict[str, Any]
 
 
 @dataclass
+class RequestFailed(Exception):
+    m_code: Optional[str] = None
+
+@dataclass
 class UploadError(Exception):
     http_code: Optional[int] = None
 
@@ -421,6 +425,30 @@ class MatrixClient(nio.AsyncClient):
 
         while self.skipped_events[room_id] and not events and more:
             more = await self.load_past_events(room_id)
+
+
+    async def room_create(
+        self,
+        name:     Optional[str] = None,
+        topic:    Optional[str] = None,
+        public:   bool          = False,
+        encrypt:  bool          = False,  # TODO
+        federate: bool          = True,
+    ) -> str:
+
+        response = await super().room_create(
+            name       = name,
+            topic      = topic,
+            federate   = federate,
+            visibility =
+                nio.RoomVisibility.public if public else
+                nio.RoomVisibility.private,
+        )
+
+        if isinstance(response, nio.RoomCreateError):
+            raise RequestFailed(response.status_code)
+
+        return response.room_id
 
 
     async def room_forget(self, room_id: str) -> None:
