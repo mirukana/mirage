@@ -31,6 +31,16 @@ HBox {
                 pageLoader.showRoom(userId, roomId)
             })
         },
+
+        cancel: button => {
+            nameField.text                    = ""
+            topicField.text                   = ""
+            publicCheckBox.checked            = false
+            encryptCheckBox.checked           = false
+            blockOtherServersCheckBox.checked = false
+
+            pageLoader.showPrevious()
+        }
     })
 
 

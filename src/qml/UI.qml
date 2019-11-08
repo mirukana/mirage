@@ -85,7 +85,12 @@ Item {
 
         HLoader {
             id: pageLoader
+
             property bool isWide: width > theme.contentIsWideAbove
+
+            // List of previously loaded [componentUrl, {properties}]
+            property var history: []
+            property int historyLength: 20
 
             Component.onCompleted: {
                 if (! py.startupAnyAccountsSaved) {
@@ -104,6 +109,9 @@ Item {
             }
 
             function _show(componentUrl, properties={}) {
+                history.unshift([componentUrl, properties])
+                if (history.length > historyLength) history.pop()
+
                 pageLoader.setSource(componentUrl, properties)
             }
 
@@ -121,6 +129,19 @@ Item {
 
                 window.uiState.page           = "Chat/Chat.qml"
                 window.uiState.pageProperties = {userId, roomId}
+                window.uiStateChanged()
+            }
+
+            function showPrevious(timesBack=1) {
+                timesBack = Math.min(timesBack, history.length - 1)
+                if (timesBack < 1) return
+
+                let [componentUrl, properties] = history[timesBack]
+
+                _show(componentUrl, properties)
+
+                window.uiState.page           = componentUrl
+                window.uiState.pageProperties = properties
                 window.uiStateChanged()
             }
 
