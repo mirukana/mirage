@@ -15,8 +15,10 @@ HPage {
     HColumnLayout {
         Layout.alignment: Qt.AlignCenter
         Layout.minimumWidth: Layout.maximumWidth
-        Layout.maximumWidth:
-            Math.max(tabBar.contentWidth, swipeView.contentWidth)
+        Layout.maximumWidth: Math.min(
+            parent.width,
+            Math.max(tabBar.contentWidth, swipeView.contentWidth),
+        )
 
         HTabBar {
             id: tabBar

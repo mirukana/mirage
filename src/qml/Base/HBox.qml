@@ -53,6 +53,7 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.Wrap
 
+            Layout.preferredWidth: parent.width
             Layout.fillWidth: true
             Layout.topMargin: interfaceBox.verticalSpacing
             Layout.leftMargin: interfaceBox.horizontalSpacing
@@ -63,6 +64,7 @@ Rectangle {
             id: interfaceBody
             spacing: interfaceBox.verticalSpacing
 
+            Layout.preferredWidth: parent.width
             Layout.fillWidth: true
             Layout.topMargin:
                 interfaceTitle.visible ? 0 : interfaceBox.verticalSpacing
@@ -75,6 +77,8 @@ Rectangle {
             visible: buttonModel.length > 0
             flow: width >= buttonRepeater.childrenImplicitWidth ?
                   GridLayout.LeftToRight : GridLayout.TopToBottom
+
+            Layout.preferredWidth: parent.width
 
             HRepeater {
                 id: buttonRepeater
