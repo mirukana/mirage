@@ -458,8 +458,8 @@ class MatrixClient(nio.AsyncClient):
     ) -> str:
 
         response = await super().room_create(
-            name       = name,
-            topic      = topic,
+            name       = name or None,
+            topic      = topic or None,
             federate   = federate,
             visibility =
                 nio.RoomVisibility.public if public else

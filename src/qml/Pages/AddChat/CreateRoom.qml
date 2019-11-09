@@ -20,8 +20,8 @@ HBox {
             errorMessage.text = ""
 
             let args = [
-                nameField.text || null,
-                topicField.text || null,
+                nameField.text,
+                topicField.text,
                 publicCheckBox.checked,
                 encryptCheckBox.checked,
                 ! blockOtherServersCheckBox.checked,
