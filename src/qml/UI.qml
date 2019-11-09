@@ -134,7 +134,7 @@ Item {
 
             function showPrevious(timesBack=1) {
                 timesBack = Math.min(timesBack, history.length - 1)
-                if (timesBack < 1) return
+                if (timesBack < 1) return false
 
                 let [componentUrl, properties] = history[timesBack]
 
@@ -143,6 +143,7 @@ Item {
                 window.uiState.page           = componentUrl
                 window.uiState.pageProperties = properties
                 window.uiStateChanged()
+                return true
             }
 
             onStatusChanged: if (status == Loader.Ready) {

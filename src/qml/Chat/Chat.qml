@@ -21,7 +21,11 @@ HPage {
 
     onRoomInfoChanged: {
         if (roomInfo.left) {
-            // If left, the room will most likely be gone on client restart
+            // If left, the room will most likely be gone on client restart.
+            // Try to switch back to the previous page.
+            if (pageLoader.showPrevious()) return
+
+            // If there wasn't any previous page, show default page.
             window.uiState.page           = "Pages/Default.qml"
             window.uiState.pageProperties = {}
             window.uiStateChanged()
