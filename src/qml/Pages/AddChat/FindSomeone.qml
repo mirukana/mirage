@@ -20,7 +20,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [userField.text]
+            let args = [userField.text, encryptCheckBox.checked]
 
             py.callClientCoro(userId, "new_direct_chat", args, roomId => {
                 button.loading    = false
@@ -59,6 +59,12 @@ HBox {
         error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true
+    }
+
+    EncryptCheckBox {
+        id: encryptCheckBox
+
+        Layout.maximumWidth: parent.width
     }
 
     HLabel {
