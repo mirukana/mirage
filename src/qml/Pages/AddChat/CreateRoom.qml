@@ -63,18 +63,11 @@ HBox {
         Layout.preferredWidth: 128
         Layout.preferredHeight: Layout.preferredWidth
 
-        HUserAvatar {
+        CurrentUserAvatar {
             anchors.fill: parent
             z: 10
             opacity: nameField.text ? 0 : 1
             visible: opacity > 0
-            clientUserId: parent.clientUserId
-            userId: clientUserId
-            displayName: account ? account.display_name : ""
-            mxc: account ? account.avatar_url : ""
-
-            readonly property var account:
-                Utils.getItem(modelSources["Account"] || [], "user_id", userId)
 
             Behavior on opacity { HNumberAnimation {} }
         }

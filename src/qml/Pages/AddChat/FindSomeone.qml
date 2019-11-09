@@ -53,6 +53,12 @@ HBox {
     readonly property string userId: addChatPage.userId
 
 
+    CurrentUserAvatar {
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 128
+        Layout.preferredHeight: Layout.preferredWidth
+    }
+
     HTextField {
         id: userField
         placeholderText: qsTr("User ID (e.g. @john:matrix.org)")

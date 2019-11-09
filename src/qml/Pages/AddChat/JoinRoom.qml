@@ -56,6 +56,12 @@ HBox {
     readonly property string userId: addChatPage.userId
 
 
+    CurrentUserAvatar {
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 128
+        Layout.preferredHeight: Layout.preferredWidth
+    }
+
     HTextField {
         id: roomField
         placeholderText: qsTr("Alias (e.g. #example:matrix.org), URL or ID")

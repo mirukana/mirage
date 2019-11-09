@@ -11,6 +11,9 @@ HPage {
 
     property string userId
 
+    readonly property var account:
+        Utils.getItem(modelSources["Account"] || [], "user_id", userId)
+
 
     HColumnLayout {
         Layout.alignment: Qt.AlignCenter

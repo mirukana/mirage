@@ -116,7 +116,6 @@
 
   - Server selection
   - Register/Forgot? for SignIn dialog
-  - Add room
   - Prevent using the composer if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading past room events
@@ -154,6 +153,10 @@
   - Opening links with keyboard
 
 - Client improvements
+  - In room creation, click avatar to set the future room's avatar
+  - In join room page, show the matching room's avatar when typing
+  - In find someone page, show the matching user's avatar when typing
+
   - More error details
   - Refetch profile after manual profile change, don't wait for a room event
 
