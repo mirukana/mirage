@@ -453,7 +453,7 @@ class MatrixClient(nio.AsyncClient):
         name:     Optional[str] = None,
         topic:    Optional[str] = None,
         public:   bool          = False,
-        encrypt:  bool          = False,  # TODO
+        encrypt:  bool          = False,
         federate: bool          = True,
     ) -> str:
 
@@ -464,6 +464,8 @@ class MatrixClient(nio.AsyncClient):
             visibility =
                 nio.RoomVisibility.public if public else
                 nio.RoomVisibility.private,
+            initial_state =
+                [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
         )
 
         if isinstance(response, nio.RoomCreateError):
