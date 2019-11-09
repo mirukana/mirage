@@ -7,7 +7,7 @@ import platform
 import re
 import traceback
 from contextlib import suppress
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
 from pathlib import Path
@@ -56,6 +56,15 @@ class MatrixNotFound(MatrixError):
 class MatrixForbidden(MatrixError):
     m_code: str = "M_FORBIDDEN"
 
+
+@dataclass
+class UserNotFound(Exception):
+    user_id: str = field()
+
+
+@dataclass
+class InvalidUserInContext(Exception):
+    user_id: str = field()
 
 @dataclass
 class UploadError(Exception):
@@ -448,7 +457,28 @@ class MatrixClient(nio.AsyncClient):
             more = await self.load_past_events(room_id)
 
 
-    async def room_create(
+    async def new_direct_chat(self, invite: str, encrypt: bool = False) -> str:
+        if invite == self.user_id:
+            raise InvalidUserInContext(invite)
+
+        if isinstance(await self.get_profile(invite), nio.ProfileGetError):
+            raise UserNotFound(invite)
+
+        response = await super().room_create(
+            invite        = [invite],
+            is_direct     = True,
+            visibility    = nio.RoomVisibility.private,
+            initial_state =
+                [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
+        )
+
+        if isinstance(response, nio.RoomCreateError):
+            raise MatrixError.from_nio(response)
+
+        return response.room_id
+
+
+    async def new_group_chat(
         self,
         name:     Optional[str] = None,
         topic:    Optional[str] = None,

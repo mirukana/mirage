@@ -6,7 +6,7 @@ import "../../utils.js" as Utils
 
 HPage {
     id: addChatPage
-    onFocusChanged: createRoom.forceActiveFocus()
+    onFocusChanged: findSomeone.forceActiveFocus()
 
 
     property string userId
@@ -22,7 +22,7 @@ HPage {
 
         HTabBar {
             id: tabBar
-            currentIndex: 2
+            currentIndex: 0
 
             Layout.fillWidth: true
 
@@ -47,13 +47,9 @@ HPage {
 
             Layout.fillWidth: true
 
-            Item {}
-
+            FindSomeone { id: findSomeone }
             JoinRoom {}
-
-            CreateRoom {
-                id: createRoom
-            }
+            CreateRoom {}
         }
     }
 }

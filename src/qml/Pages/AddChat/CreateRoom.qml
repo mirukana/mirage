@@ -27,14 +27,14 @@ HBox {
                 ! blockOtherServersCheckBox.checked,
             ]
 
-            py.callClientCoro(userId, "room_create", args, roomId => {
+            py.callClientCoro(userId, "new_group_chat", args, roomId => {
                 button.loading = false
                 pageLoader.showRoom(userId, roomId)
 
             }, (type, args) => {
                 button.loading = false
                 errorMessage.text =
-                    qsTr("Unknown error - %1, %2").arg(type).arg(args)
+                    qsTr("Unknown error - %1: %2").arg(type).arg(args)
             })
         },
 

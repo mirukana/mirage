@@ -7,11 +7,11 @@ HBox {
     id: addChatBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: roomField.forceActiveFocus()
+    onFocusChanged: userField.forceActiveFocus()
 
     buttonModel: [
-        { name: "apply", text: qsTr("Join"), iconName: "join",
-          enabled: Boolean(roomField.text), },
+        { name: "apply", text: qsTr("Start chat"), iconName: "join",
+          enabled: Boolean(userField.text), },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
 
@@ -20,9 +20,9 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [roomField.text]
+            let args = [userField.text]
 
-            py.callClientCoro(userId, "room_join", args, roomId => {
+            py.callClientCoro(userId, "new_direct_chat", args, roomId => {
                 button.loading    = false
                 errorMessage.text = ""
                 pageLoader.showRoom(userId, roomId)
@@ -32,21 +32,18 @@ HBox {
 
                 let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
 
-                if (type === "ValueError")
-                    txt = qsTr("Unrecognized alias, room ID or URL")
+                if (type === "InvalidUserInContext")
+                    txt = qsTr("You cannot invite yourself!")
 
-                if (type === "MatrixNotFound")
-                    txt = qsTr("Room not found")
-
-                if (type === "MatrixForbidden")
-                    txt = qsTr("You do not have permission to join this room")
+                if (type === "UserNotFound")
+                    txt = qsTr("This user does not exist.")
 
                 errorMessage.text = txt
             })
         },
 
         cancel: button => {
-            roomField.text    = ""
+            userField.text    = ""
             errorMessage.text = ""
             pageLoader.showPrevious()
         }
@@ -57,8 +54,8 @@ HBox {
 
 
     HTextField {
-        id: roomField
-        placeholderText: qsTr("Alias (e.g. #example:matrix.org), URL or ID")
+        id: userField
+        placeholderText: qsTr("User ID (e.g. @john:matrix.org)")
         error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true
