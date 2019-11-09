@@ -10,7 +10,7 @@ Repeater {
 
         for (let i = 0;  i < repeater.count; i++) {
             let item = repeater.itemAt(i)
-            if (item && item.width) total += item.width
+            if (item && item.implicitWidth) total += item.implicitWidth
         }
 
         return total
