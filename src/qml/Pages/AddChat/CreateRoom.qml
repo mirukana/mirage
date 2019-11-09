@@ -29,6 +29,11 @@ HBox {
             py.callClientCoro(userId, "room_create", args, roomId => {
                 button.loading = false
                 pageLoader.showRoom(userId, roomId)
+
+            }, (type, args) => {
+                button.loading = false
+                errorMessage.text =
+                    qsTr("Unknown error - %1, %2").arg(type).arg(args)
             })
         },
 
