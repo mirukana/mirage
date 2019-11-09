@@ -10,7 +10,7 @@ HBox {
     onFocusChanged: nameField.forceActiveFocus()
 
     buttonModel: [
-        { name: "apply", text: qsTr("Create"), iconName: "apply" },
+        { name: "apply", text: qsTr("Create"), iconName: "room-create" },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
 

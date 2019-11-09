@@ -10,7 +10,7 @@ HBox {
     onFocusChanged: roomField.forceActiveFocus()
 
     buttonModel: [
-        { name: "apply", text: qsTr("Join"), iconName: "apply",
+        { name: "apply", text: qsTr("Join"), iconName: "join",
           enabled: Boolean(roomField.text), },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]

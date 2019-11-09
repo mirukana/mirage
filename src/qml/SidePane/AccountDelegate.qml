@@ -60,7 +60,7 @@ HTileDelegate {
     HButton {
         id: addChat
         iconItem.dimension: 16
-        icon.name: "add-account"  // TODO
+        icon.name: "add-chat"
         backgroundColor: "transparent"
         toolTip.text: qsTr("Add new chat")
         onClicked: pageLoader.showPage(
@@ -81,7 +81,7 @@ HTileDelegate {
     HButton {
         id: expand
         loading: ! model.data.first_sync_done || ! model.data.profile_updated
-        iconItem.dimension: 16
+        iconItem.dimension: addChat.iconItem.dimension
         icon.name: "expand"
         backgroundColor: "transparent"
         toolTip.text: collapsed ? qsTr("Expand") : qsTr("Collapse")
