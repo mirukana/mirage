@@ -57,6 +57,7 @@ HBox {
     HTextField {
         id: roomField
         placeholderText: qsTr("Alias (e.g. #example:matrix.org), URL or ID")
+        error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true
     }
