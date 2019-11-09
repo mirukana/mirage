@@ -10,8 +10,8 @@ HBox {
     onFocusChanged: userField.forceActiveFocus()
 
     buttonModel: [
-        { name: "apply", text: qsTr("Start chat"), iconName: "join",
-          enabled: Boolean(userField.text), },
+        { name: "apply", text: qsTr("Start chat"),
+          iconName: "start-direct-chat", enabled: Boolean(userField.text) },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
 
