@@ -26,7 +26,9 @@ HPage {
             register: button => {},
 
             login: button => {
-                button.loading = true
+                button.loading    = true
+                errorMessage.text = ""
+
                 let args = [
                     idField.text, passwordField.text,
                     undefined, serverField.text,
@@ -35,7 +37,7 @@ HPage {
                 py.callCoro("login_client", args, ([success, data]) => {
                     if (! success) {
                         errorMessage.text = qsTr(data)
-                        button.loading = false
+                        button.loading    = false
                         return
                     }
 

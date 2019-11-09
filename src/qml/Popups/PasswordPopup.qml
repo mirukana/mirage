@@ -33,9 +33,10 @@ BoxPopup {
 
     box.buttonCallbacks: ({
         ok: button => {
-            let password   = passwordField.text
-            okClicked      = true
-            button.loading = true
+            let password      = passwordField.text
+            okClicked         = true
+            button.loading    = true
+            errorMessage.text = ""
 
             verifyPassword(password, result => {
                 if (result === true) {

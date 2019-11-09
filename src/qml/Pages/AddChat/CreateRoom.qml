@@ -16,7 +16,8 @@ HBox {
 
     buttonCallbacks: ({
         apply: button => {
-            button.loading = true
+            button.loading    = true
+            errorMessage.text = ""
 
             let args = [
                 nameField.text || null,
