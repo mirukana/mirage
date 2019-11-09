@@ -5,7 +5,7 @@ import "../../utils.js" as Utils
 
 HBox {
     id: addChatBox
-    clickButtonOnEnter: "create"
+    clickButtonOnEnter: "apply"
 
     onFocusChanged: nameField.forceActiveFocus()
 

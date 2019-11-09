@@ -5,7 +5,7 @@ import "../../utils.js" as Utils
 
 HBox {
     id: addChatBox
-    clickButtonOnEnter: "join"
+    clickButtonOnEnter: "apply"
 
     onFocusChanged: roomField.forceActiveFocus()
 
