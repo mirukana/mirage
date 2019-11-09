@@ -35,8 +35,27 @@ CryptDict = Dict[str, Any]
 
 
 @dataclass
-class RequestFailed(Exception):
-    m_code: Optional[str] = None
+class MatrixError(Exception):
+    m_code: str = "M_UNKNOWN"
+
+    @classmethod
+    def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
+        for subcls in cls.__subclasses__():
+            if subcls.m_code == response.status_code:
+                return subcls()
+
+        return cls(response.status_code)
+
+
+@dataclass
+class MatrixNotFound(MatrixError):
+    m_code: str = "M_NOT_FOUND"
+
+
+@dataclass
+class MatrixForbidden(MatrixError):
+    m_code: str = "M_FORBIDDEN"
+
 
 @dataclass
 class UploadError(Exception):
@@ -448,7 +467,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         if isinstance(response, nio.RoomCreateError):
-            raise RequestFailed(response.status_code)
+            raise MatrixError.from_nio(response)
 
         return response.room_id
 
@@ -457,16 +476,19 @@ class MatrixClient(nio.AsyncClient):
 
         if re.match(r"^https?://", string):
             for part in urlparse(string).fragment.split("/"):
-                if re.match(r"[#!].+:.+", part):
+                if re.match(r"^[#!].+:.+", part):
                     string = part
                     break
             else:
                 raise ValueError(f"No alias or room id found in url {string}")
 
+        if not re.match(r"^[#!].+:.+", string):
+            raise ValueError("Not an alias or room id")
+
         response = await super().join(string)
 
         if isinstance(response, nio.JoinError):
-            raise RequestFailed(response.status_code)
+            raise MatrixError.from_nio(response)
 
         return response.room_id
 

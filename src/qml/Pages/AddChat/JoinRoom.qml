@@ -21,13 +21,31 @@ HBox {
             let args = [roomField.text]
 
             py.callClientCoro(userId, "room_join", args, roomId => {
-                button.loading = false
+                button.loading    = false
+                errorMessage.text = ""
                 pageLoader.showRoom(userId, roomId)
+
+            }, (type, args) => {
+                button.loading = false
+
+                let txt = qsTr("Unknown error - %1, %2").arg(type).arg(args)
+
+                if (type === "ValueError")
+                    txt = qsTr("Unrecognized alias, room ID or URL")
+
+                if (type === "MatrixNotFound")
+                    txt = qsTr("Room not found")
+
+                if (type === "MatrixForbidden")
+                    txt = qsTr("You do not have permission to join this room")
+
+                errorMessage.text = txt
             })
         },
 
         cancel: button => {
-            roomField.text = ""
+            roomField.text    = ""
+            errorMessage.text = ""
             pageLoader.showPrevious()
         }
     })
