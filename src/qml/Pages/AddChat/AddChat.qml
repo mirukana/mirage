@@ -48,7 +48,8 @@ HPage {
             Layout.fillWidth: true
 
             Item {}
-            Item {}
+
+            JoinRoom {}
 
             CreateRoom {
                 id: createRoom

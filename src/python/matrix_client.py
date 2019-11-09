@@ -4,6 +4,7 @@ import html
 import io
 import logging as log
 import platform
+import re
 import traceback
 from contextlib import suppress
 from dataclasses import dataclass
@@ -13,6 +14,7 @@ from pathlib import Path
 from typing import (
     Any, BinaryIO, DefaultDict, Dict, Optional, Set, Tuple, Type, Union,
 )
+from urllib.parse import urlparse
 from uuid import uuid4
 
 import cairosvg
@@ -449,6 +451,25 @@ class MatrixClient(nio.AsyncClient):
             raise RequestFailed(response.status_code)
 
         return response.room_id
+
+    async def room_join(self, alias_or_id_or_url: str) -> str:
+        string = alias_or_id_or_url.strip()
+
+        if re.match(r"^https?://", string):
+            for part in urlparse(string).fragment.split("/"):
+                if re.match(r"[#!].+:.+", part):
+                    string = part
+                    break
+            else:
+                raise ValueError(f"No alias or room id found in url {string}")
+
+        response = await super().join(string)
+
+        if isinstance(response, nio.JoinError):
+            raise RequestFailed(response.status_code)
+
+        return response.room_id
+
 
 
     async def room_forget(self, room_id: str) -> None:
