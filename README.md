@@ -14,8 +14,6 @@ Qt 5.12+, including:
 - qt5-qmake
 - qt5-devel
 
-- qtav
-
 - python3
 - python3-devel
 - olm-python3 >= 3.1
@@ -52,7 +50,7 @@ Optional dependency for performance improvements:
 
 ## Building
 
-    git clone <TODO>
+    git clone --recursive <TODO>
     cd harmonyqml
     qmake harmonyqml.pro && make && sudo make install
 
