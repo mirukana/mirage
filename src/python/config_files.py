@@ -132,6 +132,7 @@ class UISettings(JSONConfigFile):
 
                 "focusSidePane":   ["Alt+S"],
                 "clearRoomFilter": ["Alt+Shift+S"],
+                "accountSettings": ["Alt+A"],
                 "addNewChat":      ["Alt+N"],
                 "addNewAccount":   ["Alt+Shift+N"],
 

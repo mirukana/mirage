@@ -110,6 +110,21 @@ HShortcutHandler {
         onPressed: mainUI.sidePane.sidePaneList.addNewChat()
     }
 
+
+    HShortcut {
+        enabled: mainUI.accountsPresent
+        sequences: settings.keys.accountSettings
+        onPressed: mainUI.sidePane.sidePaneList.accountSettings()
+    }
+
+
+    HShortcut {
+        enabled: mainUI.accountsPresent
+        sequences: settings.keys.toggleCollapseAccount
+        onPressed: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
+    }
+
+
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
@@ -122,12 +137,6 @@ HShortcutHandler {
         sequences: settings.keys.goToNextRoom
         onPressed: mainUI.sidePane.sidePaneList.next()
         onHeld: pressed(event)
-    }
-
-    HShortcut {
-        enabled: mainUI.accountsPresent
-        sequences: settings.keys.toggleCollapseAccount
-        onPressed: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
     }
 
 

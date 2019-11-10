@@ -72,6 +72,15 @@ HListView {
         currentItem.item.activated()
     }
 
+    function accountSettings() {
+        if (! currentItem) incrementCurrentIndex()
+
+        pageLoader.showPage(
+            "EditAccount/EditAccount",
+            {userId: currentItem.item.delegateModel.user_id},
+        )
+    }
+
     function addNewChat() {
         if (! currentItem) incrementCurrentIndex()
 
