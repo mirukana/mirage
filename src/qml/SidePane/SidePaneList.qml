@@ -76,7 +76,7 @@ HListView {
         if (! currentItem) incrementCurrentIndex()
 
         pageLoader.showPage(
-            "EditAccount/EditAccount",
+            "AccountSettings/AccountSettings",
             {userId: currentItem.item.delegateModel.user_id},
         )
     }

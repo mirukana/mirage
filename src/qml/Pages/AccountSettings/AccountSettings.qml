@@ -5,7 +5,7 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 HPage {
-    id: editAccount
+    id: accountSettings
 
     property int avatarPreferredSize: 256
 

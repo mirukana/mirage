@@ -4,7 +4,7 @@
   - Handle upload errors: non existent path, path is a dir, file too big, etc
   - Show real progression for mxc thumbnail loadings, uploads and downloads
 
-  - Login: use new exception python/qml mechanism
+  - Login & upload: use new exception python/qml mechanism
 
   - Support m.file thumbnails
   - Generate video thumbnails
@@ -34,7 +34,6 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
-  - General way to show pages as loading until account is ready
   - `code` not colored in room subtitle
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list

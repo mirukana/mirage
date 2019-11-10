@@ -13,7 +13,7 @@ HTileDelegate {
              theme.sidePane.account.collapsedOpacity : 1
 
     shouldBeCurrent:
-        window.uiState.page == "Pages/EditAccount/EditAccount.qml" &&
+        window.uiState.page == "Pages/AccountSettings/AccountSettings.qml" &&
         window.uiState.pageProperties.userId == model.data.user_id
 
     setCurrentTimer.running:
@@ -34,7 +34,7 @@ HTileDelegate {
 
     onActivated: if (! disconnecting) {
         pageLoader.showPage(
-            "EditAccount/EditAccount", { "userId": model.data.user_id }
+            "AccountSettings/AccountSettings", { "userId": model.data.user_id }
         )
     }
 

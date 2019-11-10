@@ -13,7 +13,7 @@ HGridLayout {
             py.callClientCoro(
                 userId, "set_displayname", [nameField.field.text], () => {
                     saveButton.nameChangeRunning = false
-                    editAccount.headerName =
+                    accountSettings.headerName =
                         Qt.binding(() => accountInfo.display_name)
                 }
             )
@@ -45,7 +45,7 @@ HGridLayout {
         fileDialog.selectedFile = ""
         fileDialog.file         = ""
 
-        editAccount.headerName = Qt.binding(() => accountInfo.display_name)
+        accountSettings.headerName = Qt.binding(() => accountInfo.display_name)
     }
 
     columns: 2
@@ -58,8 +58,8 @@ HGridLayout {
         property bool changed: Boolean(sourceOverride)
 
         id: avatar
-        clientUserId: editAccount.userId
-        userId: editAccount.userId
+        clientUserId: accountSettings.userId
+        userId: accountSettings.userId
         displayName: nameField.field.text
         mxc: accountInfo.avatar_url
         toolTipMxc: ""
@@ -151,7 +151,7 @@ HGridLayout {
                 property bool changed: field.text != accountInfo.display_name
 
                 readonly property string fText: field.text
-                onFTextChanged: editAccount.headerName = field.text
+                onFTextChanged: accountSettings.headerName = field.text
 
                 id: nameField
                 label.text: qsTr("Display name:")

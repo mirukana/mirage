@@ -47,7 +47,7 @@ HPage {
                         [data]
                     )
                     pageLoader.showPage(
-                        "EditAccount/EditAccount", {userId: data}
+                        "AccountSettings/AccountSettings", {userId: data}
                     )
 
                     errorMessage.text = ""

@@ -16,8 +16,8 @@ HBox {
         export: button => {
             Utils.makeObject(
                 "Dialogs/ExportKeys.qml",
-                editAccount,
-                { userId: editAccount.userId },
+                accountSettings,
+                { userId: accountSettings.userId },
                 obj => {
                     button.loading = Qt.binding(() => obj.exporting)
                     obj.dialog.open()
@@ -27,8 +27,8 @@ HBox {
         import: button => {
             Utils.makeObject(
                 "Dialogs/ImportKeys.qml",
-                editAccount,
-                { userId: editAccount.userId },
+                accountSettings,
+                { userId: accountSettings.userId },
                 obj => { obj.dialog.open() }
             )
         },
