@@ -79,6 +79,8 @@ SwipeView {
             contentWidth: parent.width
             contentHeight: contentColumn.childrenRect.height
 
+            Component.onCompleted: shortcuts.flickTarget = this
+
             HColumnLayout {
                 id: contentColumn
                 width: innerFlickable.width
