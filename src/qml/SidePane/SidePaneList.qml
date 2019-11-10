@@ -82,7 +82,9 @@ HListView {
     }
 
     function toggleCollapseAccount() {
-        if (! currentItem || filter) return
+        if (filter) return
+
+        if (! currentItem) incrementCurrentIndex()
 
         if (currentItem.item.delegateModel.type == "Account") {
             currentItem.item.toggleCollapse()
