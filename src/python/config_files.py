@@ -130,6 +130,9 @@ class UISettings(JSONConfigFile):
                 "scrollToBottom":
                     ["Alt+Ctrl+Shift+Down", "Alt+Ctrl+Shift+J", "End"],
 
+                "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
+                "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
+
                 "focusSidePane":   ["Alt+S"],
                 "clearRoomFilter": ["Alt+Shift+S"],
                 "accountSettings": ["Alt+A"],

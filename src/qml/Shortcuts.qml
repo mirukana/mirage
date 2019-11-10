@@ -1,10 +1,18 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import "Base"
 import "utils.js" as Utils
 
 HShortcutHandler {
+    // Flickable or ListView that should be affected by scroll shortcuts
     property Item flickTarget
+
+    // TabBar that should be affected by tab navigation shortcuts
+    property TabBar tabsTarget
+
+    // DebugConsole that should be affected by console shortcuts
     property DebugConsole debugConsole
+
 
     // App
 
@@ -81,6 +89,25 @@ HShortcutHandler {
         sequences: settings.keys.scrollToBottom
         onPressed: Utils.flickToBottom(flickTarget)
         onHeld: pressed(event)
+    }
+
+
+    // Tab navigation
+
+    HShortcut {
+        enabled: tabsTarget
+        sequences: settings.keys.previousTab
+        onPressed: tabsTarget.setCurrentIndex(
+            Utils.numberWrapAt(tabsTarget.currentIndex - 1, tabsTarget.count),
+        )
+    }
+
+    HShortcut {
+        enabled: tabsTarget
+        sequences: settings.keys.nextTab
+        onPressed: tabsTarget.setCurrentIndex(
+            Utils.numberWrapAt(tabsTarget.currentIndex + 1, tabsTarget.count),
+        )
     }
 
 

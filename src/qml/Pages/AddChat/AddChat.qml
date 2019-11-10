@@ -26,6 +26,7 @@ HPage {
         HTabBar {
             id: tabBar
             currentIndex: 0
+            Component.onCompleted: shortcuts.tabsTarget = this
 
             Layout.fillWidth: true
 
