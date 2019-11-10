@@ -132,8 +132,8 @@ class UISettings(JSONConfigFile):
 
                 "focusSidePane":   ["Alt+S", "Ctrl+S"],
                 "clearRoomFilter": ["Alt+Shift+S", "Ctrl+Shift+S"],
-                "addNewChat":      ["Alt+A"],
-                "addNewAccount":   ["Alt+Shift+A"],
+                "addNewChat":      ["Alt+N"],
+                "addNewAccount":   ["Alt+Shift+N"],
 
                 "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
