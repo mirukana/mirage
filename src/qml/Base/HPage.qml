@@ -17,6 +17,8 @@ SwipeView {
     property int currentSpacing:
         Math.min(theme.spacing * width / 400, theme.spacing)
 
+    property bool becomeKeyboardFlickableTarget: true
+
     id: swipeView
     clip: true
     interactive: sidePane.reduce
@@ -75,7 +77,8 @@ SwipeView {
             contentWidth: parent.width
             contentHeight: contentColumn.childrenRect.height
 
-            Component.onCompleted: shortcuts.flickTarget = this
+            Component.onCompleted:
+                if (becomeKeyboardFlickableTarget) shortcuts.flickTarget = this
 
             HColumnLayout {
                 id: contentColumn

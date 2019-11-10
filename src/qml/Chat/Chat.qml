@@ -5,6 +5,8 @@ import "../utils.js" as Utils
 
 HPage {
     id: chatPage
+    // The target will be our EventList, not the page itself
+    becomeKeyboardFlickableTarget: false
 
     property string userId: ""
     property string roomId: ""
@@ -19,6 +21,7 @@ HPage {
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
 
+
     onRoomInfoChanged: {
         if (roomInfo.left) {
             // If left, the room will most likely be gone on client restart.
@@ -32,7 +35,9 @@ HPage {
         }
     }
 
+
     readonly property bool hasUnknownDevices: false
+
 
     header: HLoader {
         id: roomHeader
