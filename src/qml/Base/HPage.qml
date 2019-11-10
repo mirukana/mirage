@@ -50,21 +50,17 @@ SwipeView {
             Behavior on height { HNumberAnimation {} }
             visible: height > 0
 
-            HRowLayout {
-                width: parent.width
+            HLabel {
+                id: innerHeaderLabel
+                anchors.fill: parent
+                textFormat: Text.StyledText
+                font.pixelSize: theme.fontSize.big
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
 
-                HLabel {
-                    id: innerHeaderLabel
-                    textFormat: Text.StyledText
-                    font.pixelSize: theme.fontSize.big
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-
-                    Layout.leftMargin: currentSpacing
-                    Layout.rightMargin: Layout.leftMargin
-                    Layout.fillWidth: true
-                }
+                leftPadding: currentSpacing
+                rightPadding: leftPadding
             }
         }
 
