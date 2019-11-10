@@ -72,6 +72,15 @@ HListView {
         currentItem.item.activated()
     }
 
+    function addNewChat() {
+        if (! currentItem) incrementCurrentIndex()
+
+        pageLoader.showPage(
+            "AddChat/AddChat",
+            {userId: currentItem.item.delegateModel.user_id},
+        )
+    }
+
     function toggleCollapseAccount() {
         if (! currentItem || filter) return
 

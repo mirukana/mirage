@@ -117,9 +117,9 @@ class UISettings(JSONConfigFile):
                 "startMuted": False,
             },
             "keys": {
-                "startPythonDebugger": "Alt+Shift+D",
-                "toggleDebugConsole":  "Alt+Shift+C",
-                "reloadConfig":        "Alt+Shift+R",
+                "startPythonDebugger": ["Alt+Shift+D"],
+                "toggleDebugConsole":  ["Alt+Shift+C"],
+                "reloadConfig":        ["Alt+Shift+R"],
 
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
@@ -130,9 +130,10 @@ class UISettings(JSONConfigFile):
                 "scrollToBottom":
                     ["Alt+Ctrl+Shift+Down", "Alt+Ctrl+Shift+J", "End"],
 
-                "focusSidePane":    ["Alt+S", "Ctrl+S"],
-                "clearRoomFilter":  ["Alt+Shift+S", "Ctrl+Shift+S"],
-                "addNewAccount":    ["Alt+N"],
+                "focusSidePane":   ["Alt+S", "Ctrl+S"],
+                "clearRoomFilter": ["Alt+Shift+S", "Ctrl+Shift+S"],
+                "addNewChat":      ["Alt+A"],
+                "addNewAccount":   ["Alt+Shift+A"],
 
                 "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],

@@ -54,7 +54,6 @@ HBox {
 
 
     HRoomAvatar {
-        // TODO: click to change the avatar
         id: avatar
         clientUserId: userId
         displayName: nameField.text

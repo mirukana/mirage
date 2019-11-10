@@ -106,6 +106,12 @@ HShortcutHandler {
 
     HShortcut {
         enabled: mainUI.accountsPresent
+        sequences: settings.keys.addNewChat
+        onPressed: mainUI.sidePane.sidePaneList.addNewChat()
+    }
+
+    HShortcut {
+        enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
         onPressed: mainUI.sidePane.sidePaneList.previous()
         onHeld: pressed(event)
