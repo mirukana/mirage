@@ -130,8 +130,8 @@ class UISettings(JSONConfigFile):
                 "scrollToBottom":
                     ["Alt+Ctrl+Shift+Down", "Alt+Ctrl+Shift+J", "End"],
 
-                "focusSidePane":   ["Alt+S", "Ctrl+S"],
-                "clearRoomFilter": ["Alt+Shift+S", "Ctrl+Shift+S"],
+                "focusSidePane":   ["Alt+S"],
+                "clearRoomFilter": ["Alt+Shift+S"],
                 "addNewChat":      ["Alt+N"],
                 "addNewAccount":   ["Alt+Shift+N"],
 
