@@ -138,10 +138,7 @@ class UISettings(JSONConfigFile):
                 "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
-                "toggleCollapseAccount": [
-                    "Alt+Shift+Left", "Alt+Shift+Right",
-                    "Alt+Shift+H", "Alt+Shift+L",
-                ],
+                "toggleCollapseAccount": [ "Alt+O"],
 
                 "clearRoomMessages": ["Ctrl+L"],
                 "sendFile": ["Alt+F"],
