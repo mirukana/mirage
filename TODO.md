@@ -15,7 +15,7 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
   - EventLink
-  - Downloading (right click on media > save as...)
+  - EventFile & Downloading (right click on media > save as...)
 
 - RoomMessageNotice
 

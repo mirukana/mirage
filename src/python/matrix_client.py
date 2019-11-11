@@ -36,7 +36,8 @@ CryptDict = Dict[str, Any]
 
 @dataclass
 class MatrixError(Exception):
-    m_code: str = "M_UNKNOWN"
+    http_code: int = 400
+    m_code:    str = "M_UNKNOWN"
 
     @classmethod
     def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
@@ -44,17 +45,29 @@ class MatrixError(Exception):
             if subcls.m_code == response.status_code:
                 return subcls()
 
-        return cls(response.status_code)
+        for subcls in cls.__subclasses__():
+            if subcls.http_code == response.transport_response.status:
+                return subcls()
 
-
-@dataclass
-class MatrixNotFound(MatrixError):
-    m_code: str = "M_NOT_FOUND"
+        return cls(response.transport_response.status, response.status_code)
 
 
 @dataclass
 class MatrixForbidden(MatrixError):
-    m_code: str = "M_FORBIDDEN"
+    http_code: int = 403
+    m_code:    str = "M_FORBIDDEN"
+
+
+@dataclass
+class MatrixNotFound(MatrixError):
+    http_code: int = 404
+    m_code:    str = "M_NOT_FOUND"
+
+
+@dataclass
+class MatrixTooLarge(MatrixError):
+    http_code: int = 413
+    m_code:    str = "M_TOO_LARGE"
 
 
 @dataclass
@@ -66,19 +79,6 @@ class UserNotFound(Exception):
 class InvalidUserInContext(Exception):
     user_id: str = field()
 
-@dataclass
-class UploadError(Exception):
-    http_code: Optional[int] = None
-
-
-@dataclass
-class UploadForbidden(UploadError):
-    http_code: Optional[int] = 403
-
-
-@dataclass
-class UploadTooLarge(UploadError):
-    http_code: Optional[int] = 413
 
 @dataclass
 class UneededThumbnail(Exception):
@@ -656,16 +656,10 @@ class MatrixClient(nio.AsyncClient):
                     ) -> str:
         response = await super().upload(data, mime, filename)
 
-        if not isinstance(response, nio.ErrorResponse):
-            return response.content_uri
+        if isinstance(response, nio.UploadError):
+            raise MatrixError.from_nio(response)
 
-        if response.status_code == 403:
-            raise UploadForbidden()
-
-        if response.status_code == 413:
-            raise UploadTooLarge()
-
-        raise UploadError(response.status_code)
+        return response.content_uri
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
