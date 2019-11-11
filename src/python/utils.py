@@ -1,3 +1,5 @@
+"""Contains various utilities that are used throughout the package."""
+
 import asyncio
 import collections
 import html
@@ -18,13 +20,22 @@ CANCELLABLE_FUTURES: Dict[Tuple[Any, Callable], asyncio.Future] = {}
 
 
 class AutoStrEnum(Enum):
+    """An Enum where auto() assigns the member's name instead of an int.
+
+    Example:
+    >>> class Fruits(AutoStrEnum): apple = auto()
+    >>> Fruits.apple.value
+    "apple"
+    """
     @staticmethod
     def _generate_next_value_(name, *_):
         return name
 
 
-def dict_update_recursive(dict1, dict2):
+def dict_update_recursive(dict1: dict, dict2: dict) -> None:
+    """Recursive version of dict.update()."""
     # https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
+
     for k in dict2:
         if (k in dict1 and isinstance(dict1[k], dict) and
                 isinstance(dict2[k], collections.Mapping)):
@@ -34,6 +45,8 @@ def dict_update_recursive(dict1, dict2):
 
 
 def is_svg(file: Union[IO, bytes, str]) -> bool:
+    """Return True if the file is a SVG. Uses lxml for detection."""
+
     try:
         _, element = next(xml_etree.iterparse(file, ("start",)))
         return element.tag == "{http://www.w3.org/2000/svg}svg"
@@ -42,6 +55,10 @@ def is_svg(file: Union[IO, bytes, str]) -> bool:
 
 
 def svg_dimensions(file: Union[IO, bytes, str]) -> Tuple[int, int]:
+    """Return the width & height or viewBox width & height for a SVG.
+    If these properties are missing (broken file), ``(256, 256)`` is returned.
+    """
+
     attrs = xml_etree.parse(file).getroot().attrib
 
     try:
@@ -58,6 +75,10 @@ def svg_dimensions(file: Union[IO, bytes, str]) -> Tuple[int, int]:
 
 
 def guess_mime(file: IO) -> str:
+    """Return the mime type for a file, or application/octet-stream if it
+    can't be guessed.
+    """
+
     if is_svg(file):
         return "image/svg+xml"
 
@@ -66,12 +87,20 @@ def guess_mime(file: IO) -> str:
 
 
 def plain2html(text: str) -> str:
+    """Transform plain text into HTML, this converts \n and \t."""
+
     return html.escape(text)\
                .replace("\n", "<br>")\
                .replace("\t", "&nbsp;" * 4)
 
 
 def serialize_value_for_qml(value: Any) -> Any:
+    """Transform a value to make it easier to use from QML.
+
+    Currently, this transforms Enum members to their actual value and Path
+    objects to their string version.
+    """
+
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
         return value.value
 
@@ -82,6 +111,8 @@ def serialize_value_for_qml(value: Any) -> Any:
 
 
 def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
+    """Return a {name: class} dict of all the classes a module defines."""
+
     return {
         m[0]: m[1] for m in inspect.getmembers(module, inspect.isclass)
         if not m[0].startswith("_") and
@@ -90,6 +121,10 @@ def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
 
 
 def cancel_previous(async_func):
+    """When the wrapped coroutine is called, cancel any previous instance
+    of that coroutine that may still be running.
+    """
+
     async def wrapper(*args, **kwargs):
         try:
             arg0_is_self = inspect.getfullargspec(async_func).args[0] == "self"
