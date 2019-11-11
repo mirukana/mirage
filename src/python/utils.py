@@ -1,16 +1,20 @@
+import asyncio
 import collections
 import html
 import inspect
+import logging as log
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
 from types import ModuleType
-from typing import IO, Any, Dict, Tuple, Type, Union
+from typing import IO, Any, Callable, Dict, Tuple, Type, Union
 
 import filetype
 
 auto = autostr
+
+CANCELLABLE_FUTURES: Dict[Tuple[Any, Callable], asyncio.Future] = {}
 
 
 class AutoStrEnum(Enum):
@@ -83,3 +87,30 @@ def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
         if not m[0].startswith("_") and
         m[1].__module__.startswith(module.__name__)
     }
+
+
+def cancel_previous(async_func):
+    async def wrapper(*args, **kwargs):
+        try:
+            arg0_is_self = inspect.getfullargspec(async_func).args[0] == "self"
+        except IndexError:
+            parent_obj = None
+        else:
+            parent_obj = args[0] if arg0_is_self else None
+
+        previous = CANCELLABLE_FUTURES.get((parent_obj, async_func))
+        if previous:
+            previous.cancel()
+            log.info("Cancelled previous coro: %s", previous)
+
+        future = asyncio.ensure_future(async_func(*args, **kwargs))
+        CANCELLABLE_FUTURES[parent_obj, async_func] = future
+
+        try:
+            result = await future
+            return result
+        finally:
+            # Make sure to do this even if an exception happens
+            del CANCELLABLE_FUTURES[parent_obj, async_func]
+
+    return wrapper

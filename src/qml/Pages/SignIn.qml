@@ -19,7 +19,8 @@ HPage {
 
         buttonModel: [
             { name: "register", text: qsTr("Register"), enabled: false },
-            { name: "login", text: qsTr("Login"), enabled: canLogin },
+            { name: "login", text: qsTr("Login"), enabled: canLogin,
+              disableWhileLoading: false },
             { name: "forgot", text: qsTr("Forgot?"), enabled: false },
         ]
 
@@ -52,6 +53,8 @@ HPage {
                         "AccountSettings/AccountSettings", {userId: data}
                     )
                 }, type => {
+                    if (type === "CancelledError") return
+
                     loginTimeout.stop()
                     let txt = qsTr("Invalid request or login type")
 

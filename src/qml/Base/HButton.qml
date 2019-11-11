@@ -12,7 +12,6 @@ Button {
 
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
-    enabled: ! loading
 
     // Must be explicitely set to display correctly on KDE
     implicitWidth: Math.max(
@@ -32,12 +31,21 @@ Button {
     readonly property alias label: contentItem.label
 
     property color backgroundColor: theme.controls.button.background
+    property bool disableWhileLoading: true
     property bool loading: false
     property bool circle: false
 
     property HToolTip toolTip: HToolTip {
         id: toolTip
         visible: text && hovered
+    }
+
+
+    Binding {
+        when: disableWhileLoading && loading
+        target: button
+        property: "enabled"
+        value: false
     }
 
 

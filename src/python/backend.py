@@ -7,6 +7,7 @@ import hsluv
 
 import nio
 
+from . import utils
 from .app import App
 from .matrix_client import MatrixClient, MatrixError
 from .models.items import Account, Device, Event, Member, Room, Upload
@@ -46,6 +47,7 @@ class Backend:
 
     # Clients management
 
+    @utils.cancel_previous
     async def login_client(self,
         user:       str,
         password:   str,

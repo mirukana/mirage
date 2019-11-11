@@ -11,8 +11,6 @@ from typing import Coroutine, Sequence
 import nio
 from appdirs import AppDirs
 
-import pyotherside
-
 from . import __about__
 from .pyotherside_events import CoroutineDone
 

@@ -98,9 +98,13 @@ Rectangle {
                         theme.icons.colorize
                     )
 
-                    enabled: (modelData.enabled == undefined ?
-                              true : modelData.enabled) &&
-                             ! button.loading
+                    enabled:
+                        modelData.enabled === undefined ?
+                        true : modelData.enabled
+
+                    disableWhileLoading:
+                        modelData.disableWhileLoading === undefined ?
+                        true : modelData.disableWhileLoading
 
                     onClicked: buttonCallbacks[name](button)
 
