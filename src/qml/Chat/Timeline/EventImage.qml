@@ -24,10 +24,13 @@ HMxcImage {
     readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
     readonly property string openUrl: isEncrypted ? cachedPath : image.httpUrl
 
+    readonly property real maxHeight:
+        theme.chat.message.thumbnailMaxHeightRatio
+
     readonly property size fitSize: Utils.fitSize(
         // Minimum display size
-        192,
-        192,
+        theme.chat.message.thumbnailMinSize.width,
+        theme.chat.message.thumbnailMinSize.height,
 
         // Real size
         loader.singleMediaInfo.thumbnail_width ||
@@ -41,8 +44,8 @@ HMxcImage {
         600,
 
         // Maximum display size
-        Math.min(eventList.height / 3, eventContent.messageBodyWidth),
-        eventList.height / 3,
+        Math.min(eventList.height * maxHeight, eventContent.messageBodyWidth),
+        eventList.height * maxHeight,
     )
 
 
