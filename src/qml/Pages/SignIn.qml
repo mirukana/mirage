@@ -5,7 +5,8 @@ import "../Base"
 HPage {
     property string loginWith: "username"
     readonly property bool canLogin:
-        serverField.text && idField.text && passwordField.text
+        serverField.text && idField.text && passwordField.text &&
+        ! serverField.error
 
     onFocusChanged: idField.forceActiveFocus()
 
@@ -72,10 +73,15 @@ HPage {
             id: loginTimeout
             interval: 30 * 1000
             onTriggered: {
-                errorMessage.text = qsTr(
-                    "This server seems unavailable. Verify your internet " +
-                    "connection or try again in a few minutes."
-                )
+                errorMessage.text =
+                    serverField.knownServerChosen ?
+
+                    qsTr("This server seems unavailable. Verify your inter" +
+                         "net connection or try again in a few minutes.") :
+
+                     qsTr("This server seems unavailable. Verify the " +
+                          "entered URL, your internet connection or try " +
+                          "again in a few minutes.")
             }
         }
 
@@ -104,8 +110,33 @@ HPage {
             id: serverField
             placeholderText: qsTr("Homeserver URL")
             text: "https://matrix.org"
+            error: ! /.+:\/\/.+/.test(cleanText)
 
             Layout.fillWidth: true
+
+
+            readonly property string cleanText: text.toLowerCase().trim()
+
+            // 2019-11-11 https://www.hello-matrix.net/public_servers.php
+            readonly property var knownServers: [
+                "https://matrix.org",
+                "https://chat.weho.st",
+                "https://tchncs.de",
+                "https://chat.privacytools.io",
+                "https://hackerspaces.be",
+                "https://matrix.allmende.io",
+                "https://feneas.org",
+                "https://junta.pl",
+                "https://perthchat.org",
+                "https://matrix.tedomum.net",
+                "https://converser.eu",
+                "https://ru-matrix.org",
+                "https://matrix.sibnsk.net",
+                "https://alternanet.fr",
+            ]
+
+            readonly property bool knownServerChosen:
+                knownServers.includes(cleanText)
         }
 
         HTextField {
