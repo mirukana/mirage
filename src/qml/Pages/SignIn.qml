@@ -34,29 +34,50 @@ HPage {
                     undefined, serverField.text,
                 ]
 
-                py.callCoro("login_client", args, ([success, data]) => {
-                    if (! success) {
-                        errorMessage.text = qsTr(data)
-                        button.loading    = false
-                        return
-                    }
+                loginTimeout.restart()
+
+                py.callCoro("login_client", args, userId => {
+                    loginTimeout.stop()
+                    errorMessage.text = ""
+                    button.loading    = false
 
                     py.callCoro(
                         "saved_accounts." +
                         (rememberAccount.checked ? "add": "delete"),
                         [data]
                     )
+
                     pageLoader.showPage(
                         "AccountSettings/AccountSettings", {userId: data}
                     )
+                }, type => {
+                    loginTimeout.stop()
+                    let txt = qsTr("Invalid request or login type")
 
-                    errorMessage.text = ""
+                    if (type === "MatrixForbidden")
+                        txt = qsTr("Invalid username or password")
+
+                    if (type === "MatrixUserDeactivated")
+                        txt = qsTr("This account was deactivated")
+
+                    errorMessage.text = txt
                     button.loading    = false
                 })
             },
 
             forgot: button => {}
         })
+
+        Timer {
+            id: loginTimeout
+            interval: 30 * 1000
+            onTriggered: {
+                errorMessage.text = qsTr(
+                    "This server seems unavailable. Verify your internet " +
+                    "connection or try again in a few minutes."
+                )
+            }
+        }
 
         HRowLayout {
             spacing: signInBox.horizontalSpacing * 1.25

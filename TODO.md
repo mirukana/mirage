@@ -4,8 +4,6 @@
   - Handle upload errors: non existent path, path is a dir, file too big, etc
   - Show real progression for mxc thumbnail loadings, uploads and downloads
 
-  - Login & upload: use new exception python/qml mechanism
-
   - Support m.file thumbnails
   - Generate video thumbnails
   - GIFs can use the video player
@@ -200,6 +198,12 @@
   - `m.room.aliases` events
   - Support "Empty room (was ...)" after peer left
   - Previewing room without joining
+
+  - thumbnail API shouldn't require auth
+  - get content repo config API
+  - add the `resume()` method
+
+  - See if we can turn all the Error classes into actual exceptions
 
 - Distribution
   - Include python dependencies in binary with rcc?

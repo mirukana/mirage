@@ -41,6 +41,8 @@ class MatrixError(Exception):
 
     @classmethod
     def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
+        # Check for the M_CODE first: some errors for an API share the same
+        # http code, but have different M_CODEs (e.g. POST /login 403).
         for subcls in cls.__subclasses__():
             if subcls.m_code == response.status_code:
                 return subcls()
@@ -56,6 +58,12 @@ class MatrixError(Exception):
 class MatrixForbidden(MatrixError):
     http_code: int = 403
     m_code:    str = "M_FORBIDDEN"
+
+
+@dataclass
+class MatrixUserDeactivated(MatrixError):
+    http_code: int = 403
+    m_code:    str = "M_USER_DEACTIVATED"
 
 
 @dataclass
@@ -159,7 +167,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         if isinstance(response, nio.LoginError):
-            raise RuntimeError(response)
+            raise MatrixError.from_nio(response)
 
         asyncio.ensure_future(self.start())
 

@@ -8,7 +8,7 @@ import hsluv
 import nio
 
 from .app import App
-from .matrix_client import MatrixClient
+from .matrix_client import MatrixClient, MatrixError
 from .models.items import Account, Device, Event, Member, Room, Upload
 from .models.model_store import ModelStore
 
@@ -51,7 +51,7 @@ class Backend:
         password:   str,
         device_id:  Optional[str] = None,
         homeserver: str           = "https://matrix.org",
-    ) -> Tuple[bool, str]:
+   ) -> str:
 
         client = MatrixClient(
             self, user=user, homeserver=homeserver, device_id=device_id,
@@ -59,13 +59,13 @@ class Backend:
 
         try:
             await client.login(password)
-        except RuntimeError as err:  # XXX raise
+        except MatrixError:
             await client.close()
-            return (False, err.args[0].message)
+            raise
 
         self.clients[client.user_id]         = client
         self.models[Account][client.user_id] = Account(client.user_id)
-        return (True, client.user_id)
+        return client.user_id
 
 
     async def resume_client(self,
