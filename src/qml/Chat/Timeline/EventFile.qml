@@ -3,6 +3,12 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HTile {
+    width: Math.max(
+        Math.min(eventContent.messageBodyWidth,
+                 theme.chat.message.fileMinWidth),
+        Math.min(eventContent.messageBodyWidth, implicitWidth),
+    )
+
     onLeftClicked: Qt.openUrlExternally(loader.mediaUrl)
     onRightClicked: eventDelegate.openContextMenu()
 

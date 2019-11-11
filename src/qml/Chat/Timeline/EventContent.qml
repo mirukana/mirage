@@ -164,32 +164,6 @@ HRowLayout {
 
                 Layout.preferredWidth: item ? item.width : -1
                 Layout.preferredHeight: item ? item.height : -1
-
-                // Layout.minimumWidth:
-                //     type === EventDelegate.Media.Image ?
-                //     (singleMediaInfo.media_width ||
-                //      (item ? item.loadingLabel.implicitWidth : -1)) : -1
-
-                // Layout.minimumHeight:
-                //     type === EventDelegate.Media.Image ?
-                //     (singleMediaInfo.media_height ||
-                //      (item ? item.loadingLabel.implicitHeight : -1)) : -1
-
-                // Layout.minimumWidth:
-                //     type === EventDelegate.Media.File ?
-                //     theme.chat.message.fileMinWidth : -1
-
-                // Layout.preferredWidth:
-                //     type === EventDelegate.Media.Video ?
-                //     theme.chat.message.videoWidth :
-
-                //     type === EventDelegate.Media.Audio ?
-                //     theme.chat.message.audioWidth :
-
-                //     -1
-
-                // Layout.maximumWidth: messageBodyWidth
-                // Layout.maximumHeight: eventList.height / 2
             }
         }
     }

@@ -6,6 +6,7 @@ HMxcImage {
     id: image
     width: fitSize.width
     height: fitSize.height
+
     horizontalAlignment: Image.AlignLeft
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
               Utils.urlExtension(loader.mediaUrl) === "gif"
