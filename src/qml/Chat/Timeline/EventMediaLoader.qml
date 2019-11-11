@@ -51,8 +51,6 @@ HLoader {
     }
 
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
-    Component.onCompleted: if (singleMediaInfo.media_title.includes("i3-gaps"))
-        Utils.debug(this)
 
 
     onTypeChanged: {
