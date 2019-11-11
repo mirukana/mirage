@@ -29,13 +29,15 @@ HLoader {
     ]
 
     readonly property int type: {
-        let main_type = singleMediaInfo.media_mime.split("/")[0].toLowerCase()
+        let mainType = singleMediaInfo.media_mime.split("/")[0].toLowerCase()
 
-        if (main_type === "image") return EventDelegate.Media.Image
-        if (main_type === "video") return EventDelegate.Media.Video
-        if (main_type === "audio") return EventDelegate.Media.Audio
+        if (mainType === "image") return EventDelegate.Media.Image
+        if (mainType === "video") return EventDelegate.Media.Video
+        if (mainType === "audio") return EventDelegate.Media.Audio
 
-        if (singleMediaInfo.event_type === "RoomMessageFile")
+        let fileEvents = ["RoomMessageFile", "RoomEncryptedFile"]
+
+        if (fileEvents.includes(singleMediaInfo.event_type))
             return EventDelegate.Media.File
 
         // If this is a preview for a link in a normal message
@@ -49,28 +51,16 @@ HLoader {
     }
 
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
+    Component.onCompleted: if (singleMediaInfo.media_title.includes("i3-gaps"))
+        Utils.debug(this)
 
 
     onTypeChanged: {
         if (type === EventDelegate.Media.Image) {
             var file = "EventImage.qml"
 
-        // } else if (type === EventDelegate.Media.File) {
-        //     var file  = "EventFile.qml"
-        //     var props = {
-        //         thumbnailMxc: thumbnailMxc,
-        //         fileUrl:      mediaUrl,
-        //         fileTitle:    info.media_title,
-        //         fileSize:     info.media_size,
-        //     }
-
-        // } else if (type === EventDelegate.Media.Video) {
-        //     var file  = "EventVideo.qml"
-        //     var props = { source: mediaUrl }
-
-        // } else if (type === EventDelegate.Media.Audio) {
-        //     var file  = "EventAudio.qml"
-        //     var props = { source: mediaUrl }
+        } else if (type !== EventDelegate.Media.Page) {
+            var file  = "EventFile.qml"
 
         } else { return }
 
