@@ -62,6 +62,13 @@ class InvalidUserInContext(Exception):
 class UneededThumbnail(Exception):
     pass
 
+
 @dataclass
 class UnthumbnailableError(Exception):
     exception: Optional[Exception] = None
+
+
+@dataclass
+class BadMimeType(Exception):
+    wanted: str = field()
+    got:    str = field()

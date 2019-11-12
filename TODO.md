@@ -1,7 +1,7 @@
 - Media
   - Verify things work with chat.privacytools.io (subdomain weirdness)
   - Confirmation box after picking file to upload
-  - Handle upload errors: non existent path, path is a dir, file too big, etc
+  - Handle upload/set avatar errors: bad path, is a dir, file too big, etc
   - Show real progression for mxc thumbnail loadings, uploads and downloads
 
   - Show reason under broken thumbnail icons
@@ -52,11 +52,9 @@
   - Don't store states in delegates
   - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
   - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
-  - Verify big avatars aren't downloaded uselessly
   - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - UI
-  - Show error if uploading avatar fails or file is corrupted
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
 
@@ -166,7 +164,6 @@
       the message with `decrypt_event()`"  - poljar
 
   - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
-  - `translated` arg for avatar upload and login errors
   - Check if username exists on login screen
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected

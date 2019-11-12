@@ -25,8 +25,8 @@ import nio
 
 from . import __about__, utils
 from .errors import (
-    InvalidUserInContext, MatrixError, UneededThumbnail, UnthumbnailableError,
-    UserNotFound,
+    BadMimeType, InvalidUserInContext, MatrixError, UneededThumbnail,
+    UnthumbnailableError, UserNotFound,
 )
 from .html_filter import HTML_FILTER
 from .models.items import (
@@ -617,7 +617,11 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
-        # TODO: check if mime is image
+        mime = utils.guess_mime(path)
+
+        if mime.split("/")[0] != "image":
+            raise BadMimeType(wanted="image/*", got=mime)
+
         await self.set_avatar((await self.upload_file(path))[0])
 
 
