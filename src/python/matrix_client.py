@@ -69,7 +69,7 @@ class MatrixClient(nio.AsyncClient):
         self.backend: Backend    = backend
         self.models:  ModelStore = self.backend.models
 
-        self.sync_task:       Optional[asyncio.Future] = None
+        self.starter_task:    Optional[asyncio.Future] = None
         self.first_sync_done: asyncio.Event            = asyncio.Event()
         self.first_sync_date: Optional[datetime]       = None
 
@@ -111,20 +111,21 @@ class MatrixClient(nio.AsyncClient):
         if isinstance(response, nio.LoginError):
             raise MatrixError.from_nio(response)
 
-        asyncio.ensure_future(self.start())
+        self.starter_task = asyncio.ensure_future(self.start())
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
-        asyncio.ensure_future(self.start())
+        self.starter_task = asyncio.ensure_future(self.start())
 
 
     async def logout(self) -> None:
-        if self.sync_task:
-            self.sync_task.cancel()
+        if self.starter_task:
+            self.starter_task.cancel()
+
             with suppress(asyncio.CancelledError):
-                await self.sync_task
+                await self.starter_task
 
         await super().logout()
         await self.close()
