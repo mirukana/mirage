@@ -411,7 +411,7 @@ class MatrixClient(nio.AsyncClient):
             )
 
             if isinstance(response, nio.RoomSendError):
-                log.error("Sending message failed: %s", response)
+                raise MatrixError.from_nio(response)
 
 
     async def load_past_events(self, room_id: str) -> bool:
