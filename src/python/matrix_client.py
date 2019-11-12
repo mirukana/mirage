@@ -44,11 +44,14 @@ class MatrixClient(nio.AsyncClient):
                  homeserver: str           = "https://matrix.org",
                  device_id:  Optional[str] = None) -> None:
 
+        if not urlparse(homeserver).scheme:
+            raise ValueError(
+                f"homeserver is missing scheme (e.g. https://): {homeserver}",
+            )
+
         store = Path(backend.app.appdirs.user_data_dir) / "encryption"
         store.mkdir(parents=True, exist_ok=True)
 
-        # TODO: ensure homeserver starts by a scheme://
-        # TODO: pass a ClientConfig with a pickle key
         super().__init__(
             homeserver = homeserver,
             user       = user,
@@ -56,6 +59,7 @@ class MatrixClient(nio.AsyncClient):
             store_path = store,
             config     = nio.AsyncClientConfig(
                 max_timeout_retry_wait_time = 10,
+                # TODO: pass a custom encryption DB pickle key?
             ),
         )
 
