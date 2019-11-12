@@ -115,7 +115,7 @@ class UploadStatus(AutoStrEnum):
 
 @dataclass
 class Upload(ModelItem):
-    filepath:   str          = field()
+    filepath:   Path         = field()
     status:     UploadStatus = UploadStatus.Starting
     total_size: int          = 0
     uploaded:   int          = 0
@@ -126,7 +126,7 @@ class Upload(ModelItem):
 
     def __post_init__(self) -> None:
         if not self.total_size:
-            self.total_size = Path(self.filepath).resolve().stat().st_size
+            self.total_size = self.filepath.resolve().stat().st_size
 
 
     def __lt__(self, other: "Upload") -> bool:

@@ -191,7 +191,7 @@ class MatrixClient(nio.AsyncClient):
         size    = path.resolve().stat().st_size
         encrypt = room_id in self.encrypted_rooms
 
-        upload_item = Upload(str(path), total_size=size)
+        upload_item = Upload(path, total_size=size)
         self.models[Upload, room_id][upload_item.uuid] = upload_item
 
         url, mime, crypt_dict = await self.upload_file(
