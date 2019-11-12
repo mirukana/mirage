@@ -1,6 +1,5 @@
 import asyncio
 import logging as log
-import random
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import hsluv
@@ -111,14 +110,6 @@ class Backend:
         await self.saved_accounts.delete(user_id)
 
 
-    async def wait_until_any_client_exists(self) -> None:
-        while True:
-            if self.clients:
-                return
-
-            await asyncio.sleep(0.1)
-
-
     async def wait_until_client_exists(self, user_id: str) -> None:
         loops = 0
         while True:
@@ -183,13 +174,13 @@ class Backend:
             return self.profile_cache[user_id]
 
         async with self.get_profile_locks[user_id]:
-            if not self.clients:
-                await self.wait_until_any_client_exists()
-
-            client = self.clients.get(
-                user_id,
-                random.choice(tuple(self.clients.values())),
-            )
+            while True:
+                try:
+                    client = next(c for c in self.clients.values())
+                    break
+                except StopIteration:
+                    # Retry after a bit if no client was present yet
+                    await asyncio.sleep(0.1)
 
             response = await client.get_profile(user_id)
 
