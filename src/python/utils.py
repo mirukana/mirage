@@ -16,6 +16,7 @@ from typing import IO, Any, Callable, Dict, Tuple, Type, Union
 import filetype
 
 File = Union[IO, bytes, str, Path]
+Size = Tuple[int, int]
 auto = autostr
 
 CANCELLABLE_FUTURES: Dict[Tuple[Any, Callable], asyncio.Future] = {}
@@ -59,7 +60,7 @@ def is_svg(file: File) -> bool:
         return False
 
 
-def svg_dimensions(file: File) -> Tuple[int, int]:
+def svg_dimensions(file: File) -> Size:
     """Return the width & height or viewBox width & height for a SVG.
     If these properties are missing (broken file), ``(256, 256)`` is returned.
     """

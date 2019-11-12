@@ -4,7 +4,7 @@ import io
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, Optional, Tuple
+from typing import Any, DefaultDict, Dict, Optional
 from urllib.parse import urlparse
 
 import aiofiles
@@ -13,9 +13,9 @@ from PIL import Image as PILImage
 import nio
 
 from .backend import Backend
+from .utils import Size
 
 CryptDict = Optional[Dict[str, Any]]
-Size      = Tuple[int, int]
 
 CONCURRENT_DOWNLOADS_LIMIT                   = asyncio.BoundedSemaphore(8)
 ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
