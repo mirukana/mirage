@@ -20,7 +20,6 @@ HImage {
     }
 
 
-    property string clientUserId
     property string mxc
     property string sourceOverride: ""
     property bool thumbnail: true
@@ -53,12 +52,16 @@ HImage {
         let args = image.thumbnail ?
                    [image.mxc, w, h, cryptDict] : [image.mxc, cryptDict]
 
-        py.callClientCoro(
-            clientUserId, "media_cache." + method, args, path => {
+        py.callCoro("media_cache." + method, args, path => {
                 if (! image) return
                 if (image.cachedPath != path) image.cachedPath = path
-                show = image.visible
-            }
+
+                image.broken = false
+                image.show   = image.visible
+
+            }, () => {
+                image.broken = true
+            },
         )
     }
 }

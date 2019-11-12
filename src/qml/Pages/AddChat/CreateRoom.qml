@@ -55,7 +55,6 @@ HBox {
 
     HRoomAvatar {
         id: avatar
-        clientUserId: userId
         displayName: nameField.text
 
         Layout.alignment: Qt.AlignCenter

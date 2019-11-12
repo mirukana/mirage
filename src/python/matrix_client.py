@@ -80,10 +80,6 @@ class MatrixClient(nio.AsyncClient):
 
         self.skipped_events: DefaultDict[str, int] = DefaultDict(lambda: 0)
 
-        from .media_cache import MediaCache
-        cache_dir        = Path(self.backend.app.appdirs.user_cache_dir)
-        self.media_cache = MediaCache(self, cache_dir)
-
         from .nio_callbacks import NioCallbacks
         self.nio_callbacks = NioCallbacks(self)
 

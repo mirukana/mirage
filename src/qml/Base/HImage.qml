@@ -11,6 +11,7 @@ Image {
            (sourceSize.width + sourceSize.height) <= 512
 
 
+    property bool broken: false
     property bool animate: true
     property bool animated: Utils.urlExtension(image.source) === "gif"
     property alias progressBar: progressBar
@@ -78,7 +79,7 @@ Image {
 
     HIcon {
         anchors.centerIn: parent
-        visible: image.status === Image.Error
+        visible: broken || image.status === Image.Error
         svgName: "broken-image"
         dimension: Math.max(16, Math.min(parent.width, parent.height) * 0.2)
         colorize: theme.colors.negativeBackground

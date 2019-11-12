@@ -32,7 +32,6 @@ HTileDelegate {
 
 
     image: HRoomAvatar {
-        clientUserId: model.user_id
         displayName: model.data.display_name
         mxc: model.data.avatar_url
     }

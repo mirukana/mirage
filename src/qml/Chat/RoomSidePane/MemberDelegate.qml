@@ -7,7 +7,6 @@ HTileDelegate {
     backgroundColor: theme.chat.roomSidePane.member.background
 
     image: HUserAvatar {
-        clientUserId: chatPage.userId
         userId: model.user_id
         displayName: model.display_name
         mxc: model.avatar_url

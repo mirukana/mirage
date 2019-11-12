@@ -15,7 +15,6 @@ Rectangle {
        theme.controls.avatar.background.opacity
    )
 
-    property string clientUserId
     property string name
     property alias mxc: avatarImage.mxc
 
@@ -53,7 +52,6 @@ Rectangle {
         sourceSize.height: parent.height
         fillMode: Image.PreserveAspectCrop
         animate: false
-        clientUserId: avatar.clientUserId
 
         HoverHandler { id: hoverHandler }
 
@@ -74,7 +72,6 @@ Rectangle {
             contentItem: HMxcImage {
                 id: avatarToolTipImage
                 fillMode: Image.PreserveAspectCrop
-                clientUserId: avatar.clientUserId
                 mxc: avatarImage.mxc
 
                 sourceSize.width: avatarToolTip.dimension

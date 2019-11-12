@@ -58,7 +58,6 @@ HGridLayout {
         property bool changed: Boolean(sourceOverride)
 
         id: avatar
-        clientUserId: accountSettings.userId
         userId: accountSettings.userId
         displayName: nameField.field.text
         mxc: accountInfo.avatar_url

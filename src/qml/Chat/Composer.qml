@@ -58,7 +58,6 @@ Rectangle {
 
         HUserAvatar {
             id: avatar
-            clientUserId: chatPage.userId
             userId: writingUserId
             displayName: writingUserInfo.display_name
             mxc: writingUserInfo.avatar_url

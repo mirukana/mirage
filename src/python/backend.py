@@ -1,5 +1,6 @@
 import asyncio
 import logging as log
+from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import hsluv
@@ -37,6 +38,10 @@ class Backend:
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {user_id: lock}
+
+        from .media_cache import MediaCache
+        cache_dir        = Path(self.app.appdirs.user_cache_dir)
+        self.media_cache = MediaCache(self, cache_dir)
 
 
     def __repr__(self) -> str:
@@ -168,28 +173,6 @@ class Backend:
         return (settings, ui_state, theme)
 
 
-    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
-        if user_id in self.profile_cache:
-            return self.profile_cache[user_id]
-
-        async with self.get_profile_locks[user_id]:
-            while True:
-                try:
-                    client = next(c for c in self.clients.values())
-                    break
-                except StopIteration:
-                    # Retry after a bit if no client was present yet
-                    await asyncio.sleep(0.1)
-
-            response = await client.get_profile(user_id)
-
-            if isinstance(response, nio.ProfileGetError):
-                raise MatrixError.from_nio(response)
-
-            self.profile_cache[user_id] = response
-            return response
-
-
     async def get_flat_sidepane_data(self) -> List[Dict[str, Any]]:
         data = []
 
@@ -210,3 +193,54 @@ class Backend:
                 })
 
         return data
+
+
+    # Client functions that don't need authentification
+
+    async def _any_client(self) -> MatrixClient:
+        while True:
+            try:
+                return next(c for c in self.clients.values())
+            except StopIteration:
+                # Retry after a bit if we don't have any clients yet
+                await asyncio.sleep(0.1)
+
+
+    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
+        if user_id in self.profile_cache:
+            return self.profile_cache[user_id]
+
+        async with self.get_profile_locks[user_id]:
+            response = await (await self._any_client()).get_profile(user_id)
+
+            if isinstance(response, nio.ProfileGetError):
+                raise MatrixError.from_nio(response)
+
+            self.profile_cache[user_id] = response
+            return response
+
+
+    async def thumbnail(
+        self, server_name: str, media_id: str, width: int, height: int,
+    ) -> nio.ThumbnailResponse:
+
+        client   = await self._any_client()
+        response = await client.thumbnail(server_name, media_id, width, height)
+
+        if isinstance(response, nio.ThumbnailError):
+            raise MatrixError.from_nio(response)
+
+        return response
+
+
+    async def download(
+        self, server_name: str, media_id: str,
+    ) -> nio.DownloadResponse:
+
+        client   = await self._any_client()
+        response = await client.download(server_name, media_id)
+
+        if isinstance(response, nio.DownloadError):
+            raise MatrixError.from_nio(response)
+
+        return response

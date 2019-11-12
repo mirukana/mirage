@@ -12,19 +12,13 @@ from PIL import Image as PILImage
 
 import nio
 
-from .matrix_client import MatrixClient
+from .backend import Backend
 
 CryptDict = Optional[Dict[str, Any]]
 Size      = Tuple[int, int]
 
 CONCURRENT_DOWNLOADS_LIMIT                   = asyncio.BoundedSemaphore(8)
 ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
-
-
-@dataclass
-class DownloadFailed(Exception):
-    message:   str = field()
-    http_code: int = field()
 
 
 @dataclass
@@ -85,13 +79,10 @@ class Media:
     async def _get_remote_data(self) -> bytes:
         parsed = urlparse(self.mxc)
 
-        resp = await self.cache.client.download(
+        resp = await self.cache.backend.download(
             server_name = parsed.netloc,
             media_id    = parsed.path.lstrip("/"),
         )
-
-        if isinstance(resp, nio.DownloadError):
-            raise DownloadFailed(resp.message, resp.status_code)
 
         return await self._decrypt(resp.body)
 
@@ -181,20 +172,17 @@ class Thumbnail(Media):
         parsed = urlparse(self.mxc)
 
         if self.crypt_dict:
-            resp = await self.cache.client.download(
+            resp = await self.cache.backend.download(
                 server_name = parsed.netloc,
                 media_id    = parsed.path.lstrip("/"),
             )
         else:
-            resp = await self.cache.client.thumbnail(
+            resp = await self.cache.backend.thumbnail(
                 server_name = parsed.netloc,
                 media_id    = parsed.path.lstrip("/"),
                 width       = self.wanted_size[0],
                 height      = self.wanted_size[1],
             )
-
-        if isinstance(resp, (nio.DownloadError, nio.ThumbnailError)):
-            raise DownloadFailed(resp.message, resp.status_code)
 
         decrypted = await self._decrypt(resp.body)
 
@@ -207,8 +195,8 @@ class Thumbnail(Media):
 
 @dataclass
 class MediaCache:
-    client:   MatrixClient = field()
-    base_dir: Path         = field()
+    backend:  Backend = field()
+    base_dir: Path    = field()
 
 
     def __post_init__(self) -> None:

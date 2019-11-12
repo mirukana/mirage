@@ -23,7 +23,6 @@ Rectangle {
 
         HRoomAvatar {
             id: avatar
-            clientUserId: chatPage.userId
             displayName: chatPage.roomInfo.display_name
             mxc: chatPage.roomInfo.avatar_url
             Layout.alignment: Qt.AlignTop
