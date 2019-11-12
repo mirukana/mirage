@@ -96,7 +96,11 @@ def guess_mime(file: File) -> str:
     elif isinstance(file, io.IOBase):
         file.seek(0, 0)
 
-    return filetype.guess_mime(file) or "application/octet-stream"
+    try:
+        return filetype.guess_mime(file) or "application/octet-stream"
+    finally:
+        if isinstance(file, io.IOBase):
+            file.seek(0, 0)
 
 
 def plain2html(text: str) -> str:
