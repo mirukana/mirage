@@ -130,12 +130,14 @@ class MatrixClient(nio.AsyncClient):
 
     async def start(self) -> None:
         def on_profile_response(future) -> None:
-            resp = future.result()
-            if isinstance(resp, nio.ProfileGetResponse):
-                account                 = self.models[Account][self.user_id]
-                account.profile_updated = datetime.now()
-                account.display_name    = resp.displayname or ""
-                account.avatar_url      = resp.avatar_url or ""
+            if future.exception():
+                return
+
+            resp                    = future.result()
+            account                 = self.models[Account][self.user_id]
+            account.profile_updated = datetime.now()
+            account.display_name    = resp.displayname or ""
+            account.avatar_url      = resp.avatar_url or ""
 
         ft = asyncio.ensure_future(self.backend.get_profile(self.user_id))
         ft.add_done_callback(on_profile_response)
@@ -409,7 +411,9 @@ class MatrixClient(nio.AsyncClient):
         if invite == self.user_id:
             raise InvalidUserInContext(invite)
 
-        if isinstance(await self.get_profile(invite), nio.ProfileGetError):
+        try:
+            await self.get_profile(invite)
+        except MatrixError:
             raise UserNotFound(invite)
 
         response = await super().room_create(
@@ -786,11 +790,11 @@ class MatrixClient(nio.AsyncClient):
         try:
             item = self.models[Member, room_id][user_id]
         except KeyError:  # e.g. user is not anymore in the room
-            info = await self.backend.get_profile(user_id)
-
-            return (info.displayname or "", info.avatar_url or "") \
-                   if isinstance(info, nio.ProfileGetResponse) else \
-                   ("", "")
+            try:
+                info = await self.backend.get_profile(user_id)
+                return (info.displayname or "", info.avatar_url or "")
+            except MatrixError:
+                return ("", "")
         else:
             return (item.display_name, item.avatar_url)
 

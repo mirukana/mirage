@@ -8,11 +8,10 @@ import nio
 
 from . import utils
 from .app import App
-from .matrix_client import MatrixClient, MatrixError
+from .errors import MatrixError
+from .matrix_client import MatrixClient
 from .models.items import Account, Device, Event, Member, Room, Upload
 from .models.model_store import ModelStore
-
-ProfileResponse = Union[nio.ProfileGetResponse, nio.ProfileGetError]
 
 
 class Backend:
@@ -169,7 +168,7 @@ class Backend:
         return (settings, ui_state, theme)
 
 
-    async def get_profile(self, user_id: str) -> ProfileResponse:
+    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
         if user_id in self.profile_cache:
             return self.profile_cache[user_id]
 
@@ -185,7 +184,7 @@ class Backend:
             response = await client.get_profile(user_id)
 
             if isinstance(response, nio.ProfileGetError):
-                log.warning("%s: %s", user_id, response)
+                raise MatrixError.from_nio(response)
 
             self.profile_cache[user_id] = response
             return response
