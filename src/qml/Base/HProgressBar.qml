@@ -25,11 +25,17 @@ ProgressBar {
             color: foregroundColor
 
             XAnimator on x {
-                running: indeterminate
+                running: bar.indeterminate
                 duration: theme.animationDuration * 8
                 from: 0
                 to: bar.width - indicator.width
-                onStopped: {[from, to] = [to, from]; start()}
+
+                onStopped: if (bar.indeterminate) {
+                    [from, to] = [to, from];
+                    start()
+                } else {
+                    indicator.x = 0
+                }
             }
         }
     }
