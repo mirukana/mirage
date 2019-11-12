@@ -44,14 +44,16 @@ HPage {
                     button.loading    = false
 
                     py.callCoro(
-                        "saved_accounts." +
-                        (rememberAccount.checked ? "add": "delete"),
-                        [data]
+                        rememberAccount.checked ?
+                        "saved_accounts.add": "saved_accounts.delete",
+
+                        [userId]
                     )
 
                     pageLoader.showPage(
-                        "AccountSettings/AccountSettings", {userId: data}
+                        "AccountSettings/AccountSettings", {userId}
                     )
+
                 }, type => {
                     if (type === "CancelledError") return
 
