@@ -7,7 +7,6 @@ import platform
 import re
 import traceback
 from contextlib import suppress
-from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
 from pathlib import Path
@@ -24,6 +23,10 @@ from pymediainfo import MediaInfo
 import nio
 
 from . import __about__, utils
+from .errors import (
+    InvalidUserInContext, MatrixError, UneededThumbnail, UnthumbnailableError,
+    UserNotFound,
+)
 from .html_filter import HTML_FILTER
 from .models.items import (
     Account, Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
@@ -32,69 +35,6 @@ from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
 
 CryptDict = Dict[str, Any]
-
-
-@dataclass
-class MatrixError(Exception):
-    http_code: int = 400
-    m_code:    str = "M_UNKNOWN"
-
-    @classmethod
-    def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
-        # Check for the M_CODE first: some errors for an API share the same
-        # http code, but have different M_CODEs (e.g. POST /login 403).
-        for subcls in cls.__subclasses__():
-            if subcls.m_code == response.status_code:
-                return subcls()
-
-        for subcls in cls.__subclasses__():
-            if subcls.http_code == response.transport_response.status:
-                return subcls()
-
-        return cls(response.transport_response.status, response.status_code)
-
-
-@dataclass
-class MatrixForbidden(MatrixError):
-    http_code: int = 403
-    m_code:    str = "M_FORBIDDEN"
-
-
-@dataclass
-class MatrixUserDeactivated(MatrixError):
-    http_code: int = 403
-    m_code:    str = "M_USER_DEACTIVATED"
-
-
-@dataclass
-class MatrixNotFound(MatrixError):
-    http_code: int = 404
-    m_code:    str = "M_NOT_FOUND"
-
-
-@dataclass
-class MatrixTooLarge(MatrixError):
-    http_code: int = 413
-    m_code:    str = "M_TOO_LARGE"
-
-
-@dataclass
-class UserNotFound(Exception):
-    user_id: str = field()
-
-
-@dataclass
-class InvalidUserInContext(Exception):
-    user_id: str = field()
-
-
-@dataclass
-class UneededThumbnail(Exception):
-    pass
-
-@dataclass
-class UnthumbnailableError(Exception):
-    exception: Optional[Exception] = None
 
 
 class MatrixClient(nio.AsyncClient):
