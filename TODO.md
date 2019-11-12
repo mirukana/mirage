@@ -67,6 +67,10 @@
   - Remove first html lists left margin
   - Adapt UI for small heights
 
+  - In room creation, click avatar to set the future room's avatar
+  - In join room page, show the matching room's avatar when typing
+  - In find someone page, show the matching user's avatar when typing
+
   - Inviting members to a room
     - Make invite icon blink if there's no one but ourself in the room,
       but never do it again once the user hovered it long enough to show 
@@ -96,7 +100,7 @@
       - Support \ escaping
     - Accept drag and dropping a picture to set avatar
 
-  - Improve avatar tooltips position, add stuff to room tooltips (last msg?)
+  - Add stuff to room tooltips like last messages
   - Show something when connection is lost or 429s happen
   - "Rejoin" LeftBanner button if room is public
   - Daybreak color
@@ -131,8 +135,10 @@
 
   - Settings page
   - Notifications
+  - Opening links with keyboard
+  - Better `<pre>` 
 
-  - Custom file picker for Linux...
+  - Custom file picker for Linux (...)
 
 - Major features
   - E2E
@@ -140,20 +146,10 @@
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
-  - Uploads
-    - Reduce messages ListView cacheBuffer height once http thumbnails
-      downloading is implemented 
   - Read receipts
   - Status message and presence
-  - Links preview
-  - Opening links with keyboard
 
 - Client improvements
-  - In room creation, click avatar to set the future room's avatar
-  - In join room page, show the matching room's avatar when typing
-  - In find someone page, show the matching user's avatar when typing
-
-  - More error details
   - Refetch profile after manual profile change, don't wait for a room event
 
   - Prevent starting multiple instances, causes problems with E2E DB
@@ -178,7 +174,6 @@
       - Fetch all members when using the filter members bar
 
   - Direct chats category
-  - Better `<pre>` 
   - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition
@@ -197,7 +192,6 @@
   - Support "Empty room (was ...)" after peer left
   - Previewing room without joining
 
-  - thumbnail API shouldn't require auth
   - get content repo config API
   - add the `resume()` method
 
