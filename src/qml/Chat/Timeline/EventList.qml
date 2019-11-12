@@ -71,10 +71,6 @@ Rectangle {
             bottomMargin: theme.spacing
             verticalLayoutDirection: ListView.BottomToTop
 
-            // Keep x scroll pages cached, to limit images having to be
-            // reloaded from network.
-            cacheBuffer: height * 4
-
             onYPosChanged:
                 if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
 
