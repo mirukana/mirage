@@ -133,7 +133,10 @@ class MatrixClient(nio.AsyncClient):
 
     async def start(self) -> None:
         def on_profile_response(future) -> None:
-            if future.exception():
+            exception = future.exception()
+
+            if exception:
+                log.warn("On %s client startup: %s", self.user_id, exception)
                 return
 
             resp                    = future.result()

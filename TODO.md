@@ -33,6 +33,7 @@
   - When qml syntax highlighting supports ES6 string interpolation, use that
 
 - Fixes
+  - CPU usage
   - `code` not colored in room subtitle
   - In the "Leave me" room, "join > Hi > left" aren't combined
   - Event delegates changing height don't scroll the list
@@ -146,6 +147,9 @@
     - Edit/delete own devices
     - Request room keys from own other devices
     - Auto-trust accounts within the same client
+    - Provide help when undecryptable messages occur, including:
+      - Trigger `nio.AsyncClient.request_room_key`
+      - Option to export-logout-login-import to fix one-time key problems
   - Read receipts
   - Status message and presence
 

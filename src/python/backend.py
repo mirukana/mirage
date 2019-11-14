@@ -197,13 +197,14 @@ class Backend:
 
     # Client functions that don't need authentification
 
-    async def _any_client(self) -> MatrixClient:
+    async def _any_client(self, prefer: str = "") -> MatrixClient:
         while True:
-            try:
-                return next(c for c in self.clients.values())
-            except StopIteration:
-                # Retry after a bit if we don't have any clients yet
-                await asyncio.sleep(0.1)
+            if self.clients:
+                break
+            await asyncio.sleep(0.1)
+
+        return self.clients.get(prefer) or \
+               next(c for c in self.clients.values())
 
 
     async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
@@ -211,7 +212,8 @@ class Backend:
             return self.profile_cache[user_id]
 
         async with self.get_profile_locks[user_id]:
-            response = await (await self._any_client()).get_profile(user_id)
+            client   = await self._any_client(prefer=user_id)
+            response = await client.get_profile(user_id)
 
             if isinstance(response, nio.ProfileGetError):
                 raise MatrixError.from_nio(response)
