@@ -21,7 +21,6 @@ HMxcImage {
 
     property EventMediaLoader loader
     readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
-    readonly property string openUrl: isEncrypted ? cachedPath : image.httpUrl
 
     readonly property real maxHeight:
         theme.chat.message.thumbnailMaxHeightRatio
@@ -48,16 +47,37 @@ HMxcImage {
     )
 
 
+    function getOpenUrl(callback) {
+        if (image.isEncrypted) {
+            callback(image.cachedPath)
+            return
+        }
+
+        let toOpen = loader.mediaUrl || loader.thumbnailMxc
+        let isMxc  = toOpen.startsWith("mxc://")
+
+        isMxc ?
+        py.callCoro("mxc_to_http", [toOpen], callback) : callback(toOpen)
+    }
+
+
     TapHandler {
-        onTapped: if (! image.animated) Qt.openUrlExternally(openUrl)
-        onDoubleTapped: Qt.openUrlExternally(openUrl)
+        onTapped: if (! image.animated) getOpenUrl(Qt.openUrlExternally)
+        onDoubleTapped: getOpenUrl(Qt.openUrlExternally)
     }
 
     HoverHandler {
         id: hover
-        onHoveredChanged:
-            eventDelegate.hoveredMediaTypeUrl =
-                hovered ? [EventDelegate.Media.Image, openUrl] : []
+        onHoveredChanged: {
+            if (hovered) {
+                getOpenUrl(url => {
+                    eventDelegate.hoveredMediaTypeUrl =
+                        [EventDelegate.Media.Image, url]
+                })
+            } else {
+                eventDelegate.hoveredMediaTypeUrl = []
+            }
+        }
     }
 
     EventImageTextBubble {

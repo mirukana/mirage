@@ -7,17 +7,7 @@ HImage {
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
     onVisibleChanged: Qt.callLater(update)
-    onMxcChanged: {
-        Qt.callLater(update)
-
-        if (isMxc) {
-            py.callCoro("mxc_to_http", [mxc], http => {
-                image.httpUrl = http || ""
-            })
-        } else {
-            httpUrl = mxc
-        }
-    }
+    onMxcChanged: Qt.callLater(update)
 
 
     property string mxc
@@ -27,7 +17,6 @@ HImage {
 
     property bool show: false
     property string cachedPath: ""
-    property string httpUrl: ""
     readonly property bool isMxc: mxc.startsWith("mxc://")
 
 
