@@ -1,9 +1,9 @@
 # Manual GUI tests
 
-## Sidepane
-
 All the following statements must be true.
 
+
+## Sidepane
 
 For all tests:
 
@@ -52,3 +52,22 @@ Shrink the window enough for the pane to be in reduced mode:
 - In a page or room, a left-to-right swipe gesture shows a full-window pane.
 - On the full-window pane, a right-to-left swipe goes back to the page/room.
 - On the full-window pane, tapping on a room/page properly goes to it.
+
+
+## Uploads
+
+Verify uploads work:
+
+- In non-encrypted rooms
+- In encrypted rooms
+
+Verify these file types are uploaded and rendered correctly; 
+and that the correct URL is opened in browser when clicking on them in a chat:
+
+- Image that doesn't need thumbnailing
+- Non-SVG, non-animated image that meets the conditions for thumbnailing
+- Animated GIF that meets the condition for thumbnailing
+- Binary or text file
+
+Verify uploaded media and their thumbnails are correctly cached on upload
+and read from cache.

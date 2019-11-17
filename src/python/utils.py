@@ -11,11 +11,14 @@ from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
 from types import ModuleType
-from typing import IO, Any, Callable, Dict, Tuple, Type, Union
+from typing import Any, Callable, Dict, Tuple, Type
 
 import filetype
+from aiofiles.threadpool.binary import AsyncBufferedReader
 
-File = Union[IO, bytes, str, Path]
+from nio.crypto import AsyncDataT as File
+from nio.crypto import async_generator_from_data
+
 Size = Tuple[int, int]
 auto = autostr
 
@@ -47,28 +50,28 @@ def dict_update_recursive(dict1: dict, dict2: dict) -> None:
             dict1[k] = dict2[k]
 
 
-def is_svg(file: File) -> bool:
+async def is_svg(file: File) -> bool:
     """Return True if the file is a SVG. Uses lxml for detection."""
 
-    if isinstance(file, Path):
-        file = str(file)
+    chunks = [c async for c in async_generator_from_data(file)]
 
-    try:
-        _, element = next(xml_etree.iterparse(file, ("start",)))
-        return element.tag == "{http://www.w3.org/2000/svg}svg"
-    except (StopIteration, xml_etree.ParseError):
-        return False
+    with io.BytesIO(b"".join(chunks)) as file:
+        try:
+            _, element = next(xml_etree.iterparse(file, ("start",)))
+            return element.tag == "{http://www.w3.org/2000/svg}svg"
+        except (StopIteration, xml_etree.ParseError):
+            return False
 
 
-def svg_dimensions(file: File) -> Size:
+async def svg_dimensions(file: File) -> Size:
     """Return the width & height or viewBox width & height for a SVG.
     If these properties are missing (broken file), ``(256, 256)`` is returned.
     """
 
-    if isinstance(file, Path):
-        file = str(file)
+    chunks = [c async for c in async_generator_from_data(file)]
 
-    attrs = xml_etree.parse(file).getroot().attrib
+    with io.BytesIO(b"".join(chunks)) as file:
+        attrs = xml_etree.parse(file).getroot().attrib
 
     try:
         width = round(float(attrs.get("width", attrs["viewBox"].split()[3])))
@@ -83,24 +86,33 @@ def svg_dimensions(file: File) -> Size:
     return (width, height)
 
 
-def guess_mime(file: File) -> str:
+async def guess_mime(file: File) -> str:
     """Return the mime type for a file, or application/octet-stream if it
     can't be guessed.
     """
 
-    if is_svg(file):
-        return "image/svg+xml"
-
-    if isinstance(file, Path):
-        file = str(file)
-    elif isinstance(file, io.IOBase):
+    if isinstance(file, io.IOBase):
         file.seek(0, 0)
+    elif isinstance(file, AsyncBufferedReader):
+        await file.seek(0, 0)
 
     try:
-        return filetype.guess_mime(file) or "application/octet-stream"
+        first_chunk: bytes
+        async for first_chunk in async_generator_from_data(file):
+            break
+
+        # TODO: plaintext
+        mime = filetype.guess_mime(first_chunk)
+
+        return mime or (
+            "image/svg+xml" if await is_svg(file) else
+            "application/octet-stream"
+        )
     finally:
         if isinstance(file, io.IOBase):
             file.seek(0, 0)
+        elif isinstance(file, AsyncBufferedReader):
+            await file.seek(0, 0)
 
 
 def plain2html(text: str) -> str:

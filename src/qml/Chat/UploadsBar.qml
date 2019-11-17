@@ -40,26 +40,20 @@ Rectangle {
                     id: filenameLabel
                     elide: Text.ElideRight
                     text:
-                        model.status === "Starting" ?
-                        qsTr("Preparing %1...").arg(fileName) :
-
-                        model.status === "Encrypting" ?
-                        qsTr("Encrypting %1...").arg(fileName) :
-
                         model.status === "Uploading" ?
                         qsTr("Uploading %1...").arg(fileName) :
 
-                        model.status === "CreatingThumbnail" ?
-                        qsTr("Generating thumbnail for %1...").arg(fileName) :
-
-                        model.status === "EncryptingThumbnail" ?
-                        qsTr("Encrypting thumbnail for %1...").arg(fileName) :
+                        model.status === "Caching" ?
+                        qsTr("Caching %1...").arg(fileName) :
 
                         model.status === "UploadingThumbnail" ?
-                        qsTr("Uploading thumbnail for %1...").arg(fileName) :
+                        qsTr("Uploading %1 thumbnail...").arg(fileName) :
+
+                        model.status === "CachingThumbnail" ?
+                        qsTr("Caching %1 thumbnail...").arg(fileName) :
 
                         model.status === "Failure" ?
-                        qsTr("Failed uploading %1.").arg(fileName) :
+                        qsTr("Uploading %1 failed").arg(fileName) :
 
                         qsTr("Invalid status for %1: %2")
                         .arg(fileName).arg(model.status)

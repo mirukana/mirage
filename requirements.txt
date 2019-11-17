@@ -9,5 +9,6 @@ html_sanitizer >= 1.7.3, < 2
 lxml           >= 4.4.1, < 5
 mistune        >= 0.8.4, < 0.9
 dataclasses    >= 0.6,   < 0.7; python_version < "3.7"
+pyfastcopy     >= 1.0.3, < 2;   python_version < "3.8"
 
 git+http://github.com/mirukan/matrix-nio#egg=matrix-nio[e2e]

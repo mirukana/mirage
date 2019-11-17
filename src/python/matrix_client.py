@@ -1,5 +1,4 @@
 import asyncio
-import functools
 import html
 import io
 import logging as log
@@ -11,8 +10,7 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import (
-    Any, AsyncIterable, BinaryIO, DefaultDict, Dict, Optional, Set, Tuple,
-    Type, Union,
+    Any, DefaultDict, Dict, NamedTuple, Optional, Set, Tuple, Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import uuid4
@@ -22,11 +20,13 @@ from PIL import Image as PILImage
 from pymediainfo import MediaInfo
 
 import nio
+from nio.crypto import AsyncDataT as UploadData
+from nio.crypto import async_generator_from_data
 
 from . import __about__, utils
 from .errors import (
     BadMimeType, InvalidUserInContext, MatrixError, UneededThumbnail,
-    UnthumbnailableError, UserNotFound,
+    UserNotFound,
 )
 from .html_filter import HTML_FILTER
 from .models.items import (
@@ -35,8 +35,20 @@ from .models.items import (
 from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
 
-UploadData = Union[bytes, BinaryIO, AsyncIterable[bytes]]
-CryptDict  = Dict[str, Any]
+CryptDict = Dict[str, Any]
+
+
+class UploadReturn(NamedTuple):
+    mxc:             str
+    mime:            str
+    decryption_dict: Dict[str, Any]
+
+
+class MatrixImageInfo(NamedTuple):
+    w:        int
+    h:        int
+    mimetype: str
+    size:     int
 
 
 class MatrixClient(nio.AsyncClient):
@@ -191,6 +203,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
+        from .media_cache import Media, Thumbnail
+
         path    = Path(path)
         size    = path.resolve().stat().st_size
         encrypt = room_id in self.encrypted_rooms
@@ -198,16 +212,17 @@ class MatrixClient(nio.AsyncClient):
         upload_item = Upload(path, total_size=size)
         self.models[Upload, room_id][upload_item.uuid] = upload_item
 
-        url, mime, crypt_dict = await self.upload_file(
-            path, upload_item, encrypt=encrypt,
+        url, mime, crypt_dict = await self.upload(
+            path, filename=path.name, encrypt=encrypt,
         )
 
-        await self.media_cache.create_media(url, path.read_bytes())
+        upload_item.status = UploadStatus.Caching
+        await Media.from_existing_file(self.backend.media_cache, url, path)
 
         kind = (mime or "").split("/")[0]
 
-        thumb_url:  str            = ""
-        thumb_info: Dict[str, Any] = {}
+        thumb_url:  str                       = ""
+        thumb_info: Optional[MatrixImageInfo] = None
 
         content: dict = {
             "body": path.name,
@@ -231,23 +246,34 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"] = "m.image"
 
             content["info"]["w"], content["info"]["h"] = (
-                utils.svg_dimensions(path) if is_svg else
+                await utils.svg_dimensions(path) if is_svg else
                 PILImage.open(path).size
             )
 
             try:
-                thumb_data, thumb_url, thumb_info, thumb_crypt_dict = \
-                    await self.upload_thumbnail(
-                        path, upload_item, is_svg=is_svg, encrypt=encrypt,
-                    )
-            except (UneededThumbnail, UnthumbnailableError):
+                thumb_data, thumb_info = await self.generate_thumbnail(
+                    path, is_svg=is_svg,
+                )
+            except UneededThumbnail:
                 pass
+            except OSError as err:
+                log.warning(f"Failed thumbnailing {path}: {err}")
             else:
-                await self.media_cache.create_thumbnail(
+                upload_item.status = UploadStatus.UploadingThumbnail
+
+                thumb_url, _, thumb_crypt_dict = await self.upload(
+                    thumb_data,
+                    filename = f"{path.stem}_sample{''.join(path.suffixes)}",
+                    encrypt  = encrypt,
+                )
+
+                upload_item.status = UploadStatus.CachingThumbnail
+
+                await Thumbnail.from_bytes(
+                    self.backend.media_cache,
                     thumb_url,
                     thumb_data,
-                    content["info"]["w"],
-                    content["info"]["h"],
+                    wanted_size = (content["info"]["w"], content["info"]["h"]),
                 )
 
                 if encrypt:
@@ -258,7 +284,7 @@ class MatrixClient(nio.AsyncClient):
                 else:
                     content["info"]["thumbnail_url"]  = thumb_url
 
-                content["info"]["thumbnail_info"] = thumb_info
+                content["info"]["thumbnail_info"] = thumb_info._asdict()
 
         elif kind == "audio":
             event_type = \
@@ -309,8 +335,10 @@ class MatrixClient(nio.AsyncClient):
             media_size       = content["info"]["size"],
             media_mime       = content["info"]["mimetype"],
             thumbnail_url    = thumb_url,
-            thumbnail_width  = thumb_info.get("w", 0),
-            thumbnail_height = thumb_info.get("h", 0),
+            thumbnail_width  =
+                content["info"].get("thumbnail_info", {}).get("w", 0),
+            thumbnail_height =
+                content["info"].get("thumbnail_info", {}).get("h", 0),
         )
 
         await self._send_message(room_id, uuid, content)
@@ -483,7 +511,6 @@ class MatrixClient(nio.AsyncClient):
         return response.room_id
 
 
-
     async def room_forget(self, room_id: str) -> None:
         await super().room_leave(room_id)
         await super().room_forget(room_id)
@@ -492,141 +519,81 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((Member, room_id), None)
 
 
-    async def encrypt_attachment(self, data: bytes) -> Tuple[bytes, CryptDict]:
-        func = functools.partial(
-            nio.crypto.attachments.encrypt_attachment,
-            data,
-        )
-
-        # Run in a separate thread
-        return await asyncio.get_event_loop().run_in_executor(None, func)
-
-
-    async def upload_thumbnail(
-        self,
-        path:    Union[Path, str],
-        item:    Optional[Upload] = None,
-        is_svg:  bool             = False,
-        encrypt: bool             = False,
-    ) -> Tuple[bytes, str, Dict[str, Any], CryptDict]:
+    async def generate_thumbnail(
+        self, data: UploadData, is_svg: bool = False,
+    ) -> Tuple[bytes, MatrixImageInfo]:
 
         png_modes = ("1", "L", "P", "RGBA")
 
-        try:
-            if is_svg:
-                svg_width, svg_height = utils.svg_dimensions(path)
+        data   = b"".join([c async for c in async_generator_from_data(data)])
+        is_svg = await utils.guess_mime(data) == "image/svg+xml"
 
-                thumb = PILImage.open(io.BytesIO(
-                    cairosvg.svg2png(
-                        url           = str(path),
-                        parent_width  = svg_width,
-                        parent_height = svg_height,
-                    ),
-                ))
-            else:
-                thumb = PILImage.open(path)
+        if is_svg:
+            svg_width, svg_height = await utils.svg_dimensions(data)
 
-            small       = thumb.width <= 800 and thumb.height <= 600
-            is_jpg_png  = thumb.format in ("JPEG", "PNG")
-            jpgable_png = thumb.format == "PNG" and thumb.mode not in png_modes
-
-            if small and is_jpg_png and not jpgable_png and not is_svg:
-                raise UneededThumbnail()
-
-            if item:
-                item.status = UploadStatus.CreatingThumbnail
-
-            if not small:
-                thumb.thumbnail((800, 600), PILImage.LANCZOS)
-
-            with io.BytesIO() as out:
-                if thumb.mode in png_modes:
-                    thumb.save(out, "PNG", optimize=True)
-                    mime = "image/png"
-                else:
-                    thumb.convert("RGB").save(out, "JPEG", optimize=True)
-                    mime = "image/jpeg"
-
-                data = out.getvalue()
-
-                if encrypt:
-                    if item:
-                        item.status = UploadStatus.EncryptingThumbnail
-
-                    data, crypt_dict = await self.encrypt_attachment(data)
-                    upload_mime      = "application/octet-stream"
-                else:
-                    crypt_dict, upload_mime = {}, mime
-
-                if item:
-                    item.status = UploadStatus.UploadingThumbnail
-
-                return (
-                    data,
-                    await self.upload(data, upload_mime, Path(path).name),
-                    {
-                        "w":        thumb.width,
-                        "h":        thumb.height,
-                        "mimetype": mime,
-                        "size":     len(data),
-                    },
-                    crypt_dict,
-                )
-
-        except OSError as err:
-            log.warning("Error when creating thumbnail: %s", err)
-            raise UnthumbnailableError(err)
-
-
-    async def upload_file(
-        self,
-        path:    Union[Path, str],
-        item:    Optional[Upload] = None,
-        encrypt: bool             = False,
-    ) -> Tuple[str, str, CryptDict]:
-
-        with open(path, "rb") as file:
-            mime = utils.guess_mime(file)
-
-            data: Union[BinaryIO, bytes]
-
-            if encrypt:
-                if item:
-                    item.status = UploadStatus.Encrypting
-
-                data, crypt_dict = await self.encrypt_attachment(file.read())
-                upload_mime      = "application/octet-stream"
-            else:
-                data, crypt_dict, upload_mime = file, {}, mime
-
-            if item:
-                item.status = UploadStatus.Uploading
-
-            return (
-                await self.upload(data, upload_mime, Path(path).name),
-                mime,
-                crypt_dict,
+            data = cairosvg.svg2png(
+                bytestring    = data,
+                parent_width  = svg_width,
+                parent_height = svg_height,
             )
+
+        thumb = PILImage.open(io.BytesIO(data))
+
+        small       = thumb.width <= 800 and thumb.height <= 600
+        is_jpg_png  = thumb.format in ("JPEG", "PNG")
+        jpgable_png = thumb.format == "PNG" and thumb.mode not in png_modes
+
+        if small and is_jpg_png and not jpgable_png and not is_svg:
+            raise UneededThumbnail()
+
+        if not small:
+            thumb.thumbnail((800, 600), PILImage.LANCZOS)
+
+        with io.BytesIO() as out:
+            if thumb.mode in png_modes:
+                thumb.save(out, "PNG", optimize=True)
+                mime = "image/png"
+            else:
+                thumb.convert("RGB").save(out, "JPEG", optimize=True)
+                mime = "image/jpeg"
+
+            data = out.getvalue()
+
+        info = MatrixImageInfo(thumb.width, thumb.height, mime, len(data))
+        return (data, info)
 
 
     async def upload(
-        self, data: UploadData, mime: str, filename: Optional[str] = None,
-    ) -> str:
-        response = await super().upload(data, mime, filename)
+        self,
+        data:     UploadData,
+        mime:     Optional[str] = None,
+        filename: Optional[str] = None,
+        encrypt:  bool          = False,
+    ) -> UploadReturn:
+
+        mime = mime or await utils.guess_mime(data)
+
+        response, decryption_dict = await super().upload(
+            data,
+            "application/octet-stream" if encrypt else mime,
+            filename,
+            encrypt,
+        )
 
         if isinstance(response, nio.UploadError):
             raise MatrixError.from_nio(response)
 
-        return response.content_uri
+        return UploadReturn(response.content_uri, mime, decryption_dict)
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
-        mime = utils.guess_mime(path)
+        mime = await utils.guess_mime(path)
 
         if mime.split("/")[0] != "image":
             raise BadMimeType(wanted="image/*", got=mime)
 
-        await self.set_avatar((await self.upload_file(path))[0])
+        mxc, *_ = await self.upload_file(path, mime, Path(path).name)
+        await self.set_avatar(mxc)
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:

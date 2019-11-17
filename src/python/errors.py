@@ -64,11 +64,6 @@ class UneededThumbnail(Exception):
 
 
 @dataclass
-class UnthumbnailableError(Exception):
-    exception: Optional[Exception] = None
-
-
-@dataclass
 class BadMimeType(Exception):
     wanted: str = field()
     got:    str = field()

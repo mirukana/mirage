@@ -104,19 +104,17 @@ class Member(ModelItem):
 
 
 class UploadStatus(AutoStrEnum):
-    Starting            = auto()
-    Encrypting          = auto()
-    Uploading           = auto()
-    CreatingThumbnail   = auto()
-    EncryptingThumbnail = auto()
-    UploadingThumbnail  = auto()
-    Failure             = auto()  # TODO
+    Uploading          = auto()
+    Caching            = auto()
+    UploadingThumbnail = auto()
+    CachingThumbnail   = auto()
+    Failure            = auto()  # TODO
 
 
 @dataclass
 class Upload(ModelItem):
     filepath:   Path         = field()
-    status:     UploadStatus = UploadStatus.Starting
+    status:     UploadStatus = UploadStatus.Uploading
     total_size: int          = 0
     uploaded:   int          = 0
 

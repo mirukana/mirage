@@ -2,6 +2,8 @@ import asyncio
 import functools
 import io
 import re
+import shutil
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, Optional
@@ -15,6 +17,9 @@ import nio
 from .backend import Backend
 from .utils import Size
 
+if sys.version_info < (3, 8):
+    import pyfastcopy  # noqa
+
 CryptDict = Optional[Dict[str, Any]]
 
 CONCURRENT_DOWNLOADS_LIMIT                   = asyncio.BoundedSemaphore(8)
@@ -23,10 +28,9 @@ ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
 
 @dataclass
 class Media:
-    cache:      "MediaCache"    = field()
-    mxc:        str             = field()
-    data:       Optional[bytes] = field(repr=False)
-    crypt_dict: CryptDict       = field(repr=False)
+    cache:      "MediaCache" = field()
+    mxc:        str          = field()
+    crypt_dict: CryptDict    = field(repr=False)
 
 
     def __post_init__(self) -> None:
@@ -64,14 +68,13 @@ class Media:
 
 
     async def create(self) -> Path:
-        if self.data is None:
-            async with CONCURRENT_DOWNLOADS_LIMIT:
-                self.data = await self._get_remote_data()
+        async with CONCURRENT_DOWNLOADS_LIMIT:
+            data = await self._get_remote_data()
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         async with aiofiles.open(self.local_path, "wb") as file:
-            await file.write(self.data)
+            await file.write(data)
 
         return self.local_path
 
@@ -103,13 +106,52 @@ class Media:
         return await asyncio.get_event_loop().run_in_executor(None, func)
 
 
+    @classmethod
+    async def from_existing_file(
+        cls,
+        cache:     "MediaCache",
+        mxc:       str,
+        existing:  Path,
+        overwrite: bool = False,
+        **kwargs,
+    ) -> "Media":
+
+        media = cls(cache, mxc, {}, **kwargs)  # type: ignore
+        media.local_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if not media.local_path.exists() or overwrite:
+            func = functools.partial(shutil.copy, existing, media.local_path)
+            await asyncio.get_event_loop().run_in_executor(None, func)
+
+        return media
+
+
+    @classmethod
+    async def from_bytes(
+        cls,
+        cache:     "MediaCache",
+        mxc:       str,
+        data:      bytes,
+        overwrite: bool = False,
+        **kwargs,
+    ) -> "Media":
+
+        media = cls(cache, mxc, {}, **kwargs)  # type: ignore
+        media.local_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if not media.local_path.exists() or overwrite:
+            async with aiofiles.open(media.local_path, "wb") as file:
+                await file.write(data)
+
+        return media
+
+
 @dataclass
 class Thumbnail(Media):
-    cache:       "MediaCache"    = field()
-    mxc:         str             = field()
-    data:        Optional[bytes] = field(repr=False)
-    crypt_dict:  CryptDict       = field(repr=False)
-    wanted_size: Size            = field()
+    cache:       "MediaCache" = field()
+    mxc:         str          = field()
+    crypt_dict:  CryptDict    = field(repr=False)
+    wanted_size: Size         = field()
 
     server_size: Optional[Size] = field(init=False, repr=False, default=None)
 
@@ -207,19 +249,10 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def create_media(self, mxc: str, data: bytes) -> None:
-        await Media(self, mxc, data, {}).create()
-
+    # These methods are for conveniant usage from QML
 
     async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> Path:
-        return await Media(self, mxc, None, crypt_dict).get()
-
-
-    async def create_thumbnail(
-        self, mxc: str, data: bytes, width: int, height: int,
-    ) -> None:
-        thumb = Thumbnail(self, mxc, data, {}, (round(width), round(height)))
-        await thumb.create()
+        return await Media(self, mxc, crypt_dict).get()
 
 
     async def get_thumbnail(
@@ -228,6 +261,6 @@ class MediaCache:
 
         thumb = Thumbnail(
             # QML sometimes pass float sizes, which matrix API doesn't like.
-            self, mxc, None, crypt_dict, (round(width), round(height)),
+            self, mxc, crypt_dict, (round(width), round(height)),
         )
         return await thumb.get()
