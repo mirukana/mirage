@@ -68,13 +68,13 @@ Rectangle {
         }
 
         HToolTip {
-            text: name && topic ? (name + "<br>" + topic) : (name || topic)
+            text: name && topic ? (`${name}<br>${topic}`) : (name || topic)
             label.textFormat: Text.StyledText
             visible: text && (nameHover.hovered || topicHover.hovered)
 
             readonly property string name:
                 roomName.truncated ?
-                ("<b>" + chatPage.roomInfo.display_name + "</b>") : ""
+                (`<b>${chatPage.roomInfo.display_name}</b>`) : ""
             readonly property string topic:
                 roomTopic.truncated ?  chatPage.roomInfo.topic : ""
         }

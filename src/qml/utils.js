@@ -85,7 +85,7 @@ function nameColor(name) {
 
 function coloredNameHtml(name, userId, displayText=null, disambiguate=false) {
     // substring: remove leading @
-    return "<font color='" + nameColor(name || userId.substring(1)) + "'>" +
+    return `<font color="${nameColor(name || userId.substring(1))}">` +
            escapeHtml(displayText || name || userId) +
            "</font>"
 }
@@ -210,11 +210,11 @@ function formatDuration(milliseconds) {
     let minutes = Math.floor((totalSeconds % 3600) / 60)
     let seconds = Math.floor(totalSeconds % 60)
 
-    if (seconds < 10) seconds = "0" + seconds
-    if (hours < 1)    return minutes + ":" + seconds
+    if (seconds < 10) seconds = `0${seconds}`
+    if (hours < 1)    return `${minutes}:${seconds}`
 
-    if (minutes < 10) minutes = "0" + minutes
-	return hours + ":" + minutes + ":" + seconds
+    if (minutes < 10) minutes = `0${minutes}`
+    return `${hours}:${minutes}:${seconds}`
 }
 
 

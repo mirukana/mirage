@@ -23,7 +23,7 @@ function onCoroutineDone(uuid, result, error, traceback) {
 
         onError ?
             onError(type, args, error, traceback) :
-            console.error("python: " + uuid + "\n" + traceback)
+            console.error(`python: ${uuid}\n${traceback}`)
 
     } else if (onSuccess) { onSuccess(result) }
 

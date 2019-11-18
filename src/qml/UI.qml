@@ -116,7 +116,7 @@ Item {
             }
 
             function showPage(name, properties={}) {
-                let path = "Pages/" + name + ".qml"
+                let path = `Pages/${name}.qml`
                 _show(path, properties)
 
                 window.uiState.page           = path

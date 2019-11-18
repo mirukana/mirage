@@ -8,12 +8,7 @@ Image {
     fillMode: Image.PreserveAspectFit
     visible: Boolean(svgName)
 
-    source:
-        svgName ?
-        ("../../icons/" + (theme ? theme.icons.preferredPack : "thin") +
-         "/" + svgName + ".svg") :
-        ""
-
+    source: svgName ? `../../icons/${iconPack}/${svgName}.svg` : ""
     sourceSize.width: svgName ? dimension : 0
     sourceSize.height: svgName ? dimension : 0
 
@@ -21,6 +16,7 @@ Image {
     property string svgName: ""
     property int dimension: 20
     property color colorize: theme.icons.colorize
+    property string iconPack: theme ? theme.icons.preferredPack : "thin"
 
 
     layer.enabled: ! Qt.colorEqual(colorize, "transparent")

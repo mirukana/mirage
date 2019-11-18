@@ -83,9 +83,7 @@ HTileDelegate {
 
         return text.replace(
             /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
-            '<font color="' +
-            theme.sidePane.room.subtitleQuote +
-            '">$1</font>',
+            `<font color="${theme.sidePane.room.subtitleQuote}">$1</font>`,
         )
     }
 

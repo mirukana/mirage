@@ -30,8 +30,6 @@
     - Is auto-sizing actually needed, or can we just set a default manual size?
     - Reducable room sidepane, swipe to show full-window
 
-  - When qml syntax highlighting supports ES6 string interpolation, use that
-
 - Fixes
   - CPU usage
   - `code` not colored in room subtitle

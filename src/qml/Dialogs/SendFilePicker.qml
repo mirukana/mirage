@@ -15,7 +15,7 @@ HFileDialogOpener {
                 if (destroyWhenDone) destroy()
             },
             (type, args, error, traceback) => {
-                console.error("python:\n" + traceback)
+                console.error(`python:\n${traceback}`)
                 if (destroyWhenDone) destroy()
             })
         }

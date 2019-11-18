@@ -19,7 +19,7 @@ HRowLayout {
     readonly property string timeText: Utils.formatTime(model.date, false)
     readonly property string localEchoText:
         model.is_local_echo ?
-        "&nbsp;<font size=" + theme.fontSize.small + "px>⏳</font>" :
+        `&nbsp;<font size=${theme.fontSize.small}px>⏳</font>` :
         ""
 
     readonly property bool pureMedia: ! contentText && linksRepeater.count
@@ -97,15 +97,14 @@ HRowLayout {
                 // For some reason, if there's only one space,
                 // times will be on their own lines most of the time.
                 "  " +
-                "<font size=" + theme.fontSize.small +
-                "px color=" + theme.chat.message.date + '>' +
+                `<font size=${theme.fontSize.small}px ` +
+                      `color=${theme.chat.message.date}>` +
                 timeText +
                 "</font>" +
 
                 // Local echo icon
                 (model.is_local_echo ?
-                 "&nbsp;<font size=" + theme.fontSize.small +
-                 "px>⏳</font>" : "")
+                 `&nbsp;<font size=${theme.fontSize.small}px>⏳</font>` : "")
 
             transform: Translate { x: xOffset }
 
