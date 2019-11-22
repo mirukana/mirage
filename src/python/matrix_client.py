@@ -81,7 +81,9 @@ class MatrixClient(nio.AsyncClient):
         self.backend: Backend    = backend
         self.models:  ModelStore = self.backend.models
 
-        self.starter_task:    Optional[asyncio.Future] = None
+        self.profile_task:    Optional[asyncio.Future] = None
+        self.sync_task:       Optional[asyncio.Future] = None
+        self.load_rooms_task: Optional[asyncio.Future] = None
         self.first_sync_done: asyncio.Event            = asyncio.Event()
         self.first_sync_date: Optional[datetime]       = None
 
@@ -123,21 +125,22 @@ class MatrixClient(nio.AsyncClient):
         if isinstance(response, nio.LoginError):
             raise MatrixError.from_nio(response)
 
-        self.starter_task = asyncio.ensure_future(self.start())
+        asyncio.ensure_future(self.start())
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
-        self.starter_task = asyncio.ensure_future(self.start())
+
+        asyncio.ensure_future(self.start())
 
 
     async def logout(self) -> None:
-        if self.starter_task:
-            self.starter_task.cancel()
-
-            with suppress(asyncio.CancelledError):
-                await self.starter_task
+        for task in (self.profile_task, self.load_rooms_task, self.sync_task):
+            if task:
+                task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await task
 
         await super().logout()
         await self.close()
@@ -157,12 +160,18 @@ class MatrixClient(nio.AsyncClient):
             account.display_name    = resp.displayname or ""
             account.avatar_url      = resp.avatar_url or ""
 
-        ft = asyncio.ensure_future(self.backend.get_profile(self.user_id))
-        ft.add_done_callback(on_profile_response)
+        self.profile_task = asyncio.ensure_future(
+            self.backend.get_profile(self.user_id),
+        )
+        self.profile_task.add_done_callback(on_profile_response)
 
         while True:
             try:
-                await self.sync_forever(timeout=10_000)
+                self.sync_task = asyncio.ensure_future(
+                    self.sync_forever(timeout=10_000),
+                )
+                await self.sync_task
+                break  # task cancelled
             except Exception:
                 trace = traceback.format_exc().rstrip()
                 log.error("Exception during sync, will restart:\n%s", trace)

@@ -50,7 +50,6 @@ BoxPopup {
             }
 
             py.callCoro("logout_client", [userId])
-
             popup.close()
         },
 

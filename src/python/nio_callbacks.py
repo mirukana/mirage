@@ -58,7 +58,9 @@ class NioCallbacks:
             await c.register_nio_room(c.all_rooms[room_id], left=True)
 
         if not c.first_sync_done.is_set():
-            asyncio.ensure_future(c.load_rooms_without_visible_events())
+            self.client.load_rooms_task = asyncio.ensure_future(
+                c.load_rooms_without_visible_events(),
+            )
 
             c.first_sync_done.set()
             c.first_sync_date = datetime.now()
