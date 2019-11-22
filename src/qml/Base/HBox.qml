@@ -41,6 +41,13 @@ Rectangle {
     }
 
 
+    HNumberAnimation on scale {
+        running: true
+        from: 0
+        to: 1
+        overshoot: 3
+    }
+
     HColumnLayout {
         id: mainColumn
         width: parent.width
