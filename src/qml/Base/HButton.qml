@@ -9,6 +9,7 @@ Button {
     bottomPadding: topPadding
     leftPadding: spacing / (circle ? 1.5 : 1)
     rightPadding: leftPadding
+    enabled: ! button.loading
 
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
@@ -42,7 +43,7 @@ Button {
 
 
     Binding {
-        when: disableWhileLoading && loading
+        when: disableWhileLoading && button.loading
         target: button
         property: "enabled"
         value: false
