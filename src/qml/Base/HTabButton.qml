@@ -12,7 +12,6 @@ TabButton {
 
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
-    enabled: ! loading
 
     // Must be explicitely set to display correctly on KDE
     implicitWidth: Math.max(
