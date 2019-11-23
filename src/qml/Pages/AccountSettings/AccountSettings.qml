@@ -30,7 +30,7 @@ HPage {
 
     Repeater {
         id: repeater
-        model: ["Profile.qml", "Encryption.qml"]
+        model: ["Profile.qml", "ImportExportKeys.qml"]
 
         Rectangle {
             color: ready ? theme.controls.box.background : "transparent"

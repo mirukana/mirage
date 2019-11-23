@@ -7,7 +7,6 @@ import re
 import traceback
 from contextlib import suppress
 from datetime import datetime
-from functools import partial
 from pathlib import Path
 from typing import (
     Any, DefaultDict, Dict, NamedTuple, Optional, Set, Tuple, Type, Union,
@@ -606,35 +605,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
-        # Reimplemented until better solutions are worked on in nio
-        await self.clear_import_error()
-
-        loop = asyncio.get_event_loop()
-
-        account     = self.models[Account][self.user_id]
-        import_keys = partial(self.olm.import_keys_static, infile, passphrase)
-
-        account.importing_key        = 0
-        account.total_keys_to_import = -1  # preparing
-
-        try:
-            sessions = await loop.run_in_executor(None, import_keys)
-        except nio.EncryptionError as err:  # XXX raise
-            account.import_error = (infile, passphrase, str(err))
-            return
-
-        account.total_keys_to_import = len(sessions)
-
-        for session in sessions:
-            if self.olm.inbound_group_store.add(session):
-                await loop.run_in_executor(
-                    None, self.store.save_inbound_group_session, session,
-                )
-                account.importing_key += 1
-
-        account.importing_key        = 0
-        account.total_keys_to_import = 0
-
+        await super().import_keys(infile, passphrase)
         await self.retry_decrypting_events()
 
 
@@ -647,10 +618,6 @@ class MatrixClient(nio.AsyncClient):
             path.unlink()
 
         await super().export_keys(outfile, passphrase)
-
-
-    async def clear_import_error(self) -> None:
-        self.models[Account][self.user_id].import_error = ("", "", "")
 
 
     async def retry_decrypting_events(self) -> None:

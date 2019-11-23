@@ -11,12 +11,21 @@ HFileDialogOpener {
     }
 
 
+    signal done()
+
+
     property string userId: ""
+    property bool importing: false
 
 
     function importKeys(file, passphrase) {
+        importing = true
+
         let path = file.toString().replace(/^file:\/\//, "")
-        py.callClientCoro(userId, "import_keys", [path, passphrase])
+        py.callClientCoro(userId, "import_keys", [path, passphrase], () => {
+            importing = false
+            done()
+        })
     }
 
 
