@@ -600,7 +600,7 @@ class MatrixClient(nio.AsyncClient):
         if mime.split("/")[0] != "image":
             raise BadMimeType(wanted="image/*", got=mime)
 
-        mxc, *_ = await self.upload_file(path, mime, Path(path).name)
+        mxc, *_ = await self.upload(path, mime, Path(path).name)
         await self.set_avatar(mxc)
 
 
