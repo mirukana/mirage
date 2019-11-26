@@ -52,27 +52,28 @@ class Room(ModelItem):
     last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
 
     def __lt__(self, other: "Room") -> bool:
-        # Left rooms may still have an inviter_id, check left first.
-        if self.left and not other.left:
-            return False
-        if other.left and not self.left:
-            return True
+        # Order: Invited rooms > joined rooms > left rooms.
+        # Within these categories, sort by date then by name.
+        # Left rooms may still have an inviter_id, so check left first.
+        return (
+            self.left,
 
-        if self.inviter_id and not other.inviter_id:
-            return True
-        if other.inviter_id and not self.inviter_id:
-            return False
+            other.inviter_id,
 
-        if self.last_event and other.last_event:
-            return self.last_event["date"] > other.last_event["date"]
-        if self.last_event and not other.last_event:
-            return True
-        if other.last_event and not self.last_event:
-            return False
+            other.last_event["date"] if other.last_event else
+            datetime.fromtimestamp(0),
 
-        name       = self.display_name or self.room_id
-        other_name = other.display_name or other.room_id
-        return name < other_name
+            self.display_name or self.room_id,
+        ) < (
+            other.left,
+
+            self.inviter_id,
+
+            self.last_event["date"] if self.last_event else
+            datetime.fromtimestamp(0),
+
+            other.display_name or other.room_id,
+        )
 
     @property
     def filter_string(self) -> str:
