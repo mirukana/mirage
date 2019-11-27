@@ -281,18 +281,41 @@ class NioCallbacks:
 
 
     async def onRoomAliasEvent(self, room, ev) -> None:
-        co = f"%1 set the room's main address to {ev.canonical_alias}."
+        if ev.canonical_alias:
+            co = f"%1 set the room's main address to {ev.canonical_alias}."
+        else:
+            co = "%1 removed the room's main address."
+
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomNameEvent(self, room, ev) -> None:
-        co = f"%1 changed the room's name to \"{ev.name}\"."
+        if ev.name:
+            co = f"%1 changed the room's name to \"{ev.name}\"."
+        else:
+            co = "%1 removed the room's name."
+
         await self.client.register_nio_event(room, ev, content=co)
 
 
+    async def onRoomAvatarEvent(self, room, ev) -> None:
+        if ev.avatar_url:
+            co = "%1 changed the room's picture:"
+        else:
+            co = "%1 removed the room's picture."
+
+        await self.client.register_nio_event(
+            room, ev, content=co, media_url=ev.avatar_url,
+        )
+
+
     async def onRoomTopicEvent(self, room, ev) -> None:
-        topic = HTML_FILTER.filter_inline(ev.topic)
-        co    = f"%1 changed the room's topic to \"{topic}\"."
+        if ev.topic:
+            topic = HTML_FILTER.filter_inline(ev.topic)
+            co    = f"%1 changed the room's topic to \"{topic}\"."
+        else:
+            co = "%1 removed the room's topic."
+
         await self.client.register_nio_event(room, ev, content=co)
 
 

@@ -193,19 +193,15 @@ class Event(ModelItem):
 
     @property
     def links(self) -> List[str]:
-        local_type    = self.local_event_type
-        media_classes = (nio.RoomMessageMedia, nio.RoomEncryptedMedia)
+        urls: List[str] = []
 
-        if local_type and issubclass(local_type, media_classes):
-            return [self.media_url]
+        if self.content.strip():
+            urls += [link[2] for link in lxml.html.iterlinks(self.content)]
 
-        if isinstance(self.source, media_classes):
-            return [self.media_url]
+        if self.media_url:
+            urls.append(self.media_url)
 
-        if not self.content.strip():
-            return []
-
-        return [link[2] for link in lxml.html.iterlinks(self.content)]
+        return urls
 
 
 @dataclass
