@@ -713,7 +713,7 @@ class MatrixClient(nio.AsyncClient):
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
-            display_name   = room.display_name,
+            display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
             topic          = HTML_FILTER.filter_inline(room.topic or ""),
             inviter_id     = inviter,

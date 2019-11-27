@@ -30,7 +30,7 @@ Rectangle {
 
         HLabel {
             id: roomName
-            text: chatPage.roomInfo.display_name
+            text: chatPage.roomInfo.display_name || qsTr("Empty room")
             font.pixelSize: theme.fontSize.big
             color: theme.chat.roomHeader.name
             elide: Text.ElideRight

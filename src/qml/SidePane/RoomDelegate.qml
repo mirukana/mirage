@@ -37,8 +37,7 @@ HTileDelegate {
     }
 
     title.color: theme.sidePane.room.name
-    title.text: model.data.display_name || "<i>Empty room</i>"
-    title.textFormat: model.data.display_name? Text.PlainText : Text.StyledText
+    title.text: model.data.display_name || qsTr("Empty room")
 
     additionalInfo.children: HIcon {
         svgName: "invite-received"

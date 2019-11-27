@@ -176,26 +176,25 @@
       - Fetch all members when using the filter members bar
 
   - Direct chats category
-  - When inviting someone to direct chat, room is "Empty room" until accepted,
     it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition
   - Live-reloading accounts.json
 
 - nio
-  - RoomMessageMedia info attribute
-  - `AsyncClient.share_group_session`: send device batches concurrently
   - Running blocking DB function calls in executor
-  - Guard against asyncio OSError Network unreachable
+  - `AsyncClient.share_group_session`: send device batches concurrently
 
+  - RoomMessageMedia and RoomAvatarEvent info attributes
+  - `m.room.aliases` events
   - MatrixRoom invited members list
+    - When inviting someone to direct chat, room is "Empty room" until accepted,
   - Left room events after client reboot
   - `org.matrix.room.preview_urls` events
-  - `m.room.aliases` events
   - Support "Empty room (was ...)" after peer left
   - Previewing room without joining
 
-  - get content repo config API
-  - add the `resume()` method
+  - Get content repo config API
+  - Add the `resume()` method
 
   - See if we can turn all the Error classes into actual exceptions
 
