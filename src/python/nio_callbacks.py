@@ -5,6 +5,7 @@ from contextlib import suppress
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, Tuple
+from urllib.parse import quote
 
 import nio
 
@@ -282,7 +283,9 @@ class NioCallbacks:
 
     async def onRoomAliasEvent(self, room, ev) -> None:
         if ev.canonical_alias:
-            co = f"%1 set the room's main address to {ev.canonical_alias}."
+            url  = f"https://matrix.to/#/{quote(ev.canonical_alias)}"
+            link = f"<a href='{url}'>{ev.canonical_alias}</a>"
+            co   = f"%1 set the room's main address to {link}."
         else:
             co = "%1 removed the room's main address."
 
