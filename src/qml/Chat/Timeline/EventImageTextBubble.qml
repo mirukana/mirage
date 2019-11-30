@@ -2,7 +2,7 @@ import QtQuick 2.12
 import "../../Base"
 
 HLabel {
-    visible: Boolean(text)
+    id: bubble
     anchors.margins: theme.spacing / 4
 
     topPadding: theme.spacing / 2
@@ -15,5 +15,12 @@ HLabel {
     background: Rectangle {
         color: Qt.hsla(0, 0, 0, 0.7)
         radius: theme.radius
+    }
+
+    Binding {
+        target: bubble
+        property: "visible"
+        value: false
+        when: ! Boolean(bubble.text)
     }
 }
