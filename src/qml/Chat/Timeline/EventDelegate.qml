@@ -99,7 +99,7 @@ Column {
         id: eventContent
         width: parent.width
 
-        Behavior on x { HNumberAnimation {} }
+        Behavior on x { HXAnimator {} }
     }
 
 
