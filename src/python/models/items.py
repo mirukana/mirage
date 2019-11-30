@@ -94,9 +94,10 @@ class Member(ModelItem):
     power_level:  int  = 0
 
     def __lt__(self, other: "Member") -> bool:
-        name       = self.display_name or self.user_id[1:]
-        other_name = other.display_name or other.user_id[1:]
-        return name.lower() < other_name.lower()
+        # Sort by name, but have members with higher power-level first
+        name       = (self.display_name or self.user_id[1:]).lower()
+        other_name = (other.display_name or other.user_id[1:]).lower()
+        return (other.power_level, name) < (self.power_level, other_name)
 
 
     @property
