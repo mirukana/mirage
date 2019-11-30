@@ -11,22 +11,8 @@ HFileDialogOpener {
     }
 
 
-    signal done()
-
-
     property string userId: ""
     property bool importing: false
-
-
-    function importKeys(file, passphrase) {
-        importing = true
-
-        let path = file.toString().replace(/^file:\/\//, "")
-        py.callClientCoro(userId, "import_keys", [path, passphrase], () => {
-            importing = false
-            done()
-        })
-    }
 
 
     PasswordPopup {
@@ -36,16 +22,38 @@ HFileDialogOpener {
         )
         okText: qsTr("Import")
 
-        onAcceptedPasswordChanged: importKeys(file, acceptedPassword)
 
         property url file: ""
 
+
         function verifyPassword(pass, callback) {
-            py.callCoro(
-                "check_exported_keys_passphrase",
-                [file.toString().replace(/^file:\/\//, ""), pass],
-                callback
-            )
+            importing = true
+            let path  = file.toString().replace(/^file:\/\//, "")
+
+            py.callClientCoro(userId, "import_keys", [path, pass], () => {
+                importing = false
+                callback(true)
+
+            }, (type, args) => {
+                callback(
+                    type === "EncryptionError" ?
+                    false :
+
+                    type === "ValueError" ?
+                    qsTr("Invalid file format") :
+
+                    type === "FileNotFoundError" ?
+                    qsTr("This file doesn't exist") :
+
+                    type === "IsADirectoryError" ?
+                    qsTr("A folder was given, expecting a file") :
+
+                    type === "PermissionError" ?
+                    qsTr("No permission to read this file") :
+
+                    qsTr("Unknown error: %1 - %2").arg(type).arg(args)
+                )
+            })
         }
     }
 }

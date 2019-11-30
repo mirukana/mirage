@@ -141,29 +141,6 @@ class Backend:
         return nio.Api.mxc_to_http(mxc)
 
 
-    @staticmethod
-    async def check_exported_keys_passphrase(file_path: str, passphrase: str,
-                                            ) -> Union[bool, Tuple[str, bool]]:
-        """Check if the exported keys file can be decrypted with passphrase.
-
-        Returns True on success, False is the passphrase is invalid, or
-        an (error_message, error_is_translated) tuple if another error occured.
-        """
-
-        try:
-            nio.crypto.key_export.decrypt_and_read(file_path, passphrase)
-            return True
-
-        except OSError as err:  # XXX raise
-            return (f"{file_path}: {err.strerror}", True)
-
-        except ValueError as err:  # XXX raise
-            if str(err).startswith("HMAC check failed"):
-                return False
-
-            return (str(err), False)
-
-
     async def load_settings(self) -> tuple:
         from .config_files import Theme
         settings = await self.ui_settings.read()

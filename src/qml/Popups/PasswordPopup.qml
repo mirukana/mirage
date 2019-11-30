@@ -25,8 +25,8 @@ BoxPopup {
 
     function verifyPassword(pass, callback) {
         // Can be reimplemented when using this component.
-        // Pass to the callback true on success, false on invalid password, or
-        // a [error message, translated] array for any other error.
+        // Pass to the callback true on success, false on invalid password,
+        // or a custom error message string.
         callback(true)
     }
 
@@ -46,8 +46,7 @@ BoxPopup {
                 } else if (result === false) {
                     passwordValid = false
                 } else {
-                    let [msg, translated] = result
-                    errorMessage.text     = translated ? msg : qsTr(msg)
+                    errorMessage.text = result
                 }
 
                 button.loading = false
