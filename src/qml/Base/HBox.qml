@@ -41,7 +41,7 @@ Rectangle {
     }
 
 
-    HNumberAnimation on scale {
+    HScaleAnimator on scale {
         running: true
         from: 0
         to: 1

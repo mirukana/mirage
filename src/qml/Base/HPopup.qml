@@ -10,10 +10,11 @@ Popup {
 
 
     enter: Transition {
-        HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 4 }
+        HScaleAnimator { from: 0; to: 1; overshoot: 4 }
     }
 
     exit: Transition {
+        // FIXME: HScaleAnimator won't work here?
         HNumberAnimation { property: "scale"; to: 0 }
     }
 

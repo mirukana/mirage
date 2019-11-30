@@ -21,12 +21,8 @@ Item {
 
     SequentialAnimation {
         id: pressAnimation
-        HNumberAnimation {
-            target: mainUI; property: "scale"; from: 1.0; to: 0.9
-        }
-        HNumberAnimation {
-            target: mainUI; property: "scale"; from: 0.9; to: 1.0
-        }
+        HScaleAnimator { target: mainUI; from: 1.0; to: 0.9 }
+        HScaleAnimator { target: mainUI; from: 0.9; to: 1.0 }
     }
 
     property bool accountsPresent:

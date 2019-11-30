@@ -53,9 +53,8 @@ Image {
                     theme.controls.image.maxPauseIndicatorSize,
                 )
                 scale: parent.status == Image.Ready && parent.paused ? 1 : 0
-                visible: scale > 0
 
-                Behavior on scale { HNumberAnimation { overshoot: 4 } }
+                Behavior on scale { HScaleAnimator { overshoot: 4 } }
             }
         }
     }

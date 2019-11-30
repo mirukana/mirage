@@ -45,8 +45,9 @@ CheckBox {
             svgName: "check-mark"
             colorize: theme.controls.checkBox.checkIconColorize
 
-            visible: scale > 0
             scale: box.checked ? 1 : 0
+
+            // FIXME: HScaleAnimator won't work here?
             Behavior on scale {
                 HNumberAnimation {
                     overshoot: 4
