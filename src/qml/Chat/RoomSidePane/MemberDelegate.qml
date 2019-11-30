@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import "../../Base"
+import "../../utils.js" as Utils
 
 HTileDelegate {
     id: memberDelegate
@@ -14,8 +15,14 @@ HTileDelegate {
     }
 
     title.text: model.display_name || model.user_id
-    title.color: theme.chat.roomSidePane.member.name
+    title.color:
+        memberDelegate.hovered ?
+        Utils.nameColor(model.display_name || model.user_id.substring(1)) :
+        theme.chat.roomSidePane.member.name
 
     subtitle.text: model.user_id
     subtitle.color: theme.chat.roomSidePane.member.subtitle
+
+
+    Behavior on title.color { HColorAnimation {} }
 }
