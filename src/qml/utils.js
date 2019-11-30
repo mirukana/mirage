@@ -102,22 +102,18 @@ function escapeHtml(string) {
 
 
 function processedEventText(ev) {
-    if (ev.event_type == "RoomMessageEmote") {
-        return "<i>" +
-               coloredNameHtml(ev.sender_name, ev.sender_id) + " " +
-               ev.content + "</i>"
-    }
+    if (ev.event_type == "RoomMessageEmote")
+        return coloredNameHtml(ev.sender_name, ev.sender_id) + " " + ev.content
 
-    if (ev.event_type.startsWith("RoomMessage")) { return ev.content }
-    if (ev.event_type.startsWith("RoomEncrypted")) { return ev.content }
+    if (ev.event_type.startsWith("RoomMessage"))   return ev.content
+    if (ev.event_type.startsWith("RoomEncrypted")) return ev.content
 
     let text = qsTr(ev.content).arg(
         coloredNameHtml(ev.sender_name, ev.sender_id)
     )
 
-    if (text.includes("%2") && ev.target_id) {
+    if (text.includes("%2") && ev.target_id)
         text = text.arg(coloredNameHtml(ev.target_name, ev.target_id))
-    }
 
     return text
 }

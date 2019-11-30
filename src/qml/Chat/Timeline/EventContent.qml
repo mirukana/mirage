@@ -84,6 +84,7 @@ HRowLayout {
                    theme.chat.message.noticeBody :
                    theme.chat.message.body
 
+            font.italic: model.event_type === "RoomMessageEmote"
             wrapMode: TextEdit.Wrap
             textFormat: Text.RichText
             text:

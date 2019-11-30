@@ -21,11 +21,8 @@ HTileDelegate {
     Behavior on opacity { HNumberAnimation {} }
 
 
-    readonly property bool invited:
-        model.data.inviter_id && ! model.data.left
-
-    readonly property var eventDate:
-        model.data.last_event ? model.data.last_event.date : null
+    readonly property bool invited: model.data.inviter_id && ! model.data.left
+    readonly property var lastEvent: model.data.last_event
 
 
     onActivated: pageLoader.showRoom(model.user_id, model.data.room_id)
@@ -51,34 +48,36 @@ HTileDelegate {
 
     rightInfo.color: theme.sidePane.room.lastEventDate
     rightInfo.text: {
-        ! eventDate ?  "" :
+        ! lastEvent || ! lastEvent.date ?
+        "" :
 
-        Utils.dateIsToday(eventDate) ?
-        Utils.formatTime(eventDate, false) :  // no seconds
+        Utils.dateIsToday(lastEvent.date) ?
+        Utils.formatTime(lastEvent.date, false) :  // no seconds
 
-        eventDate.getFullYear() == new Date().getFullYear() ?
-        Qt.formatDate(eventDate, "d MMM") : // e.g. "5 Dec"
+        lastEvent.date.getFullYear() == new Date().getFullYear() ?
+        Qt.formatDate(lastEvent.date, "d MMM") : // e.g. "5 Dec"
 
-        eventDate.getFullYear()
+        lastEvent.date.getFullYear()
     }
 
     subtitle.color: theme.sidePane.room.subtitle
+    subtitle.font.italic:
+        Boolean(lastEvent && lastEvent.event_type === "RoomMessageEmote")
     subtitle.textFormat: Text.StyledText
     subtitle.text: {
-        if (! model.data.last_event) { return "" }
-
-        let ev = model.data.last_event
+        if (! lastEvent) return ""
 
         // If it's an emote or non-message/media event
-        if (ev.event_type === "RoomMessageEmote" ||
-            (! ev.event_type.startsWith("RoomMessage") &&
-             ! ev.event_type.startsWith("RoomEncrypted"))) {
-            return Utils.processedEventText(ev)
+        if (lastEvent.event_type === "RoomMessageEmote" ||
+            (! lastEvent.event_type.startsWith("RoomMessage") &&
+            ! lastEvent.event_type.startsWith("RoomEncrypted")))
+        {
+            return Utils.processedEventText(lastEvent)
         }
 
         let text = Utils.coloredNameHtml(
-            ev.sender_name, ev.sender_id
-        ) + ": " + ev.inline_content
+            lastEvent.sender_name, lastEvent.sender_id
+        ) + ": " + lastEvent.inline_content
 
         return text.replace(
             /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
