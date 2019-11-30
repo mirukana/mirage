@@ -14,6 +14,7 @@
   - Video: missing buttons and small size problems
   - Audio: online playback is buggy, must download+play file
   - EventLink
+    - Special treatment for matrix.to URLs?
   - EventFile & Downloading (right click on media > save as...)
 
 - Refactoring

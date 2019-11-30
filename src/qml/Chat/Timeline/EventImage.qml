@@ -85,6 +85,10 @@ HMxcImage {
         anchors.top: parent.top
         text: loader.showSender
         textFormat: Text.StyledText
+        opacity: hover.hovered ? 0 : 1
+        visible: opacity > 0
+
+        Behavior on opacity { HNumberAnimation {} }
     }
 
     EventImageTextBubble {
@@ -92,5 +96,9 @@ HMxcImage {
         anchors.bottom: parent.bottom
         text: [loader.showDate, loader.showLocalEcho].join(" ").trim()
         textFormat: Text.StyledText
+        opacity: hover.hovered ? 0 : 1
+        visible: opacity > 0
+
+        Behavior on opacity { HNumberAnimation {} }
     }
 }
