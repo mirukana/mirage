@@ -20,7 +20,7 @@ HTileDelegate {
         ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
 
 
-    Behavior on opacity { HNumberAnimation {} }
+    Behavior on opacity { HOpacityAnimator {} }
 
 
     property bool disconnecting: false
@@ -74,7 +74,7 @@ HTileDelegate {
 
         Layout.fillHeight: true
 
-        Behavior on opacity { HNumberAnimation {} }
+        Behavior on opacity { HOpacityAnimator {} }
     }
 
     HButton {
@@ -102,7 +102,7 @@ HTileDelegate {
             Behavior on angle { HNumberAnimation {} }
         }
 
-        Behavior on opacity { HNumberAnimation {} }
+        Behavior on opacity { HOpacityAnimator {} }
     }
 
     contextMenu: HMenu {

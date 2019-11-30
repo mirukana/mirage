@@ -31,7 +31,7 @@ ListView {
 
     add: Transition {
         ParallelAnimation {
-            HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+            HOpacityAnimator { from: 0; to: 1 }
             HNumberAnimation { properties: "x,y"; from: 100 }
         }
     }
@@ -39,14 +39,14 @@ ListView {
     move: Transition {
         ParallelAnimation {
             // Ensure opacity goes to 1 if add/remove transition is interrupted
-            HNumberAnimation { property: "opacity"; to: 1 }
+            HOpacityAnimator { to: 1 }
             HNumberAnimation { properties: "x,y" }
         }
     }
 
     remove: Transition {
         ParallelAnimation {
-            HNumberAnimation { property: "opacity"; to: 0 }
+            HOpacityAnimator { to: 0 }
             HNumberAnimation { properties: "x,y"; to: 100 }
         }
     }

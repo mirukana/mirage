@@ -17,7 +17,7 @@ CheckBox {
     property alias subtitle: subtitleText
 
 
-    Behavior on opacity { HNumberAnimation { factor: 2 } }
+    Behavior on opacity { HOpacityAnimator { factor: 2 } }
 
 
     indicator: Rectangle {

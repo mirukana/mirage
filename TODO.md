@@ -17,6 +17,8 @@
     - Special treatment for matrix.to URLs?
   - EventFile & Downloading (right click on media > save as...)
 
+  - Create room tabs brutal size transition
+
 - Refactoring
   - Room header elide detection
   - Use HBox for Profile

@@ -81,7 +81,7 @@ HGridLayout {
                 (! avatar.mxc && overlayHover.hovered) ? 0.8 : 0.7
             )
 
-            Behavior on opacity { HNumberAnimation {} }
+            Behavior on opacity { HOpacityAnimator {} }
             Behavior on color { HColorAnimation {} }
 
             HoverHandler { id: overlayHover }

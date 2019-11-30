@@ -132,7 +132,7 @@ Rectangle {
         icon.name: "reduced-room-buttons"
 
         Behavior on opacity {
-            HNumberAnimation { duration: buttonsAnimation.duration * 2 }
+            HOpacityAnimator { duration: buttonsAnimation.duration * 2 }
         }
     }
 }

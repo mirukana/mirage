@@ -18,7 +18,7 @@ HTileDelegate {
         ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
 
 
-    Behavior on opacity { HNumberAnimation {} }
+    Behavior on opacity { HOpacityAnimator {} }
 
 
     readonly property bool invited: model.data.inviter_id && ! model.data.left

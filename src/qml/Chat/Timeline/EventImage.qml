@@ -88,7 +88,7 @@ HMxcImage {
         opacity: hover.hovered ? 0 : 1
         visible: opacity > 0
 
-        Behavior on opacity { HNumberAnimation {} }
+        Behavior on opacity { HOpacityAnimator {} }
     }
 
     EventImageTextBubble {
@@ -99,6 +99,6 @@ HMxcImage {
         opacity: hover.hovered ? 0 : 1
         visible: opacity > 0
 
-        Behavior on opacity { HNumberAnimation {} }
+        Behavior on opacity { HOpacityAnimator {} }
     }
 }

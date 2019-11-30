@@ -16,7 +16,7 @@ HRowLayout {
     readonly property alias label: label
 
 
-    Behavior on opacity { HNumberAnimation {} }
+    Behavior on opacity { HOpacityAnimator {} }
 
 
     HIcon {
@@ -35,7 +35,7 @@ HRowLayout {
 
         ParallelAnimation {
             id: resetAnimations
-            HNumberAnimation { target: icon; property: "opacity"; to: 1 }
+            HOpacityAnimator { target: icon; to: 1 }
             HNumberAnimation { target: icon; property: "rotation"; to: 0 }
         }
 

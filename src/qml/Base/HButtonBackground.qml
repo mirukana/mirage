@@ -11,7 +11,7 @@ Rectangle {
     property QtObject buttonTheme
 
 
-    Behavior on opacity { HNumberAnimation {} }
+    Behavior on opacity { HOpacityAnimator {} }
 
 
     Rectangle {
