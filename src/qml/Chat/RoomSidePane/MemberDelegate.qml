@@ -10,6 +10,7 @@ HTileDelegate {
         userId: model.user_id
         displayName: model.display_name
         mxc: model.avatar_url
+        powerLevel: model.power_level
     }
 
     title.text: model.display_name || model.user_id

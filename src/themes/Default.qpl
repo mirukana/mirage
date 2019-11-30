@@ -299,9 +299,11 @@ chat:
         color background: colors.mediumBackground
 
         member:
-            color background: "transparent"
-            color name:       colors.text
-            color subtitle:   colors.dimText
+            color background:    "transparent"
+            color name:          colors.text
+            color subtitle:      colors.dimText
+            color adminIcon:     hsluv(60, colors.saturation * 2.25, 60)
+            color moderatorIcon: adminIcon
 
         inviteButton:
             color background: colors.inputBackground
