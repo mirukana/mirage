@@ -9,7 +9,7 @@ HRowLayout {
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
-    readonly property string eventSender:
+    readonly property string eventSender: // XXX
         hideNameLine ? "" : (
             "<div class='sender'>" +
             Utils.coloredNameHtml(model.sender_name, model.sender_id) +
@@ -80,7 +80,10 @@ HRowLayout {
             leftPadding: eventContent.spacing
             rightPadding: leftPadding
 
-            color: theme.chat.message.body
+            color: model.event_type === "RoomMessageNotice" ?
+                   theme.chat.message.noticeBody :
+                   theme.chat.message.body
+
             wrapMode: TextEdit.Wrap
             textFormat: Text.RichText
             text:
@@ -140,6 +143,15 @@ HRowLayout {
                 color: isOwn?
                        theme.chat.message.ownBackground :
                        theme.chat.message.background
+
+                Rectangle {
+                    visible: model.event_type === "RoomMessageNotice"
+                    width: theme.chat.message.noticeLineWidth
+                    height: parent.height
+                    color: Utils.nameColor(
+                        model.sender_name || model.sender_id.substring(1),
+                    )
+                }
             }
         }
 

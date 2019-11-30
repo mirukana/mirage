@@ -328,6 +328,9 @@ chat:
         color body: colors.text
         color date: colors.dimText
 
+        color noticeBody:    colors.halfDimText
+        int noticeLineWidth: 1
+
         color quote: hsluv(135, colors.saturation * 2.25, 75)
         color link:  colors.link
         color code:  colors.code

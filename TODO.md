@@ -16,8 +16,6 @@
   - EventLink
   - EventFile & Downloading (right click on media > save as...)
 
-- RoomMessageNotice
-
 - Refactoring
   - Room header elide detection
   - Use HBox for Profile

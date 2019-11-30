@@ -88,13 +88,12 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
+    async def onRoomMessageNotice(self, room, ev) -> None:
+        await self.onRoomMessageText(room, ev)
+
+
     async def onRoomMessageEmote(self, room, ev) -> None:
-        co = HTML_FILTER.filter_inline(
-            ev.formatted_body
-            if ev.format == "org.matrix.custom.html" else
-            utils.plain2html(ev.body),
-        )
-        await self.client.register_nio_event(room, ev, content=co)
+        await self.onRoomMessageText(room, ev)
 
 
     async def onRoomMessageUnknown(self, room, ev) -> None:
