@@ -63,7 +63,7 @@ class Room(ModelItem):
             other.last_event["date"] if other.last_event else
             datetime.fromtimestamp(0),
 
-            self.display_name or self.room_id,
+            self.display_name.lower() or self.room_id,
         ) < (
             other.left,
 
@@ -72,7 +72,7 @@ class Room(ModelItem):
             self.last_event["date"] if self.last_event else
             datetime.fromtimestamp(0),
 
-            other.display_name or other.room_id,
+            other.display_name.lower() or other.room_id,
         )
 
     @property
@@ -96,7 +96,7 @@ class Member(ModelItem):
     def __lt__(self, other: "Member") -> bool:
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
-        return name < other_name
+        return name.lower() < other_name.lower()
 
 
     @property
