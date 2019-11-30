@@ -9,7 +9,7 @@ HRowLayout {
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
-    readonly property string eventSender: // XXX
+    readonly property string senderText:
         hideNameLine ? "" : (
             "<div class='sender'>" +
             Utils.coloredNameHtml(model.sender_name, model.sender_id) +
@@ -91,7 +91,7 @@ HRowLayout {
                 theme.chat.message.styleInclude +
 
                 // Sender name
-                eventContent.eventSender +
+                eventContent.senderText +
 
                 // Message body
                 eventContent.contentText +
@@ -162,7 +162,7 @@ HRowLayout {
             EventMediaLoader {
                 singleMediaInfo: eventDelegate.currentItem
                 mediaUrl: modelData
-                showSender: pureMedia ? eventSender : ""
+                showSender: pureMedia ? senderText : ""
                 showDate: pureMedia ? timeText : ""
                 showLocalEcho: pureMedia ? localEchoText : ""
 
