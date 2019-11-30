@@ -29,25 +29,30 @@ ListView {
         visible: listView.interactive || ! listView.enableFlicking
     }
 
+    // FIXME: HOpacityAnimator creates flickering
+
     add: Transition {
         ParallelAnimation {
-            HOpacityAnimator { from: 0; to: 1 }
-            HNumberAnimation { properties: "x,y"; from: 100 }
+            HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+            HXAnimator { from: 100 }
+            HYAnimator { from: 100 }
         }
     }
 
     move: Transition {
         ParallelAnimation {
             // Ensure opacity goes to 1 if add/remove transition is interrupted
-            HOpacityAnimator { to: 1 }
-            HNumberAnimation { properties: "x,y" }
+            HNumberAnimation { property: "opacity"; to: 1 }
+            HXAnimator {}
+            HYAnimator {}
         }
     }
 
     remove: Transition {
         ParallelAnimation {
-            HOpacityAnimator { to: 0 }
-            HNumberAnimation { properties: "x,y"; to: 100 }
+            HNumberAnimation { property: "opacity"; to: 0 }
+            HXAnimator { to: 100 }
+            HYAnimator { to: 100 }
         }
     }
 

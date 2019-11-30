@@ -20,6 +20,7 @@
   - Create room tabs brutal size transition
 
 - Refactoring
+  - Use `.pragma library` for utils.js
   - Room header elide detection
   - Use HBox for Profile
   - Banners
