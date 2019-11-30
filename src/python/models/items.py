@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Type
 from uuid import uuid4
 
 import lxml  # nosec
@@ -21,10 +21,6 @@ class Account(ModelItem):
     avatar_url:      str                = ""
     first_sync_done: bool               = False
     profile_updated: Optional[datetime] = None
-
-    importing_key:        int                  = 0
-    total_keys_to_import: int                  = 0
-    import_error:         Tuple[str, str, str] = ("", "", "")  # path,pw,err
 
     def __lt__(self, other: "Account") -> bool:
         name       = self.display_name or self.user_id[1:]
