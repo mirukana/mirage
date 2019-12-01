@@ -33,6 +33,7 @@
     - Reducable room sidepane, swipe to show full-window
 
 - Fixes
+  - Quickly posting with another account leads to sync stop
   - CPU usage
   - `code` not colored in room subtitle
   - In the "Leave me" room, "join > Hi > left" aren't combined
