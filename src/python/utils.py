@@ -136,6 +136,9 @@ def serialize_value_for_qml(value: Any) -> Any:
     if isinstance(value, Path):
         return f"file://{value!s}"
 
+    if inspect.isclass(value):
+        return value.__name__
+
     return value
 
 

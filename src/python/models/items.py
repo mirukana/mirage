@@ -106,7 +106,7 @@ class UploadStatus(AutoStrEnum):
     Caching            = auto()
     UploadingThumbnail = auto()
     CachingThumbnail   = auto()
-    Failure            = auto()  # TODO
+    Failure            = auto()
 
 
 @dataclass
@@ -182,11 +182,11 @@ class Event(ModelItem):
         return self.date > other.date
 
     @property
-    def event_type(self) -> str:
+    def event_type(self) -> Type:
         if self.local_event_type:
-            return self.local_event_type.__name__
+            return self.local_event_type
 
-        return type(self.source).__name__
+        return type(self.source)
 
     @property
     def links(self) -> List[str]:
