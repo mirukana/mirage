@@ -136,11 +136,6 @@ class Backend:
         return hsluv.hsluv_to_rgb([hue, saturation, lightness])
 
 
-    @staticmethod
-    async def mxc_to_http(mxc: str) -> Optional[str]:
-        return nio.Api.mxc_to_http(mxc)
-
-
     async def load_settings(self) -> tuple:
         from .config_files import Theme
         settings = await self.ui_settings.read()

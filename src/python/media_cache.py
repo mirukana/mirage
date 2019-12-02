@@ -41,11 +41,6 @@ class Media:
 
 
     @property
-    def http(self) -> str:
-        return nio.Api.mxc_to_http(self.mxc)
-
-
-    @property
     def local_path(self) -> Path:
         parsed = urlparse(self.mxc)
         name   = parsed.path.lstrip("/")

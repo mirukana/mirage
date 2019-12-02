@@ -1,8 +1,9 @@
 - Media
-  - Verify things work with chat.privacytools.io (subdomain weirdness)
+  - Upload progression and pausing 
   - Confirmation box after picking file to upload
-  - Handle upload/set avatar errors: bad path, is a dir, file too big, etc
-  - Show real progression for mxc thumbnail loadings, uploads and downloads
+  - Handle set avatar upload errors
+  - Show real progression for mxc thumbnail loadings
+  - Support encrypted m.file
 
   - Show reason under broken thumbnail icons
   - Support m.file thumbnails

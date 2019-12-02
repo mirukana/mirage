@@ -57,7 +57,8 @@ HMxcImage {
         let isMxc  = toOpen.startsWith("mxc://")
 
         isMxc ?
-        py.callCoro("mxc_to_http", [toOpen], callback) : callback(toOpen)
+        py.callClientCoro(chatPage.userId, "mxc_to_http", [toOpen], callback) :
+        callback(toOpen)
     }
 
 
