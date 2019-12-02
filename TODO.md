@@ -57,6 +57,7 @@
   - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - UI
+  - Make theme error/etc text colors more like name colors
   - Standardize usage of punctuation
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration

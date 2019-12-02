@@ -12,7 +12,7 @@ from typing import (
     Any, DefaultDict, Dict, NamedTuple, Optional, Set, Tuple, Type, Union,
 )
 from urllib.parse import urlparse
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import cairosvg
 from PIL import Image as PILImage
@@ -211,17 +211,28 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
+        item_uuid = uuid4()
+
+        try:
+            await self._send_file(item_uuid, room_id, path)
+        except asyncio.CancelledError:
+            del self.models[Upload, room_id][item_uuid]
+
+
+    async def _send_file(
+        self, item_uuid: UUID, room_id: str, path: Union[Path, str],
+    ) -> None:
         from .media_cache import Media, Thumbnail
 
         path    = Path(path)
         size    = path.resolve().stat().st_size
         encrypt = room_id in self.encrypted_rooms
 
-        upload_item = Upload(path, total_size=size)
+        task        = asyncio.Task.current_task()
+        upload_item = Upload(item_uuid, task, path, total_size=size)
         self.models[Upload, room_id][upload_item.uuid] = upload_item
 
         try:
-            raise MatrixError(111, "Ooops!")
             url, mime, crypt_dict = await self.upload(
                 path, filename=path.name, encrypt=encrypt,
             )
@@ -229,7 +240,10 @@ class MatrixClient(nio.AsyncClient):
             upload_item.status     = UploadStatus.Error
             upload_item.error      = type(err)
             upload_item.error_args = err.args
-            return
+
+            # Wait for cancellation, see parent send_file() method
+            while True:
+                await asyncio.sleep(0.1)
 
         upload_item.status = UploadStatus.Caching
         await Media.from_existing_file(self.backend.media_cache, url, path)

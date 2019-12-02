@@ -35,7 +35,34 @@ Rectangle {
             id: delegate
             width: uploadsList.width
 
+            Behavior on height { HNumberAnimation {} }
+
+            Binding {
+                id: hideBind
+                target: delegate
+                property: "height"
+                value: 0
+                when: false
+            }
+
             HRowLayout {
+                HButton {
+                    icon.name: "cancel"
+                    icon.color: theme.colors.negativeBackground
+                    padded: false
+
+                    onClicked: {
+                        // Python might take a sec to cancel, but we want
+                        // immediate visual feedback
+                        hideBind.when = true
+                        // Python will delete this model item on cancel
+                        py.call(py.getattr(model.task, "cancel"))
+                    }
+
+                    Layout.preferredWidth: theme.baseElementsHeight
+                    Layout.preferredHeight: Layout.preferredWidth
+                }
+
                 HLabel {
                     id: statusLabel
                     elide: expand ? Text.ElideNone : Text.ElideRight
@@ -108,7 +135,8 @@ Rectangle {
                 }
 
                 TapHandler {
-                    onTapped: statusLabel.expand = ! statusLabel.expand
+                    onTapped: if (model.status !== "Error")
+                        statusLabel.expand = ! statusLabel.expand
                 }
 
                 HoverHandler { id: infoRowHover }
