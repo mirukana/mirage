@@ -37,8 +37,9 @@ Rectangle {
 
             HRowLayout {
                 HLabel {
-                    id: filenameLabel
-                    elide: Text.ElideRight
+                    id: statusLabel
+                    elide: expand ? Text.ElideNone : Text.ElideRight
+                    wrapMode: expand ? Text.Wrap : Text.NoWrap
 
                     color: model.status === "Error" ?
                            theme.colors.errorText : theme.colors.text
@@ -81,6 +82,8 @@ Rectangle {
 
                     Layout.fillWidth: true
 
+                    property bool expand: model.status === "Error"
+
                     readonly property string fileName:
                         model.filepath.split("/").slice(-1)[0]
                 }
@@ -102,6 +105,18 @@ Rectangle {
                         model.status === "Uploading" ? implicitWidth : 0
 
                     Behavior on Layout.preferredWidth { HNumberAnimation {} }
+                }
+
+                TapHandler {
+                    onTapped: statusLabel.expand = ! statusLabel.expand
+                }
+
+                HoverHandler { id: infoRowHover }
+
+                HToolTip {
+                    id: statusToolTip
+                    text: statusLabel.truncated ? statusLabel.text : ""
+                    visible: text && infoRowHover.hovered
                 }
             }
 

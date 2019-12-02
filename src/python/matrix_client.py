@@ -221,6 +221,7 @@ class MatrixClient(nio.AsyncClient):
         self.models[Upload, room_id][upload_item.uuid] = upload_item
 
         try:
+            raise MatrixError(111, "Ooops!")
             url, mime, crypt_dict = await self.upload(
                 path, filename=path.name, encrypt=encrypt,
             )
