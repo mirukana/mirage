@@ -12,6 +12,7 @@ from enum import auto as autostr
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Callable, Dict, Tuple, Type
+from uuid import UUID
 
 import filetype
 from aiofiles.threadpool.binary import AsyncBufferedReader
@@ -135,6 +136,9 @@ def serialize_value_for_qml(value: Any) -> Any:
 
     if isinstance(value, Path):
         return f"file://{value!s}"
+
+    if isinstance(value, UUID):
+        return str(value)
 
     if inspect.isclass(value):
         return value.__name__
