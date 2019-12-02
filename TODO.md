@@ -57,6 +57,7 @@
   - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - UI
+  - Standardize usage of punctuation
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
 
@@ -184,6 +185,7 @@
   - Live-reloading accounts.json
 
 - nio
+  - Dedicated error for invalid password on key import
   - Running blocking DB function calls in executor
   - `AsyncClient.share_group_session`: send device batches concurrently
 

@@ -39,6 +39,10 @@ Rectangle {
                 HLabel {
                     id: filenameLabel
                     elide: Text.ElideRight
+
+                    color: model.status === "Error" ?
+                           theme.colors.errorText : theme.colors.text
+
                     text:
                         model.status === "Uploading" ?
                         qsTr("Uploading %1...").arg(fileName) :
@@ -47,13 +51,25 @@ Rectangle {
                         qsTr("Caching %1...").arg(fileName) :
 
                         model.status === "UploadingThumbnail" ?
-                        qsTr("Uploading %1 thumbnail...").arg(fileName) :
+                        qsTr("Uploading thumbnail for %1...").arg(fileName) :
 
                         model.status === "CachingThumbnail" ?
-                        qsTr("Caching %1 thumbnail...").arg(fileName) :
+                        qsTr("Caching thumbnail for %1...").arg(fileName) :
 
-                        model.status === "Failure" ?
-                        qsTr("Uploading %1 failed").arg(fileName) :
+                        model.status === "Error" ? (
+                            model.error === "MatrixForbidden" ?
+                            qsTr("Forbidden file type or quota exceeded: %1")
+                            .arg(fileName) :
+
+                            model.error === "MatrixTooLarge" ?
+                            qsTr("Too large for this server: %1")
+                            .arg(fileName) :
+
+                            qsTr("Unknown error for %1: %2 - %3")
+                            .arg(fileName)
+                            .arg(model.error)
+                            .arg(model.error_args)
+                        ) :
 
                         qsTr("Invalid status for %1: %2")
                         .arg(fileName).arg(model.status)
@@ -91,8 +107,18 @@ Rectangle {
 
             HProgressBar {
                 id: progressBar
+                visible: Layout.maximumHeight !== 0
                 indeterminate: true
+                foregroundColor:
+                    model.status === "Error" ?
+                    theme.controls.progressBar.errorForeground :
+                    theme.controls.progressBar.foreground
+
                 Layout.fillWidth: true
+                Layout.maximumHeight:
+                    model.status === "Error" && indeterminate ? 0 : -1
+
+                Behavior on Layout.maximumHeight { HNumberAnimation {} }
             }
         }
     }

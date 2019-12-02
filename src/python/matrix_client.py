@@ -220,9 +220,15 @@ class MatrixClient(nio.AsyncClient):
         upload_item = Upload(path, total_size=size)
         self.models[Upload, room_id][upload_item.uuid] = upload_item
 
-        url, mime, crypt_dict = await self.upload(
-            path, filename=path.name, encrypt=encrypt,
-        )
+        try:
+            url, mime, crypt_dict = await self.upload(
+                path, filename=path.name, encrypt=encrypt,
+            )
+        except MatrixError as err:
+            upload_item.status     = UploadStatus.Error
+            upload_item.error      = type(err)
+            upload_item.error_args = err.args
+            return
 
         upload_item.status = UploadStatus.Caching
         await Media.from_existing_file(self.backend.media_cache, url, path)
@@ -269,30 +275,35 @@ class MatrixClient(nio.AsyncClient):
             else:
                 upload_item.status = UploadStatus.UploadingThumbnail
 
-                thumb_url, _, thumb_crypt_dict = await self.upload(
-                    thumb_data,
-                    filename = f"{path.stem}_sample{''.join(path.suffixes)}",
-                    encrypt  = encrypt,
-                )
-
-                upload_item.status = UploadStatus.CachingThumbnail
-
-                await Thumbnail.from_bytes(
-                    self.backend.media_cache,
-                    thumb_url,
-                    thumb_data,
-                    wanted_size = (content["info"]["w"], content["info"]["h"]),
-                )
-
-                if encrypt:
-                    content["info"]["thumbnail_file"]  = {
-                        "url": thumb_url,
-                        **thumb_crypt_dict,
-                    }
+                try:
+                    thumb_url, _, thumb_crypt_dict = await self.upload(
+                        thumb_data,
+                        filename =
+                            f"{path.stem}_sample{''.join(path.suffixes)}",
+                        encrypt  = encrypt,
+                    )
+                except MatrixError as err:
+                    log.warning(f"Failed uploading thumbnail {path}: {err}")
                 else:
-                    content["info"]["thumbnail_url"]  = thumb_url
+                    upload_item.status = UploadStatus.CachingThumbnail
 
-                content["info"]["thumbnail_info"] = thumb_info._asdict()
+                    await Thumbnail.from_bytes(
+                        self.backend.media_cache,
+                        thumb_url,
+                        thumb_data,
+                        wanted_size = (content["info"]["w"],
+                                       content["info"]["h"]),
+                    )
+
+                    if encrypt:
+                        content["info"]["thumbnail_file"]  = {
+                            "url": thumb_url,
+                            **thumb_crypt_dict,
+                        }
+                    else:
+                        content["info"]["thumbnail_url"]  = thumb_url
+
+                    content["info"]["thumbnail_info"] = thumb_info._asdict()
 
         elif kind == "audio":
             event_type = \

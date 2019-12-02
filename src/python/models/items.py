@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import uuid4
 
 import lxml  # nosec
@@ -12,6 +12,8 @@ import nio
 from ..html_filter import HTML_FILTER
 from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
+
+OptionalExceptionType = Union[Type[None], Type[Exception]]
 
 
 @dataclass
@@ -106,15 +108,17 @@ class UploadStatus(AutoStrEnum):
     Caching            = auto()
     UploadingThumbnail = auto()
     CachingThumbnail   = auto()
-    Failure            = auto()
+    Error              = auto()
 
 
 @dataclass
 class Upload(ModelItem):
-    filepath:   Path         = field()
-    status:     UploadStatus = UploadStatus.Uploading
-    total_size: int          = 0
-    uploaded:   int          = 0
+    filepath:   Path                  = field()
+    status:     UploadStatus          = UploadStatus.Uploading
+    total_size: int                   = 0
+    uploaded:   int                   = 0
+    error:      OptionalExceptionType = type(None)
+    error_args: Tuple[Any, ...]       = ()
 
     uuid:       str = field(init=False, default_factory=lambda: str(uuid4()))
     start_date: datetime = field(init=False, default_factory=datetime.now)
