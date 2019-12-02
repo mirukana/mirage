@@ -28,7 +28,6 @@ ApplicationWindow {
 
     // NOTE: For JS object variables, the corresponding method to notify
     // key/value changes must be called manually, e.g. settingsChanged().
-    property var modelSources: ({})
     property var mainPaneModelSource: []
 
     property var mainUI: null
@@ -45,8 +44,6 @@ ApplicationWindow {
     property var theme: null
 
     property var hideErrorTypes: new Set()
-
-    readonly property alias py: py
 
 
     function saveState(obj) {
@@ -75,7 +72,7 @@ ApplicationWindow {
     }
 
 
-    PythonBridge { id: py }
+    PythonRootBridge { id: py }
 
     Utils { id: utils }
 

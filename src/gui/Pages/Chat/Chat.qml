@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
 import "RoomPane"
 
@@ -13,16 +14,11 @@ Item {
     property string userId: ""
     property string roomId: ""
 
+    property QtObject userInfo: ModelStore.get("accounts").find(userId)
+    property QtObject roomInfo: ModelStore.get(userId, "rooms").find(roomId)
+
     property bool loadingMessages: false
-    property bool ready: userInfo !== "waiting" && roomInfo !== "waiting"
-
-    readonly property var userInfo:
-        utils.getItem(modelSources["Account"] || [], "user_id", userId) ||
-        "waiting"
-
-    readonly property var roomInfo: utils.getItem(
-        modelSources[["Room", userId]] || [], "room_id", roomId
-    ) || "waiting"
+    property bool ready: Boolean(userInfo && roomInfo)
 
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item

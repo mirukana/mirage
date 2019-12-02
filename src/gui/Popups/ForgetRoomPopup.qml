@@ -21,7 +21,9 @@ BoxPopup {
             window.uiState.pageProperties.userId === userId &&
             window.uiState.pageProperties.roomId === roomId)
         {
-            pageLoader.showPage("Default")
+            window.mainUI.pageLoader.showPrevious() ||
+            window.mainUI.pageLoader.showPage("Default")
+
             Qt.callLater(popup.destroy)
         }
     })

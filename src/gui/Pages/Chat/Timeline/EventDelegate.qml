@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
+import "../../.."
 import "../../../Base"
 
 HColumnLayout {
@@ -65,13 +66,8 @@ HColumnLayout {
     function json() {
         return JSON.stringify(
             {
-                "model": utils.getItem(
-                    modelSources[[
-                        "Event", chat.userId, chat.roomId
-                    ]],
-                    "client_id",
-                    model.client_id
-                ),
+                "model": ModelStore.get(chat.userId, chat.roomId, "events")
+                                   .get(model.id),
                 "source": py.getattr(model.source, "__dict__"),
             },
         null, 4)

@@ -35,7 +35,7 @@ from .errors import (
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .models.items import (
-    Account, Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
+    Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
 )
 from .models.model_store import ModelStore
 from .pyotherside_events import AlertRequested
@@ -211,7 +211,7 @@ class MatrixClient(nio.AsyncClient):
                 return
 
             resp                    = future.result()
-            account                 = self.models[Account][self.user_id]
+            account                 = self.models["accounts"][self.user_id]
             account.profile_updated = datetime.now()
             account.display_name    = resp.displayname or ""
             account.avatar_url      = resp.avatar_url or ""
@@ -284,7 +284,7 @@ class MatrixClient(nio.AsyncClient):
             await self._send_file(item_uuid, room_id, path)
         except (nio.TransferCancelledError, asyncio.CancelledError):
             log.info("Deleting item for cancelled upload %s", item_uuid)
-            del self.models[Upload, room_id][str(item_uuid)]
+            del self.models[room_id, "uploads"][str(item_uuid)]
 
 
     async def _send_file(
@@ -310,7 +310,7 @@ class MatrixClient(nio.AsyncClient):
         task        = asyncio.Task.current_task()
         monitor     = nio.TransferMonitor(size)
         upload_item = Upload(item_uuid, task, monitor, path, total_size=size)
-        self.models[Upload, room_id][str(item_uuid)] = upload_item
+        self.models[room_id, "uploads"][str(item_uuid)] = upload_item
 
         def on_transferred(transferred: int) -> None:
             upload_item.uploaded  = transferred
@@ -452,7 +452,7 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
-        del self.models[Upload, room_id][str(upload_item.uuid)]
+        del self.models[room_id, "uploads"][str(upload_item.id)]
 
         await self._local_echo(
             room_id,
@@ -499,12 +499,12 @@ class MatrixClient(nio.AsyncClient):
         replace the local one we registered.
         """
 
-        our_info = self.models[Member, self.user_id, room_id][self.user_id]
+        our_info = self.models[self.user_id, room_id, "members"][self.user_id]
 
         event = Event(
-            source           = None,
-            client_id        = f"echo-{transaction_id}",
+            id               = f"echo-{transaction_id}",
             event_id         = "",
+            source           = None,
             date             = datetime.now(),
             sender_id        = self.user_id,
             sender_name      = our_info.display_name,
@@ -514,13 +514,10 @@ class MatrixClient(nio.AsyncClient):
             **event_fields,
         )
 
-        for user_id in self.models[Account]:
-            if user_id in self.models[Member, self.user_id, room_id]:
+        for user_id in self.models["accounts"]:
+            if user_id in self.models[self.user_id, room_id, "members"]:
                 key = f"echo-{transaction_id}"
-                self.models[Event, user_id, room_id][key] = event
-
-                if user_id == self.user_id:
-                    self.models[Event, user_id, room_id].sync_now()
+                self.models[user_id, room_id, "events"][key] = event
 
         await self.set_room_last_event(room_id, event)
 
@@ -583,7 +580,7 @@ class MatrixClient(nio.AsyncClient):
     async def load_rooms_without_visible_events(self) -> None:
         """Call `_load_room_without_visible_events` for all joined rooms."""
 
-        for room_id in self.models[Room, self.user_id]:
+        for room_id in self.models[self.user_id, "rooms"]:
             asyncio.ensure_future(
                 self._load_room_without_visible_events(room_id),
             )
@@ -604,7 +601,7 @@ class MatrixClient(nio.AsyncClient):
         to show or there is nothing left to load.
         """
 
-        events = self.models[Event, self.user_id, room_id]
+        events = self.models[self.user_id, room_id, "events"]
         more   = True
 
         while self.skipped_events[room_id] and not events and more:
@@ -685,11 +682,16 @@ class MatrixClient(nio.AsyncClient):
         will be marked as suitable for destruction by the server.
         """
 
-        await super().room_leave(room_id)
+        self.models[self.user_id, "rooms"].pop(room_id, None)
+        self.models.pop((self.user_id, room_id, "events"), None)
+        self.models.pop((self.user_id, room_id, "members"), None)
+
+        try:
+            await super().room_leave(room_id)
+        except MatrixNotFound:  # already left
+            pass
+
         await super().room_forget(room_id)
-        self.models[Room, self.user_id].pop(room_id, None)
-        self.models.pop((Event, self.user_id, room_id), None)
-        self.models.pop((Member, self.user_id, room_id), None)
 
 
     async def room_mass_invite(
@@ -843,7 +845,8 @@ class MatrixClient(nio.AsyncClient):
 
         for sync_id, model in self.models.items():
             if not (isinstance(sync_id, tuple) and
-                    sync_id[0:2] == (Event, self.user_id)):
+                    sync_id[0] == self.user_id and
+                    sync_id[2] == "events"):
                 continue
 
             _, _, room_id = sync_id
@@ -873,10 +876,9 @@ class MatrixClient(nio.AsyncClient):
         """
 
         self.cleared_events_rooms.add(room_id)
-        model = self.models[Event, self.user_id, room_id]
+        model = self.models[self.user_id, room_id, "events"]
         if model:
             model.clear()
-            model.sync_now()
 
 
     # Functions to register data into models
@@ -900,37 +902,10 @@ class MatrixClient(nio.AsyncClient):
         The `last_event` is notably displayed in the UI room subtitles.
         """
 
-        model = self.models[Room, self.user_id]
-        room  = model[room_id]
+        room = self.models[self.user_id, "rooms"][room_id]
 
-        if room.last_event is None:
-            room.last_event = item
-
-            if item.is_local_echo:
-                model.sync_now()
-
-            return
-
-        is_profile_ev = item.type_specifier == TypeSpecifier.profile_change
-
-        # If there were no better events available to show previously
-        prev_is_profile_ev = \
-            room.last_event.type_specifier == TypeSpecifier.profile_change
-
-        # If this is a profile event, only replace the currently shown one if
-        # it was also a profile event (we had nothing better to show).
-        if is_profile_ev and not prev_is_profile_ev:
-            return
-
-        # If this event is older than the currently shown one, only replace
-        # it if the previous was a profile event.
-        if item.date < room.last_event.date and not prev_is_profile_ev:
-            return
-
-        room.last_event = item
-
-        if item.is_local_echo:
-            model.sync_now()
+        if item.date > room.last_event_date:
+            room.last_event_date = item.date
 
 
     async def register_nio_room(
@@ -939,18 +914,21 @@ class MatrixClient(nio.AsyncClient):
         """Register a `nio.MatrixRoom` as a `Room` object in our model."""
 
         # Add room
-        try:
-            last_ev = self.models[Room, self.user_id][room.room_id].last_event
-        except KeyError:
-            last_ev = None
-
         inviter        = getattr(room, "inviter", "") or ""
         levels         = room.power_levels
         can_send_state = partial(levels.can_user_send_state, self.user_id)
         can_send_msg   = partial(levels.can_user_send_message, self.user_id)
 
-        self.models[Room, self.user_id][room.room_id] = Room(
-            room_id        = room.room_id,
+        try:
+            registered      = self.models[self.user_id, "rooms"][room.room_id]
+            last_event_date = registered.last_event_date
+            typing_members  = registered.typing_members
+        except KeyError:
+            last_event_date = datetime.fromtimestamp(0)
+            typing_members  = []
+
+        self.models[self.user_id, "rooms"][room.room_id] = Room(
+            id             = room.room_id,
             given_name     = room.name or "",
             display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
@@ -961,6 +939,8 @@ class MatrixClient(nio.AsyncClient):
             inviter_avatar =
                 (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
+
+            typing_members = typing_members,
 
             encrypted       = room.encrypted,
             invite_required = room.join_rule == "invite",
@@ -975,23 +955,24 @@ class MatrixClient(nio.AsyncClient):
             can_set_join_rules   = can_send_state("m.room.join_rules"),
             can_set_guest_access = can_send_state("m.room.guest_access"),
 
-            last_event = last_ev,
+            last_event_date = last_event_date,
+
         )
 
         # List members that left the room, then remove them from our model
         left_the_room = [
             user_id
-            for user_id in self.models[Member, self.user_id, room.room_id]
+            for user_id in self.models[self.user_id, room.room_id, "members"]
             if user_id not in room.users
         ]
 
         for user_id in left_the_room:
-            del self.models[Member, self.user_id, room.room_id][user_id]
+            del self.models[self.user_id, room.room_id, "members"][user_id]
 
         # Add the room members to the added room
         new_dict = {
             user_id: Member(
-                user_id      = user_id,
+                id           = user_id,
                 display_name = room.user_name(user_id)  # disambiguated
                                if member.display_name else "",
                 avatar_url   = member.avatar_url or "",
@@ -1000,7 +981,7 @@ class MatrixClient(nio.AsyncClient):
                 invited      = member.invited,
             ) for user_id, member in room.users.items()
         }
-        self.models[Member, self.user_id, room.room_id].update(new_dict)
+        self.models[self.user_id, room.room_id, "members"].update(new_dict)
 
 
     async def get_member_name_avatar(
@@ -1013,7 +994,7 @@ class MatrixClient(nio.AsyncClient):
         """
 
         try:
-            item = self.models[Member, self.user_id, room_id][user_id]
+            item = self.models[self.user_id, room_id, "members"][user_id]
 
         except KeyError:  # e.g. user is not anymore in the room
             try:
@@ -1030,11 +1011,7 @@ class MatrixClient(nio.AsyncClient):
     async def register_nio_event(
         self, room: nio.MatrixRoom, ev: nio.Event, **fields,
     ) -> None:
-        """Register a `nio.Event` as a `Event` object in our model.
-
-        `MatrixClient.register_nio_room` is called for the passed `room`
-        if neccessary before.
-        """
+        """Register a `nio.Event` as a `Event` object in our model."""
 
         await self.register_nio_room(room)
 
@@ -1049,9 +1026,9 @@ class MatrixClient(nio.AsyncClient):
 
         # Create Event ModelItem
         item = Event(
-            source        = ev,
-            client_id     = ev.event_id,
+            id            = ev.event_id,
             event_id      = ev.event_id,
+            source        = ev,
             date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
             sender_id     = ev.sender,
             sender_name   = sender_name,
@@ -1069,14 +1046,11 @@ class MatrixClient(nio.AsyncClient):
         local_sender = ev.sender in self.backend.clients
 
         if local_sender and tx_id:
-            item.client_id = f"echo-{tx_id}"
+            item.id = f"echo-{tx_id}"
 
         if not local_sender and not await self.event_is_past(ev):
             AlertRequested()
 
-        self.models[Event, self.user_id, room.room_id][item.client_id] = item
+        self.models[self.user_id, room.room_id, "events"][item.id] = item
 
         await self.set_room_last_event(room.room_id, item)
-
-        if item.sender_id == self.user_id:
-            self.models[Event, self.user_id, room.room_id].sync_now()

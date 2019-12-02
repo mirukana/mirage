@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import ".."
 
 BoxPopup {
     id: popup
@@ -28,7 +29,7 @@ BoxPopup {
         ok: button => {
             utils.makeObject(
                 "Dialogs/ExportKeys.qml",
-                mainUI,
+                window.mainUI,
                 { userId },
                 obj => {
                     button.loading = Qt.binding(() => obj.exporting)
@@ -44,10 +45,9 @@ BoxPopup {
             okClicked = true
             popup.ok()
 
-            if ((modelSources["Account"] || []).length < 2) {
-                pageLoader.showPage("AddAccount/AddAccount")
-            } else if (window.uiState.pageProperties.userId === userId) {
-                pageLoader.showPage("Default")
+            if (ModelStore.get("accounts").count < 2 ||
+                    window.uiState.pageProperties.userId === userId) {
+                window.mainUI.pageLoader.showPage("AddAccount/AddAccount")
             }
 
             py.callCoro("logout_client", [userId])

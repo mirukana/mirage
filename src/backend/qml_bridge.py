@@ -110,8 +110,6 @@ class QMLBridge:
 
         rc = lambda c: asyncio.run_coroutine_threadsafe(c, self._loop)  # noqa
 
-        from .models.items import Account, Room, Member, Event, Device  # noqa
-
         p = print  # pdb's `p` doesn't print a class's __str__  # noqa
         try:
             from pprintpp import pprint as pp  # noqa

@@ -172,7 +172,7 @@ HRowLayout {
 
         HRepeater {
             id: linksRepeater
-            model: eventDelegate.currentModel.links
+            model: JSON.parse(eventDelegate.currentModel.links)
 
             EventMediaLoader {
                 singleMediaInfo: eventDelegate.currentModel

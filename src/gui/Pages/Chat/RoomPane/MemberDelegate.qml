@@ -11,7 +11,7 @@ HTileDelegate {
         model.invited ? theme.chat.roomPane.member.invitedOpacity : 1
 
     image: HUserAvatar {
-        userId: model.user_id
+        userId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
         powerLevel: model.power_level
@@ -19,20 +19,20 @@ HTileDelegate {
         invited: model.invited
     }
 
-    title.text: model.display_name || model.user_id
+    title.text: model.display_name || model.id
     title.color:
         memberDelegate.hovered ?
-        utils.nameColor(model.display_name || model.user_id.substring(1)) :
+        utils.nameColor(model.display_name || model.id.substring(1)) :
         theme.chat.roomPane.member.name
 
-    subtitle.text: model.display_name ? model.user_id : ""
+    subtitle.text: model.display_name ? model.id : ""
     subtitle.color: theme.chat.roomPane.member.subtitle
 
     contextMenu: HMenu {
         HMenuItem {
             icon.name: "copy-user-id"
             text: qsTr("Copy user ID")
-            onTriggered: Clipboard.text = model.user_id
+            onTriggered: Clipboard.text = model.id
         }
     }
 

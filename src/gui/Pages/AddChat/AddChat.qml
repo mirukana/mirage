@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
 
 HPage {
@@ -10,8 +11,7 @@ HPage {
 
     property string userId
 
-    readonly property var account:
-        utils.getItem(modelSources["Account"] || [], "user_id", userId)
+    readonly property QtObject account: ModelStore.get("accounts").find(userId)
 
 
     HTabContainer {

@@ -1,11 +1,13 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional
 
 import pyotherside
 
 from .models import SyncId
+from .models.model_item import ModelItem
 from .utils import serialize_value_for_qml
 
 
@@ -13,11 +15,13 @@ from .utils import serialize_value_for_qml
 class PyOtherSideEvent:
     """Event that will be sent on instanciation to QML by PyOtherSide."""
 
+    json_lists = False
+
     def __post_init__(self) -> None:
         # CPython 3.6 or any Python implemention >= 3.7 is required for correct
         # __dataclass_fields__ dict order.
         args = [
-            serialize_value_for_qml(getattr(self, field))
+            serialize_value_for_qml(getattr(self, field), self.json_lists)
             for field in self.__dataclass_fields__  # type: ignore
         ]
         pyotherside.send(type(self).__name__, *args)
@@ -59,20 +63,32 @@ class LoopException(PyOtherSideEvent):
 
 
 @dataclass
-class ModelUpdated(PyOtherSideEvent):
-    """Indicate that a backend `Model`'s data changed."""
+class ModelEvent(ABC, PyOtherSideEvent):
+    json_lists = True
 
-    sync_id: SyncId               = field()
-    data:    List[Dict[str, Any]] = field()
 
-    serialized_sync_id: Union[str, List[str]] = field(init=False)
+@dataclass
+class ModelItemInserted(ModelEvent):
+    sync_id: SyncId    = field()
+    index:   int       = field()
+    item:    ModelItem = field()
 
-    def __post_init__(self) -> None:
-        if isinstance(self.sync_id, tuple):
-            self.serialized_sync_id = [
-                e.__name__ if isinstance(e, type) else e for e in self.sync_id
-            ]
-        else:
-           self.serialized_sync_id = self.sync_id.__name__
 
-        super().__post_init__()
+@dataclass
+class ModelItemFieldChanged(ModelEvent):
+    sync_id:         SyncId = field()
+    item_index_then: int    = field()
+    item_index_now:  int    = field()
+    changed_field:   str    = field()
+    field_value:     Any    = field()
+
+
+@dataclass
+class ModelItemDeleted(ModelEvent):
+    sync_id: SyncId = field()
+    index:   int    = field()
+
+
+@dataclass
+class ModelCleared(ModelEvent):
+    sync_id: SyncId = field()

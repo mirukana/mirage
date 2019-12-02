@@ -5,16 +5,16 @@ import logging as log
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional, Tuple
-
-from appdirs import AppDirs
+from typing import Any, DefaultDict, Dict, List, Optional
 
 import nio
+from appdirs import AppDirs
 
 from . import __app_name__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
-from .models.items import Account, Room
+from .models import SyncId
+from .models.items import Account
 from .models.model_store import ModelStore
 
 # Logging configuration
@@ -116,8 +116,8 @@ class Backend:
             await client.close()
             raise
 
-        self.clients[client.user_id]         = client
-        self.models[Account][client.user_id] = Account(client.user_id)
+        self.clients[client.user_id]            = client
+        self.models["accounts"][client.user_id] = Account(client.user_id)
         return client.user_id
 
 
@@ -133,13 +133,13 @@ class Backend:
             user=user_id, homeserver=homeserver, device_id=device_id,
         )
 
-        self.clients[user_id]         = client
-        self.models[Account][user_id] = Account(user_id)
+        self.clients[user_id]            = client
+        self.models["accounts"][user_id] = Account(user_id)
 
         await client.resume(user_id=user_id, token=token, device_id=device_id)
 
 
-    async def load_saved_accounts(self) -> Tuple[str, ...]:
+    async def load_saved_accounts(self) -> List[str]:
         """Call `resume_client` for all saved accounts in user config."""
 
         async def resume(user_id: str, info: Dict[str, str]) -> str:
@@ -162,7 +162,7 @@ class Backend:
 
         client = self.clients.pop(user_id, None)
         if client:
-            self.models[Account].pop(user_id, None)
+            self.models["accounts"].pop(user_id, None)
             await client.logout()
 
         await self.saved_accounts.delete(user_id)
@@ -256,25 +256,24 @@ class Backend:
         return (settings, ui_state, history, theme)
 
 
-    async def get_flat_mainpane_data(self) -> List[Dict[str, Any]]:
-        """Return a flat list of accounts and their joined rooms for QML."""
+    async def await_model_item(
+        self, model_id: SyncId, item_id: Any,
+    ) -> Dict[str, Any]:
 
-        data = []
+        if isinstance(model_id, list):  # when called from QML
+            model_id = tuple(model_id)
 
-        for account in sorted(self.models[Account].values()):
-            data.append({
-                "type":    "Account",
-                "id":      account.user_id,
-                "user_id": account.user_id,
-                "data":    account.serialized,
-            })
+        failures = 0
 
-            for room in sorted(self.models[Room, account.user_id].values()):
-                data.append({
-                    "type":    "Room",
-                    "id":      "/".join((account.user_id, room.room_id)),
-                    "user_id": account.user_id,
-                    "data":    room.serialized,
-                })
+        while True:
+            try:
+                return self.models[model_id][item_id].serialized
+            except KeyError:
+                if failures and failures % 300 == 0:
+                    log.warn(
+                        "Item %r not found in model %r after %ds",
+                        item_id, model_id, failures / 10,
+                    )
 
-        return data
+                await asyncio.sleep(0.1)
+                failures += 1

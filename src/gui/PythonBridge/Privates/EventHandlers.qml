@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import ".."
+import "../.."
 
 QtObject {
     function onExitRequested(exitCode) {
@@ -16,10 +18,10 @@ QtObject {
 
 
     function onCoroutineDone(uuid, result, error, traceback) {
-        let onSuccess = py.privates.pendingCoroutines[uuid].onSuccess
-        let onError   = py.privates.pendingCoroutines[uuid].onError
+        let onSuccess = Globals.pendingCoroutines[uuid].onSuccess
+        let onError   = Globals.pendingCoroutines[uuid].onError
 
-        delete py.privates.pendingCoroutines[uuid]
+        delete Globals.pendingCoroutines[uuid]
 
         if (error) {
             const type = py.getattr(py.getattr(error, "__class__"), "__name__")
@@ -74,14 +76,29 @@ QtObject {
     }
 
 
-    function onModelUpdated(syncId, data, serializedSyncId) {
-        if (serializedSyncId === "Account" || serializedSyncId[0] === "Room") {
-            py.callCoro("get_flat_mainpane_data", [], data => {
-                window.mainPaneModelSource = data
-            })
-        }
+    function onModelItemInserted(syncId, index, item) {
+        // print("insert", syncId, index, item)
+        ModelStore.get(syncId).insert(index, item)
+    }
 
-        window.modelSources[serializedSyncId] = data
-        window.modelSourcesChanged()
+
+    function onModelItemFieldChanged(syncId, oldIndex, newIndex, field, value){
+        // print("change", syncId, oldIndex, newIndex, field, value)
+        const model = ModelStore.get(syncId)
+        model.setProperty(oldIndex, field, value)
+
+        if (oldIndex !== newIndex) model.move(oldIndex, newIndex, 1)
+    }
+
+
+    function onModelItemDeleted(syncId, index) {
+        // print("del", syncId, index)
+        ModelStore.get(syncId).remove(index)
+    }
+
+
+    function onModelCleared(syncId) {
+        // print("clear", syncId)
+        ModelStore.get(syncId).clear()
     }
 }

@@ -44,6 +44,7 @@ executables.files       = $$TARGET
 # Libraries includes
 
 include(submodules/qsyncable/qsyncable.pri)
+include(submodules/gel/com_cutehacks_gel.pri)
 
 
 # Custom functions

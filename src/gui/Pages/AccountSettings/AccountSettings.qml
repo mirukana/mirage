@@ -3,28 +3,28 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
 
 HPage {
     id: accountSettings
+    hideHeaderUnderHeight: avatarPreferredSize
+    headerLabel.text: qsTr("Account settings for %1").arg(
+        utils.coloredNameHtml(headerName, userId)
+    )
+
 
     property int avatarPreferredSize: 256 * theme.uiScale
 
     property string userId: ""
 
     readonly property bool ready:
-        accountInfo !== "waiting" && Boolean(accountInfo.profile_updated)
+        accountInfo !== null && accountInfo.profile_updated > new Date(1)
 
-    readonly property var accountInfo: utils.getItem(
-        modelSources["Account"] || [], "user_id", userId
-    ) || "waiting"
+    readonly property QtObject accountInfo:
+        ModelStore.get("accounts").find(userId)
 
     property string headerName: ready ? accountInfo.display_name : userId
-
-    hideHeaderUnderHeight: avatarPreferredSize
-    headerLabel.text: qsTr("Account settings for %1").arg(
-        utils.coloredNameHtml(headerName, userId)
-    )
 
 
     HSpacer {}

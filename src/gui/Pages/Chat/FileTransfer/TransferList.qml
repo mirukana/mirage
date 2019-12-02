@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import "../../.."
 import "../../../Base"
 
 Rectangle {
@@ -25,11 +26,7 @@ Rectangle {
         id: transferList
         anchors.fill: parent
 
-        model: HListModel {
-            keyField: "uuid"
-            source: modelSources[["Upload", chat.roomId]] || []
-        }
-
+        model: ModelStore.get(chat.roomId, "uploads")
         delegate: Transfer { width: transferList.width }
     }
 }

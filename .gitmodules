@@ -7,3 +7,6 @@
 [submodule "submodules/hsluv-c"]
 	path = submodules/hsluv-c
 	url = https://github.com/hsluv/hsluv-c
+[submodule "submodules/gel"]
+	path = submodules/gel
+	url = https://github.com/Cutehacks/gel

@@ -9,7 +9,7 @@ HRowLayout {
     // Hide filter field overflowing for a sec on size changes
     clip: true
 
-    property AccountRoomList mainPaneList
+    property AccountRoomsList mainPaneList
     readonly property alias addAccountButton: addAccountButton
     readonly property alias filterField: filterField
     property alias roomFilter: filterField.text

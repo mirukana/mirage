@@ -26,10 +26,12 @@ ListView {
         visible: listView.interactive || ! listView.allowDragging
     }
 
+    // property bool debug: false
+
     // Make sure to handle when a previous transition gets interrupted
     add: Transition {
         ParallelAnimation {
-            // ScriptAction { script: print("add") }
+            // ScriptAction { script: if (listView.debug) print("add") }
             HNumberAnimation { property:   "opacity"; from: 0; to: 1 }
             HNumberAnimation { property:   "scale";   from: 0; to: 1 }
         }
@@ -37,7 +39,7 @@ ListView {
 
     move: Transition {
         ParallelAnimation {
-            // ScriptAction { script: print("move") }
+            // ScriptAction { script: if (listView.debug) print("move") }
             HNumberAnimation { property:   "opacity"; to: 1 }
             HNumberAnimation { property:   "scale";   to: 1 }
             HNumberAnimation { properties: "x,y" }
@@ -46,16 +48,15 @@ ListView {
 
     remove: Transition {
         ParallelAnimation {
-            // ScriptAction { script: print("remove") }
+            // ScriptAction { script: if (listView.debug) print("remove") }
             HNumberAnimation { property:   "opacity"; to: 0 }
             HNumberAnimation { property:   "scale";   to: 0 }
         }
     }
 
-    // displaced: move
     displaced: Transition {
         ParallelAnimation {
-            // ScriptAction { script: print("displaced") }
+            // ScriptAction { script: if (listView.debug) print("displaced") }
             HNumberAnimation { property:   "opacity"; to: 1 }
             HNumberAnimation { property:   "scale";   to: 1 }
             HNumberAnimation { properties: "x,y" }

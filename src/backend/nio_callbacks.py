@@ -14,7 +14,7 @@ import nio
 from . import utils
 from .html_markdown import HTML_PROCESSOR
 from .matrix_client import MatrixClient
-from .models.items import Account, Room, TypeSpecifier
+from .models.items import TypeSpecifier
 
 
 @dataclass
@@ -63,7 +63,6 @@ class NioCallbacks:
             # TODO: handle in nio, these are rooms that were left before
             # starting the client.
             if room_id not in self.client.all_rooms:
-                log.warning("Left room not in MatrixClient.rooms: %r", room_id)
                 continue
 
             # TODO: handle left events in nio async client
@@ -85,7 +84,7 @@ class NioCallbacks:
             self.client.first_sync_done.set()
             self.client.first_sync_date = datetime.now()
 
-            account = self.client.models[Account][self.client.user_id]
+            account = self.client.models["accounts"][self.client.user_id]
             account.first_sync_done = True
 
 
@@ -207,7 +206,7 @@ class NioCallbacks:
         prev_membership = ev.prev_membership
         ev_date         = datetime.fromtimestamp(ev.server_timestamp / 1000)
 
-        member_change = TypeSpecifier.membership_change
+        member_change = TypeSpecifier.MembershipChange
 
         # Membership changes
         if not prev or membership != prev_membership:
@@ -263,10 +262,9 @@ class NioCallbacks:
         if changed:
             # Update our account profile if the event is newer than last update
             if ev.state_key == self.client.user_id:
-                account = self.client.models[Account][self.client.user_id]
-                updated = account.profile_updated
+                account = self.client.models["accounts"][self.client.user_id]
 
-                if not updated or updated < ev_date:
+                if account.profile_updated < ev_date:
                     account.profile_updated = ev_date
                     account.display_name    = now["displayname"] or ""
                     account.avatar_url      = now["avatar_url"] or ""
@@ -276,7 +274,7 @@ class NioCallbacks:
             return None
 
             return (
-                TypeSpecifier.profile_change,
+                TypeSpecifier.ProfileChange,
                 "%1 changed their {}".format(" and ".join(changed)),
             )
 
@@ -383,10 +381,11 @@ class NioCallbacks:
         if not self.client.first_sync_done.is_set():
             return
 
-        if room.room_id not in self.client.models[Room, self.client.user_id]:
-            return
+        await self.client.register_nio_room(room)
 
-        room_item = self.client.models[Room, self.client.user_id][room.room_id]
+        room_id = room.room_id
+
+        room_item = self.client.models[self.client.user_id, "rooms"][room_id]
 
         room_item.typing_members = sorted(
             room.user_name(user_id) for user_id in ev.users

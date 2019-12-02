@@ -16,8 +16,7 @@ Item {
 
 
     property bool accountsPresent:
-        (modelSources["Account"] || []).length > 0 ||
-        py.startupAnyAccountsSaved
+        ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved
 
     readonly property alias shortcuts: shortcuts
     readonly property alias mainPane: mainPane

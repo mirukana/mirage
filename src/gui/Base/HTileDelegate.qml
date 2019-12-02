@@ -18,19 +18,4 @@ HTile {
     signal activated()
 
     property HListView view: ListView.view
-    property bool shouldBeCurrent: false
-
-    readonly property QtObject delegateModel: model
-
-    readonly property alias setCurrentTimer: setCurrentTimer
-
-
-    Timer {
-        id: setCurrentTimer
-        interval: 100
-        repeat: true
-        running: true
-        // Component.onCompleted won't work for this
-        onTriggered: if (shouldBeCurrent) view.currentIndex = model.index
-    }
 }

@@ -3,18 +3,28 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
+import "../.."
 import "../../Base"
 import "../../Dialogs"
 
 Rectangle {
+    id: composer
+    color: theme.chat.composer.background
+
+    Layout.fillWidth: true
+    Layout.minimumHeight: theme.baseElementsHeight
+    Layout.preferredHeight: areaScrollView.implicitHeight
+    Layout.maximumHeight: pageLoader.height / 2
+
+
     property string indent: "    "
 
     property var aliases: window.settings.writeAliases
     property string toSend: ""
 
     property string writingUserId: chat.userId
-    readonly property var writingUserInfo:
-        utils.getItem(modelSources["Account"] || [], "user_id", writingUserId)
+    property QtObject writingUserInfo:
+        ModelStore.get("accounts").find(writingUserId)
 
     property bool textChangedSinceLostFocus: false
 
@@ -40,20 +50,9 @@ Rectangle {
         lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
         1
 
+
     function takeFocus() { areaScrollView.forceActiveFocus() }
 
-    // property var pr: lineTextUntilCursor
-    // onPrChanged: print(
-    //      "y", cursorY, "x", cursorX,
-    //      "ltuc <" + lineTextUntilCursor + ">", "dob",
-    //      deleteCharsOnBackspace, "m", lineTextUntilCursor.match(/^ +$/))
-
-    id: composer
-    Layout.fillWidth: true
-    Layout.minimumHeight: theme.baseElementsHeight
-    Layout.preferredHeight: areaScrollView.implicitHeight
-    Layout.maximumHeight: pageLoader.height / 2
-    color: theme.chat.composer.background
 
     HRowLayout {
         anchors.fill: parent
@@ -61,8 +60,8 @@ Rectangle {
         HUserAvatar {
             id: avatar
             userId: writingUserId
-            displayName: writingUserInfo.display_name
-            mxc: writingUserInfo.avatar_url
+            displayName: writingUserInfo ? writingUserInfo.display_name : ""
+            mxc: writingUserInfo ? writingUserInfo.avatar_url : ""
         }
 
         HScrollableTextArea {

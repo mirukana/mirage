@@ -2,8 +2,6 @@
 
 from typing import Any, Dict, Optional
 
-from ..utils import serialize_value_for_qml
-
 
 class ModelItem:
     """Base class for items stored inside a `Model`.
@@ -28,11 +26,23 @@ class ModelItem:
     def __setattr__(self, name: str, value) -> None:
         """If this item is in a `Model`, alert it of attribute changes."""
 
+        if name == "parent_model" or self.parent_model is None:
+            super().__setattr__(name, value)
+            return
+
+        if getattr(self, name) == value:
+            return
+
         super().__setattr__(name, value)
 
-        if name != "parent_model" and self.parent_model is not None:
-            with self.parent_model._sync_lock:
-                self.parent_model._changed = True
+        old_index = self.parent_model._sorted_data.index(self)
+        self.parent_model._sorted_data.sort()
+        new_index = self.parent_model._sorted_data.index(self)
+
+        from ..pyotherside_events import ModelItemFieldChanged
+        ModelItemFieldChanged(
+            self.parent_model.sync_id, old_index, new_index, name, value,
+        )
 
 
     def __delattr__(self, name: str) -> None:
@@ -43,8 +53,10 @@ class ModelItem:
     def serialized(self) -> Dict[str, Any]:
         """Return this item as a dict ready to be passed to QML."""
 
+        from ..utils import serialize_value_for_qml
+
         return {
-            name: serialize_value_for_qml(getattr(self, name))
+            name: serialize_value_for_qml(getattr(self, name), json_lists=True)
             for name in dir(self)
             if not (
                 name.startswith("_") or name in ("parent_model", "serialized")

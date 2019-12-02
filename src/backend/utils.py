@@ -6,6 +6,7 @@ import collections
 import html
 import inspect
 import io
+import json
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from datetime import timedelta
 from enum import Enum
@@ -17,9 +18,10 @@ from uuid import UUID
 
 import filetype
 from aiofiles.threadpool.binary import AsyncBufferedReader
-
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
+
+from .models.model_item import ModelItem
 
 Size = Tuple[int, int]
 auto = autostr
@@ -125,7 +127,7 @@ def plain2html(text: str) -> str:
                .replace("\t", "&nbsp;" * 4)
 
 
-def serialize_value_for_qml(value: Any) -> Any:
+def serialize_value_for_qml(value: Any, json_lists: bool = False) -> Any:
     """Convert a value to make it easier to use from QML.
 
     Returns:
@@ -135,10 +137,17 @@ def serialize_value_for_qml(value: Any) -> Any:
     - Strings for `UUID` objects
     - A number of milliseconds for `datetime.timedelta` objects
     - The class `__name__` for class types.
+    - `ModelItem.serialized` for `ModelItem`s
     """
+
+    if json_lists and isinstance(value, list):
+        return json.dumps(value)
 
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
         return value.value
+
+    if isinstance(value, ModelItem):
+        return value.serialized
 
     if isinstance(value, Path):
         return f"file://{value!s}"

@@ -1,9 +1,15 @@
 # TODO
 
+- room last event date previous year show month if <3 month
+- when inviting members, prevent if user id is on another server and room
+  doesn't allow that
+- "exception during sync" aren't caught
+
 ## Media
 
 - nio ClientTimeout
 
+- no thumb if bigger than original
 - upload delay at the end?
 - Handle upload file size limit
 - Handle set avatar upload errors

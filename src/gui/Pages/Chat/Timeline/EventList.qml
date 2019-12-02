@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import "../../.."
 import "../../../Base"
 
 Rectangle {
@@ -157,12 +158,12 @@ Rectangle {
             }
 
 
-            model: HListModel {
-                keyField: "client_id"
-                source: modelSources[[
-                    "Event", chat.userId, chat.roomId
-                ]] || []
-            }
+            model: ModelStore.get(chat.userId, chat.roomId, "events")
+            // model: HSortFilterProxy {
+            //     model: ModelStore.get(chat.userId, chat.roomId, "events")
+            //     comparator: "date"
+            //     descendingSort: true
+            // }
 
             delegate: EventDelegate {}
         }

@@ -3,41 +3,16 @@
 import QtQuick 2.12
 import io.thp.pyotherside 1.5
 import CppUtils 0.1
+import "Privates"
 
 Python {
     id: py
-    Component.onCompleted: {
-        for (var func in privates.eventHandlers) {
-            if (! privates.eventHandlers.hasOwnProperty(func)) continue
-            setHandler(func.replace(/^on/, ""), privates.eventHandlers[func])
-        }
 
-        addImportPath("src")
-        addImportPath("qrc:/src")
-
-        importNames("backend.qml_bridge", ["BRIDGE"], () => {
-            loadSettings(() => {
-                callCoro("saved_accounts.any_saved", [], any => {
-                    if (any) { py.callCoro("load_saved_accounts", []) }
-
-                    py.startupAnyAccountsSaved = any
-                    py.ready                   = true
-                })
-            })
-        })
-    }
-
-
-    property bool ready: false
-    property bool startupAnyAccountsSaved: false
 
     readonly property QtObject privates: QtObject {
-        readonly property var pendingCoroutines: ({})
-        readonly property EventHandlers eventHandlers: EventHandlers {}
-
         function makeFuture(callback) {
             return Qt.createComponent("Future.qml")
-                     .createObject(py, {bridge: py})
+                     .createObject(py, { bridge: py })
         }
     }
 
@@ -47,15 +22,10 @@ Python {
     }
 
 
-    function callSync(name, args=[]) {
-        return call_sync("BRIDGE.backend." + name, args)
-    }
-
-
     function callCoro(name, args=[], onSuccess=null, onError=null) {
         let uuid = name + "." + CppUtils.uuid()
 
-        privates.pendingCoroutines[uuid] = {onSuccess, onError}
+        Globals.pendingCoroutines[uuid] = {onSuccess, onError}
 
         let future = privates.makeFuture()
 
@@ -75,7 +45,7 @@ Python {
         callCoro("get_client", [accountId], () => {
             let uuid = accountId + "." + name + "." + CppUtils.uuid()
 
-            privates.pendingCoroutines[uuid] = {onSuccess, onError}
+            Globals.pendingCoroutines[uuid] = {onSuccess, onError}
 
             let call_args = [accountId, name, uuid, args]
 

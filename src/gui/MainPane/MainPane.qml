@@ -37,7 +37,7 @@ HDrawer {
     HColumnLayout {
         anchors.fill: parent
 
-        AccountRoomList {
+        AccountRoomsList {
             id: mainPaneList
             clip: true
 

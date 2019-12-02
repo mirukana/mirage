@@ -135,30 +135,29 @@ QtObject {
 
 
     function processedEventText(ev) {
-        if (ev.event_type === "RoomMessageEmote")
-        return coloredNameHtml(ev.sender_name, ev.sender_id) + " " +
-               ev.content
+        const type       = ev.event_type
+        const unknownMsg = type === "RoomMessageUnknown"
+        const sender     = coloredNameHtml(ev.sender_name, ev.sender_id)
 
-        let unknown = ev.event_type === "RoomMessageUnknown"
+        if (type === "RoomMessageEmote")
+            return qsTr("%1 %2").arg(sender).arg(ev.content)
 
-        if (ev.event_type.startsWith("RoomMessage") && ! unknown)
+        if (type.startsWith("RoomMessage") && ! unknownMsg)
             return ev.content
 
-        if (ev.event_type.startsWith("RoomEncrypted")) return ev.content
+        if (type.startsWith("RoomEncrypted"))
+            return ev.content
 
-        let text = qsTr(ev.content).arg(
-            coloredNameHtml(ev.sender_name, ev.sender_id)
-        )
+        if (ev.content.includes("%2")) {
+            const target = coloredNameHtml(ev.target_name, ev.target_id)
+            return qsTr(ev.content).arg(sender).arg(target)
+        }
 
-        if (text.includes("%2") && ev.target_id)
-            text = text.arg(coloredNameHtml(ev.target_name, ev.target_id))
-
-        return text
+        return qsTr(ev.content).arg(sender)
     }
 
-
     function filterMatches(filter, text) {
-        let filter_lower = filter.toLowerCase()
+        const filter_lower = filter.toLowerCase()
 
         if (filter_lower === filter) {
             // Consider case only if filter isn't all lowercase (smart case)
@@ -175,17 +174,11 @@ QtObject {
     }
 
 
-    function filterModelSource(source, filter_text, property="filter_string") {
-        if (! filter_text) return source
-        let results = []
-
-        for (let i = 0;  i < source.length; i++) {
-            if (filterMatches(filter_text, source[i][property])) {
-                results.push(source[i])
-            }
+    function filterMatchesAny(filter, ...texts) {
+        for (let text of texts) {
+            if (filterMatches(filter, text)) return true
         }
-
-        return results
+        return false
     }
 
 
@@ -254,14 +247,6 @@ QtObject {
 
     function round(floatNumber) {
         return parseFloat(floatNumber.toFixed(2))
-    }
-
-
-    function getItem(array, mainKey, value) {
-        for (let i = 0; i < array.length; i++) {
-            if (array[i][mainKey] === value) { return array[i] }
-        }
-        return undefined
     }
 
 
