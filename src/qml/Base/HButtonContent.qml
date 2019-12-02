@@ -21,6 +21,7 @@ HRowLayout {
     Item {
         id: iconWrapper
 
+        Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: icon.width
         Layout.preferredHeight: icon.height
 
@@ -92,6 +93,7 @@ HRowLayout {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
 
+        Layout.alignment: Qt.AlignCenter
         Layout.fillWidth: true
         Layout.fillHeight: true
     }

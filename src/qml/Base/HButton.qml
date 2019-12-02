@@ -4,12 +4,12 @@ import QtQuick.Layouts 1.12
 
 Button {
     id: button
-    spacing: theme.spacing
-    topPadding: spacing / (circle ? 1.75 : 1.5)
-    bottomPadding: topPadding
-    leftPadding: spacing / (circle ? 1.5 : 1)
-    rightPadding: leftPadding
     enabled: ! button.loading
+    spacing: theme.spacing
+    topPadding: padded ? spacing / (circle ? 1.75 : 1.5) : 0
+    bottomPadding: topPadding
+    leftPadding: padded ? spacing / (circle ? 1.5 : 1) : 0
+    rightPadding: leftPadding
 
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
@@ -35,6 +35,7 @@ Button {
     property bool disableWhileLoading: true
     property bool loading: false
     property bool circle: false
+    property bool padded: true
 
     property HToolTip toolTip: HToolTip {
         id: toolTip
