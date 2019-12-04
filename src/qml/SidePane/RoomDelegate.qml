@@ -67,11 +67,13 @@ HTileDelegate {
     subtitle.text: {
         if (! lastEvent) return ""
 
-        // If it's an emote or non-message/media event
-        if (lastEvent.event_type === "RoomMessageEmote" ||
-            (! lastEvent.event_type.startsWith("RoomMessage") &&
-            ! lastEvent.event_type.startsWith("RoomEncrypted")))
-        {
+        let isEmote      = lastEvent.event_type === "RoomMessageEmote"
+        let isMsg        = lastEvent.event_type.startsWith("RoomMessage")
+        let isUnknownMsg = lastEvent.event_type === "RoomMessageUnknown"
+        let isCryptMedia = lastEvent.event_type.startsWith("RoomEncrypted")
+
+        // If it's a general event
+        if (isEmote || isUnknownMsg || (! isMsg && ! isCryptMedia)) {
             return Utils.processedEventText(lastEvent)
         }
 

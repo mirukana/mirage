@@ -105,7 +105,9 @@ function processedEventText(ev) {
     if (ev.event_type == "RoomMessageEmote")
         return coloredNameHtml(ev.sender_name, ev.sender_id) + " " + ev.content
 
-    if (ev.event_type.startsWith("RoomMessage"))   return ev.content
+    let unknown = ev.event_type === "RoomMessageUnknown"
+
+    if (ev.event_type.startsWith("RoomMessage") && ! unknown) return ev.content
     if (ev.event_type.startsWith("RoomEncrypted")) return ev.content
 
     let text = qsTr(ev.content).arg(
