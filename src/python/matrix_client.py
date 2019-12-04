@@ -479,9 +479,7 @@ class MatrixClient(nio.AsyncClient):
         if invite == self.user_id:
             raise InvalidUserInContext(invite)
 
-        try:
-            await self.get_profile(invite)
-        except MatrixError:
+        if isinstance(await self.get_profile(invite), nio.ProfileGetError):
             raise UserNotFound(invite)
 
         response = await super().room_create(
