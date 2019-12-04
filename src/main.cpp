@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationName("harmonyqml");
     QApplication::setApplicationDisplayName("HarmonyQML");
     QApplication::setApplicationVersion("0.2.3");
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
 
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());

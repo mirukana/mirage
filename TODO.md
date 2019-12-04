@@ -93,7 +93,7 @@
   - Replies
   - Messages editing and redaction
   - Code highlighting
-  - Adapt shortcuts flicking speed to font size and DPI
+  - Adapt shortcuts flicking speed to font size 
 
   - EditAccount page:
     - Device settings
@@ -131,9 +131,7 @@
     - https://doc.qt.io/qt-5/qtquickcontrols2-customize.html#creating-a-custom-style
     - icons.preferredPack: accept multiple values
     - Find icon packs in user data dir
-    - Correctly implement uiScale/fontScale + ctrl+-= keys
-      - See `QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling)`
-      - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
+    - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
     - Way to round avatar corners to allow box radius
     - If avatar is set, name color from average color?
     - Accent color from background
