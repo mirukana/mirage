@@ -33,10 +33,10 @@ HBox {
                 let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
 
                 if (type === "InvalidUserInContext")
-                    txt = qsTr("You cannot invite yourself!")
+                    txt = qsTr("You can't invite yourself!")
 
                 if (type === "UserNotFound")
-                    txt = qsTr("This user does not exist.")
+                    txt = qsTr("This user does not exist")
 
                 errorMessage.text = txt
             })

@@ -7,7 +7,7 @@ Banner {
 
     avatar.visible: false
     icon.svgName: "unknown-devices-warning"
-    labelText: "Unknown devices are present in this encrypted room."
+    labelText: qsTr("Unknown devices are present in this encrypted room")
 
     buttonModel: [
         {

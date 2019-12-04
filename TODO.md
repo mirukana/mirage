@@ -59,7 +59,7 @@
 
 - UI
   - Make theme error/etc text colors more like name colors
-  - Standardize usage of punctuation
+  - In account settings, display name field text should be colored
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
 
