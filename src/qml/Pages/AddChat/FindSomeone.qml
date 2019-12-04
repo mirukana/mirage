@@ -35,6 +35,10 @@ HBox {
                 if (type === "InvalidUserInContext")
                     txt = qsTr("You can't invite yourself!")
 
+                if (type === "InvalidUserId")
+                    txt = qsTr("Invalid user ID, expected format is " +
+                               "@username:homeserver")
+
                 if (type === "UserNotFound")
                     txt = qsTr("This user does not exist")
 
@@ -61,7 +65,7 @@ HBox {
 
     HTextField {
         id: userField
-        placeholderText: qsTr("User ID (e.g. @john:matrix.org)")
+        placeholderText: qsTr("User ID (e.g. @bob:matrix.org)")
         error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true

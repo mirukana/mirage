@@ -53,6 +53,11 @@ class UserNotFound(Exception):
 
 
 @dataclass
+class InvalidUserId(Exception):
+    user_id: str = field()
+
+
+@dataclass
 class InvalidUserInContext(Exception):
     user_id: str = field()
 

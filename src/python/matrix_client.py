@@ -24,8 +24,8 @@ from nio.crypto import async_generator_from_data
 
 from . import __about__, utils
 from .errors import (
-    BadMimeType, InvalidUserInContext, MatrixError, UneededThumbnail,
-    UserNotFound,
+    BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
+    UneededThumbnail, UserNotFound,
 )
 from .html_filter import HTML_FILTER
 from .models.items import (
@@ -478,6 +478,9 @@ class MatrixClient(nio.AsyncClient):
     async def new_direct_chat(self, invite: str, encrypt: bool = False) -> str:
         if invite == self.user_id:
             raise InvalidUserInContext(invite)
+
+        if not re.match(r"^@.+:.+", invite):
+            raise InvalidUserId(invite)
 
         if isinstance(await self.get_profile(invite), nio.ProfileGetError):
             raise UserNotFound(invite)
