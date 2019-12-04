@@ -1,5 +1,5 @@
 #include <QLocale>
-#include <QDebug>
+#include <QUuid>
 
 #include "utils.h"
 
@@ -14,3 +14,8 @@ QString Utils::formattedBytes(qint64 bytes, int precision) {
         bytes, precision, QLocale::DataSizeTraditionalFormat
     );
 };
+
+
+QString Utils::uuid() {
+    return QUuid::createUuid().toString(QUuid::WithoutBraces);
+}

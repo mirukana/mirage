@@ -14,6 +14,7 @@ public:
 
 public slots:
     QString formattedBytes(qint64 bytes, int precision = 2);
+    QString uuid();
 
 private:
     QLocale m_locale;

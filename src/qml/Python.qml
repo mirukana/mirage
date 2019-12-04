@@ -15,7 +15,7 @@ Python {
     }
 
     function callCoro(name, args=[], onSuccess=null, onError=null) {
-        let uuid = Math.random() + "." + name
+        let uuid = name + "." + CppUtils.uuid()
 
         pendingCoroutines[uuid] = {onSuccess, onError}
         call("APP.call_backend_coro", [name, uuid, args])
@@ -25,7 +25,7 @@ Python {
         accountId, name, args=[], onSuccess=null, onError=null
     ) {
         callCoro("wait_until_client_exists", [accountId], () => {
-            let uuid = Math.random() + "." + name
+            let uuid = accountId + "." + name + "." + CppUtils.uuid()
 
             pendingCoroutines[uuid] = {onSuccess, onError}
             call("APP.call_client_coro", [accountId, name, uuid, args])
