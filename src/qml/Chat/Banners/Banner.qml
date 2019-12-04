@@ -42,7 +42,6 @@ Rectangle {
 
             HIcon {
                 id: bannerIcon
-                dimension: bannerLabel.implicitHeight
                 visible: Boolean(svgName)
 
                 Layout.leftMargin: theme.spacing / 2

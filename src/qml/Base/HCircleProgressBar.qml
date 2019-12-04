@@ -3,7 +3,7 @@ import RadialBar 1.0
 
 RadialBar {
     id: bar
-    implicitWidth: 96
+    implicitWidth: 96 * (theme ? theme.uiScale : 1)
     implicitHeight: implicitWidth
     foregroundColor: theme.controls.circleProgressBar.background
     progressColor: theme.controls.circleProgressBar.foreground

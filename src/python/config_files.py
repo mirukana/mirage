@@ -121,6 +121,10 @@ class UISettings(JSONConfigFile):
                 "toggleDebugConsole":  ["Alt+Shift+C"],
                 "reloadConfig":        ["Alt+Shift+R"],
 
+                "zoomIn":    ["Ctrl+Plus", "Ctrl+Shift+Plus"],
+                "zoomOut":   ["Ctrl+Minus", "Ctrl+Shift+Minus"],
+                "zoomReset": ["Ctrl+Equal", "Ctrl+Backspace"],
+
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
                 "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PageUp"],

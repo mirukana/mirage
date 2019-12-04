@@ -33,6 +33,21 @@ HShortcutHandler {
         onPressed: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
+    HShortcut {
+        sequences: settings.keys.zoomIn
+        onPressed: theme.uiScale += 0.1
+    }
+
+    HShortcut {
+        sequences: settings.keys.zoomOut
+        onPressed: theme.uiScale = Math.max(0.1, theme.uiScale - 0.1)
+    }
+
+    HShortcut {
+        sequences: settings.keys.zoomReset
+        onPressed: theme.uiScale = 1
+    }
+
     // Pages
 
     HShortcut {

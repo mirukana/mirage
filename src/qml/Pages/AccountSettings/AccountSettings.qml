@@ -7,7 +7,7 @@ import "../../utils.js" as Utils
 HPage {
     id: accountSettings
 
-    property int avatarPreferredSize: 256
+    property int avatarPreferredSize: 256 * theme.uiScale
 
     property string userId: ""
 

@@ -80,7 +80,6 @@ Image {
         anchors.centerIn: parent
         visible: broken || image.status === Image.Error
         svgName: "broken-image"
-        dimension: Math.max(16, Math.min(parent.width, parent.height) * 0.2)
         colorize: theme.colors.negativeBackground
     }
 }

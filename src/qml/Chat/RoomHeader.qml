@@ -93,7 +93,6 @@ Rectangle {
                 HButton {
                     backgroundColor: "transparent"
                     icon.name: "room-view-" + modelData
-                    iconItem.dimension: 22
                     height: parent.height
                     spacing: theme.spacing / 1.5
                     topPadding: 0

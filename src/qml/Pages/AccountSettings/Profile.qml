@@ -95,7 +95,7 @@ HGridLayout {
                     svgName: "upload-avatar"
                     colorize: (! avatar.mxc && overlayHover.hovered) ?
                               theme.colors.accentText : theme.icons.colorize
-                    dimension: 64
+                    dimension: avatar.width / 3
 
                     Layout.alignment: Qt.AlignCenter
                 }

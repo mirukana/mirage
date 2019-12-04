@@ -4,5 +4,5 @@ import "../../Base"
 
 HButton {
     backgroundColor: "transparent"
-    iconItem.dimension: theme.mediaPlayer.controls.iconHeight
+    iconItem.dimension: theme.mediaPlayer.controls.iconSize
 }

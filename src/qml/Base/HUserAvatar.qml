@@ -21,7 +21,7 @@ HAvatar {
         z: 100
 
         sourceComponent: HIcon {
-            dimension: 16
+            small: true
             svgName: "user-power-" + (admin ? "100" : "50")
             colorize: admin ?
                       theme.chat.roomSidePane.member.adminIcon :

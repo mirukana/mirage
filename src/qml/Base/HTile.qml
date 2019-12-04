@@ -55,7 +55,8 @@ HButton {
 
                     visible: Layout.maximumWidth > 0
                     Layout.maximumWidth:
-                        text && tile.width >= 160 ? implicitWidth : 0
+                        text && tile.width >= 160 * theme.uiScale ?
+                        implicitWidth : 0
 
                     Behavior on Layout.maximumWidth { HNumberAnimation {} }
                 }

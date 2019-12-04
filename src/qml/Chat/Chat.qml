@@ -55,7 +55,7 @@ HPage {
     HLoader {
         source: ready ? "ChatSplitView.qml" : "../Base/HBusyIndicator.qml"
 
-        Layout.preferredWidth: ready ? -1 : 96
+        Layout.preferredWidth: ready ? -1 : 96 * theme.uiScale
         Layout.preferredHeight: Layout.preferredWidth
         Layout.fillWidth: ready
         Layout.fillHeight: ready

@@ -50,17 +50,19 @@ HColumnLayout {
             placeholderText: qsTr("Filter members")
             backgroundColor: theme.chat.roomSidePane.filterMembers.background
             bordered: false
+            opacity: width >= 16 ? 1 : 0
 
             onTextChanged: filterLimiter.restart()
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            Behavior on opacity { HOpacityAnimator {} }
         }
 
         HButton {
             enabled: false  // TODO
             icon.name: "room-send-invite"
-            iconItem.dimension: parent.height - 10
             topPadding: 0
             bottomPadding: 0
             toolTip.text: qsTr("Invite to this room")

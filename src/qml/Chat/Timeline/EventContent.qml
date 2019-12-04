@@ -49,8 +49,12 @@ HRowLayout {
         opacity: collapseAvatar ? 0 : 1
         visible: ! hideAvatar
 
-        Layout.minimumWidth: 58
-        Layout.minimumHeight: collapseAvatar ? 1 : smallAvatar ? 28 : 58
+        Layout.minimumWidth: theme.chat.message.avatarSize
+        Layout.minimumHeight:
+            collapseAvatar ? 1 :
+            smallAvatar    ? theme.chat.message.collapsedAvatarSize :
+            Layout.minimumWidth
+
         Layout.maximumWidth: Layout.minimumWidth
         Layout.maximumHeight: Layout.minimumHeight
         Layout.alignment: Qt.AlignTop
@@ -61,7 +65,7 @@ HRowLayout {
             displayName: model.sender_name
             mxc: model.sender_avatar
             width: parent.width
-            height: collapseAvatar ? 1 : 58
+            height: collapseAvatar ? 1 : theme.chat.message.avatarSize
         }
     }
 
