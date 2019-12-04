@@ -123,7 +123,7 @@ class UISettings(JSONConfigFile):
 
                 "zoomIn":    ["Ctrl+Plus", "Ctrl+Shift+Plus"],
                 "zoomOut":   ["Ctrl+Minus", "Ctrl+Shift+Minus"],
-                "zoomReset": ["Ctrl+Equal", "Ctrl+Backspace"],
+                "zoomReset": ["Ctrl+Equal", "Ctrl+Shift+Backspace"],
 
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
