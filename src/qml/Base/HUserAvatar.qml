@@ -7,6 +7,7 @@ HAvatar {
     property string userId
     property string displayName
     property int powerLevel: 0
+    property bool shiftPowerIconPosition: true
 
     readonly property bool admin: powerLevel >= 100
     readonly property bool moderator: powerLevel >= 50 && ! admin
@@ -16,9 +17,11 @@ HAvatar {
         active: admin || moderator
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.topMargin: -16 / 2
+        anchors.topMargin: shiftPowerIconPosition ? -16 / 2 : 0
         anchors.leftMargin: anchors.topMargin
         z: 100
+
+        Behavior on anchors.topMargin { HNumberAnimation {} }
 
         sourceComponent: HIcon {
             small: true
