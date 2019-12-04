@@ -337,7 +337,17 @@ class NioCallbacks:
 
 
     async def onUnknownBadEvent(self, room, ev) -> None:
+        co = "%1 sent a malformed event lacking the minimal structure."
+        await self.client.register_nio_event(room, ev, content=co)
+
+
+    async def onUnknownEvent(self, room, ev) -> None:
         co = "%1 sent an event this client doesn't understand."
+        await self.client.register_nio_event(room, ev, content=co)
+
+
+    async def onUnknownEncryptedEvent(self, room, ev) -> None:
+        co = "%1 sent an event this client doesn't know how to decrypt."
         await self.client.register_nio_event(room, ev, content=co)
 
 
