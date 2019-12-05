@@ -46,7 +46,9 @@ Rectangle {
 
 
     property int calculatedWidth: Math.min(
-        manuallyResized ? manualWidth : parentWidth * autoWidthRatio,
+        manuallyResized ? manualWidth * theme.uiScale :
+        parentWidth * autoWidthRatio,
+
         maximumCalculatedWidth
     )
 
