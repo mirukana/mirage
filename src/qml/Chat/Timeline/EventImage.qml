@@ -31,18 +31,25 @@ HMxcImage {
         theme.chat.message.thumbnailMinSize.height,
 
         // Real size
-        loader.singleMediaInfo.thumbnail_width ||
-        loader.singleMediaInfo.media_width ||
-        implicitWidth ||
-        800,
+        (
+            loader.singleMediaInfo.thumbnail_width ||
+            loader.singleMediaInfo.media_width ||
+            implicitWidth ||
+            800
+        ) * theme.uiScale,
 
-        loader.singleMediaInfo.thumbnail_height ||
-        loader.singleMediaInfo.media_height ||
-        implicitHeight ||
-        600,
+        (
+            loader.singleMediaInfo.thumbnail_height ||
+            loader.singleMediaInfo.media_height ||
+            implicitHeight ||
+            600
+        ) * theme.uiScale,
 
         // Maximum display size
-        Math.min(eventList.height * maxHeight, eventContent.messageBodyWidth),
+        Math.min(
+            eventList.height * maxHeight,
+            eventContent.messageBodyWidth * Math.min(1, theme.uiScale),
+        ),
         eventList.height * maxHeight,
     )
 

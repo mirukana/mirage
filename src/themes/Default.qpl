@@ -182,10 +182,11 @@ controls:
         int borderWidth:  2
 
     progressBar:
-        int height:            Math.max(2, spacing / 2)
-        color background:      colors.inputBackground
-        color foreground:      colors.accentBackground
-        color errorForeground: colors.negativeBackground
+        int height:             Math.max(2, spacing / 2)
+        color background:       colors.inputBackground
+        color foreground:       colors.accentBackground
+        color pausedForeground: colors.middleBackground
+        color errorForeground:  colors.negativeBackground
 
     circleProgressBar:
         int thickness:          Math.max(2, spacing / 2)
@@ -362,15 +363,15 @@ chat:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
 
         // Prefered minimum width of file messages
-        int fileMinWidth: 256
+        int fileMinWidth: 256 * uiScale
 
         // Don't scale down thumbnails below this size in pixels, if
         // the becomes too small to show it at normal size.
-        size thumbnailMinSize: Qt.size(192, 192)
+        size thumbnailMinSize: Qt.size(192 * uiScale, 192 * uiScale)
 
         // How much of the chat height thumbnails can take at most,
         // by default 0.3 for 30%.
-        real thumbnailMaxHeightRatio: 0.3
+        real thumbnailMaxHeightRatio: 0.3 * Math.min(1, uiScale)
 
     daybreak:
         color background: colors.strongBackground
