@@ -126,11 +126,6 @@ class Upload(ModelItem):
     start_date: datetime = field(init=False, default_factory=datetime.now)
 
 
-    def __post_init__(self) -> None:
-        if not self.total_size:
-            self.total_size = self.filepath.resolve().stat().st_size
-
-
     def __lt__(self, other: "Upload") -> bool:
         # Sort from newest upload to oldest.
         return self.start_date > other.start_date

@@ -60,7 +60,7 @@ Rectangle {
                     }
 
                     Layout.preferredWidth: theme.baseElementsHeight
-                    Layout.preferredHeight: Layout.preferredWidth
+                    Layout.fillHeight: true
                 }
 
                 HLabel {
@@ -93,8 +93,20 @@ Rectangle {
                             qsTr("Too large for this server: %1")
                             .arg(fileName) :
 
+                            model.error === "IsADirectoryError" ?
+                            qsTr("Can't upload folders: %1")
+                            .arg(filePath) :
+
+                            model.error === "FileNotFoundError" ?
+                            qsTr("Non-existant file: %1")
+                            .arg(filePath) :
+
+                            model.error === "PermissionError" ?
+                            qsTr("No permission to read this file: %1")
+                            .arg(filePath) :
+
                             qsTr("Unknown error for %1: %2 - %3")
-                            .arg(fileName)
+                            .arg(filePath)
                             .arg(model.error)
                             .arg(model.error_args)
                         ) :
@@ -113,6 +125,9 @@ Rectangle {
 
                     readonly property string fileName:
                         model.filepath.split("/").slice(-1)[0]
+
+                    readonly property string filePath:
+                        model.filepath.replace(/^file:\/\//, "")
                 }
 
                 HSpacer {}

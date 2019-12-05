@@ -225,8 +225,13 @@ class MatrixClient(nio.AsyncClient):
         from .media_cache import Media, Thumbnail
 
         path    = Path(path)
-        size    = path.resolve().stat().st_size
         encrypt = room_id in self.encrypted_rooms
+
+        try:
+            size = path.resolve().stat().st_size
+        except (PermissionError, FileNotFoundError):
+            # This error will be caught again by the try block later below
+            size = 0
 
         task        = asyncio.Task.current_task()
         upload_item = Upload(item_uuid, task, path, total_size=size)
@@ -236,7 +241,7 @@ class MatrixClient(nio.AsyncClient):
             url, mime, crypt_dict = await self.upload(
                 path, filename=path.name, encrypt=encrypt,
             )
-        except MatrixError as err:
+        except (MatrixError, OSError) as err:
             upload_item.status     = UploadStatus.Error
             upload_item.error      = type(err)
             upload_item.error_args = err.args
@@ -257,7 +262,7 @@ class MatrixClient(nio.AsyncClient):
             "body": path.name,
             "info": {
                 "mimetype": mime,
-                "size":     size,
+                "size":     upload_item.total_size,
             },
         }
 
