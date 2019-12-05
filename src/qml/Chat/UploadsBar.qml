@@ -94,7 +94,7 @@ Rectangle {
                             .arg(fileName) :
 
                             model.error === "IsADirectoryError" ?
-                            qsTr("Can't upload folders: %1")
+                            qsTr("Can't upload folders, need a file: %1")
                             .arg(filePath) :
 
                             model.error === "FileNotFoundError" ?
@@ -128,6 +128,13 @@ Rectangle {
 
                     readonly property string filePath:
                         model.filepath.replace(/^file:\/\//, "")
+
+                    HoverHandler { id: statusLabelHover }
+
+                    HToolTip {
+                        text: parent.truncated ? parent.text : ""
+                        visible: text && statusLabelHover.hovered
+                    }
                 }
 
                 HSpacer {}
@@ -135,7 +142,11 @@ Rectangle {
                 HLabel {
                     id: uploadCountLabel
                     visible: Layout.preferredWidth > 0
-                    text: qsTr("%1")
+                    text: qsTr("-%1  %2/s  %3/%4")
+                          .arg(model.time_left ?
+                               Utils.formatDuration(msLeft) : "∞")
+                          .arg(CppUtils.formattedBytes(model.speed))
+                          .arg(CppUtils.formattedBytes(uploaded))
                           .arg(CppUtils.formattedBytes(model.total_size))
 
                     topPadding: theme.spacing / 2
@@ -146,6 +157,12 @@ Rectangle {
                     Layout.preferredWidth:
                         model.status === "Uploading" ? implicitWidth : 0
 
+                    property int msLeft: model.time_left || -1
+                    property int uploaded: model.uploaded
+
+                    Behavior on msLeft { HNumberAnimation { duration: 1000 } }
+                    Behavior on uploaded { HNumberAnimation { duration: 1000 }}
+
                     Behavior on Layout.preferredWidth { HNumberAnimation {} }
                 }
 
@@ -153,20 +170,15 @@ Rectangle {
                     onTapped: if (model.status !== "Error")
                         statusLabel.expand = ! statusLabel.expand
                 }
-
-                HoverHandler { id: infoRowHover }
-
-                HToolTip {
-                    id: statusToolTip
-                    text: statusLabel.truncated ? statusLabel.text : ""
-                    visible: text && infoRowHover.hovered
-                }
             }
 
             HProgressBar {
                 id: progressBar
                 visible: Layout.maximumHeight !== 0
-                indeterminate: true
+                indeterminate: model.status !== "Uploading"
+                value: model.uploaded
+                to: model.total_size
+
                 foregroundColor:
                     model.status === "Error" ?
                     theme.controls.progressBar.errorForeground :
@@ -176,6 +188,7 @@ Rectangle {
                 Layout.maximumHeight:
                     model.status === "Error" && indeterminate ? 0 : -1
 
+                Behavior on value { HNumberAnimation { duration: 1000 } }
                 Behavior on Layout.maximumHeight { HNumberAnimation {} }
             }
         }

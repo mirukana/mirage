@@ -215,8 +215,8 @@ class MatrixClient(nio.AsyncClient):
 
         try:
             await self._send_file(item_uuid, room_id, path)
-        except asyncio.CancelledError:
-            del self.models[Upload, room_id][item_uuid]
+        except (nio.TransferCancelledError, asyncio.CancelledError):
+            del self.models[Upload, room_id][str(item_uuid)]
 
 
     async def _send_file(
@@ -235,18 +235,27 @@ class MatrixClient(nio.AsyncClient):
 
         task        = asyncio.Task.current_task()
         upload_item = Upload(item_uuid, task, path, total_size=size)
-        self.models[Upload, room_id][upload_item.uuid] = upload_item
+        self.models[Upload, room_id][str(item_uuid)] = upload_item
+
+        def on_transfered(transfered: int) -> None:
+            upload_item.uploaded  = transfered
+            upload_item.time_left = monitor.remaining_time
+
+        def on_speed_change(speed: float) -> None:
+            upload_item.speed = speed
+
+        monitor = nio.TransferMonitor(size, on_transfered, on_speed_change)
 
         try:
             url, mime, crypt_dict = await self.upload(
-                path, filename=path.name, encrypt=encrypt,
+                path, filename=path.name, encrypt=encrypt, monitor=monitor,
             )
         except (MatrixError, OSError) as err:
             upload_item.status     = UploadStatus.Error
             upload_item.error      = type(err)
             upload_item.error_args = err.args
 
-            # Wait for cancellation, see parent send_file() method
+            # Wait for cancellation from UI, see parent send_file() method
             while True:
                 await asyncio.sleep(0.1)
 
@@ -606,9 +615,10 @@ class MatrixClient(nio.AsyncClient):
     async def upload(
         self,
         data:     UploadData,
-        mime:     Optional[str] = None,
-        filename: Optional[str] = None,
-        encrypt:  bool          = False,
+        mime:     Optional[str]                 = None,
+        filename: Optional[str]                 = None,
+        encrypt:  bool                          = False,
+        monitor:  Optional[nio.TransferMonitor] = None,
     ) -> UploadReturn:
 
         mime = mime or await utils.guess_mime(data)
@@ -618,6 +628,7 @@ class MatrixClient(nio.AsyncClient):
             "application/octet-stream" if encrypt else mime,
             filename,
             encrypt,
+            monitor,
         )
 
         if isinstance(response, nio.UploadError):

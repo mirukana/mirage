@@ -1,7 +1,7 @@
 import asyncio
 import re
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import UUID
@@ -114,12 +114,16 @@ class UploadStatus(AutoStrEnum):
 
 @dataclass
 class Upload(ModelItem):
-    uuid:       UUID                  = field()
-    task:       asyncio.Task          = field()
-    filepath:   Path                  = field()
+    uuid:     UUID         = field()
+    task:     asyncio.Task = field()
+    filepath: Path         = field()
+
+    total_size: int                 = 0
+    uploaded:   int                 = 0
+    speed:      float               = 0
+    time_left:  Optional[timedelta] = None
+
     status:     UploadStatus          = UploadStatus.Uploading
-    total_size: int                   = 0
-    uploaded:   int                   = 0
     error:      OptionalExceptionType = type(None)
     error_args: Tuple[Any, ...]       = ()
 

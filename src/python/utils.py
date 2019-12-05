@@ -7,6 +7,7 @@ import inspect
 import io
 import logging as log
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
+from datetime import timedelta
 from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
@@ -139,6 +140,9 @@ def serialize_value_for_qml(value: Any) -> Any:
 
     if isinstance(value, UUID):
         return str(value)
+
+    if isinstance(value, timedelta):
+        return value.total_seconds() * 1000
 
     if inspect.isclass(value):
         return value.__name__
