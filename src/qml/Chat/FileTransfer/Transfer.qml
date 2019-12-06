@@ -7,14 +7,15 @@ HColumnLayout {
     id: transfer
 
 
-    property bool guiPaused: false
+    property bool paused: false
 
     property int msLeft: model.time_left || 0
     property int uploaded: model.uploaded
     readonly property int speed: model.speed
     readonly property int totalSize: model.total_size
     readonly property string status: model.status
-    readonly property bool paused: status === "Paused" || guiPaused
+    property var pr: status
+    onPrChanged: print("pr changed:", pr)
 
 
     Behavior on msLeft { HNumberAnimation { duration: 1000 } }
@@ -25,8 +26,8 @@ HColumnLayout {
         HIcon {
             svgName: "uploading"
             colorize:
-                status === "Error" ?  theme.colors.negativeBackground :
-                status === "Paused" ?  theme.colors.middleBackground :
+                transfer.status === "Error" ? theme.colors.negativeBackground :
+                transfer.paused             ? theme.colors.middleBackground :
                 theme.icons.colorize
 
             Layout.preferredWidth: theme.baseElementsHeight
@@ -37,9 +38,6 @@ HColumnLayout {
             id: statusLabel
             elide: expand ? Text.ElideNone : Text.ElideRight
             wrapMode: expand ? Text.Wrap : Text.NoWrap
-
-            color: status === "Error" ?
-                   theme.colors.errorText : theme.colors.text
 
             text:
                 status === "Uploading" ? fileName :
@@ -131,9 +129,9 @@ HColumnLayout {
                           qsTr("Resume") : qsTr("Pause")
 
             onClicked: {
-                transfer.guiPaused = ! transfer.guiPaused
+                transfer.paused = ! transfer.paused
                 py.setattr(
-                    model.monitor, "pause", transfer.guiPaused,
+                    model.monitor, "pause", transfer.paused,
                 )
             }
 
