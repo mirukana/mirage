@@ -11,9 +11,9 @@ ToolTip {
     property alias label: label
     property alias backgroundColor: background.color
 
-    readonly property bool hideNow: visible && ! window.hovered
+    readonly property bool hideNow: ! window.hovered
 
-    onHideNowChanged: if (hideNow) toolTip.hide()
+    onHideNowChanged: if (visible && hideNow) toolTip.hide()
 
 
     background: Rectangle {

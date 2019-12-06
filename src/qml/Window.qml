@@ -13,6 +13,8 @@ ApplicationWindow {
     color: "transparent"
 
 
+    // FIXME: Qt 5.13.1 bug, this randomly stops updating after the cursor
+    // leaves the window until it's clicked again.
     readonly property alias hovered: windowHover.hovered
 
     readonly property bool hidden:
@@ -21,7 +23,7 @@ ApplicationWindow {
             window.visibility == window.Minimized ||
             window.visibility == window.Hidden
 
-    // Note: For JS object variables, the corresponding method to notify
+    // NOTE: For JS object variables, the corresponding method to notify
     // key/value changes must be called manually, e.g. settingsChanged().
     property var modelSources: ({})
     property var sidePaneModelSource: []
