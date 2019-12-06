@@ -13,6 +13,8 @@ ApplicationWindow {
     color: "transparent"
 
 
+    readonly property alias hovered: windowHover.hovered
+
     readonly property bool hidden:
             Qt.application.state == Qt.ApplicationSuspended ||
             Qt.application.state == Qt.ApplicationHidden ||
@@ -36,7 +38,10 @@ ApplicationWindow {
 
     readonly property alias py: py
 
+
     Python { id: py }
+
+    HoverHandler { id: windowHover }
 
     HLoader {
         anchors.fill: parent

@@ -11,6 +11,10 @@ ToolTip {
     property alias label: label
     property alias backgroundColor: background.color
 
+    readonly property bool hideNow: visible && ! window.hovered
+
+    onHideNowChanged: if (hideNow) toolTip.hide()
+
 
     background: Rectangle {
         id: background
@@ -46,7 +50,7 @@ ToolTip {
     }
 
     TapHandler {
-        onTapped: { toolTip.hide() }
+        onTapped: toolTip.hide()
     }
 
     HoverHandler {
