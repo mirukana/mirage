@@ -14,8 +14,20 @@ HColumnLayout {
     readonly property int speed: model.speed
     readonly property int totalSize: model.total_size
     readonly property string status: model.status
-    property var pr: status
-    onPrChanged: print("pr changed:", pr)
+
+
+    function cancel() {
+        // Python might take a sec to cancel, but we want
+        // immediate visual feedback
+        transfer.height = 0
+        // Python will delete this model item on cancel
+        py.call(py.getattr(model.task, "cancel"))
+    }
+
+    function pause() {
+        transfer.paused = ! transfer.paused
+        py.setattr(model.monitor, "pause", transfer.paused)
+    }
 
 
     Behavior on msLeft { HNumberAnimation { duration: 1000 } }
@@ -127,12 +139,7 @@ HColumnLayout {
             toolTip.text: transfer.paused ?
                           qsTr("Resume") : qsTr("Pause")
 
-            onClicked: {
-                transfer.paused = ! transfer.paused
-                py.setattr(
-                    model.monitor, "pause", transfer.paused,
-                )
-            }
+            onClicked: transfer.pause()
 
             Layout.preferredWidth:
                 status === "Uploading" ?
@@ -147,21 +154,17 @@ HColumnLayout {
             icon.name: "upload-cancel"
             icon.color: theme.colors.negativeBackground
             padded: false
-
-            onClicked: {
-                // Python might take a sec to cancel, but we want
-                // immediate visual feedback
-                transfer.height = 0
-                // Python will delete this model item on cancel
-                py.call(py.getattr(model.task, "cancel"))
-            }
+            onClicked: transfer.cancel()
 
             Layout.preferredWidth: theme.baseElementsHeight
             Layout.fillHeight: true
         }
+
         TapHandler {
-            onTapped: if (status !== "Error")
-                statusLabel.expand = ! statusLabel.expand
+            onTapped: {
+                if (status === "Error") { transfer.cancel() }
+                else { statusLabel.expand = ! statusLabel.expand }
+            }
         }
     }
 
