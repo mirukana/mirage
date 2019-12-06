@@ -216,6 +216,7 @@ class MatrixClient(nio.AsyncClient):
         try:
             await self._send_file(item_uuid, room_id, path)
         except (nio.TransferCancelledError, asyncio.CancelledError):
+            log.info("Deleting item for cancelled upload %s", item_uuid)
             del self.models[Upload, room_id][str(item_uuid)]
 
 
@@ -233,8 +234,8 @@ class MatrixClient(nio.AsyncClient):
             # This error will be caught again by the try block later below
             size = 0
 
-        task        = asyncio.Task.current_task()
-        upload_item = Upload(item_uuid, task, path, total_size=size)
+        monitor     = nio.TransferMonitor(size)
+        upload_item = Upload(item_uuid, monitor, path, total_size=size)
         self.models[Upload, room_id][str(item_uuid)] = upload_item
 
         def on_transfered(transfered: int) -> None:
@@ -244,7 +245,8 @@ class MatrixClient(nio.AsyncClient):
         def on_speed_change(speed: float) -> None:
             upload_item.speed = speed
 
-        monitor = nio.TransferMonitor(size, on_transfered, on_speed_change)
+        monitor.on_transfered   = on_transfered
+        monitor.on_speed_change = on_speed_change
 
         try:
             url, mime, crypt_dict = await self.upload(

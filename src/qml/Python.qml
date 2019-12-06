@@ -10,6 +10,10 @@ Python {
     property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
 
+    function setattr(obj, attr, value, callback=null) {
+        py.call(py.getattr(obj, "__setattr__"), [attr, value], callback)
+    }
+
     function callSync(name, args=[]) {
         return call_sync("APP.backend." + name, args)
     }

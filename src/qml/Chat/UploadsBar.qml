@@ -61,7 +61,7 @@ Rectangle {
                         // immediate visual feedback
                         hideBind.when = true
                         // Python will delete this model item on cancel
-                        py.call(py.getattr(model.task, "cancel"))
+                        py.setattr(model.monitor, "cancel", true)
                     }
 
                     Layout.preferredWidth: theme.baseElementsHeight
@@ -187,7 +187,9 @@ Rectangle {
 
                     onClicked: {
                         delegate.guiPaused = ! delegate.guiPaused
-                        // py.ev("model.task. TODO
+                        py.setattr(
+                            model.monitor, "pause", model.status !== "Paused",
+                        )
                     }
 
                     Layout.preferredWidth:
