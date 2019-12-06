@@ -31,7 +31,6 @@ HColumnLayout {
                 theme.icons.colorize
 
             Layout.preferredWidth: theme.baseElementsHeight
-            Layout.fillHeight: true
         }
 
         HLabel {
