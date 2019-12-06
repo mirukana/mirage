@@ -5,29 +5,29 @@ import "../../utils.js" as Utils
 
 HColumnLayout {
     id: transfer
-    width: uploadsList.width
 
 
     property bool guiPaused: false
 
-    readonly property bool paused: model.status === "Paused" || guiPaused
+    property int msLeft: model.time_left || 0
+    property int uploaded: model.uploaded
+    readonly property int speed: model.speed
+    readonly property int totalSize: model.total_size
+    readonly property string status: model.status
+    readonly property bool paused: status === "Paused" || guiPaused
 
 
+    Behavior on msLeft { HNumberAnimation { duration: 1000 } }
+    Behavior on uploaded { HNumberAnimation { duration: 1000 }}
     Behavior on height { HNumberAnimation {} }
 
     HRowLayout {
-        HButton {
-            icon.name: "upload-cancel"
-            icon.color: theme.colors.negativeBackground
-            padded: false
-
-            onClicked: {
-                // Python might take a sec to cancel, but we want
-                // immediate visual feedback
-                transfer.height = 0
-                // Python will delete this model item on cancel
-                py.call(py.getattr(model.task, "cancel"))
-            }
+        HIcon {
+            svgName: "uploading"
+            colorize:
+                status === "Error" ?  theme.colors.negativeBackground :
+                status === "Paused" ?  theme.colors.middleBackground :
+                theme.icons.colorize
 
             Layout.preferredWidth: theme.baseElementsHeight
             Layout.fillHeight: true
@@ -38,51 +38,33 @@ HColumnLayout {
             elide: expand ? Text.ElideNone : Text.ElideRight
             wrapMode: expand ? Text.Wrap : Text.NoWrap
 
-            color: model.status === "Error" ?
+            color: status === "Error" ?
                    theme.colors.errorText : theme.colors.text
 
             text:
-                model.status === "Uploading" ?
-                qsTr("Uploading %1...").arg(fileName) :
+                status === "Uploading" ? fileName :
 
-                model.status === "Caching" ?
+                status === "Caching" ?
                 qsTr("Caching %1...").arg(fileName) :
 
-                model.status === "UploadingThumbnail" ?
-                qsTr("Uploading thumbnail for %1...").arg(fileName) :
+                model.error === "MatrixForbidden" ?
+                qsTr("Forbidden file type or quota exceeded: %1")
+                .arg(fileName) :
 
-                model.status === "CachingThumbnail" ?
-                qsTr("Caching thumbnail for %1...").arg(fileName) :
+                model.error === "MatrixTooLarge" ?
+                qsTr("Too large for this server: %1").arg(fileName) :
 
-                model.status === "Error" ? (
-                    model.error === "MatrixForbidden" ?
-                    qsTr("Forbidden file type or quota exceeded: %1")
-                    .arg(fileName) :
+                model.error === "IsADirectoryError" ?
+                qsTr("Can't upload folders, need a file: %1").arg(filePath) :
 
-                    model.error === "MatrixTooLarge" ?
-                    qsTr("Too large for this server: %1")
-                    .arg(fileName) :
+                model.error === "FileNotFoundError" ?
+                qsTr("Non-existant file: %1").arg(filePath) :
 
-                    model.error === "IsADirectoryError" ?
-                    qsTr("Can't upload folders, need a file: %1")
-                    .arg(filePath) :
+                model.error === "PermissionError" ?
+                qsTr("No permission to read this file: %1").arg(filePath) :
 
-                    model.error === "FileNotFoundError" ?
-                    qsTr("Non-existant file: %1")
-                    .arg(filePath) :
-
-                    model.error === "PermissionError" ?
-                    qsTr("No permission to read this file: %1")
-                    .arg(filePath) :
-
-                    qsTr("Unknown error for %1: %2 - %3")
-                    .arg(filePath)
-                    .arg(model.error)
-                    .arg(model.error_args)
-                ) :
-
-                qsTr("Invalid status for %1: %2")
-                .arg(fileName).arg(model.status)
+                qsTr("Unknown error for %1: %2 - %3")
+                .arg(filePath).arg(model.error).arg(model.error_args)
 
             topPadding: theme.spacing / 2
             bottomPadding: topPadding
@@ -92,7 +74,7 @@ HColumnLayout {
             Layout.fillWidth: true
 
 
-            property bool expand: model.status === "Error"
+            property bool expand: status === "Error"
 
             readonly property string fileName:
                 model.filepath.split("/").slice(-1)[0]
@@ -111,31 +93,27 @@ HColumnLayout {
 
         HSpacer {}
 
-        HLabel {
-            id: uploadCountLabel
-            visible: Layout.preferredWidth > 0
-            text: qsTr("-%1  %2/s  %3/%4")
-                  .arg(model.time_left ?
-                       Utils.formatDuration(msLeft) : "∞")
-                  .arg(CppUtils.formattedBytes(model.speed))
-                  .arg(CppUtils.formattedBytes(uploaded))
-                  .arg(CppUtils.formattedBytes(model.total_size))
+        Repeater {
+            model: [
+                msLeft ? qsTr("-%1").arg(Utils.formatDuration(msLeft)) : "",
 
-            topPadding: theme.spacing / 2
-            bottomPadding: topPadding
-            leftPadding: theme.spacing / 1.5
-            rightPadding: leftPadding
+                speed ? qsTr("%1/s").arg(CppUtils.formattedBytes(speed)) : "",
 
-            Layout.preferredWidth:
-                model.status === "Uploading" ? implicitWidth : 0
+                qsTr("%1/%2").arg(CppUtils.formattedBytes(uploaded))
+                             .arg(CppUtils.formattedBytes(totalSize)),
+            ]
 
-            property int msLeft: model.time_left || -1
-            property int uploaded: model.uploaded
+            HLabel {
+                text: modelData
+                visible: text && Layout.preferredWidth > 0
+                leftPadding: theme.spacing / 1.5
+                rightPadding: leftPadding
 
-            Behavior on msLeft { HNumberAnimation { duration: 1000 } }
-            Behavior on uploaded { HNumberAnimation { duration: 1000 }}
+                Layout.preferredWidth:
+                    status === "Uploading" ? implicitWidth : 0
 
-            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+                Behavior on Layout.preferredWidth { HNumberAnimation {} }
+            }
         }
 
         HButton {
@@ -160,7 +138,7 @@ HColumnLayout {
             }
 
             Layout.preferredWidth:
-                model.status === "Uploading" ?
+                status === "Uploading" ?
                 theme.baseElementsHeight : 0
 
             Layout.fillHeight: true
@@ -168,8 +146,24 @@ HColumnLayout {
             Behavior on Layout.preferredWidth { HNumberAnimation {} }
         }
 
+        HButton {
+            icon.name: "upload-cancel"
+            icon.color: theme.colors.negativeBackground
+            padded: false
+
+            onClicked: {
+                // Python might take a sec to cancel, but we want
+                // immediate visual feedback
+                transfer.height = 0
+                // Python will delete this model item on cancel
+                py.call(py.getattr(model.task, "cancel"))
+            }
+
+            Layout.preferredWidth: theme.baseElementsHeight
+            Layout.fillHeight: true
+        }
         TapHandler {
-            onTapped: if (model.status !== "Error")
+            onTapped: if (status !== "Error")
                 statusLabel.expand = ! statusLabel.expand
         }
     }
@@ -177,13 +171,13 @@ HColumnLayout {
     HProgressBar {
         id: progressBar
         visible: Layout.maximumHeight !== 0
-        indeterminate: model.status !== "Uploading"
-        value: model.uploaded
-        to: model.total_size
+        indeterminate: status !== "Uploading"
+        value: uploaded
+        to: totalSize
 
         // TODO: bake this in hprogressbar
         foregroundColor:
-            model.status === "Error" ?
+            status === "Error" ?
             theme.controls.progressBar.errorForeground :
 
             transfer.paused ?
@@ -193,9 +187,8 @@ HColumnLayout {
 
         Layout.fillWidth: true
         Layout.maximumHeight:
-            model.status === "Error" && indeterminate ? 0 : -1
+            status === "Error" && indeterminate ? 0 : -1
 
-        Behavior on value { HNumberAnimation { duration: 1000 } }
         Behavior on Layout.maximumHeight { HNumberAnimation {} }
     }
 }

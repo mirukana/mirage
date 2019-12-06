@@ -29,7 +29,7 @@ HSplitView {
         TransferList {
             Layout.fillWidth: true
             Layout.minimumHeight: implicitHeight
-            Layout.preferredHeight: implicitHeight * uploadsCount
+            Layout.preferredHeight: implicitHeight * transferCount
             Layout.maximumHeight: chatSplitView.height / 6
 
             Behavior on Layout.preferredHeight { HNumberAnimation {} }

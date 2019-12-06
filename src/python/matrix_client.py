@@ -305,7 +305,11 @@ class MatrixClient(nio.AsyncClient):
             except OSError as err:
                 log.warning(f"Failed thumbnailing {path}: {err}")
             else:
-                upload_item.status = UploadStatus.UploadingThumbnail
+                thumb_name = f"{path.stem}_thumbnail{''.join(path.suffixes)}"
+
+                upload_item.status     = UploadStatus.Uploading
+                upload_item.filepath   = Path(thumb_name)
+                upload_item.total_size = len(thumb_data)
 
                 try:
                     thumb_url, _, thumb_crypt_dict = await self.upload(
@@ -317,7 +321,7 @@ class MatrixClient(nio.AsyncClient):
                 except MatrixError as err:
                     log.warning(f"Failed uploading thumbnail {path}: {err}")
                 else:
-                    upload_item.status = UploadStatus.CachingThumbnail
+                    upload_item.status = UploadStatus.Caching
 
                     await Thumbnail.from_bytes(
                         self.backend.media_cache,

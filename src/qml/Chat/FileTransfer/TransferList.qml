@@ -12,15 +12,15 @@ Rectangle {
     property int delegateHeight: 0
 
     readonly property var firstDelegate:
-        uploadsList.contentItem.visibleChildren[0]
+        transferList.contentItem.visibleChildren[0]
 
-    readonly property alias uploadsCount: uploadsList.count
+    readonly property alias transferCount: transferList.count
 
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
     HListView {
-        id: uploadsList
+        id: transferList
         anchors.fill: parent
 
         model: HListModel {
@@ -28,6 +28,6 @@ Rectangle {
             source: modelSources[["Upload", chatPage.roomId]] || []
         }
 
-        delegate: Transfer { width: uploadsList.width }
+        delegate: Transfer { width: transferList.width }
     }
 }

@@ -105,11 +105,9 @@ class Member(ModelItem):
 
 
 class UploadStatus(AutoStrEnum):
-    Uploading          = auto()
-    Caching            = auto()
-    UploadingThumbnail = auto()
-    CachingThumbnail   = auto()
-    Error              = auto()
+    Uploading = auto()
+    Caching   = auto()
+    Error     = auto()
 
 
 @dataclass
