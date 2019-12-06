@@ -24,6 +24,8 @@ ProgressBar {
             height: parent.height
             color: foregroundColor
 
+            Behavior on color { HColorAnimation {} }
+
             XAnimator on x {
                 running: bar.indeterminate
                 duration: theme.animationDuration * 8

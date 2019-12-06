@@ -29,5 +29,7 @@ Image {
     layer.effect: ColorOverlay {
         color: icon.colorize
         cached: icon.cache
+
+        Behavior on color { HColorAnimation {} }
     }
 }

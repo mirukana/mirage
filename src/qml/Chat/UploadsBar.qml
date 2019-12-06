@@ -35,6 +35,11 @@ Rectangle {
             id: delegate
             width: uploadsList.width
 
+            property bool guiPaused: false
+
+            readonly property bool paused:
+                model.status === "Paused" || guiPaused
+
             Behavior on height { HNumberAnimation {} }
 
             Binding {
@@ -47,7 +52,7 @@ Rectangle {
 
             HRowLayout {
                 HButton {
-                    icon.name: "cancel"
+                    icon.name: "upload-cancel"
                     icon.color: theme.colors.negativeBackground
                     padded: false
 
@@ -166,6 +171,34 @@ Rectangle {
                     Behavior on Layout.preferredWidth { HNumberAnimation {} }
                 }
 
+                HButton {
+                    visible: Layout.preferredWidth > 0
+                    padded: false
+
+                    icon.name: delegate.paused ?
+                               "upload-resume" : "upload-pause"
+
+                    icon.color: delegate.paused ?
+                                theme.colors.positiveBackground :
+                                theme.colors.middleBackground
+
+                    toolTip.text: delegate.paused ?
+                                  qsTr("Resume") : qsTr("Pause")
+
+                    onClicked: {
+                        delegate.guiPaused = ! delegate.guiPaused
+                        // py.ev("model.task. TODO
+                    }
+
+                    Layout.preferredWidth:
+                        model.status === "Uploading" ?
+                        theme.baseElementsHeight : 0
+
+                    Layout.fillHeight: true
+
+                    Behavior on Layout.preferredWidth { HNumberAnimation {} }
+                }
+
                 TapHandler {
                     onTapped: if (model.status !== "Error")
                         statusLabel.expand = ! statusLabel.expand
@@ -179,9 +212,14 @@ Rectangle {
                 value: model.uploaded
                 to: model.total_size
 
+                // TODO: bake this in hprogressbar
                 foregroundColor:
                     model.status === "Error" ?
                     theme.controls.progressBar.errorForeground :
+
+                    delegate.paused ?
+                    theme.controls.progressBar.pausedForeground :
+
                     theme.controls.progressBar.foreground
 
                 Layout.fillWidth: true
