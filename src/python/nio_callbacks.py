@@ -97,7 +97,7 @@ class NioCallbacks:
 
 
     async def onRoomMessageUnknown(self, room, ev) -> None:
-        co = "%1 sent a message this client doesn't understand."
+        co = "%1 sent a message this client doesn't understand"
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -136,21 +136,21 @@ class NioCallbacks:
 
 
     async def onRoomCreateEvent(self, room, ev) -> None:
-        co = "%1 allowed users on other matrix servers to join this room." \
+        co = "%1 allowed users on other matrix servers to join this room" \
              if ev.federate else \
-             "%1 blocked users on other matrix servers from joining this room."
+             "%1 blocked users on other matrix servers from joining this room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomGuestAccessEvent(self, room, ev) -> None:
         allowed = "allowed" if ev.guest_access else "forbad"
-        co      = f"%1 {allowed} guests to join the room."
+        co      = f"%1 {allowed} guests to join the room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomJoinRulesEvent(self, room, ev) -> None:
         access = "public" if ev.join_rule == "public" else "invite-only"
-        co     = f"%1 made the room {access}."
+        co     = f"%1 made the room {access}"
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -168,12 +168,12 @@ class NioCallbacks:
             log.warning("Invalid visibility - %s",
                         json.dumps(vars(ev), indent=4))
 
-        co = f"%1 made future room history visible to {to}."
+        co = f"%1 made future room history visible to {to}"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onPowerLevelsEvent(self, room, ev) -> None:
-        co = "%1 changed the room's permissions."  # TODO: improve
+        co = "%1 changed the room's permissions"  # TODO: improve
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -194,42 +194,42 @@ class NioCallbacks:
 
         # Membership changes
         if not prev or membership != prev_membership:
-            reason = f" Reason: {now['reason']}" if now.get("reason") else ""
+            reason = f". Reason: {now['reason']}" if now.get("reason") else ""
 
             if membership == "join":
                 return (
                     member_change,
-                    "%1 accepted their invitation."
+                    "%1 accepted their invitation"
                     if prev and prev_membership == "invite" else
-                    "%1 joined the room.",
+                    "%1 joined the room",
                 )
 
             if membership == "invite":
-                return (member_change, "%1 invited %2 to the room.")
+                return (member_change, "%1 invited %2 to the room")
 
             if membership == "leave":
                 if ev.state_key == ev.sender:
                     return (
                         member_change,
-                        f"%1 declined their invitation.{reason}"
+                        f"%1 declined their invitation{reason}"
                         if prev and prev_membership == "invite" else
-                        f"%1 left the room.{reason}",
+                        f"%1 left the room{reason}",
                     )
 
                 return (
                     member_change,
 
-                    f"%1 withdrew %2's invitation.{reason}"
+                    f"%1 withdrew %2's invitation{reason}"
                     if prev and prev_membership == "invite" else
 
-                    f"%1 unbanned %2 from the room.{reason}"
+                    f"%1 unbanned %2 from the room{reason}"
                     if prev and prev_membership == "ban" else
 
-                    f"%1 kicked out %2 from the room.{reason}",
+                    f"%1 kicked out %2 from the room{reason}",
                 )
 
             if membership == "ban":
-                return (member_change, f"%1 banned %2 from the room.{reason}")
+                return (member_change, f"%1 banned %2 from the room{reason}")
 
         # Profile changes
         changed = []
@@ -260,7 +260,7 @@ class NioCallbacks:
 
             return (
                 TypeSpecifier.profile_change,
-                "%1 changed their {}.".format(" and ".join(changed)),
+                "%1 changed their {}".format(" and ".join(changed)),
             )
 
         log.warning("Unknown member event: %s", json.dumps(vars(ev), indent=4))
@@ -284,27 +284,27 @@ class NioCallbacks:
         if ev.canonical_alias:
             url  = f"https://matrix.to/#/{quote(ev.canonical_alias)}"
             link = f"<a href='{url}'>{ev.canonical_alias}</a>"
-            co   = f"%1 set the room's main address to {link}."
+            co   = f"%1 set the room's main address to {link}"
         else:
-            co = "%1 removed the room's main address."
+            co = "%1 removed the room's main address"
 
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomNameEvent(self, room, ev) -> None:
         if ev.name:
-            co = f"%1 changed the room's name to \"{ev.name}\"."
+            co = f"%1 changed the room's name to \"{ev.name}\""
         else:
-            co = "%1 removed the room's name."
+            co = "%1 removed the room's name"
 
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomAvatarEvent(self, room, ev) -> None:
         if ev.avatar_url:
-            co = "%1 changed the room's picture:"
+            co = "%1 changed the room's picture"
         else:
-            co = "%1 removed the room's picture."
+            co = "%1 removed the room's picture"
 
         await self.client.register_nio_event(
             room, ev, content=co, media_url=ev.avatar_url,
@@ -314,40 +314,40 @@ class NioCallbacks:
     async def onRoomTopicEvent(self, room, ev) -> None:
         if ev.topic:
             topic = HTML_FILTER.filter_inline(ev.topic)
-            co    = f"%1 changed the room's topic to \"{topic}\"."
+            co    = f"%1 changed the room's topic to \"{topic}\""
         else:
-            co = "%1 removed the room's topic."
+            co = "%1 removed the room's topic"
 
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onRoomEncryptionEvent(self, room, ev) -> None:
-        co = "%1 turned on encryption for this room."
+        co = "%1 turned on encryption for this room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onMegolmEvent(self, room, ev) -> None:
-        co = "%1 sent an undecryptable message."
+        co = "%1 sent an undecryptable message"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onBadEvent(self, room, ev) -> None:
-        co = "%1 sent a malformed event."
+        co = "%1 sent a malformed event"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onUnknownBadEvent(self, room, ev) -> None:
-        co = "%1 sent a malformed event lacking the minimal structure."
+        co = "%1 sent a malformed event lacking the minimal structure"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onUnknownEvent(self, room, ev) -> None:
-        co = "%1 sent an event this client doesn't understand."
+        co = "%1 sent an event this client doesn't understand"
         await self.client.register_nio_event(room, ev, content=co)
 
 
     async def onUnknownEncryptedEvent(self, room, ev) -> None:
-        co = "%1 sent an event this client doesn't know how to decrypt."
+        co = "%1 sent an event this client doesn't know how to decrypt"
         await self.client.register_nio_event(room, ev, content=co)
 
 
