@@ -234,8 +234,9 @@ class MatrixClient(nio.AsyncClient):
             # This error will be caught again by the try block later below
             size = 0
 
+        task        = asyncio.Task.current_task()
         monitor     = nio.TransferMonitor(size)
-        upload_item = Upload(item_uuid, monitor, path, total_size=size)
+        upload_item = Upload(item_uuid, task, monitor, path, total_size=size)
         self.models[Upload, room_id][str(item_uuid)] = upload_item
 
         def on_transfered(transfered: int) -> None:
@@ -370,7 +371,7 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
-        del self.models[Upload, room_id][upload_item.uuid]
+        del self.models[Upload, room_id][str(upload_item.uuid)]
 
         uuid = str(uuid4())
 

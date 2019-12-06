@@ -1,3 +1,4 @@
+import asyncio
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -114,6 +115,7 @@ class UploadStatus(AutoStrEnum):
 @dataclass
 class Upload(ModelItem):
     uuid:     UUID                = field()
+    task:     asyncio.Task        = field()
     monitor:  nio.TransferMonitor = field()
     filepath: Path                = field()
 
