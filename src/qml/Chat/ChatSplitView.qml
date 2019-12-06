@@ -4,6 +4,7 @@ import "../Base"
 import "Banners"
 import "Timeline"
 import "RoomSidePane"
+import "FileTransfer"
 
 HSplitView {
     id: chatSplitView
@@ -25,7 +26,7 @@ HSplitView {
             Layout.fillWidth: true
         }
 
-        UploadsBar {
+        TransferList {
             Layout.fillWidth: true
             Layout.minimumHeight: implicitHeight
             Layout.preferredHeight: implicitHeight * uploadsCount
