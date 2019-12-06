@@ -4,7 +4,7 @@ import "../../Base"
 Rectangle {
     implicitWidth: 800
     implicitHeight: firstDelegate ? firstDelegate.height : 0
-    color: theme.chat.uploadsBar.background
+    color: theme.chat.fileTransfer.background
     opacity: implicitHeight ? 1 : 0
     clip: true
 
