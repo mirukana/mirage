@@ -1,14 +1,39 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 import io.thp.pyotherside 1.5
 import "event_handlers.js" as EventHandlers
 
 Python {
     id: py
 
+
     property bool ready: false
     property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
+
+
+    function newQmlFuture() {
+        return {
+            _pyFuture: null,
+
+            get pyFuture() { return this._pyFuture },
+
+            set pyFuture(value) {
+                this._pyFuture = value
+                if (this.cancelPending) this.cancel()
+            },
+
+            cancelPending: false,
+
+            cancel: function() {
+                if (! this.pyFuture) {
+                    this.cancelPending = true
+                    return
+                }
+
+                py.call(py.getattr(this.pyFuture, "cancel"))
+            },
+        }
+    }
 
     function setattr(obj, attr, value, callback=null) {
         py.call(py.getattr(obj, "__setattr__"), [attr, value], callback)
@@ -22,27 +47,43 @@ Python {
         let uuid = name + "." + CppUtils.uuid()
 
         pendingCoroutines[uuid] = {onSuccess, onError}
-        call("APP.call_backend_coro", [name, uuid, args])
+
+        let qmlFuture = py.newQmlFuture()
+
+        call("APP.call_backend_coro", [name, uuid, args], pyFuture => {
+            qmlFuture.pyFuture = pyFuture
+        })
+
+        return qmlFuture
     }
 
     function callClientCoro(
         accountId, name, args=[], onSuccess=null, onError=null
     ) {
+        let qmlFuture = py.newQmlFuture()
+
         callCoro("wait_until_client_exists", [accountId], () => {
             let uuid = accountId + "." + name + "." + CppUtils.uuid()
 
             pendingCoroutines[uuid] = {onSuccess, onError}
-            call("APP.call_client_coro", [accountId, name, uuid, args])
+
+            let call_args = [accountId, name, uuid, args]
+
+            call("APP.call_client_coro", call_args, pyFuture => {
+                qmlFuture.pyFuture = pyFuture
+            })
         })
+
+        return qmlFuture
     }
 
     function saveConfig(backend_attribute, data, callback=null) {
         if (! py.ready) { return }  // config not loaded yet
-        callCoro(backend_attribute + ".write", [data], callback)
+        return callCoro(backend_attribute + ".write", [data], callback)
     }
 
     function loadSettings(callback=null) {
-        callCoro("load_settings", [], ([settings, uiState, theme]) => {
+        return callCoro("load_settings", [], ([settings, uiState, theme]) => {
             window.settings = settings
             window.uiState  = uiState
             window.theme    = Qt.createQmlObject(theme, window, "theme")

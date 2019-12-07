@@ -31,7 +31,7 @@ HBox {
 
             signInTimeout.restart()
 
-            py.callCoro("login_client", args, userId => {
+            loginFuture = py.callCoro("login_client", args, userId => {
                 signInTimeout.stop()
                 errorMessage.text = ""
                 button.loading    = false
@@ -48,9 +48,14 @@ HBox {
                 )
 
             }, type => {
-                if (type === "CancelledError") return
-
                 signInTimeout.stop()
+
+                if (type === "CancelledError") {
+                    loginFuture    = null
+                    button.loading = false
+                    return
+                }
+
                 let txt = qsTr("Invalid request or login type")
 
                 if (type === "MatrixForbidden")
@@ -64,11 +69,14 @@ HBox {
             })
         },
 
-        cancel: button => {}
+        cancel: button => { if (loginFuture) loginFuture.cancel() }
     })
 
 
+    property var loginFuture: null
+
     property string signInWith: "username"
+
     readonly property bool canSignIn:
         serverField.text && idField.text && passwordField.text &&
         ! serverField.error

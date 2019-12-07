@@ -54,7 +54,7 @@ class App:
         return asyncio.run_coroutine_threadsafe(coro, self.loop)
 
 
-    def _call_coro(self, coro: Coroutine, uuid: str) -> None:
+    def _call_coro(self, coro: Coroutine, uuid: str) -> Future:
         def on_done(future: Future) -> None:
             result = exception = trace = None
 
@@ -66,21 +66,23 @@ class App:
 
             CoroutineDone(uuid, result, exception, trace)
 
-        self.run_in_loop(coro).add_done_callback(on_done)
+        future = self.run_in_loop(coro)
+        future.add_done_callback(on_done)
+        return future
 
 
     def call_backend_coro(self, name: str, uuid: str, args: Sequence[str] = (),
-                         ) -> None:
-        self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
+                         ) -> Future:
+        return self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
 
     def call_client_coro(self,
                          account_id: str,
                          name:       str,
                          uuid:       str,
-                         args:       Sequence[str] = ()) -> None:
+                         args:       Sequence[str] = ()) -> Future:
         client = self.backend.clients[account_id]
-        self._call_coro(attrgetter(name)(client)(*args), uuid)
+        return self._call_coro(attrgetter(name)(client)(*args), uuid)
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
