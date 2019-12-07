@@ -21,8 +21,8 @@ CheckBox {
 
 
     indicator: Rectangle {
-        implicitWidth: implicitHeight
-        implicitHeight: mainText.font.pixelSize * 1.5
+        implicitWidth: theme.controls.checkBox.boxSize
+        implicitHeight: implicitWidth
         x: box.leftPadding
         y: box.topPadding + box.availableHeight / 2 - height / 2
         radius: theme.radius / 1.5

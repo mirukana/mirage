@@ -90,7 +90,7 @@ Item {
 
             Component.onCompleted: {
                 if (! py.startupAnyAccountsSaved) {
-                    pageLoader.showPage("SignIn")
+                    pageLoader.showPage("AddAccount/AddAccount")
                     return
                 }
 

@@ -18,7 +18,7 @@ HRowLayout {
         icon.name: "add-account"
         toolTip.text: qsTr("Add another account")
         backgroundColor: theme.sidePane.settingsButton.background
-        onClicked: pageLoader.showPage("SignIn")
+        onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.fillHeight: true
     }

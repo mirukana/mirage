@@ -145,6 +145,7 @@ controls:
     checkBox:
         color checkIconColorize: colors.accentBackground
         color boxBackground:     controls.button.background
+        int boxSize:             24 * uiScale
 
         color boxBorder:        hsluv(0, 0, 50, 0.3)
         color boxHoveredBorder: colors.accentBackground

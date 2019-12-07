@@ -15,14 +15,6 @@ Rectangle {
 
 
     property real multiplyWidth: 1.0
-    property real multiplyHorizontalSpacing: 1.5
-    property real multiplyVerticalSpacing: 1.5
-
-    property int horizontalSpacing:
-        Math.min(theme.spacing * width / 400, theme.spacing) *
-        multiplyHorizontalSpacing
-
-    property int verticalSpacing: theme.spacing * multiplyVerticalSpacing
 
     property alias title: interfaceTitle.text
     property alias buttonModel: buttonRepeater.model
@@ -51,7 +43,7 @@ Rectangle {
     HColumnLayout {
         id: mainColumn
         width: parent.width
-        spacing: interfaceBox.verticalSpacing
+        spacing: theme.spacing
 
         HLabel {
             id: interfaceTitle
@@ -62,21 +54,21 @@ Rectangle {
 
             Layout.preferredWidth: parent.width
             Layout.fillWidth: true
-            Layout.topMargin: interfaceBox.verticalSpacing
-            Layout.leftMargin: interfaceBox.horizontalSpacing
-            Layout.rightMargin: interfaceBox.horizontalSpacing
+            Layout.topMargin: theme.spacing
+            Layout.leftMargin: theme.spacing
+            Layout.rightMargin: theme.spacing
         }
 
         HColumnLayout {
             id: interfaceBody
-            spacing: interfaceBox.verticalSpacing
+            spacing: theme.spacing
 
             Layout.preferredWidth: parent.width
             Layout.fillWidth: true
             Layout.topMargin:
-                interfaceTitle.visible ? 0 : interfaceBox.verticalSpacing
-            Layout.leftMargin: interfaceBox.horizontalSpacing
-            Layout.rightMargin: interfaceBox.horizontalSpacing
+                interfaceTitle.visible ? 0 : theme.spacing
+            Layout.leftMargin: theme.spacing
+            Layout.rightMargin: theme.spacing
         }
 
         HGridLayout {

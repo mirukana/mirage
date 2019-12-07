@@ -10,5 +10,4 @@ HCheckBox {
         qsTr("Cannot be disabled later!") +
         "</font>"
     subtitle.textFormat: Text.StyledText
-    spacing: addChatBox.horizontalSpacing
 }

@@ -89,15 +89,14 @@ HBox {
         id: publicCheckBox
         text: qsTr("Make this room public")
         subtitle.text: qsTr("Anyone will be able to join without invitation.")
-        spacing: addChatBox.horizontalSpacing
 
-        Layout.maximumWidth: parent.width
+        Layout.fillWidth: true
     }
 
     EncryptCheckBox {
         id: encryptCheckBox
 
-        Layout.maximumWidth: parent.width
+        Layout.fillWidth: true
     }
 
     HCheckBox {
@@ -105,9 +104,8 @@ HBox {
         text: qsTr("Reject users from other matrix servers")
         subtitle.text: qsTr("Cannot be changed later!")
         subtitle.color: theme.colors.middleBackground
-        spacing: addChatBox.horizontalSpacing
 
-        Layout.maximumWidth: parent.width
+        Layout.fillWidth: true
     }
 
     HLabel {

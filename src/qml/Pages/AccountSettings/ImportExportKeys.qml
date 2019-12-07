@@ -4,9 +4,6 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 HBox {
-    horizontalSpacing: currentSpacing
-    verticalSpacing: currentSpacing
-
     buttonModel: [
         { name: "export", text: qsTr("Export"), iconName: "export-keys"},
         { name: "import", text: qsTr("Import"), iconName: "import-keys"},
