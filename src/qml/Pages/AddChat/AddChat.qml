@@ -6,7 +6,6 @@ import "../../utils.js" as Utils
 
 HPage {
     id: addChatPage
-    onFocusChanged: findSomeone.forceActiveFocus()
 
 
     property string userId
@@ -15,48 +14,13 @@ HPage {
         Utils.getItem(modelSources["Account"] || [], "user_id", userId)
 
 
-    HColumnLayout {
-        Layout.alignment: Qt.AlignCenter
-        Layout.minimumWidth: Layout.maximumWidth
-        Layout.maximumWidth: Math.min(
-            parent.width,
-            Math.max(tabBar.contentWidth, swipeView.contentWidth),
-        )
+    HTabbedBoxes {
+        tabModel: [
+            qsTr("Find someone"), qsTr("Join room"), qsTr("Create room"),
+        ]
 
-        HTabBar {
-            id: tabBar
-            currentIndex: 0
-            Component.onCompleted: shortcuts.tabsTarget = this
-
-            Layout.fillWidth: true
-
-            Repeater {
-                model: [
-                    qsTr("Find someone"),
-                    qsTr("Join room"),
-                    qsTr("Create room"),
-                ]
-
-                HTabButton {
-                    text: modelData
-                }
-            }
-        }
-
-        SwipeView {
-            id: swipeView
-            clip: true
-            currentIndex: tabBar.currentIndex
-            interactive: false
-
-            Layout.fillWidth: true
-
-            Behavior on implicitWidth { HNumberAnimation {} }
-            Behavior on implicitHeight { HNumberAnimation {} }
-
-            FindSomeone { id: findSomeone }
-            JoinRoom {}
-            CreateRoom {}
-        }
+        FindSomeone { Component.onCompleted: forceActiveFocus() }
+        JoinRoom {}
+        CreateRoom {}
     }
 }
