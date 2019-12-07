@@ -107,11 +107,11 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
-            icon.name: "logout"
+            icon.name: "sign-out"
             icon.color: theme.colors.negativeBackground
-            text: qsTr("Logout")
+            text: qsTr("Sign out")
             onTriggered: Utils.makePopup(
-                "Popups/LogoutPopup.qml",
+                "Popups/SignOutPopup.qml",
                 mainUI,
                 { "userId": model.data.user_id },
                 popup => { popup.ok.connect(() => { disconnecting = true }) },

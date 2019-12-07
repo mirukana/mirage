@@ -12,7 +12,7 @@ HFileDialogOpener {
     }
 
 
-    // This is used for the LogoutPopup to know when the export is done
+    // This is used for the SignOutPopup to know when the export is done
     // so it can close
     signal done()
 

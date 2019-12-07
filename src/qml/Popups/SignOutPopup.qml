@@ -18,7 +18,7 @@ BoxPopup {
     box.focusButton: "ok"
     box.buttonModel: [
         { name: "ok", text: qsTr("Export keys"), iconName: "export-keys" },
-        { name: "signout", text: qsTr("Sign out now"), iconName: "logout",
+        { name: "signout", text: qsTr("Sign out now"), iconName: "sign-out",
           iconColor: theme.colors.middleBackground },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
