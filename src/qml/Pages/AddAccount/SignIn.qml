@@ -93,7 +93,8 @@ HBox {
     HRowLayout {
         spacing: theme.spacing * 1.25
         Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: spacing / 2
+
+        Layout.topMargin: theme.spacing
         Layout.bottomMargin: Layout.topMargin
 
         Repeater {

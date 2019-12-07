@@ -38,11 +38,10 @@ Rectangle {
     HColumnLayout {
         id: mainColumn
         width: parent.width
-        spacing: theme.spacing
 
         HColumnLayout {
             id: interfaceBody
-            spacing: parent.spacing
+            spacing: theme.spacing
 
             Layout.margins: spacing
         }
