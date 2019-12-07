@@ -1,5 +1,4 @@
 - Media
-  - Upload progression and pausing 
   - Confirmation box after picking file to upload
   - Handle set avatar upload errors
   - Show real progression for mxc thumbnail loadings
@@ -18,8 +17,6 @@
     - Special treatment for matrix.to URLs?
   - EventFile & Downloading (right click on media > save as...)
 
-  - Create room tabs brutal size transition
-
 - Refactoring
   - Use a singleton for utils.js
   - Room header elide detection
@@ -34,6 +31,7 @@
     - Reducable room sidepane, swipe to show full-window
 
 - Fixes
+  - Pausing uploads doesn't work well with matrix.org
   - Quickly posting with another account leads to sync stop
   - CPU usage
   - `code` not colored in room subtitle

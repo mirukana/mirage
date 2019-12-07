@@ -51,6 +51,9 @@ HPage {
 
             Layout.fillWidth: true
 
+            Behavior on implicitWidth { HNumberAnimation {} }
+            Behavior on implicitHeight { HNumberAnimation {} }
+
             FindSomeone { id: findSomeone }
             JoinRoom {}
             CreateRoom {}
