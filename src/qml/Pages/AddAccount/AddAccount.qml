@@ -9,7 +9,7 @@ HPage {
         ]
 
         SignIn { Component.onCompleted: forceActiveFocus() }
-        Item {}  // TODO
-        Item {}  // TODO
+        Register {}
+        Recovery {}
     }
 }
