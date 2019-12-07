@@ -14,14 +14,18 @@ HBox {
             text: qsTr("Sign in"),
             enabled: canSignIn,
             iconName: "sign-in",
-            disableWhileLoading: false
+            loading: loginFuture !== null,
+            disableWhileLoading: false,
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel"},
     ]
 
     buttonCallbacks: ({
         apply: button => {
-            button.loading    = true
+            if (loginFuture) loginFuture.cancel()
+
+            signInTimeout.restart()
+
             errorMessage.text = ""
 
             let args = [
@@ -29,12 +33,10 @@ HBox {
                 undefined, serverField.text,
             ]
 
-            signInTimeout.restart()
-
             loginFuture = py.callCoro("login_client", args, userId => {
                 signInTimeout.stop()
                 errorMessage.text = ""
-                button.loading    = false
+                loginFuture       = null
 
                 py.callCoro(
                     rememberAccount.checked ?
@@ -48,13 +50,10 @@ HBox {
                 )
 
             }, type => {
-                signInTimeout.stop()
+                if (type === "CancelledError") return
 
-                if (type === "CancelledError") {
-                    loginFuture    = null
-                    button.loading = false
-                    return
-                }
+                loginFuture = null
+                signInTimeout.stop()
 
                 let txt = qsTr("Invalid request or login type")
 
@@ -65,11 +64,16 @@ HBox {
                     txt = qsTr("This account was deactivated")
 
                 errorMessage.text = txt
-                button.loading    = false
             })
         },
 
-        cancel: button => { if (loginFuture) loginFuture.cancel() }
+        cancel: button => {
+            if (! loginFuture) return
+
+            signInTimeout.stop()
+            loginFuture.cancel()
+            loginFuture    = null
+        }
     })
 
 

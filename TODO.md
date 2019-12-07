@@ -1,4 +1,4 @@
-- cancel sign in, sign out key icon
+- better cancel for all boxes
 - Media
   - Confirmation box after picking file to upload
   - Handle set avatar upload errors

@@ -74,6 +74,8 @@ Rectangle {
                         modelData.enabled === undefined ?
                         true : modelData.enabled
 
+                    loading: modelData.loading || false
+
                     disableWhileLoading:
                         modelData.disableWhileLoading === undefined ?
                         true : modelData.disableWhileLoading

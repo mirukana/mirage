@@ -50,7 +50,6 @@ class Backend:
 
     # Clients management
 
-    @utils.cancel_previous
     async def login_client(self,
         user:       str,
         password:   str,

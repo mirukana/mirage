@@ -1,19 +1,16 @@
 """Contains various utilities that are used throughout the package."""
 
-import asyncio
 import collections
 import html
 import inspect
 import io
-import logging as log
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from datetime import timedelta
 from enum import Enum
 from enum import auto as autostr
-from functools import wraps
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, Tuple, Type
+from typing import Any, Dict, Tuple, Type
 from uuid import UUID
 
 import filetype
@@ -24,8 +21,6 @@ from nio.crypto import async_generator_from_data
 
 Size = Tuple[int, int]
 auto = autostr
-
-CANCELLABLE_FUTURES: Dict[Tuple[Any, Callable], asyncio.Future] = {}
 
 
 class AutoStrEnum(Enum):
@@ -159,35 +154,3 @@ def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
         if not m[0].startswith("_") and
         m[1].__module__.startswith(module.__name__)
     }
-
-
-def cancel_previous(async_func):
-    """When the wrapped coroutine is called, cancel any previous instance
-    of that coroutine that may still be running.
-    """
-
-    @wraps(async_func)
-    async def wrapper(*args, **kwargs):
-        try:
-            arg0_is_self = inspect.getfullargspec(async_func).args[0] == "self"
-        except IndexError:
-            parent_obj = None
-        else:
-            parent_obj = args[0] if arg0_is_self else None
-
-        previous = CANCELLABLE_FUTURES.get((parent_obj, async_func))
-        if previous:
-            previous.cancel()
-            log.info("Cancelled previous coro: %s", previous)
-
-        future = asyncio.ensure_future(async_func(*args, **kwargs))
-        CANCELLABLE_FUTURES[parent_obj, async_func] = future
-
-        try:
-            result = await future
-            return result
-        finally:
-            # Make sure to do this even if an exception happens
-            del CANCELLABLE_FUTURES[parent_obj, async_func]
-
-    return wrapper
