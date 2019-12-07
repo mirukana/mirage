@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../utils.js" as Utils
 
 HPopup {
     id: popup
@@ -22,9 +23,12 @@ HPopup {
     property bool okEnabled: true
 
 
-    contentItem: HBox {
+    HBox {
         id: box
         clickButtonOnEnter: "ok"
+        implicitWidth: Math.min(
+            window.width - popup.margins, theme.controls.popup.defaultWidth,
+        )
 
         buttonModel: [
             { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},

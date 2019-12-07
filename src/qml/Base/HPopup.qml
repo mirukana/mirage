@@ -7,6 +7,7 @@ Popup {
     modal: true
     focus: true
     padding: 0
+    margins: theme.spacing
 
 
     enter: Transition {

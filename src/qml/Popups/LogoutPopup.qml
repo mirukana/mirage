@@ -15,7 +15,6 @@ BoxPopup {
         "you sign in again, by importing this file in your account settings."
     )
 
-    box.multiplyWidth: 1.5
     box.focusButton: "ok"
     box.buttonModel: [
         { name: "ok", text: qsTr("Export keys"), iconName: "export-keys" },
@@ -23,6 +22,7 @@ BoxPopup {
           iconColor: theme.colors.middleBackground },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
+
     box.buttonCallbacks: ({
         ok: button => {
             Utils.makeObject(

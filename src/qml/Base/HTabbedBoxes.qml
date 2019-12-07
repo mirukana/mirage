@@ -3,14 +3,10 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 HColumnLayout {
-    implicitWidth: Math.min(
-        parent.width,
-        Math.max(tabBar.contentWidth, swipeView.contentWidth),
-    )
-
     Layout.alignment: Qt.AlignCenter
     Layout.fillWidth: false
     Layout.fillHeight: false
+    Layout.maximumWidth: parent.width
 
     property alias tabIndex: tabBar.currentIndex
     property alias tabModel: tabRepeater.model

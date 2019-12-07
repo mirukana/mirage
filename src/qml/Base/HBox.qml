@@ -5,18 +5,13 @@ import "../utils.js" as Utils
 Rectangle {
     id: interfaceBox
     color: theme.controls.box.background
-    implicitWidth: Math.min(
-        window.width, theme.minimumSupportedWidthPlusSpacing * multiplyWidth
-    )
+    implicitWidth: theme.controls.box.defaultWidth
     implicitHeight: childrenRect.height
 
     Keys.onReturnPressed: if (clickButtonOnEnter) enterClickButton()
     Keys.onEnterPressed: Keys.onReturnPressed(event)
 
 
-    property real multiplyWidth: 1.0
-
-    property alias title: interfaceTitle.text
     property alias buttonModel: buttonRepeater.model
     property var buttonCallbacks: []
     property string focusButton: ""
@@ -45,30 +40,11 @@ Rectangle {
         width: parent.width
         spacing: theme.spacing
 
-        HLabel {
-            id: interfaceTitle
-            visible: Boolean(text)
-            font.pixelSize: theme.fontSize.bigger
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.Wrap
-
-            Layout.preferredWidth: parent.width
-            Layout.fillWidth: true
-            Layout.topMargin: theme.spacing
-            Layout.leftMargin: theme.spacing
-            Layout.rightMargin: theme.spacing
-        }
-
         HColumnLayout {
             id: interfaceBody
-            spacing: theme.spacing
+            spacing: parent.spacing
 
-            Layout.preferredWidth: parent.width
-            Layout.fillWidth: true
-            Layout.topMargin:
-                interfaceTitle.visible ? 0 : theme.spacing
-            Layout.leftMargin: theme.spacing
-            Layout.rightMargin: theme.spacing
+            Layout.margins: spacing
         }
 
         HGridLayout {
@@ -76,8 +52,6 @@ Rectangle {
             visible: buttonModel.length > 0
             flow: width >= buttonRepeater.childrenImplicitWidth ?
                   GridLayout.LeftToRight : GridLayout.TopToBottom
-
-            Layout.preferredWidth: parent.width
 
             HRepeater {
                 id: buttonRepeater

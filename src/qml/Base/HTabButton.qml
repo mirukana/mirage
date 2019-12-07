@@ -13,7 +13,6 @@ TabButton {
     iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
 
-    // Must be explicitely set to display correctly on KDE
     implicitWidth: Math.max(
         implicitBackgroundWidth + leftInset + rightInset,
         // FIXME: why is *2 needed to not get ellided text in AddAccount page?

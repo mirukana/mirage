@@ -57,7 +57,9 @@ BoxPopup {
 
 
     HRowLayout {
-        spacing: box.horizontalSpacing
+        spacing: theme.spacing
+
+        Layout.fillWidth: true
 
         HTextField {
             id: passwordField

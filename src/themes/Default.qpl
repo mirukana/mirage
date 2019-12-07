@@ -98,10 +98,12 @@ icons:
 
 controls:
     box:
-        color background: colors.strongBackground
+        int defaultWidth: minimumSupportedWidthPlusSpacing
         int radius:       theme.radius
+        color background: colors.strongBackground
 
     popup:
+        int defaultWidth: minimumSupportedWidthPlusSpacing * 2
         color background: colors.strongBackground
 
     header:
