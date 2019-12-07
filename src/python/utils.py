@@ -10,6 +10,7 @@ import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from datetime import timedelta
 from enum import Enum
 from enum import auto as autostr
+from functools import wraps
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Callable, Dict, Tuple, Type
@@ -165,6 +166,7 @@ def cancel_previous(async_func):
     of that coroutine that may still be running.
     """
 
+    @wraps(async_func)
     async def wrapper(*args, **kwargs):
         try:
             arg0_is_self = inspect.getfullargspec(async_func).args[0] == "self"
