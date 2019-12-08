@@ -41,7 +41,7 @@ Rectangle {
 
         HColumnLayout {
             id: interfaceBody
-            spacing: theme.spacing
+            spacing: theme.spacing * 1.5
 
             Layout.margins: spacing
         }
