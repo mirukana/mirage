@@ -178,8 +178,12 @@ HBox {
 
     HCheckBox {
         id: rememberAccount
-        text: qsTr("Remember my account")
         checked: true
+        text: qsTr("Remember my account")
+        subtitle.text: qsTr(
+            "An access token will be stored on this device to " +
+            "automatically sign you in."
+        )
 
         Layout.fillWidth: true
     }
