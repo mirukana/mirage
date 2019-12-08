@@ -7,8 +7,8 @@ ApplicationWindow {
     flags: Qt.WA_TranslucentBackground
     minimumWidth: theme ? theme.minimumSupportedWidth : 240
     minimumHeight: theme ? theme.minimumSupportedHeight : 120
-    width: 640
-    height: 480
+    width: Math.min(screen.width, 1152)
+    height: Math.min(screen.height, 768)
     visible: true
     color: "transparent"
 
