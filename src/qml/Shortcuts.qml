@@ -3,7 +3,9 @@ import QtQuick.Controls 2.12
 import "Base"
 import "utils.js" as Utils
 
-HShortcutHandler {
+Item {
+    visible: false
+
     // Flickable or ListView that should be affected by scroll shortcuts
     property Item flickTarget
 
@@ -19,40 +21,40 @@ HShortcutHandler {
     HShortcut {
         enabled: debugMode
         sequences: settings.keys.startPythonDebugger
-        onPressed: py.call("APP.pdb")
+        onActivated: py.call("APP.pdb")
     }
 
     HShortcut {
         enabled: debugMode && debugConsole
         sequences: settings.keys.toggleDebugConsole
-        onPressed: debugConsole.visible = ! debugConsole.visible
+        onActivated: debugConsole.visible = ! debugConsole.visible
     }
 
     HShortcut {
         sequences: settings.keys.reloadConfig
-        onPressed: py.loadSettings(() => { mainUI.pressAnimation.start() })
+        onActivated: py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
     HShortcut {
         sequences: settings.keys.zoomIn
-        onPressed: theme.uiScale += 0.1
+        onActivated: theme.uiScale += 0.1
     }
 
     HShortcut {
         sequences: settings.keys.zoomOut
-        onPressed: theme.uiScale = Math.max(0.1, theme.uiScale - 0.1)
+        onActivated: theme.uiScale = Math.max(0.1, theme.uiScale - 0.1)
     }
 
     HShortcut {
         sequences: settings.keys.zoomReset
-        onPressed: theme.uiScale = 1
+        onActivated: theme.uiScale = 1
     }
 
     // Pages
 
     HShortcut {
         sequences: settings.keys.goToLastPage
-        onPressed: mainUI.pageLoader.showPrevious()
+        onActivated: mainUI.pageLoader.showPrevious()
     }
 
     // Page scrolling
@@ -60,50 +62,44 @@ HShortcutHandler {
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollUp
-        onPressed: Utils.smartVerticalFlick(flickTarget, -335)
-        onHeld: pressed(event)
+        onActivated: Utils.smartVerticalFlick(flickTarget, -335)
     }
 
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollDown
-        onPressed: Utils.smartVerticalFlick(flickTarget, 335)
-        onHeld: pressed(event)
+        onActivated: Utils.smartVerticalFlick(flickTarget, 335)
     }
 
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollPageUp
-        onPressed: Utils.smartVerticalFlick(
+        onActivated: Utils.smartVerticalFlick(
             flickTarget, -2.3 * flickTarget.height, 8,
         )
-        onHeld: pressed(event)
         // Ensure only a slight slip after releasing the key
-        onReleased: Utils.smartVerticalFlick(flickTarget, -335)
+        // onReleased: Utils.smartVerticalFlick(flickTarget, -335)
     }
 
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollPageDown
-        onPressed: Utils.smartVerticalFlick(
+        onActivated: Utils.smartVerticalFlick(
             flickTarget, 2.3 * flickTarget.height, 8,
         )
-        onHeld: pressed(event)
-        onReleased: Utils.smartVerticalFlick(flickTarget, 335)
+        // onReleased: Utils.smartVerticalFlick(flickTarget, 335)
     }
 
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollToTop
-        onPressed: Utils.flickToTop(flickTarget)
-        onHeld: pressed(event)
+        onActivated: Utils.flickToTop(flickTarget)
     }
 
     HShortcut {
         enabled: flickTarget
         sequences: settings.keys.scrollToBottom
-        onPressed: Utils.flickToBottom(flickTarget)
-        onHeld: pressed(event)
+        onActivated: Utils.flickToBottom(flickTarget)
     }
 
 
@@ -112,7 +108,7 @@ HShortcutHandler {
     HShortcut {
         enabled: tabsTarget
         sequences: settings.keys.previousTab
-        onPressed: tabsTarget.setCurrentIndex(
+        onActivated: tabsTarget.setCurrentIndex(
             Utils.numberWrapAt(tabsTarget.currentIndex - 1, tabsTarget.count),
         )
     }
@@ -120,7 +116,7 @@ HShortcutHandler {
     HShortcut {
         enabled: tabsTarget
         sequences: settings.keys.nextTab
-        onPressed: tabsTarget.setCurrentIndex(
+        onActivated: tabsTarget.setCurrentIndex(
             Utils.numberWrapAt(tabsTarget.currentIndex + 1, tabsTarget.count),
         )
     }
@@ -131,54 +127,53 @@ HShortcutHandler {
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.focusSidePane
-        onPressed: mainUI.sidePane.setFocus()
+        onActivated: mainUI.sidePane.toggleFocus()
+        context: Qt.ApplicationShortcut
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.clearRoomFilter
-        onPressed: mainUI.sidePane.toolBar.roomFilter = ""
+        onActivated: mainUI.sidePane.toolBar.roomFilter = ""
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewAccount
-        onPressed: mainUI.sidePane.toolBar.addAccountButton.clicked()
+        onActivated: mainUI.sidePane.toolBar.addAccountButton.clicked()
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewChat
-        onPressed: mainUI.sidePane.sidePaneList.addNewChat()
+        onActivated: mainUI.sidePane.sidePaneList.addNewChat()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.accountSettings
-        onPressed: mainUI.sidePane.sidePaneList.accountSettings()
+        onActivated: mainUI.sidePane.sidePaneList.accountSettings()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.toggleCollapseAccount
-        onPressed: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
+        onActivated: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
-        onPressed: mainUI.sidePane.sidePaneList.previous()
-        onHeld: pressed(event)
+        onActivated: mainUI.sidePane.sidePaneList.previous()
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToNextRoom
-        onPressed: mainUI.sidePane.sidePaneList.next()
-        onHeld: pressed(event)
+        onActivated: mainUI.sidePane.sidePaneList.next()
     }
 
 
@@ -187,7 +182,7 @@ HShortcutHandler {
     HShortcut {
         enabled: window.uiState.page == "Chat/Chat.qml"
         sequences: settings.keys.clearRoomMessages
-        onPressed: Utils.makePopup(
+        onActivated: Utils.makePopup(
             "Popups/ClearMessagesPopup.qml",
             mainUI,
             {
@@ -200,7 +195,7 @@ HShortcutHandler {
     HShortcut {
         enabled: window.uiState.page == "Chat/Chat.qml"
         sequences: settings.keys.sendFile
-        onPressed: Utils.makeObject(
+        onActivated: Utils.makeObject(
             "Dialogs/SendFilePicker.qml",
             mainUI,
             {
@@ -215,7 +210,7 @@ HShortcutHandler {
     HShortcut {
         enabled: window.uiState.page == "Chat/Chat.qml"
         sequences: settings.keys.sendFileFromPathInClipboard
-        onPressed: Utils.sendFile(
+        onActivated: Utils.sendFile(
             window.uiState.pageProperties.userId,
             window.uiState.pageProperties.roomId,
             Clipboard.text.trim(),

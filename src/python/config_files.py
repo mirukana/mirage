@@ -121,14 +121,14 @@ class UISettings(JSONConfigFile):
                 "toggleDebugConsole":  ["Alt+Shift+C"],
                 "reloadConfig":        ["Alt+Shift+R"],
 
-                "zoomIn":    ["Ctrl+Plus", "Ctrl+Shift+Plus"],
-                "zoomOut":   ["Ctrl+Minus", "Ctrl+Shift+Minus"],
-                "zoomReset": ["Ctrl+Equal", "Ctrl+Shift+Backspace"],
+                "zoomIn":    ["Ctrl++"],
+                "zoomOut":   ["Ctrl+-"],
+                "zoomReset": ["Ctrl+="],
 
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
-                "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PageUp"],
-                "scrollPageDown": ["Alt+Ctrl+Down", "Alt+Ctrl+J", "PageDown"],
+                "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PgUp"],
+                "scrollPageDown": ["Alt+Ctrl+Down", "Alt+Ctrl+J", "PgDown"],
                 "scrollToTop":
                     ["Alt+Ctrl+Shift+Up", "Alt+Ctrl+Shift+K", "Home"],
                 "scrollToBottom":
@@ -148,8 +148,8 @@ class UISettings(JSONConfigFile):
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [ "Alt+O"],
 
-                "clearRoomMessages": ["Ctrl+L"],
-                "sendFile": ["Alt+F"],
+                "clearRoomMessages":           ["Ctrl+L"],
+                "sendFile":                    ["Alt+F"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+F"],
             },
         }
