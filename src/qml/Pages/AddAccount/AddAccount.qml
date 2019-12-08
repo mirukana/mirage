@@ -5,7 +5,7 @@ import "../../Base"
 HPage {
     HTabbedBoxes {
         tabModel: [
-            qsTr("Sign in"), qsTr("Register"), qsTr("Recovery"),
+            qsTr("Sign in"), qsTr("Register"), qsTr("Reset"),
         ]
 
         SignIn { Component.onCompleted: forceActiveFocus() }

@@ -103,6 +103,7 @@ HBox {
     }
 
     HRowLayout {
+        visible: false  // TODO
         spacing: theme.spacing * 1.25
         Layout.alignment: Qt.AlignHCenter
 
@@ -121,6 +122,25 @@ HBox {
                 onClicked: signInWith = modelData
             }
         }
+    }
+
+    HTextField {
+        id: idField
+        placeholderText: qsTr(
+            signInWith === "email" ? "Email" :
+            signInWith === "phone" ? "Phone" :
+            "Username"
+        )
+
+        Layout.fillWidth: true
+    }
+
+    HTextField {
+        id: passwordField
+        placeholderText: qsTr("Password")
+        echoMode: HTextField.Password
+
+        Layout.fillWidth: true
     }
 
     HTextField {
@@ -154,25 +174,6 @@ HBox {
 
         readonly property bool knownServerChosen:
             knownServers.includes(cleanText)
-    }
-
-    HTextField {
-        id: idField
-        placeholderText: qsTr(
-            signInWith === "email" ? "Email" :
-            signInWith === "phone" ? "Phone" :
-            "Username"
-        )
-
-        Layout.fillWidth: true
-    }
-
-    HTextField {
-        id: passwordField
-        placeholderText: qsTr("Password")
-        echoMode: HTextField.Password
-
-        Layout.fillWidth: true
     }
 
     HCheckBox {
