@@ -25,7 +25,7 @@ HBox {
         wrapMode: Text.Wrap
         text: qsTr(
             "Account recovery is not implemented yet. You can reset your " +
-            "password using a client that supports it, such as Riot."
+            "password using a client that supports it, like Riot."
         )
 
         Layout.fillWidth: true

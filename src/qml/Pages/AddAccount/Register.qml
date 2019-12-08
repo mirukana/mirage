@@ -21,7 +21,7 @@ HBox {
         wrapMode: Text.Wrap
         text: qsTr(
             "Registering is not implemented yet. You can create a new " +
-            "account from a client that supports it, such as Riot."
+            "account from a client that supports it, like Riot."
         )
 
         Layout.fillWidth: true
