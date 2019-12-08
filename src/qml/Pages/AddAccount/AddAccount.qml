@@ -10,6 +10,6 @@ HPage {
 
         SignIn { Component.onCompleted: forceActiveFocus() }
         Register {}
-        Recovery {}
+        Reset {}
     }
 }
