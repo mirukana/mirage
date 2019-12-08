@@ -3,107 +3,36 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
 
-Rectangle {
+HDrawer {
     id: sidePane
     clip: true
-    opacity: mainUI.accountsPresent && ! reduce ? 1 : 0
-    visible: opacity > 0
-
+    opacity: mainUI.accountsPresent ? 1 : 0
     color: theme.sidePane.background
+    normalWidth: window.uiState.sidePaneManualWidth
+
+    onUserResized: {
+        window.uiState.sidePaneManualWidth = newWidth
+        window.uiStateChanged()
+    }
+
 
     property bool hasFocus: toolBar.filterField.activeFocus
     property alias sidePaneList: sidePaneList
     property alias toolBar: toolBar
 
-    property real autoWidthRatio: theme.sidePane.autoWidthRatio
-    property bool manuallyResizing: false
-    property bool manuallyResized: false
-    property int manualWidth: 0
-    property bool animateWidth: true
 
-    Component.onCompleted: {
-        if (window.uiState.sidePaneManualWidth) {
-            manualWidth     = window.uiState.sidePaneManualWidth
-            manuallyResized = true
-        }
-    }
-
-    onFocusChanged: if (focus) toolBar.filterField.forceActiveFocus()
-
-    onManualWidthChanged: {
-        window.uiState.sidePaneManualWidth = manualWidth
-        window.uiStateChanged()
-    }
-
-    property int maximumCalculatedWidth: Math.min(
-        manuallyResized ? manualWidth : theme.sidePane.maximumAutoWidth,
-        window.width - theme.minimumSupportedWidthPlusSpacing
-    )
-
-    property int parentWidth: parent.width
-    // Needed for SplitView since it breaks the binding when user manual sizes
-    onParentWidthChanged: width = Qt.binding(() => implicitWidth)
-
-
-    property int calculatedWidth: Math.min(
-        manuallyResized ? manualWidth * theme.uiScale :
-        parentWidth * autoWidthRatio,
-
-        maximumCalculatedWidth
-    )
-
-    property bool collapse:
-        (manuallyResizing ? width : calculatedWidth) <
-        (manuallyResized ?
-         (theme.sidePane.collapsedWidth + theme.spacing * 2) :
-         theme.sidePane.autoCollapseBelowWidth)
-
-    property bool reduce:
-        window.width < theme.sidePane.autoReduceBelowWindowWidth
-
-    property int implicitWidth:
-        reduce   ? 0 :
-        collapse ? theme.sidePane.collapsedWidth :
-        calculatedWidth
-
-    property int currentSpacing:
-        width <= theme.sidePane.collapsedWidth + theme.spacing * 2 ?
-        0 : theme.spacing
-
-    Behavior on currentSpacing { HNumberAnimation {} }
-    Behavior on implicitWidth  {
-        HNumberAnimation { factor: animateWidth ? 1 : 0 }
-    }
-
-
-    function setFocus() {
-        forceActiveFocus()
-        if (reduce) {
-            pageLoader.item.currentIndex = 0
-        }
-    }
-
-
-    Keys.enabled: sidePane.hasFocus
-    Keys.onUpPressed: sidePaneList.previous(false)  // do not activate
-    Keys.onDownPressed: sidePaneList.next(false)
-    Keys.onEnterPressed: Keys.onReturnPressed(event)
-    Keys.onReturnPressed: if (event.modifiers & Qt.ShiftModifier) {
-        sidePaneList.toggleCollapseAccount()
-    } else {
-        if (window.settings.clearRoomFilterOnEnter) {
-            mainUI.sidePane.toolBar.roomFilter = ""
+    function toggleFocus() {
+        if (toolBar.filterField.activeFocus) {
+            pageLoader.takeFocus()
+            return
         }
 
-        sidePaneList.activate()
-    }
-    Keys.onEscapePressed: {
-        if (window.settings.clearRoomFilterOnEscape) {
-            mainUI.sidePane.toolBar.roomFilter = ""
-        }
-        mainUI.pageLoader.forceActiveFocus()
+        sidePane.open()
+        toolBar.filterField.forceActiveFocus()
     }
 
+
+    Behavior on opacity { HOpacityAnimator {} }
 
     HColumnLayout {
         anchors.fill: parent
@@ -118,6 +47,7 @@ Rectangle {
 
         SidePaneToolBar {
             id: toolBar
+            sidePaneList: sidePaneList
         }
     }
 }

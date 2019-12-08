@@ -261,9 +261,6 @@ ui:
 
 
 sidePane:
-    real autoWidthRatio:  0.33 * uiScale
-    int maximumAutoWidth: 320 * uiScale
-
     int autoCollapseBelowWidth: 128 * uiScale
     int collapsedWidth:         controls.avatar.size
 

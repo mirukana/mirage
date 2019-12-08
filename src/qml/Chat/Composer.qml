@@ -5,8 +5,6 @@ import "../Dialogs"
 import "../utils.js" as Utils
 
 Rectangle {
-    function setFocus() { areaScrollView.forceActiveFocus() }
-
     property string indent: "    "
 
     property var aliases: window.settings.writeAliases
@@ -39,6 +37,8 @@ Rectangle {
         lineTextUntilCursor.match(/^ +$/) ?
         lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
         1
+
+    function takeFocus() { areaScrollView.forceActiveFocus() }
 
     // property var pr: lineTextUntilCursor
     // onPrChanged: print(

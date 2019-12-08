@@ -5,7 +5,7 @@ import "../utils.js" as Utils
 
 HTileDelegate {
     id: roomDelegate
-    spacing: sidePane.currentSpacing
+    spacing: theme.spacing
     backgroundColor: theme.sidePane.room.background
     opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
 
@@ -110,7 +110,7 @@ HTileDelegate {
 
             onTriggered: Utils.makePopup(
                 "Popups/LeaveRoomPopup.qml",
-                sidePane,
+                window,
                 {
                     userId: model.user_id,
                     roomId: model.data.room_id,
@@ -126,7 +126,7 @@ HTileDelegate {
 
             onTriggered: Utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
-                sidePane,
+                window,
                 {
                     userId: model.user_id,
                     roomId: model.data.room_id,

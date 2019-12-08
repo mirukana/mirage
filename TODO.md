@@ -1,3 +1,7 @@
+- make pageup/down not slippery again
+- rename all setfocus() to takefocus()
+- refactor roomsidepane too
+- better pane minsize
 - better cancel for all boxes
 - Media
   - Confirmation box after picking file to upload

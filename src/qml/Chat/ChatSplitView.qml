@@ -8,7 +8,7 @@ import "FileTransfer"
 
 HSplitView {
     id: chatSplitView
-    Component.onCompleted: composer.setFocus()
+    Component.onCompleted: composer.takeFocus()
 
     HColumnLayout {
         Layout.fillWidth: true

@@ -6,7 +6,7 @@ import "../utils.js" as Utils
 HTileDelegate {
     id: accountDelegate
     spacing: 0
-    topPadding: model.index > 0 ? sidePane.currentSpacing / 2 : 0
+    topPadding: model.index > 0 ? theme.spacing / 2 : 0
     bottomPadding: topPadding
     backgroundColor: theme.sidePane.account.background
     opacity: collapsed && ! forceExpand ?
@@ -54,7 +54,7 @@ HTileDelegate {
     title.color: theme.sidePane.account.name
     title.text: model.data.display_name || model.data.user_id
     title.font.pixelSize: theme.fontSize.big
-    title.leftPadding: sidePane.currentSpacing
+    title.leftPadding: theme.spacing
 
     HButton {
         id: addChat
@@ -112,7 +112,7 @@ HTileDelegate {
             text: qsTr("Sign out")
             onTriggered: Utils.makePopup(
                 "Popups/SignOutPopup.qml",
-                mainUI,
+                window,
                 { "userId": model.data.user_id },
                 popup => { popup.ok.connect(() => { disconnecting = true }) },
             )

@@ -5,6 +5,9 @@ import "../utils.js" as Utils
 
 HPage {
     id: chatPage
+    leftPadding: 0
+    rightPadding: 0
+
     // The target will be our EventList, not the page itself
     becomeKeyboardFlickableTarget: false
 
@@ -48,9 +51,6 @@ HPage {
         height: ready ? implicitHeight : 0
         Behavior on height { HNumberAnimation {} }
     }
-
-    page.leftPadding: 0
-    page.rightPadding: 0
 
     HLoader {
         source: ready ? "ChatSplitView.qml" : "../Base/HBusyIndicator.qml"

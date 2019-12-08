@@ -11,7 +11,6 @@ Item {
     id: mainUI
     focus: true
     Component.onCompleted: window.mainUI = mainUI
-    Keys.forwardTo: [shortcuts]
 
     readonly property alias shortcuts: shortcuts
     readonly property alias sidePane: sidePane
@@ -55,107 +54,99 @@ Item {
     }
 
 
-    HSplitView {
-        id: uiSplitView
+    SidePane {
+        id: sidePane
+        maxNormalWidth: parent.width - theme.minimumSupportedWidth
+    }
+
+    HLoader {
+        id: pageLoader
         anchors.fill: parent
+        anchors.leftMargin: sidePane.width * sidePane.position
+        visible: ! sidePane.hidden || anchors.leftMargin < width
 
-        onAnyResizingChanged: if (anyResizing) {
-            sidePane.manuallyResizing = true
-        } else {
-            sidePane.manuallyResizing = false
-            sidePane.manuallyResized = true
-            sidePane.manualWidth = sidePane.width
+        // onSourceChanged: if (sidePane.collapse) sidePane.close()
+
+
+        property bool isWide: width > theme.contentIsWideAbove
+
+        // List of previously loaded [componentUrl, {properties}]
+        property var history: []
+        property int historyLength: 20
+
+        Component.onCompleted: {
+            if (! py.startupAnyAccountsSaved) {
+                pageLoader.showPage("AddAccount/AddAccount")
+                return
+            }
+
+            let page  = window.uiState.page
+            let props = window.uiState.pageProperties
+
+            if (page == "Chat/Chat.qml") {
+                pageLoader.showRoom(props.userId, props.roomId)
+            } else {
+                pageLoader._show(page, props)
+            }
         }
 
-        SidePane {
-            id: sidePane
+        function _show(componentUrl, properties={}) {
+            history.unshift([componentUrl, properties])
+            if (history.length > historyLength) history.pop()
 
-            // Initial width until user manually resizes
-            width: implicitWidth
-            Layout.minimumWidth: reduce ? 0 : theme.sidePane.collapsedWidth
-            Layout.maximumWidth:
-                window.width - theme.minimumSupportedWidthPlusSpacing
-
-            Behavior on Layout.minimumWidth { HNumberAnimation {} }
+            pageLoader.setSource(componentUrl, properties)
         }
 
-        HLoader {
-            id: pageLoader
+        function showPage(name, properties={}) {
+            let path = `Pages/${name}.qml`
+            _show(path, properties)
 
-            property bool isWide: width > theme.contentIsWideAbove
+            window.uiState.page           = path
+            window.uiState.pageProperties = properties
+            window.uiStateChanged()
+        }
 
-            // List of previously loaded [componentUrl, {properties}]
-            property var history: []
-            property int historyLength: 20
+        function showRoom(userId, roomId) {
+            _show("Chat/Chat.qml", {userId, roomId})
 
-            Component.onCompleted: {
-                if (! py.startupAnyAccountsSaved) {
-                    pageLoader.showPage("AddAccount/AddAccount")
-                    return
-                }
+            window.uiState.page           = "Chat/Chat.qml"
+            window.uiState.pageProperties = {userId, roomId}
+            window.uiStateChanged()
+        }
 
-                let page  = window.uiState.page
-                let props = window.uiState.pageProperties
+        function showPrevious(timesBack=1) {
+            timesBack = Math.min(timesBack, history.length - 1)
+            if (timesBack < 1) return false
 
-                if (page == "Chat/Chat.qml") {
-                    pageLoader.showRoom(props.userId, props.roomId)
-                } else {
-                    pageLoader._show(page, props)
-                }
-            }
+            let [componentUrl, properties] = history[timesBack]
 
-            function _show(componentUrl, properties={}) {
-                history.unshift([componentUrl, properties])
-                if (history.length > historyLength) history.pop()
+            _show(componentUrl, properties)
 
-                pageLoader.setSource(componentUrl, properties)
-            }
+            window.uiState.page           = componentUrl
+            window.uiState.pageProperties = properties
+            window.uiStateChanged()
+            return true
+        }
 
-            function showPage(name, properties={}) {
-                let path = `Pages/${name}.qml`
-                _show(path, properties)
+        function takeFocus() {
+            pageLoader.item.forceActiveFocus()
+            if (sidePane.collapse) sidePane.close()
+        }
 
-                window.uiState.page           = path
-                window.uiState.pageProperties = properties
-                window.uiStateChanged()
-            }
 
-            function showRoom(userId, roomId) {
-                _show("Chat/Chat.qml", {userId, roomId})
+        onStatusChanged: if (status == Loader.Ready) {
+            pageLoader.takeFocus()
+            appearAnimation.start()
+        }
 
-                window.uiState.page           = "Chat/Chat.qml"
-                window.uiState.pageProperties = {userId, roomId}
-                window.uiStateChanged()
-            }
-
-            function showPrevious(timesBack=1) {
-                timesBack = Math.min(timesBack, history.length - 1)
-                if (timesBack < 1) return false
-
-                let [componentUrl, properties] = history[timesBack]
-
-                _show(componentUrl, properties)
-
-                window.uiState.page           = componentUrl
-                window.uiState.pageProperties = properties
-                window.uiStateChanged()
-                return true
-            }
-
-            onStatusChanged: if (status == Loader.Ready) {
-                item.forceActiveFocus()
-                appearAnimation.start()
-            }
-
-            clip: appearAnimation.running
-            XAnimator {
-                id: appearAnimation
-                target: pageLoader.item
-                from: -300
-                to: 0
-                easing.type: Easing.OutBack
-                duration: theme.animationDuration * 2
-            }
+        clip: appearAnimation.running
+        XAnimator {
+            id: appearAnimation
+            target: pageLoader.item
+            from: -300
+            to: 0
+            easing.type: Easing.OutBack
+            duration: theme.animationDuration * 2
         }
     }
 

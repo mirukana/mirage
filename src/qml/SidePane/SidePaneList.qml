@@ -108,7 +108,6 @@ HListView {
             {
                 currentIndex = i
                 currentItem.item.toggleCollapse()
-                activate()
             }
         }
     }
