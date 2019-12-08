@@ -181,7 +181,7 @@ HBox {
         text: qsTr("Remember my account")
         checked: true
 
-        Layout.alignment: Qt.AlignHCenter
+        Layout.fillWidth: true
     }
 
     HLabel {

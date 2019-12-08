@@ -67,13 +67,16 @@ Column {
 
     function json() {
         return JSON.stringify(
-            Utils.getItem(
-                modelSources[[
-                    "Event", chatPage.userId, chatPage.roomId
-                ]],
-                "client_id",
-                model.client_id
-            ),
+            {
+                "model": Utils.getItem(
+                    modelSources[[
+                        "Event", chatPage.userId, chatPage.roomId
+                    ]],
+                    "client_id",
+                    model.client_id
+                ),
+                "source": py.getattr(model.source, "__dict__"),
+            },
         null, 4)
     }
 
