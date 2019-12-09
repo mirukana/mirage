@@ -24,7 +24,7 @@ HDrawer {
     property var history: window.history.console
     property alias his: debugConsole.history
     property int historyEntry: -1
-    property int maxHistoryLength: 5
+    property int maxHistoryLength: 4096
 
     property string help: qsTr(
         `Javascript debugging console
