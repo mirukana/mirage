@@ -47,6 +47,7 @@ HDrawer {
             error: false,
         })
         visible = true
+        forceActiveFocus()
     }
 
     onHistoryEntryChanged:
