@@ -4,11 +4,26 @@ import "../../Base"
 
 HDrawer {
     id: roomSidePane
-    color: theme.chat.roomSidePane.background
     edge: Qt.RightEdge
     normalSize: buttonRepeater.childrenImplicitWidth
     minNormalSize:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
+
+    background: HColumnLayout{
+        Rectangle {
+            color: theme.chat.roomSidePaneButtons.background
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: theme.baseElementsHeight
+        }
+
+        Rectangle {
+            color: theme.chat.roomSidePane.background
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+    }
 
     HColumnLayout {
         anchors.fill: parent
