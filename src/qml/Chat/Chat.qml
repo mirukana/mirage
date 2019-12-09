@@ -21,6 +21,8 @@ Item {
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
 
+    readonly property alias roomSidePane: roomSidePane
+
 
     onRoomInfoChanged: {
         if (roomInfo.left) {
@@ -37,7 +39,7 @@ Item {
 
 
     HLoader {
-        anchors.rightMargin: roomSidePane.width * roomSidePane.position
+        anchors.rightMargin: roomSidePane.visibleWidth
         anchors.fill: parent
         visible: ! roomSidePane.hidden || anchors.rightMargin < width
 

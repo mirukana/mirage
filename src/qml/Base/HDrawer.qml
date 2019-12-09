@@ -50,6 +50,8 @@ Drawer {
         collapseExpandSize :
         Math.max(minNormalSize, Math.min(normalSize, maxNormalSize))
 
+    readonly property int visibleSize: visible ? width * position : 0
+
     readonly property bool horizontal:
         edge === Qt.LeftEdge || edge === Qt.RightEdge
 

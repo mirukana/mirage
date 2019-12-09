@@ -61,7 +61,7 @@ Item {
     HLoader {
         id: pageLoader
         anchors.fill: parent
-        anchors.leftMargin: sidePane.width * sidePane.position
+        anchors.leftMargin: sidePane.visibleSize
         visible: ! sidePane.hidden || anchors.leftMargin < width
 
         // onSourceChanged: if (sidePane.collapse) sidePane.close()
