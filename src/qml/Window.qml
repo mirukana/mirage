@@ -36,6 +36,9 @@ ApplicationWindow {
     property var uiState: ({})
     onUiStateChanged: py.saveConfig("ui_state", uiState)
 
+    property var history: ({})
+    onHistoryChanged: py.saveConfig("history", history)
+
     property var theme: null
 
     readonly property alias py: py

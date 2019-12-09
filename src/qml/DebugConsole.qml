@@ -19,9 +19,10 @@ HDrawer {
     property var target: null
     property alias t: debugConsole.target
 
-    property var history: []
+    property var history: window.history.console
     property alias his: debugConsole.history
     property int historyEntry: -1
+    property int maxHistoryLength: 5
 
     property string help: qsTr(
         `Javascript debugging console
@@ -67,7 +68,11 @@ HDrawer {
 
 
     function runJS(input) {
-        if (history.slice(-1)[0] !== input) history.push(input)
+        if (history.slice(-1)[0] !== input) {
+            history.push(input)
+            while (history.length > maxHistoryLength) history.shift()
+            window.historyChanged()
+        }
 
         let output = ""
         let error  = false

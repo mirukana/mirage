@@ -23,6 +23,7 @@ class Backend:
         self.saved_accounts = config_files.Accounts(self)
         self.ui_settings    = config_files.UISettings(self)
         self.ui_state       = config_files.UIState(self)
+        self.history        = config_files.History(self)
 
         self.models = ModelStore(allowed_key_types={
             Account,             # Logged-in accounts
@@ -139,9 +140,10 @@ class Backend:
         from .config_files import Theme
         settings = await self.ui_settings.read()
         ui_state = await self.ui_state.read()
+        history  = await self.history.read()
         theme    = await Theme(self, settings["theme"]).read()
 
-        return (settings, ui_state, theme)
+        return (settings, ui_state, history, theme)
 
 
     async def get_flat_sidepane_data(self) -> List[Dict[str, Any]]:

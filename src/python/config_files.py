@@ -175,6 +175,19 @@ class UIState(JSONConfigFile):
 
 
 @dataclass
+class History(JSONConfigFile):
+    filename: str = "history.json"
+
+    @property
+    def path(self) -> Path:
+        return Path(self.backend.app.appdirs.user_data_dir) / self.filename
+
+
+    async def default_data(self) -> JsonData:
+        return {"console": []}
+
+
+@dataclass
 class Theme(ConfigFile):
     @property
     def path(self) -> Path:

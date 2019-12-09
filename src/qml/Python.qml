@@ -83,9 +83,12 @@ Python {
     }
 
     function loadSettings(callback=null) {
-        return callCoro("load_settings", [], ([settings, uiState, theme]) => {
+        let func = "load_settings"
+
+        return callCoro(func, [], ([settings, uiState, history, theme]) => {
             window.settings = settings
             window.uiState  = uiState
+            window.history  = history
             window.theme    = Qt.createQmlObject(theme, window, "theme")
 
             if (callback) { callback(settings, uiState, theme) }
