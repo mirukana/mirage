@@ -102,7 +102,7 @@ function escapeHtml(string) {
 
 
 function processedEventText(ev) {
-    if (ev.event_type == "RoomMessageEmote")
+    if (ev.event_type === "RoomMessageEmote")
         return coloredNameHtml(ev.sender_name, ev.sender_id) + " " + ev.content
 
     let unknown = ev.event_type === "RoomMessageUnknown"
@@ -124,7 +124,7 @@ function processedEventText(ev) {
 function filterMatches(filter, text) {
     let filter_lower = filter.toLowerCase()
 
-    if (filter_lower == filter) {
+    if (filter_lower === filter) {
         // Consider case only if filter isn't all lowercase (smart case)
         filter = filter_lower
         text   = text.toLowerCase()
@@ -170,9 +170,9 @@ function minutesBetween(date1, date2) {
 
 
 function dateIsDay(date, dayDate) {
-    return date.getDate() == dayDate.getDate() &&
-           date.getMonth() == dayDate.getMonth() &&
-           date.getFullYear() == dayDate.getFullYear()
+    return date.getDate() === dayDate.getDate() &&
+           date.getMonth() === dayDate.getMonth() &&
+           date.getFullYear() === dayDate.getFullYear()
 }
 
 

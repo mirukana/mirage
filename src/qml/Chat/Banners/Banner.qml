@@ -83,7 +83,7 @@ Rectangle {
             Rectangle {
                 id: buttonsRightPadding
                 color: theme.controls.button.background
-                visible: bannerGrid.flow == GridLayout.TopToBottom
+                visible: bannerGrid.flow === GridLayout.TopToBottom
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true

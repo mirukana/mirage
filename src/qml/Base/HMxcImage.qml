@@ -32,7 +32,7 @@ HImage {
         if (! image) return  // if it was destroyed
 
         if (! isMxc) {
-            if (source != mxc) source = mxc
+            if (source !== mxc) source = mxc
             show = image.visible
             return
         }
@@ -43,7 +43,7 @@ HImage {
 
         py.callCoro("media_cache." + method, args, path => {
                 if (! image) return
-                if (image.cachedPath != path) image.cachedPath = path
+                if (image.cachedPath !== path) image.cachedPath = path
 
                 image.broken = false
                 image.show   = image.visible

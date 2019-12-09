@@ -10,5 +10,5 @@ Label {
     color: theme.colors.text
     linkColor: theme.colors.link
 
-    maximumLineCount: elide == Label.ElideNone ? Number.MAX_VALUE : 1
+    maximumLineCount: elide === Label.ElideNone ? Number.MAX_VALUE : 1
 }

@@ -157,7 +157,7 @@ Rectangle {
                         let parts   = lineText.split(indent)
 
                         for (const [i, part] of parts.entries()) {
-                            if (i == parts.length - 1 || part) { break }
+                            if (i === parts.length - 1 || part) { break }
                             indents += 1
                         }
 
@@ -191,8 +191,8 @@ Rectangle {
                         return
                     }
 
-                    if (ev.modifiers == Qt.NoModifier &&
-                        ev.key == Qt.Key_Backspace &&
+                    if (ev.modifiers === Qt.NoModifier &&
+                        ev.key === Qt.Key_Backspace &&
                         ! textArea.selectedText)
                     {
                         ev.accepted = true

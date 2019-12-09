@@ -82,7 +82,7 @@ Item {
             let page  = window.uiState.page
             let props = window.uiState.pageProperties
 
-            if (page == "Chat/Chat.qml") {
+            if (page === "Chat/Chat.qml") {
                 pageLoader.showRoom(props.userId, props.roomId)
             } else {
                 pageLoader._show(page, props)
@@ -133,7 +133,7 @@ Item {
         }
 
 
-        onStatusChanged: if (status == Loader.Ready) {
+        onStatusChanged: if (status === Loader.Ready) {
             pageLoader.takeFocus()
             appearAnimation.start()
         }

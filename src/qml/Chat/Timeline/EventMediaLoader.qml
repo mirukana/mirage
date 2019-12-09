@@ -29,7 +29,7 @@ HLoader {
     ]
 
     readonly property int type: {
-        if (singleMediaInfo.event_type == "RoomAvatarEvent")
+        if (singleMediaInfo.event_type === "RoomAvatarEvent")
             return EventDelegate.Media.Image
 
         let mainType = singleMediaInfo.media_mime.split("/")[0].toLowerCase()

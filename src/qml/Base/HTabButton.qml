@@ -31,7 +31,7 @@ TabButton {
     readonly property alias label: contentItem.label
 
     property color backgroundColor:
-        TabBar.index % 2 == 0 ?
+        TabBar.index % 2 === 0 ?
         theme.controls.tab.background : theme.controls.tab.alternateBackground
 
     property bool loading: false

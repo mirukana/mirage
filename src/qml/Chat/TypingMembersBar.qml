@@ -32,8 +32,8 @@ Rectangle {
             text: {
                 let tm = chat.roomInfo.typing_members
 
-                if (tm.length == 0) return ""
-                if (tm.length == 1) return qsTr("%1 is typing...").arg(tm[0])
+                if (tm.length === 0) return ""
+                if (tm.length === 1) return qsTr("%1 is typing...").arg(tm[0])
 
                 return qsTr("%1 and %2 are typing...")
                        .arg(tm.slice(0, -1).join(", ")).arg(tm.slice(-1)[0])

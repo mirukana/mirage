@@ -7,7 +7,7 @@ Column {
     id: eventDelegate
     width: eventList.width
     topPadding:
-        model.event_type == "RoomCreateEvent" ? 0 :
+        model.event_type === "RoomCreateEvent" ? 0 :
         dayBreak  ? theme.spacing * 4 :
         talkBreak ? theme.spacing * 6 :
         combine   ? theme.spacing / 2 :

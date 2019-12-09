@@ -38,12 +38,12 @@ Item {
         })
 
         nameFilters:
-            fileType == HFileDialogOpener.FileType.Images ?
+            fileType === HFileDialogOpener.FileType.Images ?
             [filters.images, filters.all] :
             [filters.all]
 
             folder: StandardPaths.writableLocation(
-                fileType == HFileDialogOpener.FileType.Images ?
+                fileType === HFileDialogOpener.FileType.Images ?
                 StandardPaths.PicturesLocation :
                 StandardPaths.HomeLocation
             )

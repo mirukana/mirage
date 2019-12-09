@@ -14,9 +14,9 @@ BoxPopup {
     box.focusButton: "ok"
 
     onOk: py.callClientCoro(userId, "room_forget", [roomId], () => {
-        if (window.uiState.page == "Chat/Chat.qml" &&
-            window.uiState.pageProperties.userId == userId &&
-            window.uiState.pageProperties.roomId == roomId)
+        if (window.uiState.page === "Chat/Chat.qml" &&
+            window.uiState.pageProperties.userId === userId &&
+            window.uiState.pageProperties.roomId === roomId)
         {
             pageLoader.showPage("Default")
             Qt.callLater(popup.destroy)

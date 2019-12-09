@@ -154,7 +154,7 @@ HColumnLayout {
                     boundPosition >= savedDuration - 500 ?
                     "restart" :
 
-                    media.playbackState == MediaPlayer.PlayingState ? "pause" :
+                    media.playbackState === MediaPlayer.PlayingState ? "pause" :
 
                     "play"
 

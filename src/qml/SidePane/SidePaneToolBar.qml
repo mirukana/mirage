@@ -29,7 +29,7 @@ HRowLayout {
         Component.onCompleted: filterField.text = uiState.sidePaneFilter
 
         onTextChanged: {
-            if (window.uiState.sidePaneFilter == text) return
+            if (window.uiState.sidePaneFilter === text) return
             window.uiState.sidePaneFilter = text
             window.uiStateChanged()
         }

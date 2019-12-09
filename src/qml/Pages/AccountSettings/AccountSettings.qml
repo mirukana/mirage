@@ -52,7 +52,7 @@ HPage {
                 width: ready ? parent.width : 96
                 source: ready ?
                         modelData :
-                        (modelData == "Profile.qml" ?
+                        (modelData === "Profile.qml" ?
                          "../../Base/HBusyIndicator.qml" : "")
             }
         }

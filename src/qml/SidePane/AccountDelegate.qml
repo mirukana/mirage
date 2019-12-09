@@ -13,8 +13,8 @@ HTileDelegate {
              theme.sidePane.account.collapsedOpacity : 1
 
     shouldBeCurrent:
-        window.uiState.page == "Pages/AccountSettings/AccountSettings.qml" &&
-        window.uiState.pageProperties.userId == model.data.user_id
+        window.uiState.page === "Pages/AccountSettings/AccountSettings.qml" &&
+        window.uiState.pageProperties.userId === model.data.user_id
 
     setCurrentTimer.running:
         ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus

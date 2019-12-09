@@ -13,7 +13,7 @@ JsonListModel {
             let obj = JSON.parse(JSON.stringify(item))
 
             for (let role in obj) {
-                if (obj[role]["objectName"] != undefined) {
+                if (obj[role]["objectName"] !== undefined) {
                     obj[role] = toObject(item[role])
                 }
             }

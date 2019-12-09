@@ -23,13 +23,12 @@
   - EventFile & Downloading (right click on media > save as...)
 
 - Refactoring
-  - Replace all the `==` by `===`
   - Use a singleton for utils.js
   - Use HBox for Profile
   - Banners
   - Composer
 
-  - Room Sidepane save/load size
+  - Room Sidepane save/load size & keybinds
 
 - Fixes
   - Pausing uploads doesn't work well with matrix.org

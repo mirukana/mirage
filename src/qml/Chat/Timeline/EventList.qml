@@ -11,7 +11,7 @@ Rectangle {
     HSelectableLabelContainer {
         id: selectableLabelContainer
         anchors.fill: parent
-        reversed: eventList.verticalLayoutDirection == ListView.BottomToTop
+        reversed: eventList.verticalLayoutDirection === ListView.BottomToTop
 
         DragHandler {
             target: null
@@ -33,11 +33,11 @@ Rectangle {
         Timer {
             id: dragFlicker
             interval: 100
-            running: speed != 0
+            running: speed !== 0
             repeat: true
 
             onTriggered: {
-                if (eventList.verticalOvershoot != 0) return
+                if (eventList.verticalOvershoot !== 0) return
                 if (speed < 0 && eventList.atYEnd) return
                 if (eventList.atYBeggining) {
                     if (bouncedStart) { return } else { bouncedStart = true }
@@ -116,13 +116,13 @@ Rectangle {
             }
 
             function canDayBreak(item, itemAfter) {
-                if (itemAfter && itemAfter.event_type == "RoomCreateEvent")
+                if (itemAfter && itemAfter.event_type === "RoomCreateEvent")
                     return true
 
                 if (! item || ! itemAfter || ! item.date || ! itemAfter.date)
                     return false
 
-                return item.date.getDate() != itemAfter.date.getDate()
+                return item.date.getDate() !== itemAfter.date.getDate()
             }
 
             function loadPastEvents() {

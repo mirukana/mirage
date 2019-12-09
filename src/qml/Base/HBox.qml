@@ -61,10 +61,10 @@ Rectangle {
                     text: modelData.text
                     icon.name: modelData.iconName || ""
                     icon.color: modelData.iconColor || (
-                        name == "ok" || name == "apply" || name == "retry" ?
+                        name === "ok" || name === "apply" || name === "retry" ?
                         theme.colors.positiveBackground :
 
-                        name == "cancel" ?
+                        name === "cancel" ?
                         theme.colors.negativeBackground :
 
                         theme.icons.colorize
@@ -90,7 +90,7 @@ Rectangle {
                     Keys.onEnterPressed: Keys.onReturnPressed(event)
 
                     Component.onCompleted:
-                        if (name == focusButton) forceActiveFocus()
+                        if (name === focusButton) forceActiveFocus()
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: theme.baseElementsHeight

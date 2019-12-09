@@ -7,7 +7,7 @@ function onExitRequested(exitCode) {
 
 
 function onAlertRequested() {
-    if (Qt.application.state != Qt.ApplicationActive) {
+    if (Qt.application.state !== Qt.ApplicationActive) {
 		window.alert(window.settings.alertOnMessageForMsec)
 	}
 }
@@ -32,7 +32,7 @@ function onCoroutineDone(uuid, result, error, traceback) {
 
 
 function onModelUpdated(syncId, data, serializedSyncId) {
-    if (serializedSyncId == ["Account"] || serializedSyncId[0] == "Room") {
+    if (serializedSyncId === ["Account"] || serializedSyncId[0] === "Room") {
         py.callCoro("get_flat_sidepane_data", [], data => {
             window.sidePaneModelSource = data
         })

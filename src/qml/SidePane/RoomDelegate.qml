@@ -10,9 +10,9 @@ HTileDelegate {
     opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
 
     shouldBeCurrent:
-        window.uiState.page == "Chat/Chat.qml" &&
-        window.uiState.pageProperties.userId == model.user_id &&
-        window.uiState.pageProperties.roomId == model.data.room_id
+        window.uiState.page === "Chat/Chat.qml" &&
+        window.uiState.pageProperties.userId === model.user_id &&
+        window.uiState.pageProperties.roomId === model.data.room_id
 
     setCurrentTimer.running:
         ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
@@ -54,7 +54,7 @@ HTileDelegate {
         Utils.dateIsToday(lastEvent.date) ?
         Utils.formatTime(lastEvent.date, false) :  // no seconds
 
-        lastEvent.date.getFullYear() == new Date().getFullYear() ?
+        lastEvent.date.getFullYear() === new Date().getFullYear() ?
         Qt.formatDate(lastEvent.date, "d MMM") : // e.g. "5 Dec"
 
         lastEvent.date.getFullYear()

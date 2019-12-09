@@ -45,7 +45,7 @@ BoxPopup {
 
             if ((modelSources["Account"] || []).length < 2) {
                 pageLoader.showPage("AddAccount/AddAccount")
-            } else if (window.uiState.pageProperties.userId == userId) {
+            } else if (window.uiState.pageProperties.userId === userId) {
                 pageLoader.showPage("Default")
             }
 

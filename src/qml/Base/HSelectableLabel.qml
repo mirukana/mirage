@@ -54,7 +54,7 @@ TextEdit {
             var lastPos  = container.selectionStartPosition
         }
 
-        if (first == index && last == index) {
+        if (first === index && last === index) {
             select(
                 label.positionAt(firstPos.x, firstPos.y),
                 label.positionAt(lastPos.x, lastPos.y),
@@ -65,10 +65,10 @@ TextEdit {
         {
             label.selectAll()
 
-        } else if (first == index) {
+        } else if (first === index) {
             label.select(positionAt(firstPos.x, firstPos.y), length)
 
-        } else if (last == index) {
+        } else if (last === index) {
             label.select(0, positionAt(lastPos.x, lastPos.y))
 
         } else {
@@ -121,8 +121,8 @@ TextEdit {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            tapCount == 2 ? selectWordAt(eventPoint.position) :
-            tapCount == 3 ? selectAllText() :
+            tapCount === 2 ? selectWordAt(eventPoint.position) :
+            tapCount === 3 ? selectAllText() :
             container.clearSelection()
         }
     }

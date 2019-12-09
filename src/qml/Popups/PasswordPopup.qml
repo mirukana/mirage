@@ -82,7 +82,7 @@ BoxPopup {
                       theme.colors.negativeBackground
 
             Layout.preferredWidth:
-                passwordValid == null ||
+                passwordValid === null ||
                 (validateWhileTyping && ! okClicked && ! passwordValid) ?
                 0 :implicitWidth
 

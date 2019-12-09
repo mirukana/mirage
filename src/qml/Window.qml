@@ -18,10 +18,10 @@ ApplicationWindow {
     readonly property alias hovered: windowHover.hovered
 
     readonly property bool hidden:
-            Qt.application.state == Qt.ApplicationSuspended ||
-            Qt.application.state == Qt.ApplicationHidden ||
-            window.visibility == window.Minimized ||
-            window.visibility == window.Hidden
+            Qt.application.state === Qt.ApplicationSuspended ||
+            Qt.application.state === Qt.ApplicationHidden ||
+            window.visibility === window.Minimized ||
+            window.visibility === window.Hidden
 
     // NOTE: For JS object variables, the corresponding method to notify
     // key/value changes must be called manually, e.g. settingsChanged().

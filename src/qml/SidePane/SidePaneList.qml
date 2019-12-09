@@ -26,13 +26,13 @@ HListView {
         for (let i = 0;  i < window.sidePaneModelSource.length; i++) {
             let item = window.sidePaneModelSource[i]
 
-            if (item.type == "Account" ||
+            if (item.type === "Account" ||
                 (filter ?
                  Utils.filterMatches(filter, item.data.filter_string) :
                  ! window.uiState.collapseAccounts[item.user_id]))
             {
-                if (filter && show.length && item.type == "Account" &&
-                    show[show.length - 1].type == "Account" &&
+                if (filter && show.length && item.type === "Account" &&
+                    show[show.length - 1].type === "Account" &&
                     ! Utils.filterMatches(
                         filter, show[show.length - 1].data.filter_string)
                 ) {
@@ -47,7 +47,7 @@ HListView {
         }
 
         let last = show[show.length - 1]
-        if (show.length && filter && last.type == "Account" &&
+        if (show.length && filter && last.type === "Account" &&
             ! Utils.filterMatches(filter, last.data.filter_string))
         {
             // If filter active, last item is an account and last item
@@ -95,7 +95,7 @@ HListView {
 
         if (! currentItem) incrementCurrentIndex()
 
-        if (currentItem.item.delegateModel.type == "Account") {
+        if (currentItem.item.delegateModel.type === "Account") {
             currentItem.item.toggleCollapse()
             return
         }
@@ -103,7 +103,7 @@ HListView {
         for (let i = 0;  i < model.source.length; i++) {
             let item = model.source[i]
 
-            if (item.type == "Account" && item.user_id ==
+            if (item.type === "Account" && item.user_id ==
                 currentItem.item.delegateModel.user_id)
             {
                 currentIndex = i
@@ -121,7 +121,7 @@ HListView {
     delegate: Loader {
         width: sidePaneList.width
         Component.onCompleted: setSource(
-            model.type == "Account" ?
+            model.type === "Account" ?
             "AccountDelegate.qml" : "RoomDelegate.qml",
             {view: sidePaneList}
         )

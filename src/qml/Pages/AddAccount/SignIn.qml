@@ -116,8 +116,8 @@ HBox {
             HButton {
                 icon.name: modelData
                 circle: true
-                checked: signInWith == modelData
-                enabled: modelData == "username"
+                checked: signInWith === modelData
+                enabled: modelData === "username"
                 autoExclusive: true
                 onClicked: signInWith = modelData
             }

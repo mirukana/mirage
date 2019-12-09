@@ -147,7 +147,7 @@ HGridLayout {
             }
 
             HLabeledTextField {
-                property bool changed: field.text != accountInfo.display_name
+                property bool changed: field.text !== accountInfo.display_name
 
                 readonly property string fText: field.text
                 onFTextChanged: accountSettings.headerName = field.text
@@ -168,7 +168,7 @@ HGridLayout {
                 property string currentAlias:
                     window.settings.writeAliases[userId] || ""
 
-                property bool changed: field.text != currentAlias
+                property bool changed: field.text !== currentAlias
 
                 id: aliasField
                 label.text: qsTr("Write alias:")
