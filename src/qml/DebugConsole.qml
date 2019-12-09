@@ -2,16 +2,15 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 import "Base"
+import "utils.js" as Utils
 
-Window {
+HDrawer {
     id: debugConsole
-    title: qsTr("Debug console")
-    width: 640
-    height: 480
-    visible: false
-    flags: Qt.WA_TranslucentBackground
-    color: "transparent"
-
+    edge: Qt.BottomEdge
+    width: vertical ? Math.min(window.width, 720) : calculatedWidth
+    height: vertical ? calculatedWidth : Math.min(window.width, 480)
+    normalWidth: 360
+    z: 9999
 
     property var target: null
     property alias t: debugConsole.target
@@ -19,6 +18,23 @@ Window {
     property var history: []
     property alias his: debugConsole.history
     property int historyEntry: -1
+
+    property string help: qsTr(
+        `Javascript debugging console
+
+        Special variables:
+            t    Target item to debug for which this console was opened
+            his  History, list of commands entered
+
+        Special commands:
+            .j OBJECT, .json OBJECT  Print OBJECT as human-readable JSON
+
+            .t, .top     Attach the console to the parent window's top
+            .b, .bottom  Attach the console to the parent window's bottom
+            .l, .left    Attach the console to the parent window's left
+            .r, .right   Attach the console to the parent window's right
+            .h, .help    Show this help`.replace(/^ {8}/gm, "")
+    )
 
 
     Component.onCompleted: {
@@ -39,21 +55,37 @@ Window {
     function runJS(input) {
         if (history.slice(-1)[0] !== input) history.push(input)
 
-        let error = false
+        let output = ""
+        let error  = false
 
         try {
-            if (input.startsWith("j ")) {
-                var output = JSON.stringify(eval(input.substring(2)), null, 4)
+            if ([".h", ".help"].includes(input)) {
+                output = debugConsole.help
+
+            } else if ([".t", ".top"].includes(input)) {
+                debugConsole.edge = Qt.TopEdge
+
+            } else if ([".b", ".bottom"].includes(input)) {
+                debugConsole.edge = Qt.BottomEdge
+
+            } else if ([".l", ".left"].includes(input)) {
+                debugConsole.edge = Qt.LeftEdge
+
+            } else if ([".r", ".right"].includes(input)) {
+                debugConsole.edge = Qt.RightEdge
+
+            } else if (input.startsWith(".j ") || input.startsWith(".json ")) {
+                output = JSON.stringify(eval(input.substring(2)), null, 4)
 
             } else {
                 let result = eval(input)
-                var output = result instanceof Array ?
+                output     = result instanceof Array ?
                              "[" + String(result) + "]" : String(result)
             }
 
         } catch (err) {
-            error = true
-            var output = err.toString()
+            error  = true
+            output = err.toString()
         }
 
         commandsView.model.insert(0, { input, output, error })
@@ -119,7 +151,7 @@ Window {
             onAccepted: if (text) { runJS(text); text = ""; historyEntry = -1 }
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
-            placeholderText: qsTr("Type some JavaScript...")
+            placeholderText: qsTr("Javascript debug console - Try .help")
             font.family: theme.fontFamily.mono
 
             Keys.onUpPressed:

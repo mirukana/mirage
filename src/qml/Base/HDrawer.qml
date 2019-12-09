@@ -4,8 +4,10 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
-    implicitWidth: calculatedWidth
-    implicitHeight: referenceSizeParent.height
+    x: vertical ? referenceSizeParent.width / 2 - width / 2 : 0
+    y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
+    implicitWidth: vertical ? referenceSizeParent.width : calculatedWidth
+    implicitHeight: vertical ? calculatedWidth : referenceSizeParent.height
 
     topPadding: 0
     bottomPadding: 0
@@ -26,23 +28,32 @@ Drawer {
 
     signal userResized(int newWidth)
 
+    property alias color: bg.color
+
     property Item referenceSizeParent: parent
 
-    property int normalWidth: 300
+    property int normalWidth:
+        vertical ? referenceSizeParent.height : referenceSizeParent.width
     property int minNormalWidth: resizeAreaWidth
     property int maxNormalWidth:
+        vertical ?
+        referenceSizeParent.height - theme.minimumSupportedHeight :
         referenceSizeParent.width - theme.minimumSupportedWidth
 
-    property bool collapse: window.width < 400
-    property int collapseExpandedWidth: referenceSizeParent.width
+    property bool collapse:
+        (vertical ? window.height : window.width) < 400
+    property int collapseExpandedWidth:
+        vertical ? referenceSizeParent.height : referenceSizeParent.width
 
-    property alias color: bg.color
-    property alias resizeAreaWidth: resizeArea.width
+    property int resizeAreaWidth: theme.spacing / 2
 
     readonly property int calculatedWidth:
         collapse ?
         collapseExpandedWidth :
         Math.max(minNormalWidth, Math.min(normalWidth, maxNormalWidth))
+
+    readonly property bool vertical:
+        edge === Qt.TopEdge || edge === Qt.BottomEdge
 
 
     Behavior on width {
@@ -50,12 +61,18 @@ Drawer {
         NumberAnimation { duration: 100 }
     }
 
+    Behavior on height {
+        enabled: ! resizeMouseHandler.drag.active
+        NumberAnimation { duration: 100 }
+    }
+
     Item {
         id: resizeArea
-        x: drawer.edge === Qt.LeftEdge ? drawer.width - width : 0
-        width: theme.spacing / 2
-        height: parent.height
-        z: 9999
+        x: vertical || drawer.edge === Qt.RightEdge ? 0 : drawer.width-width
+        y: ! vertical || drawer.edge !== Qt.TopEdge ? 0 : drawer.height-height
+        width: vertical ? parent.width : resizeAreaWidth
+        height: vertical ? resizeAreaWidth : parent.height
+        z: 999
 
         MouseArea {
             id: resizeMouseHandler
@@ -65,16 +82,24 @@ Drawer {
             hoverEnabled: true
             cursorShape:
                 containsMouse || drag.active ?
-                Qt.SizeHorCursor : Qt.ArrowCursor
+                (vertical ? Qt.SizeVerCursor : Qt.SizeHorCursor) :
+                Qt.ArrowCursor
 
             onPressed: canResize = true
             onReleased: { canResize = false; userResized(drawer.normalWidth) }
 
             onMouseXChanged:
-                if (canResize) {
+                if (! vertical && canResize) {
                     drawer.normalWidth =
                         drawer.calculatedWidth +
                         (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
+                }
+
+            onMouseYChanged:
+                if (vertical && canResize) {
+                    drawer.normalWidth =
+                        drawer.calculatedWidth +
+                        (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
 
             property bool canResize: false
