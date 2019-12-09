@@ -16,6 +16,8 @@ HDrawer {
     z: 9999
     position: 0
 
+    property var previouslyFocusedItem: null
+
     property var target: null
     property alias t: debugConsole.target
 
@@ -53,13 +55,21 @@ HDrawer {
             mainUI.shortcuts.debugConsole.destroy()
 
         mainUI.shortcuts.debugConsole = debugConsole
-        forceActiveFocus()
         position = 1
         commandsView.model.insert(0, {
             input: "t = " + String(target),
             output: "",
             error: false,
         })
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+            previouslyFocusedItem = window.activeFocusItem
+            forceActiveFocus()
+        } else if (previouslyFocusedItem) {
+            previouslyFocusedItem.forceActiveFocus()
+        }
     }
 
     onHistoryEntryChanged:
