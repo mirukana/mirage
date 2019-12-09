@@ -13,7 +13,7 @@ HPage {
         Utils.getItem(modelSources["Account"] || [], "user_id", userId)
 
 
-    HTabbedBoxes {
+    HTabContainer {
         tabModel: [
             qsTr("Find someone"), qsTr("Join room"), qsTr("Create room"),
         ]

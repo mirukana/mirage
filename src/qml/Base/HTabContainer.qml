@@ -10,7 +10,7 @@ HColumnLayout {
 
     property alias tabIndex: tabBar.currentIndex
     property alias tabModel: tabRepeater.model
-    default property alias boxes: swipeView.contentData
+    default property alias data: swipeView.contentData
 
     HTabBar {
         id: tabBar

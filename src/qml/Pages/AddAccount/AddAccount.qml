@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HPage {
-    HTabbedBoxes {
+    HTabContainer {
         tabModel: [
             qsTr("Sign in"), qsTr("Register"), qsTr("Reset"),
         ]
