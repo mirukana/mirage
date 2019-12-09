@@ -6,13 +6,14 @@ import "utils.js" as Utils
 
 HDrawer {
     id: debugConsole
-    edge: Qt.BottomEdge
+    edge: Qt.TopEdge
     x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
     y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
     width: horizontal ? calculatedSize : Math.min(window.width, 720)
     height: vertical ? calculatedSize : Math.min(window.width, 480)
     normalSize: 360
     z: 9999
+    position: 0
 
     property var target: null
     property alias t: debugConsole.target
@@ -41,13 +42,13 @@ HDrawer {
 
     Component.onCompleted: {
         mainUI.shortcuts.debugConsole = debugConsole
+        forceActiveFocus()
+        position = 1
         commandsView.model.insert(0, {
             input: "t = " + String(target),
             output: "",
             error: false,
         })
-        visible = true
-        forceActiveFocus()
     }
 
     onHistoryEntryChanged:

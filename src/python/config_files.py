@@ -118,7 +118,7 @@ class UISettings(JSONConfigFile):
             },
             "keys": {
                 "startPythonDebugger": ["Alt+Shift+D"],
-                "toggleDebugConsole":  ["Alt+Shift+C"],
+                "toggleDebugConsole":  ["Alt+Shift+C", "F1"],
                 "reloadConfig":        ["Alt+Shift+R"],
 
                 "zoomIn":    ["Ctrl++"],
