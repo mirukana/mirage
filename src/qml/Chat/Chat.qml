@@ -22,6 +22,7 @@ Item {
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
 
+    readonly property alias loader: loader
     readonly property alias roomSidePane: roomSidePane
 
 
@@ -41,7 +42,7 @@ Item {
 
     HLoader {
         id: loader
-        anchors.rightMargin: roomSidePane.visibleWidth
+        anchors.rightMargin: roomSidePane.visibleSize
         anchors.fill: parent
         visible: ! roomSidePane.hidden || anchors.rightMargin < width
         onLoaded: if (chat.focus) item.composer.takeFocus()

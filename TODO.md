@@ -27,6 +27,7 @@
   - Use HBox for Profile
   - Banners
   - Composer
+  - Try gel for the models and stop being lazy in python
 
   - Room Sidepane save/load size & keybinds
 
