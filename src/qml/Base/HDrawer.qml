@@ -57,12 +57,12 @@ Drawer {
 
 
     Behavior on width {
-        enabled: ! resizeMouseHandler.drag.active
+        enabled: horizontal && ! resizeMouseHandler.drag.active
         NumberAnimation { duration: 100 }
     }
 
     Behavior on height {
-        enabled: ! resizeMouseHandler.drag.active
+        enabled: vertical && ! resizeMouseHandler.drag.active
         NumberAnimation { duration: 100 }
     }
 
