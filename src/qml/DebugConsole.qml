@@ -7,9 +7,9 @@ import "utils.js" as Utils
 HDrawer {
     id: debugConsole
     edge: Qt.BottomEdge
-    width: vertical ? Math.min(window.width, 720) : calculatedWidth
-    height: vertical ? calculatedWidth : Math.min(window.width, 480)
-    normalWidth: 360
+    width: horizontal ? calculatedSize : Math.min(window.width, 720)
+    height: vertical ? calculatedSize : Math.min(window.width, 480)
+    normalSize: 360
     z: 9999
 
     property var target: null

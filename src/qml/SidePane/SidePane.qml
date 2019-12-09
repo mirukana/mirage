@@ -7,8 +7,8 @@ HDrawer {
     id: sidePane
     opacity: mainUI.accountsPresent ? 1 : 0
     color: theme.sidePane.background
-    normalWidth: window.uiState.sidePaneManualWidth
-    minNormalWidth: theme.controls.avatar.size + theme.spacing * 2
+    normalSize: window.uiState.sidePaneManualWidth
+    minNormalSize: theme.controls.avatar.size + theme.spacing * 2
 
     onUserResized: {
         window.uiState.sidePaneManualWidth = newWidth

@@ -6,8 +6,8 @@ HDrawer {
     id: roomSidePane
     color: theme.chat.roomSidePane.background
     edge: Qt.RightEdge
-    normalWidth: buttonRepeater.childrenImplicitWidth
-    minNormalWidth:
+    normalSize: buttonRepeater.childrenImplicitWidth
+    minNormalSize:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
     HColumnLayout {

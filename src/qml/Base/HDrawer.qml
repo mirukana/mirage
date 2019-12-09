@@ -4,10 +4,10 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
-    x: vertical ? referenceSizeParent.width / 2 - width / 2 : 0
+    x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
     y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
-    implicitWidth: vertical ? referenceSizeParent.width : calculatedWidth
-    implicitHeight: vertical ? calculatedWidth : referenceSizeParent.height
+    implicitWidth: horizontal ? calculatedSize : referenceSizeParent.width
+    implicitHeight: vertical ? calculatedSize : referenceSizeParent.height
 
     topPadding: 0
     bottomPadding: 0
@@ -32,28 +32,30 @@ Drawer {
 
     property Item referenceSizeParent: parent
 
-    property int normalWidth:
-        vertical ? referenceSizeParent.height : referenceSizeParent.width
-    property int minNormalWidth: resizeAreaWidth
-    property int maxNormalWidth:
-        vertical ?
-        referenceSizeParent.height - theme.minimumSupportedHeight :
-        referenceSizeParent.width - theme.minimumSupportedWidth
+    property int normalSize:
+        horizontal ? referenceSizeParent.width : referenceSizeParent.height
+    property int minNormalSize: resizeAreaSize
+    property int maxNormalSize:
+        horizontal ?
+        referenceSizeParent.width - theme.minimumSupportedWidth :
+        referenceSizeParent.height - theme.minimumSupportedHeight
 
     property bool collapse:
-        (vertical ? window.height : window.width) < 400
-    property int collapseExpandedWidth:
-        vertical ? referenceSizeParent.height : referenceSizeParent.width
+        (horizontal ? window.width : window.height) < 400
+    property int collapseExpandSize:
+        horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
-    property int resizeAreaWidth: theme.spacing / 2
+    property int resizeAreaSize: theme.spacing / 2
 
-    readonly property int calculatedWidth:
+    readonly property int calculatedSize:
         collapse ?
-        collapseExpandedWidth :
-        Math.max(minNormalWidth, Math.min(normalWidth, maxNormalWidth))
+        collapseExpandSize :
+        Math.max(minNormalSize, Math.min(normalSize, maxNormalSize))
 
-    readonly property bool vertical:
-        edge === Qt.TopEdge || edge === Qt.BottomEdge
+    readonly property bool horizontal:
+        edge === Qt.LeftEdge || edge === Qt.RightEdge
+
+    readonly property bool vertical: ! horizontal
 
 
     Behavior on width {
@@ -69,9 +71,9 @@ Drawer {
     Item {
         id: resizeArea
         x: vertical || drawer.edge === Qt.RightEdge ? 0 : drawer.width-width
-        y: ! vertical || drawer.edge !== Qt.TopEdge ? 0 : drawer.height-height
-        width: vertical ? parent.width : resizeAreaWidth
-        height: vertical ? resizeAreaWidth : parent.height
+        y: horizontal || drawer.edge !== Qt.TopEdge ? 0 : drawer.height-height
+        width: horizontal ? resizeAreaSize : parent.width
+        height: vertical ? resizeAreaSize : parent.height
         z: 999
 
         MouseArea {
@@ -82,23 +84,23 @@ Drawer {
             hoverEnabled: true
             cursorShape:
                 containsMouse || drag.active ?
-                (vertical ? Qt.SizeVerCursor : Qt.SizeHorCursor) :
+                (horizontal ? Qt.SizeHorCursor : Qt.SizeVerCursor) :
                 Qt.ArrowCursor
 
             onPressed: canResize = true
-            onReleased: { canResize = false; userResized(drawer.normalWidth) }
+            onReleased: { canResize = false; userResized(drawer.normalSize) }
 
             onMouseXChanged:
-                if (! vertical && canResize) {
-                    drawer.normalWidth =
-                        drawer.calculatedWidth +
+                if (horizontal && canResize) {
+                    drawer.normalSize =
+                        drawer.calculatedSize +
                         (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
                 }
 
             onMouseYChanged:
                 if (vertical && canResize) {
-                    drawer.normalWidth =
-                        drawer.calculatedWidth +
+                    drawer.normalSize =
+                        drawer.calculatedSize +
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
 
