@@ -774,6 +774,16 @@ class MatrixClient(nio.AsyncClient):
             last_event     = last_ev,
         )
 
+        # List members that left the room, then remove them from our model
+        left_the_room = [
+            user_id
+            for user_id in self.models[Member, room.room_id]
+            if user_id not in room.users
+        ]
+
+        for user_id in left_the_room:
+            del self.models[Member, room.room_id][user_id]
+
         # Add the room members to the added room
         new_dict = {
             user_id: Member(
