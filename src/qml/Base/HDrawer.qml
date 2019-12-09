@@ -4,8 +4,6 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
-    x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
-    y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
     implicitWidth: horizontal ? calculatedSize : referenceSizeParent.width
     implicitHeight: vertical ? calculatedSize : referenceSizeParent.height
 
