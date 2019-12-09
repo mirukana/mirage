@@ -41,6 +41,9 @@ HDrawer {
 
 
     Component.onCompleted: {
+        if (mainUI.shortcuts.debugConsole)
+            mainUI.shortcuts.debugConsole.destroy()
+
         mainUI.shortcuts.debugConsole = debugConsole
         forceActiveFocus()
         position = 1

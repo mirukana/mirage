@@ -25,9 +25,15 @@ Item {
     }
 
     HShortcut {
-        enabled: debugMode && debugConsole
+        enabled: debugMode
         sequences: settings.keys.toggleDebugConsole
-        onActivated: debugConsole.visible = ! debugConsole.visible
+        onActivated:  {
+            if (debugConsole) {
+                debugConsole.visible = ! debugConsole.visible
+            } else {
+                Utils.debug(mainUI || window)
+            }
+        }
     }
 
     HShortcut {
