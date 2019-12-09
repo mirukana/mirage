@@ -15,6 +15,10 @@ Item {
     // DebugConsole that should be affected by console shortcuts
     property DebugConsole debugConsole
 
+    readonly property Item toFlick:
+        debugConsole && debugConsole.activeFocus ?
+        debugConsole.commandsView : flickTarget
+
 
     // App
 
@@ -66,46 +70,46 @@ Item {
     // Page scrolling
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollUp
-        onActivated: Utils.smartVerticalFlick(flickTarget, -335)
+        onActivated: Utils.smartVerticalFlick(toFlick, -335)
     }
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollDown
-        onActivated: Utils.smartVerticalFlick(flickTarget, 335)
+        onActivated: Utils.smartVerticalFlick(toFlick, 335)
     }
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollPageUp
         onActivated: Utils.smartVerticalFlick(
-            flickTarget, -2.3 * flickTarget.height, 8,
+            toFlick, -2.3 * toFlick.height, 8,
         )
         // Ensure only a slight slip after releasing the key
-        // onReleased: Utils.smartVerticalFlick(flickTarget, -335)
+        // onReleased: Utils.smartVerticalFlick(toFlick, -335)
     }
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollPageDown
         onActivated: Utils.smartVerticalFlick(
-            flickTarget, 2.3 * flickTarget.height, 8,
+            toFlick, 2.3 * toFlick.height, 8,
         )
-        // onReleased: Utils.smartVerticalFlick(flickTarget, 335)
+        // onReleased: Utils.smartVerticalFlick(toFlick, 335)
     }
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollToTop
-        onActivated: Utils.flickToTop(flickTarget)
+        onActivated: Utils.flickToTop(toFlick)
     }
 
     HShortcut {
-        enabled: flickTarget
+        enabled: toFlick
         sequences: settings.keys.scrollToBottom
-        onActivated: Utils.flickToBottom(flickTarget)
+        onActivated: Utils.flickToBottom(toFlick)
     }
 
 

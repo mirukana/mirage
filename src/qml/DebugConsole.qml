@@ -44,6 +44,8 @@ HDrawer {
             .h, .help    Show this help`.replace(/^ {8}/gm, "")
     )
 
+    readonly property alias commandsView: commandsView
+
 
     Component.onCompleted: {
         if (mainUI.shortcuts.debugConsole)
