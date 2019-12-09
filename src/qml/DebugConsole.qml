@@ -3,6 +3,7 @@ import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 import "Base"
 import "utils.js" as Utils
+import "utils.js" as U
 
 HDrawer {
     id: debugConsole
@@ -10,8 +11,8 @@ HDrawer {
     x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
     y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
     width: horizontal ? calculatedSize : Math.min(window.width, 720)
-    height: vertical ? calculatedSize : Math.min(window.width, 480)
-    normalSize: 360
+    height: vertical ? calculatedSize : Math.min(window.height, 720)
+    normalSize: 400
     z: 9999
     position: 0
 
@@ -25,9 +26,13 @@ HDrawer {
     property string help: qsTr(
         `Javascript debugging console
 
-        Special variables:
-            t    Target item to debug for which this console was opened
-            his  History, list of commands entered
+        Useful variables:
+            window, theme, settings, shortcuts, mainUI, pageLoader
+            py    Python interpreter
+            U     Utils/utils.js module
+            this  The console itself
+            t     Target item to debug for which this console was opened
+            his   History, list of commands entered
 
         Special commands:
             .j OBJECT, .json OBJECT  Print OBJECT as human-readable JSON
