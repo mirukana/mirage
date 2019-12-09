@@ -2,14 +2,11 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
+import "RoomSidePane"
 
-HPage {
-    id: chatPage
-    leftPadding: 0
-    rightPadding: 0
+Item {
+    id: chat
 
-    // The target will be our EventList, not the page itself
-    becomeKeyboardFlickableTarget: false
 
     property string userId: ""
     property string roomId: ""
@@ -39,26 +36,27 @@ HPage {
     }
 
 
-    readonly property bool hasUnknownDevices: false
+    HLoader {
+        anchors.rightMargin: roomSidePane.width * roomSidePane.position
+        anchors.fill: parent
+        visible: ! roomSidePane.hidden || anchors.rightMargin < width
 
+        source: ready ? "ChatPage.qml" : ""
 
-    header: HLoader {
-        id: roomHeader
-        source: ready ? "RoomHeader.qml" : ""
+        HLoader {
+            anchors.centerIn: parent
+            width: 96 * theme.uiScale
+            height: width
 
-        clip: height < implicitHeight
-        width: parent.width
-        height: ready ? implicitHeight : 0
-        Behavior on height { HNumberAnimation {} }
+            source: opacity > 0 ? "../Base/HBusyIndicator.qml" : ""
+            opacity: ready ? 0 : 1
+
+            Behavior on opacity { HOpacityAnimator { factor: 2 } }
+        }
     }
 
-    HLoader {
-        source: ready ? "ChatSplitView.qml" : "../Base/HBusyIndicator.qml"
-
-        Layout.preferredWidth: ready ? -1 : 96 * theme.uiScale
-        Layout.preferredHeight: Layout.preferredWidth
-        Layout.fillWidth: ready
-        Layout.fillHeight: ready
-        Layout.alignment: Qt.AlignCenter
+    RoomSidePane {
+        id: roomSidePane
+        referenceSizeParent: chat
     }
 }

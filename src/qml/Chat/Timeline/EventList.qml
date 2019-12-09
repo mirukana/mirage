@@ -85,7 +85,7 @@ Rectangle {
             Component.onCompleted: shortcuts.flickTarget = eventList
 
 
-            property string inviter: chatPage.roomInfo.inviter || ""
+            property string inviter: chat.roomInfo.inviter || ""
             property real yPos: visibleArea.yPosition
             property bool canLoad: true
 
@@ -133,7 +133,7 @@ Rectangle {
                     eventList.canLoad = false
 
                     py.callClientCoro(
-                        chatPage.userId, "load_past_events", [chatPage.roomId],
+                        chat.userId, "load_past_events", [chat.roomId],
                         moreToLoad => {
                             try {
                                 eventList.canLoad = moreToLoad
@@ -155,7 +155,7 @@ Rectangle {
             model: HListModel {
                 keyField: "client_id"
                 source: modelSources[[
-                    "Event", chatPage.userId, chatPage.roomId
+                    "Event", chat.userId, chat.roomId
                 ]] || []
             }
 

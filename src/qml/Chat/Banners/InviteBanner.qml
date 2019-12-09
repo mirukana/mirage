@@ -3,9 +3,9 @@ import "../../Base"
 import "../../utils.js" as Utils
 
 Banner {
-    property string inviterId: chatPage.roomInfo.inviter
-    property string inviterName: chatPage.roomInfo.inviter_name
-    property string inviterAvatar: chatPage.roomInfo.inviter_avatar
+    property string inviterId: chat.roomInfo.inviter
+    property string inviterName: chat.roomInfo.inviter_name
+    property string inviterAvatar: chat.roomInfo.inviter_avatar
 
     color: theme.chat.inviteBanner.background
 
@@ -36,7 +36,7 @@ Banner {
         accept: button => {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "join", [chatPage.roomId], () => {
+                chat.userId, "join", [chat.roomId], () => {
                     button.loading = false
             })
         },
@@ -44,7 +44,7 @@ Banner {
         decline: button => {
             button.loading = true
             py.callClientCoro(
-                chatPage.userId, "room_leave", [chatPage.roomId], () => {
+                chat.userId, "room_leave", [chat.roomId], () => {
                     button.loading = false
             })
         }

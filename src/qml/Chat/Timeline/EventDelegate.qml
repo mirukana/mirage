@@ -28,7 +28,7 @@ Column {
         nextItem     = eventList.model.get(model.index - 1)
     }
 
-    property bool isOwn: chatPage.userId === model.sender_id
+    property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
     property bool combine: eventList.canCombine(previousItem, model)
     property bool talkBreak: eventList.canTalkBreak(previousItem, model)
@@ -70,7 +70,7 @@ Column {
             {
                 "model": Utils.getItem(
                     modelSources[[
-                        "Event", chatPage.userId, chatPage.roomId
+                        "Event", chat.userId, chat.roomId
                     ]],
                     "client_id",
                     model.client_id
@@ -168,8 +168,8 @@ Column {
             text: qsTr("Clear messages")
             onTriggered: Utils.makePopup(
                 "Popups/ClearMessagesPopup.qml",
-                chatPage,
-                {userId: chatPage.userId, roomId: chatPage.roomId},
+                chat,
+                {userId: chat.userId, roomId: chat.roomId},
             )
         }
     }

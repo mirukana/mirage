@@ -6,9 +6,9 @@ Banner {
     color: theme.chat.leftBanner.background
 
     // TODO: avatar func auto
-    avatar.userId: chatPage.userId
-    avatar.displayName: chatPage.userInfo.display_name
-    avatar.mxc: chatPage.userInfo.avatar_url
+    avatar.userId: chat.userId
+    avatar.displayName: chat.userInfo.display_name
+    avatar.mxc: chat.userInfo.avatar_url
     labelText: qsTr("You are not part of this room anymore")
 
     buttonModel: [
@@ -24,11 +24,11 @@ Banner {
         forget: button => {
             Utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
-                mainUI,  // Must not be destroyed with chatPage
+                mainUI,  // Must not be destroyed with chat
                 {
-                    userId:   chatPage.userId,
-                    roomId:   chatPage.roomId,
-                    roomName: chatPage.roomInfo.display_name,
+                    userId:   chat.userId,
+                    roomId:   chat.roomId,
+                    roomName: chat.roomInfo.display_name,
                 },
                 obj => {
                     obj.onOk.connect(() => { button.loading = true })

@@ -25,7 +25,7 @@ Rectangle {
 
         model: HListModel {
             keyField: "uuid"
-            source: modelSources[["Upload", chatPage.roomId]] || []
+            source: modelSources[["Upload", chat.roomId]] || []
         }
 
         delegate: Transfer { width: transferList.width }

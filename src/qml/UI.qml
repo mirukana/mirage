@@ -56,7 +56,6 @@ Item {
 
     SidePane {
         id: sidePane
-        maxNormalWidth: parent.width - theme.minimumSupportedWidth
     }
 
     HLoader {

@@ -10,7 +10,7 @@ Rectangle {
     property var aliases: window.settings.writeAliases
     property string toSend: ""
 
-    property string writingUserId: chatPage.userId
+    property string writingUserId: chat.userId
     readonly property var writingUserInfo:
         Utils.getItem(modelSources["Account"] || [], "user_id", writingUserId)
 
@@ -78,13 +78,13 @@ Rectangle {
                 py.callClientCoro(
                     writingUserId,
                     "room_typing",
-                    [chatPage.roomId, typing, 5000]
+                    [chat.roomId, typing, 5000]
                 )
             }
 
             onTextChanged: {
                 if (Utils.isEmptyObject(aliases)) {
-                    writingUserId = Qt.binding(() => chatPage.userId)
+                    writingUserId = Qt.binding(() => chat.userId)
                     toSend        = text
                     setTyping(Boolean(text))
                     textChangedSinceLostFocus = true
@@ -108,7 +108,7 @@ Rectangle {
                     return
                 }
 
-                writingUserId = Qt.binding(() => chatPage.userId)
+                writingUserId = Qt.binding(() => chat.userId)
                 toSend        = text
 
                 let vals = Object.values(aliases)
@@ -168,7 +168,7 @@ Rectangle {
 
                     if (textArea.text === "") { return }
 
-                    let args = [chatPage.roomId, toSend]
+                    let args = [chat.roomId, toSend]
                     py.callClientCoro(writingUserId, "send_text", args)
 
                     area.clear()
@@ -215,8 +215,8 @@ Rectangle {
 
             SendFilePicker {
                 id: sendFilePicker
-                userId: chatPage.userId
-                roomId: chatPage.roomId
+                userId: chat.userId
+                roomId: chat.roomId
             }
         }
     }

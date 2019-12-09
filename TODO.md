@@ -1,8 +1,8 @@
 - make pageup/down not slippery again
-- rename all setfocus() to takefocus()
-- refactor roomsidepane too
-- better pane minsize
+- test sidepane opacity
 - better cancel for all boxes
+- get rid of all currentSpacing stuff
+
 - Media
   - Confirmation box after picking file to upload
   - Handle set avatar upload errors
@@ -23,17 +23,13 @@
   - EventFile & Downloading (right click on media > save as...)
 
 - Refactoring
+  - Replace all the `==` by `===`
   - Use a singleton for utils.js
-  - Room header elide detection
   - Use HBox for Profile
   - Banners
   - Composer
 
-  - Room Sidepane
-    - Hide when window too small
-    - Also save/load its size
-    - Is auto-sizing actually needed, or can we just set a default manual size?
-    - Reducable room sidepane, swipe to show full-window
+  - Room Sidepane save/load size
 
 - Fixes
   - Pausing uploads doesn't work well with matrix.org
@@ -118,9 +114,7 @@
   - Sidepane
     - Animate when logging out last account and sidepane turns invisible
     - Header back button when reduced
-    - Better look for arrows and option button when collapsed
-    - Show it when hovering/hitting focus keybind on the left when collapsed
-    - Ability to drag on any place of the pane to resize
+    - Better look when reduced to minimum size
 
   - Server selection
   - Register/Forgot? for SignIn dialog

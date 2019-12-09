@@ -30,7 +30,7 @@ Rectangle {
             textFormat: Text.StyledText
             elide: Text.ElideRight
             text: {
-                let tm = chatPage.roomInfo.typing_members
+                let tm = chat.roomInfo.typing_members
 
                 if (tm.length == 0) return ""
                 if (tm.length == 1) return qsTr("%1 is typing...").arg(tm[0])

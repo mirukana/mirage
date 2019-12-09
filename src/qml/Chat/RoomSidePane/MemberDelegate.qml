@@ -4,7 +4,6 @@ import "../../utils.js" as Utils
 
 HTileDelegate {
     id: memberDelegate
-    spacing: roomSidePane.currentSpacing
     backgroundColor: theme.chat.roomSidePane.member.background
 
     image: HUserAvatar {

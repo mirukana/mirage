@@ -10,10 +10,6 @@ HRowLayout {
     readonly property alias filterField: filterField
     property alias roomFilter: filterField.text
 
-    Layout.fillWidth: true
-    Layout.minimumHeight: theme.baseElementsHeight
-    Layout.maximumHeight: Layout.minimumHeight
-
     HButton {
         id: addAccountButton
         icon.name: "add-account"

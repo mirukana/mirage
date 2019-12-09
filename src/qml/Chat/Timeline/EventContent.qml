@@ -29,7 +29,7 @@ HRowLayout {
 
     readonly property int messageBodyWidth:
         width - (avatarWrapper.visible ? avatarWrapper.width : 0) -
-        totalSpacing
+        spacing * Math.max(0, (visibleChildren.length - 1))
 
     readonly property int xOffset:
         onRight ?

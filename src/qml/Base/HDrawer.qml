@@ -5,7 +5,12 @@ import "../utils.js" as Utils
 Drawer {
     id: drawer
     implicitWidth: calculatedWidth
-    implicitHeight: parent.height
+    implicitHeight: referenceSizeParent.height
+
+    topPadding: 0
+    bottomPadding: 0
+    leftPadding: 0
+    rightPadding: 0
 
     // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
     // dragMargin: parent.width / 2
@@ -21,12 +26,15 @@ Drawer {
 
     signal userResized(int newWidth)
 
+    property Item referenceSizeParent: parent
+
     property int normalWidth: 300
     property int minNormalWidth: resizeAreaWidth
-    property int maxNormalWidth: parent.width
+    property int maxNormalWidth:
+        referenceSizeParent.width - theme.minimumSupportedWidth
 
     property bool collapse: window.width < 400
-    property int collapseExpandedWidth: parent.width
+    property int collapseExpandedWidth: referenceSizeParent.width
 
     property alias color: bg.color
     property alias resizeAreaWidth: resizeArea.width
@@ -44,7 +52,7 @@ Drawer {
 
     Item {
         id: resizeArea
-        anchors.right: parent.right
+        x: drawer.edge === Qt.LeftEdge ? drawer.width - width : 0
         width: theme.spacing / 2
         height: parent.height
         z: 9999
@@ -63,8 +71,11 @@ Drawer {
             onReleased: { canResize = false; userResized(drawer.normalWidth) }
 
             onMouseXChanged:
-                if (canResize)
-                    drawer.normalWidth = drawer.calculatedWidth + mouseX
+                if (canResize) {
+                    drawer.normalWidth =
+                        drawer.calculatedWidth +
+                        (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
+                }
 
             property bool canResize: false
         }

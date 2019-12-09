@@ -5,10 +5,10 @@ import "../utils.js" as Utils
 
 HDrawer {
     id: sidePane
-    clip: true
     opacity: mainUI.accountsPresent ? 1 : 0
     color: theme.sidePane.background
     normalWidth: window.uiState.sidePaneManualWidth
+    minNormalWidth: theme.controls.avatar.size + theme.spacing * 2
 
     onUserResized: {
         window.uiState.sidePaneManualWidth = newWidth
@@ -48,6 +48,11 @@ HDrawer {
         SidePaneToolBar {
             id: toolBar
             sidePaneList: sidePaneList
+
+            Layout.fillWidth: true
+            Layout.fillHeight: false
+            Layout.preferredHeight: theme.baseElementsHeight
+
         }
     }
 }

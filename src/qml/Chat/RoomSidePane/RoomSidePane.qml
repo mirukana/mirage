@@ -2,17 +2,43 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-Rectangle {
+HDrawer {
     id: roomSidePane
     color: theme.chat.roomSidePane.background
+    edge: Qt.RightEdge
+    normalWidth: buttonRepeater.childrenImplicitWidth
+    minNormalWidth:
+        buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
-    property bool collapsed: false
-    property var activeView: null
-    property int currentSpacing: collapsed ? 0 : theme.spacing
-
-    Behavior on currentSpacing { HNumberAnimation {} }
-
-    MembersView {
+    HColumnLayout {
         anchors.fill: parent
+
+        HFlow {
+            Layout.fillWidth: true
+
+            HRepeater {
+                id: buttonRepeater
+                model: [
+                    "members", "files", "notifications", "history", "settings"
+                ]
+
+                HButton {
+                    height: theme.baseElementsHeight
+                    backgroundColor: "transparent"
+                    icon.name: "room-view-" + modelData
+                    autoExclusive: true
+                    checked: modelData === "members"
+                    enabled: modelData === "members"
+                    toolTip.text: qsTr(
+                        modelData.charAt(0).toUpperCase() + modelData.slice(1)
+                    )
+                }
+            }
+        }
+
+        MembersView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
     }
 }
