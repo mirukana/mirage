@@ -6,6 +6,7 @@ import "RoomSidePane"
 
 Item {
     id: chat
+    onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
 
 
     property string userId: ""
@@ -39,9 +40,11 @@ Item {
 
 
     HLoader {
+        id: loader
         anchors.rightMargin: roomSidePane.visibleWidth
         anchors.fill: parent
         visible: ! roomSidePane.hidden || anchors.rightMargin < width
+        onLoaded: if (chat.focus) item.composer.takeFocus()
 
         source: ready ? "ChatPage.qml" : ""
 

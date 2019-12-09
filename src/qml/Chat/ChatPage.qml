@@ -14,7 +14,9 @@ HPage {
     // The target will be our EventList, not the page itself
     becomeKeyboardFlickableTarget: false
 
-    Component.onCompleted: composer.takeFocus()
+
+    readonly property alias composer: composer
+
 
     RoomHeader {
         Layout.fillWidth: true

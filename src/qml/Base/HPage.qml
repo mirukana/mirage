@@ -7,7 +7,7 @@ Page {
     id: innerPage
 
 
-    default property alias columnChildren: contentColumn.children
+    default property alias columnData: contentColumn.data
 
     property alias flickable: innerFlickable
     property alias headerLabel: innerHeaderLabel

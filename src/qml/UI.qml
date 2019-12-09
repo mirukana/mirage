@@ -63,7 +63,8 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: sidePane.visibleSize
         visible: ! sidePane.hidden || anchors.leftMargin < width
-
+        clip: appearAnimation.running
+        onLoaded: { takeFocus(); appearAnimation.start() }
         // onSourceChanged: if (sidePane.collapse) sidePane.close()
 
 
@@ -133,12 +134,6 @@ Item {
         }
 
 
-        onStatusChanged: if (status === Loader.Ready) {
-            pageLoader.takeFocus()
-            appearAnimation.start()
-        }
-
-        clip: appearAnimation.running
         XAnimator {
             id: appearAnimation
             target: pageLoader.item
