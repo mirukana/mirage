@@ -47,6 +47,7 @@ HColumnLayout {
 
         HTextField {
             id: filterField
+            objectName: "memberFilterField"
             placeholderText: qsTr("Filter members")
             backgroundColor: theme.chat.roomPane.filterMembers.background
             bordered: false

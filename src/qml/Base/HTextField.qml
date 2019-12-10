@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
+    objectName: ""  // Set one to allow remembering the text using a file
+    selectByMouse: true
     leftPadding: theme.spacing
     rightPadding: leftPadding
     topPadding: theme.spacing / 1.5
@@ -17,6 +19,32 @@ TextField {
            theme.controls.textField.focusedText :
            theme.controls.textField.text
 
+    background: Rectangle {
+        id: textFieldBackground
+        color: field.activeFocus ? focusedBackgroundColor : backgroundColor
+        border.color: error ? errorBorder :
+                      field.activeFocus ? focusedBorderColor : borderColor
+        border.width: bordered ? theme.controls.textField.borderWidth : 0
+
+        Behavior on color { HColorAnimation { factor: 0.25 } }
+        Behavior on border.color { HColorAnimation { factor: 0.25 } }
+    }
+
+    // Set it only on component creation to avoid binding loops
+    Component.onCompleted:
+        if (! text && uiState[objectName]) text = uiState[objectName].text
+
+    onTextChanged: {
+        if (! objectName) return
+        window.uiState[objectName] = {text}
+        window.uiStateChanged()
+    }
+
+    Keys.onPressed: if (
+        event.modifiers & Qt.AltModifier ||
+        event.modifiers & Qt.MetaModifier
+    ) event.accepted = true  // XXX Still needed?
+
 
     property bool error: false
 
@@ -30,23 +58,4 @@ TextField {
     property color focusedBackgroundColor:
         theme.controls.textField.focusedBackground
     property color focusedBorderColor: theme.controls.textField.focusedBorder
-
-
-    background: Rectangle {
-        id: textFieldBackground
-        color: field.activeFocus ? focusedBackgroundColor : backgroundColor
-        border.color: error ? errorBorder :
-                      field.activeFocus ? focusedBorderColor : borderColor
-        border.width: bordered ? theme.controls.textField.borderWidth : 0
-
-        Behavior on color { HColorAnimation { factor: 0.25 } }
-        Behavior on border.color { HColorAnimation { factor: 0.25 } }
-    }
-
-    selectByMouse: true
-
-    Keys.onPressed: if (
-        event.modifiers & Qt.AltModifier ||
-        event.modifiers & Qt.MetaModifier
-    ) event.accepted = true
 }

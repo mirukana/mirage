@@ -4,6 +4,7 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
+    objectName: ""  // Set one to allow storing the user size to a file
     implicitWidth: horizontal ? calculatedSize : parent.width
     implicitHeight: vertical ? calculatedSize : parent.height
 

@@ -169,7 +169,6 @@ class UIState(JSONConfigFile):
             "collapseAccounts": {},
             "page":             "Pages/Default.qml",
             "pageProperties":   {},
-            "sidePaneFilter":   "",
         }
 
 

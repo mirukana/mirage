@@ -22,17 +22,10 @@ HRowLayout {
 
     HTextField {
         id: filterField
+        objectName: "roomFilterField"
         placeholderText: qsTr("Filter rooms")
         backgroundColor: theme.mainPane.filterRooms.background
         bordered: false
-
-        Component.onCompleted: filterField.text = uiState.sidePaneFilter
-
-        onTextChanged: {
-            if (window.uiState.mainPaneFilter === text) return
-            window.uiState.mainPaneFilter = text
-            window.uiStateChanged()
-        }
 
         Layout.fillWidth: true
         Layout.fillHeight: true

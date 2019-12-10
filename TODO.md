@@ -1,3 +1,4 @@
+- scale vs current zoom methods?
 - better cancel for all boxes
 
 - Media
@@ -78,7 +79,6 @@
   - Restoring UI state:
     - Composer content
     - Which element was focused
-    - Room member filter field
 
   - Combine events so they take less space
     - After combining is implemented, no need to hide profile changes anymore.
