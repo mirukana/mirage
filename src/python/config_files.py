@@ -137,7 +137,7 @@ class UISettings(JSONConfigFile):
                 "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
                 "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
 
-                "focusSidePane":   ["Alt+S"],
+                "focusMainPane":   ["Alt+S"],
                 "clearRoomFilter": ["Alt+Shift+S"],
                 "accountSettings": ["Alt+A"],
                 "addNewChat":      ["Alt+N"],

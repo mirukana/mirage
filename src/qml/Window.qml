@@ -26,7 +26,7 @@ ApplicationWindow {
     // NOTE: For JS object variables, the corresponding method to notify
     // key/value changes must be called manually, e.g. settingsChanged().
     property var modelSources: ({})
-    property var sidePaneModelSource: []
+    property var mainPaneModelSource: []
 
     property var mainUI: null
 

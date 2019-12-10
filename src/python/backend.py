@@ -146,7 +146,7 @@ class Backend:
         return (settings, ui_state, history, theme)
 
 
-    async def get_flat_sidepane_data(self) -> List[Dict[str, Any]]:
+    async def get_flat_mainpane_data(self) -> List[Dict[str, Any]]:
         data = []
 
         for account in sorted(self.models[Account].values()):

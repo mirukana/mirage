@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Window 2.7
 import QtGraphicalEffects 1.12
 import "Base"
-import "SidePane"
+import "MainPane"
 import "utils.js" as Utils
 
 Item {
@@ -13,7 +13,7 @@ Item {
     Component.onCompleted: window.mainUI = mainUI
 
     readonly property alias shortcuts: shortcuts
-    readonly property alias sidePane: sidePane
+    readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
     readonly property alias pressAnimation: pressAnimation
     readonly property alias fullScreenPopup: fullScreenPopup
@@ -54,18 +54,18 @@ Item {
     }
 
 
-    SidePane {
-        id: sidePane
+    MainPane {
+        id: mainPane
     }
 
     HLoader {
         id: pageLoader
         anchors.fill: parent
-        anchors.leftMargin: sidePane.visibleSize
-        visible: ! sidePane.hidden || anchors.leftMargin < width
+        anchors.leftMargin: mainPane.visibleSize
+        visible: ! mainPane.hidden || anchors.leftMargin < width
         clip: appearAnimation.running
         onLoaded: { takeFocus(); appearAnimation.start() }
-        // onSourceChanged: if (sidePane.collapse) sidePane.close()
+        // onSourceChanged: if (mainPane.collapse) mainPane.close()
 
 
         property bool isWide: width > theme.contentIsWideAbove
@@ -130,7 +130,7 @@ Item {
 
         function takeFocus() {
             pageLoader.item.forceActiveFocus()
-            if (sidePane.collapse) sidePane.close()
+            if (mainPane.collapse) mainPane.close()
         }
 
 

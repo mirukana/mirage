@@ -5,7 +5,7 @@ import "../Base"
 HRowLayout {
     id: toolBar
 
-    property SidePaneList sidePaneList
+    property AccountRoomList mainPaneList
     readonly property alias addAccountButton: addAccountButton
     readonly property alias filterField: filterField
     property alias roomFilter: filterField.text
@@ -14,7 +14,7 @@ HRowLayout {
         id: addAccountButton
         icon.name: "add-account"
         toolTip.text: qsTr("Add another account")
-        backgroundColor: theme.sidePane.settingsButton.background
+        backgroundColor: theme.mainPane.settingsButton.background
         onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.fillHeight: true
@@ -23,32 +23,32 @@ HRowLayout {
     HTextField {
         id: filterField
         placeholderText: qsTr("Filter rooms")
-        backgroundColor: theme.sidePane.filterRooms.background
+        backgroundColor: theme.mainPane.filterRooms.background
         bordered: false
 
         Component.onCompleted: filterField.text = uiState.sidePaneFilter
 
         onTextChanged: {
-            if (window.uiState.sidePaneFilter === text) return
-            window.uiState.sidePaneFilter = text
+            if (window.uiState.mainPaneFilter === text) return
+            window.uiState.mainPaneFilter = text
             window.uiStateChanged()
         }
 
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        Keys.onUpPressed: sidePaneList.previous(false)  // do not activate
-        Keys.onDownPressed: sidePaneList.next(false)
+        Keys.onUpPressed: mainPaneList.previous(false)  // do not activate
+        Keys.onDownPressed: mainPaneList.next(false)
 
         Keys.onEnterPressed: Keys.onReturnPressed(event)
         Keys.onReturnPressed: {
             if (event.modifiers & Qt.ShiftModifier) {
-                sidePaneList.toggleCollapseAccount()
+                mainPaneList.toggleCollapseAccount()
                 return
             }
 
             if (window.settings.clearRoomFilterOnEnter) text = ""
-            sidePaneList.activate()
+            mainPaneList.activate()
         }
 
         Keys.onEscapePressed: {

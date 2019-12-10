@@ -4,14 +4,14 @@ import "../Base"
 import "../utils.js" as Utils
 
 HDrawer {
-    id: sidePane
+    id: mainPane
     objectName: "mainPane"
-    color: theme.sidePane.background
+    color: theme.mainPane.background
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
 
     property bool hasFocus: toolBar.filterField.activeFocus
-    property alias sidePaneList: sidePaneList
+    property alias mainPaneList: mainPaneList
     property alias toolBar: toolBar
 
 
@@ -21,7 +21,7 @@ HDrawer {
             return
         }
 
-        sidePane.open()
+        mainPane.open()
         toolBar.filterField.forceActiveFocus()
     }
 
@@ -29,7 +29,7 @@ HDrawer {
     Behavior on opacity { HOpacityAnimator {} }
 
     Binding {
-        target: sidePane
+        target: mainPane
         property: "visible"
         value: false
         when: ! mainUI.accountsPresent
@@ -38,17 +38,17 @@ HDrawer {
     HColumnLayout {
         anchors.fill: parent
 
-        SidePaneList {
-            id: sidePaneList
+        AccountRoomList {
+            id: mainPaneList
             clip: true
 
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
-        SidePaneToolBar {
+        MainPaneToolBar {
             id: toolBar
-            sidePaneList: sidePaneList
+            mainPaneList: mainPaneList
 
             Layout.fillWidth: true
             Layout.fillHeight: false

@@ -125,58 +125,58 @@ Item {
     }
 
 
-    // SidePane
+    // MainPane
 
     HShortcut {
         enabled: mainUI.accountsPresent
-        sequences: settings.keys.focusSidePane
-        onActivated: mainUI.sidePane.toggleFocus()
+        sequences: settings.keys.focusMainPane
+        onActivated: mainUI.mainPane.toggleFocus()
         context: Qt.ApplicationShortcut
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.clearRoomFilter
-        onActivated: mainUI.sidePane.toolBar.roomFilter = ""
+        onActivated: mainUI.mainPane.toolBar.roomFilter = ""
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewAccount
-        onActivated: mainUI.sidePane.toolBar.addAccountButton.clicked()
+        onActivated: mainUI.mainPane.toolBar.addAccountButton.clicked()
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewChat
-        onActivated: mainUI.sidePane.sidePaneList.addNewChat()
+        onActivated: mainUI.mainPane.mainPaneList.addNewChat()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.accountSettings
-        onActivated: mainUI.sidePane.sidePaneList.accountSettings()
+        onActivated: mainUI.mainPane.mainPaneList.accountSettings()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.toggleCollapseAccount
-        onActivated: mainUI.sidePane.sidePaneList.toggleCollapseAccount()
+        onActivated: mainUI.mainPane.mainPaneList.toggleCollapseAccount()
     }
 
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
-        onActivated: mainUI.sidePane.sidePaneList.previous()
+        onActivated: mainUI.mainPane.mainPaneList.previous()
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToNextRoom
-        onActivated: mainUI.sidePane.sidePaneList.next()
+        onActivated: mainUI.mainPane.mainPaneList.next()
     }
 
 

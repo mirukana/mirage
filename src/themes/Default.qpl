@@ -260,7 +260,7 @@ ui:
 
 
 
-sidePane:
+mainPane:
     int autoCollapseBelowWidth: 128 * uiScale
     int collapsedWidth:         controls.avatar.size
 

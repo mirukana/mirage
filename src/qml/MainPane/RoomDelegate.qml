@@ -6,8 +6,8 @@ import "../utils.js" as Utils
 HTileDelegate {
     id: roomDelegate
     spacing: theme.spacing
-    backgroundColor: theme.sidePane.room.background
-    opacity: model.data.left ? theme.sidePane.room.leftRoomOpacity : 1
+    backgroundColor: theme.mainPane.room.background
+    opacity: model.data.left ? theme.mainPane.room.leftRoomOpacity : 1
 
     shouldBeCurrent:
         window.uiState.page === "Chat/Chat.qml" &&
@@ -15,7 +15,7 @@ HTileDelegate {
         window.uiState.pageProperties.roomId === model.data.room_id
 
     setCurrentTimer.running:
-        ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
+        ! mainPaneList.activateLimiter.running && ! mainPane.hasFocus
 
 
     Behavior on opacity { HOpacityAnimator {} }
@@ -33,7 +33,7 @@ HTileDelegate {
         mxc: model.data.avatar_url
     }
 
-    title.color: theme.sidePane.room.name
+    title.color: theme.mainPane.room.name
     title.text: model.data.display_name || qsTr("Empty room")
 
     additionalInfo.children: HIcon {
@@ -46,7 +46,7 @@ HTileDelegate {
         Behavior on Layout.maximumWidth { HNumberAnimation {} }
     }
 
-    rightInfo.color: theme.sidePane.room.lastEventDate
+    rightInfo.color: theme.mainPane.room.lastEventDate
     rightInfo.text: {
         ! lastEvent || ! lastEvent.date ?
         "" :
@@ -60,7 +60,7 @@ HTileDelegate {
         lastEvent.date.getFullYear()
     }
 
-    subtitle.color: theme.sidePane.room.subtitle
+    subtitle.color: theme.mainPane.room.subtitle
     subtitle.font.italic:
         Boolean(lastEvent && lastEvent.event_type === "RoomMessageEmote")
     subtitle.textFormat: Text.StyledText
@@ -83,7 +83,7 @@ HTileDelegate {
 
         return text.replace(
             /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
-            `<font color="${theme.sidePane.room.subtitleQuote}">$1</font>`,
+            `<font color="${theme.mainPane.room.subtitleQuote}">$1</font>`,
         )
     }
 

@@ -8,27 +8,27 @@ HTileDelegate {
     spacing: 0
     topPadding: model.index > 0 ? theme.spacing / 2 : 0
     bottomPadding: topPadding
-    backgroundColor: theme.sidePane.account.background
+    backgroundColor: theme.mainPane.account.background
     opacity: collapsed && ! forceExpand ?
-             theme.sidePane.account.collapsedOpacity : 1
+             theme.mainPane.account.collapsedOpacity : 1
 
     shouldBeCurrent:
         window.uiState.page === "Pages/AccountSettings/AccountSettings.qml" &&
         window.uiState.pageProperties.userId === model.data.user_id
 
     setCurrentTimer.running:
-        ! sidePaneList.activateLimiter.running && ! sidePane.hasFocus
+        ! mainPaneList.activateLimiter.running && ! mainPane.hasFocus
 
 
     Behavior on opacity { HOpacityAnimator {} }
 
 
     property bool disconnecting: false
-    readonly property bool forceExpand: Boolean(sidePaneList.filter)
+    readonly property bool forceExpand: Boolean(mainPaneList.filter)
 
     // Hide harmless error when a filter matches nothing
     readonly property bool collapsed: try {
-        return sidePaneList.collapseAccounts[model.data.user_id] || false
+        return mainPaneList.collapseAccounts[model.data.user_id] || false
     } catch (err) {}
 
 
@@ -51,7 +51,7 @@ HTileDelegate {
         mxc: model.data.avatar_url
     }
 
-    title.color: theme.sidePane.account.name
+    title.color: theme.mainPane.account.name
     title.text: model.data.display_name || model.data.user_id
     title.font.pixelSize: theme.fontSize.big
     title.leftPadding: theme.spacing

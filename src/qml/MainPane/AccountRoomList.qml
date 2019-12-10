@@ -4,10 +4,10 @@ import "../Base"
 import "../utils.js" as Utils
 
 HListView {
-    id: sidePaneList
+    id: mainPaneList
 
 
-    readonly property var originSource: window.sidePaneModelSource
+    readonly property var originSource: window.mainPaneModelSource
     readonly property var collapseAccounts: window.uiState.collapseAccounts
     readonly property string filter: toolBar.roomFilter
     readonly property alias activateLimiter: activateLimiter
@@ -21,10 +21,10 @@ HListView {
         let show = []
 
         // Hide a harmless error when activating a RoomDelegate
-        try { window.sidePaneModelSource } catch (err) { return }
+        try { window.mainPaneModelSource } catch (err) { return }
 
-        for (let i = 0;  i < window.sidePaneModelSource.length; i++) {
-            let item = window.sidePaneModelSource[i]
+        for (let i = 0;  i < window.mainPaneModelSource.length; i++) {
+            let item = window.mainPaneModelSource[i]
 
             if (item.type === "Account" ||
                 (filter ?
@@ -119,11 +119,11 @@ HListView {
     }
 
     delegate: Loader {
-        width: sidePaneList.width
+        width: mainPaneList.width
         Component.onCompleted: setSource(
             model.type === "Account" ?
             "AccountDelegate.qml" : "RoomDelegate.qml",
-            {view: sidePaneList}
+            {view: mainPaneList}
         )
     }
 
