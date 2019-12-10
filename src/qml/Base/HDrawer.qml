@@ -87,24 +87,21 @@ Drawer {
                 (horizontal ? Qt.SizeHorCursor : Qt.SizeVerCursor) :
                 Qt.ArrowCursor
 
-            onPressed: canResize = true
-            onReleased: {canResize = false; userResized(drawer.preferredSize)}
-
             onMouseXChanged:
-                if (horizontal && canResize) {
+                if (horizontal && pressed) {
                     drawer.preferredSize =
                         drawer.calculatedSize +
                         (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
                 }
 
             onMouseYChanged:
-                if (vertical && canResize) {
+                if (vertical && pressed) {
                     drawer.preferredSize =
                         drawer.calculatedSize +
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
 
-            property bool canResize: false
+            onReleased: userResized(drawer.preferredSize)
         }
     }
 }
