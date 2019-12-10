@@ -6,7 +6,7 @@ import "../utils.js" as Utils
 HDrawer {
     id: sidePane
     color: theme.sidePane.background
-    normalSize: window.uiState.sidePaneManualWidth
+    normalSize: window.uiState.sidePaneManualWidth || 300
     minNormalSize: theme.controls.avatar.size + theme.spacing * 2
 
     onUserResized: {
