@@ -27,8 +27,8 @@ HAvatar {
             small: true
             svgName: "user-power-" + (admin ? "100" : "50")
             colorize: admin ?
-                      theme.chat.roomSidePane.member.adminIcon :
-                      theme.chat.roomSidePane.member.moderatorIcon
+                      theme.chat.roomPane.member.adminIcon :
+                      theme.chat.roomPane.member.moderatorIcon
 
             HoverHandler { id: powerIconHover }
 

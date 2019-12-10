@@ -48,7 +48,7 @@ HColumnLayout {
         HTextField {
             id: filterField
             placeholderText: qsTr("Filter members")
-            backgroundColor: theme.chat.roomSidePane.filterMembers.background
+            backgroundColor: theme.chat.roomPane.filterMembers.background
             bordered: false
             opacity: width >= 16 ? 1 : 0
 
@@ -66,7 +66,7 @@ HColumnLayout {
             topPadding: 0
             bottomPadding: 0
             toolTip.text: qsTr("Invite to this room")
-            backgroundColor: theme.chat.roomSidePane.inviteButton.background
+            backgroundColor: theme.chat.roomPane.inviteButton.background
 
             Layout.fillHeight: true
         }

@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 import "../utils.js" as Utils
-import "RoomSidePane"
+import "RoomPane"
 
 Item {
     id: chat
@@ -23,7 +23,7 @@ Item {
     ) || "waiting"
 
     readonly property alias loader: loader
-    readonly property alias roomSidePane: roomSidePane
+    readonly property alias roomPane: roomPane
 
 
     onRoomInfoChanged: {
@@ -42,9 +42,9 @@ Item {
 
     HLoader {
         id: loader
-        anchors.rightMargin: roomSidePane.visibleSize
+        anchors.rightMargin: roomPane.visibleSize
         anchors.fill: parent
-        visible: ! roomSidePane.hidden || anchors.rightMargin < width
+        visible: ! roomPane.hidden || anchors.rightMargin < width
         onLoaded: if (chat.focus) item.composer.takeFocus()
 
         source: ready ? "ChatPage.qml" : ""
@@ -61,8 +61,8 @@ Item {
         }
     }
 
-    RoomSidePane {
-        id: roomSidePane
+    RoomPane {
+        id: roomPane
         referenceSizeParent: chat
     }
 }

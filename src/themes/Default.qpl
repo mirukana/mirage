@@ -297,10 +297,10 @@ chat:
         color name:       colors.text
         color topic:      colors.dimText
 
-    roomSidePaneButtons:
+    roomPaneButtons:
         color background: chat.roomHeader.background
 
-    roomSidePane:
+    roomPane:
         color background: colors.mediumBackground
 
         member:

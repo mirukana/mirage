@@ -4,24 +4,24 @@ import "../../utils.js" as Utils
 
 HTileDelegate {
     id: memberDelegate
-    backgroundColor: theme.chat.roomSidePane.member.background
+    backgroundColor: theme.chat.roomPane.member.background
 
     image: HUserAvatar {
         userId: model.user_id
         displayName: model.display_name
         mxc: model.avatar_url
         powerLevel: model.power_level
-        shiftPowerIconPosition: ! roomSidePane.collapsed
+        shiftPowerIconPosition: ! roomPane.collapsed
     }
 
     title.text: model.display_name || model.user_id
     title.color:
         memberDelegate.hovered ?
         Utils.nameColor(model.display_name || model.user_id.substring(1)) :
-        theme.chat.roomSidePane.member.name
+        theme.chat.roomPane.member.name
 
     subtitle.text: model.user_id
-    subtitle.color: theme.chat.roomSidePane.member.subtitle
+    subtitle.color: theme.chat.roomPane.member.subtitle
 
 
     Behavior on title.color { HColorAnimation {} }

@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HDrawer {
-    id: roomSidePane
+    id: roomPane
     objectName: "roomPane"
     edge: Qt.RightEdge
     defaultSize: buttonRepeater.childrenImplicitWidth
@@ -12,14 +12,14 @@ HDrawer {
 
     background: HColumnLayout{
         Rectangle {
-            color: theme.chat.roomSidePaneButtons.background
+            color: theme.chat.roomPaneButtons.background
 
             Layout.fillWidth: true
             Layout.preferredHeight: theme.baseElementsHeight
         }
 
         Rectangle {
-            color: theme.chat.roomSidePane.background
+            color: theme.chat.roomPane.background
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -52,7 +52,7 @@ HDrawer {
             }
         }
 
-        MembersView {
+        MemberView {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
