@@ -72,32 +72,25 @@ Item {
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollUp
-        onActivated: Utils.smartVerticalFlick(toFlick, -335)
+        onActivated: Utils.flickPages(toFlick, -1 / 10)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollDown
-        onActivated: Utils.smartVerticalFlick(toFlick, 335)
+        onActivated: Utils.flickPages(toFlick, 1 / 10)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollPageUp
-        onActivated: Utils.smartVerticalFlick(
-            toFlick, -2.3 * toFlick.height, 8,
-        )
-        // Ensure only a slight slip after releasing the key
-        // onReleased: Utils.smartVerticalFlick(toFlick, -335)
+        onActivated: Utils.flickPages(toFlick, -1)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollPageDown
-        onActivated: Utils.smartVerticalFlick(
-            toFlick, 2.3 * toFlick.height, 8,
-        )
-        // onReleased: Utils.smartVerticalFlick(toFlick, 335)
+        onActivated: Utils.flickPages(toFlick, 1)
     }
 
     HShortcut {

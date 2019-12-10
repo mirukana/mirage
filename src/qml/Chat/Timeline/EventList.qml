@@ -61,7 +61,7 @@ Rectangle {
         HListView {
             id: eventList
             clip: true
-            enableFlicking: false
+            allowDragging: false
 
             anchors.fill: parent
             anchors.leftMargin: theme.spacing
@@ -91,8 +91,6 @@ Rectangle {
 
             property bool ownEventsOnRight:
                 width < theme.chat.eventList.ownEventsOnRightUnderWidth
-
-            property alias cursorShape: mouseArea.cursorShape
 
 
             function canCombine(item, itemAfter) {
@@ -160,19 +158,6 @@ Rectangle {
             }
 
             delegate: EventDelegate {}
-
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
-
-                onWheel: Utils.smartVerticalFlick(
-                    eventList,
-                    200 * Qt.styleHints.wheelScrollLines *
-                    (wheel.angleDelta.y < 0 ? 1 : -1),
-                    2,
-                )
-            }
         }
     }
 

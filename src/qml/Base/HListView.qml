@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 
 ListView {
     id: listView
-    interactive: enableFlicking
+    interactive: allowDragging
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -15,18 +15,13 @@ ListView {
 
     maximumFlickVelocity: 4000
 
-    property bool enableFlicking: true
-
-    readonly property int currentItemHeight:
-        currentItem ? currentItem.height : 0
-
 
     highlight: Rectangle {
         color: theme.controls.listView.highlight
     }
 
     ScrollBar.vertical: ScrollBar {
-        visible: listView.interactive || ! listView.enableFlicking
+        visible: listView.interactive || ! listView.allowDragging
     }
 
     add: Transition {
@@ -52,4 +47,32 @@ ListView {
     }
 
     displaced: move
+
+
+    property bool allowDragging: true
+
+    property alias cursorShape: mouseArea.cursorShape
+
+    readonly property int currentItemHeight:
+        currentItem ? currentItem.height : 0
+
+
+    Connections {
+        target: listView
+        enabled: ! listView.allowDragging
+        // interactive gets temporarily set to true below to allow wheel scroll
+        onDraggingChanged: listView.interactive = false
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        enabled: ! parent.allowDragging || cursorShape !== Qt.ArrowCursor
+        acceptedButtons: Qt.NoButton
+        onWheel: {
+            // Allow wheel usage, will be back to false on any drag attempt
+            parent.interactive = true
+            wheel.accepted = false
+        }
+    }
 }

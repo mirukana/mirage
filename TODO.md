@@ -1,6 +1,4 @@
-- make pageup/down not slippery again
 - better cancel for all boxes
-- get rid of all currentSpacing stuff
 
 - Media
   - Handle set avatar upload errors
@@ -24,6 +22,7 @@
 - Refactoring
   - Use a singleton for utils.js
   - Use HBox for Profile
+    - Get rid of all `currentSpacing` stuff
   - Banners
   - Composer
   - Try gel for the models and stop being lazy in python
