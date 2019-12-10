@@ -52,6 +52,18 @@ function isEmptyObject(obj) {
 }
 
 
+function objectUpdateRecursive(current, update) {
+    for (const key of Object.keys(update)) {
+        if ((key in current) && typeof(current[key]) === "object" &&
+                typeof(update[key]) === "object") {
+            objectUpdateRecursive(current[key], update[key])
+        } else {
+            current[key] = update[key]
+        }
+    }
+}
+
+
 function numberWrapAt(num, max) {
     return num < 0 ? max + (num % max) : (num % max)
 }

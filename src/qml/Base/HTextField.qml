@@ -3,7 +3,6 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
-    objectName: ""  // Set one to allow remembering the text using a file
     selectByMouse: true
     leftPadding: theme.spacing
     rightPadding: leftPadding
@@ -32,19 +31,19 @@ TextField {
 
     // Set it only on component creation to avoid binding loops
     Component.onCompleted:
-        if (! text && uiState[objectName]) text = uiState[objectName].text
+        if (! text) text = window.getState(this, "text", "")
 
-    onTextChanged: {
-        if (! objectName) return
-        window.uiState[objectName] = {text}
-        window.uiStateChanged()
-    }
+    onTextChanged: window.saveState(this)
 
     Keys.onPressed: if (
         event.modifiers & Qt.AltModifier ||
         event.modifiers & Qt.MetaModifier
     ) event.accepted = true  // XXX Still needed?
 
+
+    property string saveName: ""
+    property string saveId: ""
+    property var saveProperties: ["text"]
 
     property bool error: false
 

@@ -4,7 +4,8 @@ import "../../Base"
 
 HDrawer {
     id: roomPane
-    objectName: "roomPane"
+    saveName: "roomPane"
+
     edge: Qt.RightEdge
     defaultSize: buttonRepeater.childrenImplicitWidth
     minimumSize:

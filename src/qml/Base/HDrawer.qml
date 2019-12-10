@@ -4,7 +4,6 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
-    objectName: ""  // Set one to allow storing the user size to a file
     implicitWidth: horizontal ? calculatedSize : parent.width
     implicitHeight: vertical ? calculatedSize : parent.height
 
@@ -25,14 +24,18 @@ Drawer {
     background: Rectangle { id: bg; color: theme.colors.strongBackground }
 
 
+    property string saveName: ""
+    property string saveId: ""
+    property var saveProperties: ["preferredSize"]
+
+    //
+
     property alias color: bg.color
 
     property int defaultSize: 300
 
     property int preferredSize:
-        window.uiState[objectName] ?
-        (window.uiState[objectName].size || defaultSize) :
-        defaultSize
+        window.getState(this, "preferredSize", defaultSize)
 
     property int minimumSize: resizeAreaSize
     property int maximumSize:
@@ -109,17 +112,7 @@ Drawer {
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
 
-            onReleased: {
-                if (! drawer.objectName) {
-                    console.warn("Can't save pane size, no objectName set")
-                    return
-                }
-
-                window.uiState[drawer.objectName] = {
-                    size: drawer.preferredSize,
-                }
-                window.uiStateChanged()
-            }
+            onReleased: window.saveState(drawer)
         }
     }
 }

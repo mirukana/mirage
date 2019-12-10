@@ -22,7 +22,8 @@ HRowLayout {
 
     HTextField {
         id: filterField
-        objectName: "roomFilterField"
+        saveName: "roomFilterField"
+
         placeholderText: qsTr("Filter rooms")
         backgroundColor: theme.mainPane.filterRooms.background
         bordered: false

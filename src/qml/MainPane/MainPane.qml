@@ -5,7 +5,7 @@ import "../utils.js" as Utils
 
 HDrawer {
     id: mainPane
-    objectName: "mainPane"
+    saveName: "mainPane"
     color: theme.mainPane.background
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 

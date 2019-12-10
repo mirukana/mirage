@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import "Base"
+import "utils.js" as Utils
 
 ApplicationWindow {
     id: window
@@ -42,6 +43,32 @@ ApplicationWindow {
     property var theme: null
 
     readonly property alias py: py
+
+
+    function saveState(obj) {
+        if (! obj.saveName || ! obj.saveProperties ||
+            obj.saveProperties.length < 1) return
+
+        let propertyValues = {}
+
+        for (let prop of obj.saveProperties) {
+            propertyValues[prop] = obj[prop]
+        }
+
+        Utils.objectUpdateRecursive(uiState, {
+            [obj.saveName]: { [obj.saveId || "ALL"]: propertyValues },
+        })
+
+        uiStateChanged()
+    }
+
+    function getState(obj, property, defaultValue=undefined) {
+        try {
+            return uiState[obj.saveName][obj.saveId || "ALL"][property]
+        } catch(err) {
+            return defaultValue
+        }
+    }
 
 
     Python { id: py }
