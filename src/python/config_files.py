@@ -3,7 +3,7 @@ import json
 import logging as log
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import aiofiles
 
@@ -21,6 +21,13 @@ class ConfigFile:
     backend:  Backend = field(repr=False)
     filename: str     = field()
 
+    _to_write: Optional[str] = field(init=False, default=None)
+
+
+    def __post_init__(self) -> None:
+        asyncio.ensure_future(self._write_loop())
+
+
     @property
     def path(self) -> Path:
         return Path(self.backend.app.appdirs.user_config_dir) / self.filename
@@ -36,11 +43,20 @@ class ConfigFile:
 
 
     async def write(self, data) -> None:
-        async with WRITE_LOCK:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._to_write = data
 
-            async with aiofiles.open(self.path, "w") as new:
-                await new.write(data)
+
+    async def _write_loop(self) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+
+        while True:
+            if self._to_write is not None:
+                async with aiofiles.open(self.path, "w") as new:
+                    await new.write(self._to_write)
+
+                self._to_write = None
+
+            await asyncio.sleep(1)
 
 
 @dataclass
@@ -73,6 +89,7 @@ class JSONConfigFile(ConfigFile):
 class Accounts(JSONConfigFile):
     filename: str = "accounts.json"
 
+
     async def any_saved(self) -> bool:
         return bool(await self.read())
 
@@ -100,6 +117,7 @@ class Accounts(JSONConfigFile):
 @dataclass
 class UISettings(JSONConfigFile):
     filename: str = "settings.json"
+
 
     async def default_data(self) -> JsonData:
         return {
@@ -159,6 +177,7 @@ class UISettings(JSONConfigFile):
 class UIState(JSONConfigFile):
     filename: str = "state.json"
 
+
     @property
     def path(self) -> Path:
         return Path(self.backend.app.appdirs.user_data_dir) / self.filename
@@ -175,6 +194,7 @@ class UIState(JSONConfigFile):
 @dataclass
 class History(JSONConfigFile):
     filename: str = "history.json"
+
 
     @property
     def path(self) -> Path:
