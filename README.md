@@ -7,7 +7,6 @@ From your distribution's package manager, install:
 
 Qt 5.12+, including:
 - qt5-declarative-devel
-- qt5-quickcontrols
 - qt5-quickcontrols2-devel
 - qt5-svg-devel
 - qt5-graphicaleffects
