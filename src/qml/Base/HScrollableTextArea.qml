@@ -6,8 +6,20 @@ ScrollView {
     clip: true
     ScrollBar.vertical.visible: contentHeight > height
 
+    // Set it only on component creation to avoid binding loops
+    Component.onCompleted: if (! text) {
+        text                    = window.getState(this, "text", "")
+        textArea.cursorPosition = text.length
+    }
+
+    onTextChanged: window.saveState(this)
+
 
     default property alias textAreaData: textArea.data
+
+    property string saveName: ""
+    property var saveId: "ALL"
+    property var saveProperties: ["text"]
 
     property alias backgroundColor: textAreaBackground.color
     property alias placeholderText: textArea.placeholderText

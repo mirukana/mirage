@@ -30,8 +30,10 @@ TextField {
     }
 
     // Set it only on component creation to avoid binding loops
-    Component.onCompleted:
-        if (! text) text = window.getState(this, "text", "")
+    Component.onCompleted: if (! text) {
+        text           = window.getState(this, "text", "")
+        cursorPosition = text.length
+    }
 
     onTextChanged: window.saveState(this)
 
@@ -42,7 +44,7 @@ TextField {
 
 
     property string saveName: ""
-    property string saveId: ""
+    property var saveId: "ALL"
     property var saveProperties: ["text"]
 
     property bool error: false

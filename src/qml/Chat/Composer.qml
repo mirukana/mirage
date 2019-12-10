@@ -65,6 +65,9 @@ Rectangle {
 
         HScrollableTextArea {
             id: areaScrollView
+            saveName: "composer"
+            saveId: [chat.roomId, writingUserId]
+
             placeholderText: qsTr("Type a message...")
             backgroundColor: "transparent"
             area.tabStopDistance: 4 * 4  // 4 spaces

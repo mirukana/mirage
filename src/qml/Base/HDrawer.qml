@@ -25,7 +25,7 @@ Drawer {
 
 
     property string saveName: ""
-    property string saveId: ""
+    property var saveId: "ALL"
     property var saveProperties: ["preferredSize"]
 
     //

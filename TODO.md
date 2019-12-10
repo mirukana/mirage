@@ -76,10 +76,6 @@
       but never do it again once the user hovered it long enough to show 
       tooltip or clicked on it once 
 
-  - Restoring UI state:
-    - Composer content
-    - Which element was focused
-
   - Combine events so they take less space
     - After combining is implemented, no need to hide profile changes anymore.
   - Replies
