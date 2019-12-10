@@ -12,7 +12,7 @@ HDrawer {
     y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
     width: horizontal ? calculatedSize : Math.min(window.width, 720)
     height: vertical ? calculatedSize : Math.min(window.height, 720)
-    normalSize: 400
+    preferredSize: 400
     z: 9999
     position: 0
 

@@ -30,25 +30,25 @@ Drawer {
 
     property Item referenceSizeParent: parent
 
-    property int normalSize:
+    property int preferredSize:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
-    property int minNormalSize: resizeAreaSize
-    property int maxNormalSize:
+    property int minimumSize: resizeAreaSize
+    property int maximumSize:
         horizontal ?
         referenceSizeParent.width - theme.minimumSupportedWidth :
         referenceSizeParent.height - theme.minimumSupportedHeight
 
     property bool collapse:
         (horizontal ? window.width : window.height) < 400
-    property int collapseExpandSize:
+    property int peekSizeWhileCollapsed:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
     property int resizeAreaSize: theme.spacing / 2
 
     readonly property int calculatedSize:
         collapse ?
-        collapseExpandSize :
-        Math.max(minNormalSize, Math.min(normalSize, maxNormalSize))
+        peekSizeWhileCollapsed :
+        Math.max(minimumSize, Math.min(preferredSize, maximumSize))
 
     readonly property int visibleSize: visible ? width * position : 0
 
@@ -88,18 +88,18 @@ Drawer {
                 Qt.ArrowCursor
 
             onPressed: canResize = true
-            onReleased: { canResize = false; userResized(drawer.normalSize) }
+            onReleased: {canResize = false; userResized(drawer.preferredSize)}
 
             onMouseXChanged:
                 if (horizontal && canResize) {
-                    drawer.normalSize =
+                    drawer.preferredSize =
                         drawer.calculatedSize +
                         (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
                 }
 
             onMouseYChanged:
                 if (vertical && canResize) {
-                    drawer.normalSize =
+                    drawer.preferredSize =
                         drawer.calculatedSize +
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
