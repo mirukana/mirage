@@ -4,8 +4,9 @@ import "../../Base"
 
 HDrawer {
     id: roomSidePane
+    objectName: "roomPane"
     edge: Qt.RightEdge
-    preferredSize: buttonRepeater.childrenImplicitWidth
+    defaultSize: buttonRepeater.childrenImplicitWidth
     minimumSize:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 

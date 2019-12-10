@@ -24,19 +24,24 @@ Drawer {
     background: Rectangle { id: bg; color: theme.colors.strongBackground }
 
 
-    signal userResized(int newWidth)
-
     property alias color: bg.color
 
-    property Item referenceSizeParent: parent
+    property int defaultSize: 300
 
     property int preferredSize:
-        horizontal ? referenceSizeParent.width : referenceSizeParent.height
+        window.uiState[objectName] ?
+        (window.uiState[objectName].size || defaultSize) :
+        defaultSize
+
     property int minimumSize: resizeAreaSize
     property int maximumSize:
         horizontal ?
         referenceSizeParent.width - theme.minimumSupportedWidth :
         referenceSizeParent.height - theme.minimumSupportedHeight
+
+    //
+
+    property Item referenceSizeParent: parent
 
     property bool collapse:
         (horizontal ? window.width : window.height) < 400
@@ -49,6 +54,8 @@ Drawer {
         collapse ?
         peekSizeWhileCollapsed :
         Math.max(minimumSize, Math.min(preferredSize, maximumSize))
+
+    //
 
     readonly property int visibleSize: visible ? width * position : 0
 
@@ -101,7 +108,17 @@ Drawer {
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
                 }
 
-            onReleased: userResized(drawer.preferredSize)
+            onReleased: {
+                if (! drawer.objectName) {
+                    console.warn("Can't save pane size, no objectName set")
+                    return
+                }
+
+                window.uiState[drawer.objectName] = {
+                    size: drawer.preferredSize,
+                }
+                window.uiStateChanged()
+            }
         }
     }
 }

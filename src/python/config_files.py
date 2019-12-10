@@ -166,11 +166,10 @@ class UIState(JSONConfigFile):
 
     async def default_data(self) -> JsonData:
         return {
-            "collapseAccounts":    {},
-            "page":                "Pages/Default.qml",
-            "pageProperties":      {},
-            "sidePaneFilter":      "",
-            "sidePaneManualWidth": None,
+            "collapseAccounts": {},
+            "page":             "Pages/Default.qml",
+            "pageProperties":   {},
+            "sidePaneFilter":   "",
         }
 
 

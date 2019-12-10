@@ -5,14 +5,9 @@ import "../utils.js" as Utils
 
 HDrawer {
     id: sidePane
+    objectName: "mainPane"
     color: theme.sidePane.background
-    preferredSize: window.uiState.sidePaneManualWidth || 300
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
-
-    onUserResized: {
-        window.uiState.sidePaneManualWidth = newWidth
-        window.uiStateChanged()
-    }
 
 
     property bool hasFocus: toolBar.filterField.activeFocus

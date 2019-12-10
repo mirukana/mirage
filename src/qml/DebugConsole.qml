@@ -7,12 +7,13 @@ import "utils.js" as U
 
 HDrawer {
     id: debugConsole
+    objectName: "debugConsole"
     edge: Qt.TopEdge
     x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
     y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
     width: horizontal ? calculatedSize : Math.min(window.width, 720)
     height: vertical ? calculatedSize : Math.min(window.height, 720)
-    preferredSize: 400
+    defaultSize: 400
     z: 9999
     position: 0
 
