@@ -1,13 +1,12 @@
 - make pageup/down not slippery again
-- test sidepane opacity
 - better cancel for all boxes
 - get rid of all currentSpacing stuff
 
 - Media
-  - Confirmation box after picking file to upload
   - Handle set avatar upload errors
-  - Show real progression for mxc thumbnail loadings
   - Support encrypted m.file
+  - Confirmation box after picking file to upload
+  - Show real progression for mxc thumbnail loadings
 
   - Show reason under broken thumbnail icons
   - Support m.file thumbnails
@@ -62,9 +61,6 @@
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
 
-  - Just use Shortcut onHeld instead of analyzing the current velocity
-    in `smartVerticalFlick()`
-  - Thinner expand arrow icon
   - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
   - Make HListView scrollbars visible
@@ -85,8 +81,6 @@
     - Which element was focused
     - Room member filter field
 
-  - Prevent others from having a too similar hue as us, or our own accounts
-    from sharing a too similar hue
   - Combine events so they take less space
     - After combining is implemented, no need to hide profile changes anymore.
   - Replies
@@ -117,7 +111,7 @@
     - Better look when reduced to minimum size
 
   - Server selection
-  - Register/Forgot? for SignIn dialog
+  - Register/Reset for AddAccount page
   - Prevent using the composer if no permission (power levels)
     - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading past room events

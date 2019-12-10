@@ -5,7 +5,6 @@ import "../utils.js" as Utils
 
 HDrawer {
     id: sidePane
-    opacity: mainUI.accountsPresent ? 1 : 0
     color: theme.sidePane.background
     normalSize: window.uiState.sidePaneManualWidth
     minNormalSize: theme.controls.avatar.size + theme.spacing * 2
@@ -33,6 +32,13 @@ HDrawer {
 
 
     Behavior on opacity { HOpacityAnimator {} }
+
+    Binding {
+        target: sidePane
+        property: "visible"
+        value: false
+        when: ! mainUI.accountsPresent
+    }
 
     HColumnLayout {
         anchors.fill: parent
