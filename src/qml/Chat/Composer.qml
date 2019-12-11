@@ -68,7 +68,11 @@ Rectangle {
             saveName: "composer"
             saveId: [chat.roomId, writingUserId]
 
+            enabled: chat.roomInfo.can_send_messages
+            disabledText:
+                qsTr("You do not have permission to post in this room")
             placeholderText: qsTr("Type a message...")
+
             backgroundColor: "transparent"
             area.tabStopDistance: 4 * 4  // 4 spaces
             area.focus: true
@@ -209,6 +213,7 @@ Rectangle {
         }
 
         HButton {
+            enabled: chat.roomInfo.can_send_messages
             icon.name: "upload-file"
             backgroundColor: theme.chat.composer.uploadButton.background
             toolTip.text: qsTr("Send files")

@@ -57,6 +57,7 @@
 
 - UI
   - Scrollable popup
+  - HDrawer snapping
   - Make theme error/etc text colors more like name colors
   - In account settings, display name field text should be colored
   - Way to open context menus without a right mouse button
@@ -103,8 +104,7 @@
 
   - Server selection
   - Register/Reset for AddAccount page
-  - Prevent using the composer if no permission (power levels)
-    - Prevent using an alias if that user is not in the room or no permission
+  - Prevent using an alias if that user is not in the room or no permission
   - Spinner when loading past room events
 
   - Theming

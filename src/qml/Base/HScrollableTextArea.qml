@@ -1,3 +1,4 @@
+
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
@@ -23,13 +24,17 @@ ScrollView {
 
     property alias backgroundColor: textAreaBackground.color
     property alias placeholderText: textArea.placeholderText
-    property alias text: textArea.text
+    property alias placeholderTextColor: textArea.placeholderTextColor
     property alias area: textArea
+    property alias text: textArea.text
+    property string disabledText: ""
+    property string disabledTextColor: theme.controls.textArea.disabledText
     property var focusItemOnTab: null
 
 
     TextArea {
         id: textArea
+        enabled: parent.enabled
         leftPadding: theme.spacing
         rightPadding: leftPadding
         topPadding: theme.spacing / 1.5
@@ -45,6 +50,7 @@ ScrollView {
 
         placeholderTextColor: theme.controls.textArea.placeholderText
         color: theme.controls.textArea.text
+
         background: Rectangle {
             id: textAreaBackground
             color: theme.controls.textArea.background
@@ -57,5 +63,37 @@ ScrollView {
 
         KeyNavigation.priority: KeyNavigation.BeforeItem
         KeyNavigation.tab: focusItemOnTab
+
+        Binding on color {
+            value: "transparent"
+            when: ! textArea.enabled
+        }
+
+        Binding on placeholderTextColor {
+            value: "transparent"
+            when: ! textArea.enabled
+        }
+
+        Behavior on color { HColorAnimation {} }
+        Behavior on placeholderTextColor { HColorAnimation {} }
+
+        HLabel {
+            anchors.fill: parent
+            visible: opacity > 0
+            opacity: parent.enabled ? 0 : 1
+            color: disabledTextColor
+            text: disabledText
+
+            leftPadding: parent.leftPadding
+            rightPadding: parent.rightPadding
+            topPadding: parent.topPadding
+            bottomPadding: parent.bottomPadding
+
+            wrapMode: parent.wrapMode
+            font.family: parent.font.family
+            font.pixelSize: parent.font.pixelSize
+
+            Behavior on opacity { HOpacityAnimator {} }
+        }
     }
 }

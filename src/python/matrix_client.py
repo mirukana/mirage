@@ -801,8 +801,9 @@ class MatrixClient(nio.AsyncClient):
         except KeyError:
             last_ev = None
 
-        inviter = getattr(room, "inviter", "") or ""
-        levels  = room.power_levels
+        inviter   = getattr(room, "inviter", "") or ""
+        levels    = room.power_levels
+        our_level = levels.get_user_level(self.user_id)
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
@@ -815,8 +816,8 @@ class MatrixClient(nio.AsyncClient):
                 (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
 
-            can_invite =
-                levels.users.get(self.user_id, 0) >= levels.defaults.invite,
+            can_invite        = our_level >= levels.defaults.invite,
+            can_send_messages = our_level >= levels.defaults.events_default,
 
             last_event = last_ev,
         )

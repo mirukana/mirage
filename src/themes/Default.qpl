@@ -171,11 +171,13 @@ controls:
         color text:            colors.text
         color focusedText:     colors.text
         color placeholderText: colors.dimText
+        color disabledText:    colors.dimText
 
     textArea:
         color background:      colors.inputBackground
         color text:            colors.text
         color placeholderText: controls.textField.placeholderText
+        color disabledText:    controls.textField.disabledText
 
     toolTip:
         int delay:        500
