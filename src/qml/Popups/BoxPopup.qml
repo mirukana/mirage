@@ -27,7 +27,8 @@ HPopup {
         id: box
         clickButtonOnEnter: "ok"
         implicitWidth: Math.min(
-            window.width - popup.margins, theme.controls.popup.defaultWidth,
+            window.width - popup.leftMargin - popup.rightMargin,
+            theme.controls.popup.defaultWidth,
         )
 
         buttonModel: [
