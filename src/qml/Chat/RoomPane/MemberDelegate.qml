@@ -20,7 +20,7 @@ HTileDelegate {
         Utils.nameColor(model.display_name || model.user_id.substring(1)) :
         theme.chat.roomPane.member.name
 
-    subtitle.text: model.user_id
+    subtitle.text: model.display_name ? model.user_id : ""
     subtitle.color: theme.chat.roomPane.member.subtitle
 
 
