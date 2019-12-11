@@ -7,6 +7,10 @@ Drawer {
     implicitWidth: horizontal ? calculatedSize : parent.width
     implicitHeight: vertical ? calculatedSize : parent.height
 
+    // Prevents this: open a popup, make the window small enough for the
+    // drawer to collapse, then make it big again → popup is now behind drawer
+    z: -1
+
     topPadding: 0
     bottomPadding: 0
     leftPadding: 0
