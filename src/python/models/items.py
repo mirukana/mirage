@@ -47,6 +47,8 @@ class Room(ModelItem):
     left:           bool      = False
     typing_members: List[str] = field(default_factory=list)
 
+    can_invite: bool = True
+
     # Event.serialized
     last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
 

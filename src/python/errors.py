@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 import nio
 
 
+# Matrix Errors
+
 @dataclass
 class MatrixError(Exception):
     http_code: int = 400
@@ -30,6 +32,18 @@ class MatrixForbidden(MatrixError):
 
 
 @dataclass
+class MatrixBadJson(MatrixError):
+    http_code: int = 403
+    m_code:    str = "M_BAD_JSON"
+
+
+@dataclass
+class MatrixNotJson(MatrixError):
+    http_code: int = 403
+    m_code:    str = "M_NOT_JSON"
+
+
+@dataclass
 class MatrixUserDeactivated(MatrixError):
     http_code: int = 403
     m_code:    str = "M_USER_DEACTIVATED"
@@ -46,6 +60,8 @@ class MatrixTooLarge(MatrixError):
     http_code: int = 413
     m_code:    str = "M_TOO_LARGE"
 
+
+# Client errors
 
 @dataclass
 class UserNotFound(Exception):

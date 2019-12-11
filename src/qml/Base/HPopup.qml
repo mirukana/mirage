@@ -9,7 +9,6 @@ Popup {
     padding: 0
     margins: theme.spacing
 
-
     enter: Transition {
         HScaleAnimator { from: 0; to: 1; overshoot: 4 }
     }
@@ -22,4 +21,11 @@ Popup {
     background: Rectangle {
         color: theme.controls.popup.background
     }
+
+
+    readonly property int maximumPreferredWidth:
+        window.width - leftMargin - rightMargin - leftInset - rightInset
+
+    readonly property int maximumPreferredHeight:
+        window.height - topMargin - bottomMargin - topInset - bottomInset
 }

@@ -14,22 +14,29 @@ HPopup {
 
     default property alias boxData: box.body
     property alias box: box
+    property bool fillAvailableHeight: false
 
     property alias summary: summary
     property alias details: details
-    property bool okClicked: false
 
     property string okText: qsTr("OK")
     property bool okEnabled: true
+    property bool okClicked: false
 
+
+    Binding on height {
+        value: popup.maximumPreferredHeight
+        when: popup.fillAvailableHeight
+    }
 
     HBox {
         id: box
-        clickButtonOnEnter: "ok"
         implicitWidth: Math.min(
             window.width - popup.leftMargin - popup.rightMargin,
             theme.controls.popup.defaultWidth,
         )
+        fillAvailableHeight: popup.fillAvailableHeight
+        clickButtonOnEnter: "ok"
 
         buttonModel: [
             { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},
@@ -43,6 +50,11 @@ HPopup {
             },
         })
 
+
+        Binding on height {
+            value: popup.maximumPreferredHeight
+            when: popup.fillAvailableHeight
+        }
 
         HLabel {
             id: summary

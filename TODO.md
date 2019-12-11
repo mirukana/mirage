@@ -1,4 +1,4 @@
-- scale vs current zoom methods?
+- binding on ...
 - better cancel for all boxes
 
 - Media
@@ -56,6 +56,7 @@
   - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - UI
+  - Scrollable popup
   - Make theme error/etc text colors more like name colors
   - In account settings, display name field text should be colored
   - Way to open context menus without a right mouse button
@@ -144,15 +145,9 @@
 - Client improvements
   - Refetch profile after manual profile change, don't wait for a room event
 
-  - Prevent starting multiple instances, causes problems with E2E DB
-    (sending new messages from second instances makes them undecryptable to
-     first instance until it's restarted)
-    - Could be fixed by "listening for a `RoomKeyEvent`that has the same
-      session id as the undecryptable `MegolmEvent`, then retry decrypting
-      the message with `decrypt_event()`"  - poljar
-
-  - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
+  - Prevent starting multiple client instances, causes problems with E2E DB
   - Check if username exists on login screen
+  - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
   - `pyotherside.atexit()`
   - Logout previous session if adding an account that's already connected
   - Config file format
@@ -166,7 +161,6 @@
       - Fetch all members when using the filter members bar
 
   - Direct chats category
-    it should be the peer's display name instead.
   - Animate RoomEventDelegate DayBreak apparition
   - Live-reloading accounts.json
 
@@ -178,7 +172,8 @@
   - RoomMessageMedia and RoomAvatarEvent info attributes
   - `m.room.aliases` events
   - MatrixRoom invited members list
-    - When inviting someone to direct chat, room is "Empty room" until accepted,
+    - Verify room has correct name when creating direct chat and peer hasn't
+      accepted the invite yet
   - Left room events after client reboot
   - `org.matrix.room.preview_urls` events
   - Support "Empty room (was ...)" after peer left

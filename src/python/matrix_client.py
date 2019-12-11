@@ -9,7 +9,8 @@ from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from typing import (
-    Any, DefaultDict, Dict, NamedTuple, Optional, Set, Tuple, Type, Union,
+    Any, DefaultDict, Dict, List, NamedTuple, Optional, Set, Tuple, Type,
+    Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -51,6 +52,10 @@ class MatrixImageInfo(NamedTuple):
 
 
 class MatrixClient(nio.AsyncClient):
+    user_id_regex          = re.compile(r"^@.+:.+")
+    room_id_or_alias_regex = re.compile(r"^[#!].+:.+")
+    http_s_url             = re.compile(r"^https?://")
+
     def __init__(self,
                  backend,
                  user:       str,
@@ -500,7 +505,7 @@ class MatrixClient(nio.AsyncClient):
         if invite == self.user_id:
             raise InvalidUserInContext(invite)
 
-        if not re.match(r"^@.+:.+", invite):
+        if not self.user_id_regex.match(invite):
             raise InvalidUserId(invite)
 
         if isinstance(await self.get_profile(invite), nio.ProfileGetError):
@@ -548,15 +553,15 @@ class MatrixClient(nio.AsyncClient):
     async def room_join(self, alias_or_id_or_url: str) -> str:
         string = alias_or_id_or_url.strip()
 
-        if re.match(r"^https?://", string):
+        if self.http_s_url.match(string):
             for part in urlparse(string).fragment.split("/"):
-                if re.match(r"^[#!].+:.+", part):
+                if self.room_id_or_alias_regex.match(part):
                     string = part
                     break
             else:
                 raise ValueError(f"No alias or room id found in url {string}")
 
-        if not re.match(r"^[#!].+:.+", string):
+        if not self.room_id_or_alias_regex.match(string):
             raise ValueError("Not an alias or room id")
 
         response = await super().join(string)
@@ -573,6 +578,43 @@ class MatrixClient(nio.AsyncClient):
         self.models[Room, self.user_id].pop(room_id, None)
         self.models.pop((Event, self.user_id, room_id), None)
         self.models.pop((Member, room_id), None)
+
+
+    async def room_mass_invite(
+        self, room_id: str, *user_ids: str,
+    ) -> Tuple[List[str], List[Tuple[str, Exception]]]:
+
+        user_ids = tuple(
+            uid for uid in user_ids
+            # Server would return a 403 forbidden for users already in the room
+            if uid not in self.all_rooms[room_id].users
+        )
+
+        async def invite(user_id):
+            if not self.user_id_regex.match(user_id):
+                return InvalidUserId(user_id)
+
+            if isinstance(await self.get_profile(invite), nio.ProfileGetError):
+                return UserNotFound(user_id)
+
+            return await self.room_invite(room_id, user_id)
+
+        coros        = [invite(uid) for uid in user_ids]
+        successes    = []
+        errors: list = []
+        responses    = await asyncio.gather(*coros)
+
+        for user_id, response in zip(user_ids, responses):
+            if isinstance(response, nio.RoomInviteError):
+                errors.append((user_id, MatrixError.from_nio(response)))
+
+            elif isinstance(response, Exception):
+                errors.append((user_id, response))
+
+            else:
+                successes.append(user_id)
+
+        return (successes, errors)
 
 
     async def generate_thumbnail(
@@ -760,6 +802,7 @@ class MatrixClient(nio.AsyncClient):
             last_ev = None
 
         inviter = getattr(room, "inviter", "") or ""
+        levels  = room.power_levels
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
@@ -771,7 +814,11 @@ class MatrixClient(nio.AsyncClient):
             inviter_avatar =
                 (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
-            last_event     = last_ev,
+
+            can_invite =
+                levels.users.get(self.user_id, 0) >= levels.defaults.invite,
+
+            last_event = last_ev,
         )
 
         # List members that left the room, then remove them from our model

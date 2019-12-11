@@ -25,6 +25,7 @@ ScrollView {
     property alias placeholderText: textArea.placeholderText
     property alias text: textArea.text
     property alias area: textArea
+    property var focusItemOnTab: null
 
 
     TextArea {
@@ -53,5 +54,8 @@ ScrollView {
             event.modifiers & Qt.AltModifier ||
             event.modifiers & Qt.MetaModifier
         ) event.accepted = true
+
+        KeyNavigation.priority: KeyNavigation.BeforeItem
+        KeyNavigation.tab: focusItemOnTab
     }
 }

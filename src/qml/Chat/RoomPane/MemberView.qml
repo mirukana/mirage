@@ -64,12 +64,30 @@ HColumnLayout {
         }
 
         HButton {
-            enabled: false  // TODO
+            id: inviteButton
             icon.name: "room-send-invite"
-            topPadding: 0
-            bottomPadding: 0
-            toolTip.text: qsTr("Invite to this room")
             backgroundColor: theme.chat.roomPane.inviteButton.background
+            enabled: chat.ready ? chat.roomInfo.can_invite : false
+
+            toolTip.text:
+                enabled ?
+                qsTr("Invite members to this room") :
+                qsTr("No permission to invite members in this room")
+
+            topPadding: 0 // XXX
+            bottomPadding: 0
+
+            onClicked: Utils.makePopup(
+                "Popups/InviteToRoomPopup.qml",
+                chat,
+                {
+                    userId: chat.userId,
+                    roomId: chat.roomId,
+                    invitingAllowed: Qt.binding(() => inviteButton.enabled),
+                },
+            )
+
+            // onEnabledChanged: if (openedPopup && ! enabled)
 
             Layout.fillHeight: true
         }

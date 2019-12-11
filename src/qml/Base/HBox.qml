@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.12
 import "../utils.js" as Utils
 
 Rectangle {
-    id: interfaceBox
+    id: box
     color: theme.controls.box.background
     implicitWidth: theme.controls.box.defaultWidth
     implicitHeight: childrenRect.height
@@ -16,6 +16,10 @@ Rectangle {
     property var buttonCallbacks: []
     property string focusButton: ""
     property string clickButtonOnEnter: ""
+
+    property bool fillAvailableHeight: false
+
+    property HButton firstButton: null
 
     default property alias body: interfaceBody.data
 
@@ -39,6 +43,11 @@ Rectangle {
         id: mainColumn
         width: parent.width
 
+        Binding on height {
+            value: box.height
+            when: box.fillAvailableHeight
+        }
+
         HColumnLayout {
             id: interfaceBody
             spacing: theme.spacing * 1.5
@@ -55,6 +64,12 @@ Rectangle {
             HRepeater {
                 id: buttonRepeater
                 model: []
+
+                onItemAdded:
+                    if (index === 0) firstButton = buttonRepeater.itemAt(0)
+
+                onItemRemoved:
+                    if (index === 0) firstButton = null
 
                 HButton {
                     id: button

@@ -37,7 +37,7 @@ HBox {
                 let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
 
                 if (type === "InvalidUserInContext")
-                    txt = qsTr("You can't invite yourself!")
+                    txt = qsTr("Can't start chatting with yourself")
 
                 if (type === "InvalidUserId")
                     txt = qsTr("Invalid user ID, expected format is " +
