@@ -42,8 +42,9 @@ function makePopup(url, parent=null, properties={}, callback=null,
 }
 
 
-function debug(target, callback=null) {
-    return Utils.makeObject("DebugConsole.qml", target, { target }, callback)
+function debug(target, parent=null, callback=null) {
+    parent = parent || target
+    return Utils.makeObject("DebugConsole.qml", parent, { target }, callback)
 }
 
 
