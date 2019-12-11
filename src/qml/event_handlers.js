@@ -21,9 +21,13 @@ function onCoroutineDone(uuid, result, error, traceback) {
         let type = py.getattr(py.getattr(error, "__class__"), "__name__")
         let args = py.getattr(error, "args")
 
+        type === "CancelledError" ?
+        console.warn(`python: cancelled: ${uuid}`) :
+
         onError ?
-            onError(type, args, error, traceback) :
-            console.error(`python: ${uuid}\n${traceback}`)
+        onError(type, args, error, traceback) :
+
+        console.error(`python: ${uuid}\n${traceback}`)
 
     } else if (onSuccess) { onSuccess(result) }
 

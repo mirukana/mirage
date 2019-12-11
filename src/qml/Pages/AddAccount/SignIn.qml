@@ -50,8 +50,6 @@ HBox {
                 )
 
             }, type => {
-                if (type === "CancelledError") return
-
                 loginFuture = null
                 signInTimeout.stop()
 
