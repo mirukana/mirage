@@ -27,6 +27,19 @@ Button {
     // Prevent button from gaining focus and being highlighted on click
     focusPolicy: Qt.TabFocus
 
+    background: HButtonBackground {
+        button: button
+        buttonTheme: theme.controls.button
+        radius: circle ? height : 0
+        color: backgroundColor
+    }
+
+    contentItem: HButtonContent {
+        id: contentItem
+        button: button
+        buttonTheme: theme.controls.button
+    }
+
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
@@ -43,24 +56,8 @@ Button {
     }
 
 
-    Binding {
+    Binding on enabled {
         when: disableWhileLoading && button.loading
-        target: button
-        property: "enabled"
         value: false
-    }
-
-
-    background: HButtonBackground {
-        button: button
-        buttonTheme: theme.controls.button
-        radius: circle ? height : 0
-        color: backgroundColor
-    }
-
-    contentItem: HButtonContent {
-        id: contentItem
-        button: button
-        buttonTheme: theme.controls.button
     }
 }
