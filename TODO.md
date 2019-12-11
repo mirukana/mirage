@@ -1,4 +1,4 @@
-- binding on ...
+- invite keybind & context menu
 - better cancel for all boxes
 
 - Media
@@ -71,11 +71,6 @@
   - In room creation, click avatar to set the future room's avatar
   - In join room page, show the matching room's avatar when typing
   - In find someone page, show the matching user's avatar when typing
-
-  - Inviting members to a room
-    - Make invite icon blink if there's no one but ourself in the room,
-      but never do it again once the user hovered it long enough to show 
-      tooltip or clicked on it once 
 
   - Combine events so they take less space
     - After combining is implemented, no need to hide profile changes anymore.

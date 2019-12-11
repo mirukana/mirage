@@ -17,9 +17,7 @@ HLabel {
         radius: theme.radius
     }
 
-    Binding {
-        target: bubble
-        property: "visible"
+    Binding on visible {
         value: false
         when: ! Boolean(bubble.text)
     }

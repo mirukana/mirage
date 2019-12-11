@@ -130,9 +130,7 @@ HColumnLayout {
             }
         }
 
-        Binding {
-            target: timeSlider
-            property: "value"
+        Binding  on value {
             value: boundPosition
             when: ! timeSlider.pressed
         }

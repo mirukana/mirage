@@ -28,9 +28,7 @@ HDrawer {
 
     Behavior on opacity { HOpacityAnimator {} }
 
-    Binding {
-        target: mainPane
-        property: "visible"
+    Binding on visible {
         value: false
         when: ! mainUI.accountsPresent
     }

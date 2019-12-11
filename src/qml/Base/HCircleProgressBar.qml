@@ -28,16 +28,12 @@ RadialBar {
         theme.controls.circleProgressBar.indeterminateSpan
 
 
-    Binding {
-        target: bar;
-        property: "value";
+    Binding on value {
         value: bar.to * bar.indeterminateSpan
         when: bar.indeterminate
     }
 
-    Binding {
-        target: bar
-        property: "showText"
+    Binding on showText {
         value: false
         when: bar.indeterminate
     }
