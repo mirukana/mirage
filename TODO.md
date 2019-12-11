@@ -19,6 +19,7 @@
   - EventLink
     - Special treatment for matrix.to URLs?
   - EventFile & Downloading (right click on media > save as...)
+  - Prevent using upload keybinds in rooms with no perms
 
 - Refactoring
   - Use a singleton for utils.js

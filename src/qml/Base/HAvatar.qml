@@ -57,7 +57,9 @@ Rectangle {
 
         HToolTip {
             id: avatarToolTip
-            visible: (toolTipSourceOverride || toolTipMxc) &&
+            visible: ! avatarImage.broken &&
+                     avatarImage.status !== Image.Error &&
+                     (toolTipSourceOverride || toolTipMxc) &&
                      hoverHandler.hovered
             delay: 1000
             backgroundColor: theme.controls.avatar.hoveredImage.background
