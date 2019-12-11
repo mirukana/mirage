@@ -14,7 +14,7 @@ HBox {
             name: "apply",
             text: qsTr("Start chat"),
             iconName: "start-direct-chat",
-            enabled: Boolean(userField.text)
+            enabled: Boolean(userField.text.trim())
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
@@ -24,7 +24,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [userField.text, encryptCheckBox.checked]
+            let args = [userField.text.trim(), encryptCheckBox.checked]
 
             py.callClientCoro(userId, "new_direct_chat", args, roomId => {
                 button.loading    = false

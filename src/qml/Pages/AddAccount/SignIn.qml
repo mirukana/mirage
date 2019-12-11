@@ -29,8 +29,8 @@ HBox {
             errorMessage.text = ""
 
             let args = [
-                idField.text, passwordField.text,
-                undefined, serverField.text,
+                idField.text.trim(), passwordField.text,
+                undefined, serverField.text.trim(),
             ]
 
             loginFuture = py.callCoro("login_client", args, userId => {
@@ -80,7 +80,7 @@ HBox {
     property string signInWith: "username"
 
     readonly property bool canSignIn:
-        serverField.text && idField.text && passwordField.text &&
+        serverField.text.trim() && idField.text.trim() && passwordField.text &&
         ! serverField.error
 
 

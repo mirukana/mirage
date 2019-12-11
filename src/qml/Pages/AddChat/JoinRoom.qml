@@ -14,7 +14,7 @@ HBox {
             name: "apply",
             text: qsTr("Join"),
             iconName: "join",
-            enabled: Boolean(roomField.text),
+            enabled: Boolean(roomField.text.trim()),
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
@@ -24,7 +24,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [roomField.text]
+            let args = [roomField.text.trim()]
 
             py.callClientCoro(userId, "room_join", args, roomId => {
                 button.loading    = false
