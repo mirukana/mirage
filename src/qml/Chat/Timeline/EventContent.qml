@@ -41,7 +41,7 @@ HRowLayout {
     TapHandler {
         enabled: debugMode
         onDoubleTapped:
-            Utils.debug(eventContent, con => { con.runJS("json()") })
+            Utils.debug(eventContent, null, con => { con.runJS("json()") })
     }
 
     Item {
