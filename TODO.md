@@ -1,183 +1,234 @@
+# TODO
+
 - invite keybind & context menu
 - better cancel for all boxes
 
-- Media
-  - Handle set avatar upload errors
-  - Support encrypted m.file
-  - Confirmation box after picking file to upload
-  - Show real progression for mxc thumbnail loadings
+## Media
 
-  - Show reason under broken thumbnail icons
-  - Support m.file thumbnails
-  - Generate video thumbnails
-  - GIFs can use the video player
-  - Display GIF static thumbnails while the real GIF is loading
-  - Video bug: when media is done playing, clicking on progress slider always
-    bring back to the beginning no matter where
-  - Video: missing buttons and small size problems
-  - Audio: online playback is buggy, must download+play file
-  - EventLink
-    - Special treatment for matrix.to URLs?
-  - EventFile & Downloading (right click on media > save as...)
-  - Prevent using upload keybinds in rooms with no perms
+- Handle set avatar upload errors
+- Support encrypted m.file
+- Confirmation box after picking file to upload
+- Show real progression for mxc thumbnail loadings
 
-- Refactoring
-  - Use a singleton for utils.js
-  - Use HBox for Profile
-    - Get rid of all `currentSpacing` stuff
-  - Banners
-  - Composer
-  - Try gel for the models and stop being lazy in python
+- Show reason under broken thumbnail icons
+- Support m.file thumbnails
+- Generate video thumbnails
+- GIFs can use the video player
+- Display GIF static thumbnails while the real GIF is loading
+- Video bug: when media is done playing, clicking on progress slider always
+  bring back to the beginning no matter where
+- Video: missing buttons and small size problems
+- Audio: online playback is buggy, must download+play file
+- EventLink
+  - Special treatment for matrix.to URLs?
+- EventFile & Downloading (right click on media > save as...)
+- Prevent using upload keybinds in rooms with no perms
 
-  - Room Sidepane save/load size & keybinds
+## Refactoring
 
-- Fixes
-  - Pausing uploads doesn't work well with matrix.org
-  - Quickly posting with another account leads to sync stop
-  - CPU usage
-  - `code` not colored in room subtitle
-  - In the "Leave me" room, "join > Hi > left" aren't combined
-  - Event delegates changing height don't scroll the list
-  - When selecting text and scrolling up, selection stops working after a while
-    - Ensure all the text that should be copied is copied
-    - Multiple messages are currently copied out of order
+- Use a singleton for utils.js
+- Use HBox for Profile
+  - Get rid of all `currentSpacing` stuff
+- Banners
+- Composer
+- Try gel for the models and stop being lazy in python
 
-  - Pressing backspace in composer sometimes doesn't work
-  - Message order isn't preserved when sending a first message in a E2E
-    room, then while keys are being shared sending one with another account,
-    then sending one with the first account again
+- Room Sidepane save/load size & keybinds
 
-  - If account not in config anymore, discard ui state last page on startup
-  - Do something when access token is invalid
+## Bug fixes
 
-  - Don't store states in delegates
-  - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
-  - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
-  - Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
+- Pausing uploads doesn't work well with matrix.org
+- Quickly posting with another account leads to sync stop
+- CPU usage
+- `code` not colored in room subtitle
+- In the "Leave me" room, "join > Hi > left" aren't combined
+- Event delegates changing height don't scroll the list
+- When selecting text and scrolling up, selection stops working after a while
+  - Ensure all the text that should be copied is copied
+  - Multiple messages are currently copied out of order
 
-- UI
-  - Scrollable popup
-  - HDrawer snapping
-  - Make theme error/etc text colors more like name colors
-  - In account settings, display name field text should be colored
-  - Way to open context menus without a right mouse button
-  - `smartVerticalFlick()` gradual acceleration
+- Pressing backspace in composer sometimes doesn't work
+- Message order isn't preserved when sending a first message in a E2E
+  room, then while keys are being shared sending one with another account,
+  then sending one with the first account again
 
-  - Choose a better default easing type for animations
-  - Make HListView scrollbars visible
-  - Remove first html lists left margin
-  - Adapt UI for small heights
+- If account not in config anymore, discard ui state last page on startup
+- Do something when access token is invalid
 
-  - In room creation, click avatar to set the future room's avatar
-  - In join room page, show the matching room's avatar when typing
-  - In find someone page, show the matching user's avatar when typing
+- Don't store states in delegates
+- [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
+- Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
+- Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
-  - Combine events so they take less space
-    - After combining is implemented, no need to hide profile changes anymore.
-  - Replies
-  - Messages editing and redaction
-  - Code highlighting
-  - Adapt shortcuts flicking speed to font size 
+## Interface
 
-  - EditAccount page:
-    - Device settings
-    - Multiaccount aliases:
-      - Warn when conflict with another alias
-      - Forbid spaces?
-      - Add an explanation tooltip
-      - Prevent sending messages with an user not in room
-      - Support \ escaping
-    - Accept drag and dropping a picture to set avatar
+- Scrollable popup
+- HDrawer snapping
+- Make theme error/etc text colors more like name colors
+- In account settings, display name field text should be colored
+- Way to open context menus without a right mouse button
+- `smartVerticalFlick()` gradual acceleration
 
-  - Add stuff to room tooltips like last messages
-  - Show something when connection is lost or 429s happen
-  - "Rejoin" LeftBanner button if room is public
-  - Daybreak color
-  - Conversation breaks: show time of first new msg after break instead of big
-    blank space
+- Choose a better default easing type for animations
+- Make HListView scrollbars visible
+- Remove first html lists left margin
+- Adapt UI for small heights
 
-  - Sidepane
-    - Animate when logging out last account and sidepane turns invisible
-    - Header back button when reduced
-    - Better look when reduced to minimum size
+- In room creation, click avatar to set the future room's avatar
+- In join room page, show the matching room's avatar when typing
+- In find someone page, show the matching user's avatar when typing
 
-  - Server selection
-  - Register/Reset for AddAccount page
-  - Prevent using an alias if that user is not in the room or no permission
-  - Spinner when loading past room events
+- Combine events so they take less space
+  - After combining is implemented, no need to hide profile changes anymore.
+- Replies
+- Messages editing and redaction
+- Code highlighting
+- Adapt shortcuts flicking speed to font size 
 
-  - Theming
-    - Bundle fonts
-    - Standard file format, see *~ppy/qml_dict_theme.qml*
-    - https://doc.qt.io/qt-5/qtquickcontrols2-customize.html#creating-a-custom-style
-    - icons.preferredPack: accept multiple values
-    - Find icon packs in user data dir
-    - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
-    - Way to round avatar corners to allow box radius
-    - If avatar is set, name color from average color?
-    - Accent color from background
+- EditAccount page:
+  - Device settings
+  - Multiaccount aliases:
+    - Warn when conflict with another alias
+    - Forbid spaces?
+    - Add an explanation tooltip
+    - Prevent sending messages with an user not in room
+    - Support \ escaping
+  - Accept drag and dropping a picture to set avatar
 
-  - Settings page
-  - Notifications
-  - Opening links with keyboard
-  - Better `<pre>` 
+- Add stuff to room tooltips like last messages
+- Show something when connection is lost or 429s happen
+- "Rejoin" LeftBanner button if room is public
+- Daybreak color
+- Conversation breaks: show time of first new msg after break instead of big
+  blank space
 
-  - Custom file picker for Linux (...)
+- Sidepane
+  - Animate when logging out last account and sidepane turns invisible
+  - Header back button when reduced
+  - Better look when reduced to minimum size
 
-- Major features
-  - E2E
-    - Device verification
-    - Edit/delete own devices
-    - Request room keys from own other devices
-    - Auto-trust accounts within the same client
-    - Provide help when undecryptable messages occur, including:
-      - Trigger `nio.AsyncClient.request_room_key`
-      - Option to export-logout-login-import to fix one-time key problems
-  - Read receipts
-  - Status message and presence
+- Server selection
+- Register/Reset for AddAccount page
+- Prevent using an alias if that user is not in the room or no permission
+- Spinner when loading past room events
 
-- Client improvements
-  - Refetch profile after manual profile change, don't wait for a room event
+- Theming
+  - Bundle fonts
+  - Standard file format, see *~ppy/qml_dict_theme.qml*
+  - https://doc.qt.io/qt-5/qtquickcontrols2-customize.html#creating-a-custom-style
+  - icons.preferredPack: accept multiple values
+  - Find icon packs in user data dir
+  - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
+  - Way to round avatar corners to allow box radius
+  - If avatar is set, name color from average color?
+  - Accent color from background
 
-  - Prevent starting multiple client instances, causes problems with E2E DB
-  - Check if username exists on login screen
-  - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
-  - `pyotherside.atexit()`
-  - Logout previous session if adding an account that's already connected
-  - Config file format
+- Settings page
+- Notifications
+- Opening links with keyboard
+- Better `<pre>` 
 
-  - Startup improvements
-    - Initial sync filter to get more events on first sync
-    - Lazy loading members
-    - Store profiles, room events and states
-    - Use AsyncClient `store_sync_tokens`
-      - Make sure to all members are fetched before sending an E2E message 
-      - Fetch all members when using the filter members bar
+- Custom file picker for Linux (...)
 
-  - Direct chats category
-  - Animate RoomEventDelegate DayBreak apparition
-  - Live-reloading accounts.json
+## Backend
 
-- nio
-  - Dedicated error for invalid password on key import
-  - Running blocking DB function calls in executor
-  - `AsyncClient.share_group_session`: send device batches concurrently
+- Refetch profile after manual profile change, don't wait for a room event
 
-  - RoomMessageMedia and RoomAvatarEvent info attributes
-  - `m.room.aliases` events
-  - MatrixRoom invited members list
-    - Verify room has correct name when creating direct chat and peer hasn't
-      accepted the invite yet
-  - Left room events after client reboot
-  - `org.matrix.room.preview_urls` events
-  - Support "Empty room (was ...)" after peer left
-  - Previewing room without joining
+- Prevent starting multiple client instances, causes problems with E2E DB
+- Check if username exists on login screen
+- [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
+- `pyotherside.atexit()`
+- Logout previous session if adding an account that's already connected
+- Config file format
 
-  - Get content repo config API
-  - Add the `resume()` method
+- Startup improvements
+  - Initial sync filter to get more events on first sync
+  - Lazy loading members
+  - Store profiles, room events and states
+  - Use AsyncClient `store_sync_tokens`
+    - Make sure to all members are fetched before sending an E2E message 
+    - Fetch all members when using the filter members bar
 
-  - See if we can turn all the Error classes into actual exceptions
+- Direct chats category
+- Animate RoomEventDelegate DayBreak apparition
+- Live-reloading accounts.json
 
-- Distribution
-  - Include python dependencies in binary with rcc?
-  - README.md
+- E2E
+  - Device verification
+  - Edit/delete own devices
+  - Request room keys from own other devices
+  - Auto-trust accounts within the same client
+  - Provide help when undecryptable messages occur, including:
+    - Trigger `nio.AsyncClient.request_room_key`
+    - Option to export-logout-login-import to fix one-time key problems
+- Read receipts
+- Status message and presence
+
+## Nio contributions
+
+- Dedicated error for invalid password on key import
+- Running blocking DB function calls in executor
+- `AsyncClient.share_group_session`: send device batches concurrently
+
+- RoomMessageMedia and RoomAvatarEvent info attributes
+- `m.room.aliases` events
+- Left room events after client reboot
+- `org.matrix.room.preview_urls` events
+- Support "Empty room (was ...)" after peer left
+- Previewing room without joining
+
+- Get content repo config API
+- Add the `resume()` account "login" method
+
+- See if we can turn all the Error classes into actual exceptions
+
+## Distribution
+
+- Include python dependencies in binary with rcc?
+- Improve the README.md
+
+## Notable changes for future Qt version upgrade
+
+### [Qt 5.13](https://wiki.qt.io/New_Features_in_Qt_5.13)
+
+- Added `SplitView`
+- Added `cache` property to icon
+
+### [Qt 5.14](https://wiki.qt.io/New_Features_in_Qt_5.14)
+
+- Applications can now opt-in to use non-integer scale factors.
+  Use `QGuiApplication::highDpiScaleFactorRoundingPolicy`.
+
+- Added `qmlRegisterSingletonInstance` function.
+  This allows to expose a QObject as a singleton to QML, without having to
+  create a factory function as required by `qmlRegisterSingletonType`.
+  It is meant as a type safe replacement of `setContextProperty`.
+
+- Added `qmlRegisterAnonymousType` as a replacement for `qmlRegisterType`.
+  It allows to specify the URI and major version for better tooling support.
+
+- qmllint gained an experimental -U option. If run with it, it warns about 
+  about accesses to unqualified identifiers
+
+- `Text` and `TextEdit` now support Markdown format
+  (CommonMark and GitHub dialects) as an alternative to HTML.
+  Includes the GitHub checklist extension, such that you can click to toggle
+  checkboxes in a `TextEdit`.
+
+- `TextEdit` uses an I-beam cursor by default, and a pointing-hand cursor when
+  hovering a checkbox or a link
+
+- Added `WheelHandler`, an Event Handler for the mouse wheel, and optionally
+  for emulated mouse wheel events coming from a trackpad.
+
+- Added `BoundaryRule` in Qt.labs.animation: a `PropertyValueInterceptor` that
+  restricts the range of values a numeric property can have, applies
+  "resistance" when the value is overshooting, and provides the ability to
+  animate it back within range. It's particularly useful in combination with
+  `WheelHandler`, to provide similar physics as Flickable has.
+
+- `Image` and `BorderImage` now have the same `currentFrame` and `frameCount`
+  properties that `AnimatedImage` has; this allows choosing an individual icon
+  from an .ICO file that contains multiple icons, for example.
+  In the future it's intended to support other multi-page formats such as
+  PDF, TIFF and WEBP.
