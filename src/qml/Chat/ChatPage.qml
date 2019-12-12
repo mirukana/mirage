@@ -52,15 +52,16 @@ HPage {
         Layout.fillWidth: true
     }
 
+    LeftBanner {
+        id: leftBanner
+        visible: chat.roomInfo.left
+        Layout.fillWidth: true
+    }
+
     Composer {
         id: composer
         visible: ! chat.roomInfo.left &&
                  ! chat.roomInfo.inviter_id
     }
 
-    LeftBanner {
-        id: leftBanner
-        visible: chat.roomInfo.left
-        Layout.fillWidth: true
-    }
 }
