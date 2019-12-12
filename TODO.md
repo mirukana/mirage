@@ -64,7 +64,6 @@
   - Way to open context menus without a right mouse button
   - `smartVerticalFlick()` gradual acceleration
 
-  - Restore previous focus after closing right click context menu
   - Choose a better default easing type for animations
   - Make HListView scrollbars visible
   - Remove first html lists left margin

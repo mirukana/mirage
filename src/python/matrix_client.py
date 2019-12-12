@@ -590,14 +590,14 @@ class MatrixClient(nio.AsyncClient):
             if uid not in self.all_rooms[room_id].users
         )
 
-        async def invite(user_id):
-            if not self.user_id_regex.match(user_id):
-                return InvalidUserId(user_id)
+        async def invite(user):
+            if not self.user_id_regex.match(user):
+                return InvalidUserId(user)
 
-            if isinstance(await self.get_profile(invite), nio.ProfileGetError):
-                return UserNotFound(user_id)
+            if isinstance(await self.get_profile(user), nio.ProfileGetError):
+                return UserNotFound(user)
 
-            return await self.room_invite(room_id, user_id)
+            return await self.room_invite(room_id, user)
 
         coros        = [invite(uid) for uid in user_ids]
         successes    = []
@@ -835,12 +835,13 @@ class MatrixClient(nio.AsyncClient):
         # Add the room members to the added room
         new_dict = {
             user_id: Member(
-                user_id       = user_id,
-                display_name  = room.user_name(user_id)  # disambiguated
-                                if member.display_name else "",
-                avatar_url    = member.avatar_url or "",
-                typing        = user_id in room.typing_users,
-                power_level   = member.power_level,
+                user_id      = user_id,
+                display_name = room.user_name(user_id)  # disambiguated
+                               if member.display_name else "",
+                avatar_url   = member.avatar_url or "",
+                typing       = user_id in room.typing_users,
+                power_level  = member.power_level,
+                invited      = member.invited,
             ) for user_id, member in room.users.items()
         }
         self.models[Member, room.room_id].update(new_dict)

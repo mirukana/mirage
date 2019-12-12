@@ -270,14 +270,15 @@ class NioCallbacks:
     async def onRoomMemberEvent(self, room, ev) -> None:
         type_and_content = await self.process_room_member_event(room, ev)
 
-        if type_and_content is None:
-            # This is run from register_nio_event otherwise
-            await self.client.register_nio_room(room)
-        else:
+        if type_and_content is not None:
             type_specifier, content = type_and_content
             await self.client.register_nio_event(
                 room, ev, content=content, type_specifier=type_specifier,
             )
+        else:
+            # Normally, register_nio_event() will call register_nio_room().
+            # but in this case we don't have any event we want to register.
+            await self.client.register_nio_room(room)
 
 
     async def onRoomAliasEvent(self, room, ev) -> None:

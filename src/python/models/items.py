@@ -94,12 +94,19 @@ class Member(ModelItem):
     avatar_url:   str  = ""
     typing:       bool = False
     power_level:  int  = 0
+    invited:      bool = False
 
     def __lt__(self, other: "Member") -> bool:
-        # Sort by name, but have members with higher power-level first
+        # Sort by name, but have members with higher power-level first and
+        # invited-but-not-joined members last
         name       = (self.display_name or self.user_id[1:]).lower()
         other_name = (other.display_name or other.user_id[1:]).lower()
-        return (other.power_level, name) < (self.power_level, other_name)
+
+        return (
+            self.invited, other.power_level, name,
+        ) < (
+            other.invited, self.power_level, other_name,
+        )
 
 
     @property

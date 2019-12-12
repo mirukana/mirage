@@ -91,7 +91,7 @@ class App:
         ba  = self.backend                 # noqa
         mo  = self.backend.models          # noqa
         cl  = self.backend.clients
-        tcl = lambda user: cl[f"@test_{user}:matrix.org"]  # noqa
+        tcl = lambda user: cl[f"@{user}:matrix.org"]  # noqa
 
         from .models.items import Account, Room, Member, Event, Device  # noqa
 
