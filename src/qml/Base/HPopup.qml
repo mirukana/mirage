@@ -22,6 +22,11 @@ Popup {
         color: theme.controls.popup.background
     }
 
+    onAboutToShow: previouslyFocused = window.activeFocusItem
+    onClosed: if (previouslyFocused) previouslyFocused.forceActiveFocus()
+
+
+    property var previouslyFocused: null
 
     readonly property int maximumPreferredWidth:
         window.width - leftMargin - rightMargin - leftInset - rightInset

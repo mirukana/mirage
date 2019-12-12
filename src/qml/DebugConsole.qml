@@ -17,7 +17,7 @@ HDrawer {
     z: 9999
     position: 0
 
-    property var previouslyFocusedItem: null
+    property var previouslyFocused: null
 
     property var target: null
     property alias t: debugConsole.target
@@ -66,10 +66,10 @@ HDrawer {
 
     onVisibleChanged: {
         if (visible) {
-            previouslyFocusedItem = window.activeFocusItem
+            previouslyFocused = window.activeFocusItem
             forceActiveFocus()
-        } else if (previouslyFocusedItem) {
-            previouslyFocusedItem.forceActiveFocus()
+        } else if (previouslyFocused) {
+            previouslyFocused.forceActiveFocus()
         }
     }
 
