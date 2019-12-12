@@ -22,4 +22,10 @@ Menu {
         border.color: theme.controls.menu.border
         border.width: theme.controls.menu.borderWidth
     }
+
+    onAboutToShow: previouslyFocused = window.activeFocusItem
+    onClosed: if (previouslyFocused) previouslyFocused.forceActiveFocus()
+
+
+    property var previouslyFocused: null
 }
