@@ -409,7 +409,7 @@ class MatrixClient(nio.AsyncClient):
         event_type: Type[nio.Event], **event_fields,
     ) -> None:
 
-        our_info = self.models[Member, room_id][self.user_id]
+        our_info = self.models[Member, self.user_id, room_id][self.user_id]
 
         event = Event(
             source           = None,
@@ -427,7 +427,7 @@ class MatrixClient(nio.AsyncClient):
         self.local_echoes_uuid.add(uuid)
 
         for user_id in self.models[Account]:
-            if user_id in self.models[Member, room_id]:
+            if user_id in self.models[Member, self.user_id, room_id]:
                 self.models[Event, user_id, room_id][f"echo-{uuid}"] = event
                 self.models[Event, user_id, room_id].sync_now()
 
@@ -577,7 +577,7 @@ class MatrixClient(nio.AsyncClient):
         await super().room_forget(room_id)
         self.models[Room, self.user_id].pop(room_id, None)
         self.models.pop((Event, self.user_id, room_id), None)
-        self.models.pop((Member, room_id), None)
+        self.models.pop((Member, self.user_id, room_id), None)
 
 
     async def room_mass_invite(
@@ -825,12 +825,12 @@ class MatrixClient(nio.AsyncClient):
         # List members that left the room, then remove them from our model
         left_the_room = [
             user_id
-            for user_id in self.models[Member, room.room_id]
+            for user_id in self.models[Member, self.user_id, room.room_id]
             if user_id not in room.users
         ]
 
         for user_id in left_the_room:
-            del self.models[Member, room.room_id][user_id]
+            del self.models[Member, self.user_id, room.room_id][user_id]
 
         # Add the room members to the added room
         new_dict = {
@@ -844,13 +844,13 @@ class MatrixClient(nio.AsyncClient):
                 invited      = member.invited,
             ) for user_id, member in room.users.items()
         }
-        self.models[Member, room.room_id].update(new_dict)
+        self.models[Member, self.user_id, room.room_id].update(new_dict)
 
 
     async def get_member_name_avatar(self, room_id: str, user_id: str,
                                     ) -> Tuple[str, str]:
         try:
-            item = self.models[Member, room_id][user_id]
+            item = self.models[Member, self.user_id, room_id][user_id]
         except KeyError:  # e.g. user is not anymore in the room
             try:
                 info = await self.backend.get_profile(user_id)

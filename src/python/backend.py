@@ -29,8 +29,8 @@ class Backend:
             Account,             # Logged-in accounts
             (Device, str),       # Devices of user_id
             (Room,   str),       # Rooms for user_id
-            (Member, str),       # Members in room_id
             (Upload, str),       # Uploads running in room_id
+            (Member, str, str),  # Members for account user_id for room_id
             (Event,  str, str),  # Events for account user_id for room_id
         })
 

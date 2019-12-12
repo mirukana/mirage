@@ -13,7 +13,7 @@ HColumnLayout {
 
 
         readonly property var originSource:
-                modelSources[["Member", chat.roomId]] || []
+                modelSources[["Member", chat.userId, chat.roomId]] || []
 
 
         onOriginSourceChanged: filterLimiter.restart()
