@@ -89,6 +89,12 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
+            icon.name: "copy-room-id"
+            text: qsTr("Copy room ID")
+            onTriggered: Clipboard.text = model.data.room_id
+        }
+
+        HMenuItem {
             visible: invited
             icon.name: "invite-accept"
             icon.color: theme.colors.positiveBackground

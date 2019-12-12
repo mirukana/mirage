@@ -107,6 +107,12 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
+            icon.name: "copy-user-id"
+            text: qsTr("Copy user ID")
+            onTriggered: Clipboard.text = model.data.user_id
+        }
+
+        HMenuItem {
             icon.name: "sign-out"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Sign out")

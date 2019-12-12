@@ -23,6 +23,14 @@ HTileDelegate {
     subtitle.text: model.display_name ? model.user_id : ""
     subtitle.color: theme.chat.roomPane.member.subtitle
 
+    contextMenu: HMenu {
+        HMenuItem {
+            icon.name: "copy-user-id"
+            text: qsTr("Copy user ID")
+            onTriggered: Clipboard.text = model.user_id
+        }
+    }
+
 
     Behavior on title.color { HColorAnimation {} }
 }
