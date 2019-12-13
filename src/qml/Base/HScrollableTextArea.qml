@@ -4,6 +4,7 @@ import QtQuick.Controls 2.12
 
 ScrollView {
     id: scrollView
+    opacity: enabled ? 1 : theme.disabledElementsOpacity
     clip: true
     ScrollBar.vertical.visible: contentHeight > height
 
@@ -27,10 +28,11 @@ ScrollView {
     property alias placeholderTextColor: textArea.placeholderTextColor
     property alias area: textArea
     property alias text: textArea.text
-    property string disabledText: ""
-    property string disabledTextColor: theme.controls.textArea.disabledText
+    property var disabledText: null
     property var focusItemOnTab: null
 
+
+    Behavior on opacity { HOpacityAnimator {} }
 
     TextArea {
         id: textArea
@@ -64,14 +66,15 @@ ScrollView {
         KeyNavigation.priority: KeyNavigation.BeforeItem
         KeyNavigation.tab: focusItemOnTab
 
+
         Binding on color {
             value: "transparent"
-            when: ! textArea.enabled
+            when: disabledText !== null && ! textArea.enabled
         }
 
         Binding on placeholderTextColor {
             value: "transparent"
-            when: ! textArea.enabled
+            when: disabledText !== null && ! textArea.enabled
         }
 
         Behavior on color { HColorAnimation {} }
@@ -80,9 +83,8 @@ ScrollView {
         HLabel {
             anchors.fill: parent
             visible: opacity > 0
-            opacity: parent.enabled ? 0 : 1
-            color: disabledTextColor
-            text: disabledText
+            opacity: disabledText !== null && parent.enabled ? 0 : 1
+            text: disabledText || ""
 
             leftPadding: parent.leftPadding
             rightPadding: parent.rightPadding
