@@ -4,8 +4,8 @@ import "../../Base"
 HCheckBox {
     text: qsTr("Encrypt messages")
     subtitle.text:
-        qsTr("Protect the room against eavesdropper. Only you " +
-             "and those you trust can read the conversation.") +
+        qsTr("Only you and those you trust will be able to read the " +
+             "conversation") +
         `<br><font color="${theme.colors.middleBackground}">` +
         qsTr("Cannot be disabled later!") +
         "</font>"
