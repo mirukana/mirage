@@ -21,7 +21,9 @@ HTileDelegate {
     Behavior on opacity { HOpacityAnimator {} }
 
 
-    readonly property bool invited: model.data.inviter_id && ! model.data.left
+    readonly property bool joined: ! invited && ! parted
+    readonly property bool invited: model.data.inviter_id && ! parted
+    readonly property bool parted: model.data.left
     readonly property var lastEvent: model.data.last_event
 
 
@@ -89,6 +91,23 @@ HTileDelegate {
 
     contextMenu: HMenu {
         HMenuItem {
+            visible: joined
+            enabled: model.data.can_invite
+            icon.name: "room-send-invite"
+            text: qsTr("Invite members")
+
+            onTriggered: Utils.makePopup(
+                "Popups/InviteToRoomPopup.qml",
+                window,
+                {
+                    userId: model.user_id,
+                    roomId: model.data.room_id,
+                    invitingAllowed: Qt.binding(() => model.data.can_invite)
+                }
+            )
+        }
+
+        HMenuItem {
             icon.name: "copy-room-id"
             text: qsTr("Copy room ID")
             onTriggered: Clipboard.text = model.data.room_id
@@ -109,7 +128,7 @@ HTileDelegate {
         }
 
         HMenuItem {
-            visible: ! model.data.left
+            visible: invited || joined
             icon.name: invited ? "invite-decline" : "room-leave"
             icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")

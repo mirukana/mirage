@@ -1,6 +1,6 @@
 # TODO
 
-- invite keybind & context menu
+- invite keybind
 - better cancel for all boxes + disablewhileloading false
 - use defaulttext/checked elsewhere
 
@@ -134,6 +134,7 @@
 
 ## Backend
 
+- Saving the room settings
 - Refetch profile after manual profile change, don't wait for a room event
 
 - Prevent starting multiple client instances, causes problems with E2E DB
