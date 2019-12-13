@@ -7,7 +7,6 @@ CheckBox {
     id: box
     spacing: theme.spacing
     padding: 0
-    opacity: enabled ? 1 : theme.disabledElementsOpacity
 
 
     property alias mainText: mainText
@@ -18,6 +17,7 @@ CheckBox {
 
 
     indicator: Rectangle {
+        opacity: box.enabled ? 1 : theme.disabledElementsOpacity + 0.2
         implicitWidth: theme.controls.checkBox.boxSize
         implicitHeight: implicitWidth
         x: box.leftPadding
@@ -55,6 +55,8 @@ CheckBox {
     }
 
     contentItem: HColumnLayout {
+        opacity: box.enabled ? 1 : theme.disabledElementsOpacity
+
         HLabel {
             id: mainText
             text: box.text
