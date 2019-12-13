@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
+    text: defaultText
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
     leftPadding: theme.spacing
@@ -62,6 +63,11 @@ TextField {
     property color focusedBorderColor: theme.controls.textField.focusedBorder
 
     property var disabledText: null
+    property string defaultText: ""
+    readonly property bool changed: text !== defaultText
+
+
+    function reset() { clear(); text = defaultText }
 
 
     Binding on color {

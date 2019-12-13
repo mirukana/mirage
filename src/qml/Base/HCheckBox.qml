@@ -5,16 +5,9 @@ import "../utils.js" as Utils
 
 CheckBox {
     id: box
+    checked: defaultChecked
     spacing: theme.spacing
     padding: 0
-
-
-    property alias mainText: mainText
-    property alias subtitle: subtitleText
-
-
-    Behavior on opacity { HOpacityAnimator { factor: 2 } }
-
 
     indicator: Rectangle {
         opacity: box.enabled ? 1 : theme.disabledElementsOpacity + 0.2
@@ -84,4 +77,16 @@ CheckBox {
             Layout.fillWidth: true
         }
     }
+
+
+    property alias mainText: mainText
+    property alias subtitle: subtitleText
+    property bool defaultChecked: false
+    readonly property bool changed: checked !== defaultChecked
+
+
+    function reset() { checked = defaultChecked }
+
+
+    Behavior on opacity { HOpacityAnimator { factor: 2 } }
 }

@@ -28,14 +28,21 @@ ScrollView {
     property alias placeholderTextColor: textArea.placeholderTextColor
     property alias area: textArea
     property alias text: textArea.text
-    property var disabledText: null
+
     property var focusItemOnTab: null
+    property var disabledText: null
+    property string defaultText: ""
+    readonly property bool changed: text !== defaultText
+
+
+    function reset() { area.clear(); text = defaultText }
 
 
     Behavior on opacity { HOpacityAnimator {} }
 
     TextArea {
         id: textArea
+        text: defaultText
         enabled: parent.enabled
         leftPadding: theme.spacing
         rightPadding: leftPadding
