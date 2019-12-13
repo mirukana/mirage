@@ -67,7 +67,7 @@ HColumnLayout {
             id: inviteButton
             icon.name: "room-send-invite"
             backgroundColor: theme.chat.roomPane.inviteButton.background
-            enabled: chat.ready ? chat.roomInfo.can_invite : false
+            enabled: chat.roomInfo.can_invite
 
             toolTip.text:
                 enabled ?

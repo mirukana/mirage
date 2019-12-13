@@ -23,14 +23,15 @@ Item {
     ) || "waiting"
 
     readonly property alias loader: loader
-    readonly property alias roomPane: roomPane
+    readonly property alias roomPane: roomPaneLoader.item
 
 
     HLoader {
         id: loader
-        anchors.rightMargin: roomPane.visibleSize
+        anchors.rightMargin: ready ? roomPane.visibleSize : 0
         anchors.fill: parent
-        visible: ! roomPane.hidden || anchors.rightMargin < width
+        visible:
+            ready ? ! roomPane.hidden || anchors.rightMargin < width : true
         onLoaded: if (chat.focus) item.composer.takeFocus()
 
         source: ready ? "ChatPage.qml" : ""
@@ -47,8 +48,12 @@ Item {
         }
     }
 
-    RoomPane {
-        id: roomPane
-        referenceSizeParent: chat
+    HLoader {
+        id: roomPaneLoader
+        active: ready
+        sourceComponent: RoomPane {
+            id: roomPane
+            referenceSizeParent: chat
+        }
     }
 }
