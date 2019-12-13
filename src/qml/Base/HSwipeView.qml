@@ -1,13 +1,21 @@
+import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 SwipeView {
-    currentIndex: window.getState(this, "currentIndex", defaultIndex)
-    onCurrentIndexChanged: window.saveState(this)
+    Component.onCompleted: if (! changed) {
+        setCurrentIndex(window.getState(this, "currentIndex", defaultIndex))
+        saveEnabled = true
+    }
+
+    onCurrentIndexChanged: if (saveEnabled) window.saveState(this)
 
 
     property string saveName: ""
     property var saveId: "ALL"
     property var saveProperties: ["currentIndex"]
+
+    // Prevent onCurrentIndexChanged from running before Component.onCompleted
+    property bool saveEnabled: false
 
     property int defaultIndex: 0
     property bool changed: currentIndex !== defaultIndex
