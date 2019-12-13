@@ -1,9 +1,5 @@
 # TODO
 
-- invite keybind
-- better cancel for all boxes + disablewhileloading false
-- use defaulttext/checked elsewhere
-
 ## Media
 
 - Handle set avatar upload errors
@@ -27,12 +23,15 @@
 
 ## Refactoring
 
-- Use a singleton for utils.js
-- Use HBox for Profile
+- Account settings with `HTabbedContainer`
   - Get rid of all `currentSpacing` stuff
-- Banners
+  - Use new default/reset controls system 
 - Split `HScrollableTextArea`
 - Composer
+- Missing room keybinds (invite, etc), and don't put all the binds in 
+  one central file (else we can only rely on uiState properties)
+- Use QML states
+- Use a singleton for utils.js
 - Try gel for the models and stop being lazy in python
 
 - Room Sidepane save/load size & keybinds
@@ -64,12 +63,18 @@
 
 ## Interface
 
-- Scrollable popup
+- Make all "Cancel" buttons able to cancel running Backend coroutines set
+  `disabledWhileLoading` to `false` for all "OK" buttons where it makes sense
+- Use a loader of the swipeview containing members, settings, etc views
+- Expand the room pane if it's too small to show room settings?
+- Drop the `buttonModel`/`buttonCallbacks` HBox approach
+- Scrollable popups and room settings
 - HDrawer snapping
 - Make theme error/etc text colors more like name colors
 - In account settings, display name field text should be colored
 - Way to open context menus without a right mouse button
 - `smartVerticalFlick()` gradual acceleration
+- Make banner buttons look better
 
 - Choose a better default easing type for animations
 - Make HListView scrollbars visible

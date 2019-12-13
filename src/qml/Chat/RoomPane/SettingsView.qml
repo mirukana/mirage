@@ -3,8 +3,6 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-// TODO: expand pane if too small, scrollable, loader
-
 HBox {
     color: "transparent"
 
