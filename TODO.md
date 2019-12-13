@@ -1,7 +1,8 @@
 # TODO
 
 - invite keybind & context menu
-- better cancel for all boxes
+- better cancel for all boxes + disablewhileloading false
+- use defaulttext/checked elsewhere
 
 ## Media
 
@@ -30,6 +31,7 @@
 - Use HBox for Profile
   - Get rid of all `currentSpacing` stuff
 - Banners
+- Split `HScrollableTextArea`
 - Composer
 - Try gel for the models and stop being lazy in python
 
@@ -166,21 +168,22 @@
 
 ## Nio contributions
 
-- Dedicated error for invalid password on key import
-- Running blocking DB function calls in executor
-- `AsyncClient.share_group_session`: send device batches concurrently
+- Running blocking DB function calls in executor (WIP)
+- `AsyncClient.share_group_session`: send device batches concurrently (WIP)
 
-- RoomMessageMedia and RoomAvatarEvent info attributes
-- `m.room.aliases` events
-- Left room events after client reboot
-- `org.matrix.room.preview_urls` events
+- Dedicated error for invalid password on key import
+- `RoomMessageMedia` and `RoomAvatarEvent` info attributes
+- Handle `m.room.aliases` events
+
 - Support "Empty room (was ...)" after peer left
+- Left room events after client reboot
 - Previewing room without joining
 
 - Get content repo config API
 - Add the `resume()` account "login" method
 
-- See if we can turn all the Error classes into actual exceptions
+- Turn all the Error and Response classes into exceptions and normal returns
+  once `HttpClient` is deprecated
 
 ## Distribution
 

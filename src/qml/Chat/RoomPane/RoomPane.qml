@@ -69,7 +69,7 @@ HDrawer {
             Item {}
             Item {}
             Item {}
-            SettingsView {}
+            SettingsView { fillAvailableHeight: true }
         }
     }
 }
