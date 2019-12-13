@@ -59,6 +59,7 @@ Rectangle {
             id: avatarToolTip
             visible: ! avatarImage.broken &&
                      avatarImage.status !== Image.Error &&
+                     avatarImage.width < dimension * 0.75 &&
                      (toolTipSourceOverride || toolTipMxc) &&
                      hoverHandler.hovered
             delay: 1000
