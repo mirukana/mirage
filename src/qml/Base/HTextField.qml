@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
+    opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
     leftPadding: theme.spacing
     rightPadding: leftPadding
@@ -59,4 +60,39 @@ TextField {
     property color focusedBackgroundColor:
         theme.controls.textField.focusedBackground
     property color focusedBorderColor: theme.controls.textField.focusedBorder
+
+    property var disabledText: null
+
+
+    Binding on color {
+        value: "transparent"
+        when: disabledText !== null && ! field.enabled
+    }
+
+    Binding on placeholderTextColor {
+        value: "transparent"
+        when: disabledText !== null && ! field.enabled
+    }
+
+    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on color { HColorAnimation {} }
+    Behavior on placeholderTextColor { HColorAnimation {} }
+
+    HLabel {
+        anchors.fill: parent
+        visible: opacity > 0
+        opacity: disabledText !== null && parent.enabled ? 0 : 1
+        text: disabledText || ""
+
+        leftPadding: parent.leftPadding
+        rightPadding: parent.rightPadding
+        topPadding: parent.topPadding
+        bottomPadding: parent.bottomPadding
+
+        wrapMode: parent.wrapMode
+        font.family: parent.font.family
+        font.pixelSize: parent.font.pixelSize
+
+        Behavior on opacity { HOpacityAnimator {} }
+    }
 }
