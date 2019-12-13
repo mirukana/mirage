@@ -9,8 +9,8 @@ Item {
     // Flickable or ListView that should be affected by scroll shortcuts
     property Item flickTarget
 
-    // TabBar that should be affected by tab navigation shortcuts
-    property TabBar tabsTarget
+    // A QQC Container that should be affected by tab navigation shortcuts
+    property Container tabsTarget
 
     // DebugConsole that should be affected by console shortcuts
     property DebugConsole debugConsole

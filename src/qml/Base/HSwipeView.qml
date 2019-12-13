@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 SwipeView {
     Component.onCompleted: if (! changed) {
+        if (becomeKeyboardTabsTarget) shortcuts.tabsTarget = this
         setCurrentIndex(window.getState(this, "currentIndex", defaultIndex))
         saveEnabled = true
     }
@@ -17,6 +18,7 @@ SwipeView {
     // Prevent onCurrentIndexChanged from running before Component.onCompleted
     property bool saveEnabled: false
 
+    property bool becomeKeyboardTabsTarget: true
     property int defaultIndex: 0
     property bool changed: currentIndex !== defaultIndex
 
