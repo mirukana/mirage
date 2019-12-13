@@ -49,7 +49,9 @@ HDrawer {
                     )
 
                     autoExclusive: true
-                    checked: swipeView.currentIndex === index
+                    checked: swipeView.currentIndex === 0 && index === 0 ||
+                             swipeView.currentIndex === 1 && index === 4
+
                     enabled: ["members", "settings"].includes(modelData)
 
                     onClicked: swipeView.currentIndex = index
@@ -69,9 +71,6 @@ HDrawer {
             Layout.fillHeight: true
 
             MemberView {}
-            Item {}
-            Item {}
-            Item {}
             SettingsView { fillAvailableHeight: true }
         }
     }
