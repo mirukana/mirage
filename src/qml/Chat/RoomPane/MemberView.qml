@@ -83,6 +83,7 @@ HColumnLayout {
                 {
                     userId: chat.userId,
                     roomId: chat.roomId,
+                    roomName: chat.roomInfo.display_name,
                     invitingAllowed: Qt.binding(() => inviteButton.enabled),
                 },
             )

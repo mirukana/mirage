@@ -102,6 +102,7 @@ HTileDelegate {
                 {
                     userId: model.user_id,
                     roomId: model.data.room_id,
+                    roomName: model.data.display_name,
                     invitingAllowed: Qt.binding(() => model.data.can_invite)
                 }
             )

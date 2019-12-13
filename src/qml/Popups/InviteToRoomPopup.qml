@@ -5,7 +5,8 @@ import "../Base"
 BoxPopup {
     id: popup
     // fillAvailableHeight: true
-    summary.text: qsTr("Invite room members")
+    summary.text: qsTr("Invite members to <i>%1</i>").arg(roomName)
+    summary.textFormat: Text.StyledText
     okText: qsTr("Invite")
     okEnabled: invitingAllowed && Boolean(inviteArea.text.trim())
 
@@ -49,6 +50,7 @@ BoxPopup {
 
     property string userId
     property string roomId
+    property string roomName
     property bool invitingAllowed: true
 
     property var inviteFuture: null
