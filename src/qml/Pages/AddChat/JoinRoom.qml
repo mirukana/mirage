@@ -13,7 +13,7 @@ HBox {
         {
             name: "apply",
             text: qsTr("Join"),
-            iconName: "join",
+            iconName: "room-join",
             enabled: Boolean(roomField.text.trim()),
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
