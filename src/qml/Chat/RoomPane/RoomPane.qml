@@ -57,10 +57,13 @@ HDrawer {
             }
         }
 
-        SwipeView {
+        HSwipeView {
             id: swipeView
+            clip: true
             interactive: ! roomPane.collapsed
-            currentIndex: 4  // XXX
+
+            saveName: "roomPaneView"
+            saveId: chat.roomId
 
             Layout.fillWidth: true
             Layout.fillHeight: true
