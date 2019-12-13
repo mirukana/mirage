@@ -7,6 +7,7 @@ import re
 import traceback
 from contextlib import suppress
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from typing import (
     Any, DefaultDict, Dict, List, NamedTuple, Optional, Set, Tuple, Type,
@@ -801,14 +802,17 @@ class MatrixClient(nio.AsyncClient):
         except KeyError:
             last_ev = None
 
-        inviter   = getattr(room, "inviter", "") or ""
-        levels    = room.power_levels
-        our_level = levels.get_user_level(self.user_id)
+        inviter        = getattr(room, "inviter", "") or ""
+        levels         = room.power_levels
+        can_send_state = partial(levels.can_user_send_state, self.user_id)
+        can_send_msg   = partial(levels.can_user_send_message, self.user_id)
 
         self.models[Room, self.user_id][room.room_id] = Room(
             room_id        = room.room_id,
+            given_name     = room.name,
             display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
+            plain_topic    = room.topic,
             topic          = HTML_FILTER.filter_inline(room.topic or ""),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
@@ -816,8 +820,18 @@ class MatrixClient(nio.AsyncClient):
                 (room.avatar_url(inviter) or "") if inviter else "",
             left           = left,
 
-            can_invite        = our_level >= levels.defaults.invite,
-            can_send_messages = our_level >= levels.defaults.events_default,
+            encrypted       = room.encrypted,
+            invite_required = room.join_rule == "invite",
+            guests_allowed  = room.guest_access == "can_join",
+
+            can_invite           = levels.can_user_invite(self.user),
+            can_send_messages    = can_send_msg(),
+            can_set_name         = can_send_state("m.room.name"),
+            can_set_topic        = can_send_state("m.room.topic"),
+            can_set_avatar       = can_send_state("m.room.avatar"),
+            can_set_encryption   = can_send_state("m.room.encryption"),
+            can_set_join_rules   = can_send_state("m.room.join_rules"),
+            can_set_guest_access = can_send_state("m.room.guest_access"),
 
             last_event = last_ev,
         )

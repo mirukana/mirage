@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
@@ -43,19 +44,32 @@ HDrawer {
                     height: theme.baseElementsHeight
                     backgroundColor: "transparent"
                     icon.name: "room-view-" + modelData
-                    autoExclusive: true
-                    checked: modelData === "members"
-                    enabled: modelData === "members"
                     toolTip.text: qsTr(
                         modelData.charAt(0).toUpperCase() + modelData.slice(1)
                     )
+
+                    autoExclusive: true
+                    checked: swipeView.currentIndex === index
+                    enabled: ["members", "settings"].includes(modelData)
+
+                    onClicked: swipeView.currentIndex = index
                 }
             }
         }
 
-        MemberView {
+        SwipeView {
+            id: swipeView
+            interactive: ! roomPane.collapsed
+            currentIndex: 4  // XXX
+
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            MemberView {}
+            Item {}
+            Item {}
+            Item {}
+            SettingsView {}
         }
     }
 }

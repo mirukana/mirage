@@ -38,8 +38,10 @@ class Account(ModelItem):
 @dataclass
 class Room(ModelItem):
     room_id:        str       = field()
+    given_name:     str       = ""
     display_name:   str       = ""
     avatar_url:     str       = ""
+    plain_topic:    str       = ""
     topic:          str       = ""
     inviter_id:     str       = ""
     inviter_name:   str       = ""
@@ -47,8 +49,18 @@ class Room(ModelItem):
     left:           bool      = False
     typing_members: List[str] = field(default_factory=list)
 
-    can_invite:        bool = True
-    can_send_messages: bool = True
+    encrypted:       bool = False
+    invite_required: bool = True
+    guests_allowed:  bool = True
+
+    can_invite:           bool = False
+    can_send_messages:    bool = False
+    can_set_name:         bool = False
+    can_set_topic:        bool = False
+    can_set_avatar:       bool = False
+    can_set_encryption:   bool = False
+    can_set_join_rules:   bool = False
+    can_set_guest_access: bool = False
 
     # Event.serialized
     last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
