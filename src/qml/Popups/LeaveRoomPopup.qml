@@ -1,7 +1,8 @@
 import QtQuick 2.12
 
 BoxPopup {
-    summary.text: qsTr("Leave %1?").arg(roomName)
+    summary.text: qsTr("Leave <i>%1</i>?").arg(roomName)
+    summary.textFormat: Text.StyledText
     details.text: qsTr(
         "If this room is private, you will not be able to rejoin it."
     )

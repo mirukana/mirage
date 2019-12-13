@@ -2,7 +2,8 @@ import QtQuick 2.12
 
 BoxPopup {
     id: popup
-    summary.text: qsTr("Leave %1 and discard the history?").arg(roomName)
+    summary.text: qsTr("Leave <i>%1</i> and lose the history?").arg(roomName)
+    summary.textFormat: Text.StyledText
     details.text: qsTr(
         "You will not be able to see the messages you received in " +
         "this room anymore.\n\n" +
