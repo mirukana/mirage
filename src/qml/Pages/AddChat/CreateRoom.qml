@@ -74,6 +74,7 @@ HBox {
     HTextField {
         id: nameField
         placeholderText: qsTr("Name")
+        maximumLength: 255
 
         Layout.fillWidth: true
     }
