@@ -3,18 +3,18 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-// TODO: expand pane if too small
+// TODO: expand pane if too small, scrollable, loader
 
 HBox {
     color: "transparent"
-    // Component.onCompleted: Utils.debug(this)  // XXX
 
     buttonModel: [
         {
             name: "apply",
             text: qsTr("Save"),
             iconName: "apply",
-            enabled: anyChange,
+            // enabled: anyChange, TODO
+            enabled: false,
             loading: saveFuture !== null,
             disableWhileLoading: false,
         },
@@ -29,6 +29,7 @@ HBox {
     buttonCallbacks: ({
         apply: button => {
             if (saveFuture) saveFuture.cancel()
+            // TODO
         },
 
         cancel: button => {
