@@ -69,7 +69,7 @@ HBox {
 
     HTextField {
         id: userField
-        placeholderText: qsTr("User ID (e.g. @bob:matrix.org)")
+        placeholderText: qsTr("Peer user ID (e.g. @bob:matrix.org)")
         error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true

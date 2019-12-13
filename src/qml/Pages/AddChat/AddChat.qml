@@ -15,10 +15,10 @@ HPage {
 
     HTabContainer {
         tabModel: [
-            qsTr("Find someone"), qsTr("Join room"), qsTr("Create room"),
+            qsTr("Direct chat"), qsTr("Join room"), qsTr("Create room"),
         ]
 
-        FindSomeone { Component.onCompleted: forceActiveFocus() }
+        DirectChat { Component.onCompleted: forceActiveFocus() }
         JoinRoom {}
         CreateRoom {}
     }
