@@ -2,6 +2,9 @@
 
 ## Media
 
+- Send the monitor PR
+- Pause tests
+
 - Handle set avatar upload errors
 - Support encrypted m.file
 - Confirmation box after picking file to upload
@@ -38,8 +41,15 @@
 
 ## Bug fixes
 
+- two upload delegates height bug
+- Leave box button focus
+- Pause upload, switch to other room, then come back, wrong state displayed
+- Adding an account with no rooms
+- Join button 502
 - Retry the initial profile retrieval if it fails (due to e.g. dead server)
-- Pausing uploads doesn't work well with matrix.org
+
+- Messed up message delegates position
+- Pausing uploads doesn't work well, servers end up dropping the connection 
 - Quickly posting with another account leads to sync stop
 - CPU usage
 - `code` not colored in room subtitle
@@ -64,6 +74,8 @@
 
 ## Interface
 
+- https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
+- 
 - Make all "Cancel" buttons able to cancel running Backend coroutines set
   `disabledWhileLoading` to `false` for all "OK" buttons where it makes sense
 - Use a loader of the swipeview containing members, settings, etc views

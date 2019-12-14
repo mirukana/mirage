@@ -272,6 +272,7 @@ class NioCallbacks:
 
         if type_and_content is not None:
             type_specifier, content = type_and_content
+
             await self.client.register_nio_event(
                 room, ev, content=content, type_specifier=type_specifier,
             )

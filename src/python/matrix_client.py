@@ -459,6 +459,10 @@ class MatrixClient(nio.AsyncClient):
 
         await self.first_sync_done.wait()
 
+        while not self.past_tokens.get(room_id):
+            # If a new room was added, wait for onSyncResponse to set the token
+            await asyncio.sleep(0.1)
+
         response = await self.room_messages(
             room_id = room_id,
             start   = self.past_tokens[room_id],
