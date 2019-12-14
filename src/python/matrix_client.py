@@ -257,7 +257,9 @@ class MatrixClient(nio.AsyncClient):
 
         try:
             url, mime, crypt_dict = await self.upload(
-                path, filename=path.name, encrypt=encrypt, monitor=monitor,
+                lambda *_: path,
+                filename = path.name,
+                encrypt  = encrypt, monitor=monitor,
             )
         except (MatrixError, OSError) as err:
             upload_item.status     = UploadStatus.Error
@@ -319,7 +321,7 @@ class MatrixClient(nio.AsyncClient):
 
                 try:
                     thumb_url, _, thumb_crypt_dict = await self.upload(
-                        thumb_data,
+                        lambda *_: thumb_data,
                         filename =
                             f"{path.stem}_sample{''.join(path.suffixes)}",
                         encrypt  = encrypt,
@@ -668,17 +670,17 @@ class MatrixClient(nio.AsyncClient):
 
     async def upload(
         self,
-        data:     UploadData,
-        mime:     Optional[str]                 = None,
-        filename: Optional[str]                 = None,
-        encrypt:  bool                          = False,
-        monitor:  Optional[nio.TransferMonitor] = None,
+        data_provider: nio.DataProvider,
+        mime:          Optional[str]                 = None,
+        filename:      Optional[str]                 = None,
+        encrypt:       bool                          = False,
+        monitor:       Optional[nio.TransferMonitor] = None,
     ) -> UploadReturn:
 
-        mime = mime or await utils.guess_mime(data)
+        mime = mime or await utils.guess_mime(data_provider(0, 0))
 
         response, decryption_dict = await super().upload(
-            data,
+            data_provider,
             "application/octet-stream" if encrypt else mime,
             filename,
             encrypt,
@@ -697,7 +699,7 @@ class MatrixClient(nio.AsyncClient):
         if mime.split("/")[0] != "image":
             raise BadMimeType(wanted="image/*", got=mime)
 
-        mxc, *_ = await self.upload(path, mime, Path(path).name)
+        mxc, *_ = await self.upload(lambda *_: path, mime, Path(path).name)
         await self.set_avatar(mxc)
 
 

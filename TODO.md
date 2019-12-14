@@ -2,8 +2,9 @@
 
 ## Media
 
+- Pause raise error
 - Send the monitor PR
-- Pause tests
+- nio ClientTimeout
 
 - Handle set avatar upload errors
 - Support encrypted m.file
