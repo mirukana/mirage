@@ -30,8 +30,6 @@ HColumnLayout {
     }
 
 
-    Behavior on msLeft { HNumberAnimation { duration: 1000 } }
-    Behavior on uploaded { HNumberAnimation { duration: 1000 }}
     Behavior on height { HNumberAnimation {} }
 
     HRowLayout {
@@ -189,6 +187,7 @@ HColumnLayout {
         Layout.maximumHeight:
             status === "Error" && indeterminate ? 0 : -1
 
+        Behavior on value { HNumberAnimation { duration: 1200 } }
         Behavior on Layout.maximumHeight { HNumberAnimation {} }
     }
 }

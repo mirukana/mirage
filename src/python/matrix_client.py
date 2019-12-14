@@ -247,13 +247,13 @@ class MatrixClient(nio.AsyncClient):
 
         def on_transfered(transfered: int) -> None:
             upload_item.uploaded  = transfered
+
+        def on_speed_changed(speed: float) -> None:
+            upload_item.speed     = speed
             upload_item.time_left = monitor.remaining_time
 
-        def on_speed_change(speed: float) -> None:
-            upload_item.speed = speed
-
-        monitor.on_transfered   = on_transfered
-        monitor.on_speed_change = on_speed_change
+        monitor.on_transfered    = on_transfered
+        monitor.on_speed_changed = on_speed_changed
 
         try:
             url, mime, crypt_dict = await self.upload(

@@ -38,6 +38,7 @@
 
 ## Bug fixes
 
+- Retry the initial profile retrieval if it fails (due to e.g. dead server)
 - Pausing uploads doesn't work well with matrix.org
 - Quickly posting with another account leads to sync stop
 - CPU usage
