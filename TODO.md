@@ -91,6 +91,7 @@
 - Expand the room pane if it's too small to show room settings?
 - Drop the `buttonModel`/`buttonCallbacks` HBox approach
 - Scrollable popups and room settings
+- Improve when HDrawer should collapse when the ui is zoomed
 - HDrawer snapping
 - Make theme error/etc text colors more like name colors
 - In account settings, display name field text should be colored

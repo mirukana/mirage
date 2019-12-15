@@ -4,8 +4,8 @@ import "../utils.js" as Utils
 
 Drawer {
     id: drawer
-    implicitWidth: horizontal ? calculatedSize : parent.width
-    implicitHeight: vertical ? calculatedSize : parent.height
+    implicitWidth: horizontal ? calculatedSize * theme.uiScale : parent.width
+    implicitHeight: vertical ? calculatedSize * theme.uiScale : parent.height
 
     // Prevents this: open a popup, make the window small enough for the
     // drawer to collapse, then make it big again → popup is now behind drawer
@@ -52,7 +52,8 @@ Drawer {
     property Item referenceSizeParent: parent
 
     property bool collapse:
-        (horizontal ? window.width : window.height) < 400
+        (horizontal ? window.width : window.height) < 400 * theme.uiScale
+
     property int peekSizeWhileCollapsed:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
@@ -87,8 +88,8 @@ Drawer {
         id: resizeArea
         x: vertical || drawer.edge === Qt.RightEdge ? 0 : drawer.width-width
         y: horizontal || drawer.edge !== Qt.TopEdge ? 0 : drawer.height-height
-        width: horizontal ? resizeAreaSize : parent.width
-        height: vertical ? resizeAreaSize : parent.height
+        width: horizontal ? resizeAreaSize * theme.uiScale : parent.width
+        height: vertical ? resizeAreaSize * theme.uiScale : parent.height
         z: 999
 
         MouseArea {
