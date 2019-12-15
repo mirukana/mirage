@@ -32,6 +32,8 @@ HDrawer {
         anchors.fill: parent
 
         HFlow {
+            populate: null
+
             Layout.fillWidth: true
 
             HRepeater {
