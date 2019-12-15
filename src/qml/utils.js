@@ -1,5 +1,11 @@
-function makeObject(url, parent=null, properties={}, callback=null) {
-    let comp  = Qt.createComponent(url, Component.Asynchronous)
+function makeObject(urlComponent, parent=null, properties={}, callback=null) {
+    let comp = urlComponent
+
+    if (! Qt.isQtObject(urlComponent)) {
+        // It's an url or path string to a component
+        comp = Qt.createComponent(urlComponent, Component.Asynchronous)
+    }
+
     let ready = false
 
     comp.statusChanged.connect(status => {
@@ -32,9 +38,9 @@ function makeObject(url, parent=null, properties={}, callback=null) {
 }
 
 
-function makePopup(url, parent=null, properties={}, callback=null,
+function makePopup(urlComponent, parent=null, properties={}, callback=null,
                    autoDestruct=true) {
-    makeObject(url, parent, properties, (popup) => {
+    makeObject(urlComponent, parent, properties, (popup) => {
         popup.open()
         if (autoDestruct) popup.closed.connect(() => { popup.destroy() })
         if (callback)     callback(popup)
