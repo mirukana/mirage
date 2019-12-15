@@ -53,7 +53,7 @@ HColumnLayout {
             placeholderText: qsTr("Filter members")
             backgroundColor: theme.chat.roomPane.filterMembers.background
             bordered: false
-            opacity: width >= 16 ? 1 : 0
+            opacity: width >= 16 * theme.uiScale ? 1 : 0
 
             onTextChanged: filterLimiter.restart()
 

@@ -4,6 +4,8 @@ import "../Base"
 
 HRowLayout {
     id: toolBar
+    // Hide filter field overflowing for a sec on size changes
+    clip: true
 
     property AccountRoomList mainPaneList
     readonly property alias addAccountButton: addAccountButton
@@ -27,6 +29,7 @@ HRowLayout {
         placeholderText: qsTr("Filter rooms")
         backgroundColor: theme.mainPane.filterRooms.background
         bordered: false
+        opacity: width >= 16 * theme.uiScale ? 1 : 0
 
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -49,5 +52,7 @@ HRowLayout {
             if (window.settings.clearRoomFilterOnEscape) text = ""
             mainUI.pageLoader.forceActiveFocus()
         }
+
+        Behavior on opacity { HOpacityAnimator {} }
     }
 }

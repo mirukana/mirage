@@ -45,20 +45,22 @@
 
 - Room Sidepane save/load size & keybinds
 
-## Bug fixes
+## Issues
 
-- invisible image
+- invisible uploaded mxc images?
 - first undecryptable message
-- two upload delegates height bug
-- Leave box button focus
-- Pause upload, switch to other room, then come back, wrong state displayed
 - Adding an account with no rooms
 - Join button 502
 - Retry the initial profile retrieval if it fails (due to e.g. dead server)
+- Leave box button focus
 
+- two upload delegates height bug
 - Messed up message delegates position
-- Pausing uploads doesn't work well, servers end up dropping the connection 
 - Quickly posting with another account leads to sync stop
+
+- Pausing uploads doesn't work well, servers end up dropping the connection 
+- Pause upload, switch to other room, then come back, wrong state displayed
+
 - `code` not colored in room subtitle
 - In the "Leave me" room, "join > Hi > left" aren't combined
 - Event delegates changing height don't scroll the list
