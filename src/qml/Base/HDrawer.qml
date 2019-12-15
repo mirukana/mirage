@@ -96,6 +96,7 @@ Drawer {
             anchors.fill: parent
             enabled: ! drawer.collapse
             acceptedButtons: Qt.LeftButton
+            preventStealing: true
             hoverEnabled: true
             cursorShape:
                 containsMouse || drag.active ?
