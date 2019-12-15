@@ -261,12 +261,6 @@ ui:
 
 
 mainPane:
-    int autoCollapseBelowWidth: 128 * uiScale
-    int collapsedWidth:         controls.avatar.size
-
-    int autoReduceBelowWindowWidth:
-        minimumSupportedWidthPlusSpacing + collapsedWidth
-
     color background: colors.strongBackground
 
     account:
