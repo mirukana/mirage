@@ -83,6 +83,7 @@
 
 ## Interface
 
+- Differentiate invited room members
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
 - 
 - Make all "Cancel" buttons able to cancel running Backend coroutines set

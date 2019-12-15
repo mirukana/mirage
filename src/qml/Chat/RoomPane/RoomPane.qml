@@ -56,7 +56,7 @@ HDrawer {
 
                     enabled: ["members", "settings"].includes(modelData)
 
-                    onClicked: swipeView.currentIndex = index
+                    onClicked: swipeView.currentIndex = Math.min(index, 1)
                 }
             }
         }
