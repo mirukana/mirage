@@ -1,11 +1,16 @@
 # TODO
 
+- Make dark bar extend down pane
+- Verify default size
+
 ## Media
 
+- Clean up gui test md
 - Pause raise error
 - Send the monitor PR
 - nio ClientTimeout
 
+- clicking on encrypted images opens the thumbnail
 - Handle set avatar upload errors
 - Support encrypted m.file
 - Confirmation box after picking file to upload
@@ -42,6 +47,8 @@
 
 ## Bug fixes
 
+- invisible image
+- first undecryptable message
 - two upload delegates height bug
 - Leave box button focus
 - Pause upload, switch to other room, then come back, wrong state displayed
