@@ -59,7 +59,6 @@
 - Messed up message delegates position
 - Pausing uploads doesn't work well, servers end up dropping the connection 
 - Quickly posting with another account leads to sync stop
-- CPU usage
 - `code` not colored in room subtitle
 - In the "Leave me" room, "join > Hi > left" aren't combined
 - Event delegates changing height don't scroll the list

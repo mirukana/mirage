@@ -45,7 +45,7 @@ Rectangle {
     HMxcImage {
         id: avatarImage
         anchors.fill: parent
-        progressBar.visible: false
+        showProgressBar: false
         visible: Boolean(sourceOverride || mxc)
         z: 2
         sourceSize.width: parent.width

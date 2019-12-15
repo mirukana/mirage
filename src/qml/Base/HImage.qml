@@ -14,7 +14,9 @@ Image {
     property bool broken: false
     property bool animate: true
     property bool animated: Utils.urlExtension(image.source) === "gif"
-    property alias progressBar: progressBar
+
+    property alias showProgressBar: progressBarLoader.active
+    property bool inderterminateProgressBar: false
 
 
     Component {
@@ -64,16 +66,20 @@ Image {
         sourceComponent: animate && animated ? animatedImageComponent : null
     }
 
-    HCircleProgressBar {
-        id: progressBar
+    HLoader {
+        id: progressBarLoader
         anchors.centerIn: parent
         width: Math.min(parent.width, parent.height) * 0.5
         height: width
-        visible: image.status === Image.Loading
-        value: image.progress
-        text: Math.round(value * 100) + "%"
+        active: image.status === Image.Loading
 
-        Behavior on value { HNumberAnimation { factor: 2 } }
+        sourceComponent: HCircleProgressBar {
+            id: progressBar
+            value: image.progress
+            text: Math.round(value * 100) + "%"
+
+            Behavior on value { HNumberAnimation { factor: 2 } }
+        }
     }
 
     HIcon {

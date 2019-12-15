@@ -2,7 +2,7 @@ import QtQuick 2.12
 
 HImage {
     id: image
-    progressBar.indeterminate: isMxc
+    inderterminateProgressBar: isMxc
     source: sourceOverride || (show ? cachedPath : "")
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
