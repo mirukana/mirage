@@ -15,7 +15,7 @@ HButton {
     readonly property alias rightInfo: rightInfo
     readonly property alias subtitle: subtitle
 
-    property HMenu contextMenu: HMenu {}
+    property alias contextMenu: contextMenuLoader.sourceComponent
 
     property Component image
 
@@ -88,7 +88,19 @@ HButton {
         acceptedButtons: Qt.RightButton
         onTapped: {
             rightClicked()
-            if (contextMenu.count > 0) contextMenu.popup()
+            if (contextMenu) contextMenuLoader.active = true
         }
+    }
+
+    Connections {
+        enabled: contextMenuLoader.status === Loader.Ready
+        target: contextMenuLoader.item
+        onClosed: contextMenuLoader.active = false
+    }
+
+    HLoader {
+        id: contextMenuLoader
+        active: false
+        onLoaded: item.popup()
     }
 }
