@@ -23,7 +23,6 @@ HTileDelegate {
     Behavior on opacity { HOpacityAnimator {} }
 
 
-    property bool disconnecting: false
     readonly property bool forceExpand: Boolean(mainPaneList.filter)
 
     // Hide harmless error when a filter matches nothing
@@ -32,11 +31,9 @@ HTileDelegate {
     } catch (err) {}
 
 
-    onActivated: if (! disconnecting) {
-        pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": model.data.user_id }
-        )
-    }
+    onActivated: pageLoader.showPage(
+        "AccountSettings/AccountSettings", { "userId": model.data.user_id }
+    )
 
 
     function toggleCollapse() {
@@ -120,7 +117,6 @@ HTileDelegate {
                 "Popups/SignOutPopup.qml",
                 window,
                 { "userId": model.data.user_id },
-                popup => { popup.ok.connect(() => { disconnecting = true }) },
             )
         }
     }
