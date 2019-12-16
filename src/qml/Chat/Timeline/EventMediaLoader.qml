@@ -6,12 +6,26 @@ HLoader {
     id: loader
     x: eventContent.spacing
 
+    onTypeChanged: {
+        if (type === EventDelegate.Media.Image) {
+            var file = "EventImage.qml"
+
+        } else if (type === EventDelegate.Media.File) {
+            var file  = "EventFile.qml"
+
+        } else { return }
+
+        loader.setSource(file, {loader})
+    }
+
 
     property QtObject singleMediaInfo
     property string mediaUrl
     property string showSender: ""
     property string showDate: ""
     property string showLocalEcho: ""
+
+    property bool downloaded: false
 
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
@@ -56,15 +70,15 @@ HLoader {
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
 
 
-    onTypeChanged: {
-        if (type === EventDelegate.Media.Image) {
-            var file = "EventImage.qml"
+    function download(callback) {
+        if (! downloaded) print("Downloading " + loader.mediaUrl + " ...")
 
-        } else if (type === EventDelegate.Media.File) {
-            var file  = "EventFile.qml"
+        const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]
 
-        } else { return }
-
-        loader.setSource(file, {loader})
+        py.callCoro("media_cache.get_media", args, path => {
+            if (! downloaded) print("Done: " + path)
+            downloaded = true
+            callback(path)
+        })
     }
 }

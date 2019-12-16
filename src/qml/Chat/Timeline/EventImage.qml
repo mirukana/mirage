@@ -20,7 +20,6 @@ HMxcImage {
 
 
     property EventMediaLoader loader
-    property bool downloaded: false
 
     readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
 
@@ -56,21 +55,9 @@ HMxcImage {
     )
 
 
-    function download(callback) {
-        if (! downloaded) print("Downloading " + loader.mediaUrl + " ...")
-
-        const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]
-
-        py.callCoro("media_cache.get_media", args, path => {
-            if (! downloaded) print("Done: " + path)
-            downloaded = true
-            callback(path)
-        })
-    }
-
     function getOpenUrl(callback) {
         if (image.isEncrypted && loader.mediaUrl) {
-            download(callback)
+            loader.download(callback)
             return
         }
 
@@ -101,7 +88,7 @@ HMxcImage {
                 return
             }
 
-            if (image.isEncrypted && ! downloaded) {
+            if (image.isEncrypted && ! loader.downloaded) {
                 eventDelegate.hoveredMediaTypeUrl =
                     [EventDelegate.Media.Image, loader.mediaUrl]
 
