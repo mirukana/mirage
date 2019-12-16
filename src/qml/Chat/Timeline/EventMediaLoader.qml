@@ -25,7 +25,7 @@ HLoader {
     property string showDate: ""
     property string showLocalEcho: ""
 
-    property bool downloaded: false
+    property string downloadedPath: ""
 
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
@@ -71,13 +71,13 @@ HLoader {
 
 
     function download(callback) {
-        if (! downloaded) print("Downloading " + loader.mediaUrl + " ...")
+        if (! downloadedPath) print("Downloading " + loader.mediaUrl + " ...")
 
         const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]
 
         py.callCoro("media_cache.get_media", args, path => {
-            if (! downloaded) print("Done: " + path)
-            downloaded = true
+            if (! downloadedPath) print("Done: " + path)
+            downloadedPath = path
             callback(path)
         })
     }

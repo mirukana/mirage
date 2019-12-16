@@ -88,17 +88,10 @@ HMxcImage {
                 return
             }
 
-            if (image.isEncrypted && ! loader.downloaded) {
-                eventDelegate.hoveredMediaTypeUrl =
-                    [EventDelegate.Media.Image, loader.mediaUrl]
-
-                return
-            }
-
-            getOpenUrl(url => {
-                eventDelegate.hoveredMediaTypeUrl =
-                    [EventDelegate.Media.Image, url]
-            })
+            eventDelegate.hoveredMediaTypeUrl = [
+                EventDelegate.Media.Image,
+                loader.downloadedPath || loader.mediaUrl
+            ]
         }
     }
 

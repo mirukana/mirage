@@ -1,5 +1,9 @@
 # TODO
 
+- strip file:// from copy path
+- sentinel func to report path if already cached without having to click 
+- verify eventfile height
+
 - Make dark bar extend down pane
 - Verify default size
 
