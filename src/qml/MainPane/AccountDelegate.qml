@@ -20,7 +20,7 @@ HTileDelegate {
         ! mainPaneList.activateLimiter.running && ! mainPane.hasFocus
 
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
 
 
     readonly property bool forceExpand: Boolean(mainPaneList.filter)
@@ -71,7 +71,7 @@ HTileDelegate {
 
         Layout.fillHeight: true
 
-        Behavior on opacity { HOpacityAnimator {} }
+        Behavior on opacity { HNumberAnimation {} }
     }
 
     HButton {
@@ -99,7 +99,7 @@ HTileDelegate {
             Behavior on angle { HNumberAnimation {} }
         }
 
-        Behavior on opacity { HOpacityAnimator {} }
+        Behavior on opacity { HNumberAnimation {} }
     }
 
     contextMenu: HMenu {

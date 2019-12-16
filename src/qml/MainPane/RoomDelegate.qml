@@ -18,7 +18,7 @@ HTileDelegate {
         ! mainPaneList.activateLimiter.running && ! mainPane.hasFocus
 
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
 
 
     readonly property bool joined: ! invited && ! parted

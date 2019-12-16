@@ -44,7 +44,7 @@ Item {
             source: opacity > 0 ? "../Base/HBusyIndicator.qml" : ""
             opacity: ready ? 0 : 1
 
-            Behavior on opacity { HOpacityAnimator { factor: 2 } }
+            Behavior on opacity { HNumberAnimation { factor: 2 } }
         }
     }
 

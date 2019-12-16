@@ -53,6 +53,6 @@ HRowLayout {
             mainUI.pageLoader.forceActiveFocus()
         }
 
-        Behavior on opacity { HOpacityAnimator {} }
+        Behavior on opacity { HNumberAnimation {} }
     }
 }

@@ -26,7 +26,7 @@ ProgressBar {
 
             Behavior on color { HColorAnimation {} }
 
-            XAnimator on x {
+            HNumberAnimation on x {
                 running: bar.indeterminate
                 duration: theme.animationDuration * 8
                 from: 0

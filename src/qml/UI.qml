@@ -20,8 +20,12 @@ Item {
 
     SequentialAnimation {
         id: pressAnimation
-        HScaleAnimator { target: mainUI; from: 1.0; to: 0.9 }
-        HScaleAnimator { target: mainUI; from: 0.9; to: 1.0 }
+        HNumberAnimation {
+            target: mainUI; property: "scale";  from: 1.0; to: 0.9
+        }
+        HNumberAnimation {
+            target: mainUI; property: "scale";  from: 0.9; to: 1.0
+        }
     }
 
     property bool accountsPresent:
@@ -134,9 +138,10 @@ Item {
         }
 
 
-        XAnimator {
+        HNumberAnimation {
             id: appearAnimation
             target: pageLoader.item
+            property: "x"
             from: -300
             to: 0
             easing.type: Easing.OutBack

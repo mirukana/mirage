@@ -67,7 +67,7 @@ HBox {
             opacity: nameField.text ? 0 : 1
             visible: opacity > 0
 
-            Behavior on opacity { HOpacityAnimator {} }
+            Behavior on opacity { HNumberAnimation {} }
         }
     }
 

@@ -38,7 +38,7 @@ RadialBar {
         when: bar.indeterminate
     }
 
-    RotationAnimator on rotation {
+    HNumberAnimation on rotation {
         running: bar.indeterminate
         from: 0
         to: 360

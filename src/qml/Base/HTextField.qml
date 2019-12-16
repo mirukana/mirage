@@ -80,7 +80,7 @@ TextField {
         when: disabledText !== null && ! field.enabled
     }
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
     Behavior on color { HColorAnimation {} }
     Behavior on placeholderTextColor { HColorAnimation {} }
 
@@ -99,6 +99,6 @@ TextField {
         font.family: parent.font.family
         font.pixelSize: parent.font.pixelSize
 
-        Behavior on opacity { HOpacityAnimator {} }
+        Behavior on opacity { HNumberAnimation {} }
     }
 }

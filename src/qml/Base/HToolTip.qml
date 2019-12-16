@@ -41,7 +41,6 @@ ToolTip {
         }
     }
 
-    // FIXME: HOpacityAnimator won't work for these?
     enter: Transition {
         HNumberAnimation { property: "opacity"; from: 0.0; to: 1.0 }
     }

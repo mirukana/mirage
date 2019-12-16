@@ -16,45 +16,49 @@ HRowLayout {
     readonly property alias label: label
 
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
 
-    Item {
-        id: iconWrapper
 
+    HIcon {
+        property bool loading: button.loading || false
+
+        id: icon
+        svgName: button.icon.name
+        colorize: enabled ? button.icon.color: theme.icons.disabledColorize
+        cache: button.icon.cache
+
+        onLoadingChanged: if (! loading) resetAnimations.start()
+
+        Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
-        Layout.preferredWidth: icon.width
-        Layout.preferredHeight: icon.height
+
 
         ParallelAnimation {
             id: resetAnimations
-            HOpacityAnimator { target: iconWrapper; to: 1 }
-            HRotationAnimator { target: iconWrapper; to: 0 }
+            HNumberAnimation { target: icon; property: "opacity"; to: 1 }
+            HNumberAnimation { target: icon; property: "rotation"; to: 0 }
         }
 
-        HOpacityAnimator {
+
+        HNumberAnimation on opacity {
             id: blink
-            target: iconWrapper
             from: 1
             to: 0.5
             factor: 2
             running: button.loading || false
-            onFinished: {
-                if (button.loading) { [from, to] = [to, from]; start() }
-            }
+            onFinished: { [from, to] = [to, from]; start() }
         }
 
         SequentialAnimation {
             running: button.loading || false
             loops: Animation.Infinite
-            onStopped: resetAnimations.start()
 
             HPauseAnimation { factor: blink.factor * 8 }
 
-            // These don't work directly on HIcon, hence why we wrap it in
-            // an Item. Qt bug? (5.13.1_1)
-            HRotationAnimator {
+            HNumberAnimation {
                 id: rotation1
-                target: iconWrapper
+                target: icon
+                property: "rotation"
                 from: 0
                 to: 180
                 factor: blink.factor
@@ -62,25 +66,13 @@ HRowLayout {
 
             HPauseAnimation { factor: blink.factor * 8 }
 
-            HRotationAnimator {
+            HNumberAnimation {
                 target: rotation1.target
+                property: rotation1.property
                 from: rotation1.to
                 to: 360
                 factor: rotation1.factor
-                direction: RotationAnimator.Clockwise
             }
-        }
-
-        HIcon {
-            property bool loading: button.loading || false
-
-            id: icon
-            svgName: button.icon.name
-            colorize: enabled ? button.icon.color: theme.icons.disabledColorize
-            cache: button.icon.cache
-
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignCenter
         }
     }
 
@@ -93,7 +85,6 @@ HRowLayout {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
 
-        Layout.alignment: Qt.AlignCenter
         Layout.fillWidth: true
         Layout.fillHeight: true
     }

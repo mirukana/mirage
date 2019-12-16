@@ -60,7 +60,7 @@ HColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Behavior on opacity { HOpacityAnimator {} }
+            Behavior on opacity { HNumberAnimation {} }
         }
 
         HButton {

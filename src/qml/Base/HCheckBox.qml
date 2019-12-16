@@ -37,7 +37,6 @@ CheckBox {
 
             scale: box.checked ? 1 : 0
 
-            // FIXME: HScaleAnimator won't work here?
             Behavior on scale {
                 HNumberAnimation {
                     overshoot: 4
@@ -88,5 +87,5 @@ CheckBox {
     function reset() { checked = defaultChecked }
 
 
-    Behavior on opacity { HOpacityAnimator { factor: 2 } }
+    Behavior on opacity { HNumberAnimation { factor: 2 } }
 }

@@ -38,7 +38,7 @@ ScrollView {
     function reset() { area.clear(); text = defaultText }
 
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
 
     TextArea {
         id: textArea
@@ -102,7 +102,7 @@ ScrollView {
             font.family: parent.font.family
             font.pixelSize: parent.font.pixelSize
 
-            Behavior on opacity { HOpacityAnimator {} }
+            Behavior on opacity { HNumberAnimation {} }
         }
     }
 }

@@ -10,11 +10,10 @@ Popup {
     margins: theme.spacing
 
     enter: Transition {
-        HScaleAnimator { from: 0; to: 1; overshoot: 4 }
+        HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 4 }
     }
 
     exit: Transition {
-        // FIXME: HScaleAnimator won't work here?
         HNumberAnimation { property: "scale"; to: 0 }
     }
 

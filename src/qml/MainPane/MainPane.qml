@@ -26,7 +26,7 @@ HDrawer {
     }
 
 
-    Behavior on opacity { HOpacityAnimator {} }
+    Behavior on opacity { HNumberAnimation {} }
 
     Binding on visible {
         value: false
