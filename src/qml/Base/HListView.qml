@@ -27,7 +27,7 @@ ListView {
     // Make sure to handle when a previous transition gets interrupted
     add: Transition {
         ParallelAnimation {
-            ScriptAction { script: print("add") }
+            // ScriptAction { script: print("add") }
             HNumberAnimation { property:   "opacity"; from: 0; to: 1 }
             HNumberAnimation { property:   "scale";   from: 0; to: 1 }
         }
@@ -35,7 +35,7 @@ ListView {
 
     move: Transition {
         ParallelAnimation {
-            ScriptAction { script: print("move") }
+            // ScriptAction { script: print("move") }
             HNumberAnimation { property:   "opacity"; to: 1 }
             HNumberAnimation { property:   "scale";   to: 1 }
             HNumberAnimation { properties: "x,y" }
@@ -44,7 +44,7 @@ ListView {
 
     remove: Transition {
         ParallelAnimation {
-            ScriptAction { script: print("remove") }
+            // ScriptAction { script: print("remove") }
             HNumberAnimation { property:   "opacity"; to: 0 }
             HNumberAnimation { property:   "scale";   to: 0 }
         }
@@ -53,7 +53,7 @@ ListView {
     // displaced: move
     displaced: Transition {
         ParallelAnimation {
-            ScriptAction { script: print("displaced") }
+            // ScriptAction { script: print("displaced") }
             HNumberAnimation { property:   "opacity"; to: 1 }
             HNumberAnimation { property:   "scale";   to: 1 }
             HNumberAnimation { properties: "x,y" }
