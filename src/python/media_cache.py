@@ -209,6 +209,8 @@ class Thumbnail(Media):
         parsed = urlparse(self.mxc)
 
         if self.crypt_dict:
+            # Matrix makes encrypted thumbs only available through the download
+            # end-point, not the thumbnail one
             resp = await self.cache.backend.download(
                 server_name = parsed.netloc,
                 media_id    = parsed.path.lstrip("/"),

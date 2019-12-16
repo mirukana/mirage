@@ -6,8 +6,8 @@ HMxcImage {
     id: image
     width: fitSize.width
     height: fitSize.height
-
     horizontalAlignment: Image.AlignLeft
+
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
               Utils.urlExtension(loader.mediaUrl) === "gif"
     thumbnail: ! animated && loader.thumbnailMxc
@@ -20,6 +20,8 @@ HMxcImage {
 
 
     property EventMediaLoader loader
+    property bool downloaded: false
+
     readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
 
     readonly property real maxHeight:
@@ -54,7 +56,24 @@ HMxcImage {
     )
 
 
+    function download(callback) {
+        if (! downloaded) print("Downloading " + loader.mediaUrl + " ...")
+
+        const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]
+
+        py.callCoro("media_cache.get_media", args, path => {
+            if (! downloaded) print("Done: " + path)
+            downloaded = true
+            callback(path)
+        })
+    }
+
     function getOpenUrl(callback) {
+        if (image.isEncrypted && loader.mediaUrl) {
+            download(callback)
+            return
+        }
+
         if (image.isEncrypted) {
             callback(image.cachedPath)
             return
@@ -77,14 +96,22 @@ HMxcImage {
     HoverHandler {
         id: hover
         onHoveredChanged: {
-            if (hovered) {
-                getOpenUrl(url => {
-                    eventDelegate.hoveredMediaTypeUrl =
-                        [EventDelegate.Media.Image, url]
-                })
-            } else {
+            if (! hovered) {
                 eventDelegate.hoveredMediaTypeUrl = []
+                return
             }
+
+            if (image.isEncrypted && ! downloaded) {
+                eventDelegate.hoveredMediaTypeUrl =
+                    [EventDelegate.Media.Image, loader.mediaUrl]
+
+                return
+            }
+
+            getOpenUrl(url => {
+                eventDelegate.hoveredMediaTypeUrl =
+                    [EventDelegate.Media.Image, url]
+            })
         }
     }
 

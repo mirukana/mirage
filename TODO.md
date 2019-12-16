@@ -52,22 +52,21 @@
 - Leave box button focus
 
 - two upload delegates height bug
-- Messed up message delegates position
-
 - Pausing uploads doesn't work well, servers end up dropping the connection 
 - Pause upload, switch to other room, then come back, wrong state displayed
 
-- `code` not colored in room subtitle
-- In the "Leave me" room, "join > Hi > left" aren't combined
+- Messed up message delegates position
 - Event delegates changing height don't scroll the list
+
+- In the "Leave me" room, "join > Hi > left" aren't combined
 - When selecting text and scrolling up, selection stops working after a while
   - Ensure all the text that should be copied is copied
   - Multiple messages are currently copied out of order
 
 - Pressing backspace in composer sometimes doesn't work
-- Message order isn't preserved when sending a first message in a E2E
-  room, then while keys are being shared sending one with another account,
-  then sending one with the first account again
+
+- `code` not colored in room subtitle
+- Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 - If account not in config anymore, discard ui state last page on startup
 - Do something when access token is invalid
@@ -75,7 +74,6 @@
 - Don't store states in delegates
 - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
-- Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
 
 ## Interface
 
@@ -194,6 +192,7 @@
 
 ## Nio contributions
 
+- Streaming download & decrypt
 - Running blocking DB function calls in executor (WIP)
 - `AsyncClient.share_group_session`: send device batches concurrently (WIP)
 
