@@ -48,7 +48,6 @@
 
 - invisible uploaded mxc images?
 - first undecryptable message
-- Adding an account with no rooms
 - Join button 502
 - Leave box button focus
 

@@ -36,7 +36,7 @@ function onCoroutineDone(uuid, result, error, traceback) {
 
 
 function onModelUpdated(syncId, data, serializedSyncId) {
-    if (serializedSyncId === ["Account"] || serializedSyncId[0] === "Room") {
+    if (serializedSyncId === "Account" || serializedSyncId[0] === "Room") {
         py.callCoro("get_flat_mainpane_data", [], data => {
             window.mainPaneModelSource = data
         })
