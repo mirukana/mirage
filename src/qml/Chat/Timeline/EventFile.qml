@@ -10,6 +10,7 @@ HTile {
                  theme.chat.message.fileMinWidth),
         Math.min(eventContent.messageBodyWidth, implicitWidth),
     )
+    height: Math.max(theme.chat.message.avatarSize, implicitHeight)
 
     title.text: loader.singleMediaInfo.media_title || qsTr("Untitled file")
     title.elide: Text.ElideMiddle

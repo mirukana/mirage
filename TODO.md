@@ -1,8 +1,5 @@
 # TODO
 
-- some way to show name and date on EventFile
-- sentinel func to report path if already cached without having to click 
-- verify eventfile height
 
 - Make dark bar extend down pane
 - Verify default size
@@ -13,11 +10,14 @@
 - Send the monitor PR
 - nio ClientTimeout
 
-- clicking on encrypted images opens the thumbnail
 - Handle set avatar upload errors
-- Support encrypted m.file
 - Confirmation box after picking file to upload
 - Show real progression for mxc thumbnail loadings
+
+- Some way to show name and date on EventFile
+- Sentinel function to report download file path if already cached,
+  without having to click & try downloading first
+- EventFile download UI & Save as... in context menu
 
 - Show reason under broken thumbnail icons
 - Support m.file thumbnails
@@ -30,7 +30,6 @@
 - Audio: online playback is buggy, must download+play file
 - EventLink
   - Special treatment for matrix.to URLs?
-- EventFile & Downloading (right click on media > save as...)
 - Prevent using upload keybinds in rooms with no perms
 
 ## Refactoring

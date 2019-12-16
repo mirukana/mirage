@@ -41,6 +41,7 @@ HButton {
                     verticalAlignment: Qt.AlignVCenter
 
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
 
                 HRowLayout {
@@ -54,6 +55,7 @@ HButton {
                     color: theme.colors.halfDimText
 
                     visible: Layout.maximumWidth > 0
+                    Layout.fillHeight: true
                     Layout.maximumWidth:
                         text && tile.width >= 160 * theme.uiScale ?
                         implicitWidth : 0
@@ -72,6 +74,7 @@ HButton {
                 visible: Layout.maximumHeight > 0
                 Layout.maximumHeight: text ? implicitWidth : 0
                 Layout.fillWidth: true
+                Layout.fillHeight: true
 
                 Behavior on Layout.maximumHeight { HNumberAnimation {} }
             }
