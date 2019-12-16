@@ -90,7 +90,8 @@ HMxcImage {
 
             eventDelegate.hoveredMediaTypeUrl = [
                 EventDelegate.Media.Image,
-                loader.downloadedPath || loader.mediaUrl
+                loader.downloadedPath.replace(/^file:\/\//, "") ||
+                loader.mediaUrl
             ]
         }
     }

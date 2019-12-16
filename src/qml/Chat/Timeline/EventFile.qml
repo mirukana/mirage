@@ -30,7 +30,7 @@ HTile {
 
         eventDelegate.hoveredMediaTypeUrl = [
             EventDelegate.Media.File,
-            loader.downloadedPath || loader.mediaUrl
+            loader.downloadedPath.replace(/^file:\/\//, "") || loader.mediaUrl
         ]
     }
 

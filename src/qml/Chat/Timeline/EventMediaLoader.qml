@@ -74,6 +74,7 @@ HLoader {
         if (! loader.mediaUrl.startsWith("mxc://")) {
             downloadedPath = loader.mediaUrl
             callback(loader.mediaUrl)
+            return
         }
 
         if (! downloadedPath) print("Downloading " + loader.mediaUrl + " ...")
