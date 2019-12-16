@@ -39,6 +39,9 @@ class Backend:
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {user_id: lock}
 
+        self.send_locks: DefaultDict[str, asyncio.Lock] = \
+                DefaultDict(asyncio.Lock)  # {room_id: lock}
+
         from .media_cache import MediaCache
         cache_dir        = Path(self.app.appdirs.user_cache_dir)
         self.media_cache = MediaCache(self, cache_dir)

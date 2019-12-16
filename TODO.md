@@ -53,7 +53,6 @@
 
 - two upload delegates height bug
 - Messed up message delegates position
-- Quickly posting with another account leads to sync stop
 
 - Pausing uploads doesn't work well, servers end up dropping the connection 
 - Pause upload, switch to other room, then come back, wrong state displayed
