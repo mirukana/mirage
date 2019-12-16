@@ -156,7 +156,11 @@ class MatrixClient(nio.AsyncClient):
             exception = future.exception()
 
             if exception:
-                log.warn("On %s client startup: %s", self.user_id, exception)
+                log.warn("On %s client startup: %r", self.user_id, exception)
+                self.profile_task = asyncio.ensure_future(
+                    self.backend.get_profile(self.user_id),
+                )
+                self.profile_task.add_done_callback(on_profile_response)
                 return
 
             resp                    = future.result()

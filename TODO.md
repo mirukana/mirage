@@ -6,7 +6,6 @@
 ## Media
 
 - Clean up gui test md
-- Pause raise error
 - Send the monitor PR
 - nio ClientTimeout
 
@@ -51,7 +50,6 @@
 - first undecryptable message
 - Adding an account with no rooms
 - Join button 502
-- Retry the initial profile retrieval if it fails (due to e.g. dead server)
 - Leave box button focus
 
 - two upload delegates height bug
