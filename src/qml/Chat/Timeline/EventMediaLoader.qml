@@ -60,7 +60,7 @@ HLoader {
         if (type === EventDelegate.Media.Image) {
             var file = "EventImage.qml"
 
-        } else if (type !== EventDelegate.Media.Page) {
+        } else if (type === EventDelegate.Media.File) {
             var file  = "EventFile.qml"
 
         } else { return }
