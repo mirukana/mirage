@@ -1,13 +1,12 @@
 import asyncio
 import logging as log
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple
 
 import hsluv
 
 import nio
 
-from . import utils
 from .app import App
 from .errors import MatrixError
 from .matrix_client import MatrixClient

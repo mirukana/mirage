@@ -134,8 +134,9 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
-        response = nio.LoginResponse(user_id, device_id, token)
-        await self.receive_response(response)
+        self.user_id      = user_id
+        self.access_token = token
+        self.device_id    = device_id
 
         asyncio.ensure_future(self.start())
 
