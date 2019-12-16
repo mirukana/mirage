@@ -10,7 +10,7 @@ HLoader {
         if (type === EventDelegate.Media.Image) {
             var file = "EventImage.qml"
 
-        } else if (type === EventDelegate.Media.File) {
+        } else if (type !== EventDelegate.Media.Page) {
             var file  = "EventFile.qml"
 
         } else { return }
@@ -71,6 +71,11 @@ HLoader {
 
 
     function download(callback) {
+        if (! loader.mediaUrl.startsWith("mxc://")) {
+            downloadedPath = loader.mediaUrl
+            callback(loader.mediaUrl)
+        }
+
         if (! downloadedPath) print("Downloading " + loader.mediaUrl + " ...")
 
         const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]

@@ -1,6 +1,7 @@
 # TODO
 
 - strip file:// from copy path
+- some way to show name and date on EventFile
 - sentinel func to report path if already cached without having to click 
 - verify eventfile height
 
