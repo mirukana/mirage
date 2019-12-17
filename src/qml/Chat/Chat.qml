@@ -12,6 +12,7 @@ Item {
     property string userId: ""
     property string roomId: ""
 
+    property bool loadingMessages: false
     property bool ready: userInfo !== "waiting" && roomInfo !== "waiting"
 
     readonly property var userInfo:

@@ -22,6 +22,10 @@ HPage {
         Layout.fillWidth: true
     }
 
+    LoadingRoomProgressBar {
+        Layout.fillWidth: true
+    }
+
     EventList {
         id: eventList
 

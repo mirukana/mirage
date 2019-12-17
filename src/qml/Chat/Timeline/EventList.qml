@@ -128,7 +128,8 @@ Rectangle {
                 // component is destroyed but func is still running
 
                 try {
-                    eventList.canLoad = false
+                    eventList.canLoad    = false
+                    chat.loadingMessages = true
 
                     py.callClientCoro(
                         chat.userId, "load_past_events", [chat.roomId],
@@ -136,9 +137,12 @@ Rectangle {
                             try {
                                 eventList.canLoad = moreToLoad
 
-                                // If loaded messages aren't enough to fill
-                                // the screen, ensure this function runs again
+                                // Call yPosChanged() to run this func again
+                                // if the loaded messages aren't enough to fill
+                                // the screen.
                                 if (moreToLoad) yPosChanged()
+
+                                chat.loadingMessages = false
                             } catch (err) {
                                 return
                             }

@@ -27,7 +27,7 @@ ProgressBar {
             Behavior on color { HColorAnimation {} }
 
             HNumberAnimation on x {
-                running: bar.indeterminate
+                running: bar.visible && bar.indeterminate
                 duration: theme.animationDuration * 8
                 from: 0
                 to: bar.width - indicator.width

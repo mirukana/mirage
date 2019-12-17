@@ -135,7 +135,6 @@
 - Server selection
 - Register/Reset for AddAccount page
 - Prevent using an alias if that user is not in the room or no permission
-- Spinner when loading past room events
 
 - Theming
   - Bundle fonts
