@@ -18,17 +18,16 @@ HRowLayout {
         leftPadding: theme.spacing
         rightPadding: leftPadding
 
-        Layout.margins: theme.spacing
-        Layout.alignment: Qt.AlignCenter
-        Layout.maximumWidth:
-            parent.width - Layout.leftMargin - Layout.rightMargin
-
-        opacity: width > Layout.leftMargin + Layout.rightMargin ? 1 : 0
+        opacity: width > 16 * theme.uiScale ? 1 : 0
 
         background: Rectangle {
             id: noticeLabelBackground
             color: theme.controls.box.background
             radius: theme.controls.box.radius
         }
+
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: implicitWidth
+        Layout.maximumWidth: parent.width
     }
 }

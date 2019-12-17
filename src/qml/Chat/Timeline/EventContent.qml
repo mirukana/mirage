@@ -27,15 +27,14 @@ HRowLayout {
     readonly property string hoveredLink: contentLabel.hoveredLink
     readonly property bool hoveredSelectable: contentHover.hovered
 
-    readonly property int messageBodyWidth:
-        width - (avatarWrapper.visible ? avatarWrapper.width : 0) -
-        spacing * Math.max(0, (visibleChildren.length - 1))
-
     readonly property int xOffset:
         onRight ?
         contentLabel.width - contentLabel.paintedWidth -
         contentLabel.leftPadding - contentLabel.rightPadding :
         0
+
+    // 600px max with a 16px font
+    readonly property int maxMessageWidth: theme.fontSize.normal * 0.5 * 75
 
 
     TapHandler {
@@ -116,11 +115,8 @@ HRowLayout {
 
             transform: Translate { x: xOffset }
 
-            Layout.maximumWidth: Math.min(
-                // 600px with 16px font
-                theme.fontSize.normal * 0.5 * 75,
-                messageBodyWidth - leftPadding - rightPadding,
-            )
+            Layout.maximumWidth: eventContent.maxMessageWidth
+            Layout.fillWidth: true
 
             function selectAllText() {
                 // Select the message body without the date or name
@@ -162,10 +158,10 @@ HRowLayout {
 
         HRepeater {
             id: linksRepeater
-            model: eventDelegate.currentItem.links
+            model: eventDelegate.currentModel.links
 
             EventMediaLoader {
-                singleMediaInfo: eventDelegate.currentItem
+                singleMediaInfo: eventDelegate.currentModel
                 mediaUrl: modelData
                 showSender: pureMedia ? senderText : ""
                 showDate: pureMedia ? timeText : ""

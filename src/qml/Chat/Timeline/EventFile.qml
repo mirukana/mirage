@@ -5,10 +5,10 @@ import "../../utils.js" as Utils
 
 HTile {
     id: file
-    width: Math.max(
-        Math.min(eventContent.messageBodyWidth,
-                 theme.chat.message.fileMinWidth),
-        Math.min(eventContent.messageBodyWidth, implicitWidth),
+    width: Math.min(
+        eventDelegate.width,
+        eventContent.maxMessageWidth,
+        Math.max(theme.chat.message.fileMinWidth, implicitWidth),
     )
     height: Math.max(theme.chat.message.avatarSize, implicitHeight)
 

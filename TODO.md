@@ -49,17 +49,14 @@
 
 ## Issues
 
+- Room pane slightly overlaps chat at small width
 - invisible uploaded mxc images?
 - first undecryptable message
 - Join button 502
 - Leave box button focus
 
-- two upload delegates height bug
 - Pausing uploads doesn't work well, servers end up dropping the connection 
 - Pause upload, switch to other room, then come back, wrong state displayed
-
-- Messed up message delegates position
-- Event delegates changing height don't scroll the list
 
 - In the "Leave me" room, "join > Hi > left" aren't combined
 - When selecting text and scrolling up, selection stops working after a while

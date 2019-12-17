@@ -49,7 +49,7 @@ HMxcImage {
         // Maximum display size
         Math.min(
             eventList.height * maxHeight,
-            eventContent.messageBodyWidth * Math.min(1, theme.uiScale),
+            eventContent.maxMessageWidth * Math.min(1, theme.uiScale), // XXX
         ),
         eventList.height * maxHeight,
     )

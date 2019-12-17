@@ -3,15 +3,9 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../utils.js" as Utils
 
-Column {
+HColumnLayout {
     id: eventDelegate
     width: eventList.width
-    topPadding:
-        model.event_type === "RoomCreateEvent" ? 0 :
-        dayBreak  ? theme.spacing * 4 :
-        talkBreak ? theme.spacing * 6 :
-        combine   ? theme.spacing / 2 :
-        theme.spacing * 2
 
 
     enum Media { Page, File, Image, Video, Audio }
@@ -19,23 +13,18 @@ Column {
     property var hoveredMediaTypeUrl: []
 
     // Remember timeline goes from newest message at index 0 to oldest
-    property var previousItem: eventList.model.get(model.index + 1)
-    property var nextItem: eventList.model.get(model.index - 1)
-    readonly property QtObject currentItem: model
-    property int modelIndex: model.index
-    onModelIndexChanged: {
-        previousItem = eventList.model.get(model.index + 1)
-        nextItem     = eventList.model.get(model.index - 1)
-    }
+    readonly property var previousModel: eventList.model.get(model.index + 1)
+    readonly property var nextModel: eventList.model.get(model.index - 1)
+    readonly property QtObject currentModel: model
 
     property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
-    property bool combine: eventList.canCombine(previousItem, model)
-    property bool talkBreak: eventList.canTalkBreak(previousItem, model)
-    property bool dayBreak: eventList.canDayBreak(previousItem, model)
+    property bool combine: eventList.canCombine(previousModel, model)
+    property bool talkBreak: eventList.canTalkBreak(previousModel, model)
+    property bool dayBreak: eventList.canDayBreak(previousModel, model)
 
     readonly property bool smallAvatar:
-        eventList.canCombine(model, nextItem) &&
+        eventList.canCombine(model, nextModel) &&
         (model.event_type === "RoomMessageEmote" ||
          ! (model.event_type.startsWith("RoomMessage") ||
             model.event_type.startsWith("RoomEncrypted")))
@@ -59,6 +48,12 @@ Column {
         eventContent.hoveredSelectable ? Qt.IBeamCursor :
 
         Qt.ArrowCursor
+
+    readonly property int separationSpacing:
+            dayBreak  ? theme.spacing * 4 :
+            talkBreak ? theme.spacing * 6 :
+            combine   ? theme.spacing / 2 :
+            theme.spacing * 2
 
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
@@ -87,20 +82,31 @@ Column {
     }
 
 
+    Item {
+
+        Layout.fillWidth: true
+        Layout.preferredHeight:
+            model.event_type === "RoomCreateEvent" ? 0 : separationSpacing
+    }
+
     Daybreak {
         visible: dayBreak
-        width: eventDelegate.width
+
+        Layout.fillWidth: true
+        Layout.minimumWidth: parent.width
     }
 
     Item {
         visible: dayBreak
-        width: parent.width
-        height: topPadding
+
+        Layout.fillWidth: true
+        Layout.preferredHeight: separationSpacing
     }
 
     EventContent {
         id: eventContent
-        width: parent.width
+
+        Layout.fillWidth: true
 
         Behavior on x { HNumberAnimation {} }
     }
