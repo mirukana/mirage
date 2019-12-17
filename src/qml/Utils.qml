@@ -303,7 +303,7 @@ QtObject {
         if (! flickable.interactive && flickable.allowDragging) return
         if (flickable.visibleArea.yPosition < 0) return
 
-        flickable.contentY = flickTarget.contentHeight - flickTarget.height
+        flickable.contentY = flickable.contentHeight - flickable.height
         flickable.returnToBounds()
         flickable.flick(0, 100)
     }
