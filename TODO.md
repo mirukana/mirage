@@ -37,9 +37,9 @@
   - Use new default/reset controls system 
 - Split `HScrollableTextArea`
 - Composer
-- Missing room keybinds (invite, etc), and don't put all the binds in 
-  one central file (else we can only rely on uiState properties)
-- Use QML states
+- Don't put all the binds in one central file
+  - Missing room keybinds (invite, etc) and close failed upload
+- Use QML states?
 - Try gel for the models and stop being lazy in python
 
 - Room Sidepane save/load size & keybinds
@@ -71,6 +71,8 @@
 - Don't store states in delegates
 - [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
+- Can't use `QQmlApplicationEngine`, problem with QApplication?
+  See https://bugreports.qt.io/browse/QTBUG-50992
 
 ## Interface
 

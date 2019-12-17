@@ -1,3 +1,6 @@
+// The Clipboard class exposes system clipboard management and retrieval
+// to QML.
+
 #ifndef CLIPBOARD_H
 #define CLIPBOARD_H
 
@@ -17,9 +20,11 @@ class Clipboard : public QObject
 public:
     explicit Clipboard(QObject *parent = 0);
 
+    // Normal primary clipboard
     QString text() const;
     void setText(const QString &text);
 
+    // X11 select-middle-click-paste clipboard
     QString selection() const;
     void setSelection(const QString &text);
 

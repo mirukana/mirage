@@ -1,3 +1,6 @@
+// The Utils class exposes various useful functions for QML that aren't
+// normally provided by Qt.
+
 #ifndef UTILS_H
 #define UTILS_H
 
