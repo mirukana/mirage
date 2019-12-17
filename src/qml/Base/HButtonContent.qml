@@ -24,7 +24,7 @@ HRowLayout {
 
         id: icon
         svgName: button.icon.name
-        colorize: enabled ? button.icon.color: theme.icons.disabledColorize
+        colorize: button.icon.color
         cache: button.icon.cache
 
         onLoadingChanged: if (! loading) resetAnimations.start()
