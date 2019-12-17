@@ -40,7 +40,6 @@
 - Missing room keybinds (invite, etc), and don't put all the binds in 
   one central file (else we can only rely on uiState properties)
 - Use QML states
-- Use a singleton for utils.js
 - Try gel for the models and stop being lazy in python
 
 - Room Sidepane save/load size & keybinds

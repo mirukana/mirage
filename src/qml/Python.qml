@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import io.thp.pyotherside 1.5
-import "event_handlers.js" as EventHandlers
 
 Python {
     id: py
@@ -9,6 +8,8 @@ Python {
     property bool ready: false
     property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
+
+    property EventHandlers eventHandlers: EventHandlers {}
 
 
     function newQmlFuture() {
@@ -96,9 +97,9 @@ Python {
     }
 
     Component.onCompleted: {
-        for (var func in EventHandlers) {
-            if (EventHandlers.hasOwnProperty(func)) {
-                setHandler(func.replace(/^on/, ""), EventHandlers[func])
+        for (var func in eventHandlers) {
+            if (eventHandlers.hasOwnProperty(func)) {
+                setHandler(func.replace(/^on/, ""), eventHandlers[func])
             }
         }
 
