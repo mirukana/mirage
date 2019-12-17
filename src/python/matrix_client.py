@@ -257,14 +257,14 @@ class MatrixClient(nio.AsyncClient):
         upload_item = Upload(item_uuid, task, monitor, path, total_size=size)
         self.models[Upload, room_id][str(item_uuid)] = upload_item
 
-        def on_transfered(transfered: int) -> None:
-            upload_item.uploaded  = transfered
+        def on_transferred(transferred: int) -> None:
+            upload_item.uploaded  = transferred
 
         def on_speed_changed(speed: float) -> None:
             upload_item.speed     = speed
             upload_item.time_left = monitor.remaining_time
 
-        monitor.on_transfered    = on_transfered
+        monitor.on_transferred   = on_transferred
         monitor.on_speed_changed = on_speed_changed
 
         try:

@@ -1,13 +1,11 @@
 # TODO
 
-
 - Make dark bar extend down pane
 - Verify default size
 
 ## Media
 
 - Clean up gui test md
-- Send the monitor PR
 - nio ClientTimeout
 
 - Handle set avatar upload errors
