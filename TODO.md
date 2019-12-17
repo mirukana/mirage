@@ -77,9 +77,7 @@
 
 ## Interface
 
-- Differentiate invited room members
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
-- 
 - Make all "Cancel" buttons able to cancel running Backend coroutines set
   `disabledWhileLoading` to `false` for all "OK" buttons where it makes sense
 - Use a loader of the swipeview containing members, settings, etc views

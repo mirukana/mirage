@@ -5,13 +5,16 @@ import "../../utils.js" as Utils
 HTileDelegate {
     id: memberDelegate
     backgroundColor: theme.chat.roomPane.member.background
+    contentOpacity:
+        model.invited ? theme.chat.roomPane.member.invitedOpacity : 1
 
     image: HUserAvatar {
         userId: model.user_id
         displayName: model.display_name
         mxc: model.avatar_url
         powerLevel: model.power_level
-        shiftPowerIconPosition: ! roomPane.collapsed
+        shiftMembershipIconPosition: ! roomPane.collapsed
+        invited: model.invited
     }
 
     title.text: model.display_name || model.user_id
@@ -33,4 +36,5 @@ HTileDelegate {
 
 
     Behavior on title.color { HColorAnimation {} }
+    Behavior on contentOpacity { HNumberAnimation {} }
 }

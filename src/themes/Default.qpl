@@ -298,11 +298,15 @@ chat:
         color background: colors.mediumBackground
 
         member:
-            color background:    "transparent"
-            color name:          colors.text
-            color subtitle:      colors.dimText
+            real invitedOpacity: 0.5
+
+            color background: "transparent"
+            color name:       colors.text
+            color subtitle:   colors.dimText
+
             color adminIcon:     hsluv(60, colors.saturation * 2.25, 60)
             color moderatorIcon: adminIcon
+            color invitedIcon:   hsluv(0, colors.saturation * 2.25, 60)
 
         inviteButton:
             color background: colors.inputBackground

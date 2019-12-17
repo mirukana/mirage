@@ -10,6 +10,8 @@ HButton {
 
     default property alias additionalData: contentItem.data
 
+    property real contentOpacity: 1
+
     readonly property alias title: title
     readonly property alias additionalInfo: additionalInfo
     readonly property alias rightInfo: rightInfo
@@ -19,10 +21,10 @@ HButton {
 
     property Component image
 
-
     contentItem: HRowLayout {
         id: contentItem
         spacing: tile.spacing
+        opacity: tile.contentOpacity
 
         HLoader {
             sourceComponent: image
