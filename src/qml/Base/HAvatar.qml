@@ -1,15 +1,14 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import "../Base"
-import "../utils.js" as Utils
 
 Rectangle {
     id: avatar
     implicitWidth: theme.controls.avatar.size
     implicitHeight: theme.controls.avatar.size
 
-    color: avatarImage.visible ? "transparent" : Utils.hsluv(
-       name ? Utils.hueFrom(name) : 0,
+    color: avatarImage.visible ? "transparent" : utils.hsluv(
+       name ? utils.hueFrom(name) : 0,
        name ? theme.controls.avatar.background.saturation : 0,
        theme.controls.avatar.background.lightness,
        theme.controls.avatar.background.opacity
@@ -34,8 +33,8 @@ Rectangle {
         text: name ? name.charAt(0) : "?"
         font.pixelSize: parent.height / 1.4
 
-        color: Utils.hsluv(
-           name ? Utils.hueFrom(name) : 0,
+        color: utils.hsluv(
+           name ? utils.hueFrom(name) : 0,
            name ? theme.controls.avatar.letter.saturation : 0,
            theme.controls.avatar.letter.lightness,
            theme.controls.avatar.letter.opacity

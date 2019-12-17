@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../utils.js" as Utils
 
 HButton {
     id: tile

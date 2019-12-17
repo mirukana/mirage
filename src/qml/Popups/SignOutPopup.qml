@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import "../utils.js" as Utils
 
 BoxPopup {
     id: popup
@@ -25,7 +24,7 @@ BoxPopup {
 
     box.buttonCallbacks: ({
         ok: button => {
-            Utils.makeObject(
+            utils.makeObject(
                 "Dialogs/ExportKeys.qml",
                 mainUI,
                 { userId },

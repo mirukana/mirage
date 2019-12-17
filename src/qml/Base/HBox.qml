@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../utils.js" as Utils
 
 Rectangle {
     id: box
@@ -114,10 +113,10 @@ Rectangle {
                     property string name: modelData.name
 
                     property Item next: buttonRepeater.itemAt(
-                        Utils.numberWrapAt(index + 1, buttonRepeater.count),
+                        utils.numberWrapAt(index + 1, buttonRepeater.count),
                     )
                     property Item previous: buttonRepeater.itemAt(
-                        Utils.numberWrapAt(index - 1, buttonRepeater.count),
+                        utils.numberWrapAt(index - 1, buttonRepeater.count),
                     )
                 }
             }

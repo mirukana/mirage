@@ -58,11 +58,10 @@ def convert_to_qml(theme_content: str) -> str:
     lines  = [
         "import QtQuick 2.12",
         'import "Base"',
-        'import "utils.js" as Utils',
         "QtObject {",
-        "    function hsluv(h, s, l, a) { return Utils.hsluv(h, s, l, a) }",
-        "    function hsl(h, s, l)      { return Utils.hsl(h, s, l) }",
-        "    function hsla(h, s, l, a)  { return Utils.hsla(h, s, l, a) }",
+        "    function hsluv(h, s, l, a) { return utils.hsluv(h, s, l, a) }",
+        "    function hsl(h, s, l)      { return utils.hsl(h, s, l) }",
+        "    function hsla(h, s, l, a)  { return utils.hsla(h, s, l, a) }",
         "    id: theme",
     ]
     lines += [f"    {line}" for line in _process_lines(theme_content)]

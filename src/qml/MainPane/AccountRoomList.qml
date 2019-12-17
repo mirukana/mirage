@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../utils.js" as Utils
 
 HListView {
     id: mainPaneList
@@ -28,12 +27,12 @@ HListView {
 
             if (item.type === "Account" ||
                 (filter ?
-                 Utils.filterMatches(filter, item.data.filter_string) :
+                 utils.filterMatches(filter, item.data.filter_string) :
                  ! window.uiState.collapseAccounts[item.user_id]))
             {
                 if (filter && show.length && item.type === "Account" &&
                     show[show.length - 1].type === "Account" &&
-                    ! Utils.filterMatches(
+                    ! utils.filterMatches(
                         filter, show[show.length - 1].data.filter_string)
                 ) {
                     // If filter active, current and previous items are
@@ -48,7 +47,7 @@ HListView {
 
         let last = show[show.length - 1]
         if (show.length && filter && last.type === "Account" &&
-            ! Utils.filterMatches(filter, last.data.filter_string))
+            ! utils.filterMatches(filter, last.data.filter_string))
         {
             // If filter active, last item is an account and last item
             // doesn't match filter, that account had no matching rooms.

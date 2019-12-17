@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HRowLayout {
     id: eventContent
@@ -12,11 +11,11 @@ HRowLayout {
     readonly property string senderText:
         hideNameLine ? "" : (
             "<div class='sender'>" +
-            Utils.coloredNameHtml(model.sender_name, model.sender_id) +
+            utils.coloredNameHtml(model.sender_name, model.sender_id) +
             "</div>"
         )
-    readonly property string contentText: Utils.processedEventText(model)
-    readonly property string timeText: Utils.formatTime(model.date, false)
+    readonly property string contentText: utils.processedEventText(model)
+    readonly property string timeText: utils.formatTime(model.date, false)
     readonly property string localEchoText:
         model.is_local_echo ?
         `&nbsp;<font size=${theme.fontSize.small}px>⏳</font>` :
@@ -40,7 +39,7 @@ HRowLayout {
     TapHandler {
         enabled: debugMode
         onDoubleTapped:
-            Utils.debug(eventContent, null, con => { con.runJS("json()") })
+            utils.debug(eventContent, null, con => { con.runJS("json()") })
     }
 
     Item {
@@ -149,7 +148,7 @@ HRowLayout {
                     visible: model.event_type === "RoomMessageNotice"
                     width: theme.chat.message.noticeLineWidth
                     height: parent.height
-                    color: Utils.nameColor(
+                    color: utils.nameColor(
                         model.sender_name || model.sender_id.substring(1),
                     )
                 }

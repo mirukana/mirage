@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HTileDelegate {
     id: memberDelegate
@@ -20,7 +19,7 @@ HTileDelegate {
     title.text: model.display_name || model.user_id
     title.color:
         memberDelegate.hovered ?
-        Utils.nameColor(model.display_name || model.user_id.substring(1)) :
+        utils.nameColor(model.display_name || model.user_id.substring(1)) :
         theme.chat.roomPane.member.name
 
     subtitle.text: model.display_name ? model.user_id : ""

@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 Rectangle {
     property alias selectableLabelContainer: selectableLabelContainer
@@ -100,7 +99,7 @@ Rectangle {
                     ! canTalkBreak(item, itemAfter) &&
                     ! canDayBreak(item, itemAfter) &&
                     item.sender_id === itemAfter.sender_id &&
-                    Utils.minutesBetween(item.date, itemAfter.date) <= 5
+                    utils.minutesBetween(item.date, itemAfter.date) <= 5
                 )
             }
 
@@ -109,7 +108,7 @@ Rectangle {
 
                 return Boolean(
                     ! canDayBreak(item, itemAfter) &&
-                    Utils.minutesBetween(item.date, itemAfter.date) >= 20
+                    utils.minutesBetween(item.date, itemAfter.date) >= 20
                 )
             }
 

@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtAV 1.7
 import "../../Base"
-import "../../utils.js" as Utils
 
 HColumnLayout {
     id: osd
@@ -118,7 +117,7 @@ HColumnLayout {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.margins: padding / 4
-                    text: Utils.formatDuration(previewToolTip.wantTimestamp)
+                    text: utils.formatDuration(previewToolTip.wantTimestamp)
                     padding: theme.spacing / 2
                     opacity: previewToolTip.wantTimestamp === -1 ? 0 : 1
 
@@ -197,7 +196,7 @@ HColumnLayout {
             OSDButton {
                 id: speedButton
                 icon.name: "player-speed"
-                text: qsTr("%1x").arg(Utils.round(media.playbackRate))
+                text: qsTr("%1x").arg(utils.round(media.playbackRate))
                 toolTip.text: qsTr("Reset speed")
                 onClicked: media.playbackRate = 1
             }
@@ -225,11 +224,11 @@ HColumnLayout {
                 text:  boundPosition && savedDuration ?
 
                        qsTr("%1 / %2")
-                       .arg(Utils.formatDuration(boundPosition))
-                       .arg(Utils.formatDuration(savedDuration)) :
+                       .arg(utils.formatDuration(boundPosition))
+                       .arg(utils.formatDuration(savedDuration)) :
 
                        boundPosition || savedDuration ?
-                       Utils.formatDuration(boundPosition || savedDuration) :
+                       utils.formatDuration(boundPosition || savedDuration) :
 
                        ""
             }
@@ -239,7 +238,7 @@ HColumnLayout {
             OSDLabel {
                 text: boundPosition && savedDuration ?
                       qsTr("-%1").arg(
-                          Utils.formatDuration(savedDuration - boundPosition)
+                          utils.formatDuration(savedDuration - boundPosition)
                       ) : ""
             }
 

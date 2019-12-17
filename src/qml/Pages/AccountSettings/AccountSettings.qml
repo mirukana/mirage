@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HPage {
     id: accountSettings
@@ -14,7 +13,7 @@ HPage {
     readonly property bool ready:
         accountInfo !== "waiting" && Boolean(accountInfo.profile_updated)
 
-    readonly property var accountInfo: Utils.getItem(
+    readonly property var accountInfo: utils.getItem(
         modelSources["Account"] || [], "user_id", userId
     ) || "waiting"
 
@@ -22,7 +21,7 @@ HPage {
 
     hideHeaderUnderHeight: avatarPreferredSize
     headerLabel.text: qsTr("Account settings for %1").arg(
-        Utils.coloredNameHtml(headerName, userId)
+        utils.coloredNameHtml(headerName, userId)
     )
 
 

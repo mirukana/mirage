@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HColumnLayout {
     HListView {
@@ -21,7 +20,7 @@ HColumnLayout {
 
         function filterSource() {
             model.source =
-                Utils.filterModelSource(originSource, filterField.text)
+                utils.filterModelSource(originSource, filterField.text)
         }
 
 
@@ -77,7 +76,7 @@ HColumnLayout {
             topPadding: 0 // XXX
             bottomPadding: 0
 
-            onClicked: Utils.makePopup(
+            onClicked: utils.makePopup(
                 "Popups/InviteToRoomPopup.qml",
                 chat,
                 {

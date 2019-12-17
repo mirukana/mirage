@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HColumnLayout {
     id: transfer
@@ -102,7 +101,7 @@ HColumnLayout {
 
         Repeater {
             model: [
-                msLeft ? qsTr("-%1").arg(Utils.formatDuration(msLeft)) : "",
+                msLeft ? qsTr("-%1").arg(utils.formatDuration(msLeft)) : "",
 
                 speed ? qsTr("%1/s").arg(CppUtils.formattedBytes(speed)) : "",
 

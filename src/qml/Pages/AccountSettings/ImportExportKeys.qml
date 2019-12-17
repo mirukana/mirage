@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HBox {
     buttonModel: [
@@ -11,7 +10,7 @@ HBox {
 
     buttonCallbacks: ({
         export: button => {
-            Utils.makeObject(
+            utils.makeObject(
                 "Dialogs/ExportKeys.qml",
                 accountSettings,
                 { userId: accountSettings.userId },
@@ -22,7 +21,7 @@ HBox {
             )
         },
         import: button => {
-            Utils.makeObject(
+            utils.makeObject(
                 "Dialogs/ImportKeys.qml",
                 accountSettings,
                 { userId: accountSettings.userId },

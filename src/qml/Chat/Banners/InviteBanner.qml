@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 Banner {
     property string inviterId: chat.roomInfo.inviter
@@ -14,7 +13,7 @@ Banner {
     avatar.mxc: inviterAvatar
 
     labelText: qsTr("%1 invited you to this room").arg(
-        Utils.coloredNameHtml(inviterName, inviterId)
+        utils.coloredNameHtml(inviterName, inviterId)
     )
 
     buttonModel: [

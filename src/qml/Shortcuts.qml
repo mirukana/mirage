@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import "Base"
-import "utils.js" as Utils
 
 Item {
     visible: false
@@ -35,7 +34,7 @@ Item {
             if (debugConsole) {
                 debugConsole.visible = ! debugConsole.visible
             } else {
-                Utils.debug(mainUI || window)
+                utils.debug(mainUI || window)
             }
         }
     }
@@ -72,37 +71,37 @@ Item {
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollUp
-        onActivated: Utils.flickPages(toFlick, -1 / 10)
+        onActivated: utils.flickPages(toFlick, -1 / 10)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollDown
-        onActivated: Utils.flickPages(toFlick, 1 / 10)
+        onActivated: utils.flickPages(toFlick, 1 / 10)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollPageUp
-        onActivated: Utils.flickPages(toFlick, -1)
+        onActivated: utils.flickPages(toFlick, -1)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollPageDown
-        onActivated: Utils.flickPages(toFlick, 1)
+        onActivated: utils.flickPages(toFlick, 1)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollToTop
-        onActivated: Utils.flickToTop(toFlick)
+        onActivated: utils.flickToTop(toFlick)
     }
 
     HShortcut {
         enabled: toFlick
         sequences: settings.keys.scrollToBottom
-        onActivated: Utils.flickToBottom(toFlick)
+        onActivated: utils.flickToBottom(toFlick)
     }
 
 
@@ -112,7 +111,7 @@ Item {
         enabled: tabsTarget
         sequences: settings.keys.previousTab
         onActivated: tabsTarget.setCurrentIndex(
-            Utils.numberWrapAt(tabsTarget.currentIndex - 1, tabsTarget.count),
+            utils.numberWrapAt(tabsTarget.currentIndex - 1, tabsTarget.count),
         )
     }
 
@@ -120,7 +119,7 @@ Item {
         enabled: tabsTarget
         sequences: settings.keys.nextTab
         onActivated: tabsTarget.setCurrentIndex(
-            Utils.numberWrapAt(tabsTarget.currentIndex + 1, tabsTarget.count),
+            utils.numberWrapAt(tabsTarget.currentIndex + 1, tabsTarget.count),
         )
     }
 
@@ -185,7 +184,7 @@ Item {
     HShortcut {
         enabled: window.uiState.page === "Chat/Chat.qml"
         sequences: settings.keys.clearRoomMessages
-        onActivated: Utils.makePopup(
+        onActivated: utils.makePopup(
             "Popups/ClearMessagesPopup.qml",
             mainUI,
             {
@@ -198,7 +197,7 @@ Item {
     HShortcut {
         enabled: window.uiState.page === "Chat/Chat.qml"
         sequences: settings.keys.sendFile
-        onActivated: Utils.makeObject(
+        onActivated: utils.makeObject(
             "Dialogs/SendFilePicker.qml",
             mainUI,
             {
@@ -213,7 +212,7 @@ Item {
     HShortcut {
         enabled: window.uiState.page === "Chat/Chat.qml"
         sequences: settings.keys.sendFileFromPathInClipboard
-        onActivated: Utils.sendFile(
+        onActivated: utils.sendFile(
             window.uiState.pageProperties.userId,
             window.uiState.pageProperties.roomId,
             Clipboard.text.trim(),

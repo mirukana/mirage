@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import Qt.labs.platform 1.1
-import "../utils.js" as Utils
 
 HFileDialogOpener {
     fill: false
@@ -11,7 +10,7 @@ HFileDialogOpener {
         for (let file of files) {
             let path = Qt.resolvedUrl(file).replace(/^file:/, "")
 
-            Utils.sendFile(userId, roomId, path, () => {
+            utils.sendFile(userId, roomId, path, () => {
                 if (destroyWhenDone) destroy()
             },
             (type, args, error, traceback) => {

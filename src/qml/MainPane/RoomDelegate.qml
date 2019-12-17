@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../utils.js" as Utils
 
 HTileDelegate {
     id: roomDelegate
@@ -53,8 +52,8 @@ HTileDelegate {
         ! lastEvent || ! lastEvent.date ?
         "" :
 
-        Utils.dateIsToday(lastEvent.date) ?
-        Utils.formatTime(lastEvent.date, false) :  // no seconds
+        utils.dateIsToday(lastEvent.date) ?
+        utils.formatTime(lastEvent.date, false) :  // no seconds
 
         lastEvent.date.getFullYear() === new Date().getFullYear() ?
         Qt.formatDate(lastEvent.date, "d MMM") : // e.g. "5 Dec"
@@ -76,10 +75,10 @@ HTileDelegate {
 
         // If it's a general event
         if (isEmote || isUnknownMsg || (! isMsg && ! isCryptMedia)) {
-            return Utils.processedEventText(lastEvent)
+            return utils.processedEventText(lastEvent)
         }
 
-        let text = Utils.coloredNameHtml(
+        let text = utils.coloredNameHtml(
             lastEvent.sender_name, lastEvent.sender_id
         ) + ": " + lastEvent.inline_content
 
@@ -96,7 +95,7 @@ HTileDelegate {
             icon.name: "room-send-invite"
             text: qsTr("Invite members")
 
-            onTriggered: Utils.makePopup(
+            onTriggered: utils.makePopup(
                 "Popups/InviteToRoomPopup.qml",
                 window,
                 {
@@ -118,7 +117,7 @@ HTileDelegate {
             visible: invited
             icon.name: "invite-accept"
             icon.color: theme.colors.positiveBackground
-            text: qsTr("Accept %1's invite").arg(Utils.coloredNameHtml(
+            text: qsTr("Accept %1's invite").arg(utils.coloredNameHtml(
                 model.data.inviter_name, model.data.inviter_id
             ))
             label.textFormat: Text.StyledText
@@ -134,7 +133,7 @@ HTileDelegate {
             icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
 
-            onTriggered: Utils.makePopup(
+            onTriggered: utils.makePopup(
                 "Popups/LeaveRoomPopup.qml",
                 window,
                 {
@@ -150,7 +149,7 @@ HTileDelegate {
             icon.color: theme.colors.negativeBackground
             text: qsTr("Forget")
 
-            onTriggered: Utils.makePopup(
+            onTriggered: utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
                 window,
                 {

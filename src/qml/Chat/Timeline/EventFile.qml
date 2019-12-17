@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HTile {
     id: file
@@ -39,5 +38,5 @@ HTile {
     property EventMediaLoader loader
 
     readonly property bool cryptDict: loader.singleMediaInfo.media_crypt_dict
-    readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
+    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 }

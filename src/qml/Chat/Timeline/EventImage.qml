@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HMxcImage {
     id: image
@@ -9,7 +8,7 @@ HMxcImage {
     horizontalAlignment: Image.AlignLeft
 
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
-              Utils.urlExtension(loader.mediaUrl) === "gif"
+              utils.urlExtension(loader.mediaUrl) === "gif"
     thumbnail: ! animated && loader.thumbnailMxc
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :
@@ -21,12 +20,12 @@ HMxcImage {
 
     property EventMediaLoader loader
 
-    readonly property bool isEncrypted: ! Utils.isEmptyObject(cryptDict)
+    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 
     readonly property real maxHeight:
         theme.chat.message.thumbnailMaxHeightRatio
 
-    readonly property size fitSize: Utils.fitSize(
+    readonly property size fitSize: utils.fitSize(
         // Minimum display size
         theme.chat.message.thumbnailMinSize.width,
         theme.chat.message.thumbnailMinSize.height,

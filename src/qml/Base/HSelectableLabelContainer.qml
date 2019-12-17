@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import "../utils.js" as Utils
 
 FocusScope {
     signal deselectAll()

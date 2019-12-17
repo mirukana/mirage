@@ -2,8 +2,6 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 import "Base"
-import "utils.js" as Utils
-import "utils.js" as U
 
 HDrawer {
     id: debugConsole
@@ -31,9 +29,8 @@ HDrawer {
         `Javascript debugging console
 
         Useful variables:
-            window, theme, settings, shortcuts, mainUI, pageLoader
+            window, theme, settings, shortcuts, utils, mainUI, pageLoader
             py    Python interpreter
-            U     Utils/utils.js module
             this  The console itself
             t     Target item to debug for which this console was opened
             his   History, list of commands entered

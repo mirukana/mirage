@@ -1,5 +1,4 @@
 import QtQuick 2.12
-import "../utils.js" as Utils
 
 Image {
     id: image
@@ -13,7 +12,7 @@ Image {
 
     property bool broken: false
     property bool animate: true
-    property bool animated: Utils.urlExtension(image.source) === "gif"
+    property bool animated: utils.urlExtension(image.source) === "gif"
 
     property alias showProgressBar: progressBarLoader.active
     property bool inderterminateProgressBar: false

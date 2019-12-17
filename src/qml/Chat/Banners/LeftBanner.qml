@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 Banner {
     color: theme.chat.leftBanner.background
@@ -22,7 +21,7 @@ Banner {
 
     buttonCallbacks: ({
         forget: button => {
-            Utils.makePopup(
+            utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
                 mainUI,  // Must not be destroyed with chat
                 {

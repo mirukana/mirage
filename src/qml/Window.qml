@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import "Base"
-import "utils.js" as Utils
 
 ApplicationWindow {
     id: window
@@ -55,7 +54,7 @@ ApplicationWindow {
             propertyValues[prop] = obj[prop]
         }
 
-        Utils.objectUpdateRecursive(uiState, {
+        utils.objectUpdateRecursive(uiState, {
             [obj.saveName]: { [obj.saveId || "ALL"]: propertyValues },
         })
 
@@ -72,6 +71,8 @@ ApplicationWindow {
 
 
     Python { id: py }
+
+    Utils { id: utils }
 
     HoverHandler { id: windowHover }
 

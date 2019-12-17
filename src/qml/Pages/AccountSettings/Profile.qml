@@ -3,7 +3,6 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../Dialogs"
-import "../../utils.js" as Utils
 
 HGridLayout {
     function applyChanges() {
@@ -77,7 +76,7 @@ HGridLayout {
                      1 : 0
 
             anchors.fill: parent
-            color: Utils.hsluv(0, 0, 0,
+            color: utils.hsluv(0, 0, 0,
                 (! avatar.mxc && overlayHover.hovered) ? 0.8 : 0.7
             )
 
@@ -139,7 +138,7 @@ HGridLayout {
 
             HLabel {
                 text: qsTr("User ID:<br>%1")
-                      .arg(Utils.coloredNameHtml(userId, userId, userId))
+                      .arg(utils.coloredNameHtml(userId, userId, userId))
                 textFormat: Text.StyledText
                 wrapMode: Text.Wrap
 

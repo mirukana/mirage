@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 import "../Dialogs"
-import "../utils.js" as Utils
 
 Rectangle {
     property string indent: "    "
@@ -12,7 +11,7 @@ Rectangle {
 
     property string writingUserId: chat.userId
     readonly property var writingUserInfo:
-        Utils.getItem(modelSources["Account"] || [], "user_id", writingUserId)
+        utils.getItem(modelSources["Account"] || [], "user_id", writingUserId)
 
     property bool textChangedSinceLostFocus: false
 
@@ -90,7 +89,7 @@ Rectangle {
             }
 
             onTextChanged: {
-                if (Utils.isEmptyObject(aliases)) {
+                if (utils.isEmptyObject(aliases)) {
                     writingUserId = Qt.binding(() => chat.userId)
                     toSend        = text
                     setTyping(Boolean(text))

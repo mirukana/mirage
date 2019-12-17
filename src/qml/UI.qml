@@ -5,7 +5,6 @@ import QtQuick.Window 2.7
 import QtGraphicalEffects 1.12
 import "Base"
 import "MainPane"
-import "utils.js" as Utils
 
 Item {
     id: mainUI

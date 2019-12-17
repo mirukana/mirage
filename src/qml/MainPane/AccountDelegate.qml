@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../utils.js" as Utils
 
 HTileDelegate {
     id: accountDelegate
@@ -113,7 +112,7 @@ HTileDelegate {
             icon.name: "sign-out"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Sign out")
-            onTriggered: Utils.makePopup(
+            onTriggered: utils.makePopup(
                 "Popups/SignOutPopup.qml",
                 window,
                 { "userId": model.data.user_id },

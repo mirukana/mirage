@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../utils.js" as Utils
 import "RoomPane"
 
 Item {
@@ -16,10 +15,10 @@ Item {
     property bool ready: userInfo !== "waiting" && roomInfo !== "waiting"
 
     readonly property var userInfo:
-        Utils.getItem(modelSources["Account"] || [], "user_id", userId) ||
+        utils.getItem(modelSources["Account"] || [], "user_id", userId) ||
         "waiting"
 
-    readonly property var roomInfo: Utils.getItem(
+    readonly property var roomInfo: utils.getItem(
         modelSources[["Room", userId]] || [], "room_id", roomId
     ) || "waiting"
 

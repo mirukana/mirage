@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../utils.js" as ChatJS
 
 Banner {
     color: theme.chat.unknownDevices.background

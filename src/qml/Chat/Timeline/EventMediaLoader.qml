@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HLoader {
     id: loader
@@ -58,7 +57,7 @@ HLoader {
             return EventDelegate.Media.File
 
         // If this is a preview for a link in a normal message
-        let ext = Utils.urlExtension(mediaUrl)
+        let ext = utils.urlExtension(mediaUrl)
 
         if (imageExtensions.includes(ext)) return EventDelegate.Media.Image
         if (videoExtensions.includes(ext)) return EventDelegate.Media.Video

@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../utils.js" as Utils
 
 HColumnLayout {
     id: eventDelegate
@@ -63,7 +62,7 @@ HColumnLayout {
     function json() {
         return JSON.stringify(
             {
-                "model": Utils.getItem(
+                "model": utils.getItem(
                     modelSources[[
                         "Event", chat.userId, chat.roomId
                     ]],
@@ -172,7 +171,7 @@ HColumnLayout {
         HMenuItem {
             icon.name: "clear-messages"
             text: qsTr("Clear messages")
-            onTriggered: Utils.makePopup(
+            onTriggered: utils.makePopup(
                 "Popups/ClearMessagesPopup.qml",
                 chat,
                 {userId: chat.userId, roomId: chat.roomId},
