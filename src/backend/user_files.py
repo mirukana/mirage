@@ -1,9 +1,11 @@
+"""User data and configuration files definitions."""
+
 import asyncio
 import json
 import logging as log
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, ClassVar, Dict, Optional
 
 import aiofiles
 
@@ -17,7 +19,11 @@ WRITE_LOCK = asyncio.Lock()
 
 
 @dataclass
-class ConfigFile:
+class DataFile:
+    """Base class representing a user data file."""
+
+    is_config: ClassVar[bool] = False
+
     backend:  Backend = field(repr=False)
     filename: str     = field()
 
@@ -30,23 +36,36 @@ class ConfigFile:
 
     @property
     def path(self) -> Path:
-        return Path(self.backend.appdirs.user_config_dir) / self.filename
+        """Full path of the file, even if it doesn't exist yet."""
+
+        if self.is_config:
+            return Path(self.backend.appdirs.user_config_dir) / self.filename
+
+        return Path(self.backend.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self):
+        """Default content if the file doesn't exist."""
+
         return ""
 
 
     async def read(self):
+        """Return the content of the existing file on disk."""
+
         log.debug("Reading config %s at %s", type(self).__name__, self.path)
         return self.path.read_text()
 
 
     async def write(self, data) -> None:
+        """Request for the file to be written/updated with data."""
+
         self._to_write = data
 
 
     async def _write_loop(self) -> None:
+        """Write/update file to on disk with a 1 second cooldown."""
+
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
         while True:
@@ -59,13 +78,21 @@ class ConfigFile:
             await asyncio.sleep(1)
 
 
+
 @dataclass
-class JSONConfigFile(ConfigFile):
+class JSONDataFile(DataFile):
+    """Represent a user data file in the JSON format."""
+
     async def default_data(self) -> JsonData:
         return {}
 
 
     async def read(self) -> JsonData:
+        """Return the content of the existing file on disk.
+
+        If the file doesn't exist on disk or it has missing keys, the missing
+        data will be merged and written to disk before returning.
+        """
         try:
             data = json.loads(await super().read())
         except (FileNotFoundError, json.JSONDecodeError):
@@ -86,15 +113,26 @@ class JSONConfigFile(ConfigFile):
 
 
 @dataclass
-class Accounts(JSONConfigFile):
+class Accounts(JSONDataFile):
+    """Config file for saved matrix accounts: user ID, access tokens, etc."""
+
+    is_config = True
+
     filename: str = "accounts.json"
 
 
     async def any_saved(self) -> bool:
+        """Return whether there are any accounts saved on disk."""
         return bool(await self.read())
 
 
     async def add(self, user_id: str) -> None:
+        """Add an account to the config and write it on disk.
+
+        The account's details such as its access token are retrieved from
+        the corresponding `MatrixClient` in `backend.clients`.
+        """
+
         client = self.backend.clients[user_id]
 
         await self.write({
@@ -108,6 +146,8 @@ class Accounts(JSONConfigFile):
 
 
     async def delete(self, user_id: str) -> None:
+        """Delete an account from the config and write it on disk."""
+
         await self.write({
             uid: info
             for uid, info in (await self.read()).items() if uid != user_id
@@ -115,7 +155,11 @@ class Accounts(JSONConfigFile):
 
 
 @dataclass
-class UISettings(JSONConfigFile):
+class UISettings(JSONDataFile):
+    """Config file for QML interface settings and keybindings."""
+
+    is_config = True
+
     filename: str = "settings.json"
 
 
@@ -174,13 +218,10 @@ class UISettings(JSONConfigFile):
 
 
 @dataclass
-class UIState(JSONConfigFile):
+class UIState(JSONDataFile):
+    """File to save and restore the state of the QML interface."""
+
     filename: str = "state.json"
-
-
-    @property
-    def path(self) -> Path:
-        return Path(self.backend.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self) -> JsonData:
@@ -192,13 +233,10 @@ class UIState(JSONConfigFile):
 
 
 @dataclass
-class History(JSONConfigFile):
+class History(JSONDataFile):
+    """File to save and restore lines typed by the user in QML components."""
+
     filename: str = "history.json"
-
-
-    @property
-    def path(self) -> Path:
-        return Path(self.backend.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self) -> JsonData:
@@ -206,7 +244,10 @@ class History(JSONConfigFile):
 
 
 @dataclass
-class Theme(ConfigFile):
+class Theme(DataFile):
+    """A theme file defining the look of QML components."""
+
+
     @property
     def path(self) -> Path:
         data_dir = Path(self.backend.appdirs.user_data_dir)

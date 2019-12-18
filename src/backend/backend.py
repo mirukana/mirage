@@ -28,11 +28,11 @@ class Backend:
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
-        from . import config_files
-        self.saved_accounts = config_files.Accounts(self)
-        self.ui_settings    = config_files.UISettings(self)
-        self.ui_state       = config_files.UIState(self)
-        self.history        = config_files.History(self)
+        from . import user_files
+        self.saved_accounts = user_files.Accounts(self)
+        self.ui_settings    = user_files.UISettings(self)
+        self.ui_state       = user_files.UIState(self)
+        self.history        = user_files.History(self)
 
         self.models = ModelStore(allowed_key_types={
             Account,             # Logged-in accounts
@@ -232,7 +232,7 @@ class Backend:
     async def load_settings(self) -> tuple:
         """Return parsed user config files."""
 
-        from .config_files import Theme
+        from .user_files import Theme
         settings = await self.ui_settings.read()
         ui_state = await self.ui_state.read()
         history  = await self.history.read()
