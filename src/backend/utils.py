@@ -1,4 +1,4 @@
-"""Contains various utilities that are used throughout the package."""
+"""Various utilities that are used throughout the package."""
 
 import collections
 import html
@@ -31,13 +31,14 @@ class AutoStrEnum(Enum):
     >>> Fruits.apple.value
     "apple"
     """
+
     @staticmethod
     def _generate_next_value_(name, *_):
         return name
 
 
 def dict_update_recursive(dict1: dict, dict2: dict) -> None:
-    """Recursive version of dict.update()."""
+    """Deep-merge `dict1` and `dict2`, recursive version of `dict.update()`."""
     # https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
 
     for k in dict2:
@@ -49,7 +50,7 @@ def dict_update_recursive(dict1: dict, dict2: dict) -> None:
 
 
 async def is_svg(file: File) -> bool:
-    """Return True if the file is a SVG. Uses lxml for detection."""
+    """Return whether the file is a SVG (`lxml` is used for detection)."""
 
     chunks = [c async for c in async_generator_from_data(file)]
 
@@ -62,7 +63,8 @@ async def is_svg(file: File) -> bool:
 
 
 async def svg_dimensions(file: File) -> Size:
-    """Return the width & height or viewBox width & height for a SVG.
+    """Return the width and height, or viewBox width and height for a SVG.
+
     If these properties are missing (broken file), ``(256, 256)`` is returned.
     """
 
@@ -85,9 +87,7 @@ async def svg_dimensions(file: File) -> Size:
 
 
 async def guess_mime(file: File) -> str:
-    """Return the mime type for a file, or application/octet-stream if it
-    can't be guessed.
-    """
+    """Return the file's mimetype, or `application/octet-stream` if unknown."""
 
     if isinstance(file, io.IOBase):
         file.seek(0, 0)
@@ -114,7 +114,7 @@ async def guess_mime(file: File) -> str:
 
 
 def plain2html(text: str) -> str:
-    """Transform plain text into HTML, this converts \n and \t."""
+    """Convert `\\n` into `<br>` tags and `\\t` into four spaces."""
 
     return html.escape(text)\
                .replace("\n", "<br>")\
@@ -122,10 +122,15 @@ def plain2html(text: str) -> str:
 
 
 def serialize_value_for_qml(value: Any) -> Any:
-    """Transform a value to make it easier to use from QML.
+    """Convert a value to make it easier to use from QML.
 
-    Currently, this transforms Enum members to their actual value and Path
-    objects to their string version.
+    Returns:
+
+    - Return the member's actual value for `Enum` members
+    - A `file://...` string for `Path` objects
+    - Strings for `UUID` objects
+    - A number of milliseconds for `datetime.timedelta` objects
+    - The class `__name__` for class types.
     """
 
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
@@ -147,7 +152,7 @@ def serialize_value_for_qml(value: Any) -> Any:
 
 
 def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
-    """Return a {name: class} dict of all the classes a module defines."""
+    """Return a `{name: class}` dict of all the classes a module defines."""
 
     return {
         m[0]: m[1] for m in inspect.getmembers(module, inspect.isclass)
