@@ -64,7 +64,7 @@ HColumnLayout {
                 qsTr("Can't upload folders, need a file: %1").arg(filePath) :
 
                 model.error === "FileNotFoundError" ?
-                qsTr("Non-existant file: %1").arg(filePath) :
+                qsTr("Non-existent file: %1").arg(filePath) :
 
                 model.error === "PermissionError" ?
                 qsTr("No permission to read this file: %1").arg(filePath) :
