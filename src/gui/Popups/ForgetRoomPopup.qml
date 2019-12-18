@@ -15,7 +15,7 @@ BoxPopup {
     box.focusButton: "ok"
 
     onOk: py.callClientCoro(userId, "room_forget", [roomId], () => {
-        if (window.uiState.page === "Chat/Chat.qml" &&
+        if (window.uiState.page === "Pages/Chat/Chat.qml" &&
             window.uiState.pageProperties.userId === userId &&
             window.uiState.pageProperties.roomId === roomId)
         {

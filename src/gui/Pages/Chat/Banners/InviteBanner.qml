@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import "../../Base"
+import "../../../Base"
 
 Banner {
     property string inviterId: chat.roomInfo.inviter

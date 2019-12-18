@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../Base"
+import "../../Base"
 import "RoomPane"
 
 Item {
@@ -41,7 +41,7 @@ Item {
             width: 96 * theme.uiScale
             height: width
 
-            source: opacity > 0 ? "../Base/HBusyIndicator.qml" : ""
+            source: opacity > 0 ? "../../Base/HBusyIndicator.qml" : ""
             opacity: ready ? 0 : 1
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }

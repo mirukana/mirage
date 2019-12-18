@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import "../../Base"
+import "../../../Base"
 
 HTileDelegate {
     id: memberDelegate

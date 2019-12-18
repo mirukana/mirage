@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../Base"
-import "../Dialogs"
+import "../../Base"
+import "../../Dialogs"
 
 Rectangle {
     property string indent: "    "

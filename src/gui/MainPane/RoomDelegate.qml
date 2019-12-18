@@ -9,7 +9,7 @@ HTileDelegate {
     opacity: model.data.left ? theme.mainPane.room.leftRoomOpacity : 1
 
     shouldBeCurrent:
-        window.uiState.page === "Chat/Chat.qml" &&
+        window.uiState.page === "Pages/Chat/Chat.qml" &&
         window.uiState.pageProperties.userId === model.user_id &&
         window.uiState.pageProperties.roomId === model.data.room_id
 

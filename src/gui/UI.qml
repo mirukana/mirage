@@ -86,7 +86,7 @@ Item {
             let page  = window.uiState.page
             let props = window.uiState.pageProperties
 
-            if (page === "Chat/Chat.qml") {
+            if (page === "Pages/Chat/Chat.qml") {
                 pageLoader.showRoom(props.userId, props.roomId)
             } else {
                 pageLoader._show(page, props)
@@ -110,9 +110,9 @@ Item {
         }
 
         function showRoom(userId, roomId) {
-            _show("Chat/Chat.qml", {userId, roomId})
+            _show("Pages/Chat/Chat.qml", {userId, roomId})
 
-            window.uiState.page           = "Chat/Chat.qml"
+            window.uiState.page           = "Pages/Chat/Chat.qml"
             window.uiState.pageProperties = {userId, roomId}
             window.uiStateChanged()
         }

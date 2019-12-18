@@ -182,7 +182,7 @@ Item {
     // Chat
 
     HShortcut {
-        enabled: window.uiState.page === "Chat/Chat.qml"
+        enabled: window.uiState.page === "Pages/Chat/Chat.qml"
         sequences: settings.keys.clearRoomMessages
         onActivated: utils.makePopup(
             "Popups/ClearMessagesPopup.qml",
@@ -195,7 +195,7 @@ Item {
     }
 
     HShortcut {
-        enabled: window.uiState.page === "Chat/Chat.qml"
+        enabled: window.uiState.page === "Pages/Chat/Chat.qml"
         sequences: settings.keys.sendFile
         onActivated: utils.makeObject(
             "Dialogs/SendFilePicker.qml",
@@ -210,7 +210,7 @@ Item {
     }
 
     HShortcut {
-        enabled: window.uiState.page === "Chat/Chat.qml"
+        enabled: window.uiState.page === "Pages/Chat/Chat.qml"
         sequences: settings.keys.sendFileFromPathInClipboard
         onActivated: utils.sendFile(
             window.uiState.pageProperties.userId,
