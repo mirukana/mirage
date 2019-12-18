@@ -1,3 +1,9 @@
+"""QPL (Qt Property Language) theme files to QML converter.
+
+QPL is a custom configuration format currently used for theme files.
+This is a big hack and will be replaced in the future by a standard language.
+"""
+
 import re
 from typing import Generator
 
@@ -6,6 +12,8 @@ PROPERTY_TYPES = {"bool", "double", "int", "list", "real", "string", "url",
 
 
 def _add_property(line: str) -> str:
+    """Return a QML property declaration line from a QPL property line."""
+
     if re.match(r"^\s*[a-zA-Z\d_]+\s*:$", line):
         return re.sub(r"^(\s*)(\S*\s*):$",
                       r"\1readonly property QtObject \2: QtObject",
@@ -19,6 +27,8 @@ def _add_property(line: str) -> str:
 
 
 def _process_lines(content: str) -> Generator[str, None, None]:
+    """Yield lines of real QML from lines of QPL."""
+
     skip           = False
     indent         = " " * 4
     current_indent = 0
@@ -55,6 +65,8 @@ def _process_lines(content: str) -> Generator[str, None, None]:
 
 
 def convert_to_qml(theme_content: str) -> str:
+    """Return valid QML code with imports from QPL content."""
+
     lines  = [
         "import QtQuick 2.12",
         'import "../Base"',
@@ -66,4 +78,5 @@ def convert_to_qml(theme_content: str) -> str:
     ]
     lines += [f"    {line}" for line in _process_lines(theme_content)]
     lines += ["}"]
+
     return "\n".join(lines)
