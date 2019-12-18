@@ -49,7 +49,7 @@ class CoroutineDone(PyOtherSideEvent):
 
 @dataclass
 class ModelUpdated(PyOtherSideEvent):
-    """Indicate that a backend model's data changed."""
+    """Indicate that a backend `Model`'s data changed."""
 
     sync_id: SyncId               = field()
     data:    List[Dict[str, Any]] = field()

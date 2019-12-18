@@ -9,6 +9,24 @@ from .model_item import ModelItem
 
 
 class Model(MutableMapping):
+    """A mapping of `{identifier: ModelItem}` synced between Python & QML.
+
+    From the Python side, the model is usable like a normal dict of
+    `ModelItem` subclass objects.
+    Different types of `ModelItem` must not be mixed in the same model.
+
+    When items are added, changed or removed from the model, a synchronization
+    with QML is scheduled.
+    The model will synchronize with QML no more than every 0.25s, for
+    performance reasons; though it is possible to request an instant sync
+    via `sync_now()` for certain cases when this delay is unacceptable.
+
+    Model data is sent to QML using a `ModelUpdated` event from the
+    `pyotherside_events` module.
+    The data is a list of serialized `ModelItem` dicts, as expected
+    by QML for components like `ListView`.
+    """
+
     def __init__(self, sync_id: SyncId) -> None:
         self.sync_id:  SyncId               = sync_id
         self._data:    Dict[Any, ModelItem] = {}
@@ -20,6 +38,8 @@ class Model(MutableMapping):
 
 
     def __repr__(self) -> str:
+        """Provide a full representation of the model and its content."""
+
         try:
             from pprintpp import pformat
         except ImportError:
@@ -36,6 +56,8 @@ class Model(MutableMapping):
 
 
     def __str__(self) -> str:
+        """Provide a short "<sync_id>: <num> items" representation."""
+
         if isinstance(self.sync_id, tuple):
             reprs = tuple(repr(s) for s in self.sync_id[1:])
             sid = ", ".join((self.sync_id[0].__name__, *reprs))
@@ -51,6 +73,16 @@ class Model(MutableMapping):
 
 
     def __setitem__(self, key, value: ModelItem) -> None:
+        """Merge new item with an existing one if possible, else add it.
+
+        If an existing item with the passed `key` is found, its fields will be
+        updated with the passed `ModelItem`'s fields.
+        In other cases, the item is simply added to the model.
+
+        This also sets the `ModelItem.parent_model` hidden attribute on the
+        passed item.
+        """
+
         new = value
 
         if key in self:
@@ -89,6 +121,8 @@ class Model(MutableMapping):
 
 
     def _sync_loop(self) -> None:
+        """Loop to synchronize model when needed with a cooldown of 0.25s."""
+
         while True:
             time.sleep(0.25)
 
@@ -99,13 +133,18 @@ class Model(MutableMapping):
 
 
     def sync_now(self) -> None:
+        """Trigger a model synchronization right now. Use with precaution."""
+
         ModelUpdated(self.sync_id, self.serialized())
         self._changed = False
 
 
     def serialized(self) -> List[Dict[str, Any]]:
+        """Return serialized model content as a list of dict for QML."""
+
         return [item.serialized for item in sorted(self._data.values())]
 
 
     def __lt__(self, other: "Model") -> bool:
+        """Sort `Model` objects lexically by `sync_id`."""
         return str(self.sync_id) < str(other.sync_id)
