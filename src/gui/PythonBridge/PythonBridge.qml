@@ -9,7 +9,7 @@ Python {
     property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
 
-    property PythonEventHandlers eventHandlers: PythonEventHandlers {}
+    property EventHandlers eventHandlers: EventHandlers {}
 
 
     function newQmlFuture() {
