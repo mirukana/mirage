@@ -8,6 +8,8 @@
 - Clean up gui test md
 - nio ClientTimeout
 
+- upload delay at the end?
+- Handle upload file size limit
 - Handle set avatar upload errors
 - Confirmation box after picking file to upload
 - Show real progression for mxc thumbnail loadings
@@ -79,6 +81,7 @@
 
 ## Interface
 
+- Remember ctrl+tab page target
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
 - Make all "Cancel" buttons able to cancel running Backend coroutines set
   `disabledWhileLoading` to `false` for all "OK" buttons where it makes sense

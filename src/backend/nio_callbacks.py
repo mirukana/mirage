@@ -17,55 +17,74 @@ from .models.items import Account, Room, TypeSpecifier
 
 @dataclass
 class NioCallbacks:
+    """Register callbacks for nio's request responses and room events.
+
+    For every nio `Response` and `Event` subclasses, this class can have a
+    method named `on<ClassName>` (e.g. `onRoomMessageText`) that will
+    automatically be registered in nio.
+
+    For room event content strings, the `%1` and `%2` placeholders
+    refer to the event's sender and who this event targets (`state_key`).
+    These are processed from QML, to allow translations of the strings.
+    """
+
     client: MatrixClient = field()
 
 
     def __post_init__(self) -> None:
-        c = self.client
+        """Register our methods as callbacks."""
 
         for name, class_ in utils.classes_defined_in(nio.responses).items():
             with suppress(AttributeError):
-                c.add_response_callback(getattr(self, f"on{name}"), class_)
+                method = getattr(self, f"on{name}")
+                self.client.add_response_callback(method, class_)
 
         for name, class_ in utils.classes_defined_in(nio.events).items():
             with suppress(AttributeError):
-                c.add_event_callback(getattr(self, f"on{name}"), class_)
+                method = getattr(self, f"on{name}")
+                self.client.add_event_callback(method, class_)
 
-        c.add_ephemeral_callback(
+        self.client.add_ephemeral_callback(
             self.onTypingNoticeEvent, nio.events.TypingNoticeEvent,
         )
 
 
-    async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
-        c = self.client
+    # Response callbacks
 
+    async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
         for room_id, info in resp.rooms.join.items():
-            if room_id not in c.past_tokens:
-                c.past_tokens[room_id] = info.timeline.prev_batch
+            if room_id not in self.client.past_tokens:
+                self.client.past_tokens[room_id] = info.timeline.prev_batch
 
         # TODO: way of knowing if a nio.MatrixRoom is left
         for room_id, info in resp.rooms.leave.items():
             # TODO: handle in nio, these are rooms that were left before
             # starting the client.
-            if room_id not in c.all_rooms:
+            if room_id not in self.client.all_rooms:
                 log.warning("Left room not in MatrixClient.rooms: %r", room_id)
                 continue
 
             # TODO: handle left events in nio async client
             for ev in info.timeline.events:
                 if isinstance(ev, nio.RoomMemberEvent):
-                    await self.onRoomMemberEvent(c.all_rooms[room_id], ev)
+                    await self.onRoomMemberEvent(
+                        self.client.all_rooms[room_id], ev,
+                    )
 
-            await c.register_nio_room(c.all_rooms[room_id], left=True)
-
-        if not c.first_sync_done.is_set():
-            self.client.load_rooms_task = asyncio.ensure_future(
-                c.load_rooms_without_visible_events(),
+            await self.client.register_nio_room(
+                self.client.all_rooms[room_id], left=True,
             )
 
-            c.first_sync_done.set()
-            c.first_sync_date = datetime.now()
-            c.models[Account][c.user_id].first_sync_done = True
+        if not self.client.first_sync_done.is_set():
+            self.client.load_rooms_task = asyncio.ensure_future(
+                self.client.load_rooms_without_visible_events(),
+            )
+
+            self.client.first_sync_done.set()
+            self.client.first_sync_date = datetime.now()
+
+            account = self.client.models[Account][self.client.user_id]
+            account.first_sync_done = True
 
 
     async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
@@ -76,8 +95,7 @@ class NioCallbacks:
             log.warning(repr(resp))
 
 
-    # Callbacks for nio room events
-    # Content: %1 is the sender, %2 the target (ev.state_key).
+    # Event callbacks
 
     async def onRoomMessageText(self, room, ev) -> None:
         co = HTML_PROCESSOR.filter(
@@ -178,9 +196,14 @@ class NioCallbacks:
 
 
     async def process_room_member_event(
-        self, room, ev,
+        self, room: nio.MatrixRoom, ev: nio.RoomMemberEvent,
     ) -> Optional[Tuple[TypeSpecifier, str]]:
+        """Return a `TypeSpecifier` and string describing a member event.
 
+        Matrix member events can represent many actions:
+        a user joined the room, a user banned another, a user changed their
+        display name, etc.
+        """
         if ev.prev_content == ev.content:
             return None
 
@@ -356,13 +379,9 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    # Callbacks for nio invite events
-
     async def onInviteEvent(self, room, ev) -> None:
         await self.client.register_nio_room(room)
 
-
-    # Callbacks for nio ephemeral events
 
     async def onTypingNoticeEvent(self, room, ev) -> None:
         # Prevent recent past typing notices from being shown for a split
