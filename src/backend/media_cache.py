@@ -1,3 +1,5 @@
+"""Matrix media caching and retrieval."""
+
 import asyncio
 import functools
 import io
@@ -27,7 +29,43 @@ ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
 
 
 @dataclass
+class MediaCache:
+    """Matrix media cache manager."""
+
+    backend:  Backend = field()
+    base_dir: Path    = field()
+
+
+    def __post_init__(self) -> None:
+        self.thumbs_dir    = self.base_dir / "thumbnails"
+        self.downloads_dir = self.base_dir / "downloads"
+
+        self.thumbs_dir.mkdir(parents=True, exist_ok=True)
+        self.downloads_dir.mkdir(parents=True, exist_ok=True)
+
+
+    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> Path:
+        """Return a `Media` object. Method intended for QML convenience."""
+
+        return await Media(self, mxc, crypt_dict).get()
+
+
+    async def get_thumbnail(
+        self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
+    ) -> Path:
+        """Return a `Thumbnail` object. Method intended for QML convenience."""
+
+        thumb = Thumbnail(
+            # QML sometimes pass float sizes, which matrix API doesn't like.
+            self, mxc, crypt_dict, (round(width), round(height)),
+        )
+        return await thumb.get()
+
+
+@dataclass
 class Media:
+    """A matrix media file."""
+
     cache:      "MediaCache" = field()
     mxc:        str          = field()
     crypt_dict: CryptDict    = field(repr=False)
@@ -42,12 +80,16 @@ class Media:
 
     @property
     def local_path(self) -> Path:
+        """The path where the file either exists or should be downloaded."""
+
         parsed = urlparse(self.mxc)
         name   = parsed.path.lstrip("/")
         return self.cache.downloads_dir / parsed.netloc / name
 
 
     async def get(self) -> Path:
+        """Return the cached file's path, downloading it first if needed."""
+
         async with ACCESS_LOCKS[self.mxc]:
             try:
                 return await self._get_local_existing_file()
@@ -56,6 +98,8 @@ class Media:
 
 
     async def _get_local_existing_file(self) -> Path:
+        """Return the cached file's path."""
+
         if not self.local_path.exists():
             raise FileNotFoundError()
 
@@ -63,6 +107,8 @@ class Media:
 
 
     async def create(self) -> Path:
+        """Download and cache the media file to disk."""
+
         async with CONCURRENT_DOWNLOADS_LIMIT:
             data = await self._get_remote_data()
 
@@ -75,6 +121,8 @@ class Media:
 
 
     async def _get_remote_data(self) -> bytes:
+        """Return the file's data from the matrix server, decrypt if needed."""
+
         parsed = urlparse(self.mxc)
 
         resp = await self.cache.backend.download(
@@ -86,6 +134,8 @@ class Media:
 
 
     async def _decrypt(self, data: bytes) -> bytes:
+        """Decrypt an encrypted file's data."""
+
         if not self.crypt_dict:
             return data
 
@@ -110,6 +160,7 @@ class Media:
         overwrite: bool = False,
         **kwargs,
     ) -> "Media":
+        """Copy an existing file to cache and return a `Media` for it."""
 
         media = cls(cache, mxc, {}, **kwargs)  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
@@ -130,6 +181,7 @@ class Media:
         overwrite: bool = False,
         **kwargs,
     ) -> "Media":
+        """Create a cached file from bytes data and return a `Media` for it."""
 
         media = cls(cache, mxc, {}, **kwargs)  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
@@ -143,6 +195,8 @@ class Media:
 
 @dataclass
 class Thumbnail(Media):
+    """The thumbnail of a matrix media, which is a media itself."""
+
     cache:       "MediaCache" = field()
     mxc:         str          = field()
     crypt_dict:  CryptDict    = field(repr=False)
@@ -153,7 +207,15 @@ class Thumbnail(Media):
 
     @staticmethod
     def normalize_size(size: Size) -> Size:
-        # https://matrix.org/docs/spec/client_server/latest#thumbnails
+        """Return standard `(width, height)` matrix thumbnail dimensions.
+
+        The Matrix specification defines a few standard thumbnail dimensions
+        for homeservers to store and return: 32x32, 96x96, 320x240, 640x480,
+        and 800x600.
+
+        This method returns the best matching size for a `size` without
+        upscaling, e.g. passing `(641, 480)` will return `(800, 600)`.
+        """
 
         if size[0] > 640 or size[1] > 480:
             return (800, 600)
@@ -172,7 +234,12 @@ class Thumbnail(Media):
 
     @property
     def local_path(self) -> Path:
-        # example: thumbnails/matrix.org/32x32/<mxc id>
+        """The path where the thumbnail either exists or should be downloaded.
+
+        The returned paths are in this form:
+        `<base thumbnail folder>/<homeserver domain>/<standard size>/<mxc id>`,
+        e.g. `~/.cache/appname/thumbnails/matrix.org/32x32/Hm24ar11i768b0el`.
+        """
 
         parsed = urlparse(self.mxc)
         size   = self.normalize_size(self.server_size or self.wanted_size)
@@ -230,34 +297,3 @@ class Thumbnail(Media):
             self.server_size = PILImage.open(img).size
 
         return decrypted
-
-
-@dataclass
-class MediaCache:
-    backend:  Backend = field()
-    base_dir: Path    = field()
-
-
-    def __post_init__(self) -> None:
-        self.thumbs_dir    = self.base_dir / "thumbnails"
-        self.downloads_dir = self.base_dir / "downloads"
-
-        self.thumbs_dir.mkdir(parents=True, exist_ok=True)
-        self.downloads_dir.mkdir(parents=True, exist_ok=True)
-
-
-    # These methods are for conveniant usage from QML
-
-    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> Path:
-        return await Media(self, mxc, crypt_dict).get()
-
-
-    async def get_thumbnail(
-        self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
-    ) -> Path:
-
-        thumb = Thumbnail(
-            # QML sometimes pass float sizes, which matrix API doesn't like.
-            self, mxc, crypt_dict, (round(width), round(height)),
-        )
-        return await thumb.get()
