@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     QApplication::setOrganizationName("harmonyqml");
     QApplication::setApplicationName("harmonyqml");
     QApplication::setApplicationDisplayName("HarmonyQML");
-    QApplication::setApplicationVersion("0.2.3");
+    QApplication::setApplicationVersion("0.3.0");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 

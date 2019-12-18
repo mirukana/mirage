@@ -12,7 +12,7 @@ Python {
         addImportPath("src")
         addImportPath("qrc:/src")
 
-        importNames("backend", ["BRIDGE"], () => {
+        importNames("backend.qml_bridge", ["BRIDGE"], () => {
             loadSettings(() => {
                 callCoro("saved_accounts.any_saved", [], any => {
                     if (any) { py.callCoro("load_saved_accounts", []) }

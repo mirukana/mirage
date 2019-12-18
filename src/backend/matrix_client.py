@@ -24,7 +24,7 @@ import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
 
-from .__about__ import __pkg_name__, __pretty_name__
+from . import __app_name__, __display_name__
 from . import utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
@@ -114,7 +114,7 @@ class MatrixClient(nio.AsyncClient):
     def default_device_name(self) -> str:
         os_ = f" on {platform.system()}".rstrip()
         os_ = f"{os_} {platform.release()}".rstrip() if os_ != " on" else ""
-        return f"{__pretty_name__}{os_}"
+        return f"{__display_name__}{os_}"
 
 
     async def login(self, password: str, device_name: str = "") -> None:
@@ -221,7 +221,7 @@ class MatrixClient(nio.AsyncClient):
         # to the sender so our other accounts wouldn't be able to replace
         # local echoes by real messages.
         tx_id = uuid4()
-        content[f"{__pkg_name__}.transaction_id"] = str(tx_id)
+        content[f"{__app_name__}.transaction_id"] = str(tx_id)
 
         await self._local_echo(room_id, tx_id, event_type, content=echo_body)
         await self._send_message(room_id, content)
@@ -291,7 +291,7 @@ class MatrixClient(nio.AsyncClient):
         thumb_info: Optional[MatrixImageInfo] = None
 
         content: dict = {
-            f"{__pkg_name__}.transaction_id": str(transaction_id),
+            f"{__app_name__}.transaction_id": str(transaction_id),
 
             "body": path.name,
             "info": {
@@ -926,7 +926,7 @@ class MatrixClient(nio.AsyncClient):
 
         # Add the Event to model
         tx_id = ev.source.get("content", {}).get(
-            f"{__pkg_name__}.transaction_id",
+            f"{__app_name__}.transaction_id",
         )
         local_sender = ev.sender in self.backend.clients
 

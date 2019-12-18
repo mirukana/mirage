@@ -9,7 +9,7 @@ from appdirs import AppDirs
 
 import nio
 
-from . import __about__
+from . import __app_name__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
 from .models.items import Account, Device, Event, Member, Room, Upload
@@ -22,7 +22,7 @@ nio.log.logbook.StreamHandler(sys.stderr).push_application()
 
 class Backend:
     def __init__(self) -> None:
-        self.appdirs = AppDirs(appname=__about__.__pkg_name__, roaming=True)
+        self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
         from . import config_files
         self.saved_accounts = config_files.Accounts(self)
