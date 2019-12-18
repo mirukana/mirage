@@ -10,7 +10,7 @@ import lxml  # nosec
 
 import nio
 
-from ..html_filter import HTML_FILTER
+from ..html_markdown import HTML_PROCESSOR
 from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
 
@@ -200,7 +200,7 @@ class Event(ModelItem):
 
     def __post_init__(self) -> None:
         if not self.inline_content:
-            self.inline_content = HTML_FILTER.filter_inline(self.content)
+            self.inline_content = HTML_PROCESSOR.filter_inline(self.content)
 
 
     def __lt__(self, other: "Event") -> bool:

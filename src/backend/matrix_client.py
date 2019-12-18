@@ -30,7 +30,7 @@ from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
     UneededThumbnail, UserNotFound,
 )
-from .html_filter import HTML_FILTER
+from .html_markdown import HTML_PROCESSOR as HTML
 from .models.items import (
     Account, Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
 )
@@ -205,13 +205,13 @@ class MatrixClient(nio.AsyncClient):
             event_type = nio.RoomMessageEmote
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
-            to_html    = HTML_FILTER.from_markdown_inline(text, outgoing=True)
-            echo_body  = HTML_FILTER.from_markdown_inline(text)
+            to_html    = HTML.from_markdown_inline(text, outgoing=True)
+            echo_body  = HTML.from_markdown_inline(text)
         else:
             event_type = nio.RoomMessageText
             content    = {"body": text, "msgtype": "m.text"}
-            to_html    = HTML_FILTER.from_markdown(text, outgoing=True)
-            echo_body  = HTML_FILTER.from_markdown(text)
+            to_html    = HTML.from_markdown(text, outgoing=True)
+            echo_body  = HTML.from_markdown(text)
 
         if to_html not in (html.escape(text), f"<p>{html.escape(text)}</p>"):
             content["format"]         = "org.matrix.custom.html"
@@ -832,7 +832,7 @@ class MatrixClient(nio.AsyncClient):
             display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
             plain_topic    = room.topic or "",
-            topic          = HTML_FILTER.filter_inline(room.topic or ""),
+            topic          = HTML.filter_inline(room.topic or ""),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
             inviter_avatar =

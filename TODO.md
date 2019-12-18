@@ -90,6 +90,7 @@
 - Way to open context menus without a right mouse button
 - `smartVerticalFlick()` gradual acceleration
 - Make banner buttons look better
+- Way to color HTML from the composer
 
 - Choose a better default easing type for animations
 - Make HListView scrollbars visible
@@ -206,8 +207,9 @@
 - Turn all the Error and Response classes into exceptions and normal returns
   once `HttpClient` is deprecated
 
-## Distribution
+## Distribution & dependencies
 
+- Mistune v2.0
 - Include python dependencies in binary with rcc?
 - Improve the README.md
 

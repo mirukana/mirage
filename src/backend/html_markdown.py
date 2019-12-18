@@ -1,3 +1,5 @@
+"""HTML and Markdown processing tools."""
+
 import re
 
 import html_sanitizer.sanitizer as sanitizer
@@ -7,12 +9,20 @@ from lxml.html import HtmlElement  # nosec
 
 
 class MarkdownInlineGrammar(mistune.InlineGrammar):
-    # Enable *word* but not _word_ syntaxes (TODO: config option for that)
+    """Markdown inline elements syntax modifications for the Mistune parser.
+
+    Modifications:
+
+    - Disable underscores for bold/italics (e.g. `__bold__`)
+    """
+
     emphasis        = re.compile(r"^\*((?:\*\*|[^\*])+?)\*(?!\*)")
     double_emphasis = re.compile(r"^\*{2}([\s\S]+?)\*{2}(?!\*)")
 
 
 class MarkdownInlineLexer(mistune.InlineLexer):
+    """Apply the changes from `MarkdownInlineGrammar` for Mistune."""
+
     grammar_class = MarkdownInlineGrammar
 
 
@@ -24,7 +34,27 @@ class MarkdownInlineLexer(mistune.InlineLexer):
         return self.renderer.emphasis(self.output(m.group(1)))
 
 
-class HtmlFilter:
+class HTMLProcessor:
+    """Provide HTML filtering and conversion from Markdown.
+
+    Filtering sanitizes HTML and ensures it complies with the supported Qt
+    subset for usage in QML: https://doc.qt.io/qt-5/richtext-html-subset.html
+
+    Some methods take an `outgoing` argument, specifying if the HTML is
+    intended to be sent to matrix servers or used locally in our application.
+
+    For local usage, extra transformations are applied:
+
+    - Wrap text lines starting with a `>` in `<span>` with a `quote` class.
+      This allows them to be styled appropriately from QML.
+
+    Some methods have `inline` counterparts, which return text appropriate
+    for UI elements restricted to display a single line, e.g. the room
+    last message subtitles in QML or notifications.
+    In inline filtered HTML, block tags are stripped or substituted and
+    newlines are turned into ⏎ symbols (U+23CE).
+    """
+
     inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
 
     block_tags = {
@@ -73,14 +103,20 @@ class HtmlFilter:
 
 
     def from_markdown(self, text: str, outgoing: bool = False) -> str:
+        """Return filtered HTML from Markdown text."""
+
         return self.filter(self._markdown_to_html(text), outgoing)
 
 
     def from_markdown_inline(self, text: str, outgoing: bool = False) -> str:
+        """Return single-line filtered HTML from Markdown text."""
+
         return self.filter_inline(self._markdown_to_html(text), outgoing)
 
 
     def filter_inline(self, html: str, outgoing: bool = False) -> str:
+        """Filter and return HTML with block tags stripped or substituted."""
+
         html = self._inline_sanitizer.sanitize(html)
 
         if outgoing:
@@ -93,6 +129,8 @@ class HtmlFilter:
 
 
     def filter(self, html: str, outgoing: bool = False) -> str:
+        """Filter and return HTML."""
+
         html = self._sanitizer.sanitize(html).rstrip("\n")
 
         if outgoing:
@@ -102,6 +140,8 @@ class HtmlFilter:
 
 
     def sanitize_settings(self, inline: bool = False) -> dict:
+        """Return an html_sanitizer configuration."""
+
         # https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
         # TODO: mx-reply and the new hidden thing
 
@@ -156,6 +196,8 @@ class HtmlFilter:
 
     @staticmethod
     def _process_span_font(el: HtmlElement) -> HtmlElement:
+        """Convert HTML `<span data-mx-color=...` to `<font color=...>`."""
+
         if el.tag not in ("span", "font"):
             return el
 
@@ -169,6 +211,8 @@ class HtmlFilter:
 
     @staticmethod
     def _img_to_a(el: HtmlElement) -> HtmlElement:
+        """Linkify images by wrapping `<img>` tags in `<a>`."""
+
         if el.tag == "img":
             el.tag            = "a"
             el.attrib["href"] = el.attrib.pop("src", "")
@@ -178,8 +222,11 @@ class HtmlFilter:
 
 
     def _remove_extra_newlines(self, el: HtmlElement) -> HtmlElement:
-        # Remove excess \n characters to avoid additional blank lines with
-        # HTML/CSS using `white-space: pre`, except in <pre> content.
+        """Remove excess `\\n` characters from non-`<pre>` HTML elements.
+
+        This is done to avoid additional blank lines when the CSS directive
+        `white-space: pre` is used.
+        """
 
         pre_parent = any(parent.tag == "pre" for parent in el.iterancestors())
 
@@ -193,9 +240,12 @@ class HtmlFilter:
 
 
     def _newlines_to_return_symbol(self, el: HtmlElement) -> HtmlElement:
-        # Add a return unicode symbol (U+23CE) to blocks with siblings
-        # (e.g. a <p> followed by another <p>) or <br>.
-        # The <br> themselves will be removed by the inline sanitizer.
+        """Turn newlines into unicode return symbols (⏎, U+23CE).
+
+        The symbol is added to blocks with siblings (e.g. a `<p>` followed by
+        another `<p>`) and `<br>` tags.
+        The `<br>` themselves will be removed by the inline sanitizer.
+        """
 
         is_block_with_siblings = (el.tag in self.block_tags and
                                   next(el.itersiblings(), None) is not None)
@@ -214,4 +264,4 @@ class HtmlFilter:
         return el
 
 
-HTML_FILTER = HtmlFilter()
+HTML_PROCESSOR = HTMLProcessor()

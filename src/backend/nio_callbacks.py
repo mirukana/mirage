@@ -10,7 +10,7 @@ from urllib.parse import quote
 import nio
 
 from . import utils
-from .html_filter import HTML_FILTER
+from .html_markdown import HTML_PROCESSOR
 from .matrix_client import MatrixClient
 from .models.items import Account, Room, TypeSpecifier
 
@@ -80,7 +80,7 @@ class NioCallbacks:
     # Content: %1 is the sender, %2 the target (ev.state_key).
 
     async def onRoomMessageText(self, room, ev) -> None:
-        co = HTML_FILTER.filter(
+        co = HTML_PROCESSOR.filter(
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else
             utils.plain2html(ev.body),
@@ -315,7 +315,7 @@ class NioCallbacks:
 
     async def onRoomTopicEvent(self, room, ev) -> None:
         if ev.topic:
-            topic = HTML_FILTER.filter_inline(ev.topic)
+            topic = HTML_PROCESSOR.filter_inline(ev.topic)
             co    = f"%1 changed the room's topic to \"{topic}\""
         else:
             co = "%1 removed the room's topic"
