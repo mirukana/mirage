@@ -1,4 +1,4 @@
-"""Install `uvloop` if possible and provide a `QmlBridge`."""
+"""Install `uvloop` if possible and provide a `QMLBridge`."""
 
 import asyncio
 import logging as log
@@ -20,7 +20,7 @@ else:
     uvloop.install()
 
 
-class QmlBridge:
+class QMLBridge:
     """Setup asyncio and provide synchronous methods to call coroutines.
 
     A thread is created to run the asyncio loop in, to ensure all calls from
@@ -110,4 +110,4 @@ class QmlBridge:
 # Make CTRL-C work again
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-BRIDGE = QmlBridge()
+BRIDGE = QMLBridge()
