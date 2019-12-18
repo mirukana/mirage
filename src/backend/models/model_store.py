@@ -1,60 +1,34 @@
-from typing import Dict, Iterator, MutableMapping, Set, Tuple, Type, Union
-
+from collections import UserDict
 from dataclasses import dataclass, field
+from typing import Dict
 
 from . import SyncId
-from .model_item import ModelItem
 from .model import Model
 
-KeyType = Union[Type[ModelItem], Tuple[Type, ...]]
 
 @dataclass(frozen=True)
-class ModelStore(MutableMapping):
-    allowed_key_types: Set[KeyType] = field()
+class ModelStore(UserDict):
+    """Dict of sync ID keys and `Model` values.
 
-    data: Dict[SyncId, Model] = field(init=False, default_factory=dict)
+    The dict keys must be the sync ID of `Model` values.
+    If a non-existent key is accessed, a corresponding `Model` will be
+    created, put into the interal `data` dict and returned.
+    """
 
-
-    def __getitem__(self, key: SyncId) -> Model:
-        try:
-            return self.data[key]
-        except KeyError:
-            if isinstance(key, tuple):
-                for i in key:
-                    if not i:
-                        raise ValueError(f"Empty string in key: {key!r}")
-
-                key_type  = (key[0],) + \
-                            tuple(type(el) for el in key[1:])
-            else:
-                key_type = key  # type: ignore
-
-            if key_type not in self.allowed_key_types:
-                raise TypeError(f"{key_type!r} not in allowed key types: "
-                                f"{self.allowed_key_types!r}")
-
-            model          = Model(key)
-            self.data[key] = model
-            return model
+    data: Dict[SyncId, Model] = field(default_factory=dict)
 
 
-    def __setitem__(self, key, item) -> None:
-        raise NotImplementedError()
+    def __missing__(self, key: SyncId) -> Model:
+        """When accessing a non-existent model, create and return it."""
 
-
-    def __delitem__(self, key: SyncId) -> None:
-        del self.data[key]
-
-
-    def __iter__(self) -> Iterator[SyncId]:
-        return iter(self.data)
-
-
-    def __len__(self) -> int:
-        return len(self.data)
+        model          = Model(sync_id=key)
+        self.data[key] = model
+        return model
 
 
     def __str__(self) -> str:
+        """Provide a nice overview of stored models when `print()` called."""
+
         return "%s(\n    %s\n)" % (
             type(self).__name__,
             "\n    ".join(sorted(str(v) for v in self.values())),
