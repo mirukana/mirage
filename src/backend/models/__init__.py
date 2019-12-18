@@ -1,3 +1,5 @@
+"""Provide classes related to data models shared between Python and QML."""
+
 from typing import Tuple, Type, Union
 
 from .model_item import ModelItem

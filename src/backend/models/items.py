@@ -1,3 +1,5 @@
+"""`ModelItem` subclasses definitions."""
+
 import asyncio
 import re
 from dataclasses import dataclass, field
@@ -19,6 +21,8 @@ OptionalExceptionType = Union[Type[None], Type[Exception]]
 
 @dataclass
 class Account(ModelItem):
+    """A logged in matrix account."""
+
     user_id:         str                = field()
     display_name:    str                = ""
     avatar_url:      str                = ""
@@ -26,17 +30,21 @@ class Account(ModelItem):
     profile_updated: Optional[datetime] = None
 
     def __lt__(self, other: "Account") -> bool:
+        """Sort by display name or user ID."""
         name       = self.display_name or self.user_id[1:]
         other_name = other.display_name or other.user_id[1:]
         return name < other_name
 
     @property
     def filter_string(self) -> str:
+        """Filter based on display name."""
         return self.display_name
 
 
 @dataclass
 class Room(ModelItem):
+    """A matrix room we are invited to, are or were member of."""
+
     room_id:        str       = field()
     given_name:     str       = ""
     display_name:   str       = ""
@@ -66,8 +74,13 @@ class Room(ModelItem):
     last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
 
     def __lt__(self, other: "Room") -> bool:
-        # Order: Invited rooms > joined rooms > left rooms.
-        # Within these categories, sort by date then by name.
+        """Sort by join state, then descending last event date, then name.
+
+        Invited rooms are first, then joined rooms, then left rooms.
+        Within these categories, sort by last event date (room with recent
+        messages are first), then by display names.
+        """
+
         # Left rooms may still have an inviter_id, so check left first.
         return (
             self.left,
@@ -91,6 +104,8 @@ class Room(ModelItem):
 
     @property
     def filter_string(self) -> str:
+        """Filter based on room display name, topic, and last event content."""
+
         return " ".join((
             self.display_name,
             self.topic,
@@ -101,6 +116,8 @@ class Room(ModelItem):
 
 @dataclass
 class Member(ModelItem):
+    """A member in a matrix room."""
+
     user_id:      str  = field()
     display_name: str  = ""
     avatar_url:   str  = ""
@@ -109,8 +126,8 @@ class Member(ModelItem):
     invited:      bool = False
 
     def __lt__(self, other: "Member") -> bool:
-        # Sort by name, but have members with higher power-level first and
-        # invited-but-not-joined members last
+        """Sort by power level, then by display name/user ID."""
+
         name       = (self.display_name or self.user_id[1:]).lower()
         other_name = (other.display_name or other.user_id[1:]).lower()
 
@@ -123,10 +140,13 @@ class Member(ModelItem):
 
     @property
     def filter_string(self) -> str:
+        """Filter members based on display name."""
         return self.display_name
 
 
 class UploadStatus(AutoStrEnum):
+    """Enum describing the status of an upload operation."""
+
     Uploading = auto()
     Caching   = auto()
     Error     = auto()
@@ -134,6 +154,8 @@ class UploadStatus(AutoStrEnum):
 
 @dataclass
 class Upload(ModelItem):
+    """Represent a running or failed file upload operation."""
+
     uuid:     UUID                = field()
     task:     asyncio.Task        = field()
     monitor:  nio.TransferMonitor = field()
@@ -152,11 +174,14 @@ class Upload(ModelItem):
 
 
     def __lt__(self, other: "Upload") -> bool:
-        # Sort from newest upload to oldest.
+        """Sort by the start date, from newest upload to oldest."""
+
         return self.start_date > other.start_date
 
 
 class TypeSpecifier(AutoStrEnum):
+    """Enum providing clarification of purpose for some matrix events."""
+
     none              = auto()
     profile_change    = auto()
     membership_change = auto()
@@ -164,6 +189,8 @@ class TypeSpecifier(AutoStrEnum):
 
 @dataclass
 class Event(ModelItem):
+    """A matrix state event or message."""
+
     source:        Optional[nio.Event] = field()
     client_id:     str                 = field()
     event_id:      str                 = field()
@@ -204,11 +231,14 @@ class Event(ModelItem):
 
 
     def __lt__(self, other: "Event") -> bool:
-        # Sort events from newest to oldest. return True means return False.
+        """Sort by date in descending order, from newest to oldest."""
+
         return self.date > other.date
 
     @property
     def event_type(self) -> Type:
+        """Type of the source nio event used to create this `Event`."""
+
         if self.local_event_type:
             return self.local_event_type
 
@@ -216,6 +246,8 @@ class Event(ModelItem):
 
     @property
     def links(self) -> List[str]:
+        """List of URLs (`<a href=...>` tags) present in the event content."""
+
         urls: List[str] = []
 
         if self.content.strip():
@@ -229,6 +261,8 @@ class Event(ModelItem):
 
 @dataclass
 class Device(ModelItem):
+    """A matrix user's device. This class is currently unused."""
+
     device_id:      str  = field()
     ed25519_key:    str  = field()
     trusted:        bool = False
