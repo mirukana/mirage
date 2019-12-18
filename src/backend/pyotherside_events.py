@@ -9,10 +9,11 @@ from .utils import serialize_value_for_qml
 
 @dataclass
 class PyOtherSideEvent:
-    """Event that will be sent to QML by PyOtherSide."""
+    """Event that will be sent on instanciation to QML by PyOtherSide."""
 
     def __post_init__(self) -> None:
-        # CPython >= 3.6 or any Python >= 3.7 needed for correct dict order
+        # CPython 3.6 or any Python implemention >= 3.7 is required for correct
+        # __dataclass_fields__ dict order.
         args = [
             serialize_value_for_qml(getattr(self, field))
             for field in self.__dataclass_fields__  # type: ignore
@@ -29,9 +30,10 @@ class ExitRequested(PyOtherSideEvent):
 
 @dataclass
 class AlertRequested(PyOtherSideEvent):
-    """Request an alert to be shown for msec milliseconds.
-    The Alert state for example sets the urgency hint on X11/Wayland,
-    or flashes the taskbar icon on Windows.
+    """Request a window manager alert to be shown.
+
+    Sets the urgency hint for compliant X11/Wayland window managers;
+    flashes the taskbar icon on Windows.
     """
 
 
