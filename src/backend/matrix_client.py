@@ -1,3 +1,5 @@
+"""Matrix client and related classes."""
+
 import asyncio
 import html
 import io
@@ -41,22 +43,39 @@ CryptDict = Dict[str, Any]
 
 
 class UploadReturn(NamedTuple):
+    """Details for an uploaded file."""
+
     mxc:             str
     mime:            str
     decryption_dict: Dict[str, Any]
 
 
 class MatrixImageInfo(NamedTuple):
-    w:        int
-    h:        int
-    mimetype: str
-    size:     int
+    """Image informations to be passed for Matrix file events."""
+
+    width:  int
+    height: int
+    mime:   str
+    size:   int
+
+    def as_dict(self) -> Dict[str, Union[int, str]]:
+        """Return a dict ready to be included in a Matrix file events."""
+
+        return {
+            "w":        self.width,
+            "h":        self.height,
+            "mimetype": self.mime,
+            "size":     self.size,
+        }
 
 
 class MatrixClient(nio.AsyncClient):
+    """A client for an account to interact with a matrix homeserver."""
+
     user_id_regex          = re.compile(r"^@.+:.+")
     room_id_or_alias_regex = re.compile(r"^[#!].+:.+")
     http_s_url             = re.compile(r"^https?://")
+
 
     def __init__(self,
                  backend,
@@ -112,12 +131,16 @@ class MatrixClient(nio.AsyncClient):
 
     @property
     def default_device_name(self) -> str:
+        """Device name to set at login if the user hasn't set a custom one."""
+
         os_ = f" on {platform.system()}".rstrip()
         os_ = f"{os_} {platform.release()}".rstrip() if os_ != " on" else ""
         return f"{__display_name__}{os_}"
 
 
     async def login(self, password: str, device_name: str = "") -> None:
+        """Login to the server using the account's password."""
+
         response = await super().login(
             password, device_name or self.default_device_name,
         )
@@ -125,17 +148,21 @@ class MatrixClient(nio.AsyncClient):
         if isinstance(response, nio.LoginError):
             raise MatrixError.from_nio(response)
 
-        asyncio.ensure_future(self.start())
+        asyncio.ensure_future(self._start())
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
+        """Login to the server using an existing access token."""
+
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
-        asyncio.ensure_future(self.start())
+        asyncio.ensure_future(self._start())
 
 
     async def logout(self) -> None:
+        """Logout from the server. This will delete the device."""
+
         for task in (self.profile_task, self.load_rooms_task, self.sync_task):
             if task:
                 task.cancel()
@@ -148,14 +175,20 @@ class MatrixClient(nio.AsyncClient):
 
     @property
     def syncing(self) -> bool:
+        """Return whether this client is currently syncing with the server."""
+
         if not self.sync_task:
             return False
 
         return not self.sync_task.done()
 
 
-    async def start(self) -> None:
+    async def _start(self) -> None:
+        """Fetch our user profile and enter the server sync loop."""
+
         def on_profile_response(future) -> None:
+            """Update our model `Account` with the received profile details."""
+
             exception = future.exception()
 
             if exception:
@@ -192,10 +225,14 @@ class MatrixClient(nio.AsyncClient):
 
     @property
     def all_rooms(self) -> Dict[str, nio.MatrixRoom]:
+        """Return dict containing both our joined and invited rooms."""
+
         return {**self.invited_rooms, **self.rooms}
 
 
     async def send_text(self, room_id: str, text: str) -> None:
+        """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""
+
         escape = False
         if text.startswith("//") or text.startswith(r"\/"):
             escape = True
@@ -228,6 +265,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
+        """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
+
         item_uuid = uuid4()
 
         try:
@@ -240,6 +279,11 @@ class MatrixClient(nio.AsyncClient):
     async def _send_file(
         self, item_uuid: UUID, room_id: str, path: Union[Path, str],
     ) -> None:
+        """Monitorably upload a file + thumbnail and send the built event."""
+
+        # TODO: this function is WAY TOO COMPLEX, and most of it should be
+        # refactored into nio.
+
         from .media_cache import Media, Thumbnail
 
         transaction_id = uuid4()
@@ -361,7 +405,7 @@ class MatrixClient(nio.AsyncClient):
                     else:
                         content["info"]["thumbnail_url"]  = thumb_url
 
-                    content["info"]["thumbnail_info"] = thumb_info._asdict()
+                    content["info"]["thumbnail_info"] = thumb_info.as_dict()
 
         elif kind == "audio":
             event_type = \
@@ -422,9 +466,27 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def _local_echo(
-        self, room_id: str, transaction_id: UUID,
-        event_type: Type[nio.Event], **event_fields,
+        self,
+        room_id:        str,
+        transaction_id: UUID,
+        event_type:     Type[nio.Event],
+        **event_fields,
     ) -> None:
+        """Register a local model `Event` while waiting for the server.
+
+        When the user sends a message, we want to show instant feedback in
+        the UI timeline without waiting for the servers to receive our message
+        and retransmit it to us.
+
+        The event will be locally echoed for all our accounts that are members
+        of the `room_id` room.
+        This allows sending messages from other accounts within the same
+        composer without having to go to another page in the UI,
+        and getting direct feedback for these accounts in the timeline.
+
+        When we do get the real event retransmited by the server, it will
+        replace the local one we registered.
+        """
 
         our_info = self.models[Member, self.user_id, room_id][self.user_id]
 
@@ -453,6 +515,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def _send_message(self, room_id: str, content: dict) -> None:
+        """Send a message event with `content` dict to a room."""
 
         async with self.backend.send_locks[room_id]:
             response = await self.room_send(
@@ -467,6 +530,14 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_past_events(self, room_id: str) -> bool:
+        """Ask the server for 100 previous events  of the room.
+
+        Events from before the client was started will be requested and
+        registered into our models.
+
+        Returns whether there are any messages left to load.
+        """
+
         if room_id in self.fully_loaded_rooms or \
            room_id in self.invited_rooms or \
            room_id in self.cleared_events_rooms:
@@ -507,6 +578,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_rooms_without_visible_events(self) -> None:
+        """Call `_load_room_without_visible_events` for all joined rooms."""
+
         for room_id in self.models[Room, self.user_id]:
             asyncio.ensure_future(
                 self._load_room_without_visible_events(room_id),
@@ -514,6 +587,20 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def _load_room_without_visible_events(self, room_id: str) -> None:
+        """Request past events for rooms without any suitable event to show.
+
+        Some events are currently not supported, or processed but not
+        shown in the UI timeline/room "last event" subtitle, e.g.
+        the "x changed their name/avatar" events.
+
+        It could happen that all the initial events received in the initial
+        sync for a room are such events,
+        and thus we'd have nothing to show in the room.
+
+        This method tries to load past events until we have at least one
+        to show or there is nothing left to load.
+        """
+
         events = self.models[Event, self.user_id, room_id]
         more   = True
 
@@ -522,6 +609,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def new_direct_chat(self, invite: str, encrypt: bool = False) -> str:
+        """Create a room and invite a single user in it for a direct chat."""
+
         if invite == self.user_id:
             raise InvalidUserInContext(invite)
 
@@ -553,6 +642,7 @@ class MatrixClient(nio.AsyncClient):
         encrypt:  bool          = False,
         federate: bool          = True,
     ) -> str:
+        """Create a new matrix room with the purpose of being a group chat."""
 
         response = await super().room_create(
             name       = name or None,
@@ -571,6 +661,8 @@ class MatrixClient(nio.AsyncClient):
         return response.room_id
 
     async def room_join(self, alias_or_id_or_url: str) -> str:
+        """Join an existing matrix room."""
+
         string = alias_or_id_or_url.strip()
 
         if self.http_s_url.match(string):
@@ -593,6 +685,12 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def room_forget(self, room_id: str) -> None:
+        """Leave a joined room (or decline an invite) and forget its history.
+
+        If all the members of a room leave and forget it, that room
+        will be marked as suitable for destruction by the server.
+        """
+
         await super().room_leave(room_id)
         await super().room_forget(room_id)
         self.models[Room, self.user_id].pop(room_id, None)
@@ -603,6 +701,13 @@ class MatrixClient(nio.AsyncClient):
     async def room_mass_invite(
         self, room_id: str, *user_ids: str,
     ) -> Tuple[List[str], List[Tuple[str, Exception]]]:
+        """Invite users to a room in parallel.
+
+        Returns a tuple with:
+
+        - A list of users we successfully invited
+        - A list of `(user_id, Exception)` tuples for those failed to invite.
+        """
 
         user_ids = tuple(
             uid for uid in user_ids
@@ -640,6 +745,7 @@ class MatrixClient(nio.AsyncClient):
     async def generate_thumbnail(
         self, data: UploadData, is_svg: bool = False,
     ) -> Tuple[bytes, MatrixImageInfo]:
+        """Create a thumbnail from an image, return the bytes and info."""
 
         png_modes = ("1", "L", "P", "RGBA")
 
@@ -689,6 +795,7 @@ class MatrixClient(nio.AsyncClient):
         encrypt:       bool                          = False,
         monitor:       Optional[nio.TransferMonitor] = None,
     ) -> UploadReturn:
+        """Upload a file to the matrix homeserver."""
 
         mime = mime or await utils.guess_mime(data_provider(0, 0))
 
@@ -707,6 +814,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
+        """Upload an image to the homeserver and set it as our avatar."""
+
         mime = await utils.guess_mime(path)
 
         if mime.split("/")[0] != "image":
@@ -717,11 +826,15 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
+        """Import decryption keys from a file, then retry decrypting events."""
+
         await super().import_keys(infile, passphrase)
         await self.retry_decrypting_events()
 
 
     async def export_keys(self, outfile: str, passphrase: str) -> None:
+        """Export our decryption keys to a file."""
+
         path = Path(outfile)
         path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -733,6 +846,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def retry_decrypting_events(self) -> None:
+        """Retry decrypting room `Event`s in our model we failed to decrypt."""
+
         for sync_id, model in self.models.items():
             if not (isinstance(sync_id, tuple) and
                     sync_id[0:2] == (Event, self.user_id)):
@@ -759,6 +874,11 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def clear_events(self, room_id: str) -> None:
+        """Remove every `Event` of a room we registred in our model.
+
+        The events will be gone from the UI, until the client is restarted.
+        """
+
         self.cleared_events_rooms.add(room_id)
         model = self.models[Event, self.user_id, room_id]
         if model:
@@ -769,6 +889,8 @@ class MatrixClient(nio.AsyncClient):
     # Functions to register data into models
 
     async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
+        """Return whether an event was created before this client started."""
+
         if not self.first_sync_date:
             return True
 
@@ -780,6 +902,11 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_room_last_event(self, room_id: str, item: Event) -> None:
+        """Set the `last_event` for a `Room` using data in our `Event` model.
+
+        The `last_event` is notably displayed in the UI room subtitles.
+        """
+
         model = self.models[Room, self.user_id]
         room  = model[room_id]
 
@@ -813,8 +940,11 @@ class MatrixClient(nio.AsyncClient):
             model.sync_now()
 
 
-    async def register_nio_room(self, room: nio.MatrixRoom, left: bool = False,
-                               ) -> None:
+    async def register_nio_room(
+        self, room: nio.MatrixRoom, left: bool = False,
+    ) -> None:
+        """Register a `nio.MatrixRoom` as a `Room` object in our model."""
+
         # Add room
         try:
             last_ev = self.models[Room, self.user_id][room.room_id].last_event
@@ -880,16 +1010,26 @@ class MatrixClient(nio.AsyncClient):
         self.models[Member, self.user_id, room.room_id].update(new_dict)
 
 
-    async def get_member_name_avatar(self, room_id: str, user_id: str,
-                                    ) -> Tuple[str, str]:
+    async def get_member_name_avatar(
+        self, room_id: str, user_id: str,
+    ) -> Tuple[str, str]:
+        """Return a room member's display name and avatar.
+
+        If the member isn't found in the room (e.g. they left), their
+        profile is retrieved using `MatrixClient.backend.get_profile()`.
+        """
+
         try:
             item = self.models[Member, self.user_id, room_id][user_id]
+
         except KeyError:  # e.g. user is not anymore in the room
             try:
                 info = await self.backend.get_profile(user_id)
                 return (info.displayname or "", info.avatar_url or "")
+
             except MatrixError:
                 return ("", "")
+
         else:
             return (item.display_name, item.avatar_url)
 
@@ -897,6 +1037,11 @@ class MatrixClient(nio.AsyncClient):
     async def register_nio_event(
         self, room: nio.MatrixRoom, ev: nio.Event, **fields,
     ) -> None:
+        """Register a `nio.Event` as a `Event` object in our model.
+
+        `MatrixClient.register_nio_room` is called for the passed `room`
+        if neccessary before.
+        """
 
         await self.register_nio_room(room)
 
