@@ -9,7 +9,7 @@ Python {
     property bool startupAnyAccountsSaved: false
     property var pendingCoroutines: ({})
 
-    property EventHandlers eventHandlers: EventHandlers {}
+    property PythonEventHandlers eventHandlers: PythonEventHandlers {}
 
 
     function newQmlFuture() {
@@ -105,7 +105,7 @@ Python {
 
         addImportPath("src")
         addImportPath("qrc:/src")
-        importNames("python", ["APP"], () => {
+        importNames("backend", ["APP"], () => {
             loadSettings(() => {
                 callCoro("saved_accounts.any_saved", [], any => {
                     if (any) { py.callCoro("load_saved_accounts", []) }

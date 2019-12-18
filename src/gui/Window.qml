@@ -70,7 +70,7 @@ ApplicationWindow {
     }
 
 
-    Python { id: py }
+    PythonBridge { id: py }
 
     Utils { id: utils }
 

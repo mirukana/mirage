@@ -31,7 +31,7 @@ Item {
         (modelSources["Account"] || []).length > 0 ||
         py.startupAnyAccountsSaved
 
-    Shortcuts { id: shortcuts }
+    GlobalShortcuts { id: shortcuts }
 
     HImage {
         id: mainUIBackground

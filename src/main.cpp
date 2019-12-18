@@ -48,10 +48,10 @@ int main(int argc, char *argv[]) {
     // System (qrc:/, resources stored in the app's executable) if possible,
     // else fall back to the filesystem.
     // The dev qmake flag disables the resource system for faster builds.
-    QFileInfo qrcPath(":src/qml/Window.qml");
+    QFileInfo qrcPath(":src/gui/Window.qml");
     QQmlComponent component(
         &engine,
-        qrcPath.exists() ? "qrc:/src/qml/Window.qml" : "src/qml/Window.qml"
+        qrcPath.exists() ? "qrc:/src/gui/Window.qml" : "src/gui/Window.qml"
     );
     component.create(objectContext);
 
