@@ -1,22 +1,28 @@
 import asyncio
 import logging as log
+import sys
 from pathlib import Path
 from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple
 
 import hsluv
+from appdirs import AppDirs
 
 import nio
 
-from .app import App
+from . import __about__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
 from .models.items import Account, Device, Event, Member, Room, Upload
 from .models.model_store import ModelStore
 
+log.getLogger().setLevel(log.INFO)
+nio.logger_group.level = nio.log.logbook.ERROR
+nio.log.logbook.StreamHandler(sys.stderr).push_application()
+
 
 class Backend:
-    def __init__(self, app: App) -> None:
-        self.app = app
+    def __init__(self) -> None:
+        self.appdirs = AppDirs(appname=__about__.__pkg_name__, roaming=True)
 
         from . import config_files
         self.saved_accounts = config_files.Accounts(self)
@@ -43,7 +49,7 @@ class Backend:
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
         from .media_cache import MediaCache
-        cache_dir        = Path(self.app.appdirs.user_cache_dir)
+        cache_dir        = Path(self.appdirs.user_cache_dir)
         self.media_cache = MediaCache(self, cache_dir)
 
 

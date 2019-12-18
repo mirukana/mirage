@@ -24,7 +24,7 @@ Item {
     HShortcut {
         enabled: debugMode
         sequences: settings.keys.startPythonDebugger
-        onActivated: py.call("APP.pdb")
+        onActivated: py.call("BRIDGE.pdb")
     }
 
     HShortcut {

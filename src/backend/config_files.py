@@ -30,7 +30,7 @@ class ConfigFile:
 
     @property
     def path(self) -> Path:
-        return Path(self.backend.app.appdirs.user_config_dir) / self.filename
+        return Path(self.backend.appdirs.user_config_dir) / self.filename
 
 
     async def default_data(self):
@@ -180,7 +180,7 @@ class UIState(JSONConfigFile):
 
     @property
     def path(self) -> Path:
-        return Path(self.backend.app.appdirs.user_data_dir) / self.filename
+        return Path(self.backend.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self) -> JsonData:
@@ -198,7 +198,7 @@ class History(JSONConfigFile):
 
     @property
     def path(self) -> Path:
-        return Path(self.backend.app.appdirs.user_data_dir) / self.filename
+        return Path(self.backend.appdirs.user_data_dir) / self.filename
 
 
     async def default_data(self) -> JsonData:
@@ -209,7 +209,7 @@ class History(JSONConfigFile):
 class Theme(ConfigFile):
     @property
     def path(self) -> Path:
-        data_dir = Path(self.backend.app.appdirs.user_data_dir)
+        data_dir = Path(self.backend.appdirs.user_data_dir)
         return data_dir / "themes" / self.filename
 
 

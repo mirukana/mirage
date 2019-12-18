@@ -12,7 +12,7 @@ Python {
         addImportPath("src")
         addImportPath("qrc:/src")
 
-        importNames("backend", ["APP"], () => {
+        importNames("backend", ["BRIDGE"], () => {
             loadSettings(() => {
                 callCoro("saved_accounts.any_saved", [], any => {
                     if (any) { py.callCoro("load_saved_accounts", []) }
@@ -45,7 +45,7 @@ Python {
 
 
     function callSync(name, args=[]) {
-        return call_sync("APP.backend." + name, args)
+        return call_sync("BRIDGE.backend." + name, args)
     }
 
 
@@ -56,7 +56,7 @@ Python {
 
         let future = privates.makeFuture()
 
-        call("APP.call_backend_coro", [name, uuid, args], pyFuture => {
+        call("BRIDGE.call_backend_coro", [name, uuid, args], pyFuture => {
             future.privates.pythonFuture = pyFuture
         })
 
@@ -76,7 +76,7 @@ Python {
 
             let call_args = [accountId, name, uuid, args]
 
-            call("APP.call_client_coro", call_args, pyFuture => {
+            call("BRIDGE.call_client_coro", call_args, pyFuture => {
                 future.privates.pythonFuture = pyFuture
             })
         })

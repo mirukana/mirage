@@ -1,1 +1,1 @@
-from .app import APP  # noqa
+from .qml_bridge import BRIDGE  # noqa

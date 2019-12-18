@@ -69,7 +69,7 @@ class MatrixClient(nio.AsyncClient):
                 f"homeserver is missing scheme (e.g. https://): {homeserver}",
             )
 
-        store = Path(backend.app.appdirs.user_data_dir) / "encryption"
+        store = Path(backend.appdirs.user_data_dir) / "encryption"
         store.mkdir(parents=True, exist_ok=True)
 
         super().__init__(
