@@ -23,26 +23,60 @@ nio.log.logbook.StreamHandler(sys.stderr).push_application()
 
 
 class Backend:
-    """Manage matrix clients and provide other useful general methods."""
+    """Manage matrix clients and provide other useful general methods.
+
+    Attributes:
+        saved_accounts: User config file for saved matrix account details.
+
+        ui_settings: User config file for QML interface settings.
+
+        ui_state: User data file for saving/restoring QML UI state.
+
+        history: User data file for saving/restoring lines typed into QML
+            components.
+
+        models: A dict containing our data models that are synchronized between
+            the Python backend and the QML UI.
+            The models should only ever be modified from the backend.
+
+            The dict keys are the `Model`'s synchronization ID,
+            which are in one of these form:
+
+            - A `ModelItem` type, the type of item that this model stores;
+            - A `(ModelItem, str...)` tuple.
+
+            Currently used sync ID throughout the code are:
+
+            - `Account`: logged-in accounts;
+
+            - `(Room, "<user_id>")`: rooms a `user_id` account is part of;
+
+            - `(Upload, "<user_id>")`: ongoing or failed file uploads for a
+              `user_id` account;
+
+            - `(Member, "<user_id>", "<room_id>")`: members in the room
+              `room_id` that account `user_id` is part of;
+
+            - `(Event,  "<user_id>", "<room_id>")`: state events and messages
+              in the room `room_id` that account `user_id` is part of.
+
+        clients: A dict containing the logged `MatrixClient` objects we manage.
+            Each client represents a logged-in account,
+            identified by its `user_id`.
+
+        media_cache: A matrix media cache for downloaded files.
+    """
 
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
-        from . import user_files
-        self.saved_accounts = user_files.Accounts(self)
-        self.ui_settings    = user_files.UISettings(self)
-        self.ui_state       = user_files.UIState(self)
-        self.history        = user_files.History(self)
+        from .user_files import Accounts, UISettings, UIState, History
+        self.saved_accounts: Accounts   = Accounts(self)
+        self.ui_settings:    UISettings = UISettings(self)
+        self.ui_state:       UIState    = UIState(self)
+        self.history:        History    = History(self)
 
-        self.models = ModelStore(allowed_key_types={
-            Account,             # Logged-in accounts
-            (Device, str),       # Devices of user_id
-            (Room,   str),       # Rooms for user_id
-            (Upload, str),       # Uploads running in room_id
-            (Member, str, str),  # Members for account user_id for room_id
-            (Event,  str, str),  # Events for account user_id for room_id
-        })
-
+        self.models:  ModelStore              = ModelStore()
         self.clients: Dict[str, MatrixClient] = {}
 
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
@@ -53,8 +87,8 @@ class Backend:
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
         from .media_cache import MediaCache
-        cache_dir        = Path(self.appdirs.user_cache_dir)
-        self.media_cache = MediaCache(self, cache_dir)
+        cache_dir                    = Path(self.appdirs.user_cache_dir)
+        self.media_cache: MediaCache = MediaCache(self, cache_dir)
 
 
     def __repr__(self) -> str:

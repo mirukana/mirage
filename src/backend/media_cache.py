@@ -1,4 +1,4 @@
-"""Matrix media caching and retrieval."""
+"""Matrix media downloading, caching and retrieval."""
 
 import asyncio
 import functools
@@ -30,7 +30,7 @@ ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
 
 @dataclass
 class MediaCache:
-    """Matrix media cache manager."""
+    """Matrix downloaded media cache."""
 
     backend:  Backend = field()
     base_dir: Path    = field()
