@@ -69,7 +69,7 @@ Python {
     ) {
         let future = privates.makeFuture()
 
-        callCoro("wait_until_client_exists", [accountId], () => {
+        callCoro("get_client", [accountId], () => {
             let uuid = accountId + "." + name + "." + CppUtils.uuid()
 
             privates.pendingCoroutines[uuid] = {onSuccess, onError}

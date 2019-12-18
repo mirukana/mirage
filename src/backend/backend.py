@@ -1,8 +1,9 @@
 import asyncio
 import logging as log
 import sys
+import traceback
 from pathlib import Path
-from typing import Any, Callable, DefaultDict, Dict, List, Optional, Tuple
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple
 
 import hsluv
 from appdirs import AppDirs
@@ -15,12 +16,15 @@ from .matrix_client import MatrixClient
 from .models.items import Account, Device, Event, Member, Room, Upload
 from .models.model_store import ModelStore
 
+# Logging configuration
 log.getLogger().setLevel(log.INFO)
 nio.logger_group.level = nio.log.logbook.ERROR
 nio.log.logbook.StreamHandler(sys.stderr).push_application()
 
 
 class Backend:
+    """Manage matrix clients and provide other useful general methods."""
+
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
@@ -65,6 +69,7 @@ class Backend:
         device_id:  Optional[str] = None,
         homeserver: str           = "https://matrix.org",
    ) -> str:
+        """Create and register a `MatrixClient`, login and return a user ID."""
 
         client = MatrixClient(
             self, user=user, homeserver=homeserver, device_id=device_id,
@@ -86,6 +91,7 @@ class Backend:
                             token:      str,
                             device_id:  str,
                             homeserver: str = "https://matrix.org") -> None:
+        """Create and register a `MatrixClient` with known account details."""
 
         client = MatrixClient(
             backend=self,
@@ -99,6 +105,8 @@ class Backend:
 
 
     async def load_saved_accounts(self) -> Tuple[str, ...]:
+        """Call `resume_client` for all saved accounts in user config."""
+
         async def resume(user_id: str, info: Dict[str, str]) -> str:
             await self.resume_client(
                 user_id    = user_id,
@@ -115,6 +123,8 @@ class Backend:
 
 
     async def logout_client(self, user_id: str) -> None:
+        """Log a `MatrixClient` out and unregister it from our models."""
+
         client = self.clients.pop(user_id, None)
         if client:
             self.models[Account].pop(user_id, None)
@@ -123,29 +133,105 @@ class Backend:
         await self.saved_accounts.delete(user_id)
 
 
-    async def wait_until_client_exists(self, user_id: str) -> None:
-        loops = 0
+    async def get_client(self, user_id: str) -> MatrixClient:
+        """Wait until a `MatrixClient` is registered in model and return it."""
+
+        failures = 0
+
         while True:
             if user_id in self.clients:
-                return
+                return self.clients[user_id]
 
-            if loops and loops % 100 == 0:  # every 10s except first time
-                log.warning("Waiting for account %s to exist, %ds passed",
-                            user_id, loops // 10)
+            if failures and failures % 100 == 0:  # every 10s except first time
+                log.warning(
+                    "Client %r not found after %ds, stack trace:\n%s",
+                    user_id, failures / 10, traceback.format_stack(),
+                )
 
             await asyncio.sleep(0.1)
-            loops += 1
+            failures += 1
+
+
+    async def get_any_client(self) -> MatrixClient:
+        """Return any healthy syncing `MatrixClient` registered in model."""
+
+        failures = 0
+
+        while True:
+            for client in self.clients.values():
+                if client.syncing:
+                    return client
+
+            if failures and failures % 300 == 0:
+                log.warn(
+                    "No healthy client found after %ds, stack trace:\n%s",
+                    failures / 10, traceback.format_stack(),
+                )
+
+            await asyncio.sleep(0.1)
+            failures += 1
+
+
+    # Client functions that don't need authentification
+
+    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
+        """Cache and return the matrix profile of `user_id`."""
+
+        if user_id in self.profile_cache:
+            return self.profile_cache[user_id]
+
+        async with self.get_profile_locks[user_id]:
+            client   = await self.get_any_client()
+            response = await client.get_profile(user_id)
+
+            if isinstance(response, nio.ProfileGetError):
+                raise MatrixError.from_nio(response)
+
+            self.profile_cache[user_id] = response
+            return response
+
+
+    async def thumbnail(
+        self, server_name: str, media_id: str, width: int, height: int,
+    ) -> nio.ThumbnailResponse:
+        """Return thumbnail for a matrix media."""
+
+        args     = (server_name, media_id, width, height)
+        client   = await self.get_any_client()
+        response = await client.thumbnail(*args)
+
+        if isinstance(response, nio.ThumbnailError):
+            raise MatrixError.from_nio(response)
+
+        return response
+
+
+    async def download(
+        self, server_name: str, media_id: str,
+    ) -> nio.DownloadResponse:
+        """Return the content of a matrix media."""
+
+        client   = await self.get_any_client()
+        response = await client.download(server_name, media_id)
+
+        if isinstance(response, nio.DownloadError):
+            raise MatrixError.from_nio(response)
+
+        return response
 
 
     # General functions
 
     @staticmethod
     def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
-        # (0-360, 0-100, 0-100) -> [0-1, 0-1, 0-1]
+        """Convert HSLuv (0-360, 0-100, 0-100) to RGB (0-1, 0-1, 0-1) color."""
+
         return hsluv.hsluv_to_rgb([hue, saturation, lightness])
 
 
     async def load_settings(self) -> tuple:
+        """Return parsed user config files."""
+
         from .config_files import Theme
         settings = await self.ui_settings.read()
         ui_state = await self.ui_state.read()
@@ -156,6 +242,8 @@ class Backend:
 
 
     async def get_flat_mainpane_data(self) -> List[Dict[str, Any]]:
+        """Return a flat list of accounts and their joined rooms for QML."""
+
         data = []
 
         for account in sorted(self.models[Account].values()):
@@ -175,65 +263,3 @@ class Backend:
                 })
 
         return data
-
-
-    # Client functions that don't need authentification
-
-    async def _any_client(self, caller: Callable, *args, **kw) -> MatrixClient:
-        failures = 0
-
-        while True:
-            for client in self.clients.values():
-                if client.syncing:
-                    return client
-
-            await asyncio.sleep(0.1)
-            failures += 1
-
-            if failures and failures % 300 == 0:
-                log.warn(
-                    "No syncing client found after %ds of wait for %s %r %r",
-                    failures / 10, caller.__name__, args, kw,
-                )
-
-
-    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
-        if user_id in self.profile_cache:
-            return self.profile_cache[user_id]
-
-        async with self.get_profile_locks[user_id]:
-            client   = await self._any_client(self.get_profile, user_id)
-            response = await client.get_profile(user_id)
-
-            if isinstance(response, nio.ProfileGetError):
-                raise MatrixError.from_nio(response)
-
-            self.profile_cache[user_id] = response
-            return response
-
-
-    async def thumbnail(
-        self, server_name: str, media_id: str, width: int, height: int,
-    ) -> nio.ThumbnailResponse:
-
-        args     = (server_name, media_id, width, height)
-        client   = await self._any_client(self.thumbnail, *args)
-        response = await client.thumbnail(*args)
-
-        if isinstance(response, nio.ThumbnailError):
-            raise MatrixError.from_nio(response)
-
-        return response
-
-
-    async def download(
-        self, server_name: str, media_id: str,
-    ) -> nio.DownloadResponse:
-
-        client   = await self._any_client(self.download, server_name, media_id)
-        response = await client.download(server_name, media_id)
-
-        if isinstance(response, nio.DownloadError):
-            raise MatrixError.from_nio(response)
-
-        return response

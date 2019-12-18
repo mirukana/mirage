@@ -1,3 +1,5 @@
+"""Install `uvloop` if possible and provide a `QmlBridge`."""
+
 import asyncio
 import logging as log
 import signal
@@ -19,24 +21,35 @@ else:
 
 
 class QmlBridge:
+    """Setup asyncio and provide synchronous methods to call coroutines.
+
+    A thread is created to run the asyncio loop in, to ensure all calls from
+    QML return instantly.
+    Methods are provided for QML to call coroutines using PyOtherSide, which
+    doesn't have this ability out of the box.
+
+    Attributes:
+        backend: The `Backend` containing the coroutines of interest and
+            `MatrixClient` objects.
+    """
+
     def __init__(self) -> None:
-        self.backend = Backend()
+        self.backend: Backend = Backend()
 
-        self.loop = asyncio.get_event_loop()
-        Thread(target=self._start_loop_in_thread).start()
-
-
-    def _start_loop_in_thread(self) -> None:
-        asyncio.set_event_loop(self.loop)
-        self.loop.run_forever()
+        self._loop = asyncio.get_event_loop()
+        Thread(target=self._start_asyncio_loop).start()
 
 
-    def _run_coro_in_loop(self, coro: Coroutine) -> Future:
-        return asyncio.run_coroutine_threadsafe(coro, self.loop)
+    def _start_asyncio_loop(self) -> None:
+        asyncio.set_event_loop(self._loop)
+        self._loop.run_forever()
 
 
     def _call_coro(self, coro: Coroutine, uuid: str) -> Future:
+        """Schedule a coroutine to run in our thread and return a `Future`."""
+
         def on_done(future: Future) -> None:
+            """Send a PyOtherSide event with the coro's result/exception."""
             result = exception = trace = None
 
             try:
@@ -47,7 +60,7 @@ class QmlBridge:
 
             CoroutineDone(uuid, result, exception, trace)
 
-        future = self._run_coro_in_loop(coro)
+        future = asyncio.run_coroutine_threadsafe(coro, self._loop)
         future.add_done_callback(on_done)
         return future
 
@@ -55,24 +68,30 @@ class QmlBridge:
     def call_backend_coro(
         self, name: str, uuid: str, args: Sequence[str] = (),
     ) -> Future:
+        """Schedule a `Backend` coroutine and return a `Future`."""
+
         return self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
 
     def call_client_coro(
         self, user_id: str, name: str, uuid: str, args: Sequence[str] = (),
     ) -> Future:
+        """Schedule a `MatrixClient` coroutine and return a `Future`."""
 
         client = self.backend.clients[user_id]
         return self._call_coro(attrgetter(name)(client)(*args), uuid)
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
+        """Call the RemotePdb debugger; define some conveniance variables."""
+
         ad  = additional_data              # noqa
-        rc  = self._run_coro_in_loop       # noqa
         ba  = self.backend                 # noqa
         mo  = self.backend.models          # noqa
         cl  = self.backend.clients
         gcl = lambda user: cl[f"@{user}:matrix.org"]  # noqa
+
+        rc = lambda c: asyncio.run_coroutine_threadsafe(c, self._loop)  # noqa
 
         from .models.items import Account, Room, Member, Event, Device  # noqa
 
