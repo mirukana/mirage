@@ -98,6 +98,8 @@ async def guess_mime(file: File) -> str:
         first_chunk: bytes
         async for first_chunk in async_generator_from_data(file):
             break
+        else:
+            return "inode/x-empty"  # empty file
 
         # TODO: plaintext
         mime = filetype.guess_mime(first_chunk)
