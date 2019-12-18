@@ -1,3 +1,5 @@
+"""Custom exception definitions."""
+
 from dataclasses import dataclass, field
 
 import nio
@@ -7,11 +9,15 @@ import nio
 
 @dataclass
 class MatrixError(Exception):
+    """An error returned by a Matrix server."""
+
     http_code: int = 400
     m_code:    str = "M_UNKNOWN"
 
     @classmethod
     def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
+        """Return a `MatrixError` subclass from a nio `ErrorResponse`."""
+
         # Check for the M_CODE first: some errors for an API share the same
         # http code, but have different M_CODEs (e.g. POST /login 403).
         for subcls in cls.__subclasses__():
