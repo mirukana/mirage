@@ -3,85 +3,93 @@ import io.thp.pyotherside 1.5
 
 Python {
     id: py
+    Component.onCompleted: {
+        for (var func in privates.eventHandlers) {
+            if (! privates.eventHandlers.hasOwnProperty(func)) continue
+            setHandler(func.replace(/^on/, ""), privates.eventHandlers[func])
+        }
+
+        addImportPath("src")
+        addImportPath("qrc:/src")
+
+        importNames("backend", ["APP"], () => {
+            loadSettings(() => {
+                callCoro("saved_accounts.any_saved", [], any => {
+                    if (any) { py.callCoro("load_saved_accounts", []) }
+
+                    py.startupAnyAccountsSaved = any
+                    py.ready                   = true
+                })
+            })
+        })
+    }
 
 
     property bool ready: false
     property bool startupAnyAccountsSaved: false
-    property var pendingCoroutines: ({})
 
-    property EventHandlers eventHandlers: EventHandlers {}
+    readonly property QtObject privates: QtObject {
+        readonly property var pendingCoroutines: ({})
+        readonly property EventHandlers eventHandlers: EventHandlers {}
 
-
-    function newQmlFuture() {
-        return {
-            _pyFuture: null,
-
-            get pyFuture() { return this._pyFuture },
-
-            set pyFuture(value) {
-                this._pyFuture = value
-                if (this.cancelPending) this.cancel()
-            },
-
-            cancelPending: false,
-
-            cancel: function() {
-                if (! this.pyFuture) {
-                    this.cancelPending = true
-                    return
-                }
-
-                py.call(py.getattr(this.pyFuture, "cancel"))
-            },
+        function makeFuture(callback) {
+            return Qt.createComponent("Future.qml")
+                     .createObject(py, {bridge: py})
         }
     }
+
 
     function setattr(obj, attr, value, callback=null) {
         py.call(py.getattr(obj, "__setattr__"), [attr, value], callback)
     }
 
+
     function callSync(name, args=[]) {
         return call_sync("APP.backend." + name, args)
     }
 
+
     function callCoro(name, args=[], onSuccess=null, onError=null) {
         let uuid = name + "." + CppUtils.uuid()
 
-        pendingCoroutines[uuid] = {onSuccess, onError}
+        privates.pendingCoroutines[uuid] = {onSuccess, onError}
 
-        let qmlFuture = py.newQmlFuture()
+        let future = privates.makeFuture()
 
         call("APP.call_backend_coro", [name, uuid, args], pyFuture => {
-            qmlFuture.pyFuture = pyFuture
+            future.privates.pythonFuture = pyFuture
         })
 
-        return qmlFuture
+        return future
     }
+
 
     function callClientCoro(
         accountId, name, args=[], onSuccess=null, onError=null
     ) {
-        let qmlFuture = py.newQmlFuture()
+        let future = privates.makeFuture()
 
         callCoro("wait_until_client_exists", [accountId], () => {
             let uuid = accountId + "." + name + "." + CppUtils.uuid()
 
-            pendingCoroutines[uuid] = {onSuccess, onError}
+            privates.pendingCoroutines[uuid] = {onSuccess, onError}
 
             let call_args = [accountId, name, uuid, args]
 
             call("APP.call_client_coro", call_args, pyFuture => {
-                qmlFuture.pyFuture = pyFuture
+                future.privates.pythonFuture = pyFuture
             })
         })
 
-        return qmlFuture
+        return future
     }
+
 
     function saveConfig(backend_attribute, data, callback=null) {
         if (! py.ready) { return }  // config not loaded yet
         return callCoro(backend_attribute + ".write", [data], callback)
     }
+
 
     function loadSettings(callback=null) {
         let func = "load_settings"
@@ -93,27 +101,6 @@ Python {
             window.theme    = Qt.createQmlObject(theme, window, "theme")
 
             if (callback) { callback(settings, uiState, theme) }
-        })
-    }
-
-    Component.onCompleted: {
-        for (var func in eventHandlers) {
-            if (eventHandlers.hasOwnProperty(func)) {
-                setHandler(func.replace(/^on/, ""), eventHandlers[func])
-            }
-        }
-
-        addImportPath("src")
-        addImportPath("qrc:/src")
-        importNames("backend", ["APP"], () => {
-            loadSettings(() => {
-                callCoro("saved_accounts.any_saved", [], any => {
-                    if (any) { py.callCoro("load_saved_accounts", []) }
-
-                    py.startupAnyAccountsSaved = any
-                    py.ready                   = true
-                })
-            })
         })
     }
 }

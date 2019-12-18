@@ -14,8 +14,8 @@ QtObject {
 
 
     function onCoroutineDone(uuid, result, error, traceback) {
-        let onSuccess = py.pendingCoroutines[uuid].onSuccess
-        let onError   = py.pendingCoroutines[uuid].onError
+        let onSuccess = py.privates.pendingCoroutines[uuid].onSuccess
+        let onError   = py.privates.pendingCoroutines[uuid].onError
 
         if (error) {
             let type = py.getattr(py.getattr(error, "__class__"), "__name__")
@@ -31,7 +31,7 @@ QtObject {
 
         } else if (onSuccess) { onSuccess(result) }
 
-        delete pendingCoroutines[uuid]
+        delete py.privates.pendingCoroutines[uuid]
     }
 
 
