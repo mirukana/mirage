@@ -72,8 +72,7 @@ class Room(ModelItem):
     can_set_join_rules:   bool = False
     can_set_guest_access: bool = False
 
-    # Event.serialized
-    last_event: Optional[Dict[str, Any]] = field(default=None, repr=False)
+    last_event: Optional["Event"] = field(default=None, repr=False)
 
     def __lt__(self, other: "Room") -> bool:
         """Sort by join state, then descending last event date, then name.
@@ -89,7 +88,7 @@ class Room(ModelItem):
 
             other.inviter_id,
 
-            other.last_event["date"] if other.last_event else
+            other.last_event.date if other.last_event else
             datetime.fromtimestamp(0),
 
             self.display_name.lower() or self.room_id,
@@ -98,7 +97,7 @@ class Room(ModelItem):
 
             self.inviter_id,
 
-            self.last_event["date"] if self.last_event else
+            self.last_event.date if self.last_event else
             datetime.fromtimestamp(0),
 
             other.display_name.lower() or other.room_id,
@@ -111,9 +110,20 @@ class Room(ModelItem):
         return " ".join((
             self.display_name,
             self.topic,
-            re.sub(r"<.*?>", "", self.last_event["inline_content"])
+            re.sub(r"<.*?>", "", self.last_event.inline_content)
             if self.last_event else "",
         ))
+
+
+    @property
+    def serialized(self) -> Dict[str, Any]:
+        dct = super().serialized
+
+        if self.last_event is not None:
+            dct["last_event"] = self.last_event.serialized
+
+        return dct
+
 
 
 @dataclass

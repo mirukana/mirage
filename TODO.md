@@ -5,7 +5,6 @@
 
 ## Media
 
-- Clean up gui test md
 - nio ClientTimeout
 
 - upload delay at the end?
@@ -49,7 +48,6 @@
 
 ## Issues
 
-- last event obj
 - load_past raise
 - Room pane slightly overlaps chat at small width
 - invisible uploaded mxc images?

@@ -913,7 +913,7 @@ class MatrixClient(nio.AsyncClient):
         room  = model[room_id]
 
         if room.last_event is None:
-            room.last_event = item.serialized
+            room.last_event = item
 
             if item.is_local_echo:
                 model.sync_now()
@@ -924,7 +924,7 @@ class MatrixClient(nio.AsyncClient):
 
         # If there were no better events available to show previously
         prev_is_profile_ev = \
-            room.last_event["type_specifier"] == TypeSpecifier.profile_change
+            room.last_event.type_specifier == TypeSpecifier.profile_change
 
         # If this is a profile event, only replace the currently shown one if
         # it was also a profile event (we had nothing better to show).
@@ -933,10 +933,10 @@ class MatrixClient(nio.AsyncClient):
 
         # If this event is older than the currently shown one, only replace
         # it if the previous was a profile event.
-        if item.date < room.last_event["date"] and not prev_is_profile_ev:
+        if item.date < room.last_event.date and not prev_is_profile_ev:
             return
 
-        room.last_event = item.serialized
+        room.last_event = item
 
         if item.is_local_echo:
             model.sync_now()
