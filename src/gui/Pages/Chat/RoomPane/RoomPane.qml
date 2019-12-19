@@ -10,7 +10,7 @@ HDrawer {
     saveName: "roomPane"
 
     edge: Qt.RightEdge
-    defaultSize: buttonRepeater.childrenImplicitWidth
+    defaultSize: buttonRepeater.summedImplicitWidth
     minimumSize:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 

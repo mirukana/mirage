@@ -143,7 +143,7 @@ HRowLayout {
                     parent.paintedWidth +
                     parent.leftPadding + parent.rightPadding,
 
-                    linksRepeater.childrenWidth +
+                    linksRepeater.summedWidth +
                     (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
                 )
                 height: contentColumn.height

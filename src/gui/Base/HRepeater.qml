@@ -7,25 +7,34 @@ import QtQuick 2.12
 Repeater {
     id: repeater
 
-    readonly property int childrenImplicitWidth: {
-        let total = 0
 
-        for (let i = 0;  i < repeater.count; i++) {
-            let item = repeater.itemAt(i)
-            if (item && item.implicitWidth) total += item.implicitWidth
+    readonly property var childrenImplicitWidth: {
+        const widths = []
+
+        for (let i = 0; i < repeater.count; i++) {
+            const item = repeater.itemAt(i)
+
+            if (item)
+                widths.push(item.implicitWidth > 0 ? item.implicitWidth : 0)
         }
 
-        return total
+        return widths
     }
 
-    readonly property int childrenWidth: {
-        let total = 0
+    readonly property var childrenWidth: {
+        const widths = []
 
-        for (let i = 0;  i < repeater.count; i++) {
-            let item = repeater.itemAt(i)
-            if (item && item.width) total += item.width
+        for (let i = 0; i < repeater.count; i++) {
+            const item = repeater.itemAt(i)
+            if (item) widths.push(item.width > 0 ? item.width : 0)
         }
 
-        return total
+        return widths
     }
+
+    readonly property real summedWidth: utils.sum(childrenWidth)
+    readonly property real summedImplicitWidth:utils.sum(childrenImplicitWidth)
+
+    readonly property real thinestChild: Math.min(...childrenWidth)
+    readonly property real widestChild: Math.max(...childrenWidth)
 }

@@ -57,6 +57,12 @@ QtObject {
     }
 
 
+    function sum(array) {
+        if (array.length < 1) return 0
+        return array.reduce((a, b) => (isNaN(a) ? 0 : a) + (isNaN(b) ? 0 : b))
+    }
+
+
     function isEmptyObject(obj) {
         return Object.entries(obj).length === 0 && obj.constructor === Object
     }

@@ -59,7 +59,7 @@ Rectangle {
         HGridLayout {
             id: buttonGrid
             visible: buttonModel.length > 0
-            flow: width >= buttonRepeater.childrenImplicitWidth ?
+            flow: width >= buttonRepeater.summedImplicitWidth ?
                   GridLayout.LeftToRight : GridLayout.TopToBottom
 
             HRepeater {
