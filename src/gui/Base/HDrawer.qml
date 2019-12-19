@@ -44,9 +44,7 @@ Drawer {
 
     property int minimumSize: resizeAreaSize
     property int maximumSize:
-        horizontal ?
-        referenceSizeParent.width - theme.minimumSupportedWidth :
-        referenceSizeParent.height - theme.minimumSupportedHeight
+        horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
     //
 

@@ -53,9 +53,11 @@ Item {
     HLoader {
         id: roomPaneLoader
         active: ready
+
         sourceComponent: RoomPane {
             id: roomPane
             referenceSizeParent: chat
+            maximumSize: chat.width - theme.minimumSupportedWidth
         }
     }
 }

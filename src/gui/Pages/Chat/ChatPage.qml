@@ -31,7 +31,6 @@ HPage {
         id: eventList
 
         // Avoid a certain binding loop
-        Layout.minimumWidth: theme.minimumSupportedWidth
         Layout.fillWidth: true
         Layout.fillHeight: true
     }

@@ -70,6 +70,7 @@ Item {
 
     MainPane {
         id: mainPane
+        maximumSize: parent.width - theme.minimumSupportedWidth
     }
 
     PageLoader {
