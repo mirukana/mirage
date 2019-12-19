@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../../Base"
+import "../../.."
 
 HRowLayout {
     id: eventContent
@@ -40,8 +41,13 @@ HRowLayout {
 
     TapHandler {
         enabled: debugMode
-        onDoubleTapped:
-            utils.debug(eventContent, null, con => { con.runJS("json()") })
+        onDoubleTapped: debugConsoleLoader.toggle()
+    }
+
+    DebugConsoleLoader {
+        id: debugConsoleLoader
+        active: false
+        onLoaded: item.runJS("json()")
     }
 
     Item {

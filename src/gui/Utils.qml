@@ -57,14 +57,6 @@ QtObject {
     }
 
 
-    function debug(target, parent=null, callback=null) {
-        parent = parent || target
-        return utils.makeObject(
-            "DebugConsole.qml", parent, { target }, callback,
-        )
-    }
-
-
     function isEmptyObject(obj) {
         return Object.entries(obj).length === 0 && obj.constructor === Object
     }

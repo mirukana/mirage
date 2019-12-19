@@ -17,9 +17,9 @@ HDrawer {
     z: 9999
     position: 0
 
-    property var previouslyFocused: null
+    property Item previouslyFocused: null
 
-    property var target: null
+    property QtObject target: null
     property alias t: debugConsole.target
 
     property var history: window.history.console
@@ -51,10 +51,6 @@ HDrawer {
 
 
     Component.onCompleted: {
-        if (mainUI.shortcuts.debugConsole)
-            mainUI.shortcuts.debugConsole.destroy()
-
-        mainUI.shortcuts.debugConsole = debugConsole
         position = 1
         commandsView.model.insert(0, {
             input: "t = " + String(target),

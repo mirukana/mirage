@@ -13,12 +13,23 @@ Item {
     // A QQC Container that should be affected by tab navigation shortcuts
     property Container tabsTarget
 
-    // DebugConsole that should be affected by console shortcuts
-    property DebugConsole debugConsole
+    // DebugConsoleLoader that should be affected by console shortcuts
+    property DebugConsoleLoader debugConsoleLoader
+
+    // DebugConsoleLoader to activate if no other loader is active and the
+    // shortcut to bring up a console is pressed
+    property DebugConsoleLoader defaultDebugConsoleLoader
+
+    readonly property DebugConsole debugConsole:
+        debugConsoleLoader ? debugConsoleLoader.item : null
+
+    readonly property DebugConsole defaultDebugConsole:
+        defaultDebugConsoleLoader ? defaultDebugConsoleLoader.item : null
 
     readonly property Item toFlick:
         debugConsole && debugConsole.activeFocus ?
-        debugConsole.commandsView : flickTarget
+        debugConsole.commandsView :
+        flickTarget
 
 
     // App
@@ -35,8 +46,12 @@ Item {
         onActivated:  {
             if (debugConsole) {
                 debugConsole.visible = ! debugConsole.visible
+
+            } else if (! defaultDebugConsoleLoader.active) {
+                defaultDebugConsoleLoader.active = true
+
             } else {
-                utils.debug(mainUI || window)
+                defaultDebugConsole.visible = ! defaultDebugConsole.visible
             }
         }
     }

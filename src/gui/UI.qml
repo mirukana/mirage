@@ -35,7 +35,15 @@ Item {
         }
     }
 
-    GlobalShortcuts { id: shortcuts }
+    GlobalShortcuts {
+        id: shortcuts
+        defaultDebugConsoleLoader: debugConsoleLoader
+    }
+
+    DebugConsoleLoader {
+        id: debugConsoleLoader
+        active: false
+    }
 
     HImage {
         id: mainUIBackground
