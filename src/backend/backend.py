@@ -15,7 +15,7 @@ import nio
 from . import __app_name__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
-from .models.items import Account, Device, Event, Member, Room, Upload
+from .models.items import Account, Room
 from .models.model_store import ModelStore
 
 # Logging configuration
