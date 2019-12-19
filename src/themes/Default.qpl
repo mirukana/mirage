@@ -8,9 +8,6 @@ int minimumSupportedWidth:  240 * uiScale
 int minimumSupportedHeight: 120 * uiScale
 int contentIsWideAbove:     472 * uiScale
 
-int minimumSupportedWidthPlusSpacing:  minimumSupportedWidth + spacing * 2
-int minimumSupportedHeightPlusSpacing: minimumSupportedHeight + spacing * 2
-
 int baseElementsHeight:       36 * uiScale
 int spacing:                  12 * uiScale
 int radius:                   5 * uiScale
@@ -98,12 +95,12 @@ icons:
 
 controls:
     box:
-        int defaultWidth: minimumSupportedWidthPlusSpacing
+        int defaultWidth: minimumSupportedWidth
         int radius:       theme.radius
         color background: colors.strongBackground
 
     popup:
-        int defaultWidth: minimumSupportedWidthPlusSpacing * 2
+        int defaultWidth: minimumSupportedWidth * 2
         color background: colors.strongBackground
 
     header:
