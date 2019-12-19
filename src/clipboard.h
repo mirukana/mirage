@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 // The Clipboard class exposes system clipboard management and retrieval
 // to QML.
 

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 """QPL (Qt Property Language) theme files to QML converter.
 
 QPL is a custom configuration format currently used for theme files.

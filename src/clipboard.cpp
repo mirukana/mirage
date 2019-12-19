@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 // Function implementations of the Clipboard class, see the clipboard.h file.
 
 #include <QClipboard>

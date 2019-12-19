@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 

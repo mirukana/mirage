@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 """Various utilities that are used throughout the package."""
 
 import collections

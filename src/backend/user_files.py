@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 """User data and configuration files definitions."""
 
 import asyncio

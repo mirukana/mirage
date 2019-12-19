@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 // Function implementations of the Utils class, see the utils.h file.
 
 #include <QLocale>

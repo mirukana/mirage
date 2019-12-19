@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 // The Utils class exposes various useful functions for QML that aren't
 // normally provided by Qt.
 
