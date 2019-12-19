@@ -31,8 +31,16 @@ HRowLayout {
 
     readonly property int xOffset:
         onRight ?
-        contentLabel.width - contentLabel.paintedWidth -
-        contentLabel.leftPadding - contentLabel.rightPadding :
+        Math.min(
+            contentColumn.width - contentLabel.paintedWidth -
+            contentLabel.leftPadding - contentLabel.rightPadding,
+
+            contentColumn.width - linksRepeater.widestChild -
+            (
+                pureMedia ?
+                0 : contentLabel.leftPadding + contentLabel.rightPadding
+            ),
+        ) :
         0
 
     // 600px max with a 16px font
