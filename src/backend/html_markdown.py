@@ -9,6 +9,8 @@ import mistune
 from html_sanitizer.sanitizer import Sanitizer
 from lxml.html import HtmlElement  # nosec
 
+from .svg_colors import SVG_COLORS
+
 
 class MarkdownInlineGrammar(mistune.InlineGrammar):
     """Markdown inline elements syntax modifications for the Mistune parser.
@@ -68,7 +70,10 @@ class MarkdownInlineLexer(mistune.InlineLexer):
 
 class MarkdownRenderer(mistune.Renderer):
     def color(self, color: str, text: str):
-        """Render given text with a color using `<span data-mx-color=...>`."""
+        """Render given text with a color using `<span data-mx-color=#hex>`."""
+
+        # This may be a color name, try to get a #hex code for it.
+        color = SVG_COLORS.get(re.sub(r"\s", "", color.lower()), color)
 
         return f'<span data-mx-color="{color}">{text}</span>'
 
