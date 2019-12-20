@@ -170,14 +170,13 @@ HColumnLayout {
                 Clipboard.text = selectableLabelContainer.joinedSelection
         }
 
-        HMenuItem {
+        HMenuItemPopupSpawner {
             icon.name: "clear-messages"
             text: qsTr("Clear messages")
-            onTriggered: utils.makePopup(
-                "Popups/ClearMessagesPopup.qml",
-                chat,
-                {userId: chat.userId, roomId: chat.roomId},
-            )
+
+            popup: "Popups/ClearMessagesPopup.qml"
+            popupParent: chat
+            properties: ({userId: chat.userId, roomId: chat.roomId})
         }
     }
 }

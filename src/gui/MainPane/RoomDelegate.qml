@@ -91,22 +91,19 @@ HTileDelegate {
     }
 
     contextMenu: HMenu {
-        HMenuItem {
+        HMenuItemPopupSpawner {
             visible: joined
             enabled: model.data.can_invite
             icon.name: "room-send-invite"
             text: qsTr("Invite members")
 
-            onTriggered: utils.makePopup(
-                "Popups/InviteToRoomPopup.qml",
-                window,
-                {
-                    userId: model.user_id,
-                    roomId: model.data.room_id,
-                    roomName: model.data.display_name,
-                    invitingAllowed: Qt.binding(() => model.data.can_invite)
-                }
-            )
+            popup: "Popups/InviteToRoomPopup.qml"
+            properties: ({
+                userId: model.user_id,
+                roomId: model.data.room_id,
+                roomName: model.data.display_name,
+                invitingAllowed: Qt.binding(() => model.data.can_invite)
+            })
         }
 
         HMenuItem {
@@ -129,39 +126,32 @@ HTileDelegate {
             )
         }
 
-        HMenuItem {
+        HMenuItemPopupSpawner {
             visible: invited || joined
             icon.name: invited ? "invite-decline" : "room-leave"
             icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
 
-            onTriggered: utils.makePopup(
-                "Popups/LeaveRoomPopup.qml",
-                window,
-                {
-                    userId: model.user_id,
-                    roomId: model.data.room_id,
-                    roomName: model.data.display_name,
-                }
-            )
+            popup: "Popups/LeaveRoomPopup.qml"
+            properties: ({
+                userId: model.user_id,
+                roomId: model.data.room_id,
+                roomName: model.data.display_name,
+            })
         }
 
-        HMenuItem {
+        HMenuItemPopupSpawner {
             icon.name: "room-forget"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Forget")
 
-            onTriggered: utils.makePopup(
-                "Popups/ForgetRoomPopup.qml",
-                window,
-                {
-                    userId: model.user_id,
-                    roomId: model.data.room_id,
-                    roomName: model.data.display_name,
-                },
-                null,
-                false,
-            )
+            popup: "Popups/ForgetRoomPopup.qml"
+            autoDestruct: false
+            properties: ({
+                userId: model.user_id,
+                roomId: model.data.room_id,
+                roomName: model.data.display_name,
+            })
         }
     }
 }

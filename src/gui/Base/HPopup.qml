@@ -24,10 +24,11 @@ Popup {
     }
 
     onAboutToShow: previouslyFocused = window.activeFocusItem
-    onClosed: if (previouslyFocused) previouslyFocused.forceActiveFocus()
+    onClosed: if (focusOnClosed) focusOnClosed.forceActiveFocus()
 
 
     property var previouslyFocused: null
+    property Item focusOnClosed: previouslyFocused
 
     readonly property int maximumPreferredWidth:
         window.width - leftMargin - rightMargin - leftInset - rightInset

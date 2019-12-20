@@ -68,6 +68,11 @@ QtObject {
     }
 
 
+    function objectUpdate(current, update) {
+        return Object.assign({}, current, update)
+    }
+
+
     function objectUpdateRecursive(current, update) {
         for (const key of Object.keys(update)) {
             if ((key in current) && typeof(current[key]) === "object" &&

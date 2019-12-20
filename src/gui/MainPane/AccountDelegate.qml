@@ -110,15 +110,13 @@ HTileDelegate {
             onTriggered: Clipboard.text = model.data.user_id
         }
 
-        HMenuItem {
+        HMenuItemPopupSpawner {
             icon.name: "sign-out"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Sign out")
-            onTriggered: utils.makePopup(
-                "Popups/SignOutPopup.qml",
-                window,
-                { "userId": model.data.user_id },
-            )
+
+            popup: "Popups/SignOutPopup.qml"
+            properties: { "userId": model.data.user_id }
         }
     }
 }

@@ -25,9 +25,17 @@ Menu {
         border.width: theme.controls.menu.borderWidth
     }
 
-    onAboutToShow: previouslyFocused = window.activeFocusItem
-    onClosed: if (previouslyFocused) previouslyFocused.forceActiveFocus()
+    onAboutToShow: {
+        previouslyFocused = window.activeFocusItem
+        focusOnClosed     = Qt.binding(() => previouslyFocused)
+    }
+    onClosed: if (focusOnClosed) focusOnClosed.forceActiveFocus()
 
 
     property var previouslyFocused: null
+
+    // MenuItems that open popups (or other elements taking focus when opened)
+    // should set this to null. It will be reset to previouslyFocus when
+    // the Menu is closed and opened again.
+    property Item focusOnClosed: previouslyFocused
 }

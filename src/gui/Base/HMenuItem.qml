@@ -12,11 +12,6 @@ MenuItem {
     bottomPadding: topPadding
     height: visible ? implicitHeight : 0
 
-
-    readonly property alias iconItem: contentItem.icon
-    readonly property alias label: contentItem.label
-
-
     background: HButtonBackground {
         button: menuItem
         buttonTheme: theme.controls.menuItem
@@ -28,4 +23,8 @@ MenuItem {
         buttonTheme: theme.controls.menuItem
         label.horizontalAlignment: Label.AlignLeft
     }
+
+
+    readonly property alias iconItem: contentItem.icon
+    readonly property alias label: contentItem.label
 }

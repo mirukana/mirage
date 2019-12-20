@@ -48,13 +48,13 @@
 
 ## Issues
 
-- invisible uploaded mxc images?
-- first undecryptable message
-- Join button 502
-- Leave box button focus
+- `EventImage`s for `m.image` sometimes appear broken, can be made normal
+  by switching to another room and coming back
+- First sent message in E2E room is sometimes undecryptable
+- Handle matrix errors for accept/decline invite buttons and other
 
+- Pause upload, switch to other room, then come back → wrong state displayed
 - Pausing uploads doesn't work well, servers end up dropping the connection 
-- Pause upload, switch to other room, then come back, wrong state displayed
 
 - In the "Leave me" room, "join > Hi > left" aren't combined
 - When selecting text and scrolling up, selection stops working after a while
