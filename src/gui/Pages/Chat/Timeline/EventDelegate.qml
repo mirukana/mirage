@@ -170,6 +170,13 @@ HColumnLayout {
                 Clipboard.text = selectableLabelContainer.joinedSelection
         }
 
+        HMenuItem {
+            icon.name: "debug"
+            text: qsTr("Debug this event")
+            visible: debugMode
+            onTriggered: eventContent.debugConsoleLoader.toggle()
+        }
+
         HMenuItemPopupSpawner {
             icon.name: "clear-messages"
             text: qsTr("Clear messages")

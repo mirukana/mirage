@@ -46,11 +46,8 @@ HRowLayout {
     // ~600px max with a 16px font
     readonly property int maxMessageWidth: theme.fontSize.normal * 0.5 * 75
 
+    readonly property alias debugConsoleLoader: debugConsoleLoader
 
-    TapHandler {
-        enabled: debugMode
-        onDoubleTapped: debugConsoleLoader.toggle()
-    }
 
     DebugConsoleLoader {
         id: debugConsoleLoader

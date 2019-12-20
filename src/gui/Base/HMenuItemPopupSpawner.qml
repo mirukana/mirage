@@ -5,7 +5,6 @@ import QtQuick.Controls 2.12
 
 HMenuItem {
     onTriggered: {
-        print( parent.parent.parent)
         menu.focusOnClosed = null
 
         utils.makePopup(
