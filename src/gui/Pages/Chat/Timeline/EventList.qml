@@ -133,7 +133,9 @@ Rectangle {
                     chat.loadingMessages = true
 
                     py.callClientCoro(
-                        chat.userId, "load_past_events", [chat.roomId],
+                        chat.userId,
+                        "load_past_events",
+                        [chat.roomId],
                         moreToLoad => {
                             try {
                                 eventList.canLoad = moreToLoad

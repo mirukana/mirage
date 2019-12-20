@@ -48,7 +48,6 @@
 
 ## Issues
 
-- load_past raise
 - invisible uploaded mxc images?
 - first undecryptable message
 - Join button 502

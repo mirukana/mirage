@@ -558,9 +558,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         if isinstance(response, nio.RoomMessagesError):
-            log.error("Loading past messages for room %s failed: %s",
-                      room_id, response)
-            return True
+            raise MatrixError.from_nio(response)
 
         self.loaded_once_rooms.add(room_id)
         more_to_load = True
@@ -607,7 +605,10 @@ class MatrixClient(nio.AsyncClient):
         more   = True
 
         while self.skipped_events[room_id] and not events and more:
-            more = await self.load_past_events(room_id)
+            try:
+                more = await self.load_past_events(room_id)
+            except MatrixError:
+                break
 
 
     async def new_direct_chat(self, invite: str, encrypt: bool = False) -> str:
