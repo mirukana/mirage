@@ -57,7 +57,7 @@ Item {
         sourceComponent: RoomPane {
             id: roomPane
             referenceSizeParent: chat
-            maximumSize: chat.width - theme.minimumSupportedWidth
+            maximumSize: chat.width - theme.minimumSupportedWidth * 1.5
         }
     }
 }
