@@ -244,8 +244,8 @@ class MatrixClient(nio.AsyncClient):
             event_type = nio.RoomMessageEmote
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
-            to_html    = HTML.from_markdown_inline(text, outgoing=True)
-            echo_body  = HTML.from_markdown_inline(text)
+            to_html    = HTML.from_markdown(text, inline=True, outgoing=True)
+            echo_body  = HTML.from_markdown(text, inline=True)
         else:
             event_type = nio.RoomMessageText
             content    = {"body": text, "msgtype": "m.text"}
@@ -965,7 +965,7 @@ class MatrixClient(nio.AsyncClient):
             display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
             plain_topic    = room.topic or "",
-            topic          = HTML.filter_inline(room.topic or ""),
+            topic          = HTML.filter(room.topic or "", inline=True),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
             inviter_avatar =

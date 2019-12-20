@@ -239,7 +239,8 @@ class Event(ModelItem):
 
     def __post_init__(self) -> None:
         if not self.inline_content:
-            self.inline_content = HTML_PROCESSOR.filter_inline(self.content)
+            self.inline_content = \
+                HTML_PROCESSOR.filter(self.content, inline=True)
 
 
     def __lt__(self, other: "Event") -> bool:

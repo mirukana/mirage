@@ -340,7 +340,7 @@ class NioCallbacks:
 
     async def onRoomTopicEvent(self, room, ev) -> None:
         if ev.topic:
-            topic = HTML_PROCESSOR.filter_inline(ev.topic)
+            topic = HTML_PROCESSOR.filter(ev.topic, inline=True)
             co    = f"%1 changed the room's topic to \"{topic}\""
         else:
             co = "%1 removed the room's topic"

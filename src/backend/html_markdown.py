@@ -92,14 +92,16 @@ class HTMLProcessor:
     - Wrap text lines starting with a `>` in `<span>` with a `quote` class.
       This allows them to be styled appropriately from QML.
 
-    Some methods have `inline` counterparts, which return text appropriate
+    Some methods take an `inline` argument, which return text appropriate
     for UI elements restricted to display a single line, e.g. the room
     last message subtitles in QML or notifications.
     In inline filtered HTML, block tags are stripped or substituted and
     newlines are turned into ⏎ symbols (U+23CE).
     """
 
-    inline_tags = {"font", "a", "sup", "sub", "b", "i", "s", "u", "code"}
+    inline_tags = {
+        "span", "font", "a", "sup", "sub", "b", "i", "s", "u", "code",
+    }
 
     block_tags = {
         "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
@@ -126,8 +128,16 @@ class HTMLProcessor:
 
 
     def __init__(self) -> None:
-        self._sanitizer        = Sanitizer(self.sanitize_settings())
+        self._sanitizers = {
+            (False, False): Sanitizer(self.sanitize_settings(False, False)),
+            (True, False):  Sanitizer(self.sanitize_settings(True, False)),
+            (False, True):  Sanitizer(self.sanitize_settings(False, True)),
+            (True, True):   Sanitizer(self.sanitize_settings(True, True)),
+        }
+
         self._inline_sanitizer = Sanitizer(self.sanitize_settings(inline=True))
+        self._inline_outgoing_sanitizer = \
+            Sanitizer(self.sanitize_settings(inline=True))
 
         # The whitespace remover doesn't take <pre> into account
         sanitizer.normalize_overall_whitespace = lambda html, *args, **kw: html
@@ -149,44 +159,36 @@ class HTMLProcessor:
         ]
 
 
-    def from_markdown(self, text: str, outgoing: bool = False) -> str:
+    def from_markdown(
+        self, text: str, inline: bool = False, outgoing: bool = False,
+    ) -> str:
         """Return filtered HTML from Markdown text."""
 
-        return self.filter(self._markdown_to_html(text), outgoing)
+        return self.filter(self._markdown_to_html(text), inline, outgoing)
 
 
-    def from_markdown_inline(self, text: str, outgoing: bool = False) -> str:
-        """Return single-line filtered HTML from Markdown text."""
+    def filter(
+        self, html: str, inline: bool = False, outgoing: bool = False,
+    ) -> str:
+        """Filter and return HTML."""
 
-        return self.filter_inline(self._markdown_to_html(text), outgoing)
-
-
-    def filter_inline(self, html: str, outgoing: bool = False) -> str:
-        """Filter and return HTML with block tags stripped or substituted."""
-
-        html = self._inline_sanitizer.sanitize(html)
+        html = self._sanitizers[inline, outgoing].sanitize(html).rstrip("\n")
 
         if outgoing:
             return html
 
         # Client-side modifications
-        return self.inline_quote_regex.sub(
-            r'\1<span class="quote">\2</span>', html,
-        )
-
-
-    def filter(self, html: str, outgoing: bool = False) -> str:
-        """Filter and return HTML."""
-
-        html = self._sanitizer.sanitize(html).rstrip("\n")
-
-        if outgoing:
-            return html
+        if inline:
+            return self.inline_quote_regex.sub(
+                r'\1<span class="quote">\2</span>', html,
+            )
 
         return self.quote_regex.sub(r'\1<span class="quote">\2</span>\3', html)
 
 
-    def sanitize_settings(self, inline: bool = False) -> dict:
+    def sanitize_settings(
+        self, inline: bool = False, outgoing: bool = False,
+    ) -> dict:
         """Return an html_sanitizer configuration."""
 
         # https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
@@ -203,6 +205,7 @@ class HTMLProcessor:
         attributes = {**inlines_attributes, **{
             "ol":   {"start"},
             "hr":   {"width"},
+            "span": {"data-mx-color"},
         }}
 
         return {
@@ -231,18 +234,22 @@ class HTMLProcessor:
                 sanitizer.tag_replacer("div", "p"),
                 sanitizer.tag_replacer("caption", "p"),
                 sanitizer.target_blank_noopener,
-                self._process_span_font,
+
+                self._span_color_to_font if not outgoing else lambda el: el,
+
                 self._img_to_a,
                 self._remove_extra_newlines,
                 self._newlines_to_return_symbol if inline else lambda el: el,
             ],
-            "element_postprocessors": [],
+            "element_postprocessors": [
+                self._font_color_to_span if outgoing else lambda el: el,
+            ],
             "is_mergeable": lambda e1, e2: e1.attrib == e2.attrib,
         }
 
 
     @staticmethod
-    def _process_span_font(el: HtmlElement) -> HtmlElement:
+    def _span_color_to_font(el: HtmlElement) -> HtmlElement:
         """Convert HTML `<span data-mx-color=...` to `<font color=...>`."""
 
         if el.tag not in ("span", "font"):
@@ -252,6 +259,21 @@ class HTMLProcessor:
         if color:
             el.tag = "font"
             el.attrib["color"] = color
+
+        return el
+
+
+    @staticmethod
+    def _font_color_to_span(el: HtmlElement) -> HtmlElement:
+        """Convert HTML `<font color=...>` to `<span data-mx-color=...`."""
+
+        if el.tag not in ("span", "font"):
+            return el
+
+        color = el.attrib.pop("color", None)
+        if color:
+            el.tag = "span"
+            el.attrib["data-mx-color"] = color
 
         return el
 
