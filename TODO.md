@@ -49,7 +49,6 @@
 ## Issues
 
 - load_past raise
-- Room pane slightly overlaps chat at small width
 - invisible uploaded mxc images?
 - first undecryptable message
 - Join button 502

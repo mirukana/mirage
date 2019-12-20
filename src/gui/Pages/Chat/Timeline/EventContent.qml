@@ -43,7 +43,7 @@ HRowLayout {
         ) :
         0
 
-    // 600px max with a 16px font
+    // ~600px max with a 16px font
     readonly property int maxMessageWidth: theme.fontSize.normal * 0.5 * 75
 
 
@@ -85,6 +85,8 @@ HRowLayout {
 
     HColumnLayout {
         id: contentColumn
+
+        Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
 
         HSelectableLabel {
@@ -185,9 +187,8 @@ HRowLayout {
                 transform: Translate { x: xOffset }
 
                 Layout.bottomMargin: pureMedia ? 0 : contentLabel.bottomPadding
-                Layout.leftMargin: pureMedia ? 0 : contentLabel.leftPadding
-                Layout.rightMargin: pureMedia ? 0 : contentLabel.rightPadding
-
+                Layout.leftMargin: pureMedia ? 0 : eventContent.spacing
+                Layout.rightMargin: pureMedia ? 0 : eventContent.spacing
                 Layout.preferredWidth: item ? item.width : -1
                 Layout.preferredHeight: item ? item.height : -1
             }

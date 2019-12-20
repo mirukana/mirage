@@ -187,11 +187,11 @@ QtObject {
 
     function fitSize(minWidth, minHeight, width, height, maxWidth, maxHeight) {
         if (width >= height) {
-            let new_width = Math.max(Math.min(width, maxWidth), minWidth)
+            let new_width = Math.min(Math.max(width, minWidth), maxWidth)
             return Qt.size(new_width, height / (width / new_width))
         }
 
-        let new_height = Math.max(Math.min(height, maxHeight), minHeight)
+        let new_height = Math.min(Math.max(height, minHeight), maxHeight)
         return Qt.size(width / (height / new_height), new_height)
     }
 

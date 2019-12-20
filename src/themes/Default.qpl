@@ -365,11 +365,11 @@ chat:
 
         // Don't scale down thumbnails below this size in pixels, if
         // the becomes too small to show it at normal size.
-        size thumbnailMinSize: Qt.size(192 * uiScale, 192 * uiScale)
+        size thumbnailMinSize: Qt.size(256 * uiScale, 256 * uiScale)
 
         // How much of the chat height thumbnails can take at most,
-        // by default 0.3 for 30%.
-        real thumbnailMaxHeightRatio: 0.3 * Math.min(1, uiScale)
+        // by default 0.4 for 40%.
+        real thumbnailMaxHeightRatio: 0.4 * Math.min(1, uiScale)
 
     daybreak:
         color background: colors.strongBackground

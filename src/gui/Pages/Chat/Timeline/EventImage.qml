@@ -25,7 +25,7 @@ HMxcImage {
     readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 
     readonly property real maxHeight:
-        theme.chat.message.thumbnailMaxHeightRatio
+        eventList.height * theme.chat.message.thumbnailMaxHeightRatio
 
     readonly property size fitSize: utils.fitSize(
         // Minimum display size
@@ -49,10 +49,12 @@ HMxcImage {
 
         // Maximum display size
         Math.min(
-            eventList.height * maxHeight,
-            eventContent.maxMessageWidth * Math.min(1, theme.uiScale), // XXX
+            Math.max(maxHeight, theme.chat.message.thumbnailMinSize.width),
+            pureMedia ? Infinity : eventContent.maxMessageWidth,
+            eventDelegate.width - eventContent.spacing - avatarWrapper.width -
+            eventContent.spacing * 2,  // padding
         ),
-        eventList.height * maxHeight,
+        Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
     )
 
 
