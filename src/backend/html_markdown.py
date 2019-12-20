@@ -16,16 +16,40 @@ class MarkdownInlineGrammar(mistune.InlineGrammar):
     Modifications:
 
     - Disable underscores for bold/italics (e.g. `__bold__`)
+
+    - Add syntax for coloring text: `<color>(text)`,
+      e.g. `<red>(Lorem ipsum)` or `<#000040>(sit dolor amet...)`
     """
 
+    escape          = re.compile(r"^\\([\\`*{}\[\]()#+\-.!_<>~|])")  # Add <
     emphasis        = re.compile(r"^\*((?:\*\*|[^\*])+?)\*(?!\*)")
     double_emphasis = re.compile(r"^\*{2}([\s\S]+?)\*{2}(?!\*)")
+
+    # test string: r"<b>(x) <r>(x) \<a>b>(x) <a\>b>(x) <b>(\(z) <c>(foo\)xyz)"
+    color = re.compile(
+        r"^<(.+?)>"          # capture the color in `<color>`
+        r"\((.+?)"           # capture text in `(text`
+        r"(?<!\\)(?:\\\\)*"  # ignore the next `)` if it's \escaped
+        r"\)",               # finish on a `)`
+    )
 
 
 class MarkdownInlineLexer(mistune.InlineLexer):
     """Apply the changes from `MarkdownInlineGrammar` for Mistune."""
 
     grammar_class = MarkdownInlineGrammar
+
+    default_rules = [
+        "escape", "color", "autolink", "url",  # Add color
+        "footnote", "link", "reflink", "nolink",
+        "double_emphasis", "emphasis", "code",
+        "linebreak", "strikethrough", "text",
+    ]
+    inline_html_rules = [
+        "escape", "color", "autolink", "url", "link", "reflink",  # Add color
+        "nolink", "double_emphasis", "emphasis", "code",
+        "linebreak", "strikethrough", "text",
+    ]
 
 
     def output_double_emphasis(self, m):
@@ -34,6 +58,19 @@ class MarkdownInlineLexer(mistune.InlineLexer):
 
     def output_emphasis(self, m):
         return self.renderer.emphasis(self.output(m.group(1)))
+
+
+    def output_color(self, m):
+        color = m.group(1)
+        text  = self.output(m.group(2))
+        return self.renderer.color(color, text)
+
+
+class MarkdownRenderer(mistune.Renderer):
+    def color(self, color: str, text: str):
+        """Render given text with a color using `<span data-mx-color=...>`."""
+
+        return f'<span data-mx-color="{color}">{text}</span>'
 
 
 class HTMLProcessor:
@@ -95,7 +132,10 @@ class HTMLProcessor:
         # hard_wrap: convert all \n to <br> without required two spaces
         # escape: escape HTML characters in the input string, e.g. tags
         self._markdown_to_html = mistune.Markdown(
-            hard_wrap=True, escape=True, inline=MarkdownInlineLexer,
+            hard_wrap=True,
+            escape=True,
+            inline=MarkdownInlineLexer,
+            renderer=MarkdownRenderer(),
         )
 
         self._markdown_to_html.block.default_rules = [

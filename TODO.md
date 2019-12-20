@@ -92,7 +92,6 @@
 - Way to open context menus without a right mouse button
 - `smartVerticalFlick()` gradual acceleration
 - Make banner buttons look better
-- Way to color HTML from the composer
 
 - Choose a better default easing type for animations
 - Make HListView scrollbars visible
