@@ -67,11 +67,14 @@ HTileDelegate {
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding
 
-        visible: opacity > 0
         opacity: expand.loading ? 0 : 1
+        visible: opacity > 0 && Layout.maximumWidth > 0
 
         Layout.fillHeight: true
+        Layout.maximumWidth:
+            accountDelegate.width >= 100 * theme.uiScale ?  implicitWidth : 0
 
+        Behavior on Layout.maximumWidth { HNumberAnimation {} }
         Behavior on opacity { HNumberAnimation {} }
     }
 
@@ -87,10 +90,13 @@ HTileDelegate {
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding
 
-        visible: opacity > 0
         opacity: ! loading && accountDelegate.forceExpand ? 0 : 1
+        visible: opacity > 0 && Layout.maximumWidth > 0
 
         Layout.fillHeight: true
+        Layout.maximumWidth:
+            accountDelegate.width >= 120 * theme.uiScale ?  implicitWidth : 0
+
 
         iconItem.transform: Rotation {
             origin.x: expand.iconItem.width / 2
@@ -100,6 +106,7 @@ HTileDelegate {
             Behavior on angle { HNumberAnimation {} }
         }
 
+        Behavior on Layout.maximumWidth { HNumberAnimation {} }
         Behavior on opacity { HNumberAnimation {} }
     }
 
