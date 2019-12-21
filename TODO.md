@@ -86,7 +86,6 @@
 - Drop the `buttonModel`/`buttonCallbacks` HBox approach
 - Scrollable popups and room settings
 - Improve when HDrawer should collapse when the ui is zoomed
-- HDrawer snapping
 - Make theme error/etc text colors more like name colors
 - In account settings, display name field text should be colored
 - Way to open context menus without a right mouse button

@@ -46,6 +46,9 @@ Drawer {
     property int maximumSize:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
+    property int snapAt: defaultSize
+    property int snapZone: theme.spacing * 2
+
     //
 
     property Item referenceSizeParent: parent
@@ -105,19 +108,26 @@ Drawer {
 
             onMouseXChanged:
                 if (horizontal && pressed) {
-                    drawer.preferredSize =
+                    drawer.preferredSize = snapSize(
                         drawer.calculatedSize +
                         (drawer.edge === Qt.RightEdge ? -mouseX : mouseX)
+                    )
                 }
 
             onMouseYChanged:
                 if (vertical && pressed) {
-                    drawer.preferredSize =
+                    drawer.preferredSize = snapSize(
                         drawer.calculatedSize +
                         (drawer.edge === Qt.BottomEdge ? -mouseY : mouseY)
+                    )
                 }
 
             onReleased: window.saveState(drawer)
+
+            function snapSize(num) {
+                return num < snapAt + snapZone && num  > snapAt - snapZone ?
+                       snapAt : num
+            }
         }
     }
 }
