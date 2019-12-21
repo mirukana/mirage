@@ -91,6 +91,8 @@
 - Way to open context menus without a right mouse button
 - `smartVerticalFlick()` gradual acceleration
 - Make banner buttons look better
+- When window is reduced enough for main pane to be invisible, transition
+  between pane and page with alt+S is laggy when the page is a chat
 
 - Choose a better default easing type for animations
 - Make HListView scrollbars visible
