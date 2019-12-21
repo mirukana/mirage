@@ -30,6 +30,11 @@ HDrawer {
         }
     }
 
+
+    readonly property alias buttonRepeater: buttonRepeater
+    readonly property alias swipeView: swipeView
+
+
     HColumnLayout {
         anchors.fill: parent
 

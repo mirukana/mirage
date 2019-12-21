@@ -17,6 +17,7 @@ HButton {
     readonly property alias additionalInfo: additionalInfo
     readonly property alias rightInfo: rightInfo
     readonly property alias subtitle: subtitle
+    readonly property Item loadedImage: imageLoader.item
 
     property alias contextMenu: contextMenuLoader.sourceComponent
 
@@ -28,6 +29,7 @@ HButton {
         opacity: tile.contentOpacity
 
         HLoader {
+            id: imageLoader
             sourceComponent: image
         }
 
