@@ -176,7 +176,7 @@ HDrawer {
             onAccepted: if (text) { runJS(text); text = ""; historyEntry = -1 }
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
-            placeholderText: qsTr("Javascript debug console - Try .help")
+            placeholderText: qsTr("JavaScript debug console - Try .help")
             font.family: theme.fontFamily.mono
 
             Keys.onUpPressed:

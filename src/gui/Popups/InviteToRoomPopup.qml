@@ -78,7 +78,7 @@ BoxPopup {
         text:
             invitingAllowed ?
             allErrors :
-            qsTr("You do not have permission to invite members in this room")
+            qsTr("You do not have permission to invite members to this room")
 
         Layout.maximumHeight: text ? implicitHeight : 0
         Layout.fillWidth: true

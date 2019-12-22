@@ -73,7 +73,7 @@ HColumnLayout {
             toolTip.text:
                 enabled ?
                 qsTr("Invite members to this room") :
-                qsTr("No permission to invite members in this room")
+                qsTr("No permission to invite members to this room")
 
             topPadding: 0 // XXX
             bottomPadding: 0
