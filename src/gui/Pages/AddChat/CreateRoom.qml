@@ -90,7 +90,8 @@ HBox {
     HCheckBox {
         id: publicCheckBox
         text: qsTr("Make this room public")
-        subtitle.text: qsTr("Anyone will be able to join with no invite required.")
+        subtitle.text:
+            qsTr("Anyone will be able to join with no invite required")
 
         Layout.fillWidth: true
     }
