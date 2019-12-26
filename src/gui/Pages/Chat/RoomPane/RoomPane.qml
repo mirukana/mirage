@@ -19,7 +19,9 @@ HDrawer {
             color: theme.chat.roomPaneButtons.background
 
             Layout.fillWidth: true
-            Layout.preferredHeight: theme.baseElementsHeight
+            Layout.preferredHeight: buttonFlow.height
+
+            Behavior on Layout.preferredHeight { HNumberAnimation {} }
         }
 
         Rectangle {
@@ -39,6 +41,7 @@ HDrawer {
         anchors.fill: parent
 
         HFlow {
+            id: buttonFlow
             populate: null
 
             Layout.fillWidth: true
