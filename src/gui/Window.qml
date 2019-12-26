@@ -44,6 +44,8 @@ ApplicationWindow {
 
     property var theme: null
 
+    property var hideErrorTypes: new Set()
+
     readonly property alias py: py
 
 

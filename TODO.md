@@ -3,6 +3,9 @@
 - Make dark bar extend down pane
 - Verify default size
 
+- catch py unretrieved exception
+- call default handler from signin & others
+
 ## Media
 
 - nio ClientTimeout

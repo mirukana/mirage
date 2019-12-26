@@ -19,21 +19,39 @@ QtObject {
         let onSuccess = py.privates.pendingCoroutines[uuid].onSuccess
         let onError   = py.privates.pendingCoroutines[uuid].onError
 
+        delete py.privates.pendingCoroutines[uuid]
+
         if (error) {
-            let type = py.getattr(py.getattr(error, "__class__"), "__name__")
-            let args = py.getattr(error, "args")
+            const type = py.getattr(py.getattr(error, "__class__"), "__name__")
+            const args = py.getattr(error, "args")
 
-            type === "CancelledError" ?
-            console.warn(`python: cancelled: ${uuid}`) :
+            if (type === "CancelledError") {
+                console.warn(`python: cancelled: ${uuid}`)
+                return
+            }
 
-            onError ?
-            onError(type, args, error, traceback) :
+            if (onError) {
+                onError(type, args, error, traceback)
+                return
+            }
 
             console.error(`python: ${uuid}\n${traceback}`)
 
-        } else if (onSuccess) { onSuccess(result) }
+            if (window.hideErrorTypes.has(type)) {
+                console.warn(
+                    "Not showing error popup for this type due to user choice"
+                )
+                return
+            }
 
-        delete py.privates.pendingCoroutines[uuid]
+            utils.makePopup(
+                "Popups/UnexpectedErrorPopup.qml",
+                window,
+                { errorType: type, errorArguments: args, traceback },
+            )
+        }
+
+        if (onSuccess) onSuccess(result)
     }
 
 

@@ -21,8 +21,10 @@ HPopup {
     property alias details: details
 
     property string okText: qsTr("OK")
+    property string okIcon: "ok"
     property bool okEnabled: true
     property bool okClicked: false
+    property string cancelText: qsTr("Cancel")
 
 
     Binding on height {
@@ -40,8 +42,8 @@ HPopup {
         clickButtonOnEnter: "ok"
 
         buttonModel: [
-            { name: "ok", text: okText, iconName: "ok", enabled: okEnabled},
-            { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
+            { name: "ok", text: okText, iconName: okIcon, enabled: okEnabled},
+            { name: "cancel", text: cancelText, iconName: "cancel" },
         ]
 
         buttonCallbacks: ({
