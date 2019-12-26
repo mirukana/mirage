@@ -28,11 +28,10 @@ import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
 
-from . import __app_name__, __display_name__
-from . import utils
+from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
-    UneededThumbnail, UserNotFound,
+    MatrixNotFound, UneededThumbnail,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .models.items import (
@@ -131,6 +130,22 @@ class MatrixClient(nio.AsyncClient):
         )
 
 
+    async def _send(self, *args, **kwargs) -> nio.Response:
+        """Raise a `MatrixError` subclass for any `nio.ErrorResponse`.
+
+        This function is called by `nio.AsyncClient`'s methods to send
+        requests to the server. Return normal responses, but catch any
+        `ErrorResponse` to turn them into `MatrixError` exceptions we raise.
+        """
+
+        response = await super()._send(*args, **kwargs)
+
+        if isinstance(response, nio.ErrorResponse):
+            raise MatrixError.from_nio(response)
+
+        return response
+
+
     @property
     def default_device_name(self) -> str:
         """Device name to set at login if the user hasn't set a custom one."""
@@ -143,13 +158,7 @@ class MatrixClient(nio.AsyncClient):
     async def login(self, password: str, device_name: str = "") -> None:
         """Login to the server using the account's password."""
 
-        response = await super().login(
-            password, device_name or self.default_device_name,
-        )
-
-        if isinstance(response, nio.LoginError):
-            raise MatrixError.from_nio(response)
-
+        await super().login(password, device_name or self.default_device_name)
         asyncio.ensure_future(self._start())
 
 
@@ -221,7 +230,7 @@ class MatrixClient(nio.AsyncClient):
                 break  # task cancelled
             except Exception:
                 trace = traceback.format_exc().rstrip()
-                log.error("Exception during sync, will restart:\n%s", trace)
+                log.error("Exception during sync, restart in 2s:\n%s", trace)
                 await asyncio.sleep(2)
 
 
@@ -520,15 +529,12 @@ class MatrixClient(nio.AsyncClient):
         """Send a message event with `content` dict to a room."""
 
         async with self.backend.send_locks[room_id]:
-            response = await self.room_send(
+            await self.room_send(
                 room_id                   = room_id,
                 message_type              = "m.room.message",
                 content                   = content,
                 ignore_unverified_devices = True,
             )
-
-        if isinstance(response, nio.RoomSendError):
-            raise MatrixError.from_nio(response)
 
 
     async def load_past_events(self, room_id: str) -> bool:
@@ -556,9 +562,6 @@ class MatrixClient(nio.AsyncClient):
             start   = self.past_tokens[room_id],
             limit   = 100 if room_id in self.loaded_once_rooms else 25,
         )
-
-        if isinstance(response, nio.RoomMessagesError):
-            raise MatrixError.from_nio(response)
 
         self.loaded_once_rooms.add(room_id)
         more_to_load = True
@@ -620,21 +623,16 @@ class MatrixClient(nio.AsyncClient):
         if not self.user_id_regex.match(invite):
             raise InvalidUserId(invite)
 
-        if isinstance(await self.get_profile(invite), nio.ProfileGetError):
-            raise UserNotFound(invite)
+        # Raise MatrixNotFound if profile doesn't exist
+        await self.get_profile(invite)
 
-        response = await super().room_create(
+        return await super().room_create(
             invite        = [invite],
             is_direct     = True,
             visibility    = nio.RoomVisibility.private,
             initial_state =
                 [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
-        )
-
-        if isinstance(response, nio.RoomCreateError):
-            raise MatrixError.from_nio(response)
-
-        return response.room_id
+        ).room_id
 
 
     async def new_group_chat(
@@ -647,7 +645,7 @@ class MatrixClient(nio.AsyncClient):
     ) -> str:
         """Create a new matrix room with the purpose of being a group chat."""
 
-        response = await super().room_create(
+        return await super().room_create(
             name       = name or None,
             topic      = topic or None,
             federate   = federate,
@@ -656,12 +654,7 @@ class MatrixClient(nio.AsyncClient):
                 nio.RoomVisibility.private,
             initial_state =
                 [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
-        )
-
-        if isinstance(response, nio.RoomCreateError):
-            raise MatrixError.from_nio(response)
-
-        return response.room_id
+        ).room_id
 
     async def room_join(self, alias_or_id_or_url: str) -> str:
         """Join an existing matrix room."""
@@ -679,12 +672,7 @@ class MatrixClient(nio.AsyncClient):
         if not self.room_id_or_alias_regex.match(string):
             raise ValueError("Not an alias or room id")
 
-        response = await super().join(string)
-
-        if isinstance(response, nio.JoinError):
-            raise MatrixError.from_nio(response)
-
-        return response.room_id
+        return await super().join(string).room_id
 
 
     async def room_forget(self, room_id: str) -> None:
@@ -722,8 +710,10 @@ class MatrixClient(nio.AsyncClient):
             if not self.user_id_regex.match(user):
                 return InvalidUserId(user)
 
-            if isinstance(await self.get_profile(user), nio.ProfileGetError):
-                return UserNotFound(user)
+            try:
+                await self.get_profile(user)
+            except MatrixNotFound as err:
+                return err
 
             return await self.room_invite(room_id, user)
 
@@ -809,9 +799,6 @@ class MatrixClient(nio.AsyncClient):
             encrypt,
             monitor,
         )
-
-        if isinstance(response, nio.UploadError):
-            raise MatrixError.from_nio(response)
 
         return UploadReturn(response.content_uri, mime, decryption_dict)
 

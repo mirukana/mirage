@@ -89,14 +89,6 @@ class NioCallbacks:
             account.first_sync_done = True
 
 
-    async def onErrorResponse(self, resp: nio.ErrorResponse) -> None:
-        # TODO: show something in the client, must be seen on login screen too
-        try:
-            log.warning("%s - %s", resp, json.dumps(vars(resp), indent=4))
-        except Exception:
-            log.warning(repr(resp))
-
-
     # Event callbacks
 
     async def onRoomMessageText(self, room, ev) -> None:

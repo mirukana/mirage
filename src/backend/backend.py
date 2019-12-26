@@ -220,9 +220,6 @@ class Backend:
             client   = await self.get_any_client()
             response = await client.get_profile(user_id)
 
-            if isinstance(response, nio.ProfileGetError):
-                raise MatrixError.from_nio(response)
-
             self.profile_cache[user_id] = response
             return response
 
@@ -232,14 +229,9 @@ class Backend:
     ) -> nio.ThumbnailResponse:
         """Return thumbnail for a matrix media."""
 
-        args     = (server_name, media_id, width, height)
-        client   = await self.get_any_client()
-        response = await client.thumbnail(*args)
-
-        if isinstance(response, nio.ThumbnailError):
-            raise MatrixError.from_nio(response)
-
-        return response
+        args   = (server_name, media_id, width, height)
+        client = await self.get_any_client()
+        return await client.thumbnail(*args)
 
 
     async def download(
@@ -247,13 +239,8 @@ class Backend:
     ) -> nio.DownloadResponse:
         """Return the content of a matrix media."""
 
-        client   = await self.get_any_client()
-        response = await client.download(server_name, media_id)
-
-        if isinstance(response, nio.DownloadError):
-            raise MatrixError.from_nio(response)
-
-        return response
+        client = await self.get_any_client()
+        return await client.download(server_name, media_id)
 
 
     # General functions

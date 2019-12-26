@@ -72,11 +72,6 @@ class MatrixTooLarge(MatrixError):
 # Client errors
 
 @dataclass
-class UserNotFound(Exception):
-    user_id: str = field()
-
-
-@dataclass
 class InvalidUserId(Exception):
     user_id: str = field()
 
