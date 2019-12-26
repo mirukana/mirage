@@ -1,7 +1,5 @@
 # TODO
 
-- Verify default size
-
 ## Media
 
 - nio ClientTimeout
@@ -12,7 +10,6 @@
 - Confirmation box after picking file to upload
 - Show real progression for mxc thumbnail loadings
 
-- Some way to show name and date on EventFile
 - Sentinel function to report download file path if already cached,
   without having to click & try downloading first
 - EventFile download UI & Save as... in context menu
@@ -46,7 +43,6 @@
 
 ## Issues
 
-- Room pane can't make thin enough when zoomed
 - `EventImage`s for `m.image` sometimes appear broken, can be made normal
   by switching to another room and coming back
 - First sent message in E2E room is sometimes undecryptable

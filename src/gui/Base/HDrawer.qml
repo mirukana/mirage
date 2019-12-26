@@ -5,8 +5,8 @@ import QtQuick.Controls 2.12
 
 Drawer {
     id: drawer
-    implicitWidth: horizontal ? calculatedSize * theme.uiScale : parent.width
-    implicitHeight: vertical ? calculatedSize * theme.uiScale : parent.height
+    implicitWidth: horizontal ? calculatedSize : parent.width
+    implicitHeight: vertical ? calculatedSize : parent.height
 
     // Prevents this: open a popup, make the window small enough for the
     // drawer to collapse, then make it big again → popup is now behind drawer
@@ -37,7 +37,7 @@ Drawer {
 
     property alias color: bg.color
 
-    property int defaultSize: 300
+    property int defaultSize: 300 * theme.uiScale
 
     property int preferredSize:
         window.getState(this, "preferredSize", defaultSize)

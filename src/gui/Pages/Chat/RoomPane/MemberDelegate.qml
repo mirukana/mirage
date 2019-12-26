@@ -41,6 +41,7 @@ HTileDelegate {
     Behavior on spacing { HNumberAnimation {} }
 
     Binding on spacing {
+        id: spacebind
         value: (roomPane.minimumSize - loadedImage.width) / 2
         when: loadedImage &&
               roomPane.width < loadedImage.width + theme.spacing * 2
