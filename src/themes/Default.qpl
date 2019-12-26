@@ -312,7 +312,7 @@ chat:
             color background: colors.inputBackground
 
     eventList:
-        int ownEventsOnRightUnderWidth: 768
+        int ownEventsOnRightUnderWidth: 768 * theme.uiScale
         color background:               "transparent"
 
     message:
