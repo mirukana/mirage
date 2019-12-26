@@ -50,6 +50,15 @@ class CoroutineDone(PyOtherSideEvent):
 
 
 @dataclass
+class LoopException(PyOtherSideEvent):
+    """Indicate that an uncaught exception occured in the asyncio loop."""
+
+    message:   str                 = field()
+    exception: Optional[Exception] = field()
+    traceback: Optional[str]       = None
+
+
+@dataclass
 class ModelUpdated(PyOtherSideEvent):
     """Indicate that a backend `Model`'s data changed."""
 

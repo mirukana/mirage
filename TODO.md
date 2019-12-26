@@ -3,9 +3,6 @@
 - Make dark bar extend down pane
 - Verify default size
 
-- catch py unretrieved exception
-- call default handler from signin & others
-
 ## Media
 
 - nio ClientTimeout
@@ -55,7 +52,6 @@
 - `EventImage`s for `m.image` sometimes appear broken, can be made normal
   by switching to another room and coming back
 - First sent message in E2E room is sometimes undecryptable
-- Handle matrix errors for accept/decline invite buttons and other
 
 - Pause upload, switch to other room, then come back → wrong state displayed
 - Pausing uploads doesn't work well, servers end up dropping the connection 

@@ -47,11 +47,30 @@ QtObject {
             utils.makePopup(
                 "Popups/UnexpectedErrorPopup.qml",
                 window,
-                { errorType: type, errorArguments: args, traceback },
+                { errorType: type, traceback },
             )
         }
 
         if (onSuccess) onSuccess(result)
+    }
+
+
+    function onLoopException(message, error, traceback) {
+        // No need to log these here, the asyncio exception handler does it
+        const type = py.getattr(py.getattr(error, "__class__"), "__name__")
+
+        if (window.hideErrorTypes.has(type)) {
+            console.warn(
+                "Not showing error popup for this type due to user choice"
+            )
+            return
+        }
+
+        utils.makePopup(
+            "Popups/UnexpectedErrorPopup.qml",
+            window,
+            { errorType: type, message, traceback },
+        )
     }
 
 

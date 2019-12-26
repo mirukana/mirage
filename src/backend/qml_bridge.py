@@ -12,7 +12,7 @@ from threading import Thread
 from typing import Coroutine, Sequence
 
 from .backend import Backend
-from .pyotherside_events import CoroutineDone
+from .pyotherside_events import CoroutineDone, LoopException
 
 try:
     import uvloop
@@ -39,7 +39,22 @@ class QMLBridge:
         self.backend: Backend = Backend()
 
         self._loop = asyncio.get_event_loop()
+        self._loop.set_exception_handler(self._loop_exception_handler)
+
         Thread(target=self._start_asyncio_loop).start()
+
+
+    def _loop_exception_handler(
+        self, loop: asyncio.AbstractEventLoop, context: dict,
+    ) -> None:
+        if "exception" in context:
+            err   = context["exception"]
+            trace = "".join(
+                traceback.format_exception(type(err), err, err.__traceback__),
+            )
+            LoopException(context["message"], err, trace)
+
+        loop.default_exception_handler(context)
 
 
     def _start_asyncio_loop(self) -> None:

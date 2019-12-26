@@ -16,12 +16,12 @@ BoxPopup {
 
 
     property string errorType
-    property var errorArguments: []
+    property string message: ""
     property string traceback: ""
 
 
     HScrollableTextArea {
-        text: traceback || qsTr("No traceback available")
+        text: [message, traceback].join("\n\n") || qsTr("No info available")
         area.readOnly: true
 
         Layout.fillWidth: true
