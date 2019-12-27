@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import io.thp.pyotherside 1.5
+import CppUtils 0.1
 
 Python {
     id: py

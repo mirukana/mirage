@@ -7,7 +7,6 @@ import traceback
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple
 
-import hsluv
 from appdirs import AppDirs
 
 import nio
@@ -244,13 +243,6 @@ class Backend:
 
 
     # General functions
-
-    @staticmethod
-    def hsluv(hue: int, saturation: int, lightness: int) -> List[float]:
-        """Convert HSLuv (0-360, 0-100, 0-100) to RGB (0-1, 0-1, 0-1) color."""
-
-        return hsluv.hsluv_to_rgb([hue, saturation, lightness])
-
 
     async def load_settings(self) -> tuple:
         """Return parsed user config files."""
