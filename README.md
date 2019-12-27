@@ -29,7 +29,7 @@ Install [pyotherside](https://github.com/thp/pyotherside):
 
     git clone https://github.com/thp/pyotherside
     cd pyotherside
-    qmake && make && sudo make install
+    make clean; qmake && make && sudo make install
 
 After this, verify the permissions of the installed plugin files.
 To ensure that they're correctly set:
