@@ -37,11 +37,19 @@ int main(int argc, char *argv[]) {
     objectContext->setContextProperty("debugMode", false);
 #endif
 
-    // Add our custom non-visual `QObject `s as properties.
-    // Their attributes and methods will be accessing like normal QML objects.
-    /* objectContext->setContextProperty("CppUtils", new Utils()); */
-    objectContext->setContextProperty("Clipboard", new Clipboard());
-
+    // Register our custom non-visual QObject singletons,
+    // that will be importable anywhere in QML. Example:
+    //     import Clipboard 0.1
+    //     ...
+    //     Component.onCompleted: print(Clipboard.text)
+    qmlRegisterSingletonType<Clipboard>(
+        "Clipboard", 0, 1, "Clipboard",
+        [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+            Q_UNUSED(engine)
+            Q_UNUSED(scriptEngine)
+            return new Clipboard();
+        }
+    );
 
     qmlRegisterSingletonType<Utils>(
         "CppUtils", 0, 1, "CppUtils",
@@ -52,8 +60,10 @@ int main(int argc, char *argv[]) {
         }
     );
 
-    // Register our custom visual items that will be importable from QML,
-    // e.g. `import RadialBar 1.0`
+    // Register our custom visual items that will be importable from QML, e.g.
+    //     import RadialBar 1.0
+    //     ...
+    //     RadialBar { ... }
     qmlRegisterType<RadialBar>("RadialBar", 1, 0, "RadialBar");
 
     // Create the QML root component by loading its file from the Qt Resource

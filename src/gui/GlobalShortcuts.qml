@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import Clipboard 0.1
 import "Base"
 
 Item {
