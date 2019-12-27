@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import CppUtils 0.1
 
 QtObject {
     function makeObject(urlComponent, parent=null, properties={},

@@ -39,8 +39,18 @@ int main(int argc, char *argv[]) {
 
     // Add our custom non-visual `QObject `s as properties.
     // Their attributes and methods will be accessing like normal QML objects.
-    objectContext->setContextProperty("CppUtils", new Utils());
+    /* objectContext->setContextProperty("CppUtils", new Utils()); */
     objectContext->setContextProperty("Clipboard", new Clipboard());
+
+
+    qmlRegisterSingletonType<Utils>(
+        "CppUtils", 0, 1, "CppUtils",
+        [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+            Q_UNUSED(engine)
+            Q_UNUSED(scriptEngine)
+            return new Utils();
+        }
+    );
 
     // Register our custom visual items that will be importable from QML,
     // e.g. `import RadialBar 1.0`
