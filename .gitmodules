@@ -4,3 +4,6 @@
 [submodule "submodules/RadialBarDemo"]
 	path = submodules/RadialBarDemo
 	url = https://github.com/mirukan/RadialBarDemo/
+[submodule "submodules/hsluv-c"]
+	path = submodules/hsluv-c
+	url = https://github.com/hsluv/hsluv-c
