@@ -125,6 +125,11 @@ class QMLBridge:
 
 
 # Make CTRL-C work again
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+try:
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+except ValueError:
+    # FIXME - happens when we're imported from a thread,
+    # occurs in py3.8 but not 3.6?
+    pass
 
 BRIDGE = QMLBridge()
