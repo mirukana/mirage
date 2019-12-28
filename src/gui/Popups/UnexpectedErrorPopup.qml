@@ -23,6 +23,7 @@ BoxPopup {
     HScrollableTextArea {
         text: [message, traceback].join("\n\n") || qsTr("No info available")
         area.readOnly: true
+        area.font.family: theme.fontFamily.mono
 
         Layout.fillWidth: true
     }
