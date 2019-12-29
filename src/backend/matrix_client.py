@@ -626,13 +626,14 @@ class MatrixClient(nio.AsyncClient):
         # Raise MatrixNotFound if profile doesn't exist
         await self.get_profile(invite)
 
-        return await super().room_create(
+        response = await super().room_create(
             invite        = [invite],
             is_direct     = True,
             visibility    = nio.RoomVisibility.private,
             initial_state =
                 [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
-        ).room_id
+        )
+        return response.room_id
 
 
     async def new_group_chat(
@@ -645,7 +646,7 @@ class MatrixClient(nio.AsyncClient):
     ) -> str:
         """Create a new matrix room with the purpose of being a group chat."""
 
-        return await super().room_create(
+        response = await super().room_create(
             name       = name or None,
             topic      = topic or None,
             federate   = federate,
@@ -654,7 +655,8 @@ class MatrixClient(nio.AsyncClient):
                 nio.RoomVisibility.private,
             initial_state =
                 [nio.EnableEncryptionBuilder().as_dict()] if encrypt else [],
-        ).room_id
+        )
+        return response.room_id
 
     async def room_join(self, alias_or_id_or_url: str) -> str:
         """Join an existing matrix room."""
@@ -672,7 +674,8 @@ class MatrixClient(nio.AsyncClient):
         if not self.room_id_or_alias_regex.match(string):
             raise ValueError("Not an alias or room id")
 
-        return await super().join(string).room_id
+        response = await super().join(string)
+        return response.room_id
 
 
     async def room_forget(self, room_id: str) -> None:
