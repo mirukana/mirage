@@ -63,9 +63,10 @@ HTileDelegate {
         utils.formatTime(model.last_event_date, false) :  // no seconds
 
         model.last_event_date.getFullYear() === new Date().getFullYear() ?
-        Qt.formatDate(model.last_event_date, "d MMM") : // e.g. "5 Dec"
+        Qt.formatDate(model.last_event_date, "d MMM") :  // e.g. "5 Dec"
 
-        model.last_event_date.getFullYear()
+        // model.last_event_date.getFullYear() ?
+        Qt.formatDate(model.last_event_date, "MMM yyyy")  // e.g. "Jan 2020"
     }
 
     contextMenu: HMenu {
