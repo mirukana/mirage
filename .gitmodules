@@ -10,3 +10,6 @@
 [submodule "submodules/gel"]
 	path = submodules/gel
 	url = https://github.com/Cutehacks/gel
+[submodule "submodules/SortFilterProxyModel"]
+	path = submodules/SortFilterProxyModel
+	url = https://github.com/oKcerG/SortFilterProxyModel

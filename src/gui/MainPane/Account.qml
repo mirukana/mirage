@@ -12,7 +12,7 @@ HTileDelegate {
     bottomPadding: topPadding
 
     backgroundColor: theme.mainPane.account.background
-    opacity: collapsed && ! anyFilter ?
+    opacity: collapsed && ! mainPane.filter ?
              theme.mainPane.account.collapsedOpacity : 1
 
     title.color: theme.mainPane.account.name
@@ -50,8 +50,6 @@ HTileDelegate {
 
     readonly property bool collapsed:
         window.uiState.collapseAccounts[model.id] || false
-
-    readonly property bool anyFilter: Boolean(mainPaneList.filter)
 
 
     function toggleCollapse() {
@@ -99,7 +97,7 @@ HTileDelegate {
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding
 
-        opacity: ! loading && account.anyFilter ? 0 : 1
+        opacity: ! loading && mainPane.filter ? 0 : 1
         visible: opacity > 0 && Layout.maximumWidth > 0
 
         Layout.fillHeight: true

@@ -1,28 +1,18 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import SortFilterProxyModel 0.2
 import ".."
 import "../Base"
 
 HListView {
     id: mainPaneList
-
     model: ModelStore.get("accounts")
-    // model: HSortFilterProxy {
-    //     model: ModelStore.get("accounts")
-    //     comparator: (a, b) =>
-    //         // Sort by display name or user ID
-    //         (a.display_name || a.id).toLocaleLowerCase() <
-    //         (b.display_name || b.id).toLocaleLowerCase()
-    // }
 
     delegate: AccountRoomsDelegate {
         width: mainPaneList.width
         height: childrenRect.height
     }
-
-
-    readonly property string filter: toolBar.roomFilter
 
 
     function previous(activate=true) {
@@ -58,7 +48,7 @@ HListView {
     }
 
     function toggleCollapseAccount() {
-        if (filter) return
+        if (mainPane.filter) return
 
         if (! currentItem) incrementCurrentIndex()
 

@@ -45,11 +45,6 @@ class Account(ModelItem):
         other_name = other.display_name or other.id[1:]
         return name.lower() < other_name.lower()
 
-    @property
-    def filter_string(self) -> str:
-        """Filter based on display name."""
-        return self.display_name
-
 
 @dataclass
 class Room(ModelItem):
@@ -105,12 +100,6 @@ class Room(ModelItem):
             self.last_event_date,
             (other.display_name or other.id).lower(),
         )
-
-    @property
-    def filter_string(self) -> str:
-        """Filter based on room display name, topic, and last event content."""
-
-        return " ".join((self.display_name, self.topic))
 
 
 @dataclass

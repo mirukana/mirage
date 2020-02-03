@@ -11,9 +11,10 @@ HDrawer {
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
 
-    property bool hasFocus: toolBar.filterField.activeFocus
-    property alias mainPaneList: mainPaneList
-    property alias toolBar: toolBar
+    readonly property bool hasFocus: toolBar.filterField.activeFocus
+    readonly property alias mainPaneList: mainPaneList
+    readonly property alias toolBar: toolBar
+    property alias filter: toolBar.roomFilter
 
 
     function toggleFocus() {
