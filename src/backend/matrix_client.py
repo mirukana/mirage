@@ -499,15 +499,21 @@ class MatrixClient(nio.AsyncClient):
 
         our_info = self.models[self.user_id, room_id, "members"][self.user_id]
 
+        content = event_fields.get("content", "").strip()
+
+        if content and "inline_content" not in event_fields:
+            event_fields["inline_content"] = HTML.filter(content, inline=True)
+
         event = Event(
-            id               = f"echo-{transaction_id}",
-            event_id         = "",
-            event_type       = event_type,
-            date             = datetime.now(),
-            sender_id        = self.user_id,
-            sender_name      = our_info.display_name,
-            sender_avatar    = our_info.avatar_url,
-            is_local_echo    = True,
+            id            = f"echo-{transaction_id}",
+            event_id      = "",
+            event_type    = event_type,
+            date          = datetime.now(),
+            sender_id     = self.user_id,
+            sender_name   = our_info.display_name,
+            sender_avatar = our_info.avatar_url,
+            is_local_echo = True,
+            links         = Event.parse_links(content),
             **event_fields,
         )
 
@@ -1021,6 +1027,11 @@ class MatrixClient(nio.AsyncClient):
             await self.get_member_name_avatar(room.room_id, target_id) \
             if target_id else ("", "")
 
+        content = fields.get("content", "").strip()
+
+        if content and "inline_content" not in fields:
+            fields["inline_content"] = HTML.filter(content, inline=True)
+
         # Create Event ModelItem
         item = Event(
             id            = ev.event_id,
@@ -1034,6 +1045,7 @@ class MatrixClient(nio.AsyncClient):
             target_id     = target_id,
             target_name   = target_name,
             target_avatar = target_avatar,
+            links         = Event.parse_links(content),
             **fields,
         )
 

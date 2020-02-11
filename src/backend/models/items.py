@@ -174,9 +174,10 @@ class Event(ModelItem):
     sender_name:   str                 = field()
     sender_avatar: str                 = field()
 
-    content:        str = ""
-    inline_content: str = ""
-    reason:         str = ""
+    content:        str                  = ""
+    inline_content: str                  = ""
+    reason:         str                  = ""
+    links:          List[Dict[str, Any]] = field(default_factory=list)
 
     type_specifier: TypeSpecifier = TypeSpecifier.Unset
 
@@ -201,32 +202,19 @@ class Event(ModelItem):
     thumbnail_height:     int            = 0
     thumbnail_crypt_dict: Dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self) -> None:
-        if not self.inline_content:
-            self.inline_content = \
-                HTML_PROCESSOR.filter(self.content, inline=True)
-
-
     def __lt__(self, other: "Event") -> bool:
         """Sort by date in descending order, from newest to oldest."""
 
         return self.date > other.date
 
-    @property
-    def links(self) -> List[Dict[str, Any]]:
-        """List of URLs (`<a href=...>` tags) present in the event content."""
+    @staticmethod
+    def parse_links(text: str) -> List[Dict[str, Any]]:
+        """Return list of URLs (`<a href=...>` tags) present in the text."""
 
-        urls: List[Dict[str, Any]] = []
+        if not text.strip():
+            return []
 
-        if self.content.strip():
-            urls += [
-                {"url": link[2]} for link in lxml.html.iterlinks(self.content)
-            ]
-
-        if self.media_url:
-            urls.append({"url": self.media_url})
-
-        return urls
+        return [{"url": link[2]} for link in lxml.html.iterlinks(text)]
 
     @property
     def serialized(self) -> Dict[str, Any]:
