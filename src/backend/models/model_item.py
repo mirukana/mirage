@@ -1,6 +1,12 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
+from ..pyotherside_events import ModelItemFieldChanged
+from ..utils import serialize_value_for_qml
+
+if TYPE_CHECKING:
+    from .model import Model
 
 
 class ModelItem:
@@ -18,7 +24,6 @@ class ModelItem:
     """
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
-        from .model import Model
         cls.parent_model: Optional[Model] = None
         return super().__new__(cls)
 
@@ -39,7 +44,6 @@ class ModelItem:
         self.parent_model._sorted_data.sort()
         new_index = self.parent_model._sorted_data.index(self)
 
-        from ..pyotherside_events import ModelItemFieldChanged
         ModelItemFieldChanged(
             self.parent_model.sync_id, old_index, new_index, name, value,
         )
@@ -52,8 +56,6 @@ class ModelItem:
     @property
     def serialized(self) -> Dict[str, Any]:
         """Return this item as a dict ready to be passed to QML."""
-
-        from ..utils import serialize_value_for_qml
 
         return {
             name: serialize_value_for_qml(getattr(self, name), json_lists=True)

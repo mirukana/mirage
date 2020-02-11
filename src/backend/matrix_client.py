@@ -14,19 +14,18 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import (
-    Any, DefaultDict, Dict, List, NamedTuple, Optional, Set, Tuple, Type,
-    Union,
+    TYPE_CHECKING, Any, DefaultDict, Dict, List, NamedTuple, Optional, Set,
+    Tuple, Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 import cairosvg
-from PIL import Image as PILImage
-from pymediainfo import MediaInfo
-
 import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
 
 from . import __app_name__, __display_name__, utils
 from .errors import (
@@ -34,11 +33,14 @@ from .errors import (
     MatrixNotFound, UneededThumbnail,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
-from .models.items import (
-    Event, Member, Room, TypeSpecifier, Upload, UploadStatus,
-)
+from .media_cache import Media, Thumbnail
+from .models.items import Event, Member, Room, Upload, UploadStatus
 from .models.model_store import ModelStore
+from .nio_callbacks import NioCallbacks
 from .pyotherside_events import AlertRequested
+
+if TYPE_CHECKING:
+    from .backend import Backend
 
 CryptDict = Dict[str, Any]
 
@@ -103,8 +105,7 @@ class MatrixClient(nio.AsyncClient):
             ),
         )
 
-        from .backend import Backend
-        self.backend: Backend    = backend
+        self.backend: "Backend"  = backend
         self.models:  ModelStore = self.backend.models
 
         self.profile_task:    Optional[asyncio.Future] = None
@@ -120,7 +121,6 @@ class MatrixClient(nio.AsyncClient):
 
         self.skipped_events: DefaultDict[str, int] = DefaultDict(lambda: 0)
 
-        from .nio_callbacks import NioCallbacks
         self.nio_callbacks = NioCallbacks(self)
 
 
@@ -292,10 +292,8 @@ class MatrixClient(nio.AsyncClient):
     ) -> None:
         """Monitorably upload a file + thumbnail and send the built event."""
 
-        # TODO: this function is WAY TOO COMPLEX, and most of it should be
+        # TODO: this function is way too complex, and most of it should be
         # refactored into nio.
-
-        from .media_cache import Media, Thumbnail
 
         transaction_id = uuid4()
         path           = Path(path)

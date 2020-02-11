@@ -1,13 +1,15 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from threading import Lock
-from typing import Any, Dict, Iterator, List, MutableMapping
+from typing import TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping
 
 from ..pyotherside_events import (
     ModelCleared, ModelItemDeleted, ModelItemInserted,
 )
 from . import SyncId
-from .model_item import ModelItem
+
+if TYPE_CHECKING:
+    from .model_item import ModelItem
 
 
 class Model(MutableMapping):
@@ -30,10 +32,10 @@ class Model(MutableMapping):
     """
 
     def __init__(self, sync_id: SyncId) -> None:
-        self.sync_id:      SyncId               = sync_id
-        self._data:        Dict[Any, ModelItem] = {}
-        self._sorted_data: List[ModelItem]      = []
-        self._write_lock:  Lock                 = Lock()
+        self.sync_id:      SyncId                 = sync_id
+        self._data:        Dict[Any, "ModelItem"] = {}
+        self._sorted_data: List["ModelItem"]      = []
+        self._write_lock:  Lock                   = Lock()
 
 
     def __repr__(self) -> str:
@@ -58,7 +60,7 @@ class Model(MutableMapping):
         return self._data[key]
 
 
-    def __setitem__(self, key, value: ModelItem) -> None:
+    def __setitem__(self, key, value: "ModelItem") -> None:
         """Merge new item with an existing one if possible, else add it.
 
         If an existing item with the passed `key` is found, its fields will be

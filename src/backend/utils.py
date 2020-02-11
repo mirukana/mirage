@@ -21,8 +21,6 @@ from aiofiles.threadpool.binary import AsyncBufferedReader
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
 
-from .models.model_item import ModelItem
-
 Size = Tuple[int, int]
 auto = autostr
 
@@ -143,11 +141,11 @@ def serialize_value_for_qml(value: Any, json_lists: bool = False) -> Any:
     if json_lists and isinstance(value, list):
         return json.dumps(value)
 
+    if hasattr(value, "serialized"):
+        return value.serialized
+
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
         return value.value
-
-    if isinstance(value, ModelItem):
-        return value.serialized
 
     if isinstance(value, Path):
         return f"file://{value!s}"

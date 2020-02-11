@@ -10,16 +10,17 @@ import shutil
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, Optional
+from typing import TYPE_CHECKING, Any, DefaultDict, Dict, Optional
 from urllib.parse import urlparse
 
 import aiofiles
+import nio
 from PIL import Image as PILImage
 
-import nio
-
-from .backend import Backend
 from .utils import Size
+
+if TYPE_CHECKING:
+    from .backend import Backend
 
 if sys.version_info < (3, 8):
     import pyfastcopy  # noqa
@@ -34,8 +35,8 @@ ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
 class MediaCache:
     """Matrix downloaded media cache."""
 
-    backend:  Backend = field()
-    base_dir: Path    = field()
+    backend:  "Backend" = field()
+    base_dir: Path      = field()
 
 
     def __post_init__(self) -> None:

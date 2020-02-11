@@ -7,13 +7,15 @@ import json
 import logging as log
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, ClassVar, Dict, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
 
 import aiofiles
 
-from .backend import Backend
 from .theme_parser import convert_to_qml
 from .utils import dict_update_recursive
+
+if TYPE_CHECKING:
+    from .backend import Backend
 
 JsonData = Dict[str, Any]
 
@@ -26,8 +28,8 @@ class DataFile:
 
     is_config: ClassVar[bool] = False
 
-    backend:  Backend = field(repr=False)
-    filename: str     = field()
+    backend:  "Backend" = field(repr=False)
+    filename: str       = field()
 
     _to_write: Optional[str] = field(init=False, default=None)
 

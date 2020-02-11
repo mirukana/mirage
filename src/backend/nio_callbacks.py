@@ -6,15 +6,17 @@ import logging as log
 from contextlib import suppress
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple
 from urllib.parse import quote
 
 import nio
 
 from . import utils
 from .html_markdown import HTML_PROCESSOR
-from .matrix_client import MatrixClient
 from .models.items import TypeSpecifier
+
+if TYPE_CHECKING:
+    from .matrix_client import MatrixClient
 
 
 @dataclass
@@ -30,7 +32,7 @@ class NioCallbacks:
     These are processed from QML, to allow translations of the strings.
     """
 
-    client: MatrixClient = field()
+    client: "MatrixClient" = field()
 
 
     def __post_init__(self) -> None:

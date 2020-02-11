@@ -13,9 +13,11 @@ from appdirs import AppDirs
 from . import __app_name__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
+from .media_cache import MediaCache
 from .models import SyncId
 from .models.items import Account
 from .models.model_store import ModelStore
+from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -71,7 +73,6 @@ class Backend:
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
-        from .user_files import Accounts, UISettings, UIState, History
         self.saved_accounts: Accounts   = Accounts(self)
         self.ui_settings:    UISettings = UISettings(self)
         self.ui_state:       UIState    = UIState(self)
@@ -87,7 +88,6 @@ class Backend:
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
-        from .media_cache import MediaCache
         cache_dir                    = Path(self.appdirs.user_cache_dir)
         self.media_cache: MediaCache = MediaCache(self, cache_dir)
 
@@ -247,7 +247,6 @@ class Backend:
     async def load_settings(self) -> tuple:
         """Return parsed user config files."""
 
-        from .user_files import Theme
         settings = await self.ui_settings.read()
         ui_state = await self.ui_state.read()
         history  = await self.history.read()

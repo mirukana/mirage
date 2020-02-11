@@ -2,13 +2,15 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import pyotherside
 
 from .models import SyncId
-from .models.model_item import ModelItem
 from .utils import serialize_value_for_qml
+
+if TYPE_CHECKING:
+    from .models.model_item import ModelItem
 
 
 @dataclass
@@ -69,9 +71,9 @@ class ModelEvent(ABC, PyOtherSideEvent):
 
 @dataclass
 class ModelItemInserted(ModelEvent):
-    sync_id: SyncId    = field()
-    index:   int       = field()
-    item:    ModelItem = field()
+    sync_id: SyncId      = field()
+    index:   int         = field()
+    item:    "ModelItem" = field()
 
 
 @dataclass
