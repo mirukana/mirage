@@ -1,6 +1,6 @@
 # TODO
 
-- room last event date previous year show month if <3 month
+- members filtering
 - when inviting members, prevent if user id is on another server and room
   doesn't allow that
 - "exception during sync" aren't caught

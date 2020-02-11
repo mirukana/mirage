@@ -502,13 +502,12 @@ class MatrixClient(nio.AsyncClient):
         event = Event(
             id               = f"echo-{transaction_id}",
             event_id         = "",
-            source           = None,
+            event_type       = event_type,
             date             = datetime.now(),
             sender_id        = self.user_id,
             sender_name      = our_info.display_name,
             sender_avatar    = our_info.avatar_url,
             is_local_echo    = True,
-            local_event_type = event_type,
             **event_fields,
         )
 
@@ -1026,6 +1025,7 @@ class MatrixClient(nio.AsyncClient):
         item = Event(
             id            = ev.event_id,
             event_id      = ev.event_id,
+            event_type    = type(ev),
             source        = ev,
             date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
             sender_id     = ev.sender,

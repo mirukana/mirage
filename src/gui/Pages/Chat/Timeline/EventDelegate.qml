@@ -64,13 +64,8 @@ HColumnLayout {
 
 
     function json() {
-        return JSON.stringify(
-            {
-                "model": ModelStore.get(chat.userId, chat.roomId, "events")
-                                   .get(model.id),
-                "source": py.getattr(model.source, "__dict__"),
-            },
-        null, 4)
+        const events = ModelStore.get(chat.userId, chat.roomId, "events")
+        return JSON.stringify(events.get(model.id), null, 4)
     }
 
     function openContextMenu() {

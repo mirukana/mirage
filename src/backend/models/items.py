@@ -3,7 +3,6 @@
 """`ModelItem` subclasses definitions."""
 
 import asyncio
-import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -19,6 +18,7 @@ from .model_item import ModelItem
 
 ZeroDate              = datetime.fromtimestamp(0)
 OptionalExceptionType = Union[Type[None], Type[Exception]]
+
 
 
 class TypeSpecifier(AutoStrEnum):
@@ -127,12 +127,6 @@ class Member(ModelItem):
         )
 
 
-    @property
-    def filter_string(self) -> str:
-        """Filter members based on display name."""
-        return self.display_name
-
-
 class UploadStatus(AutoStrEnum):
     """Enum describing the status of an upload operation."""
 
@@ -142,7 +136,7 @@ class UploadStatus(AutoStrEnum):
 
 
 @dataclass
-class Upload(ModelItem):
+class Upload(ModelItem):  # XXX
     """Represent a running or failed file upload operation."""
 
     id:       UUID                = field()
@@ -219,33 +213,25 @@ class Event(ModelItem):
         return self.date > other.date
 
     @property
-    def event_type(self) -> Type:
-        """Type of the source nio event used to create this `Event`."""
-
-        if self.local_event_type:
-            return self.local_event_type
-
-        return type(self.source)
-
-    @property
-    def links(self) -> List[str]:
+    def links(self) -> List[Dict[str, Any]]:
         """List of URLs (`<a href=...>` tags) present in the event content."""
 
-        urls: List[str] = []
+        urls: List[Dict[str, Any]] = []
 
         if self.content.strip():
-            urls += [link[2] for link in lxml.html.iterlinks(self.content)]
+            urls += [
+                {"url": link[2]} for link in lxml.html.iterlinks(self.content)
+            ]
 
         if self.media_url:
-            urls.append(self.media_url)
+            urls.append({"url": self.media_url})
 
         return urls
 
     @property
     def serialized(self) -> Dict[str, Any]:
-        dct = super().serialized
-        del dct["source"]
-        del dct["local_event_type"]
+        dct           = super().serialized
+        dct["source"] = dct["source"].__dict__
         return dct
 
 

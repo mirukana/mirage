@@ -18,9 +18,6 @@ class ModelItem:
     Subclasses are also expected to implement `__lt__()`,
     to provide support for comparisons with the `<`, `>`, `<=`, `=>` operators
     and thus allow a `Model` to sort its `ModelItem`s.
-
-    They may also implement a `filter_string` property, that will be used
-    for filtering from the UI.
     """
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
