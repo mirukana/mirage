@@ -17,6 +17,10 @@ Column {
         roomList.model.count < 1 &&
         ! utils.filterMatches(mainPane.filter, model.display_name)
 
+    readonly property alias account: account
+    readonly property alias collapsed: account.collapsed
+    readonly property alias roomList: roomList
+
 
     Account {
         id: account
@@ -62,6 +66,8 @@ Column {
             width: roomList.width
             userId: delegate.userId
         }
+
+        highlight: null  // managed by the AccountRoomsList
 
         Behavior on height { HNumberAnimation {} }
     }

@@ -9,11 +9,12 @@ ListView {
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
+    highlightResizeDuration: theme.animationDuration
 
     // Keep highlighted delegate at the center
     highlightRangeMode: ListView.ApplyRange
-    preferredHighlightBegin: height / 2 - currentItemHeight
-    preferredHighlightEnd: height / 2 + currentItemHeight
+    preferredHighlightBegin: height / 2 - currentItemHeight / 2
+    preferredHighlightEnd: height / 2 + currentItemHeight / 2
 
     maximumFlickVelocity: 4000
 
@@ -65,11 +66,8 @@ ListView {
 
 
     property bool allowDragging: true
-
     property alias cursorShape: mouseArea.cursorShape
-
-    readonly property int currentItemHeight:
-        currentItem ? currentItem.height : 0
+    property int currentItemHeight: currentItem ? currentItem.height : 0
 
 
     Connections {
