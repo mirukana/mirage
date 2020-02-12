@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import SortFilterProxyModel 0.2
 import "../../.."
 import "../../../Base"
 
@@ -10,26 +11,15 @@ HColumnLayout {
         id: memberList
         clip: true
 
-        model: ModelStore.get(chat.userId, chat.roomId, "members")
-        // model: HSortFilterProxy {
-        //     model: ModelStore.get(chat.userId, chat.roomId, "members")
+        model: SortFilterProxyModel {
+            sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
 
-        //     comparator: (a, b) =>
-        //         // Sort by power level, then by display name or user ID (no @)
-        //         [
-        //             a.invited,
-        //             b.power_level,
-        //             (a.display_name || a.id.substring(1)).toLocaleLowerCase(),
-        //         ] < [
-        //             b.invited,
-        //             a.power_level,
-        //             (b.display_name || b.id.substring(1)).toLocaleLowerCase(),
-        //         ]
-
-        //         filter: (item, index) => utils.filterMatchesAny(
-        //             filterField.text, item.display_name, item.id,
-        //         )
-        // }
+            filters: ExpressionFilter {
+                expression: utils.filterMatches(
+                   filterField.text, model.display_name,
+                )
+            }
+        }
 
         delegate: MemberDelegate {
             width: memberList.width
@@ -52,8 +42,6 @@ HColumnLayout {
             backgroundColor: theme.chat.roomPane.filterMembers.background
             bordered: false
             opacity: width >= 16 * theme.uiScale ? 1 : 0
-
-            onTextChanged: memberList.model.reFilter()
 
             Layout.fillWidth: true
             Layout.fillHeight: true
