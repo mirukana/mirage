@@ -1,7 +1,10 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from threading import Lock
+from bisect import bisect
+from threading import RLock
 from typing import TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping
+
+from blist import blist
 
 from ..pyotherside_events import (
     ModelCleared, ModelItemDeleted, ModelItemInserted,
@@ -34,8 +37,8 @@ class Model(MutableMapping):
     def __init__(self, sync_id: SyncId) -> None:
         self.sync_id:      SyncId                 = sync_id
         self._data:        Dict[Any, "ModelItem"] = {}
-        self._sorted_data: List["ModelItem"]      = []
-        self._write_lock:  Lock                   = Lock()
+        self._sorted_data: List["ModelItem"]      = blist()
+        self._write_lock:  RLock                  = RLock()
 
 
     def __repr__(self) -> str:
@@ -85,10 +88,10 @@ class Model(MutableMapping):
             new.parent_model = self
 
             self._data[key] = new
-            self._sorted_data.append(new)
-            self._sorted_data.sort()
+            index           = bisect(self._sorted_data, new)
+            self._sorted_data.insert(index, new)
 
-            ModelItemInserted(self.sync_id, self._sorted_data.index(new), new)
+            ModelItemInserted(self.sync_id, index, new)
 
 
     def __delitem__(self, key) -> None:
