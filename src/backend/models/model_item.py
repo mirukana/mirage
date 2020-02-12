@@ -43,7 +43,11 @@ class ModelItem:
             new_index = self.parent_model._sorted_data.index(self)
 
             ModelItemFieldChanged(
-                self.parent_model.sync_id, old_index, new_index, name, value,
+                self.parent_model.sync_id,
+                old_index,
+                new_index,
+                name,
+                self.serialize_field(name),
             )
 
 
@@ -51,13 +55,16 @@ class ModelItem:
         raise NotImplementedError()
 
 
+    def serialize_field(self, field: str) -> Any:
+        return serialize_value_for_qml(getattr(self, field), json_lists=True)
+
+
     @property
     def serialized(self) -> Dict[str, Any]:
         """Return this item as a dict ready to be passed to QML."""
 
         return {
-            name: serialize_value_for_qml(getattr(self, name), json_lists=True)
-            for name in dir(self)
+            name: self.serialize_field(name) for name in dir(self)
             if not (
                 name.startswith("_") or name in ("parent_model", "serialized")
             )

@@ -168,7 +168,6 @@ class Event(ModelItem):
     id:            str                 = field()
     event_id:      str                 = field()
     event_type:    Type[nio.Event]     = field()
-    source:        Optional[nio.Event] = field()
     date:          datetime            = field()
     sender_id:     str                 = field()
     sender_name:   str                 = field()
@@ -185,8 +184,8 @@ class Event(ModelItem):
     target_name:   str = ""
     target_avatar: str = ""
 
-    is_local_echo:    bool                      = False
-    local_event_type: Optional[Type[nio.Event]] = None
+    is_local_echo: bool                = False
+    source:        Optional[nio.Event] = None
 
     media_url:        str            = ""
     media_title:      str            = ""
@@ -216,11 +215,11 @@ class Event(ModelItem):
 
         return [link[2] for link in lxml.html.iterlinks(text)]
 
-    @property
-    def serialized(self) -> Dict[str, Any]:
-        dct           = super().serialized
-        dct["source"] = dct["source"].__dict__
-        return dct
+    def serialize_field(self, field: str) -> Any:
+        if field == "source":
+            return self.source.__dict__ if self.source else {}
+
+        return super().serialize_field(field)
 
 
 @dataclass
