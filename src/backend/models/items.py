@@ -12,7 +12,6 @@ from uuid import UUID
 import lxml  # nosec
 import nio
 
-from ..html_markdown import HTML_PROCESSOR
 from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
 
@@ -168,16 +167,17 @@ class Event(ModelItem):
 
     id:            str                 = field()
     event_id:      str                 = field()
+    event_type:    Type[nio.Event]     = field()
     source:        Optional[nio.Event] = field()
     date:          datetime            = field()
     sender_id:     str                 = field()
     sender_name:   str                 = field()
     sender_avatar: str                 = field()
 
-    content:        str                  = ""
-    inline_content: str                  = ""
-    reason:         str                  = ""
-    links:          List[Dict[str, Any]] = field(default_factory=list)
+    content:        str       = ""
+    inline_content: str       = ""
+    reason:         str       = ""
+    links:          List[str] = field(default_factory=list)
 
     type_specifier: TypeSpecifier = TypeSpecifier.Unset
 
@@ -208,13 +208,13 @@ class Event(ModelItem):
         return self.date > other.date
 
     @staticmethod
-    def parse_links(text: str) -> List[Dict[str, Any]]:
+    def parse_links(text: str) -> List[str]:
         """Return list of URLs (`<a href=...>` tags) present in the text."""
 
         if not text.strip():
             return []
 
-        return [{"url": link[2]} for link in lxml.html.iterlinks(text)]
+        return [link[2] for link in lxml.html.iterlinks(text)]
 
     @property
     def serialized(self) -> Dict[str, Any]:
