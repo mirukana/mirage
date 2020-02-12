@@ -17,13 +17,11 @@ if TYPE_CHECKING:
 class PyOtherSideEvent:
     """Event that will be sent on instanciation to QML by PyOtherSide."""
 
-    json_lists = False
-
     def __post_init__(self) -> None:
         # CPython 3.6 or any Python implemention >= 3.7 is required for correct
         # __dataclass_fields__ dict order.
         args = [
-            serialize_value_for_qml(getattr(self, field), self.json_lists)
+            serialize_value_for_qml(getattr(self, field))
             for field in self.__dataclass_fields__  # type: ignore
         ]
         pyotherside.send(type(self).__name__, *args)
@@ -65,19 +63,14 @@ class LoopException(PyOtherSideEvent):
 
 
 @dataclass
-class ModelEvent(ABC, PyOtherSideEvent):
-    json_lists = True
-
-
-@dataclass
-class ModelItemInserted(ModelEvent):
+class ModelItemInserted(PyOtherSideEvent):
     sync_id: SyncId      = field()
     index:   int         = field()
     item:    "ModelItem" = field()
 
 
 @dataclass
-class ModelItemFieldChanged(ModelEvent):
+class ModelItemFieldChanged(PyOtherSideEvent):
     sync_id:         SyncId = field()
     item_index_then: int    = field()
     item_index_now:  int    = field()
@@ -86,11 +79,11 @@ class ModelItemFieldChanged(ModelEvent):
 
 
 @dataclass
-class ModelItemDeleted(ModelEvent):
+class ModelItemDeleted(PyOtherSideEvent):
     sync_id: SyncId = field()
     index:   int    = field()
 
 
 @dataclass
-class ModelCleared(ModelEvent):
+class ModelCleared(PyOtherSideEvent):
     sync_id: SyncId = field()

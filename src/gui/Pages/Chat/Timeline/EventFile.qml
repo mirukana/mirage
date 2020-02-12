@@ -40,6 +40,8 @@ HTile {
 
     property EventMediaLoader loader
 
-    readonly property bool cryptDict: loader.singleMediaInfo.media_crypt_dict
+    readonly property bool cryptDict:
+        JSON.parse(loader.singleMediaInfo.media_crypt_dict)
+
     readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 }

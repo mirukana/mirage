@@ -64,8 +64,11 @@ HColumnLayout {
 
 
     function json() {
-        const events = ModelStore.get(chat.userId, chat.roomId, "events")
-        return JSON.stringify(events.get(model.id), null, 4)
+        let event    = ModelStore.get(chat.userId, chat.roomId, "events")
+                                 .get(model.id)
+        event        = JSON.parse(JSON.stringify(event))
+        event.source = JSON.parse(event.source)
+        return JSON.stringify(event, null, 4)
     }
 
     function openContextMenu() {

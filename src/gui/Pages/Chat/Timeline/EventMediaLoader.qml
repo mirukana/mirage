@@ -80,7 +80,10 @@ HLoader {
 
         if (! downloadedPath) print("Downloading " + loader.mediaUrl + " ...")
 
-        const args = [loader.mediaUrl, loader.singleMediaInfo.media_crypt_dict]
+        const args = [
+            loader.mediaUrl,
+            JSON.parse(loader.singleMediaInfo.media_crypt_dict)
+        ]
 
         py.callCoro("media_cache.get_media", args, path => {
             if (! downloadedPath) print("Done: " + path)

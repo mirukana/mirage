@@ -56,7 +56,10 @@ class ModelItem:
 
 
     def serialize_field(self, field: str) -> Any:
-        return serialize_value_for_qml(getattr(self, field), json_lists=True)
+        return serialize_value_for_qml(
+            getattr(self, field),
+            json_list_dicts=True,
+        )
 
 
     @property

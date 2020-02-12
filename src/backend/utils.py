@@ -8,12 +8,12 @@ import inspect
 import io
 import json
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
-from datetime import timedelta
+from datetime import datetime, timedelta
 from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Dict, Tuple, Type
+from typing import Any, Dict, Mapping, Sequence, Tuple, Type
 from uuid import UUID
 
 import filetype
@@ -125,7 +125,7 @@ def plain2html(text: str) -> str:
                .replace("\t", "&nbsp;" * 4)
 
 
-def serialize_value_for_qml(value: Any, json_lists: bool = False) -> Any:
+def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
     """Convert a value to make it easier to use from QML.
 
     Returns:
@@ -138,7 +138,10 @@ def serialize_value_for_qml(value: Any, json_lists: bool = False) -> Any:
     - `ModelItem.serialized` for `ModelItem`s
     """
 
-    if json_lists and isinstance(value, list):
+    if isinstance(value, (int, float, bool, str, datetime)):
+        return value
+
+    if json_list_dicts and isinstance(value, (Sequence, Mapping)):
         return json.dumps(value)
 
     if hasattr(value, "serialized"):

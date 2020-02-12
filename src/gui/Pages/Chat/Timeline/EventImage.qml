@@ -15,9 +15,11 @@ HMxcImage {
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :
          (loader.mediaUrl || loader.thumbnailMxc)
-    cryptDict: thumbnail && loader.thumbnailMxc ?
-               loader.singleMediaInfo.thumbnail_crypt_dict :
-               loader.singleMediaInfo.media_crypt_dict
+    cryptDict: JSON.parse(
+        thumbnail && loader.thumbnailMxc ?
+        loader.singleMediaInfo.thumbnail_crypt_dict :
+        loader.singleMediaInfo.media_crypt_dict
+    )
 
 
     property EventMediaLoader loader

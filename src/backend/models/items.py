@@ -3,6 +3,7 @@
 """`ModelItem` subclasses definitions."""
 
 import asyncio
+import json
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -217,7 +218,8 @@ class Event(ModelItem):
 
     def serialize_field(self, field: str) -> Any:
         if field == "source":
-            return self.source.__dict__ if self.source else {}
+            source_dict = nio.attr.asdict(self.source) if self.source else {}
+            return json.dumps(source_dict)
 
         return super().serialize_field(field)
 

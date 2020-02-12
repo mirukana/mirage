@@ -42,9 +42,6 @@
 - Don't put all the binds in one central file
   - Missing room keybinds (invite, etc) and close failed upload
 - Use QML states?
-- Try gel for the models and stop being lazy in python
-
-- Room Sidepane save/load size & keybinds
 
 ## Issues
 
@@ -76,6 +73,7 @@
 
 ## Interface
 
+- Room Sidepane keybinds
 - Remember ctrl+tab page target
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
 - Make all "Cancel" buttons able to cancel running Backend coroutines set
