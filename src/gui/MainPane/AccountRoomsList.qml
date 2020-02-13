@@ -20,8 +20,6 @@ HListView {
     highlightRangeMode: ListView.NoHighlightRange
 
     highlight: Rectangle {
-        Component.onCompleted: print("coc")
-        Component.onDestruction: print("cod")
         id: highlightRectangle
         y:
             selectedRoom ?
@@ -154,6 +152,12 @@ HListView {
     function clearSelection() {
         if (selectedRoom) currentItem.roomList.currentIndex = -1
         currentIndex = -1
+    }
+
+    function forceUpdateSelection() {
+        // When the selection is cleared, if an account or room delegate is
+        // supposed to be selected, it will try to be so again.
+        clearSelection()
     }
 
 

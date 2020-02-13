@@ -6,12 +6,13 @@ import ".."
 import "../Base"
 
 Column {
-    id: delegate
+    id: accountRooms
     // visible: account.opacity > 0
 
 
     property string userId: model.id
     readonly property HListView view: ListView.view
+    readonly property int listIndex: index
     readonly property bool hide:
         mainPane.filter &&
         roomList.model.count < 1 &&
@@ -25,7 +26,7 @@ Column {
     Account {
         id: account
         width: parent.width
-        view: delegate.view
+        view: accountRooms.view
 
         opacity: hide ?
                  0 :
@@ -46,7 +47,7 @@ Column {
         interactive: false
 
         model: SortFilterProxyModel {
-            sourceModel: ModelStore.get(delegate.userId, "rooms")
+            sourceModel: ModelStore.get(accountRooms.userId, "rooms")
 
             filters: [
                 ExpressionFilter {
@@ -64,7 +65,7 @@ Column {
 
         delegate: Room {
             width: roomList.width
-            userId: delegate.userId
+            userId: accountRooms.userId
         }
 
         highlight: null  // managed by the AccountRoomsList

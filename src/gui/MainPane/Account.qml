@@ -43,9 +43,12 @@ HTileDelegate {
         }
     }
 
-    onActivated: pageLoader.showPage(
-        "AccountSettings/AccountSettings", { "userId": model.id }
-    )
+    onActivated: {
+        becomeSelected()
+        pageLoader.showPage(
+            "AccountSettings/AccountSettings", { "userId": model.id }
+        )
+    }
 
 
     readonly property alias addChat: addChat
@@ -53,6 +56,18 @@ HTileDelegate {
     readonly property bool collapsed:
         window.uiState.collapseAccounts[model.id] || false
 
+    readonly property bool shouldBeSelected:
+        (
+            window.uiState.page === "Pages/AddChat/AddChat.qml" ||
+            window.uiState.page === "Pages/AccountSettings/AccountSettings.qml"
+        ) &&
+        window.uiState.pageProperties.userId === model.id
+
+
+    function becomeSelected() {
+        accountRooms.roomList.currentIndex = -1
+        mainPaneList.currentIndex          = index
+    }
 
     function toggleCollapse() {
         window.uiState.collapseAccounts[model.id] = ! collapsed
@@ -62,15 +77,29 @@ HTileDelegate {
 
     Behavior on opacity { HNumberAnimation {} }
 
+
+    // Trying to set the current item to ourself usually won't work from the
+    // first time, when this delegate is being initialized
+    Timer {
+        interval: 100
+        repeat: true
+        running: shouldBeSelected && mainPaneList.currentIndex === -1
+        triggeredOnStart: true
+        onTriggered: becomeSelected()
+    }
+
     HButton {
         id: addChat
         iconItem.small: true
         icon.name: "add-chat"
         backgroundColor: "transparent"
         toolTip.text: qsTr("Add new chat")
-        onClicked: pageLoader.showPage(
-            "AddChat/AddChat", {userId: model.id},
-        )
+        onClicked: {
+            becomeSelected()
+            pageLoader.showPage(
+                "AddChat/AddChat", {userId: model.id},
+            )
+        }
 
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding

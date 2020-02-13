@@ -73,6 +73,7 @@ HLoader {
         window.uiState.page           = componentUrl
         window.uiState.pageProperties = properties
         window.uiStateChanged()
+        mainUI.mainPane.mainPaneList.forceUpdateSelection()
         return true
     }
 
