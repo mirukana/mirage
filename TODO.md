@@ -45,6 +45,7 @@
 
 ## Issues
 
+- AccountRoomsList highlight delegate movements when reaching the bottom
 - `EventImage`s for `m.image` sometimes appear broken, can be made normal
   by switching to another room and coming back
 - First sent message in E2E room is sometimes undecryptable

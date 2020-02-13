@@ -14,12 +14,13 @@ HListView {
         height: childrenRect.height
     }
 
+    // Must handle the highlight's position and size manually because
+    // of our nested lists
     highlightFollowsCurrentItem: false
-    currentItemHeight:
-        selectedRoom ? selectedRoom.height :
-        currentItem ? currentItem.account.height : 0
+    highlightRangeMode: ListView.NoHighlightRange
 
     highlight: Rectangle {
+        id: highlightRectangle
         y:
             selectedRoom ?
             currentItem.y + currentItem.account.height +
@@ -36,6 +37,18 @@ HListView {
 
         Behavior on y { HNumberAnimation {} }
         Behavior on height { HNumberAnimation {} }
+
+        Binding {
+            target: mainPaneList
+            property: "contentY"
+            value: Math.max(
+                0,
+                highlightRectangle.y + highlightRectangle.height / 2 -
+                mainPaneList.height / 2,
+            )
+            when: ! mainPaneList.horizontalOvershoot
+            delayed: true
+        }
     }
 
 
