@@ -20,6 +20,8 @@ HListView {
     highlightRangeMode: ListView.NoHighlightRange
 
     highlight: Rectangle {
+        Component.onCompleted: print("coc")
+        Component.onDestruction: print("cod")
         id: highlightRectangle
         y:
             selectedRoom ?
@@ -120,8 +122,15 @@ HListView {
         }
     }
 
+    function requestActivate() {
+        activateLimiter.restart()
+    }
+
     function activate() {
-        currentItem.item.activated()
+        if (! currentItem) incrementCurrentIndex()
+        selectedRoom ?
+        currentItem.roomList.currentItem.activated() :
+        currentItem.account.activated()
     }
 
     function accountSettings() {
@@ -133,13 +142,18 @@ HListView {
     function addNewChat() {
         if (! currentItem) incrementCurrentIndex()
         currentItem.roomList.currentIndex = -1
-        currentItem.account.activated()
+        currentItem.account.addChat.clicked()
     }
 
     function toggleCollapseAccount() {
         if (mainPane.filter) return
         if (! currentItem) incrementCurrentIndex()
         currentItem.account.toggleCollapse()
+    }
+
+    function clearSelection() {
+        if (selectedRoom) currentItem.roomList.currentIndex = -1
+        currentIndex = -1
     }
 
 

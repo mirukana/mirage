@@ -27,6 +27,10 @@ HDrawer {
         toolBar.filterField.forceActiveFocus()
     }
 
+    function addccount() {
+        toolBar.addAccountButton.clicked()
+    }
+
 
     Behavior on opacity { HNumberAnimation {} }
 

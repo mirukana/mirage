@@ -48,6 +48,8 @@ HTileDelegate {
     )
 
 
+    readonly property alias addChat: addChat
+
     readonly property bool collapsed:
         window.uiState.collapseAccounts[model.id] || false
 

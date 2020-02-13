@@ -187,13 +187,19 @@ Item {
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToPreviousRoom
-        onActivated: mainUI.mainPane.mainPaneList.previous()
+        onActivated: {
+            mainUI.mainPane.mainPaneList.previous()
+            mainUI.mainPane.mainPaneList.requestActivate()
+        }
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.goToNextRoom
-        onActivated: mainUI.mainPane.mainPaneList.next()
+        onActivated: {
+            mainUI.mainPane.mainPaneList.next()
+            mainUI.mainPane.mainPaneList.requestActivate()
+        }
     }
 
 
