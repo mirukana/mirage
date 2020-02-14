@@ -4,7 +4,6 @@
 
 import asyncio
 import json
-import logging as log
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
@@ -26,7 +25,8 @@ WRITE_LOCK = asyncio.Lock()
 class DataFile:
     """Base class representing a user data file."""
 
-    is_config: ClassVar[bool] = False
+    is_config:      ClassVar[bool] = False
+    create_missing: ClassVar[bool] = True
 
     backend:  "Backend" = field(repr=False)
     filename: str       = field()
@@ -55,10 +55,17 @@ class DataFile:
 
 
     async def read(self):
-        """Return the content of the existing file on disk."""
+        """Return content of the existing file on disk, or default content."""
 
-        log.debug("Reading config %s at %s", type(self).__name__, self.path)
-        return self.path.read_text()
+        try:
+            return self.path.read_text()
+        except FileNotFoundError:
+            default = await self.default_data()
+
+            if self.create_missing:
+                await self.write(default)
+
+            return default
 
 
     async def write(self, data) -> None:
@@ -68,18 +75,23 @@ class DataFile:
 
 
     async def _write_loop(self) -> None:
-        """Write/update file to on disk with a 1 second cooldown."""
+        """Write/update file on disk with a 1 second cooldown."""
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
         while True:
-            if self._to_write is not None:
-                async with aiofiles.open(self.path, "w") as new:
-                    await new.write(self._to_write)
-
-                self._to_write = None
-
             await asyncio.sleep(1)
+
+            if self._to_write is None:
+                continue
+
+            if not self.create_missing and not self.path.exists():
+                continue
+
+            async with aiofiles.open(self.path, "w") as new:
+                await new.write(self._to_write)
+
+            self._to_write = None
 
 
 
@@ -92,14 +104,23 @@ class JSONDataFile(DataFile):
 
 
     async def read(self) -> JsonData:
-        """Return the content of the existing file on disk.
+        """Return content of the existing file on disk, or default content.
 
-        If the file doesn't exist on disk or it has missing keys, the missing
-        data will be merged and written to disk before returning.
+        If the file has missing keys, the missing data will be merged and
+        written to disk before returning.
+
+        If `create_missing` is `True` and the file doesn't exist, it will be
+        created.
         """
+
         try:
             data = json.loads(await super().read())
-        except (FileNotFoundError, json.JSONDecodeError):
+        except FileNotFoundError:
+            if not self.create_missing:
+                return await self.default_data()
+
+            data = {}
+        except json.JSONDecodeError:
             data = {}
 
         all_data = await self.default_data()
@@ -251,6 +272,10 @@ class History(JSONDataFile):
 class Theme(DataFile):
     """A theme file defining the look of QML components."""
 
+    # Since it currently breaks at every update and the file format will be
+    # changed later, don't copy the theme to user data dir if it doesn't exist.
+    create_missing = False
+
 
     @property
     def path(self) -> Path:
@@ -264,7 +289,4 @@ class Theme(DataFile):
 
 
     async def read(self) -> str:
-        if not self.path.exists():
-            await self.write(await self.default_data())
-
         return convert_to_qml(await super().read())
