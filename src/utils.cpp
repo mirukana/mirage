@@ -9,6 +9,8 @@
 #include "utils.h"
 #include "../submodules/hsluv-c/src/hsluv.h"
 
+using namespace std;
+
 
 Utils::Utils() {
     // Initialization
@@ -30,5 +32,11 @@ QString Utils::uuid() {
 QColor Utils::hsluv(qreal hue, qreal saturation, qreal luv, qreal alpha) {
     double red, green, blue;
     hsluv2rgb(hue, saturation, luv, &red, &green, &blue);
-    return QColor::fromRgbF(red, green, blue, alpha);
+
+    return QColor::fromRgbF(
+        qMax(0.0, qMin(1.0, red)),
+        qMax(0.0, qMin(1.0, green)),
+        qMax(0.0, qMin(1.0, blue)),
+        qMax(0.0, qMin(1.0, alpha))
+    );
 }
