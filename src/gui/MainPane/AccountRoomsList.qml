@@ -35,7 +35,7 @@ HListView {
 
         color: theme.controls.listView.highlight
 
-        Behavior on y { HNumberAnimation {} }
+        Behavior on y { HNumberAnimation { id: yAnimation } }
         Behavior on height { HNumberAnimation {} }
 
         Binding {
@@ -43,11 +43,14 @@ HListView {
             property: "contentY"
             value: Math.max(
                 0,
-                highlightRectangle.y + highlightRectangle.height / 2 -
-                mainPaneList.height / 2,
+                Math.min(
+                    mainPaneList.contentHeight - mainPaneList.height,
+                    highlightRectangle.y + highlightRectangle.height / 2 -
+                    mainPaneList.height / 2,
+                ),
             )
-            when: ! mainPaneList.horizontalOvershoot
             delayed: true
+            when: yAnimation.running
         }
     }
 
