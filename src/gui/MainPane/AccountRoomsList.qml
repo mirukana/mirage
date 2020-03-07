@@ -41,11 +41,8 @@ HListView {
         Binding {
             target: mainPaneList
             property: "contentY"
-            value: Math.max(
-                0,
-                highlightRectangle.y + highlightRectangle.height / 2 -
-                mainPaneList.height / 2,
-            )
+            value: highlightRectangle.y + highlightRectangle.height / 2 -
+                   mainPaneList.height / 2
             delayed: true
             when: yAnimation.running
         }
