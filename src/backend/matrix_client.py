@@ -10,6 +10,7 @@ import platform
 import re
 import traceback
 from contextlib import suppress
+from copy import copy
 from datetime import datetime
 from functools import partial
 from pathlib import Path
@@ -520,7 +521,7 @@ class MatrixClient(nio.AsyncClient):
         for user_id in self.models["accounts"]:
             if user_id in self.models[self.user_id, room_id, "members"]:
                 key = f"echo-{transaction_id}"
-                self.models[user_id, room_id, "events"][key] = event
+                self.models[user_id, room_id, "events"][key] = copy(event)
 
         await self.set_room_last_event(room_id, event)
 
@@ -1033,6 +1034,7 @@ class MatrixClient(nio.AsyncClient):
             fields["inline_content"] = HTML.filter(content, inline=True)
 
         # Create Event ModelItem
+
         item = Event(
             id            = ev.event_id,
             event_id      = ev.event_id,
@@ -1050,6 +1052,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         # Add the Event to model
+
         tx_id = ev.source.get("content", {}).get(
             f"{__app_name__}.transaction_id",
         )
