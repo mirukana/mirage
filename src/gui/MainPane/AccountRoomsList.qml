@@ -43,14 +43,17 @@ HListView {
             property: "contentY"
             value: Math.max(
                 0,
-                Math.min(
-                    mainPaneList.contentHeight - mainPaneList.height,
-                    highlightRectangle.y + highlightRectangle.height / 2 -
-                    mainPaneList.height / 2,
-                ),
+                highlightRectangle.y + highlightRectangle.height / 2 -
+                mainPaneList.height / 2,
             )
             delayed: true
             when: yAnimation.running
+        }
+
+        Connections {
+            target: mainPaneList
+            enabled: yAnimation.running
+            onContentYChanged: mainPaneList.returnToBounds()
         }
     }
 
