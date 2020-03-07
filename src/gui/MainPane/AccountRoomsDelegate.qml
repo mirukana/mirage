@@ -13,10 +13,8 @@ Column {
     property string userId: model.id
     readonly property HListView view: ListView.view
     readonly property int listIndex: index
-    readonly property bool hide:
-        mainPane.filter &&
-        roomList.model.count < 1 &&
-        ! utils.filterMatches(mainPane.filter, model.display_name)
+    readonly property bool noFilterResults:
+        mainPane.filter && roomList.model.count === 0
 
     readonly property alias account: account
     readonly property alias collapsed: account.collapsed
@@ -28,22 +26,14 @@ Column {
         width: parent.width
         view: accountRooms.view
 
-        opacity: hide ?
-                 0 :
-                 collapsed && ! mainPane.filter ?
-                 theme.mainPane.account.collapsedOpacity :
-                 1
-        scale: hide ? opacity : 1
-        height: implicitHeight * (hide ? opacity : 1)
-
-        Behavior on opacity { HNumberAnimation {} }
+        opacity: collapsed || noFilterResults ?
+                 theme.mainPane.account.collapsedOpacity : 1
     }
 
     HListView {
         id: roomList
         width: parent.width
-        height: hide ? 0 : contentHeight
-        visible: ! hide
+        height: contentHeight
         interactive: false
 
         model: SortFilterProxyModel {

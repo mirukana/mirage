@@ -43,12 +43,9 @@ HTileDelegate {
         }
     }
 
-    onActivated: {
-        becomeSelected()
-        pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": model.id }
-        )
-    }
+    onActivated: pageLoader.showPage(
+        "AccountSettings/AccountSettings", { "userId": model.id }
+    )
 
 
     readonly property alias addChat: addChat
@@ -94,12 +91,9 @@ HTileDelegate {
         icon.name: "add-chat"
         backgroundColor: "transparent"
         toolTip.text: qsTr("Add new chat")
-        onClicked: {
-            becomeSelected()
-            pageLoader.showPage(
-                "AddChat/AddChat", {userId: model.id},
-            )
-        }
+        onClicked: pageLoader.showPage(
+            "AddChat/AddChat", {userId: model.id},
+        )
 
         leftPadding: theme.spacing / 2
         rightPadding: leftPadding
