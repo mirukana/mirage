@@ -51,7 +51,8 @@ HTileDelegate {
     readonly property alias addChat: addChat
 
     readonly property bool collapsed:
-        window.uiState.collapseAccounts[model.id] || false
+        (window.uiState.collapseAccounts[model.id] || false) &&
+        ! mainPane.filter
 
     readonly property bool shouldBeSelected:
         (

@@ -61,14 +61,26 @@ HListView {
     readonly property Room selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
 
+    function previous() {
+        if (! mainPane.filter) {
+            _previous()
+            return
+        }
 
-    function previous(activate=true) {
+        let reachedStart = false
+        do {
+            if (currentIndex === count - 1 && reachedStart) break
+            _previous()
+            if (currentIndex === 0) reachedStart = true
+        } while (! currentItem.roomList.currentItem)
+    }
+
+    function _previous() {
         let currentAccount = currentItem
 
         // Nothing is selected
         if (! currentAccount) {
             decrementCurrentIndex()
-            return
         }
 
         let roomList = currentAccount.roomList
@@ -93,7 +105,21 @@ HListView {
         }
     }
 
-    function next(activate=true) {
+    function next() {
+        if (! mainPane.filter) {
+            _next()
+            return
+        }
+
+        let reachedEnd = false
+        do {
+            if (currentIndex === 0 && reachedEnd) break
+            _next()
+            if (currentIndex === count - 1) reachedEnd = true
+        } while (! currentItem.roomList.currentItem)
+    }
+
+    function _next() {
         const currentAccount = currentItem
 
         // Nothing is selected
