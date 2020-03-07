@@ -17,7 +17,6 @@ Item {
     property QtObject userInfo: ModelStore.get("accounts").find(userId)
     property QtObject roomInfo: ModelStore.get(userId, "rooms").find(roomId)
 
-    property bool loadingMessages: false
     property bool ready: Boolean(userInfo && roomInfo)
 
     readonly property alias loader: loader

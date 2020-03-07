@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Layouts 1.12
 import "../../.."
 import "../../../Base"
 
@@ -84,12 +85,34 @@ Rectangle {
             // fetch past events.
             onInviterChanged: canLoad = true
 
+            // Since the list is BottomToTop, this is actually a header
+            footer: Item {
+                width: eventList.width
+                height: (button.height + theme.spacing * 2) * opacity
+                opacity: eventList.loading ? 1 : 0
+                visible: opacity > 0
+
+                Behavior on opacity { HNumberAnimation {} }
+
+                HButton {
+                    id: button
+                    width: Math.min(parent.width, implicitWidth)
+                    anchors.centerIn: parent
+
+                    loading: true
+                    text: qsTr("Loading previous messages...")
+                    enableRadius: true
+                    iconItem.small: true
+                }
+            }
+
             Component.onCompleted: shortcuts.flickTarget = eventList
 
 
             property string inviter: chat.roomInfo.inviter || ""
             property real yPos: visibleArea.yPosition
             property bool canLoad: true
+            property bool loading: false
 
             property bool ownEventsOnRight:
                 width < theme.chat.eventList.ownEventsOnRightUnderWidth
@@ -130,8 +153,8 @@ Rectangle {
                 // component is destroyed but func is still running
 
                 try {
-                    eventList.canLoad    = false
-                    chat.loadingMessages = true
+                    eventList.canLoad = false
+                    eventList.loading = true
 
                     py.callClientCoro(
                         chat.userId,
@@ -146,7 +169,7 @@ Rectangle {
                                 // the screen.
                                 if (moreToLoad) yPosChanged()
 
-                                chat.loadingMessages = false
+                                eventList.loading = false
                             } catch (err) {
                                 return
                             }

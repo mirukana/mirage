@@ -32,7 +32,7 @@ Button {
     background: HButtonBackground {
         button: button
         buttonTheme: theme.controls.button
-        radius: circle ? height : 0
+        radius: circle ? height : enableRadius ? theme.radius : 0
         color: backgroundColor
     }
 
@@ -51,6 +51,7 @@ Button {
     property bool loading: false
     property bool circle: false
     property bool padded: true
+    property bool enableRadius: false
 
     property HToolTip toolTip: HToolTip {
         id: toolTip
