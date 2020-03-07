@@ -27,7 +27,7 @@ HRowLayout {
         id: icon
         svgName: button.icon.name
         colorize: button.icon.color
-        cache: button.icon.cache
+        // cache: button.icon.cache  // XXX: need Qt 5.13+
 
         onLoadingChanged: if (! loading) resetAnimations.start()
 

@@ -39,13 +39,13 @@
   - Use new default/reset controls system 
 - Split `HScrollableTextArea`
 - Composer
-- Don't put all the binds in one central file
+- Don't put all the keybinds in one central file
   - Missing room keybinds (invite, etc) and close failed upload
 - Use QML states?
 
 ## Issues
 
-- AccountRoomsList highlight delegate movements when reaching the bottom
+- Forget a room, it comes back because of the "you left" event
 - `EventImage`s for `m.image` sometimes appear broken, can be made normal
   by switching to another room and coming back
 - First sent message in E2E room is sometimes undecryptable
