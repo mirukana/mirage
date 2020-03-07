@@ -67,9 +67,13 @@ HTileDelegate {
         mainPaneList.currentIndex          = index
     }
 
-    function toggleCollapse() {
-        window.uiState.collapseAccounts[model.id] = ! collapsed
+    function setCollapse(collapse) {
+        window.uiState.collapseAccounts[model.id] = collapse
         window.uiStateChanged()
+    }
+
+    function toggleCollapse() {
+        setCollapse(! collapsed)
     }
 
 

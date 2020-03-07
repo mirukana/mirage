@@ -49,7 +49,11 @@ HRowLayout {
                 return
             }
 
-            if (window.settings.clearRoomFilterOnEnter) text = ""
+            if (window.settings.clearRoomFilterOnEnter) {
+                mainPaneList.setCollapseAccount(false)
+                text = ""
+            }
+
             mainPaneList.requestActivate()
         }
 

@@ -157,27 +157,36 @@ HListView {
     }
 
     function activate() {
-        if (! currentItem) incrementCurrentIndex()
+        if (! currentItem) next()
+
         selectedRoom ?
         currentItem.roomList.currentItem.activated() :
         currentItem.account.activated()
     }
 
     function accountSettings() {
-        if (! currentItem) incrementCurrentIndex()
+        if (! currentItem) next()
+
         currentItem.roomList.currentIndex = -1
         currentItem.account.activated()
     }
 
     function addNewChat() {
-        if (! currentItem) incrementCurrentIndex()
+        if (! currentItem) next()
+
         currentItem.roomList.currentIndex = -1
         currentItem.account.addChat.clicked()
     }
 
+    function setCollapseAccount(collapse) {
+        if (! currentItem) return
+        currentItem.account.setCollapse(collapse)
+    }
+
     function toggleCollapseAccount() {
         if (mainPane.filter) return
-        if (! currentItem) incrementCurrentIndex()
+        if (! currentItem) next()
+
         currentItem.account.toggleCollapse()
     }
 
