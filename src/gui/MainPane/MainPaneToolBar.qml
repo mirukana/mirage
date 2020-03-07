@@ -50,7 +50,7 @@ HRowLayout {
             }
 
             if (window.settings.clearRoomFilterOnEnter) text = ""
-            mainPaneList.activate()
+            mainPaneList.requestActivate()
         }
 
         Keys.onEscapePressed: {
