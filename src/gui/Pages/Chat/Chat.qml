@@ -11,17 +11,33 @@ Item {
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
 
 
-    property string userId: ""
-    property string roomId: ""
+    property string userId
+    property string roomId
 
-    property QtObject userInfo: ModelStore.get("accounts").find(userId)
-    property QtObject roomInfo: ModelStore.get(userId, "rooms").find(roomId)
+    property QtObject userInfo: null
+    property QtObject roomInfo: null
 
     property bool ready: Boolean(userInfo && roomInfo)
 
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
 
+
+    Timer {
+        interval: 100
+        running: ! userInfo
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: userInfo = ModelStore.get("accounts").find(userId)
+    }
+
+    Timer {
+        interval: 100
+        running: ! roomInfo
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: roomInfo = ModelStore.get(userId, "rooms").find(roomId)
+    }
 
     HLoader {
         id: loader
