@@ -23,6 +23,8 @@ HImage {
 
 
     function update() {
+        if (! py) return  // component was destroyed
+
         let w = sourceSize.width || width
         let h = sourceSize.height || height
 
@@ -30,8 +32,6 @@ HImage {
             show = false
             return
         }
-
-        if (! image) return  // if it was destroyed
 
         if (! isMxc) {
             if (source !== mxc) source = mxc
