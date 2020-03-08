@@ -9,7 +9,6 @@
 - nio ClientTimeout
 
 - no thumb if bigger than original
-- upload delay at the end?
 - Handle upload file size limit
 - Handle set avatar upload errors
 - Confirmation box after picking file to upload

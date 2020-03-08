@@ -418,9 +418,13 @@ class MatrixClient(nio.AsyncClient):
                 upload_item.total_size = len(thumb_data)
 
                 try:
-                    # The total_size passed to the monitor only considers
-                    # the file itself, and not the thumbnail.
-                    monitor.on_transferred = None
+                    upload_item.total_size = thumb_info.size
+
+                    monitor = nio.TransferMonitor(thumb_info.size)
+                    monitor.on_transferred = on_transferred
+                    monitor.on_speed_changed = on_speed_changed
+
+                    self.upload_monitors[item_uuid] = monitor
 
                     thumb_url, _, thumb_crypt_dict = await self.upload(
                         lambda *_: thumb_data,
