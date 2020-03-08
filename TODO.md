@@ -50,7 +50,6 @@
   by switching to another room and coming back
 - First sent message in E2E room is sometimes undecryptable
 
-- Pause upload, switch to other room, then come back → wrong state displayed
 - Pausing uploads doesn't work well, servers end up dropping the connection 
 
 - In the "Leave me" room, "join > Hi > left" aren't combined

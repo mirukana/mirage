@@ -112,8 +112,11 @@ class MatrixClient(nio.AsyncClient):
         self.profile_task:    Optional[asyncio.Future] = None
         self.sync_task:       Optional[asyncio.Future] = None
         self.load_rooms_task: Optional[asyncio.Future] = None
-        self.first_sync_done: asyncio.Event            = asyncio.Event()
-        self.first_sync_date: Optional[datetime]       = None
+
+        self.upload_monitors: Dict[UUID, nio.TransferMonitor] = {}
+
+        self.first_sync_done: asyncio.Event      = asyncio.Event()
+        self.first_sync_date: Optional[datetime] = None
 
         self.past_tokens:          Dict[str, str] = {}     # {room_id: token}
         self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
@@ -276,6 +279,25 @@ class MatrixClient(nio.AsyncClient):
         await self._send_message(room_id, content)
 
 
+    async def toggle_pause_upload(
+        self, room_id: str, uuid: Union[str, UUID],
+    ) -> None:
+        if isinstance(uuid, str):
+            uuid = UUID(uuid)
+
+        pause = not self.upload_monitors[uuid].pause
+
+        self.upload_monitors[uuid].pause                  = pause
+        self.models[room_id, "uploads"][str(uuid)].paused = pause
+
+
+    async def cancel_upload(self, uuid: Union[str, UUID]) -> None:
+        if isinstance(uuid, str):
+            uuid = UUID(uuid)
+
+        self.upload_monitors[uuid].cancel = True
+
+
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
         """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
 
@@ -285,6 +307,7 @@ class MatrixClient(nio.AsyncClient):
             await self._send_file(item_uuid, room_id, path)
         except (nio.TransferCancelledError, asyncio.CancelledError):
             log.info("Deleting item for cancelled upload %s", item_uuid)
+            del self.upload_monitors[item_uuid]
             del self.models[room_id, "uploads"][str(item_uuid)]
 
 
@@ -306,9 +329,10 @@ class MatrixClient(nio.AsyncClient):
             # This error will be caught again by the try block later below
             size = 0
 
-        task        = asyncio.Task.current_task()
         monitor     = nio.TransferMonitor(size)
-        upload_item = Upload(item_uuid, task, monitor, path, total_size=size)
+        upload_item = Upload(item_uuid, path, total_size=size)
+
+        self.upload_monitors[item_uuid]                 = monitor
         self.models[room_id, "uploads"][str(item_uuid)] = upload_item
 
         def on_transferred(transferred: int) -> None:
@@ -325,8 +349,14 @@ class MatrixClient(nio.AsyncClient):
             url, mime, crypt_dict = await self.upload(
                 lambda *_: path,
                 filename = path.name,
-                encrypt  = encrypt, monitor=monitor,
+                encrypt  = encrypt,
+                monitor  = monitor,
             )
+
+            # FIXME: nio might not catch the cancel in time
+            if monitor.cancel:
+                raise nio.TransferCancelledError()
+
         except (MatrixError, OSError) as err:
             upload_item.status     = UploadStatus.Error
             upload_item.error      = type(err)
@@ -388,12 +418,21 @@ class MatrixClient(nio.AsyncClient):
                 upload_item.total_size = len(thumb_data)
 
                 try:
+                    # The total_size passed to the monitor only considers
+                    # the file itself, and not the thumbnail.
+                    monitor.on_transferred = None
+
                     thumb_url, _, thumb_crypt_dict = await self.upload(
                         lambda *_: thumb_data,
                         filename =
                             f"{path.stem}_sample{''.join(path.suffixes)}",
                         encrypt  = encrypt,
+                        monitor  = monitor,
                     )
+
+                    # FIXME: nio might not catch the cancel in time
+                    if monitor.cancel:
+                        raise nio.TransferCancelledError()
                 except MatrixError as err:
                     log.warning(f"Failed uploading thumbnail {path}: {err}")
                 else:
@@ -451,6 +490,7 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
+        del self.upload_monitors[item_uuid]
         del self.models[room_id, "uploads"][str(upload_item.id)]
 
         await self._local_echo(

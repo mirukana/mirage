@@ -9,13 +9,12 @@ HColumnLayout {
     id: transfer
 
 
-    property bool paused: false
-
     property int msLeft: model.time_left || 0
     property int uploaded: model.uploaded
     readonly property int speed: model.speed
     readonly property int totalSize: model.total_size
     readonly property string status: model.status
+    readonly property bool paused: model.paused
 
 
     function cancel() {
@@ -23,12 +22,13 @@ HColumnLayout {
         // immediate visual feedback
         transfer.height = 0
         // Python will delete this model item on cancel
-        py.call(py.getattr(model.task, "cancel"))
+        py.callClientCoro(chat.userId, "cancel_upload", [model.id])
     }
 
-    function pause() {
-        transfer.paused = ! transfer.paused
-        py.setattr(model.monitor, "pause", transfer.paused)
+    function toggle_pause() {
+        py.callClientCoro(
+            chat.userId, "toggle_pause_upload", [chat.roomId, model.id],
+        )
     }
 
 
@@ -139,7 +139,7 @@ HColumnLayout {
             toolTip.text: transfer.paused ?
                           qsTr("Resume") : qsTr("Pause")
 
-            onClicked: transfer.pause()
+            onClicked: transfer.toggle_pause()
 
             Layout.preferredWidth:
                 status === "Uploading" ?

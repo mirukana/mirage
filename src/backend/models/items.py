@@ -2,7 +2,6 @@
 
 """`ModelItem` subclasses definitions."""
 
-import asyncio
 import json
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -136,18 +135,17 @@ class UploadStatus(AutoStrEnum):
 
 
 @dataclass
-class Upload(ModelItem):  # XXX
+class Upload(ModelItem):
     """Represent a running or failed file upload operation."""
 
-    id:       UUID                = field()
-    task:     asyncio.Task        = field()
-    monitor:  nio.TransferMonitor = field()
-    filepath: Path                = field()
+    id:       UUID = field()
+    filepath: Path = field()
 
     total_size: int       = 0
     uploaded:   int       = 0
     speed:      float     = 0
     time_left:  timedelta = timedelta(0)
+    paused:     bool      = False
 
     status:     UploadStatus          = UploadStatus.Uploading
     error:      OptionalExceptionType = type(None)
