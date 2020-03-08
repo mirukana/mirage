@@ -71,8 +71,8 @@ HMxcImage {
             return
         }
 
-        let toOpen = loader.mediaUrl || loader.thumbnailMxc
-        let isMxc  = toOpen.startsWith("mxc://")
+        const toOpen = loader.mediaUrl || loader.thumbnailMxc
+        const isMxc  = toOpen.startsWith("mxc://")
 
         isMxc ?
         py.callClientCoro(chat.userId, "mxc_to_http", [toOpen], callback) :

@@ -25,8 +25,8 @@ HImage {
     function update() {
         if (! py) return  // component was destroyed
 
-        let w = sourceSize.width || width
-        let h = sourceSize.height || height
+        const w = sourceSize.width || width
+        const h = sourceSize.height || height
 
         if (! image.mxc || w < 1 || h < 1 ) {
             show = false
@@ -39,9 +39,9 @@ HImage {
             return
         }
 
-        let method = image.thumbnail ? "get_thumbnail" : "get_media"
-        let args = image.thumbnail ?
-                   [image.mxc, w, h, cryptDict] : [image.mxc, cryptDict]
+        const method = image.thumbnail ? "get_thumbnail" : "get_media"
+        const args   = image.thumbnail ?
+                       [image.mxc, w, h, cryptDict] : [image.mxc, cryptDict]
 
         py.callCoro("media_cache." + method, args, path => {
                 if (! image) return

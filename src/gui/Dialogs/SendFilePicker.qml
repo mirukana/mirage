@@ -9,8 +9,8 @@ HFileDialogOpener {
     dialog.fileMode: FileDialog.OpenFiles
 
     onFilesPicked: {
-        for (let file of files) {
-            let path = Qt.resolvedUrl(file).replace(/^file:/, "")
+        for (const file of files) {
+            const path = Qt.resolvedUrl(file).replace(/^file:/, "")
 
             utils.sendFile(userId, roomId, path, () => {
                 if (destroyWhenDone) destroy()

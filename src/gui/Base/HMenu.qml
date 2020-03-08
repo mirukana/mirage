@@ -11,7 +11,7 @@ Menu {
         let result = 0
 
         for (let i = 0; i < count; ++i) {
-            let item = itemAt(i)
+            const item = itemAt(i)
             if (! item.visible) continue
 
             result = Math.max(item.implicitWidth, result)

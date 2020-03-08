@@ -20,8 +20,8 @@ HLoader {
             return
         }
 
-        let page  = window.uiState.page
-        let props = window.uiState.pageProperties
+        const page  = window.uiState.page
+        const props = window.uiState.pageProperties
 
         if (page === "Pages/Chat/Chat.qml") {
             pageLoader.showRoom(props.userId, props.roomId)
@@ -46,7 +46,7 @@ HLoader {
     }
 
     function showPage(name, properties={}) {
-        let path = `Pages/${name}.qml`
+        const path = `Pages/${name}.qml`
         _show(path, properties)
 
         window.uiState.page           = path
@@ -66,7 +66,7 @@ HLoader {
         timesBack = Math.min(timesBack, history.length - 1)
         if (timesBack < 1) return false
 
-        let [componentUrl, properties] = history[timesBack]
+        const [componentUrl, properties] = history[timesBack]
 
         _show(componentUrl, properties)
 

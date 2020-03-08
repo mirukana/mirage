@@ -27,7 +27,7 @@ Rectangle {
 
     function enterClickButton() {
         for (let i = 0; i < buttonModel.length; i++) {
-            let btn = buttonRepeater.itemAt(i)
+            const btn = buttonRepeater.itemAt(i)
             if (btn.enabled && btn.name === clickButtonOnEnter) btn.clicked()
         }
     }

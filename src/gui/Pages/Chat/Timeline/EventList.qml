@@ -20,11 +20,11 @@ Rectangle {
             target: null
             onActiveChanged: if (! active) dragFlicker.speed = 0
             onCentroidChanged: {
-                let left  = centroid.pressedButtons & Qt.LeftButton
-                let vel   = centroid.velocity.y
-                let pos   = centroid.position.y
-                let dist  = Math.min(selectableLabelContainer.height / 4, 50)
-                let boost = 20 * (pos < dist ?  -pos : -(height - pos))
+                const left  = centroid.pressedButtons & Qt.LeftButton
+                const vel   = centroid.velocity.y
+                const pos   = centroid.position.y
+                const dist  = Math.min(selectableLabelContainer.height / 4, 50)
+                const boost = 20 * (pos < dist ?  -pos : -(height - pos))
 
                 dragFlicker.speed =
                     left && vel && pos < dist          ? 1000 + boost :

@@ -25,7 +25,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [userField.text.trim(), encryptCheckBox.checked]
+            const args = [userField.text.trim(), encryptCheckBox.checked]
 
             py.callClientCoro(userId, "new_direct_chat", args, roomId => {
                 button.loading    = false

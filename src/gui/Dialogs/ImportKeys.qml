@@ -29,8 +29,8 @@ HFileDialogOpener {
 
 
         function verifyPassword(pass, callback) {
-            importing = true
-            let path  = file.toString().replace(/^file:\/\//, "")
+            importing  = true
+            const path = file.toString().replace(/^file:\/\//, "")
 
             py.callClientCoro(userId, "import_keys", [path, pass], () => {
                 importing = false

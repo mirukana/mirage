@@ -30,7 +30,7 @@ HBox {
 
             errorMessage.text = ""
 
-            let args = [
+            const args = [
                 idField.text.trim(), passwordField.text,
                 undefined, serverField.text.trim(),
             ]

@@ -25,7 +25,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [roomField.text.trim()]
+            const args = [roomField.text.trim()]
 
             py.callClientCoro(userId, "room_join", args, roomId => {
                 button.loading    = false

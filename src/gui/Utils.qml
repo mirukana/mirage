@@ -20,7 +20,7 @@ QtObject {
                console.error("Failed creating component: ", comp.errorString())
 
             } else if (! ready && status === Component.Ready) {
-                let incu = comp.incubateObject(
+                const incu = comp.incubateObject(
                     parent, properties, Qt.Asynchronous,
                 )
 
@@ -165,7 +165,7 @@ QtObject {
             text   = text.toLowerCase()
         }
 
-        for (let word of filter.split(" ")) {
+        for (const word of filter.split(" ")) {
             if (word && ! text.includes(word)) {
                 return false
             }
@@ -175,7 +175,7 @@ QtObject {
 
 
     function filterMatchesAny(filter, ...texts) {
-        for (let text of texts) {
+        for (const text of texts) {
             if (filterMatches(filter, text)) return true
         }
         return false
@@ -184,11 +184,11 @@ QtObject {
 
     function fitSize(minWidth, minHeight, width, height, maxWidth, maxHeight) {
         if (width >= height) {
-            let new_width = Math.min(Math.max(width, minWidth), maxWidth)
+            const new_width = Math.min(Math.max(width, minWidth), maxWidth)
             return Qt.size(new_width, height / (width / new_width))
         }
 
-        let new_height = Math.min(Math.max(height, minHeight), maxHeight)
+        const new_height = Math.min(Math.max(height, minHeight), maxHeight)
         return Qt.size(width / (height / new_height), new_height)
     }
 
@@ -231,9 +231,9 @@ QtObject {
 
 
     function formatDuration(milliseconds) {
-        let totalSeconds = milliseconds / 1000
+        const totalSeconds = milliseconds / 1000
 
-        let hours   = Math.floor(totalSeconds / 3600)
+        const hours = Math.floor(totalSeconds / 3600)
         let minutes = Math.floor((totalSeconds % 3600) / 60)
         let seconds = Math.floor(totalSeconds % 60)
 

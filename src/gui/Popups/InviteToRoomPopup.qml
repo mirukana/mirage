@@ -87,7 +87,7 @@ BoxPopup {
             // TODO: handle these: real user not found
             const lines = []
 
-            for (let [user, error] of failedInvites) {
+            for (const [user, error] of failedInvites) {
                 const type = py.getattr(
                     py.getattr(error, "__class__"), "__name__",
                 )

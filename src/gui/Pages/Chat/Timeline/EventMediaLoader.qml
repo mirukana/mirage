@@ -47,19 +47,19 @@ HLoader {
         if (singleMediaInfo.event_type === "RoomAvatarEvent")
             return EventDelegate.Media.Image
 
-        let mainType = singleMediaInfo.media_mime.split("/")[0].toLowerCase()
+        const mainType = singleMediaInfo.media_mime.split("/")[0].toLowerCase()
 
         if (mainType === "image") return EventDelegate.Media.Image
         if (mainType === "video") return EventDelegate.Media.Video
         if (mainType === "audio") return EventDelegate.Media.Audio
 
-        let fileEvents = ["RoomMessageFile", "RoomEncryptedFile"]
+        const fileEvents = ["RoomMessageFile", "RoomEncryptedFile"]
 
         if (fileEvents.includes(singleMediaInfo.event_type))
             return EventDelegate.Media.File
 
         // If this is a preview for a link in a normal message
-        let ext = utils.urlExtension(mediaUrl)
+        const ext = utils.urlExtension(mediaUrl)
 
         if (imageExtensions.includes(ext)) return EventDelegate.Media.Image
         if (videoExtensions.includes(ext)) return EventDelegate.Media.Video

@@ -35,7 +35,7 @@ BoxPopup {
 
     box.buttonCallbacks: ({
         ok: button => {
-            let password      = passwordField.text
+            const password    = passwordField.text
             okClicked         = true
             button.loading    = true
             errorMessage.text = ""

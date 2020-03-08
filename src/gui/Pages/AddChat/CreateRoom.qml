@@ -20,7 +20,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            let args = [
+            const args = [
                 nameField.text,
                 topicField.text,
                 publicCheckBox.checked,

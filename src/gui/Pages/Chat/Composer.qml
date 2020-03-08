@@ -101,7 +101,7 @@ Rectangle {
 
                 let foundAlias = null
 
-                for (let [user, writing_alias] of Object.entries(aliases)) {
+                for (const [user, writing_alias] of Object.entries(aliases)) {
                     if (text.startsWith(writing_alias + " ")) {
                         writingUserId = user
                         foundAlias = new RegExp("^" + writing_alias + " ")
@@ -119,15 +119,15 @@ Rectangle {
                 writingUserId = Qt.binding(() => chat.userId)
                 toSend        = text
 
-                let vals = Object.values(aliases)
+                const vals = Object.values(aliases)
 
-                let longestAlias =
+                const longestAlias =
                     vals.reduce((a, b) => a.length > b.length ? a: b)
 
-                let textNotStartsWithAnyAlias =
+                const textNotStartsWithAnyAlias =
                     ! vals.some(a => a.startsWith(text))
 
-                let textContainsCharNotInAnyAlias =
+                const textContainsCharNotInAnyAlias =
                     vals.every(a => text.split("").some(c => ! a.includes(c)))
 
                 // Only set typing when it's sure that the user will not use
@@ -162,21 +162,21 @@ Rectangle {
                         ev.modifiers & Qt.AltModifier)
                     {
                         let indents = 0
-                        let parts   = lineText.split(indent)
+                        const parts = lineText.split(indent)
 
                         for (const [i, part] of parts.entries()) {
                             if (i === parts.length - 1 || part) { break }
                             indents += 1
                         }
 
-                        let add = indent.repeat(indents)
+                        const add = indent.repeat(indents)
                         textArea.insert(cursorPosition, "\n" + add)
                         return
                     }
 
                     if (textArea.text === "") { return }
 
-                    let args = [chat.roomId, toSend]
+                    const args = [chat.roomId, toSend]
                     py.callClientCoro(writingUserId, "send_text", args)
 
                     area.clear()

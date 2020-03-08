@@ -26,7 +26,7 @@ HFileDialogOpener {
     function exportKeys(file, passphrase) {
         exporting = true
 
-        let path = file.toString().replace(/^file:\/\//, "")
+        const path = file.toString().replace(/^file:\/\//, "")
 
         py.callClientCoro(userId, "export_keys", [path, passphrase], () => {
             exporting = false

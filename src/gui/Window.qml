@@ -50,9 +50,9 @@ ApplicationWindow {
         if (! obj.saveName || ! obj.saveProperties ||
             obj.saveProperties.length < 1) return
 
-        let propertyValues = {}
+        const propertyValues = {}
 
-        for (let prop of obj.saveProperties) {
+        for (const prop of obj.saveProperties) {
             propertyValues[prop] = obj[prop]
         }
 

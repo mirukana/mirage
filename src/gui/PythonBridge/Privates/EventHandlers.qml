@@ -18,8 +18,8 @@ QtObject {
 
 
     function onCoroutineDone(uuid, result, error, traceback) {
-        let onSuccess = Globals.pendingCoroutines[uuid].onSuccess
-        let onError   = Globals.pendingCoroutines[uuid].onError
+        const onSuccess = Globals.pendingCoroutines[uuid].onSuccess
+        const onError   = Globals.pendingCoroutines[uuid].onError
 
         delete Globals.pendingCoroutines[uuid]
 

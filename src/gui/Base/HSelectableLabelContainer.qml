@@ -25,9 +25,9 @@ FocusScope {
     ]
 
     readonly property string joinedSelection: {
-        let toCopy = []
+        const toCopy = []
 
-        for (let key of Object.keys(selectedTexts).sort()) {
+        for (const key of Object.keys(selectedTexts).sort()) {
             if (! selectedTexts[key]) continue
 
             // For some dumb reason, Object.keys convert the floats to strings
@@ -53,7 +53,7 @@ FocusScope {
         selecting               = false
     }
     onDragPointChanged: {
-        let pos = mapFromItem(
+        const pos = mapFromItem(
             mainUI, eventPoint.scenePosition.x, eventPoint.scenePosition.y,
         )
         draggedItem.x = pos.x

@@ -73,14 +73,14 @@ HListView {
     }
 
     function _previous() {
-        let currentAccount = currentItem
+        const currentAccount = currentItem
 
         // Nothing is selected
         if (! currentAccount) {
             decrementCurrentIndex()
         }
 
-        let roomList = currentAccount.roomList
+        const roomList = currentAccount.roomList
 
         // An account is selected
         if (! roomList.currentItem) {
