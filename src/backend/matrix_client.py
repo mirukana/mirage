@@ -827,10 +827,14 @@ class MatrixClient(nio.AsyncClient):
                 thumb.convert("RGB").save(out, "JPEG", optimize=True)
                 mime = "image/jpeg"
 
-            data = out.getvalue()
+            thumb_data = out.getvalue()
+            thumb_size = len(thumb_data)
 
-        info = MatrixImageInfo(thumb.width, thumb.height, mime, len(data))
-        return (data, info)
+        if thumb_size >= len(data):
+            raise UneededThumbnail()
+
+        info = MatrixImageInfo(thumb.width, thumb.height, mime, thumb_size)
+        return (thumb_data, info)
 
 
     async def upload(
