@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
+import CppUtils 0.1
 import "../.."
 import "../../Base"
 import "../../Dialogs"
@@ -218,7 +219,13 @@ Rectangle {
             enabled: chat.roomInfo.can_send_messages
             icon.name: "upload-file"
             backgroundColor: theme.chat.composer.uploadButton.background
-            toolTip.text: qsTr("Send files")
+            toolTip.text:
+                chat.userInfo.max_upload_size ?
+                qsTr("Send files (%1 max)").arg(
+                    CppUtils.formattedBytes(chat.userInfo.max_upload_size, 0),
+                ) :
+                qsTr("Send files")
+
             onClicked: sendFilePicker.dialog.open()
 
             Layout.fillHeight: true

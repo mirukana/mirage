@@ -4,7 +4,7 @@
 
 - "exception during sync" aren't caught
 - nio ClientTimeout
-- Handle upload file size limit
+- Name
 - Update docstrings
 - Update TODO.md 
 - Update README.md

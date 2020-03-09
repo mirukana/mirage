@@ -35,8 +35,9 @@ class Account(ModelItem):
     id:              str      = field()
     display_name:    str      = ""
     avatar_url:      str      = ""
-    first_sync_done: bool     = False
+    max_upload_size: int      = 0
     profile_updated: datetime = ZeroDate
+    first_sync_done: bool     = False
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by display name or user ID."""

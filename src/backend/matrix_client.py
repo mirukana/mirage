@@ -110,9 +110,10 @@ class MatrixClient(nio.AsyncClient):
         self.backend: "Backend"  = backend
         self.models:  ModelStore = self.backend.models
 
-        self.profile_task:    Optional[asyncio.Future] = None
-        self.sync_task:       Optional[asyncio.Future] = None
-        self.load_rooms_task: Optional[asyncio.Future] = None
+        self.profile_task:       Optional[asyncio.Future] = None
+        self.server_config_task: Optional[asyncio.Future] = None
+        self.sync_task:          Optional[asyncio.Future] = None
+        self.load_rooms_task:    Optional[asyncio.Future] = None
 
         self.upload_monitors: Dict[UUID, nio.TransferMonitor] = {}
 
@@ -179,7 +180,12 @@ class MatrixClient(nio.AsyncClient):
     async def logout(self) -> None:
         """Logout from the server. This will delete the device."""
 
-        for task in (self.profile_task, self.load_rooms_task, self.sync_task):
+        tasks = (
+            self.profile_task, self.load_rooms_task, self.sync_task,
+            self.server_config_task,
+        )
+
+        for task in tasks:
             if task:
                 task.cancel()
                 with suppress(asyncio.CancelledError):
@@ -221,10 +227,33 @@ class MatrixClient(nio.AsyncClient):
             account.display_name    = resp.displayname or ""
             account.avatar_url      = resp.avatar_url or ""
 
+        def on_server_config_response(future) -> None:
+            """Update our model `Account` with the received config details."""
+
+            exception = future.exception()
+
+            if exception:
+                log.warn("On %s client startup: %r", self.user_id, exception)
+                self.server_config_task = asyncio.ensure_future(
+                    self.get_server_config(),
+                )
+                self.server_config_task.add_done_callback(
+                    on_server_config_response,
+                )
+                return
+
+            account                 = self.models["accounts"][self.user_id]
+            account.max_upload_size = future.result()
+
         self.profile_task = asyncio.ensure_future(
             self.backend.get_profile(self.user_id),
         )
         self.profile_task.add_done_callback(on_profile_response)
+
+        self.server_config_task = asyncio.ensure_future(
+            self.get_server_config(),
+        )
+        self.server_config_task.add_done_callback(on_server_config_response)
 
         while True:
             try:
@@ -237,6 +266,11 @@ class MatrixClient(nio.AsyncClient):
                 trace = traceback.format_exc().rstrip()
                 log.error("Exception during sync, restart in 2s:\n%s", trace)
                 await asyncio.sleep(2)
+
+
+    async def get_server_config(self) -> int:
+        """Return the maximum upload size on this server"""
+        return (await self.content_repository_config()).upload_size
 
 
     @property
