@@ -45,10 +45,10 @@ Rectangle {
     readonly property string lineTextUntilCursor:
         lineText.substring(0, cursorX)
 
-    readonly property int deleteCharsOnBackspace:
-        lineTextUntilCursor.match(/^ +$/) ?
-        lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
-        1
+    // readonly property int deleteCharsOnBackspace:
+    //     lineTextUntilCursor.match(/^ +$/) ?
+    //     lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
+    //     1
 
 
     function takeFocus() { areaScrollView.forceActiveFocus() }
@@ -199,16 +199,17 @@ Rectangle {
                         return
                     }
 
-                    if (ev.modifiers === Qt.NoModifier &&
-                        ev.key === Qt.Key_Backspace &&
-                        ! textArea.selectedText)
-                    {
-                        ev.accepted = true
-                        textArea.remove(
-                            cursorPosition - deleteCharsOnBackspace,
-                            cursorPosition
-                        )
-                    }
+                    // FIXME: buggy
+                    // if (ev.modifiers === Qt.NoModifier &&
+                    //     ev.key === Qt.Key_Backspace &&
+                    //     ! textArea.selectedText)
+                    // {
+                    //     ev.accepted = true
+                    //     textArea.remove(
+                    //         cursorPosition - deleteCharsOnBackspace,
+                    //         cursorPosition
+                    //     )
+                    // }
                 })
             }
         }

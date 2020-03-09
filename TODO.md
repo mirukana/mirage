@@ -1,12 +1,16 @@
 # TODO
 
+## Before release
+
 - "exception during sync" aren't caught
+- nio ClientTimeout
+- Handle upload file size limit
+- Update docstrings
+- Update TODO.md 
+- Update README.md
 
 ## Media
 
-- nio ClientTimeout
-
-- Handle upload file size limit
 - Handle set avatar upload errors
 - Confirmation box after picking file to upload
 - Show real progression for mxc thumbnail loadings
@@ -44,6 +48,7 @@
 - Forget a room, it comes back because of the "you left" event
 - `EventImage`s for `m.image` sometimes appear broken, can be made normal
   by switching to another room and coming back
+
 - First sent message in E2E room is sometimes undecryptable
 
 - Pausing uploads doesn't work well, servers end up dropping the connection 
@@ -53,10 +58,8 @@
   - Ensure all the text that should be copied is copied
   - Multiple messages are currently copied out of order
 
-- Pressing backspace in composer sometimes doesn't work
-
 - `code` not colored in room subtitle
-- Quote links color in room subtitles (e.g. "> http://foo.orgA)" )
+- Quote links color in room subtitles (e.g. "> http://foo.org" )
 
 - If account not in config anymore, discard ui state last page on startup
 - Do something when access token is invalid
@@ -205,8 +208,6 @@
 ## Distribution & dependencies
 
 - Mistune v2.0
-- Include python dependencies in binary with rcc?
-- Improve the README.md
 
 ## Notable changes for future Qt version upgrade
 
