@@ -2,6 +2,7 @@
 
 ## Before release
 
+- Downloaded media filenames
 - "exception during sync" aren't caught
 - nio ClientTimeout
 - Name

@@ -446,7 +446,8 @@ class MatrixClient(nio.AsyncClient):
             except OSError as err:
                 log.warning(f"Failed thumbnailing {path}: {err}")
             else:
-                thumb_name = f"{path.stem}_thumbnail{''.join(path.suffixes)}"
+                thumb_ext  = "png" if thumb_info.mime == "image/png" else "jpg"
+                thumb_name = f"{path.stem}_thumbnail.{thumb_ext}"
 
                 upload_item.status     = UploadStatus.Uploading
                 upload_item.filepath   = Path(thumb_name)
