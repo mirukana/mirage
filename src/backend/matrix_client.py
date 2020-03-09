@@ -875,7 +875,7 @@ class MatrixClient(nio.AsyncClient):
             thumb_data = out.getvalue()
             thumb_size = len(thumb_data)
 
-        if thumb_size >= len(data):
+        if thumb_size >= len(data) and is_jpg_png and not is_svg:
             raise UneededThumbnail()
 
         info = MatrixImageInfo(thumb.width, thumb.height, mime, thumb_size)
