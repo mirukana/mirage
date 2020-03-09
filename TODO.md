@@ -255,3 +255,22 @@
   from an .ICO file that contains multiple icons, for example.
   In the future it's intended to support other multi-page formats such as
   PDF, TIFF and WEBP.
+
+### [Qt 5.15](https://wiki.qt.io/New_Features_in_Qt_5.15)
+
+- Introduced inline components
+  (ability to declare multiple QML components in the same file)
+
+- Introduced `required` properties
+
+- Added a declarative way of registering types to QML
+
+- Added support for the Nullish Coalescing Operator (`??`)
+
+- Added `qmlformat` tool which automatically formats any QML file according to
+  the QML Coding Conventions.
+
+- Added `cursorShape` property to pointer handlers. Most pointer handlers
+  (e.g. `DragHandler`) will change the cursor when the active state is true.
+  `HoverHandler` will change it when the mouse is hovering over the `Item` that
+  contains the `HoverHandler`.
