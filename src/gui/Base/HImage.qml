@@ -14,7 +14,8 @@ Image {
 
     property bool broken: false
     property bool animate: true
-    property bool animated: utils.urlExtension(image.source) === "gif"
+    property bool animated:
+        utils.urlExtension(image.source).toLowerCase() === "gif"
 
     property alias showProgressBar: progressBarLoader.active
     property bool inderterminateProgressBar: false

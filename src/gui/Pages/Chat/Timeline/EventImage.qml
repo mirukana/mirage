@@ -10,7 +10,7 @@ HMxcImage {
     horizontalAlignment: Image.AlignLeft
 
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
-              utils.urlExtension(loader.mediaUrl) === "gif"
+              utils.urlExtension(loader.mediaUrl).toLowerCase() === "gif"
     thumbnail: ! animated && loader.thumbnailMxc
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :

@@ -59,7 +59,7 @@ HLoader {
             return EventDelegate.Media.File
 
         // If this is a preview for a link in a normal message
-        const ext = utils.urlExtension(mediaUrl)
+        const ext = utils.urlExtension(mediaUrl).toLowerCase()
 
         if (imageExtensions.includes(ext)) return EventDelegate.Media.Image
         if (videoExtensions.includes(ext)) return EventDelegate.Media.Video

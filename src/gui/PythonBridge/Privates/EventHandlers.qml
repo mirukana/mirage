@@ -83,7 +83,7 @@ QtObject {
 
 
     function onModelItemFieldChanged(syncId, oldIndex, newIndex, field, value){
-        // print("change", syncId, oldIndex, newIndex, field, value)
+        print("\u001b[37mchange", syncId, oldIndex, newIndex, field, value, "\u001b[0m")
         const model = ModelStore.get(syncId)
         model.setProperty(oldIndex, field, value)
 
