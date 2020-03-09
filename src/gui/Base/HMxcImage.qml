@@ -13,6 +13,7 @@ HImage {
 
 
     property string mxc
+    property string title
     property string sourceOverride: ""
     property bool thumbnail: true
     property var cryptDict: ({})
@@ -41,7 +42,8 @@ HImage {
 
         const method = image.thumbnail ? "get_thumbnail" : "get_media"
         const args   = image.thumbnail ?
-                       [image.mxc, w, h, cryptDict] : [image.mxc, cryptDict]
+                       [image.mxc, image.title, w, h, cryptDict] :
+                       [image.mxc, image.title, cryptDict]
 
         py.callCoro("media_cache." + method, args, path => {
                 if (! image) return

@@ -47,20 +47,30 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def get_media(self, mxc: str, crypt_dict: CryptDict = None) -> Path:
+    async def get_media(
+        self,
+        mxc:        str,
+        title:      str,
+        crypt_dict: CryptDict = None,
+    ) -> Path:
         """Return a `Media` object. Method intended for QML convenience."""
 
-        return await Media(self, mxc, crypt_dict).get()
+        return await Media(self, mxc, title, crypt_dict).get()
 
 
     async def get_thumbnail(
-        self, mxc: str, width: int, height: int, crypt_dict: CryptDict = None,
+        self,
+        mxc:        str,
+        title:      str,
+        width:      int,
+        height:     int,
+        crypt_dict: CryptDict = None,
     ) -> Path:
         """Return a `Thumbnail` object. Method intended for QML convenience."""
 
         thumb = Thumbnail(
             # QML sometimes pass float sizes, which matrix API doesn't like.
-            self, mxc, crypt_dict, (round(width), round(height)),
+            self, mxc, title, crypt_dict, (round(width), round(height)),
         )
         return await thumb.get()
 
@@ -71,6 +81,7 @@ class Media:
 
     cache:      "MediaCache" = field()
     mxc:        str          = field()
+    title:      str          = field()
     crypt_dict: CryptDict    = field(repr=False)
 
 
@@ -85,9 +96,11 @@ class Media:
     def local_path(self) -> Path:
         """The path where the file either exists or should be downloaded."""
 
-        parsed = urlparse(self.mxc)
-        name   = parsed.path.lstrip("/")
-        return self.cache.downloads_dir / parsed.netloc / name
+        parsed   = urlparse(self.mxc)
+        mxc_id   = parsed.path.lstrip("/")
+        title    = Path(self.title)
+        filename = f"{title.stem}_{mxc_id}{title.suffix}"
+        return self.cache.downloads_dir / parsed.netloc / filename
 
 
     async def get(self) -> Path:
@@ -165,7 +178,7 @@ class Media:
     ) -> "Media":
         """Copy an existing file to cache and return a `Media` for it."""
 
-        media = cls(cache, mxc, {}, **kwargs)  # type: ignore
+        media = cls(cache, mxc, existing.name, {}, **kwargs)  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
@@ -202,6 +215,7 @@ class Thumbnail(Media):
 
     cache:       "MediaCache" = field()
     mxc:         str          = field()
+    title:       str          = field()
     crypt_dict:  CryptDict    = field(repr=False)
     wanted_size: Size         = field()
 
@@ -244,11 +258,15 @@ class Thumbnail(Media):
         e.g. `~/.cache/appname/thumbnails/matrix.org/32x32/Hm24ar11i768b0el`.
         """
 
-        parsed = urlparse(self.mxc)
-        size   = self.normalize_size(self.server_size or self.wanted_size)
-        name   = "%dx%d/%s" % (size[0], size[1], parsed.path.lstrip("/"))
+        size     = self.normalize_size(self.server_size or self.wanted_size)
+        size_dir = f"{size[0]}x{size[1]}"
 
-        return self.cache.thumbs_dir / parsed.netloc / name
+        parsed   = urlparse(self.mxc)
+        mxc_id   = parsed.path.lstrip("/")
+        title    = Path(self.title)
+        filename = f"{title.stem}_{mxc_id}{title.suffix}"
+
+        return self.cache.thumbs_dir / parsed.netloc / size_dir / filename
 
 
     async def _get_local_existing_file(self) -> Path:

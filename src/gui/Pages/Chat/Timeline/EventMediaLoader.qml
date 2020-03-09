@@ -85,6 +85,7 @@ HLoader {
 
         const args = [
             loader.mediaUrl,
+            loader.title,
             JSON.parse(loader.singleMediaInfo.media_crypt_dict)
         ]
 

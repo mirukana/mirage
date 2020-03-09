@@ -18,6 +18,7 @@ Rectangle {
 
     property string name
     property alias mxc: avatarImage.mxc
+    property alias title: avatarImage.title
 
     property alias toolTipMxc: avatarToolTipImage.mxc
     property alias sourceOverride: avatarImage.sourceOverride
@@ -77,6 +78,7 @@ Rectangle {
                 id: avatarToolTipImage
                 fillMode: Image.PreserveAspectCrop
                 mxc: avatarImage.mxc
+                title: avatarImage.title
 
                 sourceSize.width: avatarToolTip.dimension
                 sourceSize.height: avatarToolTip.dimension

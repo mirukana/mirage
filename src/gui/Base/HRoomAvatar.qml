@@ -7,6 +7,9 @@ HAvatar {
           displayName.substring(1) :
           displayName
 
+    title: "room_" + roomId + ".avatar"
 
+
+    property string roomId
     property string displayName
 }

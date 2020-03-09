@@ -12,6 +12,7 @@ HTileDelegate {
     opacity: model.left ? theme.mainPane.room.leftRoomOpacity : 1
 
     image: HRoomAvatar {
+        roomId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
     }

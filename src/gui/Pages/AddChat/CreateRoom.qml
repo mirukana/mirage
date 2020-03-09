@@ -56,6 +56,7 @@ HBox {
 
     HRoomAvatar {
         id: avatar
+        roomId: ""
         displayName: nameField.text
 
         Layout.alignment: Qt.AlignCenter
