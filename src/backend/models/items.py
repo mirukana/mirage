@@ -197,6 +197,7 @@ class Event(ModelItem):
     media_crypt_dict: Dict[str, Any] = field(default_factory=dict)
 
     thumbnail_url:        str            = ""
+    thumbnail_mime:       str            = ""
     thumbnail_width:      int            = 0
     thumbnail_height:     int            = 0
     thumbnail_crypt_dict: Dict[str, Any] = field(default_factory=dict)

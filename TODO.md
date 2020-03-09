@@ -2,7 +2,7 @@
 
 ## Before release
 
-- Downloaded media filenames
+- Fix highlighted account/room in MainPane
 - "exception during sync" aren't caught
 - nio ClientTimeout
 - Name
@@ -153,6 +153,8 @@
 
 ## Backend
 
+- Have a `Thubmnail.from_existing_file()` to be called after generating and
+  and uploading a thumbnail, like the equivalent `Media.from_existing_file()`
 - Saving the room settings
 - Refetch profile after manual profile change, don't wait for a room event
 

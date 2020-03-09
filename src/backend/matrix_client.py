@@ -553,6 +553,8 @@ class MatrixClient(nio.AsyncClient):
                 content["info"].get("thumbnail_info", {}).get("w", 0),
             thumbnail_height =
                 content["info"].get("thumbnail_info", {}).get("h", 0),
+            thumbnail_mime =
+                content["info"].get("thumbnail_info", {}).get("mimetype", ""),
         )
 
         await self._send_message(room_id, content)

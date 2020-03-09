@@ -31,6 +31,19 @@ HLoader {
     readonly property string title:
         singleMediaInfo.media_title || utils.urlFileName(mediaUrl)
 
+    readonly property string thumbnailTitle:
+        singleMediaInfo.media_title.replace(
+            /\.[^\.]+$/,
+            singleMediaInfo.thumbnail_mime === "image/jpeg"    ? ".jpg" :
+            singleMediaInfo.thumbnail_mime === "image/png"     ? ".png" :
+            singleMediaInfo.thumbnail_mime === "image/gif"     ? ".gif" :
+            singleMediaInfo.thumbnail_mime === "image/tiff"    ? ".tiff" :
+            singleMediaInfo.thumbnail_mime === "image/svg+xml" ? ".svg" :
+            singleMediaInfo.thumbnail_mime === "image/webp"    ? ".webp" :
+            singleMediaInfo.thumbnail_mime === "image/bmp"     ? ".bmp" :
+            ".thumbnail"
+        ) || utils.urlFileName(mediaUrl)
+
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
 		"tiff", "webp", "svg",

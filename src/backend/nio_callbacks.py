@@ -140,6 +140,7 @@ class NioCallbacks:
 
             thumbnail_width      = thumb_info.get("w") or 0,
             thumbnail_height     = thumb_info.get("h") or 0,
+            thumbnail_mime       = thumb_info.get("mimetype") or "",
             thumbnail_crypt_dict = thumb_crypt_dict,
         )
 
