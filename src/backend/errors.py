@@ -82,6 +82,11 @@ class InvalidUserInContext(Exception):
 
 
 @dataclass
+class UserFromOtherServerDisallowed(Exception):
+    user_id: str = field()
+
+
+@dataclass
 class UneededThumbnail(Exception):
     pass
 

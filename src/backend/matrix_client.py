@@ -22,16 +22,17 @@ from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 import cairosvg
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
+
 import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
-from PIL import Image as PILImage
-from pymediainfo import MediaInfo
 
 from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
-    MatrixNotFound, UneededThumbnail,
+    MatrixNotFound, UneededThumbnail, UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
@@ -759,16 +760,26 @@ class MatrixClient(nio.AsyncClient):
             if uid not in self.all_rooms[room_id].users
         )
 
-        async def invite(user):
-            if not self.user_id_regex.match(user):
-                return InvalidUserId(user)
+        async def invite(user_id: str):
+            if not self.user_id_regex.match(user_id):
+                return InvalidUserId(user_id)
+
+            if not self.rooms[room_id].federate:
+                _, user_server = user_id.split(":", maxsplit=1)
+                _, room_server = room_id.split(":", maxsplit=1)
+
+                user_server = re.sub(r":443$", "", user_server)
+                room_server = re.sub(r":443$", "", room_server)
+
+                if user_server != room_server:
+                    return UserFromOtherServerDisallowed(user_id)
 
             try:
-                await self.get_profile(user)
+                await self.get_profile(user_id)
             except MatrixNotFound as err:
                 return err
 
-            return await self.room_invite(room_id, user)
+            return await self.room_invite(room_id, user_id)
 
         coros        = [invite(uid) for uid in user_ids]
         successes    = []

@@ -97,6 +97,10 @@ BoxPopup {
                     qsTr("%1 is not a valid user ID, expected format is " +
                          "@username:homeserver").arg(user) :
 
+                    type === "UserFromOtherServerDisallowed" ?
+                    qsTr("This room rejects users from other matrix " +
+                         "servers, can't invite %1").arg(user) :
+
                     type === "UserNotFound" ?
                     qsTr("%1 not found, please verify the entered user ID")
                     .arg(user) :
