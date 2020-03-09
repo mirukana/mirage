@@ -32,7 +32,8 @@ from nio.crypto import async_generator_from_data
 from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
-    MatrixNotFound, UneededThumbnail, UserFromOtherServerDisallowed,
+    MatrixNotFound, MatrixTooLarge, UneededThumbnail,
+    UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
@@ -384,6 +385,7 @@ class MatrixClient(nio.AsyncClient):
             url, mime, crypt_dict = await self.upload(
                 lambda *_: path,
                 filename = path.name,
+                filesize = size,
                 encrypt  = encrypt,
                 monitor  = monitor,
             )
@@ -466,6 +468,7 @@ class MatrixClient(nio.AsyncClient):
                         lambda *_: thumb_data,
                         filename =
                             f"{path.stem}_sample{''.join(path.suffixes)}",
+                        filesize = thumb_info.size,
                         encrypt  = encrypt,
                         monitor  = monitor,
                     )
@@ -886,12 +889,16 @@ class MatrixClient(nio.AsyncClient):
     async def upload(
         self,
         data_provider: nio.DataProvider,
-        mime:          Optional[str]                 = None,
         filename:      Optional[str]                 = None,
+        filesize:      Optional[int]                 = None,
+        mime:          Optional[str]                 = None,
         encrypt:       bool                          = False,
         monitor:       Optional[nio.TransferMonitor] = None,
     ) -> UploadReturn:
         """Upload a file to the matrix homeserver."""
+
+        if filesize > self.models["accounts"][self.user_id].max_upload_size:
+            raise MatrixTooLarge()
 
         mime = mime or await utils.guess_mime(data_provider(0, 0))
 
@@ -909,12 +916,18 @@ class MatrixClient(nio.AsyncClient):
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
         """Upload an image to the homeserver and set it as our avatar."""
 
+        path = Path(path)
         mime = await utils.guess_mime(path)
 
         if mime.split("/")[0] != "image":
             raise BadMimeType(wanted="image/*", got=mime)
 
-        mxc, *_ = await self.upload(lambda *_: path, mime, Path(path).name)
+        mxc, *_ = await self.upload(
+            data_provider = lambda *_: path,
+            filename      = path.name,
+            filesize      = path.resolve().stat().st_size,
+            mime          = mime,
+        )
         await self.set_avatar(mxc)
 
 
