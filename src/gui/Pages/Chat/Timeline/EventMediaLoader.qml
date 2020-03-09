@@ -28,6 +28,9 @@ HLoader {
 
     property string downloadedPath: ""
 
+    readonly property string title:
+        singleMediaInfo.media_title || utils.urlFileName(mediaUrl)
+
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
 		"tiff", "webp", "svg",
