@@ -61,7 +61,9 @@ HColumnLayout {
                 .arg(fileName) :
 
                 model.error === "MatrixTooLarge" ?
-                qsTr("Too large for this server: %1").arg(fileName) :
+                qsTr("Too large for this server (%1 max): %2")
+                .arg(CppUtils.formattedBytes(chat.userInfo.max_upload_size))
+                .arg(fileName) :
 
                 model.error === "IsADirectoryError" ?
                 qsTr("Can't upload folders, need a file: %1").arg(filePath) :
