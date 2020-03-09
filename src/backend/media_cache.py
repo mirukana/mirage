@@ -193,13 +193,14 @@ class Media:
         cls,
         cache:     "MediaCache",
         mxc:       str,
+        filename:  str,
         data:      bytes,
         overwrite: bool = False,
         **kwargs,
     ) -> "Media":
         """Create a cached file from bytes data and return a `Media` for it."""
 
-        media = cls(cache, mxc, {}, **kwargs)  # type: ignore
+        media = cls(cache, mxc, filename, {}, **kwargs)  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:

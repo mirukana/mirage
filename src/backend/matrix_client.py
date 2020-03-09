@@ -471,8 +471,7 @@ class MatrixClient(nio.AsyncClient):
 
                     thumb_url, _, thumb_crypt_dict = await self.upload(
                         lambda *_: thumb_data,
-                        filename =
-                            f"{path.stem}_sample{''.join(path.suffixes)}",
+                        filename = f"{path.stem}_sample{path.suffix}",
                         filesize = thumb_info.size,
                         encrypt  = encrypt,
                         monitor  = monitor,
@@ -489,6 +488,7 @@ class MatrixClient(nio.AsyncClient):
                     await Thumbnail.from_bytes(
                         self.backend.media_cache,
                         thumb_url,
+                        path.name,
                         thumb_data,
                         wanted_size = (content["info"]["w"],
                                        content["info"]["h"]),
