@@ -40,7 +40,7 @@ from .media_cache import Media, Thumbnail
 from .models.items import Event, Member, Room, Upload, UploadStatus
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
-from .pyotherside_events import AlertRequested
+from .pyotherside_events import AlertRequested, LoopException
 
 if TYPE_CHECKING:
     from .backend import Backend
@@ -207,7 +207,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def _start(self) -> None:
-        """Fetch our user profile and enter the server sync loop."""
+        """Fetch our user profile, server config and enter the sync loop."""
 
         def on_profile_response(future) -> None:
             """Update our model `Account` with the received profile details."""
@@ -263,9 +263,14 @@ class MatrixClient(nio.AsyncClient):
                 )
                 await self.sync_task
                 break  # task cancelled
-            except Exception:
+            except Exception as err:
                 trace = traceback.format_exc().rstrip()
-                log.error("Exception during sync, restart in 2s:\n%s", trace)
+
+                if isinstance(err, MatrixError) and err.http_code >= 500:
+                    log.error("Server failure during sync:\n%s", trace)
+                else:
+                    LoopException(str(err), err, trace)
+
                 await asyncio.sleep(2)
 
 

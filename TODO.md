@@ -3,8 +3,8 @@
 ## Before release
 
 - Fix highlighted account/room in MainPane
-- "exception during sync" aren't caught
 - nio ClientTimeout
+- Default theme?
 - Name
 - Update docstrings
 - Update TODO.md 
