@@ -9,7 +9,7 @@ HColumnLayout {
     id: transfer
 
 
-    property int msLeft: model.time_left || 0
+    property int msLeft: model.time_left
     property int uploaded: model.uploaded
     readonly property int speed: model.speed
     readonly property int totalSize: model.total_size

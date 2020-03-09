@@ -11,7 +11,7 @@ import re
 import traceback
 from contextlib import suppress
 from copy import copy
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 from pathlib import Path
 from typing import (
@@ -381,7 +381,7 @@ class MatrixClient(nio.AsyncClient):
 
         def on_speed_changed(speed: float) -> None:
             upload_item.speed     = speed
-            upload_item.time_left = monitor.remaining_time
+            upload_item.time_left = monitor.remaining_time or timedelta(0)
 
         monitor.on_transferred   = on_transferred
         monitor.on_speed_changed = on_speed_changed
