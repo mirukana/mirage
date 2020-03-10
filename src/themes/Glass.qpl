@@ -32,7 +32,7 @@ fontFamily:
 colors:
     int hue:          240
     int saturation:   60
-    int bgSaturation: saturation / 2
+    int bgSaturation: saturation / 1.5
     real intensity:   1.0
     real opacity:     0.7
     real bgOpacity:   0.5
