@@ -32,10 +32,10 @@ fontFamily:
 colors:
     int hue:          240
     int saturation:   60
-    int bgSaturation: saturation
+    int bgSaturation: saturation / 2
     real intensity:   1.0
-    real opacity:     1.0
-    real bgOpacity:   1.0
+    real opacity:     0.7
+    real bgOpacity:   0.5
 
     color weakBackground:   hsluv(hue, bgSaturation, intensity * 9, opacity)
     color mediumBackground: hsluv(hue, bgSaturation, intensity * 6.8, opacity)
@@ -247,15 +247,8 @@ ui:
     point gradientStart: Qt.point(0, 0)
     point gradientEnd:   Qt.point(window.width, window.height)
 
-    color gradientStartColor:
-        hsluv(colors.hue - 50, 100, colors.intensity * 8, colors.bgOpacity)
-    color gradientEndColor:
-        hsluv(colors.hue + 20, 30, colors.intensity * 22, colors.bgOpacity)
-
-    // To have a solid color instead,
-    // set gradientStartColor and gradientEndColor to the same value, e.g.:
-    // color gradientStartColor: hsluv(0, 0, 0, colors.bgOpacity)
-    // color gradientEndColor: hsluv(0, 0, 0, colors.bgOpacity)
+    color gradientStartColor: hsluv(0, 0, 0, colors.bgOpacity)
+    color gradientEndColor: hsluv(0, 0, 0, colors.bgOpacity)
 
 
 
