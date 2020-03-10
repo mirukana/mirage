@@ -234,7 +234,7 @@ controls:
 
     displayName:
         int saturation: colors.saturation + 12
-        int lightness:  Math.min(67, colors.intensity * 67)
+        int lightness:  Math.min(72, colors.intensity * 72)
 
 
 // Special UI parts
