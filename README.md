@@ -1,4 +1,4 @@
-# harmonyqml
+# Mirage
 
 
 ## Dependencies setup
@@ -50,10 +50,10 @@ Optional dependency for performance improvements:
 ## Building
 
     git clone --recursive <TODO>
-    cd harmonyqml
-    qmake harmonyqml.pro && make && sudo make install
+    cd mirage
+    qmake mirage.pro && make && sudo make install
 
-After this if no errors happened, run `harmonyqml`.
+After this if no errors happened, run `mirage`.
 
 If you get a version mismatch error related to cffi, try:
 

@@ -9,12 +9,12 @@
 export QT_QPA_PLATFORM=xcb
 
 make clean
-qmake harmonyqml.pro CONFIG+=dev && make
+qmake mirage.pro CONFIG+=dev && make
 
 while true; do
-    find src harmonyqml.pro -type f |
+    find src mirage.pro -type f |
     # -name affects the first part of the WM_CLASS returned by xprop on Linux
     entr -cdnr sh -c \
-        "qmake harmonyqml.pro CONFIG+=dev && make && ./harmonyqml -name dev $*"
+        "qmake mirage.pro CONFIG+=dev && make && ./mirage -name dev $*"
     sleep 0.2
 done

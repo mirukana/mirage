@@ -1,15 +1,19 @@
 [submodule "submodules/qsyncable"]
 	path = submodules/qsyncable
 	url = https://github.com/benlau/qsyncable
+
 [submodule "submodules/RadialBarDemo"]
 	path = submodules/RadialBarDemo
 	url = https://github.com/mirukan/RadialBarDemo/
+
 [submodule "submodules/hsluv-c"]
 	path = submodules/hsluv-c
 	url = https://github.com/hsluv/hsluv-c
+
 [submodule "submodules/gel"]
 	path = submodules/gel
 	url = https://github.com/Cutehacks/gel
+
 [submodule "submodules/SortFilterProxyModel"]
 	path = submodules/SortFilterProxyModel
 	url = https://github.com/oKcerG/SortFilterProxyModel

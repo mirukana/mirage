@@ -12,7 +12,7 @@ build
 dist
 .qmake.stash
 Makefile
-harmonyqml
-harmonyqml.pro.user
+mirage
+mirage.pro.user
 
 tags

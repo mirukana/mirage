@@ -3,8 +3,7 @@
 ## Before release
 
 - nio ClientTimeout
-- Default theme?
-- Name
+- Config file format?
 - Update docstrings
 - Update TODO.md 
 - Update README.md
