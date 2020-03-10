@@ -10,6 +10,9 @@ HDrawer {
     color: theme.mainPane.background
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
+    onHasFocusChanged:
+        if (! hasFocus) mainPaneList.detachedCurrentIndex = false
+
 
     readonly property bool hasFocus: toolBar.filterField.activeFocus
     readonly property alias mainPaneList: mainPaneList
