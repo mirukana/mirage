@@ -14,6 +14,13 @@ QtObject {
             ListModel {
                 property var modelId
 
+                function findIndex(id) {
+                    for (let i = 0; i < count; i++)
+                        if (get(i).id === id) return i
+
+                    return null
+                }
+
                 function find(id) {
                     for (let i = 0; i < count; i++)
                         if (get(i).id === id) return get(i)

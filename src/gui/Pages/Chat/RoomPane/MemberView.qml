@@ -11,7 +11,7 @@ HColumnLayout {
         id: memberList
         clip: true
 
-        model: SortFilterProxyModel {
+        model: HSortFilterProxyModel {
             sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
 
             filters: ExpressionFilter {

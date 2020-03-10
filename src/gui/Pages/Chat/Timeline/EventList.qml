@@ -182,12 +182,6 @@ Rectangle {
 
 
             model: ModelStore.get(chat.userId, chat.roomId, "events")
-            // model: HSortFilterProxy {
-            //     model: ModelStore.get(chat.userId, chat.roomId, "events")
-            //     comparator: "date"
-            //     descendingSort: true
-            // }
-
             delegate: EventDelegate {}
         }
     }

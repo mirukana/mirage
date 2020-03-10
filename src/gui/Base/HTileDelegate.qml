@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.12
 
 HTile {
     id: tile
-    onActivated: view.currentIndex = model.index
     onLeftClicked: {
         view.highlightRangeMode    = ListView.NoHighlightRange
         view.highlightMoveDuration = 0

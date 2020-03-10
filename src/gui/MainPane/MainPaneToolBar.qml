@@ -19,10 +19,7 @@ HRowLayout {
         icon.name: "add-account"
         toolTip.text: qsTr("Add another account")
         backgroundColor: theme.mainPane.settingsButton.background
-        onClicked: {
-            mainPaneList.clearSelection()
-            pageLoader.showPage("AddAccount/AddAccount")
-        }
+        onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.fillHeight: true
     }

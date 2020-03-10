@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import SortFilterProxyModel 0.2
 import ".."
 import "../Base"
 
@@ -55,10 +54,15 @@ HListView {
     }
 
 
+    property bool detachedCurrentIndex: false
+
     readonly property Room selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
 
+
     function previous() {
+        detachedCurrentIndex = true
+
         if (! mainPane.filter) {
             _previous()
             return
@@ -96,13 +100,15 @@ HListView {
 
         if (currentAccount.collapsed || selectedIsFirst || noRooms) {
             // Have the account itself be selected
-            roomList.currentIndex = -1
+            roomList.currentIndex = -1  // XXX
         } else {
             roomList.decrementCurrentIndex()
         }
     }
 
     function next() {
+        detachedCurrentIndex = true
+
         if (! mainPane.filter) {
             _next()
             return
@@ -142,7 +148,7 @@ HListView {
         const noRooms        = roomList.count === 0
 
         if (currentAccount.collapsed || selectedIsLast || noRooms) {
-            roomList.currentIndex = -1
+            roomList.currentIndex = -1  // XXX
             mainPaneList.incrementCurrentIndex()
         } else {
             roomList.incrementCurrentIndex()
@@ -159,20 +165,22 @@ HListView {
         selectedRoom ?
         currentItem.roomList.currentItem.activated() :
         currentItem.account.activated()
+
+        detachedCurrentIndex = false
     }
 
     function accountSettings() {
         if (! currentItem) next()
-
-        currentItem.roomList.currentIndex = -1
         currentItem.account.activated()
+
+        detachedCurrentIndex = false
     }
 
     function addNewChat() {
         if (! currentItem) next()
-
-        currentItem.roomList.currentIndex = -1
         currentItem.account.addChat.clicked()
+
+        detachedCurrentIndex = false
     }
 
     function setCollapseAccount(collapse) {
@@ -187,17 +195,20 @@ HListView {
         currentItem.account.toggleCollapse()
     }
 
-    function clearSelection() {
-        if (selectedRoom) currentItem.roomList.currentIndex = -1
-        currentIndex = -1
-    }
 
-    function forceUpdateSelection() {
-        // When the selection is cleared, if an account or room delegate is
-        // supposed to be selected, it will try to be so again.
-        clearSelection()
-    }
+    Binding on currentIndex {
+        value:
+            [
+                "Pages/Chat/Chat.qml",
+                "Pages/AddChat/AddChat.qml",
+                "Pages/AccountSettings/AccountSettings.qml",
+            ].includes(window.uiState.page) ?
 
+            model.findIndex(window.uiState.pageProperties.userId) || -1 :
+            -1
+
+        when: ! detachedCurrentIndex
+    }
 
     Timer {
         id: activateLimiter

@@ -36,7 +36,7 @@ Column {
         height: contentHeight
         interactive: false
 
-        model: SortFilterProxyModel {
+        model: HSortFilterProxyModel {
             sourceModel: ModelStore.get(accountRooms.userId, "rooms")
 
             filters: [
@@ -59,6 +59,19 @@ Column {
         }
 
         highlight: null  // managed by the AccountRoomsList
+
+
+        Binding on currentIndex {
+            value:
+                window.uiState.page === "Pages/Chat/Chat.qml" &&
+                window.uiState.pageProperties.userId === userId ?
+
+                roomList.model.findIndex(window.uiState.pageProperties.roomId)
+                || -1 :
+                -1
+
+            when: ! view.detachedCurrentIndex
+        }
 
         Behavior on height { HNumberAnimation {} }
     }

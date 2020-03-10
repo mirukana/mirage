@@ -136,8 +136,8 @@ HTileDelegate {
     }
 
     onActivated: {
-        becomeSelected()
         pageLoader.showRoom(userId, model.id)
+        mainPaneList.detachedCurrentIndex = false
     }
 
 
@@ -152,32 +152,6 @@ HTileDelegate {
     readonly property QtObject lastEvent:
         eventModel.count > 0 ? eventModel.get(0) : null
 
-    readonly property bool shouldBeSelected:
-        window.uiState.page === "Pages/Chat/Chat.qml" &&
-        window.uiState.pageProperties.userId === userId &&
-        window.uiState.pageProperties.roomId === model.id
-
-
-    function becomeSelected() {
-        mainPaneList.currentIndex = accountRooms.listIndex
-        roomList.currentIndex     = index
-    }
-
 
     Behavior on opacity { HNumberAnimation {} }
-
-
-    // Trying to set the current item to ourself usually won't work from the
-    // first time, when this delegate is being initialized
-    Timer {
-        interval: 100
-        repeat: true
-        running:
-            shouldBeSelected &&
-            mainPaneList.currentIndex === -1 &&
-            roomList.currentIndex === -1
-
-        triggeredOnStart: true
-        onTriggered: becomeSelected()
-    }
 }
