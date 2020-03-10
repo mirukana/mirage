@@ -21,9 +21,10 @@ HBox {
 
     HLabel {
         wrapMode: Text.Wrap
+        horizontalAlignment: Qt.AlignHCenter
         text: qsTr(
-            "Registering is not implemented yet. You can create a new " +
-            "account from a client that supports it, like Riot."
+            "Not yet implemented\n\nYou can create a new " +
+            "account from another client such as Riot."
         )
 
         Layout.fillWidth: true

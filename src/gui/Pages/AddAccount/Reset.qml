@@ -25,9 +25,10 @@ HBox {
 
     HLabel {
         wrapMode: Text.Wrap
+        horizontalAlignment: Qt.AlignHCenter
         text: qsTr(
-            "Account recovery is not implemented yet. You can reset your " +
-            "password using a client that supports it, like Riot."
+            "Not yet implemented\n\nYou can reset your " +
+            "password using another client such as Riot."
         )
 
         Layout.fillWidth: true
