@@ -59,6 +59,15 @@ HListView {
     readonly property Room selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
 
+    readonly property bool hasActiveAccount:
+        window.uiState.page === "Pages/Chat/Chat.qml" ||
+        window.uiState.page === "Pages/AddChat/AddChat.qml" ||
+        window.uiState.page === "Pages/AccountSettings/AccountSettings.qml"
+
+    readonly property var activeAccountIndex:
+        hasActiveAccount ?
+        model.findIndex(window.uiState.pageProperties.userId) : null
+
 
     function previous() {
         detachedCurrentIndex = true
@@ -198,14 +207,8 @@ HListView {
 
     Binding on currentIndex {
         value:
-            [
-                "Pages/Chat/Chat.qml",
-                "Pages/AddChat/AddChat.qml",
-                "Pages/AccountSettings/AccountSettings.qml",
-            ].includes(window.uiState.page) ?
-
-            model.findIndex(window.uiState.pageProperties.userId) || -1 :
-            -1
+            hasActiveAccount ?
+            (activeAccountIndex === null ? -1 : activeAccountIndex) : -1
 
         when: ! detachedCurrentIndex
     }

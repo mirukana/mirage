@@ -2,7 +2,6 @@
 
 ## Before release
 
-- Fix highlighted account/room in MainPane
 - nio ClientTimeout
 - Default theme?
 - Name

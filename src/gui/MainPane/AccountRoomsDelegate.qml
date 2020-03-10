@@ -61,14 +61,22 @@ Column {
         highlight: null  // managed by the AccountRoomsList
 
 
+        readonly property bool hasActiveRoom:
+            window.uiState.page === "Pages/Chat/Chat.qml" &&
+            window.uiState.pageProperties.userId === userId
+
+        readonly property var activeRoomIndex:
+            hasActiveRoom ?
+            model.findIndex(window.uiState.pageProperties.roomId) : null
+
+
         Binding on currentIndex {
             value:
-                window.uiState.page === "Pages/Chat/Chat.qml" &&
-                window.uiState.pageProperties.userId === userId ?
-
-                roomList.model.findIndex(window.uiState.pageProperties.roomId)
-                || -1 :
-                -1
+                roomList.hasActiveRoom ?
+                (
+                    roomList.activeRoomIndex === null ?
+                    -1 : roomList.activeRoomIndex
+                ) : -1
 
             when: ! view.detachedCurrentIndex
         }
