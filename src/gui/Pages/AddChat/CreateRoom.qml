@@ -107,7 +107,7 @@ HBox {
         id: blockOtherServersCheckBox
         text: qsTr("Reject users from other matrix servers")
         subtitle.text: qsTr("Cannot be changed later!")
-        subtitle.color: theme.colors.middleBackground
+        subtitle.color: theme.colors.warningText
 
         Layout.fillWidth: true
     }

@@ -30,45 +30,47 @@ fontFamily:
     string mono:  "Hack"
 
 colors:
-    int hue:        264
-    int saturation: 40
-    real intensity: 1.0
-    real opacity:   1.0
+    int hue:          240
+    int saturation:   60
+    int bgSaturation: saturation
+    real intensity:   1.0
+    real opacity:     1.0
+    real bgOpacity:   1.0
 
-    color weakBackground:   hsluv(hue, saturation, intensity * 12, opacity)
-    color mediumBackground: hsluv(hue, saturation, intensity * 9, opacity)
-    color strongBackground: hsluv(hue, saturation, intensity * 6, opacity)
-
-    color inputBackground:
-        hsluv(hue, saturation * 1.25, intensity * 2, Math.max(0.6, opacity))
+    color weakBackground:   hsluv(hue, bgSaturation, intensity * 9, opacity)
+    color mediumBackground: hsluv(hue, bgSaturation, intensity * 6.8, opacity)
+    color strongBackground:
+        hsluv(hue, bgSaturation * 2, intensity * 2, Math.max(0.6, opacity))
 
     color accentBackground:
-        hsluv(hue, saturation * 1.25, intensity * 42, Math.max(0.6, opacity))
+        hsluv(hue, saturation * 1.5, intensity * 32, Math.max(0.6, opacity))
 
-    color strongAccentBackground:
-        hsluv(hue, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+    color accentElement:
+        hsluv(hue, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
+
+    color strongAccentElement:
+        hsluv(hue, saturation * 1.5, intensity * 72, Math.max(0.6, opacity))
 
     color positiveBackground:
-        hsluv(155, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+        hsluv(155, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
 
     color middleBackground:
-        hsluv(60, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+        hsluv(60, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
 
     color negativeBackground:
-        hsluv(0, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+        hsluv(0, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
 
-    color alertBackground:
-        hsluv(0, saturation * 2.25, intensity * 52, Math.max(0.6, opacity))
+    color alertBackground: negativeBackground
 
 
     color brightText:  hsluv(0, 0, intensity * 100)
-    color text:        hsluv(0, 0, intensity * 80)
-    color halfDimText: hsluv(0, 0, intensity * 70)
-    color dimText:     hsluv(0, 0, intensity * 55)
-    color dimmerText:  hsluv(0, 0, intensity * 30)
+    color text:        hsluv(0, 0, intensity * 85)
+    color halfDimText: hsluv(0, 0, intensity * 72)
+    color dimText:     hsluv(0, 0, intensity * 60)
 
-    color errorText:   hsluv(0, saturation * 2.25, 50)
-    color accentText:  hsluv(hue, saturation * 2.25, 60)
+    color warningText: hsluv(60, saturation * 1.5, 72)
+    color errorText:   hsluv(0, saturation * 1.5, 72)
+    color accentText:  hsluv(hue, saturation * 1.5, 72)
     color link:        accentText
     color code:        hsluv(hue + 5, saturation * 1.5, intensity * 60)
 
@@ -96,18 +98,18 @@ icons:
 controls:
     box:
         int defaultWidth: minimumSupportedWidth
+        color background: colors.mediumBackground
         int radius:       theme.radius
-        color background: colors.strongBackground
 
     popup:
-        int defaultWidth: minimumSupportedWidth * 2
-        color background: colors.strongBackground
+        int defaultWidth: minimumSupportedWidth * 1.75
+        color background: colors.mediumBackground
 
     header:
-        color background: colors.strongBackground
+        color background: colors.mediumBackground
 
     button:
-        color background: colors.inputBackground
+        color background: colors.strongBackground
         color text:       colors.text
 
         color hoveredOverlay: hsluv(0, 0, 50, 0.2)
@@ -142,27 +144,27 @@ controls:
         color checkedOverlay: controls.button.hoveredOverlay
 
     checkBox:
-        color checkIconColorize: colors.accentBackground
+        color checkIconColorize: colors.accentElement
         color boxBackground:     controls.button.background
         int boxSize:             24 * uiScale
 
-        color boxBorder:        hsluv(0, 0, 50, 0.3)
-        color boxHoveredBorder: colors.accentBackground
-        color boxPressedBorder: colors.strongAccentBackground
+        color boxBorder:        "black"
+        color boxHoveredBorder: colors.accentElement
+        color boxPressedBorder: colors.strongAccentElement
 
         color text: controls.button.text
         color subtitle: colors.dimText
 
     listView:
-        color highlight: hsluv(0, 0, 50, 0.3)
+        color highlight: colors.strongBackground
 
     textField:
-        color background:        colors.inputBackground
+        color background:        colors.strongBackground
         color focusedBackground: background
 
         int borderWidth:     1
         color border:        "transparent"
-        color focusedBorder: colors.accentBackground
+        color focusedBorder: colors.accentElement
         color errorBorder:   colors.negativeBackground
 
         color text:            colors.text
@@ -170,28 +172,28 @@ controls:
         color placeholderText: colors.dimText
 
     textArea:
-        color background:      colors.inputBackground
+        color background:      colors.strongBackground
         color text:            colors.text
         color placeholderText: controls.textField.placeholderText
 
     toolTip:
         int delay:        500
-        color background: colors.inputBackground
+        color background: colors.strongBackground
         color text:       colors.text
         color border:     "black"
         int borderWidth:  2
 
     progressBar:
         int height:             Math.max(2, spacing / 2)
-        color background:       colors.inputBackground
-        color foreground:       colors.accentBackground
+        color background:       colors.strongBackground
+        color foreground:       colors.accentElement
         color pausedForeground: colors.middleBackground
         color errorForeground:  colors.negativeBackground
 
     circleProgressBar:
         int thickness:          Math.max(2, spacing / 2)
-        color background:       colors.inputBackground
-        color foreground:       colors.accentBackground
+        color background:       colors.strongBackground
+        color foreground:       colors.accentElement
         color errorForeground:  colors.negativeBackground
         color text:             colors.text
         real indeterminateSpan: 0.5  // 0-1
@@ -207,7 +209,7 @@ controls:
             color inside: hsluv(0, 0, 90)
             color pressedInside: "white"
             color border: "black"
-            color pressedBorder: colors.strongAccentBackground
+            color pressedBorder: colors.strongAccentElement
 
     image:
         int maxPauseIndicatorSize: 64
@@ -221,18 +223,18 @@ controls:
             color background: hsluv(0, 0, 0, 0.4)
 
         background:
-            int saturation: colors.saturation + 10
-            int lightness:  Math.min(50, colors.intensity * 20)
+            int saturation: colors.saturation
+            int lightness:  Math.min(50, colors.intensity * 23)
             real opacity:   1.0
 
         letter:
-            int saturation: 10 + colors.saturation * 1.5
+            int saturation: colors.saturation + 20
             int lightness:  colors.intensity * 60
             real opacity:   1.0
 
     displayName:
-        int saturation: colors.saturation + 25
-        int lightness:  Math.min(60, colors.intensity * 60)
+        int saturation: colors.saturation + 12
+        int lightness:  Math.min(67, colors.intensity * 67)
 
 
 // Special UI parts
@@ -246,9 +248,9 @@ ui:
     point gradientEnd:   Qt.point(window.width, window.height)
 
     color gradientStartColor:
-        hsluv(colors.hue - 50, 100, colors.intensity * 8, 1.0)
+        hsluv(colors.hue - 50, 100, colors.intensity * 8, colors.bgOpacity)
     color gradientEndColor:
-        hsluv(colors.hue + 20, 30, colors.intensity * 22, 1.0)
+        hsluv(colors.hue + 20, 30, colors.intensity * 22, colors.bgOpacity)
 
     // To have a solid color instead,
     // set gradientStartColor and gradientEndColor to the same value, e.g.:
@@ -258,7 +260,7 @@ ui:
 
 
 mainPane:
-    color background: colors.strongBackground
+    color background: colors.mediumBackground
 
     account:
         real collapsedOpacity: 0.3
@@ -276,10 +278,10 @@ mainPane:
         color subtitleQuote: hsluv(135, colors.saturation * 2.25, 65)
 
     settingsButton:
-        color background: colors.inputBackground
+        color background: colors.strongBackground
 
     filterRooms:
-        color background: colors.inputBackground
+        color background: colors.strongBackground
 
 
 chat:
@@ -306,10 +308,10 @@ chat:
             color invitedIcon:   hsluv(0, colors.saturation * 2.25, 60)
 
         inviteButton:
-            color background: colors.inputBackground
+            color background: colors.strongBackground
 
         filterMembers:
-            color background: colors.inputBackground
+            color background: colors.strongBackground
 
     eventList:
         int ownEventsOnRightUnderWidth: 768 * theme.uiScale
@@ -320,12 +322,12 @@ chat:
         int collapsedAvatarSize: 28 * uiScale
 
         int radius:          theme.radius
-        color background:    colors.strongBackground
+        color background:    colors.mediumBackground
         color ownBackground: hsluv(
             colors.hue,
-            colors.saturation + 25,
-            colors.intensity * 6,
-            colors.opacity + 0.2
+            colors.bgSaturation * 2,
+            colors.intensity * 5,
+            Math.max(0.6, opacity),
         )
 
         color body: colors.text
@@ -334,7 +336,7 @@ chat:
         color noticeBody:    colors.halfDimText
         int noticeLineWidth: 1
 
-        color quote: hsluv(135, colors.saturation * 2.25, 75)
+        color quote: hsluv(135, colors.saturation * 1.5, colors.intensity * 80)
         color link:  colors.link
         color code:  colors.code
 
@@ -372,7 +374,7 @@ chat:
         real thumbnailMaxHeightRatio: 0.4 * Math.min(1, uiScale)
 
     daybreak:
-        color background: colors.strongBackground
+        color background: colors.mediumBackground
         color text:       colors.text
         int radius:       theme.radius
 

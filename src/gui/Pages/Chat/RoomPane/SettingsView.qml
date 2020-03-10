@@ -90,7 +90,7 @@ HBox {
         subtitle.text:
             qsTr("Only you and those you trust will be able to read the " +
                  "conversation") +
-            `<br><font color="${theme.colors.middleBackground}">` +
+            `<br><font color="${theme.colors.warningText}">` +
             (
                 chat.roomInfo.encrypted ?
                 qsTr("Cannot be disabled") :
