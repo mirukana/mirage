@@ -279,8 +279,13 @@ class Theme(DataFile):
 
     @property
     def path(self) -> Path:
-        data_dir = Path(self.backend.appdirs.user_data_dir)
-        return data_dir / "themes" / self.filename
+        data_dir  = Path(self.backend.appdirs.user_data_dir)
+        user_path = data_dir / "themes" / self.filename
+
+        if not user_path.exists():
+            return Path("src") / "themes" / self.filename
+
+        return user_path
 
 
     async def default_data(self) -> str:

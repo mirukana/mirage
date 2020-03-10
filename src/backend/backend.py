@@ -251,7 +251,6 @@ class Backend:
         ui_state = await self.ui_state.read()
         history  = await self.history.read()
         theme    = await Theme(self, settings["theme"]).read()
-        print(theme)
 
         return (settings, ui_state, history, theme)
 
