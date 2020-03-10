@@ -193,7 +193,7 @@ class UISettings(JSONDataFile):
             "alertOnMessageForMsec": 4000,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
-            "theme": "Default.qpl",
+            "theme": "Midnight.qpl",
             "writeAliases": {},
             "media": {
                 "autoLoad": True,
@@ -284,7 +284,7 @@ class Theme(DataFile):
 
 
     async def default_data(self) -> str:
-        async with aiofiles.open("src/themes/Default.qpl") as file:
+        async with aiofiles.open("src/themes/Midnight.qpl") as file:
             return await file.read()
 
 
