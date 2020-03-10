@@ -237,10 +237,11 @@ controls:
         int lightness:  Math.min(72, colors.intensity * 72)
 
 
-// Special UI parts
+// Specific interface parts
 
 ui:
-    // Image can be an URL or local file path.
+    // The background image can be an URL or local file path
+    // (in the form file://<path>, e.g. file:///home/user/images/foo.png).
     // If not specified, the gradient will be shown instead.
     url image: ""
 
