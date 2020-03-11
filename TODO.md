@@ -2,175 +2,179 @@
 
 ## Before release
 
+- Catch 5xx errors and retry 
 - nio ClientTimeout
-- Config file format?
 - Update docstrings
-- Update TODO.md 
 - Update README.md
-
-## Media
-
-- Handle set avatar upload errors
-- Confirmation box after picking file to upload
-- Show real progression for mxc thumbnail loadings
-
-- Sentinel function to report download file path if already cached,
-  without having to click & try downloading first
-- EventFile download UI & Save as... in context menu
-
-- Show reason under broken thumbnail icons
-- Support m.file thumbnails
-- Generate video thumbnails
-- GIFs can use the video player
-- Display GIF static thumbnails while the real GIF is loading
-- Video bug: when media is done playing, clicking on progress slider always
-  bring back to the beginning no matter where
-- Video: missing buttons and small size problems
-- Audio: online playback is buggy, must download+play file
-- EventLink
-  - Special treatment for matrix.to URLs?
-- Prevent using upload keybinds in rooms with no perms
 
 ## Refactoring
 
-- Account settings with `HTabbedContainer`
+- Rewrite the message selection buggy mess 
+
+- Put keybindings in the components they belong to instead of shoving them
+  all in one central file
+
+- Rewrite account settings using `HTabbedContainer`
   - Get rid of all `currentSpacing` stuff
   - Use new default/reset controls system 
-- Split `HScrollableTextArea`
-- Composer
-- Don't put all the keybinds in one central file
-  - Missing room keybinds (invite, etc) and close failed upload
-- Use QML states?
+  - Display name field text should be colored 
+
+- Split `HScrollableTextArea` into `HTextArea` and `HScrollView` components
+- Refactor `Composer`
+
+- Make sure we don't store any state in delegates
+
+- Drop the `buttonModel`/`buttonCallbacks` `HBox` approach, be more declarative
 
 ## Issues
 
-- Forget a room, it comes back because of the "you left" event
-- `EventImage`s for `m.image` sometimes appear broken, can be made normal
-  by switching to another room and coming back
+- Popups and room settings can't be scrolled when not enough height to show all
+
+- `Timer` and `Animation` are bound to framerate
+
+- Handle cases where a known account's access token is invalid
+- If an account is gone from the user's config, discard UI state last page
 
 - First sent message in E2E room is sometimes undecryptable
+  (can be fixed by logging out and in again) (still valid?)
 
-- Pausing uploads doesn't work well, servers end up dropping the connection 
+- After forgetting a room, it comes back because of the "you left" event
 
-- In the "Leave me" room, "join > Hi > left" aren't combined
-- When selecting text and scrolling up, selection stops working after a while
-  - Ensure all the text that should be copied is copied
-  - Multiple messages are currently copied out of order
+- `code` and links in quote ("> http://example.com") aren't properly colored
+  in room "last message" subtitle
 
-- `code` not colored in room subtitle
-- Quote links color in room subtitles (e.g. "> http://foo.org" )
-
-- If account not in config anymore, discard ui state last page on startup
-- Do something when access token is invalid
-
-- Don't store states in delegates
-- [hr not working](https://bugreports.qt.io/browse/QTBUG-74342)
 - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 - Can't use `QQmlApplicationEngine`, problem with QApplication?
   See https://bugreports.qt.io/browse/QTBUG-50992
+- [HTML <hr> not rendered](https://bugreports.qt.io/browse/QTBUG-74342)
+- Pausing uploads doesn't work well, servers ends up dropping the connection 
+  (no real solution possible?)
 
 ## Interface
 
-- Room Sidepane keybinds
-- Remember ctrl+tab page target
-- https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
-- Make all "Cancel" buttons able to cancel running Backend coroutines set
-  `disabledWhileLoading` to `false` for all "OK" buttons where it makes sense
-- Use a loader of the swipeview containing members, settings, etc views
-- Expand the room pane if it's too small to show room settings?
-- Drop the `buttonModel`/`buttonCallbacks` HBox approach
-- Scrollable popups and room settings
-- Improve when HDrawer should collapse when the ui is zoomed
-- Make theme error/etc text colors more like name colors
-- In account settings, display name field text should be colored
-- Way to open context menus without a right mouse button
-- `smartVerticalFlick()` gradual acceleration
-- Make banner buttons look better
-- When window is reduced enough for main pane to be invisible, transition
-  between pane and page with alt+S is laggy when the page is a chat
+- Expand the room pane if it's currently too small to show room settings
+- Use a loader for items not in view for the `HTabContainer`'s `SwipeView`
 
-- Choose a better default easing type for animations
-- Make HListView scrollbars visible
-- Remove first html lists left margin
-- Adapt UI for small heights
+- Make "Cancel" buttons consistent, and able to cancel running Backend
+  coroutines. Set `disabledWhileLoading` to `false` for all "OK" buttons where
+  it makes sense.
+
+- Add missing room keybindings (e.g. to open the invite members popup)
+- Room pane keybindings
+
+- Remember the previously focused item in page for ctrl+tab 
+- https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
+- Improve when HDrawer should collapse when the ui is zoomed
+- Way to open context menus without a right mouse button
+- Make room invite/left banner buttons look better
+- When window is reduced enough for main pane to be invisible, transition
+  between pane and page with Alt+S is laggy when the page is a chat
+
+- Choose a better easing types for animations
+- Make HListView scrollbars more visible
+- In messages, remove the HTML lists excess left margin
+- Improve UI for very small window heights
 
 - In room creation, click avatar to set the future room's avatar
 - In join room page, show the matching room's avatar when typing
-- In find someone page, show the matching user's avatar when typing
+- In direct chat page, show the matching user's avatar when typing
 
 - Combine events so they take less space
-  - After combining is implemented, no need to hide profile changes anymore.
+  - After combining is implemented, no need to hide profile changes anymore
+
+- Animate `DayBreak` apparition
+
+- Device settings
 - Replies
 - Messages editing and redaction
 - Code highlighting
 - Adapt shortcuts flicking speed to font size 
 
-- EditAccount page:
-  - Device settings
-  - Multiaccount aliases:
-    - Warn when conflict with another alias
-    - Forbid spaces?
-    - Add an explanation tooltip
-    - Prevent sending messages with an user not in room
-    - Support \ escaping
-  - Accept drag and dropping a picture to set avatar
+- Multiaccount aliases:
+  - Warn when conflict with another alias
+  - Forbid spaces?
+  - Add an explanation tooltip
+  - Prevent sending messages with a user not in the current room
+  - Support \ escaping
 
-- Add stuff to room tooltips like last messages
-- Show something when connection is lost or 429s happen
+- Accept drag and drop to upload files or set a new avatar 
+- Improve room tooltips, e.g. show last messages
+- Warn user when connection is lost or 429s happen
 - "Rejoin" LeftBanner button if room is public
 - Daybreak color
 - Conversation breaks: show time of first new msg after break instead of big
   blank space
 
-- Sidepane
+- `MainPane`:
   - Animate when logging out last account and sidepane turns invisible
   - Header back button when reduced
   - Better look when reduced to minimum size
 
 - Server selection
-- Register/Reset for AddAccount page
-- Prevent using an alias if that user is not in the room or no permission
+- Implement Register/Reset pages
 
 - Theming
   - Bundle fonts
-  - Standard file format, see *~ppy/qml_dict_theme.qml*
-  - https://doc.qt.io/qt-5/qtquickcontrols2-customize.html#creating-a-custom-style
+  - Use a standard file format
   - icons.preferredPack: accept multiple values
   - Find icon packs in user data dir
   - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
   - Way to round avatar corners to allow box radius
-  - If avatar is set, name color from average color?
-  - Accent color from background
 
 - Settings page
 - Notifications
 - Opening links with keyboard
 - Better `<pre>` 
 
-- Custom file picker for Linux (...)
+- Replace the rubbish default filepicker on Linux
+
+## Media-related
+
+- Add upload keybindings (close failed upload, pause, resume)
+- Handle errors when setting an avatar
+- Show confirmation box when picking file to upload or uploading from clipboard
+- Show proper progress ring for mxc thumbnails loading
+
+- Sentinel function to report local file paths for already downloaded media,
+  without having to click and try downloading first
+- EventFile "Save as..." context menu entry
+- UI for download progress (using `Transfer` like for uploads)
+
+- Show a reason or HTTP error code for thumbnails that fail to load
+- Support `m.file` thumbnails
+
+- Generate video thumbnails
+- Display GIF static thumbnails while the real GIF is loading
+- Audio/video player
+  - Can GIFs use it?
+
+- `EventLink` for client-side URL previews
+  - Special UI for matrix.to URLs
+
+- Prevent using upload keybindings in rooms where user doesn't have permission
+  to upload
 
 ## Backend
 
 - Saving the room settings
 - Refetch profile after manual profile change, don't wait for a room event
 
+- Better config file format
+
 - Prevent starting multiple client instances, causes problems with E2E DB
 - Check if username exists on login screen
 - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
-- `pyotherside.atexit()`
-- Logout previous session if adding an account that's already connected
-- Config file format
+- Logout previous session when adding an account that's already connected
 
-- Startup improvements
+- Startup improvements:
   - Initial sync filter to get more events on first sync
   - Lazy loading members
-  - Store profiles, room events and states
+  - Cache and restore profiles, room events and states
   - Use AsyncClient `store_sync_tokens`
     - Make sure to all members are fetched before sending an E2E message 
     - Fetch all members when using the filter members bar
 
-- Direct chats category
-- Animate RoomEventDelegate DayBreak apparition
+- Properly handle direct chats 
 - Live-reloading accounts.json
 
 - E2E
@@ -198,15 +202,11 @@
 - Left room events after client reboot
 - Previewing room without joining
 
-- Get content repo config API
 - Add the `resume()` account "login" method
 
-- Turn all the Error and Response classes into exceptions and normal returns
-  once `HttpClient` is deprecated
+## Distribution and dependencies
 
-## Distribution & dependencies
-
-- Mistune v2.0
+- Update to Mistune v2.0
 
 ## Notable changes for future Qt version upgrade
 
@@ -253,6 +253,9 @@
   from an .ICO file that contains multiple icons, for example.
   In the future it's intended to support other multi-page formats such as
   PDF, TIFF and WEBP.
+
+- `Binding.restoreMode`: This property can be used to describe if and how the
+  original value should be restored when the binding is disabled.
 
 ### [Qt 5.15](https://wiki.qt.io/New_Features_in_Qt_5.15)
 
