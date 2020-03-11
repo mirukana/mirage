@@ -17,18 +17,38 @@ HColumnPage {
 
 
     readonly property alias composer: composer
+    readonly property bool loadEventList: ! pageLoader.appearAnimation.running
 
 
     RoomHeader {
         Layout.fillWidth: true
     }
 
-    EventList {
-        id: eventList
+    Timer {
+        id: delayEventListLoadingTimer
+        interval: 150
+        running: true
+    }
 
-        // Avoid a certain binding loop
+    HLoader {
+        id: eventListLoader
+        sourceComponent: loadEventList ? evListComponent : placeholder
+        opacity: loadEventList ? 1 : 0
+
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        Behavior on opacity { HNumberAnimation {} }
+
+        Component {
+            id: placeholder
+            Item {}
+        }
+
+        Component {
+            id: evListComponent
+            EventList {}
+        }
     }
 
     TypingMembersBar {
@@ -60,8 +80,9 @@ HColumnPage {
 
     Composer {
         id: composer
-        visible: ! chat.roomInfo.left &&
-                 ! chat.roomInfo.inviter_id
+        eventList: loadEventList ? eventListLoader.item : null
+        visible:
+            ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
     }
 
 }

@@ -37,6 +37,8 @@ HLoader {
     property var history: []
     property int historyLength: 20
 
+    readonly property alias appearAnimation: appearAnimation
+
 
     function _show(componentUrl, properties={}) {
         history.unshift([componentUrl, properties])
@@ -89,6 +91,6 @@ HLoader {
         from: -300
         to: 0
         easing.type: Easing.OutBack
-        duration: theme.animationDuration * 2
+        duration: theme.animationDuration * 1.5
     }
 }

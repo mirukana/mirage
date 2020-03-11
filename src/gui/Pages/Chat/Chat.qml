@@ -54,8 +54,9 @@ Item {
             width: 96 * theme.uiScale
             height: width
 
-            source: opacity > 0 ? "../../Base/HBusyIndicator.qml" : ""
-            opacity: ready ? 0 : 1
+            source: "../../Base/HBusyIndicator.qml"
+            active: ready ? 0 : 1
+            opacity: active ? 1 : 0
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }
         }

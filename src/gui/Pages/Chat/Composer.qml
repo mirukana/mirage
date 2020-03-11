@@ -18,6 +18,8 @@ Rectangle {
     Layout.maximumHeight: pageLoader.height / 2
 
 
+    property Item eventList
+
     property string indent: "    "
 
     property var aliases: window.settings.writeAliases
@@ -150,7 +152,7 @@ Rectangle {
                 }
             }
 
-            area.onSelectedTextChanged: if (area.selectedText) {
+            area.onSelectedTextChanged: if (area.selectedText && eventList) {
                 eventList.selectableLabelContainer.clearSelection()
             }
 
@@ -192,6 +194,7 @@ Rectangle {
 
                 area.Keys.onPressed.connect(ev => {
                     if (ev.matches(StandardKey.Copy) &&
+                        eventList &&
                         eventList.selectableLabelContainer.joinedSelection
                     ) {
                         ev.accepted = true
