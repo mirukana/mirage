@@ -76,7 +76,7 @@ Rectangle {
 
             // Keep x scroll pages cached, to limit images having to be
             // reloaded from network.
-            cacheBuffer: height * 2
+            cacheBuffer: Screen.desktopAvailableHeight * 2
 
             onYPosChanged:
                 if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
