@@ -6,12 +6,8 @@ import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
 
-HPage {
+HFlickableColumnPage {
     id: accountSettings
-    hideHeaderUnderHeight: avatarPreferredSize
-    headerLabel.text: qsTr("Account settings for %1").arg(
-        utils.coloredNameHtml(headerName, userId)
-    )
 
 
     property int avatarPreferredSize: 256 * theme.uiScale
@@ -38,9 +34,8 @@ HPage {
             Behavior on color { HColorAnimation {} }
 
             Layout.alignment: Qt.AlignCenter
-            Layout.topMargin: header.visible || index > 0 ? theme.spacing : 0
-            Layout.bottomMargin:
-                header.visible || index < repeater.count - 1? theme.spacing : 0
+            Layout.topMargin: index > 0 ? theme.spacing : 0
+            Layout.bottomMargin: index < repeater.count - 1 ? theme.spacing : 0
 
             Layout.maximumWidth: Math.min(parent.width, 640)
             Layout.preferredWidth:

@@ -4,7 +4,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-HPage {
+HFlickableColumnPage {
     HTabContainer {
         tabModel: [
             qsTr("Sign in"), qsTr("Register"), qsTr("Reset"),

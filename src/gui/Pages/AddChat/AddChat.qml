@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
 
-HPage {
+HFlickableColumnPage {
     id: addChatPage
 
 

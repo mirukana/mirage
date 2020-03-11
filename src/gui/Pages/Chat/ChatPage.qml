@@ -7,7 +7,7 @@ import "Banners"
 import "Timeline"
 import "FileTransfer"
 
-HPage {
+HColumnPage {
     id: chatPage
     leftPadding: 0
     rightPadding: 0
