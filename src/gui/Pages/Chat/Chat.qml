@@ -8,7 +8,9 @@ import "RoomPane"
 
 Item {
     id: chat
+
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
+    onReadyChanged: longLoading = false
 
 
     property string userId
@@ -18,6 +20,7 @@ Item {
     property QtObject roomInfo: null
 
     property bool ready: Boolean(userInfo && roomInfo)
+    property bool longLoading: false
 
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
@@ -39,6 +42,12 @@ Item {
         onTriggered: roomInfo = ModelStore.get(userId, "rooms").find(roomId)
     }
 
+    Timer {
+        interval: 300
+        running: ! ready
+        onTriggered: longLoading = true
+    }
+
     HLoader {
         id: loader
         anchors.rightMargin: ready ? roomPane.visibleSize : 0
@@ -55,7 +64,7 @@ Item {
             height: width
 
             source: "../../Base/HBusyIndicator.qml"
-            active: ready ? 0 : 1
+            active: ready ? 0 : longLoading ? 1 : 0
             opacity: active ? 1 : 0
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }
