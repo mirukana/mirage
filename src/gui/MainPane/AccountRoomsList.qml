@@ -215,7 +215,7 @@ HListView {
 
     Timer {
         id: activateLimiter
-        interval: 300
+        interval: 200
         onTriggered: activate()
     }
 }
