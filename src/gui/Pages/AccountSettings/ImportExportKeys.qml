@@ -36,12 +36,14 @@ HBox {
     HLabel {
         wrapMode: Text.Wrap
         text: qsTr(
-            "The decryption keys for messages you received in encrypted " +
-            "rooms can be exported to a passphrase-protected file.\n\n" +
+            "The decryption keys for messages received in encrypted rooms " +
+            "<b>until present time</b> can be backed up " +
+            "to a passphrase-protected file.<br><br>" +
 
             "You can then import this file on any Matrix account or " +
             "client, to be able to decrypt these messages again."
         )
+        textFormat: Text.StyledText
 
         Layout.fillWidth: true
     }
