@@ -96,9 +96,13 @@ class Model(MutableMapping):
 
     def __delitem__(self, key) -> None:
         with self._write_lock:
-            item  = self._data.pop(key)
+            item              = self._data[key]
+            item.parent_model = None
+            del self._data[key]
+
             index = self._sorted_data.index(item)
             del self._sorted_data[index]
+
             ModelItemDeleted(self.sync_id, index)
 
 
