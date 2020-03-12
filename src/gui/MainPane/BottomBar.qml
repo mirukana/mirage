@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 HRowLayout {
-    id: toolBar
     // Hide filter field overflowing for a sec on size changes
     clip: true
 

@@ -14,24 +14,24 @@ HDrawer {
         if (! hasFocus) mainPaneList.detachedCurrentIndex = false
 
 
-    readonly property bool hasFocus: toolBar.filterField.activeFocus
+    readonly property bool hasFocus: bottomBar.filterField.activeFocus
     readonly property alias mainPaneList: mainPaneList
-    readonly property alias toolBar: toolBar
-    property alias filter: toolBar.roomFilter
+    readonly property alias bottomBar: bottomBar
+    property alias filter: bottomBar.roomFilter
 
 
     function toggleFocus() {
-        if (toolBar.filterField.activeFocus) {
+        if (bottomBar.filterField.activeFocus) {
             pageLoader.takeFocus()
             return
         }
 
         mainPane.open()
-        toolBar.filterField.forceActiveFocus()
+        bottomBar.filterField.forceActiveFocus()
     }
 
     function addccount() {
-        toolBar.addAccountButton.clicked()
+        bottomBar.addAccountButton.clicked()
     }
 
 
@@ -53,8 +53,8 @@ HDrawer {
             Layout.fillHeight: true
         }
 
-        MainPaneToolBar {
-            id: toolBar
+        BottomBar {
+            id: bottomBar
             mainPaneList: mainPaneList
 
             Layout.fillWidth: true
