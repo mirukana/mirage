@@ -117,6 +117,7 @@ class MatrixClient(nio.AsyncClient):
         self.load_rooms_task:    Optional[asyncio.Future] = None
 
         self.upload_monitors: Dict[UUID, nio.TransferMonitor] = {}
+        self.upload_tasks:    Dict[UUID, asyncio.Task]        = {}
 
         self.first_sync_done: asyncio.Event      = asyncio.Event()
         self.first_sync_date: Optional[datetime] = None
@@ -336,7 +337,7 @@ class MatrixClient(nio.AsyncClient):
         if isinstance(uuid, str):
             uuid = UUID(uuid)
 
-        self.upload_monitors[uuid].cancel = True
+        self.upload_tasks[uuid].cancel()
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
@@ -349,6 +350,7 @@ class MatrixClient(nio.AsyncClient):
         except (nio.TransferCancelledError, asyncio.CancelledError):
             log.info("Deleting item for cancelled upload %s", item_uuid)
             del self.upload_monitors[item_uuid]
+            del self.upload_tasks[item_uuid]
             del self.models[room_id, "uploads"][str(item_uuid)]
 
 
@@ -373,8 +375,10 @@ class MatrixClient(nio.AsyncClient):
         monitor     = nio.TransferMonitor(size)
         upload_item = Upload(item_uuid, path, total_size=size)
 
-        self.upload_monitors[item_uuid]                 = monitor
         self.models[room_id, "uploads"][str(item_uuid)] = upload_item
+
+        self.upload_monitors[item_uuid] = monitor
+        self.upload_tasks[item_uuid]    = asyncio.current_task() # type: ignore
 
         def on_transferred(transferred: int) -> None:
             upload_item.uploaded  = transferred
@@ -539,6 +543,7 @@ class MatrixClient(nio.AsyncClient):
             content["filename"] = path.name
 
         del self.upload_monitors[item_uuid]
+        del self.upload_tasks[item_uuid]
         del self.models[room_id, "uploads"][str(upload_item.id)]
 
         await self._local_echo(

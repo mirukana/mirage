@@ -9,6 +9,8 @@ HColumnLayout {
     id: transfer
 
 
+    property bool cancelPending: false
+
     property int msLeft: model.time_left
     property int uploaded: model.uploaded
     readonly property int speed: model.speed
@@ -18,9 +20,7 @@ HColumnLayout {
 
 
     function cancel() {
-        // Python might take a sec to cancel, but we want
-        // immediate visual feedback
-        transfer.height = 0
+        cancelPending = true
         // Python will delete this model item on cancel
         py.callClientCoro(chat.userId, "cancel_upload", [model.id])
     }
@@ -38,8 +38,12 @@ HColumnLayout {
         HIcon {
             svgName: "uploading"
             colorize:
-                transfer.status === "Error" ? theme.colors.negativeBackground :
-                transfer.paused             ? theme.colors.middleBackground :
+                cancelPending || transfer.status === "Error" ?
+                theme.colors.negativeBackground :
+
+                transfer.paused ?
+                theme.colors.middleBackground :
+
                 theme.icons.colorize
 
             Layout.preferredWidth: theme.baseElementsHeight
@@ -51,7 +55,11 @@ HColumnLayout {
             wrapMode: expand ? Text.Wrap : Text.NoWrap
 
             text:
-                status === "Uploading" ? fileName :
+                cancelPending ?
+                qsTr("Cancelling...") :
+
+                status === "Uploading" ?
+                fileName :
 
                 status === "Caching" ?
                 qsTr("Caching %1...").arg(fileName) :
@@ -179,7 +187,7 @@ HColumnLayout {
 
         // TODO: bake this in hprogressbar
         foregroundColor:
-            status === "Error" ?
+            cancelPending || status === "Error" ?
             theme.controls.progressBar.errorForeground :
 
             transfer.paused ?
