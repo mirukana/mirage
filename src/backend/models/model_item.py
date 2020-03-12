@@ -17,7 +17,7 @@ class ModelItem:
 
     Subclasses are also expected to implement `__lt__()`,
     to provide support for comparisons with the `<`, `>`, `<=`, `=>` operators
-    and thus allow a `Model` to sort its `ModelItem`s.
+    and thus allow a `Model` to keep its data sorted.
     """
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":

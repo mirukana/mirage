@@ -4,7 +4,6 @@
 
 - Catch server 5xx errors when sending message and retry 
 - nio ClientTimeout (to fix sync hanging after network changes or hibernation)
-- Update docstrings
 - Update README.md
 
 ## Refactoring

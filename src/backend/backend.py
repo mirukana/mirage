@@ -29,43 +29,42 @@ class Backend:
     """Manage matrix clients and provide other useful general methods.
 
     Attributes:
-        saved_accounts: User config file for saved matrix account details.
+        saved_accounts: User config file for saved matrix account.
 
         ui_settings: User config file for QML interface settings.
 
         ui_state: User data file for saving/restoring QML UI state.
 
-        history: User data file for saving/restoring lines typed into QML
+        history: User data file for saving/restoring text typed into QML
             components.
 
-        models: A dict containing our data models that are synchronized between
-            the Python backend and the QML UI.
+        models: A mapping containing our data models that are
+            synchronized between the Python backend and the QML UI.
             The models should only ever be modified from the backend.
 
-            The dict keys are the `Model`'s synchronization ID,
-            which are in one of these form:
+            If a non-existent key is accessed, it is creating with an
+            associated `Model` and returned.
 
-            - A `ModelItem` type, the type of item that this model stores;
-            - A `(ModelItem, str...)` tuple.
+            The mapping keys are the `Model`'s synchronization ID,
+            which a strings or tuple of strings.
 
             Currently used sync ID throughout the code are:
 
-            - `Account`: logged-in accounts;
+            - `"accounts"`: logged-in accounts;
 
-            - `(Room, "<user_id>")`: rooms a `user_id` account is part of;
+            - `("<user_id>", "rooms")`: rooms our account `user_id` is part of;
 
-            - `(Upload, "<user_id>")`: ongoing or failed file uploads for a
-              `user_id` account;
+            - `("<user_id>", "uploads")`: ongoing or failed file uploads for
+              our account `user_id`;
 
-            - `(Member, "<user_id>", "<room_id>")`: members in the room
-              `room_id` that account `user_id` is part of;
+            - `("<user_id>", "<room_id>", "members")`: members in the room
+              `room_id` that our account `user_id` is part of;
 
-            - `(Event,  "<user_id>", "<room_id>")`: state events and messages
-              in the room `room_id` that account `user_id` is part of.
+            - `("<user_id>", "<room_id>", "events")`: state events and messages
+              in the room `room_id` that our account `user_id` is part of.
 
-        clients: A dict containing the logged `MatrixClient` objects we manage.
-            Each client represents a logged-in account,
-            identified by its `user_id`.
+        clients: A `{user_id: MatrixClient}` dict for the logged-in clients
+            we managed. Every client is logged to one matrix account.
 
         media_cache: A matrix media cache for downloaded files.
     """

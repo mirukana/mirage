@@ -55,7 +55,7 @@ class CoroutineDone(PyOtherSideEvent):
 
 @dataclass
 class LoopException(PyOtherSideEvent):
-    """Indicate that an uncaught exception occured in the asyncio loop."""
+    """Indicate an uncaught exception occurance in the asyncio loop."""
 
     message:   str                 = field()
     exception: Optional[Exception] = field()
@@ -64,6 +64,8 @@ class LoopException(PyOtherSideEvent):
 
 @dataclass
 class ModelItemInserted(PyOtherSideEvent):
+    """Indicate a `ModelItem` insertion into a `Backend` `Model`."""
+
     sync_id: SyncId      = field()
     index:   int         = field()
     item:    "ModelItem" = field()
@@ -71,6 +73,8 @@ class ModelItemInserted(PyOtherSideEvent):
 
 @dataclass
 class ModelItemFieldChanged(PyOtherSideEvent):
+    """Indicate a `ModelItem`'s field value change in a `Backend` `Model`."""
+
     sync_id:         SyncId = field()
     item_index_then: int    = field()
     item_index_now:  int    = field()
@@ -80,10 +84,14 @@ class ModelItemFieldChanged(PyOtherSideEvent):
 
 @dataclass
 class ModelItemDeleted(PyOtherSideEvent):
+    """Indicate the removal of a `ModelItem` from a `Backend` `Model`."""
+
     sync_id: SyncId = field()
     index:   int    = field()
 
 
 @dataclass
 class ModelCleared(PyOtherSideEvent):
+    """Indicate that a `Backend` `Model` was cleared."""
+
     sync_id: SyncId = field()

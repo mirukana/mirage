@@ -14,7 +14,7 @@ class ModelStore(UserDict):
 
     The dict keys must be the sync ID of `Model` values.
     If a non-existent key is accessed, a corresponding `Model` will be
-    created, put into the interal `data` dict and returned.
+    created, put into the internal `data` dict and returned.
     """
 
     data: Dict[SyncId, Model] = field(default_factory=dict)

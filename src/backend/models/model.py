@@ -16,22 +16,17 @@ if TYPE_CHECKING:
 
 
 class Model(MutableMapping):
-    """A mapping of `{identifier: ModelItem}` synced between Python & QML.
+    """A mapping of `{ModelItem.id: ModelItem}` synced between Python & QML.
 
     From the Python side, the model is usable like a normal dict of
     `ModelItem` subclass objects.
     Different types of `ModelItem` must not be mixed in the same model.
 
-    When items are added, changed or removed from the model, a synchronization
-    with QML is scheduled.
-    The model will synchronize with QML no more than every 0.25s, for
-    performance reasons; though it is possible to request an instant sync
-    via `sync_now()` for certain cases when this delay is unacceptable.
+    When items are added, replaced, removed, have field value changes, or the
+    model is cleared, corresponding `PyOtherSideEvent` are fired to inform
+    QML of the changes so that it can keep its models in sync.
 
-    Model data is sent to QML using a `ModelUpdated` event from the
-    `pyotherside_events` module.
-    The data is a list of serialized `ModelItem` dicts, as expected
-    by QML for components like `ListView`.
+    Items in the model are kept sorted using the `ModelItem` subclass `__lt__`.
     """
 
     def __init__(self, sync_id: SyncId) -> None:

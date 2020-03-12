@@ -94,7 +94,15 @@ class Media:
 
     @property
     def local_path(self) -> Path:
-        """The path where the file either exists or should be downloaded."""
+        """The path where the file either exists or should be downloaded.
+
+        The returned paths are in this form:
+        ```
+            <base download folder>/<homeserver domain>/
+            <file title>_<mxc id>.<file extension>`
+        ```
+        e.g. `~/.cache/mirage/downloads/matrix.org/foo_Hm24ar11i768b0el.png`.
+        """
 
         parsed   = urlparse(self.mxc)
         mxc_id   = parsed.path.lstrip("/")
@@ -255,8 +263,12 @@ class Thumbnail(Media):
         """The path where the thumbnail either exists or should be downloaded.
 
         The returned paths are in this form:
-        `<base thumbnail folder>/<homeserver domain>/<standard size>/<mxc id>`,
-        e.g. `~/.cache/appname/thumbnails/matrix.org/32x32/Hm24ar11i768b0el`.
+        ```
+            <base thumbnail folder>/<homeserver domain>/<standard size>/
+            <file title>_<mxc id>.<file extension>`
+        ```
+        e.g.
+        `~/.cache/mirage/thumbnails/matrix.org/32x32/foo_Hm24ar11i768b0el.png`.
         """
 
         size     = self.normalize_size(self.server_size or self.wanted_size)
@@ -271,11 +283,15 @@ class Thumbnail(Media):
 
 
     async def _get_local_existing_file(self) -> Path:
+        """Return an existing thumbnail path or raise `FileNotFoundError`.
+
+        If we have a bigger size thumbnail downloaded than the `wanted_size`
+        for the media, return it instead of asking the server for a
+        smaller thumbnail.
+        """
+
         if self.local_path.exists():
             return self.local_path
-
-        # If we have a bigger size thumbnail than the wanted_size for this pic,
-        # return it instead of asking the server for a smaller thumbnail.
 
         try_sizes = ((32, 32), (96, 96), (320, 240), (640, 480), (800, 600))
         parts     = list(self.local_path.parts)
@@ -295,6 +311,8 @@ class Thumbnail(Media):
 
 
     async def _get_remote_data(self) -> bytes:
+        """Return the (decrypted) media file's content from the server."""
+
         parsed = urlparse(self.mxc)
 
         if self.crypt_dict:

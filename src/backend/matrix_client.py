@@ -357,7 +357,7 @@ class MatrixClient(nio.AsyncClient):
     async def _send_file(
         self, item_uuid: UUID, room_id: str, path: Union[Path, str],
     ) -> None:
-        """Monitorably upload a file + thumbnail and send the built event."""
+        """Upload and monitor a file + thumbnail and send the built event."""
 
         # TODO: this function is way too complex, and most of it should be
         # refactored into nio.
@@ -993,7 +993,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def clear_events(self, room_id: str) -> None:
-        """Remove every `Event` of a room we registred in our model.
+        """Remove every `Event` of a room we registered in our model.
 
         The events will be gone from the UI, until the client is restarted.
         """

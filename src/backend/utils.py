@@ -26,7 +26,7 @@ auto = autostr
 
 
 class AutoStrEnum(Enum):
-    """An Enum where auto() assigns the member's name instead of an int.
+    """An Enum where auto() assigns the member's name instead of an integer.
 
     Example:
     >>> class Fruits(AutoStrEnum): apple = auto()
@@ -130,12 +130,24 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
 
     Returns:
 
-    - Return the member's actual value for `Enum` members
-    - A `file://...` string for `Path` objects
-    - Strings for `UUID` objects
-    - A number of milliseconds for `datetime.timedelta` objects
-    - The class `__name__` for class types.
-    - `ModelItem.serialized` for `ModelItem`s
+    - For `int`, `float`, `bool`, `str` and `datetime`: the unchanged value
+
+    - For `Sequence` and `Mapping` subclasses (includes `list` and `dict`):
+      a JSON dump if `json_list_dicts` is `True`, else the unchanged value
+
+    - If the value as a `serialized` attribute or property, return that
+
+    - For `Enum` members, the actual value of the member
+
+    - For `Path` objects, a `file://<path...>` string
+
+    - For `UUID` object: the UUID in string form
+
+    - For `timedelta` objects: the delta as a number of milliseconds `int`
+
+    - For class types: the class `__name__`
+
+    - For anything else: the unchanged value
     """
 
     if isinstance(value, (int, float, bool, str, datetime)):
