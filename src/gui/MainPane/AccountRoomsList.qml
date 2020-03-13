@@ -22,13 +22,20 @@ HListView {
     highlight: Rectangle {
         id: highlightRectangle
         y:
+            ! currentItem ?
+            0 :
+
             selectedRoom ?
             currentItem.y + currentItem.account.height +
             currentItem.roomList.currentItem.y :
+
             currentItem.y
 
         width: mainPaneList.width
         height:
+            ! currentItem ?
+            0 :
+
             selectedRoom ?
             currentItem.roomList.currentItem.height :
             currentItem.account.height
