@@ -2,7 +2,6 @@
 
 ## Before release
 
-- Atomic
 - Catch server 5xx errors when sending message and retry 
 - Update README.md
 

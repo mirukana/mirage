@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
 import aiofiles
 
 from .theme_parser import convert_to_qml
-from .utils import dict_update_recursive
+from .utils import atomic_write, dict_update_recursive
 
 if TYPE_CHECKING:
     from .backend import Backend
@@ -88,7 +88,7 @@ class DataFile:
             if not self.create_missing and not self.path.exists():
                 continue
 
-            async with aiofiles.open(self.path, "w") as new:
+            async with atomic_write(self.path) as new:
                 await new.write(self._to_write)
 
             self._to_write = None
