@@ -24,6 +24,11 @@ Item {
     readonly property alias pressAnimation: pressAnimation
 
 
+    function reloadSettings() {
+        py.loadSettings(() => { mainUI.pressAnimation.start() })
+    }
+
+
     SequentialAnimation {
         id: pressAnimation
         HNumberAnimation {

@@ -243,6 +243,10 @@ class Backend:
 
     # General functions
 
+    async def get_config_dir(self) -> Path:
+        return Path(self.appdirs.user_config_dir)
+
+
     async def load_settings(self) -> tuple:
         """Return parsed user config files."""
 

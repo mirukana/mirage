@@ -45,6 +45,12 @@ HDrawer {
     HColumnLayout {
         anchors.fill: parent
 
+        TopBar {
+            Layout.fillWidth: true
+            Layout.fillHeight: false
+            Layout.preferredHeight: theme.baseElementsHeight
+        }
+
         AccountRoomsList {
             id: mainPaneList
             clip: true
@@ -60,7 +66,6 @@ HDrawer {
             Layout.fillWidth: true
             Layout.fillHeight: false
             Layout.preferredHeight: theme.baseElementsHeight
-
         }
     }
 }

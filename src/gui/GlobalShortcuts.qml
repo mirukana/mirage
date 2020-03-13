@@ -33,33 +33,34 @@ Item {
         flickTarget
 
 
+    function toggleConsole() {
+        if (debugConsole) {
+            debugConsole.visible = ! debugConsole.visible
+
+        } else if (! defaultDebugConsoleLoader.active) {
+            defaultDebugConsoleLoader.active = true
+
+        } else {
+            defaultDebugConsole.visible = ! defaultDebugConsole.visible
+        }
+    }
+
+
     // App
 
     HShortcut {
-        enabled: debugMode
         sequences: settings.keys.startPythonDebugger
         onActivated: py.call("BRIDGE.pdb")
     }
 
     HShortcut {
-        enabled: debugMode
         sequences: settings.keys.toggleDebugConsole
-        onActivated:  {
-            if (debugConsole) {
-                debugConsole.visible = ! debugConsole.visible
-
-            } else if (! defaultDebugConsoleLoader.active) {
-                defaultDebugConsoleLoader.active = true
-
-            } else {
-                defaultDebugConsole.visible = ! defaultDebugConsole.visible
-            }
-        }
+        onActivated: toggleConsole()
     }
 
     HShortcut {
         sequences: settings.keys.reloadConfig
-        onActivated: py.loadSettings(() => { mainUI.pressAnimation.start() })
+        onActivated: mainUI.reloadSettings()
     }
 
     HShortcut {

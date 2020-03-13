@@ -263,6 +263,11 @@ ui:
 mainPane:
     color background: colors.mediumBackground
 
+    topBar:
+        color background:       colors.strongBackground
+        color placeholderLogo:  colors.accentElement
+        color nameVersionLabel: colors.text
+
     account:
         real collapsedOpacity: 0.3
         color background:      "transparent"

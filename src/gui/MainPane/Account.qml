@@ -7,18 +7,17 @@ import "../Base"
 
 HTileDelegate {
     id: account
-    spacing: 0
-    topPadding: model.index > 0 ? theme.spacing / 2 : 0
-    bottomPadding: topPadding
-
+    rightPadding: 0
     backgroundColor: theme.mainPane.account.background
     opacity: collapsed && ! mainPane.filter ?
              theme.mainPane.account.collapsedOpacity : 1
 
-    title.color: theme.mainPane.account.name
     title.text: model.display_name || model.id
     title.font.pixelSize: theme.fontSize.big
-    title.leftPadding: theme.spacing
+    title.color:
+        hovered ?
+        utils.nameColor(model.display_name || model.id.substring(1)) :
+        theme.mainPane.account.name
 
     image: HUserAvatar {
         userId: model.id
@@ -68,63 +67,66 @@ HTileDelegate {
     }
 
 
+    Behavior on title.color { HColorAnimation {} }
     Behavior on opacity { HNumberAnimation {} }
 
 
-    HButton {
-        id: addChat
-        iconItem.small: true
-        icon.name: "add-chat"
-        backgroundColor: "transparent"
-        toolTip.text: qsTr("Add new chat")
-        onClicked: pageLoader.showPage(
-            "AddChat/AddChat", {userId: model.id},
-        )
+    HRowLayout {
+        HButton {
+            id: addChat
+            iconItem.small: true
+            icon.name: "add-chat"
+            backgroundColor: "transparent"
+            toolTip.text: qsTr("Add new chat")
+            onClicked: pageLoader.showPage(
+                "AddChat/AddChat", {userId: model.id},
+            )
 
-        leftPadding: theme.spacing / 2
-        rightPadding: leftPadding
+            leftPadding: theme.spacing / 2
+            rightPadding: leftPadding
 
-        opacity: expand.loading ? 0 : 1
-        visible: opacity > 0 && Layout.maximumWidth > 0
+            opacity: expand.loading ? 0 : 1
+            visible: opacity > 0 && Layout.maximumWidth > 0
 
-        Layout.fillHeight: true
-        Layout.maximumWidth:
-            account.width >= 100 * theme.uiScale ?  implicitWidth : 0
+            Layout.fillHeight: true
+            Layout.maximumWidth:
+                account.width >= 100 * theme.uiScale ?  implicitWidth : 0
 
-        Behavior on Layout.maximumWidth { HNumberAnimation {} }
-        Behavior on opacity { HNumberAnimation {} }
-    }
-
-    HButton {
-        id: expand
-        loading:
-            ! model.first_sync_done || model.profile_updated < new Date(1)
-        iconItem.small: true
-        icon.name: "expand"
-        backgroundColor: "transparent"
-        toolTip.text: collapsed ? qsTr("Expand") : qsTr("Collapse")
-        onClicked: account.toggleCollapse()
-
-        leftPadding: theme.spacing / 2
-        rightPadding: leftPadding
-
-        opacity: ! loading && mainPane.filter ? 0 : 1
-        visible: opacity > 0 && Layout.maximumWidth > 0
-
-        Layout.fillHeight: true
-        Layout.maximumWidth:
-            account.width >= 120 * theme.uiScale ?  implicitWidth : 0
-
-
-        iconItem.transform: Rotation {
-            origin.x: expand.iconItem.width / 2
-            origin.y: expand.iconItem.height / 2
-            angle: expand.loading ? 0 : collapsed ? 180 : 90
-
-            Behavior on angle { HNumberAnimation {} }
+            Behavior on Layout.maximumWidth { HNumberAnimation {} }
+            Behavior on opacity { HNumberAnimation {} }
         }
 
-        Behavior on Layout.maximumWidth { HNumberAnimation {} }
-        Behavior on opacity { HNumberAnimation {} }
+        HButton {
+            id: expand
+            loading:
+                ! model.first_sync_done || model.profile_updated < new Date(1)
+            iconItem.small: true
+            icon.name: "expand"
+            backgroundColor: "transparent"
+            toolTip.text: collapsed ? qsTr("Expand") : qsTr("Collapse")
+            onClicked: account.toggleCollapse()
+
+            leftPadding: theme.spacing / 2
+            rightPadding: theme.spacing
+
+            opacity: ! loading && mainPane.filter ? 0 : 1
+            visible: opacity > 0 && Layout.maximumWidth > 0
+
+            Layout.fillHeight: true
+            Layout.maximumWidth:
+                account.width >= 120 * theme.uiScale ?  implicitWidth : 0
+
+
+            iconItem.transform: Rotation {
+                origin.x: expand.iconItem.width / 2
+                origin.y: expand.iconItem.height / 2
+                angle: expand.loading ? 0 : collapsed ? 180 : 90
+
+                Behavior on angle { HNumberAnimation {} }
+            }
+
+            Behavior on Layout.maximumWidth { HNumberAnimation {} }
+            Behavior on opacity { HNumberAnimation {} }
+        }
     }
 }

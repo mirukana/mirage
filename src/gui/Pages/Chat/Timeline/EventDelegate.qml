@@ -168,7 +168,6 @@ HColumnLayout {
         HMenuItem {
             icon.name: "debug"
             text: qsTr("Debug this event")
-            visible: debugMode
             onTriggered: eventContent.debugConsoleLoader.toggle()
         }
 
