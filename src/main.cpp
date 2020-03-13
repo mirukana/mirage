@@ -8,6 +8,7 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 #include <QFileInfo>
+#include <QQuickStyle>
 
 #include "../submodules/RadialBarDemo/radialbar.h"
 
@@ -16,6 +17,9 @@
 
 
 int main(int argc, char *argv[]) {
+    // Force a default universal QML style, we have our own theming mechanism
+    qputenv("QT_STYLE_OVERRIDE","Fusion");
+
     // Define some basic info about the app before creating the QApplication
     QApplication::setOrganizationName("mirage");
     QApplication::setApplicationName("mirage");
