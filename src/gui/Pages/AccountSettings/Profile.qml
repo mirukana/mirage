@@ -183,7 +183,7 @@ HGridLayout {
 
                 id: aliasField
 
-                label.text: qsTr("Multi-account composer alias:")
+                label.text: qsTr("Composer alias:")
 
                 errorLabel.text:
                     alreadyTakenBy ?

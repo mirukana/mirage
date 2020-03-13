@@ -14,8 +14,11 @@ HColumnLayout {
 
 
     HRowLayout {
+        spacing: parent.spacing
+
         HLabel {
             id: label
+            wrapMode: Text.Wrap
 
             Layout.fillWidth: true
         }
