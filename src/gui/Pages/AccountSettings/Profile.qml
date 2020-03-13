@@ -171,9 +171,15 @@ HGridLayout {
 
                 property bool changed: field.text !== currentAlias
 
+
                 id: aliasField
                 label.text: qsTr("Multi-account composer alias:")
                 field.onAccepted: applyChanges()
+                field.placeholderText: (
+                    nameField.field.text ||
+                    accountInfo.display_name ||
+                    userId.substring(1)
+                )[0]
 
                 toolTip.text: qsTr(
                     "From any account, start a message with specified alias " +
