@@ -2,8 +2,8 @@
 
 ## Before release
 
-- Catch server 5xx errors when sending message and retry 
-- Update README.md
+- Write a real README.md
+- Test everything
 
 ## Refactoring
 
@@ -25,6 +25,8 @@
 - Drop the `buttonModel`/`buttonCallbacks` `HBox` approach, be more declarative
 
 ## Issues
+
+- Catch server 5xx errors when sending message and retry 
 
 - Popups and room settings can't be scrolled when not enough height to show all
 
