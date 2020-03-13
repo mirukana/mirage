@@ -268,7 +268,6 @@ mainPane:
 
     topBar:
         color background:       colors.strongBackground
-        color placeholderLogo:  icons.colorize
         color nameVersionLabel: colors.text
 
     listView:

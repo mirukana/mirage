@@ -13,13 +13,20 @@ Rectangle {
 
         HButton {
             backgroundColor: "transparent"
-            icon.name: "placeholder-logo"
-            icon.color: theme.mainPane.topBar.placeholderLogo
+            icon.name: "settings"
+            toolTip.text: qsTr("Open config folder")
+
+            onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+
+            Layout.fillHeight: true
+        }
+
+        HButton {
+            backgroundColor: "transparent"
 
             text: qsTr("%1 %2")
                   .arg(Qt.application.displayName).arg(Qt.application.version)
             label.color: theme.mainPane.topBar.nameVersionLabel
-            label.horizontalAlignment: Text.AlignLeft
             toolTip.text: qsTr("Open project repository")
 
             onClicked:
@@ -35,26 +42,6 @@ Rectangle {
             toolTip.text: qsTr("Developper console")
 
             onClicked: mainUI.shortcuts.toggleConsole()  // FIXME
-
-            Layout.fillHeight: true
-        }
-
-        HButton {
-            backgroundColor: "transparent"
-            icon.name: "reload-config-files"
-            toolTip.text: qsTr("Reload config files")
-
-            onClicked: mainUI.reloadSettings()
-
-            Layout.fillHeight: true
-        }
-
-        HButton {
-            backgroundColor: "transparent"
-            icon.name: "settings"
-            toolTip.text: qsTr("Open config folder")
-
-            onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
 
             Layout.fillHeight: true
         }
