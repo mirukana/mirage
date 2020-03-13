@@ -90,9 +90,7 @@
 
 - Multiaccount aliases:
   - Warn when conflict with another alias
-  - Add an explanation tooltip
   - Prevent sending messages with a user not in the current room
-  - Support \ escaping
 
 - Accept drag and drop to upload files or set a new avatar 
 - Improve room tooltips, e.g. show last messages

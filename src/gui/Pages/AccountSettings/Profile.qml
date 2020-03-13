@@ -172,8 +172,15 @@ HGridLayout {
                 property bool changed: field.text !== currentAlias
 
                 id: aliasField
-                label.text: qsTr("Write alias:")
+                label.text: qsTr("Multi-account composer alias:")
                 field.onAccepted: applyChanges()
+
+                toolTip.text: qsTr(
+                    "From any account, start a message with specified alias " +
+                    "followed by a space to type and send as this account.\n" +
+                    "This account must a member of the room too.\n" +
+                    "To ignore the alias when typing, prepend it with a space."
+                )
 
                 Component.onCompleted: field.text = currentAlias
 

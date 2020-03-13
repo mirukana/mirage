@@ -6,17 +6,8 @@ import QtQuick.Layouts 1.12
 
 ToolTip {
     id: toolTip
-    delay: theme.controls.toolTip.delay
+    delay: instant ? 0 : theme.controls.toolTip.delay
     padding: background.border.width
-
-
-    property alias label: label
-    property alias backgroundColor: background.color
-
-    readonly property bool hideNow: ! window.hovered
-
-    onHideNowChanged: if (visible && hideNow) toolTip.hide()
-
 
     background: Rectangle {
         id: background
@@ -49,6 +40,25 @@ ToolTip {
     exit: Transition {
         HNumberAnimation { property: "opacity"; to: 0.0 }
     }
+
+    onHideNowChanged: if (visible && hideNow) toolTip.hide()
+
+
+    property bool instant: false
+
+    property alias label: label
+    property alias backgroundColor: background.color
+
+    readonly property bool hideNow: ! window.hovered
+
+
+    function instantShow() {
+        if (visible) return
+        instant = true
+        open()
+        instant = false
+    }
+
 
     TapHandler {
         onTapped: toolTip.hide()

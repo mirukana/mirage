@@ -1,21 +1,54 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
-Column {
+HColumnLayout {
     spacing: theme.spacing / 2
 
-    property alias label: fieldLabel
-    property alias field: textField
 
-    HLabel {
-        id: fieldLabel
+    property alias label: label
+    property alias field: field
+    property alias toolTip: toolTip
+
+
+    HRowLayout {
+        HLabel {
+            id: label
+
+            Layout.fillWidth: true
+        }
+
+        HIcon {
+            svgName: "field-tooltip-available"
+            visible: toolTip.text
+
+            Binding on colorize {
+                value: theme.colors.accentElement
+                when: hoverHandler.hovered || toolTip.visible
+            }
+        }
+
+        HoverHandler {
+            id: hoverHandler
+            enabled: toolTip.text
+        }
+
+        TapHandler {
+            onTapped: toolTip.instantShow()
+            enabled: toolTip.text
+        }
+
+        HToolTip {
+            id: toolTip
+            visible: toolTip.text && hoverHandler.hovered
+        }
     }
 
     HTextField {
-        id: textField
+        id: field
         radius: 2
-        width: parent.width
+
+        Layout.fillWidth: true
     }
 }
