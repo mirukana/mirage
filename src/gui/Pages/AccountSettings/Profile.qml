@@ -155,6 +155,7 @@ HGridLayout {
 
                 id: nameField
                 label.text: qsTr("Display name:")
+                field.maximumLength: 255
                 field.onAccepted: applyChanges()
 
                 Component.onCompleted: field.text = accountInfo.display_name
