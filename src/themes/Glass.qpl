@@ -33,7 +33,7 @@ colors:
     int hue: 240
 
     real intensity:            1.0
-    real coloredTextIntensity: intensity * 75
+    real coloredTextIntensity: intensity * 71
 
     int saturation:            60
     int bgSaturation:          saturation / 1.5
@@ -235,7 +235,7 @@ controls:
 
     displayName:
         int saturation: colors.coloredTextSaturation
-        int lightness:  colors.coloredTextIntensity - 4
+        int lightness:  colors.coloredTextIntensity
 
 
 // Specific interface parts
