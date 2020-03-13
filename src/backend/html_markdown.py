@@ -120,7 +120,9 @@ class HTMLProcessor:
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
 
     quote_regex = re.compile(
-        r"(^|<p/?>|<br/?>|<h\d/?>)(\s*&gt;.*?)(</?p>|<br/?>|</?h\d>|$)",
+        r"(^|<span/?>|<p/?>|<br/?>|<h\d/?>)"
+        r"(\s*&gt;.*?)"
+        r"(<span/?>|</?p>|<br/?>|</?h\d>|$)",
         re.MULTILINE,
     )
 
@@ -178,12 +180,16 @@ class HTMLProcessor:
             return html
 
         # Client-side modifications
-        if inline:
-            return self.inline_quote_regex.sub(
-                r'\1<span class="quote">\2</span>', html,
-            )
 
-        return self.quote_regex.sub(r'\1<span class="quote">\2</span>\3', html)
+        html = self.quote_regex.sub(r'\1<span class="quote">\2</span>\3', html)
+
+        if not inline:
+            return html
+
+        return self.inline_quote_regex.sub(
+            r'\1<span class="quote">\2</span>', html,
+        )
+
 
 
     def sanitize_settings(
