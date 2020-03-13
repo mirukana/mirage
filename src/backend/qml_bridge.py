@@ -2,6 +2,10 @@
 
 """Install `uvloop` if possible and provide a `QMLBridge`."""
 
+# WARNING: make sure to not top-level import the media_cache module here,
+# directly or indirectly via another module import (e.g. backend).
+# See https://stackoverflow.com/a/55918049
+
 import asyncio
 import logging as log
 import signal
@@ -11,7 +15,6 @@ from operator import attrgetter
 from threading import Thread
 from typing import Coroutine, Sequence
 
-from .backend import Backend
 from .pyotherside_events import CoroutineDone, LoopException
 
 try:
@@ -36,6 +39,7 @@ class QMLBridge:
     """
 
     def __init__(self) -> None:
+        from .backend import Backend
         self.backend: Backend = Backend()
 
         self._loop = asyncio.get_event_loop()

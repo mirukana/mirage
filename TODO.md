@@ -90,7 +90,6 @@
 
 - Multiaccount aliases:
   - Warn when conflict with another alias
-  - Forbid spaces?
   - Add an explanation tooltip
   - Prevent sending messages with a user not in the current room
   - Support \ escaping

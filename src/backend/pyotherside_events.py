@@ -1,15 +1,14 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Optional
 
 import pyotherside
 
-from .models import SyncId
 from .utils import serialize_value_for_qml
 
 if TYPE_CHECKING:
+    from .models import SyncId
     from .models.model_item import ModelItem
 
 
@@ -66,7 +65,7 @@ class LoopException(PyOtherSideEvent):
 class ModelItemInserted(PyOtherSideEvent):
     """Indicate a `ModelItem` insertion into a `Backend` `Model`."""
 
-    sync_id: SyncId      = field()
+    sync_id: "SyncId"    = field()
     index:   int         = field()
     item:    "ModelItem" = field()
 
@@ -75,23 +74,23 @@ class ModelItemInserted(PyOtherSideEvent):
 class ModelItemFieldChanged(PyOtherSideEvent):
     """Indicate a `ModelItem`'s field value change in a `Backend` `Model`."""
 
-    sync_id:         SyncId = field()
-    item_index_then: int    = field()
-    item_index_now:  int    = field()
-    changed_field:   str    = field()
-    field_value:     Any    = field()
+    sync_id:         "SyncId" = field()
+    item_index_then: int      = field()
+    item_index_now:  int      = field()
+    changed_field:   str      = field()
+    field_value:     Any      = field()
 
 
 @dataclass
 class ModelItemDeleted(PyOtherSideEvent):
     """Indicate the removal of a `ModelItem` from a `Backend` `Model`."""
 
-    sync_id: SyncId = field()
-    index:   int    = field()
+    sync_id: "SyncId" = field()
+    index:   int      = field()
 
 
 @dataclass
 class ModelCleared(PyOtherSideEvent):
     """Indicate that a `Backend` `Model` was cleared."""
 
-    sync_id: SyncId = field()
+    sync_id: "SyncId" = field()
