@@ -1,15 +1,18 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import "../PythonBridge"
 
 HImage {
     id: image
     inderterminateProgressBar: isMxc
     source: sourceOverride || (show ? cachedPath : "")
+
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
     onVisibleChanged: Qt.callLater(update)
     onMxcChanged: Qt.callLater(update)
+    Component.onDestruction: if (getFuture) getFuture.cancel()
 
 
     property string mxc
@@ -20,6 +23,9 @@ HImage {
 
     property bool show: false
     property string cachedPath: ""
+
+    property Future getFuture: null
+
     readonly property bool isMxc: mxc.startsWith("mxc://")
 
 
@@ -45,15 +51,16 @@ HImage {
                        [image.mxc, image.title, w, h, cryptDict] :
                        [image.mxc, image.title, cryptDict]
 
-        py.callCoro("media_cache." + method, args, path => {
+        getFuture = py.callCoro("media_cache." + method, args, path => {
                 if (! image) return
                 if (image.cachedPath !== path) image.cachedPath = path
 
                 image.broken = false
                 image.show   = image.visible
 
-            }, () => {
-                image.broken = true
+            }, (type, args, error, traceback) => {
+                print(`Error retrieving ${mxc} (${title}):\n${traceback}`)
+                if (image) image.broken = true
             },
         )
     }

@@ -27,10 +27,7 @@ QtObject {
             const type = py.getattr(py.getattr(error, "__class__"), "__name__")
             const args = py.getattr(error, "args")
 
-            if (type === "CancelledError") {
-                console.warn(`python: cancelled: ${uuid}`)
-                return
-            }
+            if (type === "CancelledError") return
 
             if (onError) {
                 onError(type, args, error, traceback)
