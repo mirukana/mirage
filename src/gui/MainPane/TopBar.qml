@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 Rectangle {
+    clip: true
     color: theme.mainPane.topBar.background
 
     HRowLayout {

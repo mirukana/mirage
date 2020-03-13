@@ -23,6 +23,9 @@ HTileDelegate {
         userId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
+        rotation: mainPane.small ? -45 : 0
+
+        Behavior on rotation { HNumberAnimation {} }
     }
 
     contextMenu: HMenu {
@@ -69,7 +72,23 @@ HTileDelegate {
 
     Behavior on title.color { HColorAnimation {} }
     Behavior on opacity { HNumberAnimation {} }
+    Behavior on leftPadding { HNumberAnimation {} }
+    Behavior on topPadding { HNumberAnimation {} }
 
+    Binding on leftPadding {
+        value: (mainPane.minimumSize - loadedImage.width) / 2
+        when: mainPane.small
+    }
+
+    Binding on topPadding {
+        value: theme.spacing
+        when: mainPane.small
+    }
+
+    Binding on bottomPadding {
+        value: theme.spacing
+        when: mainPane.small
+    }
 
     HRowLayout {
         HButton {

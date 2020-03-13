@@ -7,6 +7,7 @@ import "../Base"
 HListView {
     id: mainPaneList
     model: ModelStore.get("accounts")
+    spacing: mainPane.small ? theme.spacing : 0
 
     delegate: AccountRoomsDelegate {
         width: mainPaneList.width
@@ -32,10 +33,14 @@ HListView {
             currentItem.roomList.currentItem.height :
             currentItem.account.height
 
-        color: theme.controls.listView.highlight
+        color:
+            mainPane.small ?
+            theme.controls.listView.smallPaneHighlight :
+            theme.controls.listView.highlight
 
         Behavior on y { HNumberAnimation { id: yAnimation } }
         Behavior on height { HNumberAnimation {} }
+        Behavior on color { HColorAnimation {} }
 
         Binding {
             target: mainPaneList
@@ -67,6 +72,7 @@ HListView {
     readonly property var activeAccountIndex:
         hasActiveAccount ?
         model.findIndex(window.uiState.pageProperties.userId) : null
+
 
 
     function previous() {

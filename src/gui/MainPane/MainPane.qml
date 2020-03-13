@@ -8,16 +8,22 @@ HDrawer {
     id: mainPane
     saveName: "mainPane"
     color: theme.mainPane.background
-    minimumSize: theme.controls.avatar.size + theme.spacing * 2
+    minimumSize: bottomBar.addAccountButton.width
 
     onHasFocusChanged:
         if (! hasFocus) mainPaneList.detachedCurrentIndex = false
 
 
+
+    property alias filter: bottomBar.roomFilter
+
+    readonly property bool small:
+        width < theme.controls.avatar.size + theme.spacing * 2
+
     readonly property bool hasFocus: bottomBar.filterField.activeFocus
     readonly property alias mainPaneList: mainPaneList
+    readonly property alias topBar: topBar
     readonly property alias bottomBar: bottomBar
-    property alias filter: bottomBar.roomFilter
 
 
     function toggleFocus() {
@@ -46,6 +52,8 @@ HDrawer {
         anchors.fill: parent
 
         TopBar {
+            id: topBar
+
             Layout.fillWidth: true
             Layout.fillHeight: false
             Layout.preferredHeight: theme.baseElementsHeight

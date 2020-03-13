@@ -156,7 +156,8 @@ controls:
         color subtitle: colors.dimText
 
     listView:
-        color highlight: colors.strongBackground
+        color highlight:          colors.strongBackground
+        color smallPaneHighlight: colors.accentBackground
 
     textField:
         color background:        colors.strongBackground

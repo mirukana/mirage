@@ -158,4 +158,20 @@ HTileDelegate {
 
 
     Behavior on opacity { HNumberAnimation {} }
+    Behavior on leftPadding { HNumberAnimation {} }
+
+    Binding on leftPadding {
+        value: (mainPane.minimumSize - loadedImage.width) / 2
+        when: mainPane.small
+    }
+
+    Binding on topPadding {
+        value: leftPadding / 2
+        when: mainPane.small
+    }
+
+    Binding on bottomPadding {
+        value: leftPadding / 2
+        when: mainPane.small
+    }
 }
