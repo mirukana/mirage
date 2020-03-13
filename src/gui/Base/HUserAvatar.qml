@@ -35,9 +35,9 @@ HAvatar {
                 "user-power-50"
 
             colorize:
-                invited ? theme.chat.roomPane.member.invitedIcon :
-                admin ? theme.chat.roomPane.member.adminIcon :
-                theme.chat.roomPane.member.moderatorIcon
+                invited ? theme.chat.roomPane.listView.member.invitedIcon :
+                admin ? theme.chat.roomPane.listView.member.adminIcon :
+                theme.chat.roomPane.listView.member.moderatorIcon
 
             HoverHandler { id: membershipIcon }
 

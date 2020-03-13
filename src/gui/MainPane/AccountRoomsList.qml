@@ -231,4 +231,10 @@ HListView {
         interval: 200
         onTriggered: activate()
     }
+
+    Rectangle {
+        anchors.fill: parent
+        z: -100
+        color: theme.mainPane.listView.background
+    }
 }

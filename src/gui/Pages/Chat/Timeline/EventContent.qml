@@ -154,7 +154,7 @@ HRowLayout {
                     (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
                 )
                 height: contentColumn.height
-                z: -1
+                z: -100
                 color: isOwn?
                        theme.chat.message.ownBackground :
                        theme.chat.message.background

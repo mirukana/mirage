@@ -27,56 +27,72 @@ HColumnLayout {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        Rectangle {
+            anchors.fill: parent
+            z: -100
+            color: theme.chat.roomPane.listView.background
+        }
     }
 
-    HRowLayout {
+    Rectangle {
+        color: theme.chat.roomPane.bottomBar.background
+
+        Layout.fillWidth: true
         Layout.minimumHeight: theme.baseElementsHeight
         Layout.maximumHeight: Layout.minimumHeight
 
-        HTextField {
-            id: filterField
-            saveName: "memberFilterField"
-            saveId: chat.roomId
+        HRowLayout {
+            anchors.fill: parent
 
-            placeholderText: qsTr("Filter members")
-            backgroundColor: theme.chat.roomPane.filterMembers.background
-            bordered: false
-            opacity: width >= 16 * theme.uiScale ? 1 : 0
+            HTextField {
+                id: filterField
+                saveName: "memberFilterField"
+                saveId: chat.roomId
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+                placeholderText: qsTr("Filter members")
+                backgroundColor:
+                    theme.chat.roomPane.bottomBar.filterMembers.background
+                bordered: false
+                opacity: width >= 16 * theme.uiScale ? 1 : 0
 
-            Behavior on opacity { HNumberAnimation {} }
-        }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-        HButton {
-            id: inviteButton
-            icon.name: "room-send-invite"
-            backgroundColor: theme.chat.roomPane.inviteButton.background
-            enabled: chat.roomInfo.can_invite
+                Behavior on opacity { HNumberAnimation {} }
+            }
 
-            toolTip.text:
-                enabled ?
-                qsTr("Invite members to this room") :
-                qsTr("No permission to invite members to this room")
+            HButton {
+                id: inviteButton
+                icon.name: "room-send-invite"
+                backgroundColor:
+                    theme.chat.roomPane.bottomBar.inviteButton.background
+                enabled: chat.roomInfo.can_invite
 
-            topPadding: 0 // XXX
-            bottomPadding: 0
+                toolTip.text:
+                    enabled ?
+                    qsTr("Invite members to this room") :
+                    qsTr("No permission to invite members to this room")
 
-            onClicked: utils.makePopup(
-                "Popups/InviteToRoomPopup.qml",
-                chat,
-                {
-                    userId: chat.userId,
-                    roomId: chat.roomId,
-                    roomName: chat.roomInfo.display_name,
-                    invitingAllowed: Qt.binding(() => inviteButton.enabled),
-                },
-            )
+                topPadding: 0 // XXX
+                bottomPadding: 0
 
-            // onEnabledChanged: if (openedPopup && ! enabled)
+                onClicked: utils.makePopup(
+                    "Popups/InviteToRoomPopup.qml",
+                    chat,
+                    {
+                        userId: chat.userId,
+                        roomId: chat.roomId,
+                        roomName: chat.roomInfo.display_name,
+                        invitingAllowed:
+                            Qt.binding(() => inviteButton.enabled),
+                    },
+                )
 
-            Layout.fillHeight: true
+                // onEnabledChanged: if (openedPopup && ! enabled)
+
+                Layout.fillHeight: true
+            }
         }
     }
 }

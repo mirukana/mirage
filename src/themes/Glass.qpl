@@ -30,49 +30,47 @@ fontFamily:
     string mono:  "Hack"
 
 colors:
-    int hue:          240
-    int saturation:   60
-    int bgSaturation: saturation / 1.5
-    real intensity:   1.0
-    real opacity:     0.7
-    real bgOpacity:   0.5
+    int hue: 240
+
+    real intensity:            1.0
+    real coloredTextIntensity: intensity * 75
+
+    int saturation:            60
+    int bgSaturation:          saturation / 1.5
+    int coloredTextSaturation: saturation + 20
+
+    real opacity: 0.7
 
     color weakBackground:   hsluv(hue, bgSaturation, intensity * 9, opacity)
     color mediumBackground: hsluv(hue, bgSaturation, intensity * 6.8, opacity)
-    color strongBackground:
-        hsluv(hue, bgSaturation * 2, intensity * 2, Math.max(0.6, opacity))
+    color strongBackground: hsluv(hue, bgSaturation * 2, 0, opacity)
 
-    color accentBackground:
-        hsluv(hue, saturation * 1.5, intensity * 42, 1)
-
-    color accentElement:
-        hsluv(hue, saturation * 1.5, intensity * 52, 1)
-
-    color strongAccentElement:
-        hsluv(hue, saturation * 1.5, intensity * 72, 1)
+    color accentBackground:    hsluv(hue, saturation, intensity * 42, 1)
+    color accentElement:       hsluv(hue, saturation * 1.5, intensity * 52, 1)
+    color strongAccentElement: hsluv(hue, saturation * 1.5, intensity * 72, 1)
 
     color positiveBackground:
-        hsluv(155, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
+        hsluv(155, saturation * 1.5, intensity * 52, opacity)
 
     color middleBackground:
-        hsluv(60, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
+        hsluv(60, saturation * 1.5, intensity * 52, opacity)
 
     color negativeBackground:
-        hsluv(0, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
+        hsluv(0, saturation * 1.5, intensity * 52, opacity)
 
     color alertBackground: negativeBackground
-
 
     color brightText:  hsluv(0, 0, intensity * 100)
     color text:        hsluv(0, 0, intensity * 85)
     color halfDimText: hsluv(0, 0, intensity * 72)
     color dimText:     hsluv(0, 0, intensity * 60)
 
-    color warningText: hsluv(60, saturation * 1.5, 72)
-    color errorText:   hsluv(0, saturation * 1.5, 72)
-    color accentText:  hsluv(hue, saturation * 1.5, 72)
-    color link:        accentText
-    color code:        hsluv(hue + 5, saturation * 1.5, intensity * 60)
+    color warningText: hsluv(60, coloredTextSaturation, coloredTextIntensity)
+    color errorText:   hsluv(0, coloredTextSaturation, coloredTextIntensity)
+    color accentText:  hsluv(hue, coloredTextSaturation, coloredTextIntensity)
+
+    color link: hsluv(hue, coloredTextSaturation, coloredTextIntensity)
+    color code: hsluv(hue + 10, coloredTextSaturation, coloredTextIntensity)
 
     // Example of an animation, set running: true to enable
     NumberAnimation on hue
@@ -156,7 +154,9 @@ controls:
         color subtitle: colors.dimText
 
     listView:
-        color highlight:          colors.strongBackground
+        color highlight: hsluv(
+            colors.hue, colors.bgSaturation * 2, 0, colors.opacity / 2,
+        )
         color smallPaneHighlight: colors.accentBackground
 
     textField:
@@ -234,8 +234,8 @@ controls:
             real opacity:   1.0
 
     displayName:
-        int saturation: colors.saturation + 12
-        int lightness:  Math.min(72, colors.intensity * 72)
+        int saturation: colors.coloredTextSaturation
+        int lightness:  colors.coloredTextIntensity - 4
 
 
 // Specific interface parts
@@ -249,39 +249,40 @@ ui:
     point gradientStart: Qt.point(0, 0)
     point gradientEnd:   Qt.point(window.width, window.height)
 
-    color gradientStartColor: hsluv(0, 0, 0, colors.bgOpacity)
-    color gradientEndColor: hsluv(0, 0, 0, colors.bgOpacity)
-
+    color gradientStartColor: hsluv(0, 0, 0, 0.5)
+    color gradientEndColor: hsluv(0, 0, 0, 0.5)
 
 
 mainPane:
-    color background: colors.mediumBackground
+    color background: "transparent"
 
     topBar:
         color background:       colors.strongBackground
-        color placeholderLogo:  colors.strongAccentElement
+        color placeholderLogo:  icons.colorize
         color nameVersionLabel: colors.text
 
-    account:
-        real collapsedOpacity: 0.3
-        color background:      "transparent"
-        color name:            colors.text
+    listView:
+        color background: colors.mediumBackground
 
-    room:
-        real leftRoomOpacity: 0.65
+        account:
+            real collapsedOpacity: 0.3
+            color background:      "transparent"
+            color name:            colors.text
 
-        color background:     "transparent"
-        color name:           colors.text
-        color lastEventDate:  colors.halfDimText
+        room:
+            real leftRoomOpacity: 0.65
 
-        color subtitle:      colors.dimText
-        color subtitleQuote: hsluv(135, colors.saturation * 2.25, 65)
+            color background:     "transparent"
+            color name:           colors.text
+            color lastEventDate:  colors.halfDimText
 
-    settingsButton:
+            color subtitle:      colors.dimText
+            color subtitleQuote: chat.message.quote
+
+    bottomBar:
         color background: colors.strongBackground
-
-    filterRooms:
-        color background: colors.strongBackground
+        color settingsButtonBackground: "transparent"
+        color filterFieldBackground: "transparent"
 
 
 chat:
@@ -290,28 +291,34 @@ chat:
         color name:       colors.text
         color topic:      colors.dimText
 
-    roomPaneButtons:
-        color background: chat.roomHeader.background
-
     roomPane:
-        color background: colors.mediumBackground
+        color background: "transparent"
 
-        member:
-            real invitedOpacity: 0.5
-
-            color background: "transparent"
-            color name:       colors.text
-            color subtitle:   colors.dimText
-
-            color adminIcon:     hsluv(60, colors.saturation * 2.25, 60)
-            color moderatorIcon: adminIcon
-            color invitedIcon:   hsluv(0, colors.saturation * 2.25, 60)
-
-        inviteButton:
+        topBar:
             color background: colors.strongBackground
 
-        filterMembers:
+        listView:
+            color background: colors.mediumBackground
+
+            member:
+                real invitedOpacity: 0.5
+
+                color background: "transparent"
+                color name:       colors.text
+                color subtitle:   colors.dimText
+
+                color adminIcon:     hsluv(60, colors.saturation * 2.25, 60)
+                color moderatorIcon: adminIcon
+                color invitedIcon:   hsluv(0, colors.saturation * 2.25, 60)
+
+        bottomBar:
             color background: colors.strongBackground
+
+            inviteButton:
+                color background: "transparent"
+
+            filterMembers:
+                color background: "transparent"
 
     eventList:
         int ownEventsOnRightUnderWidth: 768 * theme.uiScale
@@ -323,12 +330,7 @@ chat:
 
         int radius:          theme.radius
         color background:    colors.mediumBackground
-        color ownBackground: hsluv(
-            colors.hue,
-            colors.bgSaturation * 2,
-            colors.intensity * 5,
-            Math.max(0.6, opacity),
-        )
+        color ownBackground: colors.strongBackground
 
         color body: colors.text
         color date: colors.dimText
@@ -336,7 +338,9 @@ chat:
         color noticeBody:    colors.halfDimText
         int noticeLineWidth: 1
 
-        color quote: hsluv(135, colors.saturation * 1.5, colors.intensity * 80)
+        color quote: hsluv(
+            135, colors.coloredTextSaturation, colors.coloredTextIntensity,
+        )
         color link:  colors.link
         color code:  colors.code
 

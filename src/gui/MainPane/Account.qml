@@ -8,16 +8,16 @@ import "../Base"
 HTileDelegate {
     id: account
     rightPadding: 0
-    backgroundColor: theme.mainPane.account.background
+    backgroundColor: theme.mainPane.listView.account.background
     opacity: collapsed && ! mainPane.filter ?
-             theme.mainPane.account.collapsedOpacity : 1
+             theme.mainPane.listView.account.collapsedOpacity : 1
 
     title.text: model.display_name || model.id
     title.font.pixelSize: theme.fontSize.big
     title.color:
         hovered ?
         utils.nameColor(model.display_name || model.id.substring(1)) :
-        theme.mainPane.account.name
+        theme.mainPane.listView.account.name
 
     image: HUserAvatar {
         userId: model.id

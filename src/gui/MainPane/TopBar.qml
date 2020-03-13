@@ -12,6 +12,7 @@ Rectangle {
         anchors.fill: parent
 
         HButton {
+            backgroundColor: "transparent"
             icon.name: "placeholder-logo"
             icon.color: theme.mainPane.topBar.placeholderLogo
 
@@ -29,6 +30,7 @@ Rectangle {
         }
 
         HButton {
+            backgroundColor: "transparent"
             icon.name: "developper-console"
             toolTip.text: qsTr("Developper console")
 
@@ -38,6 +40,7 @@ Rectangle {
         }
 
         HButton {
+            backgroundColor: "transparent"
             icon.name: "reload-config-files"
             toolTip.text: qsTr("Reload config files")
 
@@ -47,6 +50,7 @@ Rectangle {
         }
 
         HButton {
+            backgroundColor: "transparent"
             icon.name: "settings"
             toolTip.text: qsTr("Open config folder")
 

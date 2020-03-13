@@ -27,7 +27,7 @@ Column {
         view: accountRooms.view
 
         opacity: collapsed || noFilterResults ?
-                 theme.mainPane.account.collapsedOpacity : 1
+                 theme.mainPane.listView.account.collapsedOpacity : 1
     }
 
     HListView {

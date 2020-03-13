@@ -9,8 +9,8 @@ MultiviewPane {
     saveName: "roomPane"
     edge: Qt.RightEdge
 
-    buttonsBackgroundColor: theme.chat.roomPaneButtons.background
-    backgroundColor: theme.chat.roomPane.background
+    buttonsBackgroundColor: theme.chat.roomPane.topBar.background
+    background: Rectangle { color: theme.chat.roomPane.background }
 
 
     buttonRepeater.model: [

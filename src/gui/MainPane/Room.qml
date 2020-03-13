@@ -7,8 +7,8 @@ import ".."
 import "../Base"
 
 HTileDelegate {
-    backgroundColor: theme.mainPane.room.background
-    opacity: model.left ? theme.mainPane.room.leftRoomOpacity : 1
+    backgroundColor: theme.mainPane.listView.room.background
+    opacity: model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
 
     topPadding: theme.spacing / (model.index === 0 ? 1 : 1.5)
     bottomPadding: theme.spacing / (model.index === view.count - 1 ? 1 : 1.5)
@@ -21,7 +21,7 @@ HTileDelegate {
         mxc: model.avatar_url
     }
 
-    title.color: theme.mainPane.room.name
+    title.color: theme.mainPane.listView.room.name
     title.text: model.display_name || qsTr("Empty room")
 
     additionalInfo.children: HIcon {
@@ -33,7 +33,7 @@ HTileDelegate {
         Behavior on Layout.maximumWidth { HNumberAnimation {} }
     }
 
-    subtitle.color: theme.mainPane.room.subtitle
+    subtitle.color: theme.mainPane.listView.room.subtitle
     subtitle.textFormat: Text.StyledText
     subtitle.font.italic:
         lastEvent && lastEvent.event_type === "RoomMessageEmote"
@@ -55,11 +55,12 @@ HTileDelegate {
 
         return text.replace(
             /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
-            `<font color="${theme.mainPane.room.subtitleQuote}">$1</font>`,
+            `<font color="${theme.mainPane.listView.room.subtitleQuote}">` +
+            `$1</font>`,
         )
     }
 
-    rightInfo.color: theme.mainPane.room.lastEventDate
+    rightInfo.color: theme.mainPane.listView.room.lastEventDate
     rightInfo.text: {
         model.last_event_date < new Date(1) ?
         "" :

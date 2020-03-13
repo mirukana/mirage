@@ -6,9 +6,9 @@ import "../../../Base"
 
 HTileDelegate {
     id: memberDelegate
-    backgroundColor: theme.chat.roomPane.member.background
+    backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
-        model.invited ? theme.chat.roomPane.member.invitedOpacity : 1
+        model.invited ? theme.chat.roomPane.listView.member.invitedOpacity : 1
 
     image: HUserAvatar {
         userId: model.id
@@ -23,10 +23,10 @@ HTileDelegate {
     title.color:
         memberDelegate.hovered ?
         utils.nameColor(model.display_name || model.id.substring(1)) :
-        theme.chat.roomPane.member.name
+        theme.chat.roomPane.listView.member.name
 
     subtitle.text: model.display_name ? model.id : ""
-    subtitle.color: theme.chat.roomPane.member.subtitle
+    subtitle.color: theme.chat.roomPane.listView.member.subtitle
 
     contextMenu: HMenu {
         HMenuItem {

@@ -6,32 +6,12 @@ import QtQuick.Layouts 1.12
 
 HDrawer {
     id: pane
-
     defaultSize: buttonRepeater.summedImplicitWidth
     minimumSize:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
-    background: HColumnLayout{
-        Rectangle {
-            color: buttonsBackgroundColor
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: buttonFlow.height
-
-            Behavior on Layout.preferredHeight { HNumberAnimation {} }
-        }
-
-        Rectangle {
-            color: backgroundColor
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-    }
-
 
     property color buttonsBackgroundColor
-    property color backgroundColor
 
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
@@ -42,14 +22,20 @@ HDrawer {
     HColumnLayout {
         anchors.fill: parent
 
-        HFlow {
-            id: buttonFlow
-            populate: null
+        Rectangle {
+            color: buttonsBackgroundColor
 
             Layout.fillWidth: true
+            Layout.preferredHeight: childrenRect.height
 
-            HRepeater {
-                id: buttonRepeater
+            HFlow {
+                id: buttonFlow
+                width: parent.width
+                populate: null
+
+                HRepeater {
+                    id: buttonRepeater
+                }
             }
         }
 
