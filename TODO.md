@@ -88,9 +88,6 @@
 - Code highlighting
 - Adapt shortcuts flicking speed to font size 
 
-- Multiaccount aliases:
-  - Prevent sending messages with a user not in the current room
-
 - Accept drag and drop to upload files or set a new avatar 
 - Improve room tooltips, e.g. show last messages
 - Warn user when connection is lost or 429s happen

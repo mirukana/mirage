@@ -22,7 +22,19 @@ Rectangle {
 
     property string indent: "    "
 
-    property var aliases: window.settings.writeAliases
+    property var aliases: {
+        const obj = {}
+
+        for (const [id, alia] of Object.entries(window.settings.writeAliases)){
+            const room = ModelStore.get(id, "rooms").find(chat.roomId)
+            if (room &&
+                    ! room.inviter_id && ! room.left && room.can_send_messages)
+                obj[id] = alia
+        }
+
+        return obj
+  }
+
     property string toSend: ""
 
     property string writingUserId: chat.userId
