@@ -1,20 +1,10 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import QtGraphicalEffects 1.12
 import "Base"
 
-Item {
-    LinearGradient {
-        anchors.fill: parent
-        start: Qt.point(0, 0)
-        end: Qt.point(window.width, window.height)
-
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#001b20" }
-            GradientStop { position: 1.0; color: "#3c2f4b" }
-        }
-    }
+Rectangle {
+    color: utils.hsluv(0, 0, 0, 0.5)
 
     HBusyIndicator {
         anchors.centerIn: parent
@@ -22,7 +12,7 @@ Item {
         height: width
         indeterminateSpan: 0.5
 
-        foregroundColor: Qt.hsla(0, 0, 1, 0.15)
-        progressColor: Qt.hsla(0, 0, 1, 0.4)
+        foregroundColor: utils.hsluv(240, 60 / 1.5 * 2, 0, 0.7)
+        progressColor: utils.hsluv(240, 60 * 1.5, 72)
     }
 }
