@@ -50,7 +50,6 @@ HColumnLayout {
                 saveName: "memberFilterField"
                 saveId: chat.roomId
 
-                placeholderText: qsTr("Filter members")
                 backgroundColor:
                     theme.chat.roomPane.bottomBar.filterMembers.background
                 bordered: false
@@ -58,6 +57,10 @@ HColumnLayout {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                // FIXME: fails to display sometimes for some reason if
+                // declared normally
+                Component.onCompleted: placeholderText = qsTr("Filter members")
 
                 Behavior on opacity { HNumberAnimation {} }
             }
