@@ -155,13 +155,13 @@ Item {
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.clearRoomFilter
-        onActivated: mainUI.mainPane.toolBar.roomFilter = ""
+        onActivated: mainUI.mainPane.bottomBar.roomFilter = ""
     }
 
     HShortcut {
         enabled: mainUI.accountsPresent
         sequences: settings.keys.addNewAccount
-        onActivated: mainUI.mainPane.toolBar.addAccountButton.clicked()
+        onActivated: mainUI.mainPane.bottomBar.addAccountButton.clicked()
     }
 
     HShortcut {
