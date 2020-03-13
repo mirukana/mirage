@@ -266,7 +266,7 @@ mainPane:
 
     topBar:
         color background:       colors.strongBackground
-        color placeholderLogo:  colors.accentElement
+        color placeholderLogo:  colors.strongAccentElement
         color nameVersionLabel: colors.text
 
     account:

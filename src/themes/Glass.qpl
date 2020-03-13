@@ -43,13 +43,13 @@ colors:
         hsluv(hue, bgSaturation * 2, intensity * 2, Math.max(0.6, opacity))
 
     color accentBackground:
-        hsluv(hue, saturation * 1.5, intensity * 32, Math.max(0.9, opacity))
+        hsluv(hue, saturation * 1.5, intensity * 42, 1)
 
     color accentElement:
-        hsluv(hue, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
+        hsluv(hue, saturation * 1.5, intensity * 52, 1)
 
     color strongAccentElement:
-        hsluv(hue, saturation * 1.5, intensity * 72, Math.max(0.6, opacity))
+        hsluv(hue, saturation * 1.5, intensity * 72, 1)
 
     color positiveBackground:
         hsluv(155, saturation * 1.5, intensity * 52, Math.max(0.6, opacity))
@@ -259,7 +259,7 @@ mainPane:
 
     topBar:
         color background:       colors.strongBackground
-        color placeholderLogo:  colors.accentElement
+        color placeholderLogo:  colors.strongAccentElement
         color nameVersionLabel: colors.text
 
     account:
