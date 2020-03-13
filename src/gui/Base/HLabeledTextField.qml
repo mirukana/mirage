@@ -8,6 +8,7 @@ HColumnLayout {
 
 
     property alias label: label
+    property alias errorLabel: errorLabel
     property alias field: field
     property alias toolTip: toolTip
 
@@ -50,5 +51,17 @@ HColumnLayout {
         radius: 2
 
         Layout.fillWidth: true
+    }
+
+    HLabel {
+        id: errorLabel
+        visible: Layout.maximumHeight > 0
+        wrapMode: Text.Wrap
+        color: theme.colors.errorText
+
+        Layout.maximumHeight: text ? implicitHeight : 0
+        Layout.fillWidth: true
+
+        Behavior on Layout.maximumHeight { HNumberAnimation {} }
     }
 }

@@ -89,7 +89,6 @@
 - Adapt shortcuts flicking speed to font size 
 
 - Multiaccount aliases:
-  - Warn when conflict with another alias
   - Prevent sending messages with a user not in the current room
 
 - Accept drag and drop to upload files or set a new avatar 

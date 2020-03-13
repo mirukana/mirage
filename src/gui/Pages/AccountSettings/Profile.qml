@@ -166,14 +166,31 @@ HGridLayout {
             }
 
             HLabeledTextField {
-                property string currentAlias:
-                    window.settings.writeAliases[userId] || ""
-
+                property string currentAlias: aliases[userId] || ""
                 property bool changed: field.text !== currentAlias
+
+                readonly property var aliases: window.settings.writeAliases
+
+                readonly property string alreadyTakenBy: {
+                    if (! field.text) return ""
+
+                    for (const [id, idAlias] of Object.entries(aliases))
+                        if (id !== userId && idAlias === field.text) return id
+
+                    return ""
+                }
 
 
                 id: aliasField
+
                 label.text: qsTr("Multi-account composer alias:")
+
+                errorLabel.text:
+                    alreadyTakenBy ?
+                    qsTr("Taken by %1").arg(alreadyTakenBy) :
+                    ""
+
+                field.error: alreadyTakenBy !== ""
                 field.onAccepted: applyChanges()
                 field.placeholderText: (
                     nameField.field.text ||
@@ -197,8 +214,6 @@ HGridLayout {
             }
         }
 
-        HSpacer {}
-
         HRowLayout {
             Layout.alignment: Qt.AlignBottom
 
@@ -212,7 +227,10 @@ HGridLayout {
                 text: qsTr("Save")
                 loading: nameChangeRunning || avatarChangeRunning
                 enabled:
-                    nameField.changed || aliasField.changed || avatar.changed
+                    avatar.changed ||
+                    nameField.changed ||
+                    (aliasField.changed && ! aliasField.alreadyTakenBy)
+
                 onClicked: applyChanges()
 
                 Layout.fillWidth: true
