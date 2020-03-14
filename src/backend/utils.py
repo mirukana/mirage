@@ -7,8 +7,8 @@ import html
 import inspect
 import io
 import json
+import sys
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
-from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from enum import Enum
 from enum import auto as autostr
@@ -27,6 +27,11 @@ from aiofiles.threadpool.text import AsyncTextIOWrapper
 
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
+
+if sys.version_info >= (3, 7):
+    from contextlib import asynccontextmanager
+else:
+    from async_generator import asynccontextmanager
 
 Size = Tuple[int, int]
 auto = autostr
