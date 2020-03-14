@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
 
 import aiofiles
 
+import pyotherside
+
 from .theme_parser import convert_to_qml
 from .utils import atomic_write, dict_update_recursive
 
@@ -279,18 +281,21 @@ class Theme(DataFile):
 
     @property
     def path(self) -> Path:
-        data_dir  = Path(self.backend.appdirs.user_data_dir)
-        user_path = data_dir / "themes" / self.filename
-
-        if not user_path.exists():
-            return Path("src") / "themes" / self.filename
-
-        return user_path
+        data_dir = Path(self.backend.appdirs.user_data_dir)
+        return data_dir / "themes" / self.filename
 
 
     async def default_data(self) -> str:
-        async with aiofiles.open("../themes/Midnight.qpl") as file:
-            return await file.read()
+        path = f"src/themes/{self.filename}"
+
+        try:
+            byte_content = pyotherside.qrc_get_file_contents(path)
+        except ValueError:
+            # App was compiled without QRC
+            async with aiofiles.open(path) as file:
+                return await file.read()
+        else:
+            return byte_content.decode()
 
 
     async def read(self) -> str:
