@@ -8,6 +8,7 @@ Rectangle {
     id: avatar
     implicitWidth: theme.controls.avatar.size
     implicitHeight: theme.controls.avatar.size
+    radius: theme.controls.avatar.radius
 
     color: avatarImage.visible ? "transparent" : utils.hsluv(
        name ? utils.hueFrom(name) : 0,

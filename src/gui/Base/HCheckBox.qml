@@ -16,7 +16,7 @@ CheckBox {
         implicitHeight: implicitWidth
         x: box.leftPadding
         y: box.topPadding + box.availableHeight / 2 - height / 2
-        radius: theme.radius / 1.5
+        radius: theme.radius
 
         color: theme.controls.checkBox.boxBackground
         border.color:

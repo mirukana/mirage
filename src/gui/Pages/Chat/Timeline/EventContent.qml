@@ -154,6 +154,7 @@ HRowLayout {
                     (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
                 )
                 height: contentColumn.height
+                radius: theme.radius
                 z: -100
                 color: isOwn?
                        theme.chat.message.ownBackground :
@@ -163,6 +164,7 @@ HRowLayout {
                     visible: model.event_type === "RoomMessageNotice"
                     width: theme.chat.message.noticeLineWidth
                     height: parent.height
+                    radius: parent.radius
                     color: utils.nameColor(
                         model.sender_name || model.sender_id.substring(1),
                     )

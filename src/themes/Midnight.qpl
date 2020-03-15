@@ -10,7 +10,7 @@ int contentIsWideAbove:     472 * uiScale
 
 int baseElementsHeight:       36 * uiScale
 int spacing:                  12 * uiScale
-int radius:                   5 * uiScale
+int radius:                   4 * uiScale
 int animationDuration:        100
 real loadingElementsOpacity:  0.8
 real disabledElementsOpacity: 0.3

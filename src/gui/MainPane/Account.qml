@@ -23,7 +23,7 @@ HTileDelegate {
         userId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
-        radius: mainPane.small ? circleRadius : 0
+        radius: mainPane.small ? circleRadius : theme.controls.avatar.radius
 
         Behavior on radius { HNumberAnimation {} }
     }
