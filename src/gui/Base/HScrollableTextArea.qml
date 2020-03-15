@@ -65,6 +65,7 @@ ScrollView {
         background: Rectangle {
             id: textAreaBackground
             color: theme.controls.textArea.background
+            radius: theme.radius
         }
 
         Keys.onPressed: if (

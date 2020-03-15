@@ -28,6 +28,7 @@ TextField {
         border.color: error ? errorBorder :
                       field.activeFocus ? focusedBorderColor : borderColor
         border.width: bordered ? theme.controls.textField.borderWidth : 0
+        radius: bordered ? theme.radius : 0
 
         Behavior on color { HColorAnimation { factor: 0.25 } }
         Behavior on border.color { HColorAnimation { factor: 0.25 } }
