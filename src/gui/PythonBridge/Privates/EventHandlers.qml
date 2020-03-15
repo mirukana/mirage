@@ -29,25 +29,11 @@ QtObject {
 
             if (type === "CancelledError") return
 
-            if (onError) {
-                onError(type, args, error, traceback)
-                return
-            }
+            onError ?
+            onError(type, args, error, traceback, uuid) :
+            utils.showError(type, traceback, uuid)
 
-            console.error(`python: ${uuid}\n${traceback}`)
-
-            if (window.hideErrorTypes.has(type)) {
-                console.warn(
-                    "Not showing error popup for this type due to user choice"
-                )
-                return
-            }
-
-            utils.makePopup(
-                "Popups/UnexpectedErrorPopup.qml",
-                window,
-                { errorType: type, traceback },
-            )
+            return
         }
 
         if (onSuccess) onSuccess(result)

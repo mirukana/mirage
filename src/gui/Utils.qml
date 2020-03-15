@@ -58,6 +58,25 @@ QtObject {
     }
 
 
+    function showError(type, traceback, sourceIndication="") {
+        console.error(`python: ${sourceIndication}\n${traceback}`)
+
+        if (window.hideErrorTypes.has(type)) {
+            console.warn(
+                "Not showing GUI popup for error type " + type +
+                "due to user choice"
+            )
+            return
+        }
+
+        utils.makePopup(
+            "Popups/UnexpectedErrorPopup.qml",
+            window,
+            { errorType: type, traceback },
+        )
+    }
+
+
     function sum(array) {
         if (array.length < 1) return 0
         return array.reduce((a, b) => (isNaN(a) ? 0 : a) + (isNaN(b) ? 0 : b))
