@@ -2,8 +2,6 @@
 
 ## Before release
 
-- overlay
-- Bundle fonts
 - Write a real README.md
 
 ## Refactoring
@@ -108,7 +106,6 @@
 - Implement Register/Reset pages
 
 - Theming
-  - Bundle fonts
   - Use a standard file format
   - icons.preferredPack: accept multiple values
   - Find icon packs in user data dir

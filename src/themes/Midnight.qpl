@@ -25,9 +25,8 @@ fontSize:
     int biggest: 48 * uiScale
 
 fontFamily:
-    string sans:  "Roboto"
-    string serif: "Roboto Slab"
-    string mono:  "Hack"
+    string sans: "Roboto"
+    string mono: "Hack"
 
 colors:
     int hue: 240

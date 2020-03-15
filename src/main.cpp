@@ -9,6 +9,7 @@
 #include <QQmlComponent>
 #include <QFileInfo>
 #include <QQuickStyle>
+#include <QFontDatabase>
 
 #include "../submodules/RadialBarDemo/radialbar.h"
 
@@ -27,6 +28,27 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationVersion("0.4.0");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+
+    // Register default theme fonts. Take the files  from the
+    // Qt resource system if possible (resources stored in the app executable),
+    // else the local file system.
+    // The dev qmake flag disables the resource system for faster builds.
+    QFileInfo qrcPath(":src/gui/Window.qml");
+    QString src = qrcPath.exists() ? ":/src" : "src";
+
+    QList<QString> fontFamilies;
+    fontFamilies << "roboto" << "hack";
+
+    QList<QString> fontVariants;
+    fontVariants << "regular" << "italic" << "bold" << "bold-italic";
+
+    foreach (QString family, fontFamilies) {
+        foreach (QString var, fontVariants) {
+            QFontDatabase::addApplicationFont(
+                src + "/fonts/" + family + "/" + var + ".ttf"
+            );
+        }
+    }
 
     // Create the QML engine and get the root context.
     // We will add it some properties that will be available globally in QML.
@@ -71,10 +93,7 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<RadialBar>("RadialBar", 1, 0, "RadialBar");
 
     // Create the QML root component by loading its file from the Qt Resource
-    // System (qrc:/, resources stored in the app's executable) if possible,
-    // else fall back to the filesystem.
-    // The dev qmake flag disables the resource system for faster builds.
-    QFileInfo qrcPath(":src/gui/Window.qml");
+    // System or local file system if not possible.
     QQmlComponent component(
         &engine,
         qrcPath.exists() ? "qrc:/src/gui/Window.qml" : "src/gui/Window.qml"
