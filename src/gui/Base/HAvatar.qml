@@ -16,6 +16,7 @@ Rectangle {
        theme.controls.avatar.background.opacity
    )
 
+
     property string name
     property alias mxc: avatarImage.mxc
     property alias title: avatarImage.title
@@ -27,6 +28,8 @@ Rectangle {
     property alias animate: avatarImage.animate
 
     readonly property alias hovered: hoverHandler.hovered
+    readonly property alias circleRadius: avatarImage.circleRadius
+
 
     HLabel {
         z: 1
@@ -54,6 +57,7 @@ Rectangle {
         sourceSize.height: parent.height
         fillMode: Image.PreserveAspectCrop
         animate: false
+        radius: parent.radius
 
         HoverHandler { id: hoverHandler }
 

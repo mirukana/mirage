@@ -23,9 +23,9 @@ HTileDelegate {
         userId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
-        rotation: mainPane.small ? -45 : 0
+        radius: mainPane.small ? circleRadius : 0
 
-        Behavior on rotation { HNumberAnimation {} }
+        Behavior on radius { HNumberAnimation {} }
     }
 
     contextMenu: HMenu {

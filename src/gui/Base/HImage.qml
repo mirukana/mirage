@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtGraphicalEffects 1.12
 
 Image {
     id: image
@@ -11,14 +12,22 @@ Image {
     cache: ! (animate && animated) &&
            (sourceSize.width + sourceSize.height) <= 512
 
+    layer.enabled: radius !== 0
+    layer.effect: OpacityMask { maskSource: roundMask }
 
+
+    property bool circle: radius === circleRadius
     property bool broken: false
     property bool animate: true
     property bool animated:
         utils.urlExtension(image.source).toLowerCase() === "gif"
 
+    property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
     property bool inderterminateProgressBar: false
+
+    readonly property int circleRadius:
+        Math.ceil(Math.max(image.width, image.height))
 
 
     Component {
@@ -40,6 +49,9 @@ Image {
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
             paused: ! visible || window.hidden || userPaused
+
+            layer.enabled: image.radius !== 0
+            layer.effect: OpacityMask { maskSource: roundMask }
 
             property bool userPaused: ! window.settings.media.autoPlayGIF
 
@@ -89,5 +101,11 @@ Image {
         visible: broken || image.status === Image.Error
         svgName: "broken-image"
         colorize: theme.colors.negativeBackground
+    }
+
+    Rectangle {
+        id: roundMask
+        anchors.fill: parent
+        visible: false
     }
 }
