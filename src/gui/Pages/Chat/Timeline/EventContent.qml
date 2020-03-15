@@ -163,6 +163,7 @@ HRowLayout {
 
                 Rectangle {
                     visible: model.event_type === "RoomMessageNotice"
+                    // y: parent.height / 2 - height / 2
                     width: theme.chat.message.noticeLineWidth
                     height: parent.height
                     radius: parent.radius

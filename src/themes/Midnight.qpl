@@ -358,7 +358,7 @@ chat:
         color date: colors.dimText
 
         color noticeBody:    colors.halfDimText
-        int noticeLineWidth: 1
+        int noticeLineWidth: 1 * uiScale
 
         color quote: hsluv(
             135, colors.coloredTextSaturation, colors.coloredTextIntensity,
