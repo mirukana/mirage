@@ -1179,17 +1179,19 @@ class MatrixClient(nio.AsyncClient):
 
         # Add the Event to model
 
+        model = self.models[self.user_id, room.room_id, "events"]
+
         tx_id = ev.source.get("content", {}).get(
             f"{__app_name__}.transaction_id",
         )
         local_sender = ev.sender in self.backend.clients
 
-        if local_sender and tx_id:
+        if local_sender and tx_id and tx_id in model:
             item.id = f"echo-{tx_id}"
 
         if not local_sender and not await self.event_is_past(ev):
             AlertRequested()
 
-        self.models[self.user_id, room.room_id, "events"][item.id] = item
+        model[item.id] = item
 
         await self.set_room_last_event(room.room_id, item)

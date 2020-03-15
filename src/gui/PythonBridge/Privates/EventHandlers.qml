@@ -60,13 +60,13 @@ QtObject {
 
 
     function onModelItemInserted(syncId, index, item) {
-        print("insert", syncId, index, item)
+        // print("insert", syncId, index, item)
         ModelStore.get(syncId).insert(index, item)
     }
 
 
     function onModelItemFieldChanged(syncId, oldIndex, newIndex, field, value){
-        print("change", syncId, oldIndex, newIndex, field, value)
+        // print("change", syncId, oldIndex, newIndex, field, value)
         const model = ModelStore.get(syncId)
         model.setProperty(oldIndex, field, value)
 

@@ -82,7 +82,8 @@ class Model(MutableMapping):
                     setattr(existing, field, getattr(new, field))
                 return
 
-            new.parent_model = self
+            if self.sync_id:
+                new.parent_model = self
 
             self._data[key] = new
             index           = bisect(self._sorted_data, new)
