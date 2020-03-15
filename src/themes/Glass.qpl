@@ -100,8 +100,9 @@ controls:
         int radius:       theme.radius
 
     popup:
-        int defaultWidth: minimumSupportedWidth * 1.75
-        color background: colors.mediumBackground
+        int defaultWidth:    minimumSupportedWidth * 1.75
+        color background:    colors.mediumBackground
+        color windowOverlay: hsluv(0, 0, 0, 0.7)
 
     header:
         color background: colors.mediumBackground

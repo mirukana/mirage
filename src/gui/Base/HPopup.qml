@@ -23,6 +23,12 @@ Popup {
         color: theme.controls.popup.background
     }
 
+    Overlay.modal: Rectangle {
+        color: "transparent"
+
+        HColorAnimation on color { to: theme.controls.popup.windowOverlay }
+    }
+
     onAboutToShow: previouslyFocused = window.activeFocusItem
     onClosed: if (focusOnClosed) focusOnClosed.forceActiveFocus()
 
