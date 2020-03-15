@@ -87,6 +87,14 @@ HGridLayout {
 
             HoverHandler { id: overlayHover }
 
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape:
+                    overlayHover.hovered ?
+                    Qt.PointingHandCursor : Qt.ArrowCursor
+            }
+
             HColumnLayout {
                 anchors.centerIn: parent
                 spacing: currentSpacing
