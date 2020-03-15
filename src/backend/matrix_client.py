@@ -213,6 +213,9 @@ class MatrixClient(nio.AsyncClient):
         def on_profile_response(future) -> None:
             """Update our model `Account` with the received profile details."""
 
+            if future.cancelled():  # Account logged out
+                return
+
             exception = future.exception()
 
             if exception:
@@ -231,6 +234,9 @@ class MatrixClient(nio.AsyncClient):
 
         def on_server_config_response(future) -> None:
             """Update our model `Account` with the received config details."""
+
+            if future.cancelled():  # Account logged out
+                return
 
             exception = future.exception()
 
