@@ -274,24 +274,30 @@ mainPane:
         color background: colors.mediumBackground
 
         account:
-            real collapsedOpacity: 0.3
-            color background:      "transparent"
-            color name:            colors.text
+            real collapsedOpacity:     0.3
+            color background:          "transparent"
+            color name:                colors.text
+
+            int avatarRadius:          controls.avatar.radius
+            int collapsedAvatarRadius: controls.avatar.size / 2
 
         room:
             real leftRoomOpacity: 0.65
 
-            color background:     "transparent"
-            color name:           colors.text
-            color lastEventDate:  colors.halfDimText
+            color background:    "transparent"
+            color name:          colors.text
+            color lastEventDate: colors.halfDimText
 
             color subtitle:      colors.dimText
             color subtitleQuote: chat.message.quote
 
+            int avatarRadius:          controls.avatar.radius
+            int collapsedAvatarRadius: controls.avatar.radius
+
     bottomBar:
-        color background: colors.strongBackground
+        color background:               colors.strongBackground
         color settingsButtonBackground: "transparent"
-        color filterFieldBackground: "transparent"
+        color filterFieldBackground:    "transparent"
 
 
 chat:
@@ -336,8 +342,12 @@ chat:
     message:
         int avatarSize:          58 * uiScale
         int collapsedAvatarSize: 28 * uiScale
+        int avatarRadius:        controls.avatar.radius
 
-        int radius:          theme.radius
+        int radius:            theme.radius
+        int horizontalSpacing: theme.spacing / 1.25
+        int verticalSpacing:   theme.spacing / 1.75
+
         color background:    colors.mediumBackground
         color ownBackground: colors.strongBackground
 

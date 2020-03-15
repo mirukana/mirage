@@ -7,7 +7,7 @@ import "../../.."
 
 HRowLayout {
     id: eventContent
-    spacing: theme.spacing / 1.25
+    spacing: theme.chat.message.horizontalSpacing
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
@@ -77,6 +77,7 @@ HRowLayout {
             mxc: model.sender_avatar
             width: parent.width
             height: collapseAvatar ? 1 : theme.chat.message.avatarSize
+            radius: theme.chat.message.avatarRadius
         }
     }
 
@@ -92,7 +93,7 @@ HRowLayout {
             index: model.index
             visible: ! pureMedia
 
-            topPadding: theme.spacing / 1.75
+            topPadding: theme.chat.message.verticalSpacing
             bottomPadding: topPadding
             leftPadding: eventContent.spacing
             rightPadding: leftPadding
@@ -154,7 +155,7 @@ HRowLayout {
                     (pureMedia ? 0 : parent.leftPadding + parent.rightPadding),
                 )
                 height: contentColumn.height
-                radius: theme.radius
+                radius: theme.chat.message.radius
                 z: -100
                 color: isOwn?
                        theme.chat.message.ownBackground :

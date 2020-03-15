@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 Rectangle {
     id: box
     color: theme.controls.box.background
-    radius: theme.radius
+    radius: theme.controls.box.radius
     implicitWidth: theme.controls.box.defaultWidth
     implicitHeight: childrenRect.height
 

@@ -19,6 +19,13 @@ HTileDelegate {
         roomId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
+
+        radius:
+            mainPane.small ?
+            theme.mainPane.listView.room.collapsedAvatarRadius :
+            theme.mainPane.listView.room.avatarRadius
+
+        Behavior on radius { HNumberAnimation {} }
     }
 
     title.color: theme.mainPane.listView.room.name
