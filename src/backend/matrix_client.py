@@ -968,11 +968,12 @@ class MatrixClient(nio.AsyncClient):
 
         for sync_id, model in self.models.items():
             if not (isinstance(sync_id, tuple) and
+                    len(sync_id) == 3 and
                     sync_id[0] == self.user_id and
                     sync_id[2] == "events"):
                 continue
 
-            _, _, room_id = sync_id
+            _, room_id, _ = sync_id
 
             for ev in model.values():
                 room = self.all_rooms[room_id]

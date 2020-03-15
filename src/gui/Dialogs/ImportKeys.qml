@@ -36,7 +36,9 @@ HFileDialogOpener {
                 importing = false
                 callback(true)
 
-            }, (type, args) => {
+            }, (type, args, error, traceback, uuid) => {
+                let unknown = false
+
                 callback(
                     type === "EncryptionError" ?
                     false :
@@ -53,8 +55,13 @@ HFileDialogOpener {
                     type === "PermissionError" ?
                     qsTr("No permission to read this file") :
 
-                    qsTr("Unknown error: %1 - %2").arg(type).arg(args)
+                    (
+                        unknown = true,
+                        qsTr("Unknown error: %1 - %2").arg(type).arg(args)
+                    )
                 )
+
+                if (unknown) utils.showError(type, traceback, uuid)
             })
         }
     }
