@@ -116,7 +116,7 @@ class JSONDataFile(DataFile):
         """
 
         try:
-            data = json.loads(await super().read())
+            data = json.loads(self.path.read_text())
         except FileNotFoundError:
             if not self.create_missing:
                 return await self.default_data()
