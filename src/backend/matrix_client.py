@@ -1186,7 +1186,7 @@ class MatrixClient(nio.AsyncClient):
         )
         local_sender = ev.sender in self.backend.clients
 
-        if local_sender and tx_id and tx_id in model:
+        if local_sender and tx_id and f"echo-{tx_id}" in model:
             item.id = f"echo-{tx_id}"
 
         if not local_sender and not await self.event_is_past(ev):
