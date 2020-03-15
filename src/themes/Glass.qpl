@@ -316,6 +316,9 @@ chat:
                 color moderatorIcon: adminIcon
                 color invitedIcon:   hsluv(0, colors.saturation * 2.25, 60)
 
+        roomSettings:
+            color background: colors.mediumBackground
+
         bottomBar:
             color background: colors.strongBackground
 

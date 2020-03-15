@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.12
 import "../../../Base"
 
 HBox {
-    color: "transparent"
+        color: theme.chat.roomPane.roomSettings.background
 
     buttonModel: [
         {

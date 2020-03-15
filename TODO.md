@@ -2,8 +2,8 @@
 
 ## Before release
 
+- Check import function (index tuple error)
 - Write a real README.md
-- Test everything
 
 ## Refactoring
 
@@ -112,7 +112,6 @@
   - icons.preferredPack: accept multiple values
   - Find icon packs in user data dir
   - See [Text.fontSizeMode](https://doc.qt.io/qt-5/qml-qtquick-text.html#fontSizeMode-prop)
-  - Way to round avatar corners to allow box radius
 
 - Settings page
 - Notifications
