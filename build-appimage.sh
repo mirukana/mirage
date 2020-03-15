@@ -30,6 +30,28 @@
 # You can also start a shell inside (e.g. if something goes wrong):
 #
 #     lxc exec ubuntu -- /bin/bash
+#
+# ----------
+#
+# To test the AppImage inside a container (any distro), first
+# add these lines to "/var/lib/lxd/containers/ubuntu/config"
+# (assuming you use LXD and the container is named "ubuntu"):
+#
+#     lxc.mount.entry = /dev/dri dev/dri none bind,optional,create=dir
+#     lxc.mount.entry = /tmp/.X11-unix tmp/.X11-unix none bind,optional,create=dir
+#
+# Autorize containers to access your xorg session:
+#
+#     xhost +
+#
+# Restart the container:
+#
+#     lxc restart ubuntu
+#
+# You will need to have xorg installed in the container.
+# Run the image with the DISPLAY variable correctly set, for example:
+#
+#     lxc exec -- DISPLAY=:0 /root/mirage/build/Mirage-x86_64.AppImage
 
 set -eo pipefail
 
