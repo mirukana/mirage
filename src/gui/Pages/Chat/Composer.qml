@@ -77,6 +77,7 @@ Rectangle {
             userId: writingUserId
             displayName: writingUserInfo ? writingUserInfo.display_name : ""
             mxc: writingUserInfo ? writingUserInfo.avatar_url : ""
+            radius: 0
         }
 
         HScrollableTextArea {

@@ -17,6 +17,8 @@ Rectangle {
             roomId: chat.roomId
             displayName: chat.roomInfo.display_name
             mxc: chat.roomInfo.avatar_url
+            radius: 0
+
             Layout.alignment: Qt.AlignTop
         }
 
