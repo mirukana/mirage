@@ -12,6 +12,8 @@ MenuItem {
     bottomPadding: topPadding
     height: visible ? implicitHeight : 0
 
+    icon.color: theme.icons.colorize
+
     background: HButtonBackground {
         button: menuItem
         buttonTheme: theme.controls.menuItem

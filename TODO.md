@@ -2,7 +2,8 @@
 
 ## Before release
 
-- Check import function (index tuple error)
+- overlay
+- Bundle fonts
 - Write a real README.md
 
 ## Refactoring
