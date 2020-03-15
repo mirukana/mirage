@@ -34,11 +34,27 @@ dev {
 
 # Files to copy for `make install`
 
-win32:executables.path  = "C:/Program Files"
-!win32:executables.path = /usr/local/bin
-executables.files       = $$TARGET
+!dev:unix {
+    isEmpty(PREFIX) { PREFIX = /usr }
 
-!dev:INSTALLS += executables
+    executables.path  = $$PREFIX/bin
+    executables.files = $$TARGET
+
+    shortcuts.path  = $$PREFIX/share/applications
+    shortcuts.files = extra/linux/mirage.desktop
+
+    icons.path  = $$PREFIX/share/pixmaps
+    icons.files = extra/linux/mirage.png
+
+    INSTALLS += executables shortcuts icons
+}
+
+!dev:win32 {
+    executables.path  = "C:/Program Files"
+    executables.files = $$TARGET
+
+    INSTALLS += executables
+}
 
 
 # Libraries includes
@@ -88,5 +104,5 @@ for(file, $$list($$glob_filenames(*.py))) {
 }
 
 QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
-QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile .qmake.stash
-QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
+QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
+QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info, *.AppImage)

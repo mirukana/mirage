@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Mirage
+GenericName=Matrix Chat Client
+Exec=mirage
+Icon=mirage
+Terminal=false
+Categories=Network;Chat;InstantMessaging;Qt;
+StartupWMClass=mirage

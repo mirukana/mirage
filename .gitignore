@@ -14,5 +14,6 @@ dist
 Makefile
 mirage
 mirage.pro.user
+*.AppImage
 
 tags
