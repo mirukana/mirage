@@ -981,7 +981,7 @@ class MatrixClient(nio.AsyncClient):
 
             _, room_id, _ = sync_id
 
-            for ev in model.values():
+            for ev in model.copy().values():
                 room = self.all_rooms[room_id]
 
                 if isinstance(ev.source, nio.MegolmEvent):

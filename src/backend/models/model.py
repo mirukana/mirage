@@ -2,7 +2,9 @@
 
 from bisect import bisect
 from threading import RLock
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping
+from typing import (
+    TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional,
+)
 
 from blist import blist
 
@@ -29,8 +31,8 @@ class Model(MutableMapping):
     Items in the model are kept sorted using the `ModelItem` subclass `__lt__`.
     """
 
-    def __init__(self, sync_id: SyncId) -> None:
-        self.sync_id:      SyncId                 = sync_id
+    def __init__(self, sync_id: Optional[SyncId]) -> None:
+        self.sync_id:      Optional[SyncId]       = sync_id
         self._data:        Dict[Any, "ModelItem"] = {}
         self._sorted_data: List["ModelItem"]      = blist()
         self._write_lock:  RLock                  = RLock()
@@ -86,7 +88,8 @@ class Model(MutableMapping):
             index           = bisect(self._sorted_data, new)
             self._sorted_data.insert(index, new)
 
-            ModelItemInserted(self.sync_id, index, new)
+            if self.sync_id:
+                ModelItemInserted(self.sync_id, index, new)
 
 
     def __delitem__(self, key) -> None:
@@ -98,7 +101,8 @@ class Model(MutableMapping):
             index = self._sorted_data.index(item)
             del self._sorted_data[index]
 
-            ModelItemDeleted(self.sync_id, index)
+            if self.sync_id:
+                ModelItemDeleted(self.sync_id, index)
 
 
     def __iter__(self) -> Iterator:
@@ -116,4 +120,11 @@ class Model(MutableMapping):
 
     def clear(self) -> None:
         super().clear()
-        ModelCleared(self.sync_id)
+        if self.sync_id:
+            ModelCleared(self.sync_id)
+
+
+    def copy(self, sync_id: Optional[SyncId] = None) -> "Model":
+        new = type(self)(sync_id=sync_id)
+        new.update(self)
+        return new

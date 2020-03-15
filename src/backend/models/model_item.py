@@ -42,13 +42,14 @@ class ModelItem:
             self.parent_model._sorted_data.sort()
             new_index = self.parent_model._sorted_data.index(self)
 
-            ModelItemFieldChanged(
-                self.parent_model.sync_id,
-                old_index,
-                new_index,
-                name,
-                self.serialize_field(name),
-            )
+            if self.parent_model.sync_id:
+                ModelItemFieldChanged(
+                    self.parent_model.sync_id,
+                    old_index,
+                    new_index,
+                    name,
+                    self.serialize_field(name),
+                )
 
 
     def __delattr__(self, name: str) -> None:
