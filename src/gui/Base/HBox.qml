@@ -67,11 +67,11 @@ Rectangle {
                 id: buttonRepeater
                 model: []
 
-                onItemAdded:
-                    if (index === 0) firstButton = buttonRepeater.itemAt(0)
+                onItemAdded: if (index === 0 && box)
+                    box.firstButton = buttonRepeater.itemAt(0)
 
-                onItemRemoved:
-                    if (index === 0) firstButton = null
+                onItemRemoved: if (index === 0 && box)
+                    box.firstButton = null
 
                 HButton {
                     id: button
