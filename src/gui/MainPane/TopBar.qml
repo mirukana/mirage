@@ -38,8 +38,8 @@ Rectangle {
 
         HButton {
             backgroundColor: "transparent"
-            icon.name: "developper-console"
-            toolTip.text: qsTr("Developper console")
+            icon.name: "developer-console"
+            toolTip.text: qsTr("Developer console")
 
             onClicked: mainUI.shortcuts.toggleConsole()  // FIXME
 
