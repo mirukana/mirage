@@ -274,7 +274,11 @@ class MatrixClient(nio.AsyncClient):
                 trace = traceback.format_exc().rstrip()
 
                 if isinstance(err, MatrixError) and err.http_code >= 500:
-                    log.warning("Server failure during sync:\n%s", trace)
+                    log.warning(
+                        "Server failure during sync for %s:\n%s",
+                        self.user_id,
+                        trace,
+                    )
                 else:
                     LoopException(str(err), err, trace)
 
