@@ -45,6 +45,24 @@ Image {
             horizontalAlignment: image.horizontalAlignment
             verticalAlignment: image.verticalAlignment
 
+            // Hack to make the non-animated image behind this one
+            // basically invisible
+            Binding {
+                target: image
+                property: "fillMode"
+                value: Image.Pad
+            }
+            Binding {
+                target: image
+                property: "sourceSize.width"
+                value: 1
+            }
+            Binding {
+                target: image
+                property: "sourceSize.height"
+                value: 1
+            }
+
             // Online GIFs won't be able to loop if cache is set to false,
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
