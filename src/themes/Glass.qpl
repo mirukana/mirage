@@ -333,8 +333,8 @@ chat:
         color background:               "transparent"
 
     message:
-        int avatarSize:          58 * uiScale
-        int collapsedAvatarSize: 28 * uiScale
+        int avatarSize:          56 * uiScale
+        int collapsedAvatarSize: 32 * uiScale
         int avatarRadius:        controls.avatar.radius
 
         int radius:            theme.radius
