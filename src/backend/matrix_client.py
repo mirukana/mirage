@@ -22,12 +22,11 @@ from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 import cairosvg
-from PIL import Image as PILImage
-from pymediainfo import MediaInfo
-
 import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
 
 from . import __app_name__, __display_name__, utils
 from .errors import (
@@ -37,7 +36,7 @@ from .errors import (
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
-from .models.items import Event, Member, Room, Upload, UploadStatus
+from .models.items import Event, Member, Room, Upload, UploadStatus, ZeroDate
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
 from .pyotherside_events import AlertRequested, LoopException
@@ -1010,10 +1009,13 @@ class MatrixClient(nio.AsyncClient):
         """
 
         self.cleared_events_rooms.add(room_id)
+
         model = self.models[self.user_id, room_id, "events"]
         if model:
             model.clear()
 
+        self.models[self.user_id, "rooms"][room_id].last_event_date = \
+            ZeroDate
 
     # Functions to register data into models
 
