@@ -54,7 +54,8 @@ Drawer {
     property Item referenceSizeParent: parent
 
     property bool collapse:
-        (horizontal ? window.width : window.height) < 400 * theme.uiScale
+        (horizontal ? window.width : window.height) <
+        window.settings.collapseSidePanesUnderWindowWidth * theme.uiScale
 
     property int peekSizeWhileCollapsed:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height

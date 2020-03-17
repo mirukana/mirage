@@ -196,6 +196,7 @@ class UISettings(JSONDataFile):
             "alertOnMessageForMsec": 4000,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
+            "collapseSidePanesUnderWindowWidth": 400,
             "theme": "Midnight.qpl",
             "writeAliases": {},
             "media": {
