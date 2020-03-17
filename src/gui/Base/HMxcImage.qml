@@ -59,7 +59,7 @@ HImage {
                 image.show   = image.visible
 
             }, (type, args, error, traceback) => {
-                print(`Error retrieving ${mxc} (${title}):\n${traceback}`)
+                print(`Error retrieving ${mxc} (${title}): ${type} ${args}`)
                 if (image) image.broken = true
             },
         )
