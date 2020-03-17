@@ -50,7 +50,6 @@ Rectangle {
         HLabel {
             id: nameLabel
             text: chat.roomInfo.display_name || qsTr("Empty room")
-            font.pixelSize: theme.fontSize.big
             color: theme.chat.roomHeader.name
 
             elide: Text.ElideRight
