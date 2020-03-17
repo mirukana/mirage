@@ -66,6 +66,7 @@ HBox {
         Layout.fillWidth: true
         Layout.preferredHeight: width
         Layout.maximumWidth: 256 * theme.uiScale
+        Layout.alignment: Qt.AlignCenter
     }
 
     HLabeledTextField {
