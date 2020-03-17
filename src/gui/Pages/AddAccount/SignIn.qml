@@ -8,7 +8,7 @@ HBox {
     id: signInBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: idField.forceActiveFocus()
+    onFocusChanged: idField.field.forceActiveFocus()
 
     buttonModel: [
         {
@@ -31,8 +31,8 @@ HBox {
             errorMessage.text = ""
 
             const args = [
-                idField.text.trim(), passwordField.text,
-                undefined, serverField.text.trim(),
+                idField.field.text.trim(), passwordField.field.text,
+                undefined, serverField.field.text.trim(),
             ]
 
             loginFuture = py.callCoro("login_client", args, userId => {
@@ -82,8 +82,8 @@ HBox {
     property string signInWith: "username"
 
     readonly property bool canSignIn:
-        serverField.text.trim() && idField.text.trim() && passwordField.text &&
-        ! serverField.error
+        serverField.field.text.trim() && idField.field.text.trim() &&
+        passwordField.field.text && ! serverField.field.error
 
 
     Timer {
@@ -124,35 +124,35 @@ HBox {
         }
     }
 
-    HTextField {
+    HLabeledTextField {
         id: idField
-        placeholderText: qsTr(
-            signInWith === "email" ? "Email" :
-            signInWith === "phone" ? "Phone" :
-            "Username"
+        label.text: qsTr(
+            signInWith === "email" ? "Email:" :
+            signInWith === "phone" ? "Phone:" :
+            "Username:"
         )
 
         Layout.fillWidth: true
     }
 
-    HTextField {
+    HLabeledTextField {
         id: passwordField
-        placeholderText: qsTr("Password")
-        echoMode: HTextField.Password
+        label.text: qsTr("Password:")
+        field.echoMode: HTextField.Password
 
         Layout.fillWidth: true
     }
 
-    HTextField {
+    HLabeledTextField {
         id: serverField
-        placeholderText: qsTr("Homeserver URL")
-        text: "https://matrix.org"
-        error: ! /.+:\/\/.+/.test(cleanText)
+        label.text: qsTr("Homeserver:")
+        field.text: "https://matrix.org"
+        field.error: ! /.+:\/\/.+/.test(cleanText)
 
         Layout.fillWidth: true
 
 
-        readonly property string cleanText: text.toLowerCase().trim()
+        readonly property string cleanText: field.text.toLowerCase().trim()
 
         // 2019-11-11 https://www.hello-matrix.net/public_servers.php
         readonly property var knownServers: [
@@ -186,6 +186,8 @@ HBox {
         )
 
         Layout.fillWidth: true
+        Layout.topMargin: theme.spacing / 2
+        Layout.bottomMargin: Layout.topMargin
     }
 
     HLabel {

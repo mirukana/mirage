@@ -19,9 +19,7 @@ HFileDialogOpener {
 
     PasswordPopup {
         id: importPasswordPopup
-        details.text: qsTr(
-            "Please enter the passphrase that was used to protect this file:"
-        )
+        details.text: qsTr("Passphrase used to protect this file:")
         okText: qsTr("Import")
 
 

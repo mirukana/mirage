@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.12
 import "../../../Base"
 
 HBox {
-        color: theme.chat.roomPane.roomSettings.background
+    color: theme.chat.roomPane.roomSettings.background
 
     buttonModel: [
         {
@@ -37,8 +37,8 @@ HBox {
                 saveFuture = null
             }
 
-            nameField.reset()
-            topicField.reset()
+            nameField.field.reset()
+            topicField.field.reset()
             encryptCheckBox.reset()
             requireInviteCheckbox.reset()
             forbidGuestsCheckBox.reset()
@@ -49,8 +49,9 @@ HBox {
     property var saveFuture: null
 
     readonly property bool anyChange:
-        nameField.changed || topicField.changed || encryptCheckBox.changed ||
-        requireInviteCheckbox.changed || forbidGuestsCheckBox.changed
+        nameField.field.changed || topicField.field.changed ||
+        encryptCheckBox.changed || requireInviteCheckbox.changed ||
+        forbidGuestsCheckBox.changed
 
 
     HRoomAvatar {
@@ -65,21 +66,22 @@ HBox {
         Layout.maximumWidth: 256 * theme.uiScale
     }
 
-    HTextField {
+    HLabeledTextField {
         id: nameField
-        placeholderText: qsTr("Room name")
-        maximumLength: 255
-        defaultText: chat.roomInfo.given_name
-        enabled: chat.roomInfo.can_set_name
+        label.text: qsTr("Name:")
+        field.maximumLength: 255
+        field.defaultText: chat.roomInfo.given_name
+        field.enabled: chat.roomInfo.can_set_name
 
         Layout.fillWidth: true
     }
 
-    HScrollableTextArea {
+    HLabeledTextField {
         id: topicField
-        placeholderText: qsTr("Room topic")
-        defaultText: chat.roomInfo.plain_topic
-        enabled: chat.roomInfo.can_set_topic
+        label.text: qsTr("Topic:")
+        field.placeholderText: qsTr("This room is about...")
+        field.defaultText: chat.roomInfo.plain_topic
+        field.enabled: chat.roomInfo.can_set_topic
 
         Layout.fillWidth: true
     }

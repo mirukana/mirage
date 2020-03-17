@@ -8,7 +8,7 @@ HBox {
     id: addChatBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: nameField.forceActiveFocus()
+    onFocusChanged: nameField.field.forceActiveFocus()
 
     buttonModel: [
         { name: "apply", text: qsTr("Create"), iconName: "room-create" },
@@ -21,8 +21,8 @@ HBox {
             errorMessage.text = ""
 
             const args = [
-                nameField.text,
-                topicField.text,
+                nameField.field.text,
+                topicField.field.text,
                 publicCheckBox.checked,
                 encryptCheckBox.checked,
                 ! blockOtherServersCheckBox.checked,
@@ -40,8 +40,8 @@ HBox {
         },
 
         cancel: button => {
-            nameField.text                    = ""
-            topicField.text                   = ""
+            nameField.field.text              = ""
+            topicField.field.text             = ""
             publicCheckBox.checked            = false
             encryptCheckBox.checked           = false
             blockOtherServersCheckBox.checked = false
@@ -57,7 +57,7 @@ HBox {
     HRoomAvatar {
         id: avatar
         roomId: ""
-        displayName: nameField.text
+        displayName: nameField.field.text
 
         Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: 128
@@ -66,24 +66,25 @@ HBox {
         CurrentUserAvatar {
             anchors.fill: parent
             z: 10
-            opacity: nameField.text ? 0 : 1
+            opacity: nameField.field.text ? 0 : 1
             visible: opacity > 0
 
             Behavior on opacity { HNumberAnimation {} }
         }
     }
 
-    HTextField {
+    HLabeledTextField {
         id: nameField
-        placeholderText: qsTr("Name")
-        maximumLength: 255
+        label.text: qsTr("Name:")
+        field.maximumLength: 255
 
         Layout.fillWidth: true
     }
 
-    HTextField {
+    HLabeledTextField {
         id: topicField
-        placeholderText: qsTr("Topic (optional)")
+        label.text: qsTr("Topic:")
+        field.placeholderText: qsTr("This room is about...")
 
         Layout.fillWidth: true
     }

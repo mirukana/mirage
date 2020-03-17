@@ -37,7 +37,7 @@ HFileDialogOpener {
 
     PasswordPopup {
         id: exportPasswordPopup
-        details.text: qsTr("Please enter a passphrase to protect this file:")
+        details.text: qsTr("Passphrase to protect this file:")
         okText: qsTr("Export")
 
         onAcceptedPasswordChanged: exportKeys(file, acceptedPassword)

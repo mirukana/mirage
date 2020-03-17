@@ -65,7 +65,6 @@ BoxPopup {
 
         HTextField {
             id: passwordField
-            placeholderText: qsTr("Passphrase")
             echoMode: TextInput.Password
             focus: true
             error: passwordValid === false

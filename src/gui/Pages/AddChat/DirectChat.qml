@@ -8,14 +8,14 @@ HBox {
     id: addChatBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: userField.forceActiveFocus()
+    onFocusChanged: userField.field.forceActiveFocus()
 
     buttonModel: [
         {
             name: "apply",
             text: qsTr("Start chat"),
             iconName: "start-direct-chat",
-            enabled: Boolean(userField.text.trim())
+            enabled: Boolean(userField.field.text.trim())
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
@@ -25,7 +25,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            const args = [userField.text.trim(), encryptCheckBox.checked]
+            const args = [userField.field.text.trim(), encryptCheckBox.checked]
 
             py.callClientCoro(userId, "new_direct_chat", args, roomId => {
                 button.loading    = false
@@ -52,8 +52,8 @@ HBox {
         },
 
         cancel: button => {
-            userField.text    = ""
-            errorMessage.text = ""
+            userField.field.text = ""
+            errorMessage.text    = ""
             pageLoader.showPrevious()
         }
     })
@@ -68,10 +68,11 @@ HBox {
         Layout.preferredHeight: Layout.preferredWidth
     }
 
-    HTextField {
+    HLabeledTextField {
         id: userField
-        placeholderText: qsTr("Peer user ID (e.g. @bob:matrix.org)")
-        error: Boolean(errorMessage.text)
+        label.text: qsTr("Peer user ID:")
+        field.placeholderText: qsTr("@example:matrix.org")
+        field.error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true
     }
