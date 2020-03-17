@@ -83,11 +83,18 @@ TextField {
         when: disabledText !== null && ! field.enabled
     }
 
+    Binding on implicitHeight {
+        value: disabledTextLabel.implicitHeight
+        when: disabledText !== null && ! textArea.enabled
+    }
+
+
     Behavior on opacity { HNumberAnimation {} }
     Behavior on color { HColorAnimation {} }
     Behavior on placeholderTextColor { HColorAnimation {} }
 
     HLabel {
+        id: disabledTextLabel
         anchors.fill: parent
         visible: opacity > 0
         opacity: disabledText !== null && parent.enabled ? 0 : 1
@@ -98,7 +105,12 @@ TextField {
         topPadding: parent.topPadding
         bottomPadding: parent.bottomPadding
 
-        wrapMode: parent.wrapMode
+        wrapMode:
+            parent.wrapMode === TextField.Wrap ? Text.Wrap :
+            parent.wrapMode === TextField.WordWrap ? Text.WordWrap :
+            parent.wrapMode === TextField.WrapAnywhere ? Text.WrapAnywhere :
+            Text.NoWrap
+
         font.family: parent.font.family
         font.pixelSize: parent.font.pixelSize
 

@@ -87,10 +87,16 @@ ScrollView {
             when: disabledText !== null && ! textArea.enabled
         }
 
+        Binding on implicitHeight {
+            value: disabledTextLabel.implicitHeight
+            when: disabledText !== null && ! textArea.enabled
+        }
+
         Behavior on color { HColorAnimation {} }
         Behavior on placeholderTextColor { HColorAnimation {} }
 
         HLabel {
+            id: disabledTextLabel
             anchors.fill: parent
             visible: opacity > 0
             opacity: disabledText !== null && parent.enabled ? 0 : 1
@@ -101,7 +107,12 @@ ScrollView {
             topPadding: parent.topPadding
             bottomPadding: parent.bottomPadding
 
-            wrapMode: parent.wrapMode
+            wrapMode:
+                parent.wrapMode === TextEdit.Wrap ? Text.Wrap :
+                parent.wrapMode === TextEdit.WordWrap ? Text.WordWrap :
+                parent.wrapMode === TextEdit.WrapAnywhere ? Text.WrapAnywhere :
+                Text.NoWrap
+
             font.family: parent.font.family
             font.pixelSize: parent.font.pixelSize
 
