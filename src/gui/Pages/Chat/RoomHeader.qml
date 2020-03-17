@@ -21,9 +21,10 @@ Rectangle {
 
         HButton {
             id: goToMainPaneButton
-            icon.name: "go-back-to-main-pane"
             padded: false
             visible: Layout.preferredWidth > 0
+            icon.name: "go-back-to-main-pane"
+            toolTip.text: qsTr("Go back to main pane")
 
             onClicked: mainUI.mainPane.toggleFocus()
 
@@ -116,8 +117,9 @@ Rectangle {
         HButton {
             id: goToRoomPaneButton
             padded: false
-            icon.name: "go-to-room-pane"
             visible: goToMainPaneButton.visible
+            icon.name: "go-to-room-pane"
+            toolTip.text: qsTr("Go to room pane")
 
             onClicked: chat.roomPane.toggleFocus()
 
