@@ -53,6 +53,17 @@ HBox {
         encryptCheckBox.changed || requireInviteCheckbox.changed ||
         forbidGuestsCheckBox.changed
 
+    readonly property Item keybindFocusItem: {
+        for (let i = 0; i < visibleChildren.length; i++) {
+            const child = visibleChildren[i]
+
+            if (child.focus || (child.field && child.field.focus))
+                return visibleChildren[i]
+        }
+
+        return nameField.field
+    }
+
 
     HRoomAvatar {
         id: avatar
@@ -74,6 +85,8 @@ HBox {
         field.enabled: chat.roomInfo.can_set_name
 
         Layout.fillWidth: true
+
+        Component.onCompleted: field.forceActiveFocus()
     }
 
     HLabeledTextField {

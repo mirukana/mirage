@@ -194,6 +194,7 @@ class UISettings(JSONDataFile):
     async def default_data(self) -> JsonData:
         return {
             "alertOnMessageForMsec": 4000,
+            "alwaysCenterRoomHeader": False,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "collapseSidePanesUnderWindowWidth": 400,

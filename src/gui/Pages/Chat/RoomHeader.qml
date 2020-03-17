@@ -8,9 +8,34 @@ Rectangle {
     implicitHeight: theme.baseElementsHeight
     color: theme.chat.roomHeader.background
 
+
+    readonly property bool showPaneButtons: mainUI.mainPane.collapse
+
+    readonly property bool center:
+        showPaneButtons || window.settings.alwaysCenterRoomHeader
+
+
     HRowLayout {
         id: row
         anchors.fill: parent
+
+        HButton {
+            id: goToMainPaneButton
+            icon.name: "go-back-to-main-pane"
+            padded: false
+            visible: Layout.preferredWidth > 0
+
+            onClicked: mainUI.mainPane.toggleFocus()
+
+            Layout.preferredWidth: showPaneButtons ? avatar.width : 0
+            Layout.fillHeight: true
+
+            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        }
+
+        HSpacer {
+            visible: center
+        }
 
         HRoomAvatar {
             id: avatar
@@ -34,7 +59,12 @@ Rectangle {
             rightPadding: leftPadding
 
             Layout.preferredWidth: Math.min(
-                implicitWidth, row.width - row.spacing - avatar.width
+                implicitWidth,
+                row.width -
+                row.spacing * (showPaneButtons ? 3 : 1) -
+                goToMainPaneButton.width -
+                avatar.width -
+                goToRoomPaneButton.width
             )
             Layout.fillHeight: true
 
@@ -52,7 +82,16 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             rightPadding: nameLabel.rightPadding
 
-            Layout.fillWidth: true
+            Layout.preferredWidth: Math.min(
+                implicitWidth,
+                row.width -
+                row.spacing * (showPaneButtons ? 3 : 1) -
+                goToMainPaneButton.width -
+                avatar.width -
+                nameLabel.width -
+                goToRoomPaneButton.width
+            )
+            Layout.fillWidth: ! center
             Layout.fillHeight: true
 
             HoverHandler { id: topicHover }
@@ -69,6 +108,22 @@ Rectangle {
 
             readonly property string topic:
                 topicLabel.truncated ?  chat.roomInfo.topic : ""
+        }
+
+        HSpacer {
+            visible: center
+        }
+
+        HButton {
+            id: goToRoomPaneButton
+            padded: false
+            icon.name: "go-to-room-pane"
+            visible: goToMainPaneButton.visible
+
+            onClicked: chat.roomPane.toggleFocus()
+
+            Layout.preferredWidth: goToMainPaneButton.Layout.preferredWidth
+            Layout.fillHeight: true
         }
     }
 }

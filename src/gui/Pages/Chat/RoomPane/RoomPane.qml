@@ -34,6 +34,18 @@ MultiviewPane {
         onClicked: swipeView.currentIndex = Math.min(index, 1)
     }
 
+
+    function toggleFocus() {
+        if (swipeView.currentItem.keybindFocusItem.activeFocus) {
+            pageLoader.takeFocus()
+            return
+        }
+
+        roomPane.open()
+        swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+    }
+
+
     MemberView {}
     SettingsView { fillAvailableHeight: true }
 }

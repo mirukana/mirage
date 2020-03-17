@@ -7,6 +7,9 @@ import "../../.."
 import "../../../Base"
 
 HColumnLayout {
+    readonly property alias keybindFocusItem: filterField
+
+
     HListView {
         id: memberList
         clip: true

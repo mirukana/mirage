@@ -14,7 +14,6 @@ HDrawer {
         if (! hasFocus) mainPaneList.detachedCurrentIndex = false
 
 
-
     property alias filter: bottomBar.roomFilter
 
     readonly property bool small:
