@@ -229,11 +229,11 @@ class UISettings(JSONDataFile):
                 "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
                 "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
 
-                "toggleFocusMainPane": ["Alt+S"],
-                "clearRoomFilter":     ["Alt+Shift+S"],
+                "toggleFocusMainPane": ["Alt+F"],
+                "clearRoomFilter":     ["Alt+Shift+F"],
                 "accountSettings":     ["Alt+A"],
-                "addNewChat":          ["Alt+N"],
-                "addNewAccount":       ["Alt+Shift+N"],
+                "addNewAccount":       ["Alt+Shift+A"],
+                "addNewChat":          ["Alt+C"],
 
                 "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
@@ -241,8 +241,8 @@ class UISettings(JSONDataFile):
                 "toggleCollapseAccount": [ "Alt+O"],
 
                 "clearRoomMessages":           ["Ctrl+L"],
-                "sendFile":                    ["Alt+F"],
-                "sendFileFromPathInClipboard": ["Alt+Shift+F"],
+                "sendFile":                    ["Alt+S"],
+                "sendFileFromPathInClipboard": ["Alt+Shift+S"],
 
                 "toggleFocusRoomPane": ["Alt+R"],
             },
