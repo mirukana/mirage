@@ -138,8 +138,9 @@ class Media:
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
-        async with atomic_write(self.local_path, binary=True) as file:
+        async with atomic_write(self.local_path, binary=True) as (file, done):
             await file.write(data)
+            done()
 
         return self.local_path
 
@@ -212,8 +213,11 @@ class Media:
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
-            async with atomic_write(media.local_path, binary=True) as file:
+            path = media.local_path
+
+            async with atomic_write(path, binary=True) as (file, done):
                 await file.write(data)
+                done()
 
         return media
 

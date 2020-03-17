@@ -90,8 +90,9 @@ class DataFile:
             if not self.create_missing and not self.path.exists():
                 continue
 
-            async with atomic_write(self.path) as new:
+            async with atomic_write(self.path) as (new, done):
                 await new.write(self._to_write)
+                done()
 
             self._to_write = None
 
