@@ -147,7 +147,7 @@ Item {
 
     HShortcut {
         enabled: mainUI.accountsPresent
-        sequences: settings.keys.focusMainPane
+        sequences: settings.keys.toggleFocusMainPane
         onActivated: mainUI.mainPane.toggleFocus()
         context: Qt.ApplicationShortcut
     }
