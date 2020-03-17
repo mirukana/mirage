@@ -23,6 +23,7 @@ Rectangle {
             id: goToMainPaneButton
             padded: false
             visible: Layout.preferredWidth > 0
+            backgroundColor: "transparent"
             icon.name: "go-back-to-main-pane"
             toolTip.text: qsTr("Go back to main pane")
 
@@ -118,6 +119,7 @@ Rectangle {
             id: goToRoomPaneButton
             padded: false
             visible: goToMainPaneButton.visible
+            backgroundColor: "transparent"
             icon.name: "go-to-room-pane"
             toolTip.text: qsTr("Go to room pane")
 
