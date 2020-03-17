@@ -15,25 +15,26 @@ HColumnPage {
     // The target will be our EventList, not the page itself
     becomeKeyboardFlickableTarget: false
 
+    onLoadEventListChanged: if (loadEventList) loadedOnce = true
+
+
+    property bool loadedOnce: false
 
     readonly property alias composer: composer
-    readonly property bool loadEventList: ! pageLoader.appearAnimation.running
+    readonly property bool loadEventList:
+        mainUI.mainPane.collapse ?
+        ! mainUI.mainPane.visible : ! pageLoader.appearAnimation.running
 
 
     RoomHeader {
         Layout.fillWidth: true
     }
 
-    Timer {
-        id: delayEventListLoadingTimer
-        interval: 200
-        running: true
-    }
-
     HLoader {
         id: eventListLoader
-        sourceComponent: loadEventList ? evListComponent : placeholder
         opacity: loadEventList ? 1 : 0
+        sourceComponent:
+            loadedOnce || loadEventList ? evListComponent : placeholder
 
         Layout.fillWidth: true
         Layout.fillHeight: true
