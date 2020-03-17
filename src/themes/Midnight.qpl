@@ -40,9 +40,12 @@ colors:
 
     real opacity: 1.0
 
-    color weakBackground:   hsluv(hue, bgSaturation, intensity * 9, opacity)
-    color mediumBackground: hsluv(hue, bgSaturation, intensity * 6.8, opacity)
-    color strongBackground: hsluv(hue, bgSaturation * 2,intensity * 2, opacity)
+    color weakBackground:
+        hsluv(hue, bgSaturation * 1.5, intensity * 7, opacity)
+    color mediumBackground:
+        hsluv(hue, bgSaturation, intensity * 7, opacity)
+    color strongBackground:
+        hsluv(hue, bgSaturation * 2,intensity * 2, opacity)
 
     color accentBackground:    hsluv(hue, saturation, intensity * 32, 1)
     color accentElement:       hsluv(hue, saturation * 1.5, intensity * 52, 1)
@@ -352,7 +355,7 @@ chat:
         int verticalSpacing:   theme.spacing / 1.75
 
         color background:    colors.mediumBackground
-        color ownBackground: colors.strongBackground
+        color ownBackground: colors.weakBackground
 
         color body: colors.text
         color date: colors.dimText
