@@ -47,6 +47,13 @@ MultiviewPane {
     }
 
 
+    Connections {
+        target: swipeView
+
+        onCurrentItemChanged:
+            swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+    }
+
     MemberView {}
     SettingsView { fillAvailableHeight: true }
 }
