@@ -26,7 +26,7 @@ HColumnPage {
 
     Timer {
         id: delayEventListLoadingTimer
-        interval: 150
+        interval: 200
         running: true
     }
 
