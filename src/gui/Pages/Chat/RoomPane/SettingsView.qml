@@ -53,16 +53,7 @@ HBox {
         encryptCheckBox.changed || requireInviteCheckbox.changed ||
         forbidGuestsCheckBox.changed
 
-    readonly property Item keybindFocusItem: {
-        for (let i = 0; i < visibleChildren.length; i++) {
-            const child = visibleChildren[i]
-
-            if (child.focus || (child.field && child.field.focus))
-                return visibleChildren[i]
-        }
-
-        return nameField.field
-    }
+    readonly property Item keybindFocusItem: nameField.field
 
 
     HRoomAvatar {

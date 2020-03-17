@@ -243,6 +243,8 @@ class UISettings(JSONDataFile):
                 "clearRoomMessages":           ["Ctrl+L"],
                 "sendFile":                    ["Alt+F"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+F"],
+
+                "toggleFocusRoomPane": ["Alt+R"],
             },
         }
 

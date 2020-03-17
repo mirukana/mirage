@@ -243,4 +243,14 @@ Item {
             Clipboard.text.trim(),
         )
     }
+
+
+    // RoomPane
+
+    HShortcut {
+        enabled: window.uiState.page === "Pages/Chat/Chat.qml"
+        sequences: settings.keys.toggleFocusRoomPane
+        onActivated: mainUI.pageLoader.item.roomPane.toggleFocus()
+        context: Qt.ApplicationShortcut
+    }
 }
