@@ -45,5 +45,19 @@ Rectangle {
 
             Layout.fillHeight: true
         }
+
+        HButton {
+            visible: Layout.preferredWidth > 0
+            backgroundColor: "transparent"
+            icon.name: "go-back-to-chat-from-main-pane"
+            toolTip.text: qsTr("Go back to room")
+
+            onClicked: mainPane.toggleFocus()
+
+            Layout.preferredWidth: mainPane.collapse ? implicitWidth : 0
+            Layout.fillHeight: true
+
+            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        }
     }
 }
