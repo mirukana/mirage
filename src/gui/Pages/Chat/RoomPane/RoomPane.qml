@@ -14,24 +14,39 @@ MultiviewPane {
 
 
     buttonRepeater.model: [
-        "members", "files", "notifications", "history", "settings"
+        "back", "members", "files", "notifications", "history", "settings"
     ]
 
     buttonRepeater.delegate: HButton {
+        visible: width > 0
+        width: modelData === "back" && ! roomPane.collapse ? 0 : implicitWidth
         height: theme.baseElementsHeight
+
         backgroundColor: "transparent"
-        icon.name: "room-view-" + modelData
-        toolTip.text: qsTr(
-            modelData.charAt(0).toUpperCase() + modelData.slice(1)
-        )
+        icon.name:
+            modelData === "back" ?
+            "go-back-to-chat-from-room-pane" : "room-view-" + modelData
+
+        toolTip.text:
+            modelData === "back" ?
+            qsTr("Go back to chat") :
+            qsTr(modelData.charAt(0).toUpperCase() + modelData.slice(1))
 
         autoExclusive: true
-        checked: swipeView.currentIndex === 0 && index === 0 ||
-                 swipeView.currentIndex === 1 && index === 4
+        checked: swipeView.currentIndex === 0 && index === 1 ||
+                 swipeView.currentIndex === 1 && index === 5
 
-        enabled: ["members", "settings"].includes(modelData)
+        enabled: ["back", "members", "settings"].includes(modelData)
 
-        onClicked: swipeView.currentIndex = Math.min(index, 1)
+        onClicked:
+            modelData === "back" ?
+            roomPane.toggleFocus() :
+            swipeView.currentIndex = Math.min(index, 1)
+
+        Behavior on width {
+            enabled: modelData === "back"
+            HNumberAnimation {}
+        }
     }
 
 
