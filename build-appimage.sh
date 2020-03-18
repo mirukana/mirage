@@ -89,14 +89,16 @@ install_apt_packages() {
     add-apt-repository -y ppa:beineri/opt-qt-5.12.7-xenial
     apt update -y
 
-    apt install -y qt512base qt512declarative qt512graphicaleffects \
+    apt install -y \
+        qt512base qt512declarative qt512graphicaleffects \
         qt512imageformats qt512quickcontrols2 qt512svg \
         zip git wget cmake ccache \
         build-essential mesa-common-dev libglu1-mesa-dev freeglut3-dev \
         libglfw3-dev libgles2-mesa-dev libjpeg-turbo8-dev zlib1g-dev \
         libtiff5-dev liblcms2-dev libwebp-dev  libopenjp2-7-dev libssl-dev \
         python3-dev python3-setuptools python3-pip libgdbm-dev libc6-dev \
-        zlib1g-dev libsqlite3-dev libffi-dev openssl
+        zlib1g-dev libsqlite3-dev libffi-dev openssl \
+        desktop-file-utils  # for appimage-lint.sh
 
     /usr/sbin/update-ccache-symlinks
 }
@@ -153,10 +155,6 @@ install_olm() {
     cd olm-master
     cmake . -Bbuild
     cmake --build build
-
-    cd python
-    make olm-python3
-    cd ..
     make install
 }
 
@@ -191,6 +189,7 @@ get_app_and_pip_dependencies() {
 
 initialize_appdir() {
     cd ~/mirage
+    if [ -f Makefile ]; then make clean; fi
     qmake mirage.pro
     make install INSTALL_ROOT=build/appdir
 }
@@ -203,15 +202,14 @@ complete_appdir() {
     cp -r ~/.local/lib/python3.8/site-packages/* \
           appdir/usr/lib/python3.8/site-packages
 
-    if ! [ -f linuxdeployqt-continuous-x86_64.AppImage ]; then
-        wget 'https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage'
+    if ! [ -f ~/linuxdeployqt.AppImage ]; then
+        wget 'https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage' \
+             -O ~/linuxdeployqt.AppImage
     fi
-    chmod +x linuxdeployqt-continuous-x86_64.AppImage
+    chmod +x ~/linuxdeployqt.AppImage
 
-    ./linuxdeployqt-continuous-x86_64.AppImage \
-        appdir/usr/share/applications/mirage.desktop \
-        -bundle-non-qt-libs \
-        -qmldir=../src/gui
+    ~/linuxdeployqt.AppImage appdir/usr/share/applications/mirage.desktop \
+                             -bundle-non-qt-libs -qmldir=../src/gui
 
     cp /opt/qt512/qml/io/thp/pyotherside/qmldir appdir/usr/qml/io/thp/pyotherside
 
@@ -231,11 +229,18 @@ fix_apprun_launcher() {
     cat << 'EOF' > AppRun
 #!/usr/bin/env sh
 set -e
+
 here="$(dirname "$(readlink -f "$0")")"
+
+export RESTORE_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+export RESTORE_PYTHONHOME="$PYTHONHOME"
+export RESTORE_PYTHONUSERBASE="$PYTHONUSERBASE"
+
 export SSL_CERT_FILE="$here/usr/lib/python3.8/site-packages/certifi/cacert.pem"
 export LD_LIBRARY_PATH="$here/usr/lib:$LD_LIBRARY_PATH"
-export PYTHONHOME=$here/usr
-export PYTHONUSERBASE=$here/usr
+export PYTHONHOME="$here/usr"
+export PYTHONUSERBASE="$here/usr"
+
 cd "$here"
 exec "$here/usr/bin/mirage" "$@"
 EOF
@@ -247,12 +252,33 @@ EOF
 generate_appimage() {
     cd ~/mirage/build
 
-    if ! [ -f appimagetool-x86_64.AppImage ]; then
-        wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+    if ! [ -f ~/appimagetool.AppImage ]; then
+        wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" \
+             -O ~/appimagetool.AppImage
     fi
 
-    chmod +x appimagetool-x86_64.AppImage
-    ./appimagetool-x86_64.AppImage appdir
+    chmod +x ~/appimagetool.AppImage
+    ~/appimagetool.AppImage appdir
+}
+
+
+lint_appdir() {
+    cd ~
+
+    cat << 'EOF' > /usr/local/bin/mimetype
+#!/usr/bin/env sh
+file --mime-type "$@" | tr -d ';'
+EOF
+    chmod +x /usr/local/bin/mimetype
+
+    if ! [ -d pkg2appimage ]; then
+        git clone https://github.com/AppImage/pkg2appimage
+    fi
+    chmod +x pkg2appimage/appdir-lint.sh
+
+    cd ~/mirage/build
+    echo -e "\e[34m\nAppDir linting result:\n\e[0m"
+    ~/pkg2appimage/appdir-lint.sh appdir
 }
 
 
@@ -275,3 +301,4 @@ initialize_appdir
 complete_appdir
 fix_apprun_launcher
 generate_appimage
+lint_appdir

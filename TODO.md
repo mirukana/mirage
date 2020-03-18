@@ -2,7 +2,10 @@
 
 ## Before release
 
-- Write a real README.md
+- readline
+- Add Gentoo instructions
+- Finish the README.md
+- Build final AppImage and test media opening
 
 ## Refactoring
 
@@ -51,6 +54,9 @@
 
 ## Interface
 
+- Labeled text area component, use it for room creation/settings topic 
+  - Linkify URLs in topic text areas
+
 - Expand the room pane if it's currently too small to show room settings
 - Use a loader for items not in view for the `HTabContainer`'s `SwipeView`
 
@@ -66,8 +72,6 @@
 - Improve when HDrawer should collapse when the ui is zoomed
 - Way to open context menus without a right mouse button
 - Make room invite/left banner buttons look better
-- When window is reduced enough for main pane to be invisible, transition
-  between pane and page with Alt+S is laggy when the page is a chat
 
 - Choose a better easing types for animations
 - Make HListView scrollbars more visible
@@ -99,8 +103,6 @@
 
 - `MainPane`:
   - Animate when logging out last account and sidepane turns invisible
-  - Header back button when reduced
-  - Better look when reduced to minimum size
 
 - Server selection
 - Implement Register/Reset pages
@@ -147,6 +149,7 @@
 ## Backend
 
 - Saving the room settings
+- Optimize Model item replacement
 - Refetch profile after manual profile change, don't wait for a room event
 
 - Better config file format

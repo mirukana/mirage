@@ -8,6 +8,7 @@
 
 import asyncio
 import logging as log
+import os
 import signal
 import traceback
 from concurrent.futures import Future
@@ -124,6 +125,16 @@ class QMLBridge:
                  "to connect to pdb.")
         import remote_pdb
         remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
+
+
+# The AppImage AppRun script overwrites some environment path variables to
+# correctly work, and sets RESTORE_<name> equivalents with the original values.
+# If the app is launched from an AppImage, now restore the original values
+# to prevent problems like QML Qt.openUrlExternally() failing because
+# the external launched program is affected by our AppImage-specific variables.
+for var in ("LD_LIBRARY_PATH", "PYTHONHOME", "PYTHONUSERBASE"):
+    if f"RESTORE_{var}" in os.environ:
+        os.environ[var] = os.environ[f"RESTORE_{var}"]
 
 
 # Make CTRL-C work again
