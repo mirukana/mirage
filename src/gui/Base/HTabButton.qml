@@ -12,7 +12,6 @@ TabButton {
     leftPadding: spacing
     rightPadding: leftPadding
 
-    iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
 
     implicitWidth: Math.max(

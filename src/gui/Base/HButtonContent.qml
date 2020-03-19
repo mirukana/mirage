@@ -21,60 +21,34 @@ HRowLayout {
     Behavior on opacity { HNumberAnimation {} }
 
 
-    HIcon {
-        property bool loading: button.loading || false
+    Item {
+        visible: button.icon.name || button.loading
 
-        id: icon
-        svgName: button.icon.name
-        colorize: button.icon.color
-        // cache: button.icon.cache  // XXX: need Qt 5.13+
-
-        onLoadingChanged: if (! loading) resetAnimations.start()
-
+        Layout.preferredWidth: icon.width
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
 
+        HIcon {
+            id: icon
+            svgName: button.icon.name
+            colorize: button.icon.color
+            // cache: button.icon.cache  // TODO: need Qt 5.13+
 
-        ParallelAnimation {
-            id: resetAnimations
-            HNumberAnimation { target: icon; property: "opacity"; to: 1 }
-            HNumberAnimation { target: icon; property: "rotation"; to: 0 }
+            width: svgName ? implicitWidth : 0
+            visible: width > 0
+
+            opacity: button.loading ? 0 : 1
+
+            Behavior on opacity { HNumberAnimation {} }
         }
 
+        HBusyIndicator {
+            width: height
+            height: parent.height
+            opacity: button.loading ? 1 : 0
+            visible: opacity > 0
 
-        HNumberAnimation on opacity {
-            id: blink
-            from: 1
-            to: 0.5
-            factor: 2
-            running: button.loading || false
-            onFinished: { [from, to] = [to, from]; start() }
-        }
-
-        SequentialAnimation {
-            running: button.loading || false
-            loops: Animation.Infinite
-
-            HPauseAnimation { factor: blink.factor * 8 }
-
-            HNumberAnimation {
-                id: rotation1
-                target: icon
-                property: "rotation"
-                from: 0
-                to: 180
-                factor: blink.factor
-            }
-
-            HPauseAnimation { factor: blink.factor * 8 }
-
-            HNumberAnimation {
-                target: rotation1.target
-                property: rotation1.property
-                from: rotation1.to
-                to: 360
-                factor: rotation1.factor
-            }
+            Behavior on opacity { HNumberAnimation {} }
         }
     }
 

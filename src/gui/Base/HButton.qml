@@ -13,7 +13,6 @@ Button {
     leftPadding: padded ? spacing / (circle ? 1.5 : 1) : 0
     rightPadding: leftPadding
 
-    iconItem.svgName: loading ? "hourglass" : icon.name
     icon.color: theme.icons.colorize
 
     // Must be explicitely set to display correctly on KDE
