@@ -163,8 +163,8 @@ HColumnLayout {
         HButton {
             icon.name: "upload-cancel"
             icon.color: theme.colors.negativeBackground
-            padded: false
             onClicked: transfer.cancel()
+            padded: false
 
             Layout.preferredWidth: theme.baseElementsHeight
             Layout.fillHeight: true

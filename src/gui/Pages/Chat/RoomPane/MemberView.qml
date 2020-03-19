@@ -92,8 +92,6 @@ HColumnLayout {
                     },
                 )
 
-                // onEnabledChanged: if (openedPopup && ! enabled)
-
                 Layout.fillHeight: true
             }
         }

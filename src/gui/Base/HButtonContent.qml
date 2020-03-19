@@ -32,20 +32,22 @@ HRowLayout {
 
         HIcon {
             id: icon
-            svgName: button.icon.name
-            colorize: button.icon.color
-            // cache: button.icon.cache  // TODO: need Qt 5.13+
-
+            anchors.centerIn: parent
             width: svgName ? implicitWidth : 0
             visible: width > 0
-
             opacity: button.loading ? 0 : 1
+
+            colorize: button.icon.color
+            svgName: button.icon.name
+
+            // cache: button.icon.cache  // TODO: need Qt 5.13+
 
             Behavior on opacity { HNumberAnimation {} }
         }
 
         HBusyIndicator {
             id: busyIndicator
+            anchors.centerIn: parent
             width: height
             height: parent.height
             opacity: button.loading ? 1 : 0
