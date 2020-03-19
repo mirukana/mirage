@@ -38,14 +38,14 @@ colors:
     int bgSaturation:          saturation
     int coloredTextSaturation: saturation + 20
 
-    real opacity: 1.0
+    real opacity: 0.7
 
     color weakBackground:
-        hsluv(hue, bgSaturation * 1.5, intensity * 7, opacity)
+        hsluv(hue, bgSaturation, intensity * 2.5, opacity)
     color mediumBackground:
         hsluv(hue, bgSaturation, intensity * 7, opacity)
     color strongBackground:
-        hsluv(hue, bgSaturation * 2,intensity * 2, opacity)
+        hsluv(hue, bgSaturation * 2, intensity, opacity)
 
     color accentBackground:    hsluv(hue, saturation, intensity * 32, 1)
     color accentElement:       hsluv(hue, saturation * 1.5, intensity * 52, 1)
@@ -160,8 +160,8 @@ controls:
         color highlight: hsluv(
             colors.hue,
             colors.bgSaturation * 2,
-            colors.intensity * 2,
-            colors.opacity / 2,
+            colors.intensity * 1,
+            colors.opacity / 1.5,
         )
         color smallPaneHighlight: colors.accentBackground
 
@@ -231,7 +231,7 @@ controls:
 
         background:
             int saturation: colors.saturation
-            int lightness:  Math.min(50, colors.intensity * 23)
+            int lightness:  Math.min(50, colors.intensity * 25)
             real opacity:   1.0
 
         letter:
@@ -250,15 +250,15 @@ ui:
     // The background image can be an URL or local file path
     // (in the form file://<path>, e.g. file:///home/user/images/foo.png).
     // If not specified, the gradient will be shown instead.
-    url image: ""
+    url image: "../../images/midnight.jpg"
 
     point gradientStart: Qt.point(0, 0)
     point gradientEnd:   Qt.point(window.width, window.height)
 
     color gradientStartColor:
-        hsluv(colors.hue - 50, 100, colors.intensity * 8)
+        hsluv(colors.hue, 100, colors.intensity * 8)
     color gradientEndColor:
-        hsluv(colors.hue + 20, 30, colors.intensity * 22)
+        hsluv(colors.hue + 50, 30, colors.intensity * 22)
 
     // To have a solid color instead,
     // set gradientStartColor and gradientEndColor to the same value, e.g.:
@@ -354,8 +354,8 @@ chat:
         int horizontalSpacing: theme.spacing / 1.25
         int verticalSpacing:   theme.spacing / 1.75
 
-        color background:    colors.mediumBackground
-        color ownBackground: colors.weakBackground
+        color background:    colors.weakBackground
+        color ownBackground: colors.mediumBackground
 
         color body: colors.text
         color date: colors.dimText

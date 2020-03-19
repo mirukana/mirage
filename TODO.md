@@ -2,7 +2,7 @@
 
 ## Before release
 
-- Debug mode always on, but prevent pdb if no terminal
+- No bug icon
 - Add Gentoo instructions
 - Finish the README.md
 - Build final AppImage and test media opening
