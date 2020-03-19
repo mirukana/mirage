@@ -1,60 +1,121 @@
-# Mirage
+# Mirage ![Latest release](https://img.shields.io//github/v/release/mirukan/mirage)
+
+[Features](#currently-implemented-features) ⬥
+[Installation](INSTALL.MD) ⬥
+[Configuration & theming](#configuration-and-theming) ⬥
+[More screenshots](#more-screenshots)
+
+A fancy [matrix](https://matrix.org/) chat client for secure,
+decentralized communication with an emphasis on user experience
+and customization. **Currently in alpha**.
+
+![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
+
+## Currently implemented features
+
+### Client
+
+- **Fluid interface** that adapts to any window size
+- Customizable **keyboard shortcuts** for (almost) everything, including
+  filtering and switching rooms, scrolling, sending files...
+- Versatile **theming system**, properties can refer to each others and have 
+  any valid ECMAScript 7 expression as value
+  - Comes by default with **dark and transparent themes**
+- **Multiple accounts** in one client
+
+### Profile
+
+- Set your display name and profile picture
+- Import/export **E2E** key files
+
+### Rooms
+
+- Create, join, leave and forget rooms
+- Send, accept and refuse invites
+
+### Messages
+
+- Send and receive **E2E encrypted messages**
+- Send and receive emote messages (e.g. `/me reads attentively`)
+- Receive notice (bot) messages
+- Send **markdown** formatted messages
+  - Additional syntax for **coloring** text, e.g. `<red>(Some text...)` - 
+    [SVG/CSS color names](https://www.december.com/html/spec/colorsvg.html),
+    and `#hex` codes can be used
+- Send and receive normal or **E2E encrypted files**
+- Client-side Matrix & HTTP URL **image previews**, including animated GIF 
+
+### Presence
+
+- Typing notifications
+
+## Installation
+
+See [INSTALL.MD](INSTALL.MD).
+
+## Configuration and theming
+
+The config file can be found at *$XDG_CONFIG_HOME/mirage/settings.json*, 
+or *~/.config/mirage/settings.json*.
+
+The `theme` setting can be:
+
+- The name of a built-in theme (`Midnight` or `Glass`)
+- The filename without extension of a custom theme at 
+  *$XDG_DATA_HOME/mirage/themes*, or *~/.local/share/mirage/themes*
+
+A default theme from this repository can be copied to use as a base and edit,
+for example:
+
+```sh
+    cp mirage/src/themes/Midnight.qpl \
+       "${XDG_DATA_HOME:-$HOME/.local/share}/mirage/themes/MyTheme.qpl"
+```
+
+The config setting `theme` would need to be set to `MyTheme` in this case.
+
+Theme files are nested-by-indentations sections of properties and values.  
+Properties are declared as `<type> <name>: <value>`.  
+Values can be any JavaScript (ECMAScript 7) expressions.
+
+Most of the properties are of type `color`.
+Their values, if not just refering to another property,
+can be expressed with a:
+- [SVG/CSS color name](https://www.december.com/html/spec/colorsvg.html)
+  string, e.g. `"blue"`
+- hexadecimal code string, e.g. `"#fff"` or `"#cc0000"`
+- RGBA value, using the `Qt.rgba(0-1, 0-1, 0-1, 0-1)` function
+- HSLA value, using the `Qt.hsla(0-1, 0-1, 0-1, 0-1)` function
+- HSVA value, using the `Qt.hsva(0-1, 0-1, 0-1, 0-1)` function
+- [HSLUV](https://www.hsluv.org/) value, using the
+  `hsluv(0-360, 0-100, 0-100, 0-1)` function. This is the prefered method 
+  used throughout the default theme files
+  (why? see [this](https://www.hsluv.org/comparison/#rainbow-hsluv) and
+  [that](https://www.boronine.com/2012/03/26/Color-Spaces-for-Human-Beings/#hsl-is-a-lemon))
+
+If you just want to change the background picture,
+or use a gradient/simple color instead, search for the `ui:` section in your
+text editor.
 
 
-## Dependencies setup
+With `Alt+Shift+R` by default, the config and theme can be reloaded without 
+restarting the app.
 
-From your distribution's package manager, install:
+**Warnings**: 
 
-Qt 5.12+, including:
-- qt5-declarative-devel
-- qt5-quickcontrols2-devel
-- qt5-svg-devel
-- qt5-graphicaleffects
-- qt5-qmake
-- qt5-devel
+- API currently unstable: theme properties are often renamed, added or deleted.
+- The file format for both config and themes will soon change
+- The current file format currently forces all theme to have all properties
+  defined, instead of being able to only specify the ones to override from the
+  default theme.
 
-- python3
-- python3-devel
-- olm-python3 >= 3.1
+GUI settings will also be implemented in the future.
 
-Make sure that the right version of Qt is selected and compiler flags are
-correctly set:
+## More screenshots
 
-    export QT_SELECT=5
-    export CFLAGS="-march=native -O2 -pipe"
-    export CXXFLAGS="$CFLAGS"
-    export MAKEFLAGS="$(nproc)"
+![Sign-in](extra/general/screenshots/02-sign-in.png)
+![Account settings](extra/general/screenshots/03-account-settings.png)
+![Room creation](extra/general/screenshots/04-create-room.png)
+![Main pane in small window](extra/general/screenshots/05-main-pane-small.png)
+![Chat in small window](extra/general/screenshots/06-chat-small.png)
 
-Install [pyotherside](https://github.com/thp/pyotherside):
-
-    git clone https://github.com/thp/pyotherside
-    cd pyotherside
-    make clean; qmake && make && sudo make install
-
-After this, verify the permissions of the installed plugin files.
-To ensure that they're correctly set:
-
-    sudo chmod -R 755 /usr/lib/qt5/qml/io
-    sudo chmod 644 /usr/lib/qt5/qml/io/thp/pyotherside/*
-    sudo chmod 755 /usr/lib/qt5/qml/io/thp/pyotherside/*.so
-
-Install the Python 3 dependencies:
-
-    pip3 install --user -Ur requirements.txt
-
-Optional dependency for performance improvements:
-
-    pip3 install --user -U uvloop==0.13.0
-
-
-## Building
-
-    git clone --recursive <TODO>
-    cd mirage
-    qmake mirage.pro && make && sudo make install
-
-After this if no errors happened, run `mirage`.
-
-If you get a version mismatch error related to cffi, try:
-
-    pip3 install --user --upgrade --force-reinstall cffi
