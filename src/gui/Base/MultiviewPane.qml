@@ -6,12 +6,14 @@ import QtQuick.Layouts 1.12
 
 HDrawer {
     id: pane
-    defaultSize: buttonRepeater.summedImplicitWidth
-    minimumSize:
-        buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
+    defaultSize: buttonRepeater.count * buttonWidth
+    minimumSize: buttonWidth
 
 
     property color buttonsBackgroundColor
+
+    property int buttonWidth:
+        buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
@@ -33,7 +35,7 @@ HDrawer {
                 width: parent.width
                 populate: null
 
-                HRepeater {
+                Repeater {
                     id: buttonRepeater
                 }
             }

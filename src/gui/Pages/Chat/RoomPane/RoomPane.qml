@@ -9,6 +9,12 @@ MultiviewPane {
     saveName: "roomPane"
     edge: Qt.RightEdge
 
+    defaultSize:
+        (buttonRepeater.count - (roomPane.collapse ? 0 : 1)) * buttonWidth
+
+    buttonWidth:
+        buttonRepeater.count >= 1 ? buttonRepeater.itemAt(1).implicitWidth : 0
+
     buttonsBackgroundColor: theme.chat.roomPane.topBar.background
     background: Rectangle { color: theme.chat.roomPane.background }
 
