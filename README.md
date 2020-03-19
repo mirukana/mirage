@@ -6,8 +6,9 @@
 [Screenshots](#more-screenshots)
 
 A fancy [matrix](https://matrix.org/) chat client for secure,
-decentralized communication with an emphasis on user experience
-and customization. **Currently in alpha**.
+decentralized communication with an emphasis on **u**ser e**x**perience
+and customization.  
+Written in Qt/QML + Python, **Currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
 
@@ -51,7 +52,7 @@ and customization. **Currently in alpha**.
 
 ## Installation
 
-See [INSTALL.MD](INSTALL.MD).
+See [INSTALL.MD](INSTALL.MD)
 
 ## Configuration & Theming
 
