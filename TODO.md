@@ -2,6 +2,7 @@
 
 ## Before release
 
+- page back buttons
 - Add Gentoo instructions
 - Finish the README.md
 - Build final AppImage and test media opening

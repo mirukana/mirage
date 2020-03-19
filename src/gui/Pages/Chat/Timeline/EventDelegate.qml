@@ -65,7 +65,7 @@ HColumnLayout {
 
     function json() {
         let event    = ModelStore.get(chat.userId, chat.roomId, "events")
-                                 .get(model.id)
+                                 .get(model.index)
         event        = JSON.parse(JSON.stringify(event))
         event.source = JSON.parse(event.source)
         return JSON.stringify(event, null, 4)
