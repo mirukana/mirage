@@ -343,7 +343,7 @@ chat:
                 color background: "transparent"
 
     eventList:
-        int ownEventsOnRightUnderWidth: 768 * theme.uiScale
+        int ownEventsOnRightUnderWidth: 896 * theme.uiScale
         color background:               "transparent"
 
     message:
