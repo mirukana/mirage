@@ -55,18 +55,21 @@ HListView {
             value: highlightRectangle.y + highlightRectangle.height / 2 -
                    mainPaneList.height / 2
             delayed: true
-            when: yAnimation.running
+            when: centerToHighlight && yAnimation.running
         }
 
         Connections {
             target: mainPaneList
-            enabled: yAnimation.running
+            enabled: centerToHighlight && yAnimation.running
             onContentYChanged: mainPaneList.returnToBounds()
         }
     }
 
+    onMovingChanged: if (moving) centerToHighlight = false
+
 
     property bool detachedCurrentIndex: false
+    property bool centerToHighlight: false
 
     readonly property Room selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
@@ -83,6 +86,7 @@ HListView {
 
 
     function previous() {
+        centerToHighlight    = true
         detachedCurrentIndex = true
 
         if (! mainPane.filter) {
@@ -129,6 +133,7 @@ HListView {
     }
 
     function next() {
+        centerToHighlight    = true
         detachedCurrentIndex = true
 
         if (! mainPane.filter) {
@@ -224,6 +229,12 @@ HListView {
             (activeAccountIndex === null ? -1 : activeAccountIndex) : -1
 
         when: ! detachedCurrentIndex
+    }
+
+    TapHandler {
+        id: tapHandler
+        property var pr: active
+        onPrChanged: print("pr changed:", pr)
     }
 
     Timer {

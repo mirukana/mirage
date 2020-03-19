@@ -54,6 +54,7 @@ HTileDelegate {
             "AccountSettings/AccountSettings", { "userId": model.id }
         )
         mainPaneList.detachedCurrentIndex = false
+        mainPaneList.centerToHighlight    = false
     }
 
 

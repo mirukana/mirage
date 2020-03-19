@@ -150,6 +150,7 @@ HTileDelegate {
     onActivated: {
         pageLoader.showRoom(userId, model.id)
         mainPaneList.detachedCurrentIndex = false
+        mainPaneList.centerToHighlight    = false
     }
 
 
