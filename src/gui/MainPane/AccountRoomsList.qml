@@ -231,12 +231,6 @@ HListView {
         when: ! detachedCurrentIndex
     }
 
-    TapHandler {
-        id: tapHandler
-        property var pr: active
-        onPrChanged: print("pr changed:", pr)
-    }
-
     Timer {
         id: activateLimiter
         interval: 200
