@@ -24,7 +24,9 @@ HRowLayout {
     Item {
         visible: button.icon.name || button.loading
 
-        Layout.preferredWidth: icon.width
+        Layout.preferredWidth:
+            button.loading ? busyIndicator.width : icon.width
+
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
 
@@ -43,6 +45,7 @@ HRowLayout {
         }
 
         HBusyIndicator {
+            id: busyIndicator
             width: height
             height: parent.height
             opacity: button.loading ? 1 : 0
