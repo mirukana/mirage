@@ -126,6 +126,7 @@ controls:
             colors.intensity * 4,
             Math.max(0.6, colors.opacity)
         )
+        color bottomLine: background
 
         color hoveredOverlay: controls.button.hoveredOverlay
         color pressedOverlay: controls.button.pressedOverlay
