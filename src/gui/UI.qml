@@ -49,19 +49,9 @@ Item {
         active: false
     }
 
-    HImage {
-        id: mainUIBackground
-        visible: Boolean(Qt.resolvedUrl(source))
-        fillMode: Image.PreserveAspectCrop
-        source: theme.ui.image
-        sourceSize.width: Screen.width
-        sourceSize.height: Screen.height
-        anchors.fill: parent
-        asynchronous: false
-    }
-
     LinearGradient {
         id: mainUIGradient
+        visible: ! image.visible
         anchors.fill: parent
         start: theme.ui.gradientStart
         end: theme.ui.gradientEnd
@@ -70,6 +60,17 @@ Item {
             GradientStop { position: 0.0; color: theme.ui.gradientStartColor }
             GradientStop { position: 1.0; color: theme.ui.gradientEndColor }
         }
+    }
+
+    HImage {
+        id: image
+        visible: Boolean(Qt.resolvedUrl(source))
+        fillMode: Image.PreserveAspectCrop
+        source: theme.ui.image
+        sourceSize.width: Screen.width
+        sourceSize.height: Screen.height
+        anchors.fill: parent
+        asynchronous: false
     }
 
     MainPane {
