@@ -2,7 +2,6 @@
 
 ## Before release
 
-- No bug icon
 - Add Gentoo instructions
 - Finish the README.md
 - Build final AppImage and test media opening

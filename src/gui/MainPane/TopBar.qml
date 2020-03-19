@@ -38,10 +38,10 @@ Rectangle {
 
         HButton {
             backgroundColor: "transparent"
-            icon.name: "developer-console"
-            toolTip.text: qsTr("Developer console")
+            icon.name: "reload-config-files"
+            toolTip.text: qsTr("Reload config files")
 
-            onClicked: mainUI.shortcuts.toggleConsole()  // FIXME
+            onClicked: mainUI.reloadSettings()
 
             Layout.fillHeight: true
         }
