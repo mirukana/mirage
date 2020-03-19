@@ -48,12 +48,12 @@ properties and double-click to launch.
 [More detailed instructions](https://docs.appimage.org/introduction/quickstart.html#ref-quickstart)
 
 
-## Manual installation
+## Manual Installation
 
 Qt 5.12+, Python 3.6+ (with development headers and pip),
 PyOtherSide 1.5+ and libolm 3+ are required.
 
-### Environment variables
+### Environment Variables
 
 To ensure Qt **5** will be used by default, compile using all CPU cores and 
 optimize the build for your machine:
@@ -64,7 +64,7 @@ export MAKEFLAGS="-j$(nproc)"
 export CFLAGS="-march=native -O2 -pipe"
 ```
 
-### Package manager dependencies
+### Package Manager Dependencies
 
 #### Alpine Linux 3.9+ / apk
 
@@ -157,7 +157,7 @@ sudo xbps-install -Su qt5-devel qt5-declarative-devel \
                       libopenjpeg2-devel libmediainfo-devel
 ```
 
-### Installing PyOtherSide manually
+### Installing PyOtherSide Manually
 
 Skip this section if you already installed it from your
 distro's package manager.
@@ -171,7 +171,7 @@ make
 sudo make install
 ```
 
-### Installing libolm manually
+### Installing libolm Manually
 
 Skip this section if you already installed it from your
 distro's package manager.
@@ -207,7 +207,7 @@ if you have trouble installing it.
 If everything went fine, run `mirage` to start.
 
 
-## Common issues
+## Common Issues
 
 ### cffi version mismatch
 

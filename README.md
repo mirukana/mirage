@@ -2,8 +2,8 @@
 
 [Features](#currently-implemented-features) ⬥
 [Installation](INSTALL.MD) ⬥
-[Configuration & theming](#configuration-and-theming) ⬥
-[More screenshots](#more-screenshots)
+[Configuration & Theming](#configuration--theming) ⬥
+[Screenshots](#more-screenshots)
 
 A fancy [matrix](https://matrix.org/) chat client for secure,
 decentralized communication with an emphasis on user experience
@@ -11,7 +11,7 @@ and customization. **Currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
 
-## Currently implemented features
+## Currently Implemented Features
 
 ### Client
 
@@ -53,7 +53,7 @@ and customization. **Currently in alpha**.
 
 See [INSTALL.MD](INSTALL.MD).
 
-## Configuration and theming
+## Configuration & Theming
 
 The config file can be found at *$XDG_CONFIG_HOME/mirage/settings.json*, 
 or *~/.config/mirage/settings.json*.
@@ -111,11 +111,12 @@ restarting the app.
 
 GUI settings will also be implemented in the future.
 
-## More screenshots
+## Screenshots
 
 ![Sign-in](extra/general/screenshots/02-sign-in.png)
 ![Account settings](extra/general/screenshots/03-account-settings.png)
 ![Room creation](extra/general/screenshots/04-create-room.png)
+![Chat](extra/general/screenshots/01-chat.png?raw=true)
 ![Main pane in small window](extra/general/screenshots/05-main-pane-small.png)
 ![Chat in small window](extra/general/screenshots/06-chat-small.png)
 
