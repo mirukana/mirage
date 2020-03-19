@@ -201,15 +201,16 @@ HGridLayout {
 
                 field.error: alreadyTakenBy !== ""
                 field.onAccepted: applyChanges()
-                field.placeholderText: (
+                field.placeholderText: qsTr("e.g. %1").arg((
                     nameField.field.text ||
                     accountInfo.display_name ||
                     userId.substring(1)
-                )[0]
+                )[0])
 
                 toolTip.text: qsTr(
-                    "From any account, start a message with specified alias " +
-                    "followed by a space to type and send as this account.\n" +
+                    "From any chat, start a message with specified alias " +
+                    "followed by a space to type and send as this " +
+                    "account.\n" +
                     "The account must have permission to talk in the room.\n"+
                     "To ignore the alias when typing, prepend it with a space."
                 )
