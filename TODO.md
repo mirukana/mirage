@@ -2,12 +2,17 @@
 
 ## Before release
 
-- Add Gentoo instructions
-- Build final AppImage and test media opening
+- Build final AppImage 
+
+## Main goals for next version
+
+- Redacting messages
+- Download progress bar for file events, "Save as..."
+- Make rooms fully manageable within Mirage: settings, permissions, kick, etc
 
 ## Refactoring
 
-- Rewrite the message selection buggy mess 
+- Rewrite the message text selection buggy mess 
 
 - Put keybindings in the components they belong to instead of shoving them
   all in one central file
@@ -22,15 +27,14 @@
 
 - Make sure we don't store any state in delegates
 
-- Drop the `buttonModel`/`buttonCallbacks` `HBox` approach, be more declarative
+- Drop the `HBox` `buttonModel`/`buttonCallbacks` `HBox` approach,
+  be more declarative
 
 ## Issues
 
 - Catch server 5xx errors when sending message and retry 
 
 - Popups and room settings can't be scrolled when not enough height to show all
-
-- `Timer` and `Animation` are bound to framerate
 
 - Handle cases where a known account's access token is invalid
 - If an account is gone from the user's config, discard UI state last page
@@ -43,6 +47,7 @@
 - `code` and links in quote ("> http://example.com") aren't properly colored
   in room "last message" subtitle
 
+- `Timer` and `Animation` are bound to framerate
 - Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 - Can't use `QQmlApplicationEngine`, problem with QApplication?
   See https://bugreports.qt.io/browse/QTBUG-50992

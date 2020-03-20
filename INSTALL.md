@@ -11,6 +11,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Alpine Linux 3.9+ / apk](#alpine-linux-39--apk)
     - [Arch Linux / pacman & AUR](#arch-linux--pacman--aur)
     - [Fedora 30+ / dnf](#fedora-30--dnf)
+    - [Gentoo / emerge](#gentoo--emerge)
     - [Ubuntu 19.04 / apt](#ubuntu-1904--apt)
     - [Ubuntu 19.10+, Debian bullseye / apt](#ubuntu-1910-debian-bullseye--apt)
     - [Void Linux / xbps](#void-linux--xbps)
@@ -50,8 +51,22 @@ properties and double-click to launch.
 
 ## Manual Installation
 
-Qt 5.12+, Python 3.6+ (with development headers and pip),
-PyOtherSide 1.5+ and libolm 3+ are required.
+**Qt 5.12+**, **Python 3.6+** (with **pip** to install packages from the
+[requirements.txt](requirements.txt)), **PyOtherSide 1.5+** and
+**libolm 3+** are required.  
+The equivalent `-dev` or `-devel` packages are needed, if your distro
+splits development headers into their own packages.
+
+For the Pillow Python package, these dependencies are recommended to support 
+all common image formats:
+
+- **libjpeg-turbo**
+- **zlib**
+- **libtiff**
+- **libwebp**
+- **openjpeg2**
+
+**libmediainfo** is also required for the pymediainfo package.
 
 ### Environment Variables
 
@@ -77,6 +92,7 @@ sudo apk add qt5-qtquickcontrols2-dev qt5-qtsvg-dev qt5-qtimageformats \
              build-base git cmake \
              libjpeg-turbo-dev zlib-dev tiff-dev libwebp-dev openjpeg-dev \
              libmediainfo-dev
+
 export PATH="/usr/lib/qt5/bin:$PATH"
 ```
 
@@ -110,7 +126,23 @@ sudo dnf install qt5-devel qt5-qtbase qt5-qtdeclarative qt5-qtquickcontrols2 \
                  git cmake \
                  libjpeg-turbo-devel zlib-devel libtiff-devel libwebp-devel	\
                  openjpeg2-devel libmediainfo-devel
+
 sudo ln -s /usr/bin/qmake-qt5 /usr/bin/qmake
+```
+
+#### Gentoo / emerge
+
+[libolm](#installing-libolm-manually) must be manually installed.
+
+You might need to prepend the `emerge` command with `USE=bindist`,
+if `emerge` says so.
+
+```sh
+sudo emerge -av qtcore qtdeclarative qtquickcontrols2 \
+                qtsvg qtgraphicaleffects qtimageformats \
+                dev-python/pip pyotherside \
+                dev-vcs/git cmake \
+                libjpeg-turbo zlib tiff libwebp openjpeg libmediainfo
 ```
 
 #### Ubuntu 19.04 / apt
