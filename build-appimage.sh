@@ -17,11 +17,12 @@
 #
 #     lxc launch images:ubuntu/xenial/amd64 ubuntu
 #
-# Copy the mirage repository inside the container
-# (assuming you are currently in its root, else change the './*'):
+# If you want to build an image for something else than the official unmodified
+# repo, either change the MIRAGE_REPO_URL variable or directly copy your
+# repository inside the container. Example:
 #
 #     lxc exec ubuntu -- /bin/mkdir -p /root/mirage
-#     lxc file push -vr ./* ubuntu/root/mirage
+#     lxc file push -vr <path to repo root>/* ubuntu/root/mirage
 #
 # Run this script inside the container:
 #
@@ -32,6 +33,8 @@
 #     lxc exec ubuntu -- /bin/bash
 
 set -eo pipefail
+
+MIRAGE_REPO_URL='https://github.com/mirukan/mirage'
 
 
 check_distro() {
@@ -156,7 +159,7 @@ get_app_and_pip_dependencies() {
     cd ~
 
     if ! [ -d mirage ]; then
-        git clone --recursive https://github.com/mirukan/mirage
+        git clone --recursive "$MIRAGE_REPO_URL"
     fi
 
     cd mirage
