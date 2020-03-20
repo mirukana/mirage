@@ -22,11 +22,12 @@ from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
 import cairosvg
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
+
 import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
-from PIL import Image as PILImage
-from pymediainfo import MediaInfo
 
 from . import __app_name__, __display_name__, utils
 from .errors import (
@@ -463,8 +464,9 @@ class MatrixClient(nio.AsyncClient):
                 )
             except UneededThumbnail:
                 pass
-            except OSError as err:
-                log.warning(f"Failed thumbnailing {path}: {err}")
+            except Exception:
+                trace = traceback.format_exc().rstrip()
+                log.warning("Failed thumbnailing %s:\n%s", path, trace)
             else:
                 thumb_ext  = "png" if thumb_info.mime == "image/png" else "jpg"
                 thumb_name = f"{path.stem}_thumbnail.{thumb_ext}"
