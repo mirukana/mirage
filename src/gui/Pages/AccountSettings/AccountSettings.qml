@@ -8,6 +8,8 @@ import "../../Base"
 
 HFlickableColumnPage {
     id: accountSettings
+    title: qsTr("Account settings")
+    header: HPageHeader {}
 
 
     property int avatarPreferredSize: 256 * theme.uiScale

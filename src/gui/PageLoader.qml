@@ -16,7 +16,9 @@ HLoader {
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
-            pageLoader.showPage("AddAccount/AddAccount")
+            pageLoader.showPage(
+                "AddAccount/AddAccount", {"header.show": false},
+            )
             return
         }
 

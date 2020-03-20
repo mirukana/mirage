@@ -107,7 +107,7 @@ controls:
         color windowOverlay: hsluv(0, 0, 0, 0.7)
 
     header:
-        color background: colors.mediumBackground
+        color background: colors.strongBackground
 
     button:
         color background: colors.strongBackground
@@ -306,7 +306,7 @@ mainPane:
 
 chat:
     roomHeader:
-        color background: colors.strongBackground
+        color background: controls.header.background
         color name:       colors.text
         color topic:      colors.dimText
 

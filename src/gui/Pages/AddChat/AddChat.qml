@@ -7,6 +7,8 @@ import "../../Base"
 
 HFlickableColumnPage {
     id: addChatPage
+    title: qsTr("Add new chat")
+    header: HPageHeader {}
 
 
     property string userId

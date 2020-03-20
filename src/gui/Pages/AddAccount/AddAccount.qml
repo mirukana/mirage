@@ -5,6 +5,9 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 HFlickableColumnPage {
+    title: qsTr("Add an account")
+    header: HPageHeader {}
+
     HTabContainer {
         tabModel: [
             qsTr("Sign in"), qsTr("Register"), qsTr("Reset"),
