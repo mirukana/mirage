@@ -8,7 +8,7 @@
 A fancy [matrix](https://matrix.org/) chat client for secure,
 decentralized communication with an emphasis on **u**ser e**x**perience
 and customization.  
-Written in Qt/QML + Python, **Currently in alpha**.
+Written in Qt/QML + Python, **currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
 
@@ -84,7 +84,7 @@ Their values, if not just refering to another property,
 can be expressed with a:
 - [SVG/CSS color name](https://www.december.com/html/spec/colorsvg.html)
   string, e.g. `"blue"`
-- hexadecimal code string, e.g. `"#fff"` or `"#cc0000"`
+- Hexadecimal code string, e.g. `"#fff"` or `"#cc0000"`
 - RGBA value, using the `Qt.rgba(0-1, 0-1, 0-1, 0-1)` function
 - HSLA value, using the `Qt.hsla(0-1, 0-1, 0-1, 0-1)` function
 - HSVA value, using the `Qt.hsva(0-1, 0-1, 0-1, 0-1)` function
