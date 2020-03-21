@@ -32,6 +32,8 @@ Rectangle {
     readonly property alias circleRadius: avatarImage.circleRadius
 
 
+    Behavior on color { HColorAnimation {} }
+
     HLabel {
         z: 1
         anchors.centerIn: parent
@@ -46,6 +48,8 @@ Rectangle {
            theme.controls.avatar.letter.lightness,
            theme.controls.avatar.letter.opacity
        )
+
+        Behavior on color { HColorAnimation {} }
     }
 
     HMxcImage {
