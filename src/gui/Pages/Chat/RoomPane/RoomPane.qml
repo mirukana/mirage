@@ -45,9 +45,9 @@ MultiviewPane {
         enabled: ["back", "members", "settings"].includes(modelData)
 
         onClicked:
-            modelData === "back" ?
-            roomPane.toggleFocus() :
-            swipeView.currentIndex = Math.min(index, 1)
+            modelData === "back" ?    roomPane.toggleFocus() :
+            modelData === "members" ? swipeView.currentIndex = 0 :
+            swipeView.currentIndex = 1
 
         Behavior on width {
             enabled: modelData === "back"
