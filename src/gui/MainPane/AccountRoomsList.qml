@@ -69,7 +69,7 @@ HListView {
 
 
     property bool detachedCurrentIndex: false
-    property bool centerToHighlight: false
+    property bool centerToHighlight: true
 
     readonly property Room selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
