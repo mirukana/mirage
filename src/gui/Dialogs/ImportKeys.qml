@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import Qt.labs.platform 1.1
 import "../Popups"
+import "../PythonBridge"
 
 HFileDialogOpener {
     fill: false
@@ -15,12 +16,18 @@ HFileDialogOpener {
 
     property string userId: ""
     property bool importing: false
+    property Future importFuture: null
 
 
     PasswordPopup {
         id: importPasswordPopup
-        details.text: qsTr("Passphrase used to protect this file:")
+        details.text:
+            importing ?
+            qsTr("This might take a while...") :
+            qsTr("Passphrase used to protect this file:")
         okText: qsTr("Import")
+
+        onCancelled: if (importFuture) importFuture.cancel()
 
 
         property url file: ""
@@ -28,14 +35,18 @@ HFileDialogOpener {
 
         function verifyPassword(pass, callback) {
             importing  = true
+
+            const call = py.callClientCoro
             const path = file.toString().replace(/^file:\/\//, "")
 
-            py.callClientCoro(userId, "import_keys", [path, pass], () => {
-                importing = false
+            importFuture = call(userId, "import_keys", [path, pass], () => {
+                importing    = false
+                importFuture = null
                 callback(true)
 
             }, (type, args, error, traceback, uuid) => {
-                let unknown = false
+                let unknown  = false
+                importFuture = null
 
                 callback(
                     type === "EncryptionError" ?

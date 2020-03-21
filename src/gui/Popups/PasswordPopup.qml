@@ -17,6 +17,9 @@ BoxPopup {
     onOpened: passwordField.forceActiveFocus()
 
 
+    signal cancelled()
+
+
     property bool validateWhileTyping: false
 
     property string acceptedPassword: ""
@@ -54,7 +57,10 @@ BoxPopup {
                 button.loading = false
             })
         },
-        cancel: button => { popup.close() },
+        cancel: button => {
+            popup.close()
+            cancelled()
+        },
     })
 
 
