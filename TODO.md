@@ -1,14 +1,11 @@
 # TODO
 
-## Before release
-
-- Build final AppImage 
-
 ## Main goals for next version
 
 - Redacting messages
 - Download progress bar for file events, "Save as..."
 - Make rooms fully manageable within Mirage: settings, permissions, kick, etc
+- Add AppImage metadata file
 
 ## Refactoring
 
