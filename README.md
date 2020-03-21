@@ -7,7 +7,8 @@
 
 A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
 client for encrypted and decentralized communication.  
-Written in Qt/QML + Python, **currently in alpha**.
+Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
+**currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
 
