@@ -92,7 +92,7 @@ setup_env() {
     set -euo pipefail
 
     export PATH="/usr/lib/ccache:$PATH"
-    export LD_LIBRARY_PATH="$HOME/.local/lib/python3.8/site-packages/.libs_cffi_backend/:/usr/lib/x86_64-linux-gnu/:/usr/lib:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$HOME/.local/lib/python3.8/site-packages/PIL/.libs/:$HOME/.local/lib/python3.8/site-packages/.libs_cffi_backend/:/usr/lib/x86_64-linux-gnu/:/usr/lib:$LD_LIBRARY_PATH"
     export PREFIX=/usr
 
     export CFLAGS="-march=x86-64 -O2 -pipe -fPIC"

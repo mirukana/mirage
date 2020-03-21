@@ -6,6 +6,8 @@
 - Download progress bar for file events, "Save as..."
 - Make rooms fully manageable within Mirage: settings, permissions, kick, etc
 - Add AppImage metadata file
+- Pillow now bundle image libraries?
+  Update AppImage building script and INSTALL.md
 
 ## Refactoring
 
