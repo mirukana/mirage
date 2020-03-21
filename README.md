@@ -1,7 +1,7 @@
 # Mirage ![Latest release](https://img.shields.io//github/v/release/mirukana/mirage)
 
 [Features](#currently-implemented-features) ⬥
-[Installation](INSTALL.MD) ⬥
+[Installation](INSTALL.md) ⬥
 [Configuration & Theming](#configuration--theming) ⬥
 [Screenshots](#more-screenshots)
 
@@ -52,7 +52,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 
 ## Installation
 
-See [INSTALL.MD](INSTALL.MD)
+See [INSTALL.md](INSTALL.md)
 
 ## Configuration & Theming
 
