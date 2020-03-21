@@ -17,7 +17,7 @@ HRowLayout {
             utils.coloredNameHtml(model.sender_name, model.sender_id) +
             "</div>"
         )
-    readonly property string contentText: utils.processedEventText(model)
+    property string contentText: utils.processedEventText(model)
     readonly property string timeText: utils.formatTime(model.date, false)
     readonly property string localEchoText:
         model.is_local_echo ?
