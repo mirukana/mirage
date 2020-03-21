@@ -18,9 +18,9 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 
 - **Fluid interface** that adapts to any window size
 - Customizable **keyboard shortcuts** for (almost) everything, including
-  filtering and switching rooms, scrolling, sending files...
-- Versatile **theming system**, properties can refer to each others and have 
-  any valid ECMAScript 7 expression as value
+  filtering/switching rooms, scrolling, sending files...
+- Versatile **theming system**, properties can refer to each other and have 
+  any valid ECMAScript 7 expression as values
   - Comes by default with **dark** and **transparent themes**
 - **Multiple accounts** in one client
 
@@ -40,7 +40,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - Send and receive emote messages (e.g. `/me reads attentively`)
 - Receive notice (bot) messages
 - Send **markdown** formatted messages
-  - Additional syntax for **coloring** text, e.g. `<red>(Some text...)` - 
+  - Additional syntax for **coloring text**, e.g. `<red>(Some text...)` - 
     [SVG/CSS color names](https://www.december.com/html/spec/colorsvg.html),
     and `#hex` codes can be used
 - Send and receive normal or **E2E encrypted files**
