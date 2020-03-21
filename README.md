@@ -5,9 +5,8 @@
 [Configuration & Theming](#configuration--theming) ⬥
 [Screenshots](#more-screenshots)
 
-A fancy [matrix](https://matrix.org/) chat client for secure,
-decentralized communication with an emphasis on **u**ser e**x**perience
-and customization.  
+A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
+client for encrypted and decentralized communication.  
 Written in Qt/QML + Python, **currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
@@ -21,7 +20,7 @@ Written in Qt/QML + Python, **currently in alpha**.
   filtering and switching rooms, scrolling, sending files...
 - Versatile **theming system**, properties can refer to each others and have 
   any valid ECMAScript 7 expression as value
-  - Comes by default with **dark and transparent themes**
+  - Comes by default with **dark** and **transparent themes**
 - **Multiple accounts** in one client
 
 ### Profile
