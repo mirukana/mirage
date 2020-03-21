@@ -889,7 +889,7 @@ class MatrixClient(nio.AsyncClient):
             raise UneededThumbnail()
 
         if not small:
-            thumb.thumbnail((800, 600), PILImage.LANCZOS)
+            thumb.thumbnail((800, 600))
 
         with io.BytesIO() as out:
             if thumb.mode in png_modes:
