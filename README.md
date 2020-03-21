@@ -119,4 +119,5 @@ GUI settings will also be implemented in the future.
 ![Chat](extra/general/screenshots/01-chat.png?raw=true)
 ![Main pane in small window](extra/general/screenshots/05-main-pane-small.png)
 ![Chat in small window](extra/general/screenshots/06-chat-small.png)
+![Room pane in small window](extra/general/screenshots/07-room-pane-small.png)
 
