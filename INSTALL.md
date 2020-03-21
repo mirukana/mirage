@@ -28,7 +28,7 @@ but compiling on Windows and macOS should be possible with the right tools.
 ### Linux
 
 For **x86 64bit glibc-based systems**, Mirage is available as an **AppImage**
-on the [release page](releases).  
+on the [release page](https://github.com/mirukana/mirage/releases).  
 For other architectures and musl-based distros, see the 
 [manual installation section](#manual-installation).
 

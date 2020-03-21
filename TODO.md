@@ -31,6 +31,8 @@
 
 ## Issues
 
+- When zooming in enough, "Mirage <version>" label overflows
+
 - Catch server 5xx errors when sending message and retry 
 
 - Popups and room settings can't be scrolled when not enough height to show all
