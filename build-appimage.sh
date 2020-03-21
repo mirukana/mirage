@@ -34,7 +34,7 @@
 
 set -eo pipefail
 
-MIRAGE_REPO_URL='https://github.com/mirukan/mirage'
+MIRAGE_REPO_URL='https://github.com/mirukana/mirage'
 
 
 check_distro() {

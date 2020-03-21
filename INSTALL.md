@@ -223,7 +223,7 @@ After following the above sections instructions depending on your system,
 clone the repository, install the python dependencies, compile and install:
 
 ```sh
-git clone --recursive https://github.com/mirukan/mirage
+git clone --recursive https://github.com/mirukana/mirage
 cd mirage
 pip3 install --user -Ur requirements.txt
 pip3 install --user -U uvloop==0.14.0

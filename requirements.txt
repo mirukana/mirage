@@ -12,4 +12,4 @@ dataclasses     >= 0.6,   < 0.7; python_version < "3.7"
 async_generator >= 1.10,  < 2;   python_version < "3.7"
 pyfastcopy      >= 1.0.3, < 2;   python_version < "3.8"
 
-git+http://github.com/mirukan/matrix-nio#egg=matrix-nio[e2e]
+git+http://github.com/mirukana/matrix-nio#egg=matrix-nio[e2e]

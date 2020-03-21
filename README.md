@@ -1,4 +1,4 @@
-# Mirage ![Latest release](https://img.shields.io//github/v/release/mirukan/mirage)
+# Mirage ![Latest release](https://img.shields.io//github/v/release/mirukana/mirage)
 
 [Features](#currently-implemented-features) ⬥
 [Installation](INSTALL.MD) ⬥

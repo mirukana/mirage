@@ -30,7 +30,7 @@ Rectangle {
             toolTip.text: qsTr("Open project repository")
 
             onClicked:
-                Qt.openUrlExternally("https://github.com/mirukan/mirage")
+                Qt.openUrlExternally("https://github.com/mirukana/mirage")
 
             Layout.fillWidth: true
             Layout.fillHeight: true
