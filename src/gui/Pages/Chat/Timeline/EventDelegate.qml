@@ -58,8 +58,8 @@ HColumnLayout {
     readonly property int separationSpacing:
             dayBreak  ? theme.spacing * 4 :
             talkBreak ? theme.spacing * 6 :
-            combine   ? theme.spacing / 2 :
-            theme.spacing * 2
+            combine   ? theme.spacing / (compact ? 4 : 2) :
+            theme.spacing * (compact ? 1 : 2)
 
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
