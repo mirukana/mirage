@@ -218,6 +218,7 @@ controls:
 
     avatar:
         int size:        baseElementsHeight
+        int compactSize: baseElementsHeight / 2
         int radius:      theme.radius
 
         hoveredImage:

@@ -6,8 +6,12 @@ import "../Base"
 
 Rectangle {
     id: avatar
-    implicitWidth: theme.controls.avatar.size
-    implicitHeight: theme.controls.avatar.size
+    implicitWidth: implicitHeight
+    implicitHeight:
+        compact ?
+        theme.controls.avatar.compactSize :
+        theme.controls.avatar.size
+
     radius: theme.controls.avatar.radius
 
     color: avatarImage.visible ? "transparent" : utils.hsluv(
@@ -17,6 +21,8 @@ Rectangle {
        theme.controls.avatar.background.opacity
    )
 
+
+    property bool compact: false
 
     property string name
     property alias mxc: avatarImage.mxc

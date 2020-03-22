@@ -11,6 +11,7 @@ HButton {
 
     default property alias additionalData: contentItem.data
 
+    property bool compact: window.settings.alwaysUseCompactMode
     property real contentOpacity: 1
 
     readonly property alias title: title
@@ -77,7 +78,7 @@ HButton {
                 color: theme.colors.dimText
 
                 visible: Layout.maximumHeight > 0
-                Layout.maximumHeight: text ? implicitWidth : 0
+                Layout.maximumHeight: ! compact && text ? implicitHeight : 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -86,6 +87,16 @@ HButton {
         }
     }
 
+
+    Binding on topPadding {
+        value: spacing / 4
+        when: compact
+    }
+
+    Binding on bottomPadding {
+        value: spacing / 4
+        when: compact
+    }
 
     TapHandler {
         acceptedButtons: Qt.LeftButton

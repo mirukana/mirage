@@ -7,6 +7,7 @@ import ".."
 import "../Base"
 
 HTileDelegate {
+    id: room
     backgroundColor: theme.mainPane.listView.room.background
     opacity: model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
 
@@ -19,6 +20,7 @@ HTileDelegate {
         roomId: model.id
         displayName: model.display_name
         mxc: model.avatar_url
+        compact: room.compact
 
         radius:
             mainPane.small ?

@@ -17,6 +17,7 @@ HTileDelegate {
         powerLevel: model.power_level
         shiftMembershipIconPosition: ! roomPane.collapsed
         invited: model.invited
+        compact: memberDelegate.compact
     }
 
     title.text: model.display_name || model.id
