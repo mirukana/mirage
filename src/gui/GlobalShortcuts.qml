@@ -78,6 +78,14 @@ Item {
         onActivated: theme.uiScale = 1
     }
 
+    HShortcut {
+        sequences: settings.keys.toggleCompactMode
+        onActivated: {
+            settings.compactMode = ! settings.compactMode
+            settingsChanged()
+        }
+    }
+
     // Pages
 
     HShortcut {

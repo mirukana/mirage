@@ -11,7 +11,7 @@ HButton {
 
     default property alias additionalData: contentItem.data
 
-    property bool compact: window.settings.compactModeByDefault
+    property bool compact: window.settings.compactMode
     property real contentOpacity: 1
 
     readonly property alias title: title

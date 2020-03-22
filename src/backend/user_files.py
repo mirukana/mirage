@@ -208,7 +208,7 @@ class UISettings(JSONDataFile):
         return {
             "alertOnMessageForMsec": 4000,
             "alwaysCenterRoomHeader": False,
-            "compactModeByDefault": False,
+            "compactMode": True,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "collapseSidePanesUnderWindowWidth": 400,
@@ -229,9 +229,10 @@ class UISettings(JSONDataFile):
                 "toggleDebugConsole":  ["Alt+Shift+C", "F1"],
                 "reloadConfig":        ["Alt+Shift+R"],
 
-                "zoomIn":    ["Ctrl++"],
-                "zoomOut":   ["Ctrl+-"],
-                "zoomReset": ["Ctrl+="],
+                "zoomIn":            ["Ctrl++"],
+                "zoomOut":           ["Ctrl+-"],
+                "zoomReset":         ["Ctrl+="],
+                "toggleCompactMode": ["Ctrl+Alt+C"],
 
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
