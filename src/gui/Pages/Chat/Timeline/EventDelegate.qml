@@ -20,6 +20,7 @@ HColumnLayout {
     readonly property var nextModel: eventList.model.get(model.index - 1)
     readonly property QtObject currentModel: model
 
+    property bool compact: window.settings.alwaysUseCompactMode
     property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
     property bool combine: eventList.canCombine(previousModel, model)
@@ -27,10 +28,12 @@ HColumnLayout {
     property bool dayBreak: eventList.canDayBreak(previousModel, model)
 
     readonly property bool smallAvatar:
-        eventList.canCombine(model, nextModel) &&
-        (model.event_type === "RoomMessageEmote" ||
-         ! (model.event_type.startsWith("RoomMessage") ||
-            model.event_type.startsWith("RoomEncrypted")))
+        compact || (
+            eventList.canCombine(model, nextModel) &&
+            (model.event_type === "RoomMessageEmote" ||
+             ! (model.event_type.startsWith("RoomMessage") ||
+                model.event_type.startsWith("RoomEncrypted")))
+        )
 
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight

@@ -13,9 +13,10 @@ HRowLayout {
 
     readonly property string senderText:
         hideNameLine ? "" : (
-            "<div class='sender'>" +
+            `<${smallAvatar ? "span" : "div"} class='sender'>` +
             utils.coloredNameHtml(model.sender_name, model.sender_id) +
-            "</div>"
+            (smallAvatar ? ": " : "") +
+            (smallAvatar ? "</span>" : "</div>")
         )
     property string contentText: utils.processedEventText(model)
     readonly property string timeText: utils.formatTime(model.date, false)
@@ -60,11 +61,12 @@ HRowLayout {
         opacity: collapseAvatar ? 0 : 1
         visible: ! hideAvatar
 
-        Layout.minimumWidth: theme.chat.message.avatarSize
-        Layout.minimumHeight:
-            collapseAvatar ? 1 :
-            smallAvatar    ? theme.chat.message.collapsedAvatarSize :
-            Layout.minimumWidth
+        Layout.minimumWidth:
+            smallAvatar ?
+            theme.chat.message.collapsedAvatarSize :
+            theme.chat.message.avatarSize
+
+        Layout.minimumHeight: collapseAvatar ? 1 : Layout.minimumWidth
 
         Layout.maximumWidth: Layout.minimumWidth
         Layout.maximumHeight: Layout.minimumHeight
@@ -76,7 +78,7 @@ HRowLayout {
             displayName: model.sender_name
             mxc: model.sender_avatar
             width: parent.width
-            height: collapseAvatar ? 1 : theme.chat.message.avatarSize
+            height: collapseAvatar ? 1 : parent.Layout.minimumWidth
             radius: theme.chat.message.avatarRadius
         }
     }
