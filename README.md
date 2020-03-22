@@ -1,4 +1,4 @@
-# Mirage ⋅ ![Latest release](https://img.shields.io/github/v/release/mirukana/mirage)
+# Mirage ⋅ ![Latest release](https://img.shields.io/github/v/release/mirukana/mirage) ![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org)
 
 [Features](#currently-implemented-features) ⬥
 [Installation](INSTALL.md) ⬥
