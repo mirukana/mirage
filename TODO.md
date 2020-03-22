@@ -91,7 +91,8 @@
 - In direct chat page, show the matching user's avatar when typing
 
 - Combine events so they take less space
-  - After combining is implemented, no need to hide profile changes anymore
+  - After combining is implemented,
+    no need to hide profile changes by default anymore
 
 - Animate `DayBreak` apparition
 
