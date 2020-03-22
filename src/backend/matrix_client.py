@@ -154,19 +154,27 @@ class MatrixClient(nio.AsyncClient):
         return response
 
 
-    @property
-    def default_device_name(self) -> str:
+    @staticmethod
+    def default_device_name() -> str:
         """Device name to set at login if the user hasn't set a custom one."""
 
-        os_ = f" on {platform.system()}".rstrip()
-        os_ = f"{os_} {platform.release()}".rstrip() if os_ != " on" else ""
-        return f"{__display_name__}{os_}"
+        os_name = platform.system()
+
+        if not os_name:  # unknown OS
+            return __display_name__
+
+        # On Linux, the kernel version is returned, so for a one-time-set
+        # device name it would quickly be outdated.
+        os_ver  = platform.release() if os_name == "Windows" else ""
+        return f"{__display_name__} on {os_name} {os_ver}".rstrip()
 
 
     async def login(self, password: str, device_name: str = "") -> None:
         """Login to the server using the account's password."""
 
-        await super().login(password, device_name or self.default_device_name)
+        await super().login(
+            password, device_name or self.default_device_name(),
+        )
         asyncio.ensure_future(self._start())
 
 
