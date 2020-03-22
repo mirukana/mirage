@@ -20,7 +20,7 @@ HColumnLayout {
     readonly property var nextModel: eventList.model.get(model.index - 1)
     readonly property QtObject currentModel: model
 
-    property bool compact: window.settings.alwaysUseCompactMode
+    property bool compact: window.settings.compactModeByDefault
     property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
     property bool combine: eventList.canCombine(previousModel, model)
