@@ -211,6 +211,8 @@ class UISettings(JSONDataFile):
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "collapseSidePanesUnderWindowWidth": 400,
+            "hideProfileChangeEvents": True,
+            "hideMembershipEvents": False,
             "theme": "Midnight.qpl",
             "writeAliases": {},
             "media": {

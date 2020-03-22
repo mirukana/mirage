@@ -213,6 +213,10 @@ class NioCallbacks:
 
         # Membership changes
         if not prev or membership != prev_membership:
+            if self.client.backend.ui_settings["hideMembershipEvents"]:
+                self.client.skipped_events[room.room_id] += 1
+                return None
+
             reason = f". Reason: {now['reason']}" if now.get("reason") else ""
 
             if membership == "join":
@@ -272,9 +276,9 @@ class NioCallbacks:
                     account.display_name    = now["displayname"] or ""
                     account.avatar_url      = now["avatar_url"] or ""
 
-            # Hide profile events from the timeline - XXX
-            self.client.skipped_events[room.room_id] += 1
-            return None
+            if self.client.backend.ui_settings["hideProfileChangeEvents"]:
+                self.client.skipped_events[room.room_id] += 1
+                return None
 
             return (
                 TypeSpecifier.ProfileChange,
