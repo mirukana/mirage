@@ -3,7 +3,7 @@
 # pdb won't be usable with entr,
 # use https://pypi.org/project/remote-pdb/ instead.
 
-# An argument can be given to specify which QML file in src/qml to load.
+# An argument can be given to specify which QML file in src/gui to load.
 # If no argument is given, the default is "UI.qml".
 
 export QT_QPA_PLATFORM=xcb
