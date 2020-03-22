@@ -3,6 +3,8 @@
 """HTML and Markdown processing tools."""
 
 import re
+from typing import Dict, Optional
+from urllib.parse import quote
 
 import html_sanitizer.sanitizer as sanitizer
 import mistune
@@ -162,11 +164,31 @@ class HTMLProcessor:
 
 
     def from_markdown(
-        self, text: str, inline: bool = False, outgoing: bool = False,
+        self,
+        text:              str,
+        inline:            bool                     = False,
+        outgoing:          bool                     = False,
+        mentionable_users: Optional[Dict[str, str]] = None,
     ) -> str:
         """Return filtered HTML from Markdown text."""
 
+        if mentionable_users:
+            text = self.markdown_linkify_users(text, mentionable_users)
+
         return self.filter(self._markdown_to_html(text), inline, outgoing)
+
+
+    def markdown_linkify_users(self, text: str, users: Dict[str, str]) -> str:
+        print(text)
+
+        for user_id, username in users.items():
+            repl = rf"\1[{user_id}](https://matrix.to/#/{quote(user_id)})\2"
+            text = re.sub(rf"(^|\W){user_id}($|\W)", repl, text)
+
+            repl = rf"\1[{username}](https://matrix.to/#/{quote(user_id)})\2"
+            text = re.sub(rf"(^|\W){username}($|\W)", repl, text)
+
+        return text
 
 
     def filter(

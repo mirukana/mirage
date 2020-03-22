@@ -308,6 +308,15 @@ class MatrixClient(nio.AsyncClient):
     async def send_text(self, room_id: str, text: str) -> None:
         """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""
 
+        from_md = partial(
+            HTML.from_markdown,
+            mentionable_users={
+                user_id: member.display_name or user_id
+                for user_id, member in
+                self.models[self.user_id, room_id, "members"].items()
+            },
+        )
+
         escape = False
         if text.startswith("//") or text.startswith(r"\/"):
             escape = True
@@ -317,13 +326,13 @@ class MatrixClient(nio.AsyncClient):
             event_type = nio.RoomMessageEmote
             text       = text[len("/me "): ]
             content    = {"body": text, "msgtype": "m.emote"}
-            to_html    = HTML.from_markdown(text, inline=True, outgoing=True)
-            echo_body  = HTML.from_markdown(text, inline=True)
+            to_html    = from_md(text, inline=True, outgoing=True)
+            echo_body  = from_md(text, inline=True)
         else:
             event_type = nio.RoomMessageText
             content    = {"body": text, "msgtype": "m.text"}
-            to_html    = HTML.from_markdown(text, outgoing=True)
-            echo_body  = HTML.from_markdown(text)
+            to_html    = from_md(text, outgoing=True)
+            echo_body  = from_md(text)
 
         if to_html not in (html.escape(text), f"<p>{html.escape(text)}</p>"):
             content["format"]         = "org.matrix.custom.html"
