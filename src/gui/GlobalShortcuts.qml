@@ -211,6 +211,20 @@ Item {
         }
     }
 
+    Repeater {
+        model: Object.keys(settings.keys.focusRoomAtIndex)
+
+        Item {
+            HShortcut {
+                enabled: mainUI.accountsPresent
+                sequence: settings.keys.focusRoomAtIndex[modelData]
+                onActivated: mainUI.mainPane.mainPaneList.goToRoom(
+                    parseInt(modelData - 1, 10),
+                )
+            }
+        }
+    }
+
 
     // Chat
 

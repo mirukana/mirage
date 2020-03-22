@@ -182,6 +182,12 @@ HListView {
         }
     }
 
+    function goToRoom(index) {
+        if (! currentItem) next()
+        const room = currentItem.roomList.contentItem.children[index]
+        if (room && room.activated) room.activated()
+    }
+
     function requestActivate() {
         activateLimiter.restart()
     }

@@ -256,6 +256,18 @@ class UISettings(JSONDataFile):
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [ "Alt+O"],
+                "focusRoomAtIndex": {
+                    "01": "Alt+1",
+                    "02": "Alt+2",
+                    "03": "Alt+3",
+                    "04": "Alt+4",
+                    "05": "Alt+5",
+                    "06": "Alt+6",
+                    "07": "Alt+7",
+                    "08": "Alt+8",
+                    "09": "Alt+9",
+                    "10": "Alt+0",
+                },
 
                 "clearRoomMessages":           ["Ctrl+L"],
                 "sendFile":                    ["Alt+S"],
