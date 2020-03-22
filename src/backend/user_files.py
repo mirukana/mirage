@@ -102,6 +102,16 @@ class DataFile:
 class JSONDataFile(DataFile):
     """Represent a user data file in the JSON format."""
 
+    _data: Optional[Dict[str, Any]] = field(init=False, default=None)
+
+
+    def __getitem__(self, key: str) -> Any:
+        if self._data is None:
+            raise RuntimeError(f"{self}: read() hasn't been called yet")
+
+        return self._data[key]
+
+
     async def default_data(self) -> JsonData:
         return {}
 
@@ -120,7 +130,9 @@ class JSONDataFile(DataFile):
             data = json.loads(self.path.read_text())
         except FileNotFoundError:
             if not self.create_missing:
-                return await self.default_data()
+                data       = await self.default_data()
+                self._data = data
+                return data
 
             data = {}
         except json.JSONDecodeError:
@@ -132,6 +144,7 @@ class JSONDataFile(DataFile):
         if data != all_data:
             await self.write(all_data)
 
+        self._data = all_data
         return all_data
 
 
