@@ -112,11 +112,21 @@ class HTMLProcessor:
     }
 
     link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+        # Normal :// URLs
         (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
+
+        # mailto: and tel:
         r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9_.-]+[a-z](?:\:\d+)?))",
         r"tel:(?P<body>[0-9+-]+)(?P<host>)",
+
+        # magnet:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
+
+        # User ID, room ID, room alias
+        r"(?=^|\W)(?P<body>@.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        r"(?=^|\W)(?P<body>#.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        r"(?=^|\W)(?P<body>!.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     ]]
 
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
@@ -129,16 +139,6 @@ class HTMLProcessor:
     )
 
     extra_newlines_regex = re.compile(r"\n(\n*)")
-
-    user_id_mention_regex = re.compile(
-        r"(?=^|\W)@.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
-    )
-    room_id_mention_regex = re.compile(
-        r"(?=^|\W)!.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
-    )
-    room_alias_mention_regex = re.compile(
-        r"(?=^|\W)#.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
-    )
 
 
     def __init__(self) -> None:
@@ -190,13 +190,6 @@ class HTMLProcessor:
         self, text: str, usernames: Optional[Dict[str, str]] = None,
     ) -> str:
         """Turn usernames, user ID, room alias, room ID into matrix.to URL."""
-
-        def repl_func(m) -> str:
-            return rf"[{m.group(0)}](https://matrix.to/#/{quote(m.group(0))})"
-
-        text = self.user_id_mention_regex.sub(repl_func, text)
-        text = self.room_id_mention_regex.sub(repl_func, text)
-        text = self.room_alias_mention_regex.sub(repl_func, text)
 
         for user_id, username in (usernames or {}).items():
             text = re.sub(
@@ -286,6 +279,8 @@ class HTMLProcessor:
                 self._img_to_a,
                 self._remove_extra_newlines,
                 self._newlines_to_return_symbol if inline else lambda el: el,
+
+                self._matrix_toify_user_room_links,
             ],
             "element_postprocessors": [
                 self._font_color_to_span if outgoing else lambda el: el,
@@ -376,6 +371,15 @@ class HTMLProcessor:
         if el.tail:
             el.tail = re.sub(r"\n", r" ⏎ ", el.tail)
 
+        return el
+
+
+    @staticmethod
+    def _matrix_toify_user_room_links(el: HtmlElement) -> HtmlElement:
+        if el.tag != "a" or not el.attrib.get("href"):
+            return el
+
+        el.attrib["href"] = "https://matrix.to/#/%s" % el.attrib["href"]
         return el
 
 
