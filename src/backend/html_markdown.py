@@ -130,6 +130,16 @@ class HTMLProcessor:
 
     extra_newlines_regex = re.compile(r"\n(\n*)")
 
+    user_id_mention_regex = re.compile(
+        r"(?=^|\W)@.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
+    )
+    room_id_mention_regex = re.compile(
+        r"(?=^|\W)!.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
+    )
+    room_alias_mention_regex = re.compile(
+        r"(?=^|\W)#.+?:[a-zA-Z\d.-:]*[a-zA-Z\d]",
+    )
+
 
     def __init__(self) -> None:
         self._sanitizers = {
@@ -168,25 +178,33 @@ class HTMLProcessor:
         text:              str,
         inline:            bool                     = False,
         outgoing:          bool                     = False,
-        mentionable_users: Optional[Dict[str, str]] = None,
+        mentionable_users: Optional[Dict[str, str]] = None,  # {id: name}
     ) -> str:
         """Return filtered HTML from Markdown text."""
 
-        if mentionable_users:
-            text = self.markdown_linkify_users(text, mentionable_users)
-
+        text = self.markdown_linkify_users_rooms(text, mentionable_users)
         return self.filter(self._markdown_to_html(text), inline, outgoing)
 
 
-    def markdown_linkify_users(self, text: str, users: Dict[str, str]) -> str:
-        print(text)
+    def markdown_linkify_users_rooms(
+        self, text: str, usernames: Optional[Dict[str, str]] = None,
+    ) -> str:
+        """Turn usernames, user ID, room alias, room ID into matrix.to URL."""
 
-        for user_id, username in users.items():
-            repl = rf"\1[{user_id}](https://matrix.to/#/{quote(user_id)})\2"
-            text = re.sub(rf"(^|\W){user_id}($|\W)", repl, text)
+        def repl_func(m) -> str:
+            return rf"[{m.group(0)}](https://matrix.to/#/{quote(m.group(0))})"
 
-            repl = rf"\1[{username}](https://matrix.to/#/{quote(user_id)})\2"
-            text = re.sub(rf"(^|\W){username}($|\W)", repl, text)
+        text = self.user_id_mention_regex.sub(repl_func, text)
+        text = self.room_id_mention_regex.sub(repl_func, text)
+        text = self.room_alias_mention_regex.sub(repl_func, text)
+
+        for user_id, username in (usernames or {}).items():
+            text = re.sub(
+                rf"(?<!\w)({re.escape(username)})(?!\w)",
+                rf"[\1](https://matrix.to/#/{quote(user_id)})",
+                text,
+                flags=re.IGNORECASE,
+            )
 
         return text
 
