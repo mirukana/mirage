@@ -35,6 +35,7 @@
 
 ## Issues
 
+- If names are mentioned with a different case, they look like normal links
 - When zooming in enough, "Mirage <version>" label overflows
 
 - Catch server 5xx errors when sending message and retry 

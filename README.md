@@ -17,6 +17,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 ### Client
 
 - **Fluid interface** that adapts to any window size
+- Toggleable **compact mode**
 - Customizable **keyboard shortcuts** for (almost) everything, including
   filtering/switching rooms, scrolling, sending files...
 - Versatile **theming system**, properties can refer to each other and have 
