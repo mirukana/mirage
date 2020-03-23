@@ -375,7 +375,9 @@ chat:
             "h6 { font-size: " + fontSize.smaller + "px }" +
 
             ".sender { margin-bottom: " + spacing / 2 + " }" +
-            ".quote  { color: " + quote + " }"
+            ".quote  { color: " + quote + " }" +
+
+            ".mention { text-decoration: none; }"
 
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
