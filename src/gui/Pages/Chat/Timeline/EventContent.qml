@@ -17,7 +17,7 @@ HRowLayout {
         const lines = []
 
         for (const [name, link] of mentions) {
-            if (name.startsWith("#") || name.startsWith("!")) continue
+            if (! link.match(/^https?:\/\/matrix.to\/#\/@.+/)) continue
 
             lines.push(
                 `.mention[data-mention='${name}'] { color: ` +
