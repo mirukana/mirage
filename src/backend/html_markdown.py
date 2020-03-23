@@ -4,11 +4,12 @@
 
 import re
 from typing import DefaultDict, Dict
+from urllib.parse import unquote
 
 import html_sanitizer.sanitizer as sanitizer
 import mistune
 from html_sanitizer.sanitizer import Sanitizer
-from lxml.html import HtmlElement  # nosec
+from lxml.html import HtmlElement, etree  # nosec
 
 from .svg_colors import SVG_COLORS
 
@@ -198,8 +199,21 @@ class HTMLProcessor:
     ) -> str:
         """Filter and return HTML."""
 
-        settings = self.sanitize_settings(inline, outgoing, room_id)
-        html     = Sanitizer(settings).sanitize(html).rstrip("\n")
+        sanit = Sanitizer(self.sanitize_settings(inline, outgoing, room_id))
+        html  = sanit.sanitize(html).rstrip("\n")
+
+        if not html.strip():
+            return html
+
+        tree = etree.fromstring(
+            html, parser=etree.HTMLParser(encoding="utf-8"),
+        )
+
+        for a_tag in tree.iterdescendants("a"):
+            self._matrix_toify(a_tag, room_id)
+
+        html = etree.tostring(tree, encoding="utf-8", method="html").decode()
+        html = sanit.sanitize(html).rstrip("\n")
 
         if outgoing:
             return html
@@ -277,8 +291,6 @@ class HTMLProcessor:
                 self._img_to_a,
                 self._remove_extra_newlines,
                 self._newlines_to_return_symbol if inline else lambda el: el,
-
-                lambda el: self._matrix_toify(el, room_id),
             ],
             "element_postprocessors": [
                 self._font_color_to_span if outgoing else lambda el: el,
@@ -376,7 +388,6 @@ class HTMLProcessor:
         """Turn userID, usernames, roomID, room aliases into matrix.to URL."""
 
         if el.tag != "a" or not el.attrib.get("href"):
-            # print("ret 1", el.tag, el.attrib, el.text, el.tail, sep="||")
             return el
 
         id_regexes = (
@@ -388,12 +399,10 @@ class HTMLProcessor:
                 el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
 
         if room_id not in self.rooms_user_id_names:
-            # print("ret 2", el.tag, el.attrib, el.text, el.tail, sep="||")
             return el
 
         for user_id, username in self.rooms_user_id_names[room_id].items():
-            # print(el.attrib["href"], username, user_id)
-            if el.attrib["href"] == username:
+            if unquote(el.attrib["href"]) == username:
                 el.attrib["href"] = f"https://matrix.to/#/{user_id}"
 
         # print("ret 3", el.tag, el.attrib, el.text, el.tail, sep="||")
