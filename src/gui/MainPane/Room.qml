@@ -34,23 +34,23 @@ HTileDelegate {
     title.text: model.display_name || qsTr("Empty room")
 
     additionalInfo.children: [
-        HLabel {
-            text: model.mentions
-            font.pixelSize: theme.fontSize.small
-            verticalAlignment: Qt.AlignVCenter
-            leftPadding: theme.spacing / 4
-            rightPadding: leftPadding
+        // HLabel {
+        //     text: model.mentions
+        //     font.pixelSize: theme.fontSize.small
+        //     verticalAlignment: Qt.AlignVCenter
+        //     leftPadding: theme.spacing / 4
+        //     rightPadding: leftPadding
 
-            scale: model.mentions === 0 ? 0 : 1
-            visible: scale > 0
+        //     scale: model.mentions === 0 ? 0 : 1
+        //     visible: scale > 0
 
-            background: Rectangle {
-                color: theme.colors.alertBackground
-                radius: theme.radius / 4
-            }
+        //     background: Rectangle {
+        //         color: theme.colors.alertBackground
+        //         radius: theme.radius / 4
+        //     }
 
-            Behavior on scale { HNumberAnimation {} }
-        },
+        //     Behavior on scale { HNumberAnimation {} }
+        // },
 
         HIcon {
             svgName: "invite-received"
