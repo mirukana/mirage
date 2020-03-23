@@ -1,7 +1,7 @@
 # TODO
 
+- mention color in local echo
 - cpu usage
-- room.mentions += 1 key error before registration
 
 ## Main goals for next version
 
