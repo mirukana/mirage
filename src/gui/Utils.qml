@@ -159,7 +159,9 @@ QtObject {
         const sender     = coloredNameHtml(ev.sender_name, ev.sender_id)
 
         if (type === "RoomMessageEmote")
-            return qsTr("%1 %2").arg(sender).arg(ev.content)
+            return ev.content.match(/^\s*<(p|h[1-6])>/) ?
+                   ev.content.replace(/(^\s*<(p|h[1-6])>)/, `$1 ${sender} `) :
+                   sender + " " + ev.content
 
         if (type.startsWith("RoomMessage") && ! unknownMsg)
             return ev.content
