@@ -97,6 +97,8 @@ class NioCallbacks:
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else
             utils.plain2html(ev.body),
+
+            room_id = room.room_id,
         )
         await self.client.register_nio_event(room, ev, content=co)
 
@@ -337,8 +339,10 @@ class NioCallbacks:
 
     async def onRoomTopicEvent(self, room, ev) -> None:
         if ev.topic:
-            topic = HTML_PROCESSOR.filter(ev.topic, inline=True)
-            co    = f"%1 changed the room's topic to \"{topic}\""
+            topic = HTML_PROCESSOR.filter(
+                ev.topic, inline=True, room_id=room.room_id,
+            )
+            co = f"%1 changed the room's topic to \"{topic}\""
         else:
             co = "%1 removed the room's topic"
 

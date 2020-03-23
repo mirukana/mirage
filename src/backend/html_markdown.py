@@ -3,8 +3,7 @@
 """HTML and Markdown processing tools."""
 
 import re
-from typing import Dict, Optional
-from urllib.parse import quote
+from typing import DefaultDict, Dict
 
 import html_sanitizer.sanitizer as sanitizer
 import mistune
@@ -111,7 +110,18 @@ class HTMLProcessor:
         "table", "thead", "tbody", "tr", "th", "td", "pre",
     }
 
-    link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+    user_id_regex = re.compile(
+        r"(?=^|\W)(?P<body>@.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+    )
+    room_id_regex = re.compile(
+        r"(?=^|\W)(?P<body>!.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+    )
+    room_alias_regex = re.compile(
+        r"(?=^|\W)(?P<body>#.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+    )
+
+    link_regexes = [re.compile(r, re.IGNORECASE)
+                    if isinstance(r, str) else r for r in [
         # Normal :// URLs
         (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
@@ -123,10 +133,7 @@ class HTMLProcessor:
         # magnet:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
 
-        # User ID, room ID, room alias
-        r"(?=^|\W)(?P<body>@.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
-        r"(?=^|\W)(?P<body>#.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
-        r"(?=^|\W)(?P<body>!.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        user_id_regex, room_id_regex, room_alias_regex,
     ]]
 
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
@@ -140,19 +147,11 @@ class HTMLProcessor:
 
     extra_newlines_regex = re.compile(r"\n(\n*)")
 
+    # {room_id: {user_id: username}}
+    rooms_user_id_names: DefaultDict[str, Dict[str, str]] = DefaultDict(dict)
+
 
     def __init__(self) -> None:
-        self._sanitizers = {
-            (False, False): Sanitizer(self.sanitize_settings(False, False)),
-            (True, False):  Sanitizer(self.sanitize_settings(True, False)),
-            (False, True):  Sanitizer(self.sanitize_settings(False, True)),
-            (True, True):   Sanitizer(self.sanitize_settings(True, True)),
-        }
-
-        self._inline_sanitizer = Sanitizer(self.sanitize_settings(inline=True))
-        self._inline_outgoing_sanitizer = \
-            Sanitizer(self.sanitize_settings(inline=True))
-
         # The whitespace remover doesn't take <pre> into account
         sanitizer.normalize_overall_whitespace = lambda html, *args, **kw: html
         sanitizer.normalize_whitespace_in_text_or_tail = \
@@ -175,39 +174,32 @@ class HTMLProcessor:
 
     def from_markdown(
         self,
-        text:              str,
-        inline:            bool                     = False,
-        outgoing:          bool                     = False,
-        mentionable_users: Optional[Dict[str, str]] = None,  # {id: name}
+        text:     str,
+        inline:   bool = False,
+        outgoing: bool = False,
+        room_id:  str  = "",
     ) -> str:
         """Return filtered HTML from Markdown text."""
 
-        text = self.markdown_linkify_users_rooms(text, mentionable_users)
-        return self.filter(self._markdown_to_html(text), inline, outgoing)
-
-
-    def markdown_linkify_users_rooms(
-        self, text: str, usernames: Optional[Dict[str, str]] = None,
-    ) -> str:
-        """Turn usernames, user ID, room alias, room ID into matrix.to URL."""
-
-        for user_id, username in (usernames or {}).items():
-            text = re.sub(
-                rf"(?<!\w)({re.escape(username)})(?!\w)",
-                rf"[\1](https://matrix.to/#/{quote(user_id)})",
-                text,
-                flags=re.IGNORECASE,
-            )
-
-        return text
+        return self.filter(
+            self._markdown_to_html(text),
+            inline,
+            outgoing,
+            room_id,
+        )
 
 
     def filter(
-        self, html: str, inline: bool = False, outgoing: bool = False,
+        self,
+        html:     str,
+        inline:   bool = False,
+        outgoing: bool = False,
+        room_id:  str  = "",
     ) -> str:
         """Filter and return HTML."""
 
-        html = self._sanitizers[inline, outgoing].sanitize(html).rstrip("\n")
+        settings = self.sanitize_settings(inline, outgoing, room_id)
+        html     = Sanitizer(settings).sanitize(html).rstrip("\n")
 
         if outgoing:
             return html
@@ -226,7 +218,7 @@ class HTMLProcessor:
 
 
     def sanitize_settings(
-        self, inline: bool = False, outgoing: bool = False,
+        self, inline: bool = False, outgoing: bool = False, room_id: str = "",
     ) -> dict:
         """Return an html_sanitizer configuration."""
 
@@ -247,6 +239,11 @@ class HTMLProcessor:
             "span": {"data-mx-color"},
         }}
 
+        username_link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+            rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
+            for username in self.rooms_user_id_names[room_id].values()
+        ]]
+
         return {
             "tags": inline_tags if inline else all_tags,
             "attributes": inlines_attributes if inline else attributes,
@@ -258,7 +255,8 @@ class HTMLProcessor:
             "keep_typographic_whitespace": True,
             "add_nofollow": False,
             "autolink": {
-                "link_regexes": self.link_regexes,
+                "link_regexes":
+                    self.link_regexes + username_link_regexes,  # type: ignore
                 "avoid_hosts": [],
             },
             "sanitize_href": lambda href: href,
@@ -280,7 +278,7 @@ class HTMLProcessor:
                 self._remove_extra_newlines,
                 self._newlines_to_return_symbol if inline else lambda el: el,
 
-                self._matrix_toify_user_room_links,
+                lambda el: self._matrix_toify(el, room_id),
             ],
             "element_postprocessors": [
                 self._font_color_to_span if outgoing else lambda el: el,
@@ -374,12 +372,31 @@ class HTMLProcessor:
         return el
 
 
-    @staticmethod
-    def _matrix_toify_user_room_links(el: HtmlElement) -> HtmlElement:
+    def _matrix_toify(self, el: HtmlElement, room_id: str = "") -> HtmlElement:
+        """Turn userID, usernames, roomID, room aliases into matrix.to URL."""
+
         if el.tag != "a" or not el.attrib.get("href"):
+            # print("ret 1", el.tag, el.attrib, el.text, el.tail, sep="||")
             return el
 
-        el.attrib["href"] = "https://matrix.to/#/%s" % el.attrib["href"]
+        id_regexes = (
+            self.user_id_regex, self.room_id_regex, self.room_alias_regex,
+        )
+
+        for regex in id_regexes:
+            if regex.match(el.attrib["href"]):
+                el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
+
+        if room_id not in self.rooms_user_id_names:
+            # print("ret 2", el.tag, el.attrib, el.text, el.tail, sep="||")
+            return el
+
+        for user_id, username in self.rooms_user_id_names[room_id].items():
+            # print(el.attrib["href"], username, user_id)
+            if el.attrib["href"] == username:
+                el.attrib["href"] = f"https://matrix.to/#/{user_id}"
+
+        # print("ret 3", el.tag, el.attrib, el.text, el.tail, sep="||")
         return el
 
 

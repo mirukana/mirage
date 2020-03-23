@@ -308,14 +308,7 @@ class MatrixClient(nio.AsyncClient):
     async def send_text(self, room_id: str, text: str) -> None:
         """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""
 
-        from_md = partial(
-            HTML.from_markdown,
-            mentionable_users={
-                user_id: member.display_name or user_id
-                for user_id, member in
-                self.models[self.user_id, room_id, "members"].items()
-            },
-        )
+        from_md = partial(HTML.from_markdown, room_id=room_id)
 
         escape = False
         if text.startswith("//") or text.startswith(r"\/"):
@@ -626,7 +619,9 @@ class MatrixClient(nio.AsyncClient):
         content = event_fields.get("content", "").strip()
 
         if content and "inline_content" not in event_fields:
-            event_fields["inline_content"] = HTML.filter(content, inline=True)
+            event_fields["inline_content"] = HTML.filter(
+                content, inline=True, room_id=room_id,
+            )
 
         event = Event(
             id            = f"echo-{transaction_id}",
@@ -1088,7 +1083,9 @@ class MatrixClient(nio.AsyncClient):
             display_name   = room.display_name or "",
             avatar_url     = room.gen_avatar_url or "",
             plain_topic    = room.topic or "",
-            topic          = HTML.filter(room.topic or "", inline=True),
+            topic          = HTML.filter(
+                room.topic or "", inline=True, room_id=room.room_id,
+            ),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
             inviter_avatar =
@@ -1123,6 +1120,7 @@ class MatrixClient(nio.AsyncClient):
 
         for user_id in left_the_room:
             del self.models[self.user_id, room.room_id, "members"][user_id]
+            HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
         # Add the room members to the added room
         new_dict = {
@@ -1137,6 +1135,11 @@ class MatrixClient(nio.AsyncClient):
             ) for user_id, member in room.users.items()
         }
         self.models[self.user_id, room.room_id, "members"].update(new_dict)
+
+        for user_id, member in room.users.items():
+            if member.display_name:
+                HTML.rooms_user_id_names[room.room_id][user_id] = \
+                    member.display_name
 
 
     async def get_member_name_avatar(
@@ -1182,7 +1185,9 @@ class MatrixClient(nio.AsyncClient):
         content = fields.get("content", "").strip()
 
         if content and "inline_content" not in fields:
-            fields["inline_content"] = HTML.filter(content, inline=True)
+            fields["inline_content"] = HTML.filter(
+                content, inline=True, room_id=room.room_id,
+            )
 
         # Create Event ModelItem
 
