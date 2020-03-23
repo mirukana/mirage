@@ -100,6 +100,11 @@ class NioCallbacks:
 
             room_id = room.room_id,
         )
+
+        if HTML_PROCESSOR.user_id_link_in_html(co, self.client.user_id):
+            rooms = self.client.models[self.client.user_id, "rooms"]
+            rooms[room.room_id].mentions += 1
+
         await self.client.register_nio_event(room, ev, content=co)
 
 

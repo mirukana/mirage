@@ -7,6 +7,7 @@ from typing import DefaultDict, Dict
 from urllib.parse import unquote
 
 import html_sanitizer.sanitizer as sanitizer
+import lxml.html  # nosec
 import mistune
 from html_sanitizer.sanitizer import Sanitizer
 from lxml.html import HtmlElement, etree  # nosec
@@ -171,6 +172,19 @@ class HTMLProcessor:
             rule for rule in self._markdown_to_html.block.default_rules
             if rule != "block_quote"
         ]
+
+
+    def user_id_link_in_html(self, html: str, user_id: str) -> bool:
+        if not html.strip():
+            return False
+
+        regex = re.compile(rf"https?://matrix.to/#/{user_id}", re.IGNORECASE)
+
+        for _, _, href, _ in lxml.html.iterlinks(html):
+            if regex.match(unquote(href.strip())):
+                return True
+
+        return False
 
 
     def from_markdown(

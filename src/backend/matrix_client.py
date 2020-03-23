@@ -1073,9 +1073,11 @@ class MatrixClient(nio.AsyncClient):
             registered      = self.models[self.user_id, "rooms"][room.room_id]
             last_event_date = registered.last_event_date
             typing_members  = registered.typing_members
+            mentions        = registered.mentions
         except KeyError:
             last_event_date = datetime.fromtimestamp(0)
             typing_members  = []
+            mentions        = 0
 
         self.models[self.user_id, "rooms"][room.room_id] = Room(
             id             = room.room_id,
@@ -1108,6 +1110,7 @@ class MatrixClient(nio.AsyncClient):
             can_set_guest_access = can_send_state("m.room.guest_access"),
 
             last_event_date = last_event_date,
+            mentions        = mentions,
 
         )
 

@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.12
 HButton {
     id: tile
 
+
     signal leftClicked()
     signal rightClicked()
 
@@ -23,6 +24,7 @@ HButton {
     property alias contextMenu: contextMenuLoader.sourceComponent
 
     property Component image
+
 
     contentItem: HRowLayout {
         id: contentItem
@@ -50,34 +52,37 @@ HButton {
                     Layout.fillHeight: true
                 }
 
+                HLabel {
+                    id: rightInfo
+                    font.pixelSize: theme.fontSize.small
+                    verticalAlignment: Qt.AlignVCenter
+                    color: theme.colors.halfDimText
+                    visible: Layout.maximumWidth > 0
+
+                    Layout.fillHeight: true
+                    Layout.maximumWidth:
+                        text && tile.width >= 200 * theme.uiScale ?
+                        implicitWidth : 0
+
+                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
+                }
+
                 HRowLayout {
                     id: additionalInfo
                     visible: visibleChildren.length > 0
                 }
 
-                HLabel {
-                    id: rightInfo
-                    font.pixelSize: theme.fontSize.small
-                    color: theme.colors.halfDimText
-
-                    visible: Layout.maximumWidth > 0
-                    Layout.fillHeight: true
-                    Layout.maximumWidth:
-                        text && tile.width >= 160 * theme.uiScale ?
-                        implicitWidth : 0
-
-                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
-                }
             }
 
             HRichLabel {
                 id: subtitle
                 textFormat: Text.StyledText
                 font.pixelSize: theme.fontSize.small
+                verticalAlignment: Qt.AlignVCenter
                 elide: Text.ElideRight
                 color: theme.colors.dimText
-
                 visible: Layout.maximumHeight > 0
+
                 Layout.maximumHeight: ! compact && text ? implicitHeight : 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true

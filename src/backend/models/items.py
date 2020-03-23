@@ -80,6 +80,8 @@ class Room(ModelItem):
 
     last_event_date: datetime = ZeroDate
 
+    mentions: int = 0
+
     def __lt__(self, other: "Room") -> bool:
         """Sort by join state, then descending last event date, then name.
 
