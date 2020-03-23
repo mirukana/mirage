@@ -72,595 +72,732 @@ modules:
         sha256: ff06e1a449dfbe6f2c51f27ae1187d3e72386cb54476fbb189ffaacf845f478e
 
   # Python dependencies
-  - name: python3-Pillow
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'Pillow          >= 7.0.0, < 8'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/39/47/f28067b187dd664d205f75b07dcc6e0e95703e134008a14814827eebcaab/Pillow-7.0.0.tar.gz
-      sha256: 4d9ed9a64095e031435af120d3c910148067087541131e82b3e8db302f4c8946
-
-  - name: python3-setuptools_scm
-    buildsystem: simple
-    build-commands:
-      - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} setuptools_scm
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/4b/c1/118ec08816737cc46b4dd93b22f7a138fbfb14b53f4b4718fd9983e70a50/setuptools_scm-3.5.0-py2.py3-none-any.whl
-        sha256: 0d23db3d43e0a43eb7196bcf0eb8a4a2eb0561f621ed7ec44b2fdccfd907e38f
-        
-  - name: python3-pymediainfo
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'pymediainfo     >= 4.1,   < 5'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/97/87/1a79ccbf656392b3053d667dbf903b183d55ecf13cb6439293a700a8de00/pymediainfo-4.1.tar.gz
-      sha256: ed6a8f3dcd255895021d40d1299be333a1bead3dbe8df4cbe1a863ba8fee1756
-
-  - name: python3-pytest-runner
-    buildsystem: simple
-    build-commands:
-      - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} pytest-runner
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/16/45/81b5262c0efc08882bdf183b788e6d28e3d684863990996d8b60967d48da/pytest_runner-5.2-py2.py3-none-any.whl
-        sha256: 5534b08b133ef9a5e2c22c7886a8f8508c95bb0b0bdc6cc13214f269c3c70d51
-
-  - name: python3-cffi
-    buildsystem: simple
-    build-commands: 
-      - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} cffi
-    sources: 
-      - type: file
-        url: https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz
-        sha256: 2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0
-      - type: file
-        url: https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz
-        sha256: 2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6
-      - type: file
-        url: https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl
-        sha256: 7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705
-        
-  - name: python3-cairocffi
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} cairocffi
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz
-      sha256: 2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0
-    - type: file
-      url: https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz
-      sha256: 2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6
-    - type: file
-      url: https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl
-      sha256: 7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705
-    - type: file
-      url: https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz
-      sha256: f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05db
-  
-  - name: python3-cairosvg
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'cairosvg        >= 2.4.2, < 3'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz
-      sha256: 2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0
-    - type: file
-      url: https://files.pythonhosted.org/packages/0b/02/ae6ceac1baeda530866a85075641cec12989bd8d31af6d5ab4a3e8c92f47/webencodings-0.5.1.tar.gz
-      sha256: b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923
-    - type: file
-      url: https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz
-      sha256: 2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6
-    - type: file
-      url: https://files.pythonhosted.org/packages/0b/10/8332e2a40334292e584c88f24ebf1635c1704f77be50af73cccc7babdbb7/tinycss2-1.0.2.tar.gz
-      sha256: 6427d0e3faa0a5e0e8c9f6437e2de26148a7a197a8b0992789f23d9a802788cf
-    - type: file
-      url: https://files.pythonhosted.org/packages/39/47/f28067b187dd664d205f75b07dcc6e0e95703e134008a14814827eebcaab/Pillow-7.0.0.tar.gz
-      sha256: 4d9ed9a64095e031435af120d3c910148067087541131e82b3e8db302f4c8946
-    - type: file
-      url: https://files.pythonhosted.org/packages/a4/5f/f8aa58ca0cf01cbcee728abc9d88bfeb74e95e6cb4334cfd5bed5673ea77/defusedxml-0.6.0.tar.gz
-      sha256: f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5
-    - type: file
-      url: https://files.pythonhosted.org/packages/03/37/0e28364d4c2bce998171199ab59650b3174c077ef2c8b6d4ff57aa47676a/cssselect2-0.3.0.tar.gz
-      sha256: 5c2716f06b5de93f701d5755a9666f2ee22cbcd8b4da8adddfc30095ffea3abc
-    - type: file
-      url: https://files.pythonhosted.org/packages/ba/46/24514db9c111f4d0b18bc050ff7204065ae9c89db6badcf283661528b329/CairoSVG-2.4.2.tar.gz
-      sha256: 4e668f96653326780036ebb0a9ff2bb59a8443d7bcfc51a14aab77b57a8e67ad
-    - type: file
-      url: https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl
-      sha256: 7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705
-    - type: file
-      url: https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl
-      sha256: a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78
-    - type: file
-      url: https://files.pythonhosted.org/packages/72/bb/9ad85eacc5f273b08bd5203a1d587479a93f27df9056e4e5f63276f4fd0e/cssselect2-0.3.0-py3-none-any.whl
-      sha256: 97d7d4234f846f9996d838964d38e13b45541c18143bc55cf00e4bc1281ace76
-    - type: file
-      url: https://files.pythonhosted.org/packages/94/2c/4e501f9c351343c8ba10d70b5a7ca97cdab2690af043a6e52ada65b85b6b/tinycss2-1.0.2-py3-none-any.whl
-      sha256: 9fdacc0e22d344ddd2ca053837c133900fe820ae1222f63b79617490a498507a
-    - type: file
-      url: https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz
-      sha256: f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05db
-    - type: file
-      url: https://files.pythonhosted.org/packages/06/74/9b387472866358ebc08732de3da6dc48e44b0aacd2ddaa5cb85ab7e986a2/defusedxml-0.6.0-py2.py3-none-any.whl
-      sha256: 6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93
-    - type: file
-      url: https://files.pythonhosted.org/packages/8e/3a/762f9272c20db092f4d537aaf364dd0770ecf8f7101b58c4e933e99ee2f6/CairoSVG-2.4.2-py3-none-any.whl
-      sha256: 9cb1df7e9bc60f75fb87f67940a8fb805aad544337a67a40b67c05cfe33711a2
-
-  - name: python3-aiofiles
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'aiofiles        >= 0.4.0, < 0.5'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/cf/f2/a67a23bc0bb61d88f82aa7fb84a2fb5f278becfbdc038c5cbb36c31feaf1/aiofiles-0.4.0-py3-none-any.whl
-      sha256: 1e644c2573f953664368de28d2aa4c89dfd64550429d0c27c4680ccd3aa4985d
-
-  - name: python3-appdirs
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'appdirs         >= 1.4.3, < 2'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/56/eb/810e700ed1349edde4cbdc1b2a21e28cdf115f9faf263f6bbf8447c1abf3/appdirs-1.4.3-py2.py3-none-any.whl
-      sha256: d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e
-
-  - name: python3-filetype
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'filetype        >= 1.0.5, < 2'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/1c/78/047cf0f371f8faafab05b5062f902d4bedd945d436544b30db692622ab84/filetype-1.0.5-py2.py3-none-any.whl
-      sha256: 4967124d982a71700d94a08c49c4926423500e79382a92070f5ab248d44fe461
-
-  - name: python3-html_sanitizer
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'html_sanitizer  >= 1.7.3, < 2'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/15/53/3692c565aea19f7d9dd696fee3d0062782e9ad5bf9535267180511a15967/soupsieve-2.0.tar.gz
-      sha256: e914534802d7ffd233242b785229d5ba0766a7f487385e3f714446a07bf540ae
-    - type: file
-      url: https://files.pythonhosted.org/packages/52/ba/0e121661f529e7f456e903bf5c4d255b8051d8ce2b5e629c5212efe4c3f1/beautifulsoup4-4.8.2.tar.gz
-      sha256: 05fd825eb01c290877657a56df4c6e4c311b3965bda790c613a3d6fb01a5462a
-    - type: file
-      url: https://files.pythonhosted.org/packages/39/2b/0a66d5436f237aff76b91e68b4d8c041d145ad0a2cdeefe2c42f76ba2857/lxml-4.5.0.tar.gz
-      sha256: 8620ce80f50d023d414183bf90cc2576c2837b88e00bea3f33ad2630133bbb60
-    - type: file
-      url: https://files.pythonhosted.org/packages/72/ff/88fbb7c46d359f7cbf1f8bc9f63379ed6b5e3940a9fda88f9cf5cedf24da/html-sanitizer-1.9.0.tar.gz
-      sha256: ef86b10c653b288dff4c51c0cc9cf93025c4c6a519a6e40eb1aa152861101929
-    - type: file
-      url: https://files.pythonhosted.org/packages/05/cf/ea245e52f55823f19992447b008bcbb7f78efc5960d77f6c34b5b45b36dd/soupsieve-2.0-py2.py3-none-any.whl
-      sha256: fcd71e08c0aee99aca1b73f45478549ee7e7fc006d51b37bec9e9def7dc22b69
-    - type: file
-      url: https://files.pythonhosted.org/packages/cb/a1/c698cf319e9cfed6b17376281bd0efc6bfc8465698f54170ef60a485ab5d/beautifulsoup4-4.8.2-py3-none-any.whl
-      sha256: 9fbb4d6e48ecd30bcacc5b63b94088192dcda178513b2ae3c394229f8911b887
-    - type: file
-      url: https://files.pythonhosted.org/packages/0a/a5/ed03ad639853d467988582ddb879ebe386057fa6fcc6adb29752bd8f4cbf/html_sanitizer-1.9.0-py2.py3-none-any.whl
-      sha256: 8a2a43c9f8737675bf04dad817803b3a42fab7a1f8987d27433db7b2f1d8b34d
-
-  - name: python3-lxml
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'lxml            >= 4.5.0, < 5'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/39/2b/0a66d5436f237aff76b91e68b4d8c041d145ad0a2cdeefe2c42f76ba2857/lxml-4.5.0.tar.gz
-      sha256: 8620ce80f50d023d414183bf90cc2576c2837b88e00bea3f33ad2630133bbb60
-
-  - name: python3-mistune
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'mistune         >= 0.8.4, < 0.9'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl
-      sha256: 88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4
-
-  - name: python3-blist
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'blist           >= 1.3.6, < 2'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/6b/a8/dca5224abe81ccf8db81f8a2ca3d63e7a5fa7a86adc198d4e268c67ce884/blist-1.3.6.tar.gz
-      sha256: 3a12c450b001bdf895b30ae818d4d6d3f1552096b8c995f0fe0c74bef04d1fc3
-
-  - name: python3-dataclasses
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'dataclasses     >= 0.6,   < 0.7; python_version < "3.7"'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/26/2f/1095cdc2868052dd1e64520f7c0d5c8c550ad297e944e641dbf1ffbb9a5d/dataclasses-0.6-py3-none-any.whl
-      sha256: 454a69d788c7fda44efd71e259be79577822f5e3f53f029a22d08004e951dc9f
-
-  - name: python3-async_generator
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'async_generator >= 1.10,  < 2;   python_version < "3.7"'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/71/52/39d20e03abd0ac9159c162ec24b93fbcaa111e8400308f2465432495ca2b/async_generator-1.10-py3-none-any.whl
-      sha256: 01c7bf666359b4967d2cda0000cc2e4af16a0ae098cbffcb8472fb9e8ad6585b
-
-  - name: python3-pyfastcopy
-    buildsystem: simple
-    build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'pyfastcopy      >= 1.0.3, < 2;   python_version < "3.8"'
-    sources:
-    - type: file
-      url: https://files.pythonhosted.org/packages/43/80/535d6b3de415e26d0a1cb774c6895dd07aa5986d2f8bde200393bd916790/pyfastcopy-1.0.3.tar.gz
-      sha256: ed4620f1087a8949888973e315d3d59fbe9b8cc4ca5df553d76d2f21d2748999
-
-  - name: python3-uvloop
-    buildsystem: simple
-    build-commands: 
-      - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} uvloop==0.14.0
-    sources: 
-      - type: file
-        url: https://files.pythonhosted.org/packages/84/2e/462e7a25b787d2b40cf6c9864a9e702f358349fc9cfb77e83c38acb73048/uvloop-0.14.0.tar.gz
-        sha256: 123ac9c0c7dd71464f58f1b4ee0bbd81285d96cdda8bc3519281b8973e3a461e
-
-
-  # matrix-nio and its requirements
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      attrs
-    buildsystem: simple
-    name: python3-attrs
-    sources:
-    - sha256: 08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c
-      type: file
-      url: https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      future
-    buildsystem: simple
-    name: python3-future
-    sources:
-    - sha256: b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d
-      type: file
-      url: https://files.pythonhosted.org/packages/45/0b/38b06fd9b92dc2b68d58b75f900e97884c45bedd2ff83203d933cf5851c9/future-0.18.2.tar.gz
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      peewee
-    buildsystem: simple
-    name: python3-peewee
-    sources:
-    - sha256: 9492af4d1f8e18a7fa0e930960315b38931286ea0f1659bbd5503456cffdacde
-      type: file
-      url: https://files.pythonhosted.org/packages/d4/30/0083f0e484902d118927236497c5f55c14a46c2a0e1b95083d26e5608371/peewee-3.13.1.tar.gz
-      
-  - name: "python3-chardet"
+  - name: "python3-pytest-runner"
     buildsystem: "simple"
     build-commands: 
-      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} chardet"
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pytest-runner"
+    sources: 
+    - type: "file"
+      url: "https://files.pythonhosted.org/packages/16/45/81b5262c0efc08882bdf183b788e6d28e3d684863990996d8b60967d48da/pytest_runner-5.2-py2.py3-none-any.whl"
+      sha256: "5534b08b133ef9a5e2c22c7886a8f8508c95bb0b0bdc6cc13214f269c3c70d51"
+  
+  - 
+    name: "python3-aiofiles"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} aiofiles==0.4.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/cf/f2/a67a23bc0bb61d88f82aa7fb84a2fb5f278becfbdc038c5cbb36c31feaf1/aiofiles-0.4.0-py3-none-any.whl"
+        sha256: "1e644c2573f953664368de28d2aa4c89dfd64550429d0c27c4680ccd3aa4985d"
+  - 
+    name: "python3-aiohttp"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} aiohttp==3.6.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/cb/19/57503b5de719ee45e83472f339f617b0c01ad75cba44aba1e4c97c2b0abd/idna-2.9.tar.gz"
+        sha256: "7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/e7/dd/f1713bc6638cc3a6a23735eff6ee09393b44b96176d3296693ada272a80b/typing_extensions-3.7.4.1.tar.gz"
+        sha256: "091ecc894d5e908ac75209f10d5b4f118fbdb2eb1ede6a63544054bb1edb41f2"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/d6/67/6e2507586eb1cfa6d55540845b0cd05b4b77c414f6bca8b00b45483b976e/yarl-1.4.2.tar.gz"
+        sha256: "58cd9c469eced558cd81aa3f484b2924e8897049e06889e8ff2510435b7ef74b"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/a1/78/aae1545aba6e87e23ecab8d212b58bb70e72164b67eb090b81bb17ad38e3/async-timeout-3.0.1.tar.gz"
+        sha256: "0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/7f/8f/b3c8c5b062309e854ce5b726fc101195fbaa881d306ffa5c2ba19efa3af2/multidict-4.5.2.tar.gz"
+        sha256: "024b8129695a952ebd93373e45b5d341dbb87c17ce49637b34000093f243dd4f"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz"
+        sha256: "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/98/c3/2c227e66b5e896e15ccdae2e00bbc69aa46e9a8ce8869cc5fa96310bf612/attrs-19.3.0.tar.gz"
+        sha256: "f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/00/94/f9fa18e8d7124d7850a5715a0b9c0584f7b9375d331d35e157cee50f27cc/aiohttp-3.6.2.tar.gz"
+        sha256: "259ab809ff0727d0e834ac5e8a283dc5e3e0ecc30c4d80b3cd17a4139ce1f326"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl"
+        sha256: "a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/03/92/705fe8aca27678e01bbdd7738173b8e7df0088a2202c80352f664630d638/typing_extensions-3.7.4.1-py3-none-any.whl"
+        sha256: "cf8b63fedea4d89bab840ecbb93e75578af28f76f66c35889bd7065f5af88575"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/46/03/07c4894aae38b0de52b52586b24bf189bb83e4ddabfe2e2c8f2419eec6f4/idna-ssl-1.1.0.tar.gz"
+        sha256: "a933e3bb13da54383f9e8f35dc4f9cb9eb9b3b78c6b36f311254d6d0d92c6c7c"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/e1/1e/5a4441be21b0726c4464f3f23c8b19628372f606755a9d2e46c187e65ec4/async_timeout-3.0.1-py3-none-any.whl"
+        sha256: "4291ca197d287d274d0b6cb5d6f8f8f82d434ed288f962539ff18cc9012f9ea3"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl"
+        sha256: "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl"
+        sha256: "08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"
+  - 
+    name: "python3-appdirs"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} appdirs==1.4.3"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/56/eb/810e700ed1349edde4cbdc1b2a21e28cdf115f9faf263f6bbf8447c1abf3/appdirs-1.4.3-py2.py3-none-any.whl"
+        sha256: "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"
+  - 
+    name: "python3-async-generator"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} async-generator==1.10"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/71/52/39d20e03abd0ac9159c162ec24b93fbcaa111e8400308f2465432495ca2b/async_generator-1.10-py3-none-any.whl"
+        sha256: "01c7bf666359b4967d2cda0000cc2e4af16a0ae098cbffcb8472fb9e8ad6585b"
+  - 
+    name: "python3-async-timeout"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} async-timeout==3.0.1"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/e1/1e/5a4441be21b0726c4464f3f23c8b19628372f606755a9d2e46c187e65ec4/async_timeout-3.0.1-py3-none-any.whl"
+        sha256: "4291ca197d287d274d0b6cb5d6f8f8f82d434ed288f962539ff18cc9012f9ea3"
+  - 
+    name: "python3-atomicwrites"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} atomicwrites==1.3.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/52/90/6155aa926f43f2b2a22b01be7241be3bfd1ceaf7d0b3267213e8127d41f4/atomicwrites-1.3.0-py2.py3-none-any.whl"
+        sha256: "03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4"
+  - 
+    name: "python3-attrs"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} attrs==19.3.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl"
+        sha256: "08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"
+  - 
+    name: "python3-beautifulsoup4"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} beautifulsoup4==4.8.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/cf/ea245e52f55823f19992447b008bcbb7f78efc5960d77f6c34b5b45b36dd/soupsieve-2.0-py2.py3-none-any.whl"
+        sha256: "fcd71e08c0aee99aca1b73f45478549ee7e7fc006d51b37bec9e9def7dc22b69"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/cb/a1/c698cf319e9cfed6b17376281bd0efc6bfc8465698f54170ef60a485ab5d/beautifulsoup4-4.8.2-py3-none-any.whl"
+        sha256: "9fbb4d6e48ecd30bcacc5b63b94088192dcda178513b2ae3c394229f8911b887"
+  - 
+    name: "python3-blist"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} blist==1.3.6"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/6b/a8/dca5224abe81ccf8db81f8a2ca3d63e7a5fa7a86adc198d4e268c67ce884/blist-1.3.6.tar.gz"
+        sha256: "3a12c450b001bdf895b30ae818d4d6d3f1552096b8c995f0fe0c74bef04d1fc3"
+  - 
+    name: "python3-cachetools"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} cachetools==4.0.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/08/6a/abf83cb951617793fd49c98cb9456860f5df66ff89883c8660aa0672d425/cachetools-4.0.0-py3-none-any.whl"
+        sha256: "b304586d357c43221856be51d73387f93e2a961598a9b6b6670664746f3b6c6c"
+  - 
+    name: "python3-cffi"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} cffi==1.14.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
+        sha256: "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz"
+        sha256: "2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl"
+        sha256: "7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"
+  - 
+    name: "python3-cairocffi"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} cairocffi==1.1.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
+        sha256: "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz"
+        sha256: "2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl"
+        sha256: "7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz"
+        sha256: "f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05db"
+  - 
+    name: "python3-CairoSVG"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} CairoSVG==2.4.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
+        sha256: "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0b/02/ae6ceac1baeda530866a85075641cec12989bd8d31af6d5ab4a3e8c92f47/webencodings-0.5.1.tar.gz"
+        sha256: "b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz"
+        sha256: "2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0b/10/8332e2a40334292e584c88f24ebf1635c1704f77be50af73cccc7babdbb7/tinycss2-1.0.2.tar.gz"
+        sha256: "6427d0e3faa0a5e0e8c9f6437e2de26148a7a197a8b0992789f23d9a802788cf"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/39/47/f28067b187dd664d205f75b07dcc6e0e95703e134008a14814827eebcaab/Pillow-7.0.0.tar.gz"
+        sha256: "4d9ed9a64095e031435af120d3c910148067087541131e82b3e8db302f4c8946"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/a4/5f/f8aa58ca0cf01cbcee728abc9d88bfeb74e95e6cb4334cfd5bed5673ea77/defusedxml-0.6.0.tar.gz"
+        sha256: "f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/03/37/0e28364d4c2bce998171199ab59650b3174c077ef2c8b6d4ff57aa47676a/cssselect2-0.3.0.tar.gz"
+        sha256: "5c2716f06b5de93f701d5755a9666f2ee22cbcd8b4da8adddfc30095ffea3abc"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ba/46/24514db9c111f4d0b18bc050ff7204065ae9c89db6badcf283661528b329/CairoSVG-2.4.2.tar.gz"
+        sha256: "4e668f96653326780036ebb0a9ff2bb59a8443d7bcfc51a14aab77b57a8e67ad"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl"
+        sha256: "7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl"
+        sha256: "a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/72/bb/9ad85eacc5f273b08bd5203a1d587479a93f27df9056e4e5f63276f4fd0e/cssselect2-0.3.0-py3-none-any.whl"
+        sha256: "97d7d4234f846f9996d838964d38e13b45541c18143bc55cf00e4bc1281ace76"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/94/2c/4e501f9c351343c8ba10d70b5a7ca97cdab2690af043a6e52ada65b85b6b/tinycss2-1.0.2-py3-none-any.whl"
+        sha256: "9fdacc0e22d344ddd2ca053837c133900fe820ae1222f63b79617490a498507a"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz"
+        sha256: "f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05db"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/06/74/9b387472866358ebc08732de3da6dc48e44b0aacd2ddaa5cb85ab7e986a2/defusedxml-0.6.0-py2.py3-none-any.whl"
+        sha256: "6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/8e/3a/762f9272c20db092f4d537aaf364dd0770ecf8f7101b58c4e933e99ee2f6/CairoSVG-2.4.2-py3-none-any.whl"
+        sha256: "9cb1df7e9bc60f75fb87f67940a8fb805aad544337a67a40b67c05cfe33711a2"
+  - 
+    name: "python3-chardet"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} chardet==3.0.4"
     sources: 
       - 
         type: "file"
         url: "https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl"
         sha256: "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
-    cleanup: 
-      - "*"
+  - 
+    name: "python3-cssselect2"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} cssselect2==0.3.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/94/2c/4e501f9c351343c8ba10d70b5a7ca97cdab2690af043a6e52ada65b85b6b/tinycss2-1.0.2-py3-none-any.whl"
+        sha256: "9fdacc0e22d344ddd2ca053837c133900fe820ae1222f63b79617490a498507a"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl"
+        sha256: "a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/72/bb/9ad85eacc5f273b08bd5203a1d587479a93f27df9056e4e5f63276f4fd0e/cssselect2-0.3.0-py3-none-any.whl"
+        sha256: "97d7d4234f846f9996d838964d38e13b45541c18143bc55cf00e4bc1281ace76"
+  - 
+    name: "python3-dataclasses"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} dataclasses==0.6"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/26/2f/1095cdc2868052dd1e64520f7c0d5c8c550ad297e944e641dbf1ffbb9a5d/dataclasses-0.6-py3-none-any.whl"
+        sha256: "454a69d788c7fda44efd71e259be79577822f5e3f53f029a22d08004e951dc9f"
+  - 
+    name: "python3-defusedxml"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} defusedxml==0.6.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/06/74/9b387472866358ebc08732de3da6dc48e44b0aacd2ddaa5cb85ab7e986a2/defusedxml-0.6.0-py2.py3-none-any.whl"
+        sha256: "6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93"
+  - 
+    name: "python3-filetype"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} filetype==1.0.6"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f1/ad/e1e0e85a2c2d02f634a9a400b4476f8187a634ee9d629df16f6432a6ed21/filetype-1.0.6-py2.py3-none-any.whl"
+        sha256: "fd6d0ec56820acccf8c9fb6c3ba7e04a302f6ff6c70bcc09daf4842ae9e2ac30"
+  - 
+    name: "python3-future"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} future==0.18.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/45/0b/38b06fd9b92dc2b68d58b75f900e97884c45bedd2ff83203d933cf5851c9/future-0.18.2.tar.gz"
+        sha256: "b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"
+  - 
+    name: "python3-h11"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} h11==0.9.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/5a/fd/3dad730b0f95e78aeeb742f96fa7bbecbdd56a58e405d3da440d5bfb90c6/h11-0.9.0-py2.py3-none-any.whl"
+        sha256: "4bc6d6a1238b7615b266ada57e0618568066f57dd6fa967d1290ec9309b2f2f1"
+  - 
+    name: "python3-h2"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} h2==3.2.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/8a/cc/e53517f4a1e13f74776ca93271caef378dadec14d71c61c949d759d3db69/hpack-3.0.0-py2.py3-none-any.whl"
+        sha256: "0edd79eda27a53ba5be2dfabf3b15780928a0dff6eb0c60a3d6767720e970c89"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/19/0c/bf88182bcb5dce3094e2f3e4fe20db28a9928cb7bd5b08024030e4b140db/hyperframe-5.2.0-py2.py3-none-any.whl"
+        sha256: "5187962cb16dcc078f23cb5a4b110098d546c3f41ff2d4038a9896893bbd0b40"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/25/de/da019bcc539eeab02f6d45836f23858ac467f584bfec7a526ef200242afe/h2-3.2.0-py2.py3-none-any.whl"
+        sha256: "61e0f6601fa709f35cdb730863b4e5ec7ad449792add80d1410d4174ed139af5"
+  - 
+    name: "python3-hpack"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} hpack==3.0.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/8a/cc/e53517f4a1e13f74776ca93271caef378dadec14d71c61c949d759d3db69/hpack-3.0.0-py2.py3-none-any.whl"
+        sha256: "0edd79eda27a53ba5be2dfabf3b15780928a0dff6eb0c60a3d6767720e970c89"
+  - 
+    name: "python3-html-sanitizer"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} html-sanitizer==1.9.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/15/53/3692c565aea19f7d9dd696fee3d0062782e9ad5bf9535267180511a15967/soupsieve-2.0.tar.gz"
+        sha256: "e914534802d7ffd233242b785229d5ba0766a7f487385e3f714446a07bf540ae"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/52/ba/0e121661f529e7f456e903bf5c4d255b8051d8ce2b5e629c5212efe4c3f1/beautifulsoup4-4.8.2.tar.gz"
+        sha256: "05fd825eb01c290877657a56df4c6e4c311b3965bda790c613a3d6fb01a5462a"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/39/2b/0a66d5436f237aff76b91e68b4d8c041d145ad0a2cdeefe2c42f76ba2857/lxml-4.5.0.tar.gz"
+        sha256: "8620ce80f50d023d414183bf90cc2576c2837b88e00bea3f33ad2630133bbb60"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/72/ff/88fbb7c46d359f7cbf1f8bc9f63379ed6b5e3940a9fda88f9cf5cedf24da/html-sanitizer-1.9.0.tar.gz"
+        sha256: "ef86b10c653b288dff4c51c0cc9cf93025c4c6a519a6e40eb1aa152861101929"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/cf/ea245e52f55823f19992447b008bcbb7f78efc5960d77f6c34b5b45b36dd/soupsieve-2.0-py2.py3-none-any.whl"
+        sha256: "fcd71e08c0aee99aca1b73f45478549ee7e7fc006d51b37bec9e9def7dc22b69"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/cb/a1/c698cf319e9cfed6b17376281bd0efc6bfc8465698f54170ef60a485ab5d/beautifulsoup4-4.8.2-py3-none-any.whl"
+        sha256: "9fbb4d6e48ecd30bcacc5b63b94088192dcda178513b2ae3c394229f8911b887"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0a/a5/ed03ad639853d467988582ddb879ebe386057fa6fcc6adb29752bd8f4cbf/html_sanitizer-1.9.0-py2.py3-none-any.whl"
+        sha256: "8a2a43c9f8737675bf04dad817803b3a42fab7a1f8987d27433db7b2f1d8b34d"
+  - 
+    name: "python3-hyperframe"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} hyperframe==5.2.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/19/0c/bf88182bcb5dce3094e2f3e4fe20db28a9928cb7bd5b08024030e4b140db/hyperframe-5.2.0-py2.py3-none-any.whl"
+        sha256: "5187962cb16dcc078f23cb5a4b110098d546c3f41ff2d4038a9896893bbd0b40"
+  - 
+    name: "python3-idna"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} idna==2.9"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl"
+        sha256: "a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"
+  - 
+    name: "python3-idna-ssl"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} idna-ssl==1.1.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl"
+        sha256: "a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/46/03/07c4894aae38b0de52b52586b24bf189bb83e4ddabfe2e2c8f2419eec6f4/idna-ssl-1.1.0.tar.gz"
+        sha256: "a933e3bb13da54383f9e8f35dc4f9cb9eb9b3b78c6b36f311254d6d0d92c6c7c"
+  - 
+    name: "python3-importlib-metadata"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} importlib-metadata==1.5.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl"
+        sha256: "aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/8b/03/a00d504808808912751e64ccf414be53c29cad620e3de2421135fcae3025/importlib_metadata-1.5.0-py2.py3-none-any.whl"
+        sha256: "b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"
+  - 
+    name: "python3-jsonschema"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} jsonschema==3.2.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl"
+        sha256: "aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl"
+        sha256: "08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/90/aa/cdcf7ef88cc0f831b6f14c8c57318824c9de9913fe8de38e46a98c069a35/pyrsistent-0.15.7.tar.gz"
+        sha256: "cdc7b5e3ed77bed61270a47d35434a30617b9becdf2478af76ad2c6ade307280"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/65/eb/1f97cb97bfc2390a276969c6fae16075da282f5058082d4cb10c6c5c1dba/six-1.14.0-py2.py3-none-any.whl"
+        sha256: "8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/8b/03/a00d504808808912751e64ccf414be53c29cad620e3de2421135fcae3025/importlib_metadata-1.5.0-py2.py3-none-any.whl"
+        sha256: "b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/c5/8f/51e89ce52a085483359217bc72cdbf6e75ee595d5b1d4b5ade40c7e018b8/jsonschema-3.2.0-py2.py3-none-any.whl"
+        sha256: "4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163"
+  - 
+    name: "python3-Logbook"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} Logbook==1.5.3"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/2f/d9/16ac346f7c0102835814cc9e5b684aaadea101560bb932a2403bd26b2320/Logbook-1.5.3.tar.gz"
+        sha256: "66f454ada0f56eae43066f604a222b09893f98c1adc18df169710761b8f32fe8"
+  - 
+    name: "python3-lxml"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} lxml==4.5.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/39/2b/0a66d5436f237aff76b91e68b4d8c041d145ad0a2cdeefe2c42f76ba2857/lxml-4.5.0.tar.gz"
+        sha256: "8620ce80f50d023d414183bf90cc2576c2837b88e00bea3f33ad2630133bbb60"
+  - 
+    name: "python3-mistune"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} mistune==0.8.4"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl"
+        sha256: "88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"
+  - 
+    name: "python3-peewee"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} peewee==3.13.1"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/d4/30/0083f0e484902d118927236497c5f55c14a46c2a0e1b95083d26e5608371/peewee-3.13.1.tar.gz"
+        sha256: "9492af4d1f8e18a7fa0e930960315b38931286ea0f1659bbd5503456cffdacde"
+  - 
+    name: "python3-Pillow"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} Pillow==7.0.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/39/47/f28067b187dd664d205f75b07dcc6e0e95703e134008a14814827eebcaab/Pillow-7.0.0.tar.gz"
+        sha256: "4d9ed9a64095e031435af120d3c910148067087541131e82b3e8db302f4c8946"
+  - 
+    name: "python3-pycparser"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pycparser==2.20"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl"
+        sha256: "7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"
+  - 
+    name: "python3-pycryptodome"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pycryptodome==3.9.7"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/69/2a/298b2689bee8e88c502c7e85ba1c9f07c7e182ea91c705c449f693056c9f/pycryptodome-3.9.7.tar.gz"
+        sha256: "f1add21b6d179179b3c177c33d18a2186a09cc0d3af41ff5ed3f377360b869f2"
+  - 
+    name: "python3-pyfastcopy"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pyfastcopy==1.0.3"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/43/80/535d6b3de415e26d0a1cb774c6895dd07aa5986d2f8bde200393bd916790/pyfastcopy-1.0.3.tar.gz"
+        sha256: "ed4620f1087a8949888973e315d3d59fbe9b8cc4ca5df553d76d2f21d2748999"
+  - name: "python3-setuptools_scm"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} setuptools_scm"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/4b/c1/118ec08816737cc46b4dd93b22f7a138fbfb14b53f4b4718fd9983e70a50/setuptools_scm-3.5.0-py2.py3-none-any.whl"
+        sha256: "0d23db3d43e0a43eb7196bcf0eb8a4a2eb0561f621ed7ec44b2fdccfd907e38f"
+  - 
+    name: "python3-pymediainfo"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pymediainfo==4.1"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/97/87/1a79ccbf656392b3053d667dbf903b183d55ecf13cb6439293a700a8de00/pymediainfo-4.1.tar.gz"
+        sha256: "ed6a8f3dcd255895021d40d1299be333a1bead3dbe8df4cbe1a863ba8fee1756"
+  - 
+    name: "python3-pyrsistent"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pyrsistent==0.15.7"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/65/eb/1f97cb97bfc2390a276969c6fae16075da282f5058082d4cb10c6c5c1dba/six-1.14.0-py2.py3-none-any.whl"
+        sha256: "8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/90/aa/cdcf7ef88cc0f831b6f14c8c57318824c9de9913fe8de38e46a98c069a35/pyrsistent-0.15.7.tar.gz"
+        sha256: "cdc7b5e3ed77bed61270a47d35434a30617b9becdf2478af76ad2c6ade307280"
+  - 
+    name: "python3-python-olm"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} python-olm==3.1.3"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
+        sha256: "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/54/3324b0c46340c31b909fcec598696aaec7ddc8c18a63f2db352562d3354c/cffi-1.14.0.tar.gz"
+        sha256: "2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/ae/e7/d9c3a176ca4b02024debf82342dab36efadfc5776f9c8db077e8f6e71821/pycparser-2.20-py2.py3-none-any.whl"
+        sha256: "7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/45/0b/38b06fd9b92dc2b68d58b75f900e97884c45bedd2ff83203d933cf5851c9/future-0.18.2.tar.gz"
+        sha256: "b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/d4/a4/1face47e65118d7c52726dfa305410a96bc4a0c6f3f99c90bc7104aebf21/python-olm-3.1.3.tar.gz"
+        sha256: "9a6c6133ce3777788c88e3f18b13c5b36a2f76ed1a0e774d1a48adf542fee871"
+  - 
+    name: "python3-soupsieve"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} soupsieve==2.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/05/cf/ea245e52f55823f19992447b008bcbb7f78efc5960d77f6c34b5b45b36dd/soupsieve-2.0-py2.py3-none-any.whl"
+        sha256: "fcd71e08c0aee99aca1b73f45478549ee7e7fc006d51b37bec9e9def7dc22b69"
+  - 
+    name: "python3-tinycss2"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} tinycss2==1.0.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl"
+        sha256: "a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/94/2c/4e501f9c351343c8ba10d70b5a7ca97cdab2690af043a6e52ada65b85b6b/tinycss2-1.0.2-py3-none-any.whl"
+        sha256: "9fdacc0e22d344ddd2ca053837c133900fe820ae1222f63b79617490a498507a"
+  - 
+    name: "python3-typing-extensions"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} typing-extensions==3.7.4.1"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/03/92/705fe8aca27678e01bbdd7738173b8e7df0088a2202c80352f664630d638/typing_extensions-3.7.4.1-py3-none-any.whl"
+        sha256: "cf8b63fedea4d89bab840ecbb93e75578af28f76f66c35889bd7065f5af88575"
+  - 
+    name: "python3-unpaddedbase64"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} unpaddedbase64==1.1.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/96/da/2ebf30d2fdf0f4dc949b4935e408aaa9cca948963e55ea3c99730b1f74c0/unpaddedbase64-1.1.0-py2.py3-none-any.whl"
+        sha256: "81cb4eaaa28cc6a282dd3f2c3855eaa1fbaafa736b5ee64df69889e20540a339"
+  - 
+    name: "python3-uvloop"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} uvloop==0.14.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/84/2e/462e7a25b787d2b40cf6c9864a9e702f358349fc9cfb77e83c38acb73048/uvloop-0.14.0.tar.gz"
+        sha256: "123ac9c0c7dd71464f58f1b4ee0bbd81285d96cdda8bc3519281b8973e3a461e"
+  - 
+    name: "python3-webencodings"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} webencodings==0.5.1"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl"
+        sha256: "a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"
+  - 
+    name: "python3-yarl"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} yarl==1.4.2"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/cb/19/57503b5de719ee45e83472f339f617b0c01ad75cba44aba1e4c97c2b0abd/idna-2.9.tar.gz"
+        sha256: "7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/61/b4/475114b3f1671da634f89239e61038f8742d9ac13aa34b32a05bf8022d22/multidict-4.7.5.tar.gz"
+        sha256: "aee283c49601fa4c13adc64c09c978838a7e812f85377ae130a24d7198c0331e"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/d6/67/6e2507586eb1cfa6d55540845b0cd05b4b77c414f6bca8b00b45483b976e/yarl-1.4.2.tar.gz"
+        sha256: "58cd9c469eced558cd81aa3f484b2924e8897049e06889e8ff2510435b7ef74b"
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl"
+        sha256: "a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"
+  - 
+    name: "python3-zipp"
+    buildsystem: "simple"
+    build-commands: 
+      - "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} zipp==3.1.0"
+    sources: 
+      - 
+        type: "file"
+        url: "https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl"
+        sha256: "aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"
 
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      aiohttp
-    buildsystem: simple
-    name: python3-aiohttp
-    sources:
-      - type: file
-        sha256: 259ab809ff0727d0e834ac5e8a283dc5e3e0ecc30c4d80b3cd17a4139ce1f326
-        url:  https://files.pythonhosted.org/packages/00/94/f9fa18e8d7124d7850a5715a0b9c0584f7b9375d331d35e157cee50f27cc/aiohttp-3.6.2.tar.gz
-        
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      h11
-    buildsystem: simple
-    name: python3-h11
-    sources:
-    - sha256: 4bc6d6a1238b7615b266ada57e0618568066f57dd6fa967d1290ec9309b2f2f1
-      type: file
-      url: https://files.pythonhosted.org/packages/5a/fd/3dad730b0f95e78aeeb742f96fa7bbecbdd56a58e405d3da440d5bfb90c6/h11-0.9.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      h2
-    buildsystem: simple
-    name: python3-h2
-    sources:
-    - sha256: 0edd79eda27a53ba5be2dfabf3b15780928a0dff6eb0c60a3d6767720e970c89
-      type: file
-      url: https://files.pythonhosted.org/packages/8a/cc/e53517f4a1e13f74776ca93271caef378dadec14d71c61c949d759d3db69/hpack-3.0.0-py2.py3-none-any.whl
-    - sha256: 5187962cb16dcc078f23cb5a4b110098d546c3f41ff2d4038a9896893bbd0b40
-      type: file
-      url: https://files.pythonhosted.org/packages/19/0c/bf88182bcb5dce3094e2f3e4fe20db28a9928cb7bd5b08024030e4b140db/hyperframe-5.2.0-py2.py3-none-any.whl
-    - sha256: 61e0f6601fa709f35cdb730863b4e5ec7ad449792add80d1410d4174ed139af5
-      type: file
-      url: https://files.pythonhosted.org/packages/25/de/da019bcc539eeab02f6d45836f23858ac467f584bfec7a526ef200242afe/h2-3.2.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      logbook
-    buildsystem: simple
-    name: python3-logbook
-    sources:
-    - sha256: 66f454ada0f56eae43066f604a222b09893f98c1adc18df169710761b8f32fe8
-      type: file
-      url: https://files.pythonhosted.org/packages/2f/d9/16ac346f7c0102835814cc9e5b684aaadea101560bb932a2403bd26b2320/Logbook-1.5.3.tar.gz
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      jsonschema
-    buildsystem: simple
-    name: python3-jsonschema
-    sources:
-    - sha256: aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b
-      type: file
-      url: https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl
-    - sha256: 08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c
-      type: file
-      url: https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl
-    - sha256: 8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c
-      type: file
-      url: https://files.pythonhosted.org/packages/65/eb/1f97cb97bfc2390a276969c6fae16075da282f5058082d4cb10c6c5c1dba/six-1.14.0-py2.py3-none-any.whl
-    - sha256: b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b
-      type: file
-      url: https://files.pythonhosted.org/packages/8b/03/a00d504808808912751e64ccf414be53c29cad620e3de2421135fcae3025/importlib_metadata-1.5.0-py2.py3-none-any.whl
-    - sha256: cdc7b5e3ed77bed61270a47d35434a30617b9becdf2478af76ad2c6ade307280
-      type: file
-      url: https://files.pythonhosted.org/packages/90/aa/cdcf7ef88cc0f831b6f14c8c57318824c9de9913fe8de38e46a98c069a35/pyrsistent-0.15.7.tar.gz
-    - sha256: 4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163
-      type: file
-      url: https://files.pythonhosted.org/packages/c5/8f/51e89ce52a085483359217bc72cdbf6e75ee595d5b1d4b5ade40c7e018b8/jsonschema-3.2.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      atomicwrites
-    buildsystem: simple
-    name: python3-atomicwrites
-    sources:
-    - sha256: 03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4
-      type: file
-      url: https://files.pythonhosted.org/packages/52/90/6155aa926f43f2b2a22b01be7241be3bfd1ceaf7d0b3267213e8127d41f4/atomicwrites-1.3.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      cachetools
-    buildsystem: simple
-    name: python3-cachetools
-    sources:
-    - sha256: b304586d357c43221856be51d73387f93e2a961598a9b6b6670664746f3b6c6c
-      type: file
-      url: https://files.pythonhosted.org/packages/08/6a/abf83cb951617793fd49c98cb9456860f5df66ff89883c8660aa0672d425/cachetools-4.0.0-py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      unpaddedbase64
-    buildsystem: simple
-    name: python3-unpaddedbase64
-    sources:
-    - sha256: 81cb4eaaa28cc6a282dd3f2c3855eaa1fbaafa736b5ee64df69889e20540a339
-      type: file
-      url: https://files.pythonhosted.org/packages/96/da/2ebf30d2fdf0f4dc949b4935e408aaa9cca948963e55ea3c99730b1f74c0/unpaddedbase64-1.1.0-py2.py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      pycrypto
-    buildsystem: simple
-    name: python3-pycrypto
-    sources:
-    - sha256: f2ce1e989b272cfcb677616763e0a2e7ec659effa67a88aa92b3a65528f60a3c
-      type: file
-      url: https://files.pythonhosted.org/packages/60/db/645aa9af249f059cc3a368b118de33889219e0362141e75d4eaf6f80f163/pycrypto-2.6.1.tar.gz
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'sphinx >= 1.8'
-    buildsystem: simple
-    name: python3-sphinx >
-    sources:
-    - sha256: 236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a
-      type: file
-      url: https://files.pythonhosted.org/packages/21/9f/b251f7f8a76dec1d6651be194dfba8fb8d7781d10ab3987190de8391d08e/six-1.14.0.tar.gz
-    - sha256: 4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f
-      type: file
-      url: https://files.pythonhosted.org/packages/a2/56/0404c03c83cfcca229071d3c921d7d79ed385060bbe969fde3fd8f774ebd/pyparsing-2.4.6.tar.gz
-    - sha256: 25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f
-      type: file
-      url: https://files.pythonhosted.org/packages/41/bf/9d214a5af07debc6acf7f3f257265618f1db242a3f8e49a9b516f24523a6/certifi-2019.11.28.tar.gz
-    - sha256: 87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc
-      type: file
-      url: https://files.pythonhosted.org/packages/09/06/3bc5b100fe7e878d3dee8f807a4febff1a40c213d2783e3246edde1f3419/urllib3-1.25.8.tar.gz
-    - sha256: 7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb
-      type: file
-      url: https://files.pythonhosted.org/packages/cb/19/57503b5de719ee45e83472f339f617b0c01ad75cba44aba1e4c97c2b0abd/idna-2.9.tar.gz
-    - sha256: 84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae
-      type: file
-      url: https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz
-    - sha256: b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be
-      type: file
-      url: https://files.pythonhosted.org/packages/82/c3/534ddba230bd4fbbd3b7a3d35f3341d014cca213f369a9940925e7e5f691/pytz-2019.3.tar.gz
-    - sha256: 29872e92839765e546828bb7754a68c418d927cd064fd4708fab9fe9c8bb116b
-      type: file
-      url: https://files.pythonhosted.org/packages/b9/2e/64db92e53b86efccfaea71321f597fa2e1b2bd3853d8ce658568f7a13094/MarkupSafe-1.1.1.tar.gz
-    - sha256: 3c292b474fda1671ec57d46d739d072bfd495a4f51ad01a055121d81e952b7a3
-      type: file
-      url: https://files.pythonhosted.org/packages/65/37/83e3f492eb52d771e2820e88105f605335553fe10422cba9d256faeb1702/packaging-20.3.tar.gz
-    - sha256: b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6
-      type: file
-      url: https://files.pythonhosted.org/packages/f5/4f/280162d4bd4d8aad241a21aecff7a6e46891b905a4341e7ab549ebaf7915/requests-2.23.0.tar.gz
-    - sha256: b1f6b5a4eab1f73479a50fb79fcf729514a900c341d8503d62a62dbc4127a2b1
-      type: file
-      url: https://files.pythonhosted.org/packages/e4/9f/0452b459c8ba97e07c3cd2bd243783936a992006cf4cd1353c314a927028/imagesize-1.2.0.tar.gz
-    - sha256: a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02
-      type: file
-      url: https://files.pythonhosted.org/packages/cc/b4/ed8dcb0d67d5cfb7f83c4d5463a7614cb1d078ad7ae890c9143edebbf072/alabaster-0.7.12.tar.gz
-    - sha256: 1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38
-      type: file
-      url: https://files.pythonhosted.org/packages/34/18/8706cfa5b2c73f5a549fdc0ef2e24db71812a2685959cff31cbdfc010136/Babel-2.8.0.tar.gz
-    - sha256: df3bac3df4c2c01363f3dd2cfa78cce2840a79b9f1c2d2de9ce8d31683992f52
-      type: file
-      url: https://files.pythonhosted.org/packages/21/1b/6b8bbee253195c61aeaa61181bb41d646363bdaa691d0b94b304d4901193/snowballstemmer-2.0.0.tar.gz
-    - sha256: c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc
-      type: file
-      url: https://files.pythonhosted.org/packages/2f/e0/3d435b34abd2d62e8206171892f174b180cd37b09d57b924ca5c2ef2219d/docutils-0.16.tar.gz
-    - sha256: 647344a061c249a3b74e230c739f434d7ea4d8b1d5f3721bc0f3558049b38f44
-      type: file
-      url: https://files.pythonhosted.org/packages/6e/4d/4d2fe93a35dfba417311a4ff627489a947b01dc0cc377a3673c00cf7e4b2/Pygments-2.6.1.tar.gz
-    - sha256: 93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250
-      type: file
-      url: https://files.pythonhosted.org/packages/d8/03/e491f423379ea14bb3a02a5238507f7d446de639b623187bccc111fbecdf/Jinja2-2.11.1.tar.gz
-    - sha256: 4c33767ee058b70dba89a6fc5c1892c0d57a54be67ddd3e7875a18d14cba5a72
-      type: file
-      url: https://files.pythonhosted.org/packages/b1/8e/c4846e59f38a5f2b4a0e3b27af38f2fcf904d4bfd82095bf92de0b114ebd/sphinxcontrib-qthelp-1.0.3.tar.gz
-    - sha256: eaa0eccc86e982a9b939b2b82d12cc5d013385ba5eadcc7e4fed23f4405f77bc
-      type: file
-      url: https://files.pythonhosted.org/packages/ac/86/021876a9dd4eac9dae0b1d454d848acbd56d5574d350d0f835043b5ac2cd/sphinxcontrib-serializinghtml-1.1.4.tar.gz
-    - sha256: e8f5bb7e31b2dbb25b9cc435c8ab7a79787ebf7f906155729338f3156d93659b
-      type: file
-      url: https://files.pythonhosted.org/packages/c9/2e/a7a5fef38327b7f643ed13646321d19903a2f54b0a05868e4bc34d729e1f/sphinxcontrib-htmlhelp-1.0.3.tar.gz
-    - sha256: a9925e4a4587247ed2191a22df5f6970656cb8ca2bd6284309578f2153e0c4b8
-      type: file
-      url: https://files.pythonhosted.org/packages/b2/e8/9ed3830aeed71f17c026a07a5097edcf44b692850ef215b161b8ad875729/sphinxcontrib-jsmath-1.0.1.tar.gz
-    - sha256: ff7f1afa7b9642e7060379360a67e9c41e8f3121f2ce9164266f61b9f4b338e4
-      type: file
-      url: https://files.pythonhosted.org/packages/98/33/dc28393f16385f722c893cb55539c641c9aaec8d1bc1c15b69ce0ac2dbb3/sphinxcontrib-devhelp-1.0.2.tar.gz
-    - sha256: a072735ec80e7675e3f432fcae8610ecf509c5f1869d17e2eecff44389cdbc58
-      type: file
-      url: https://files.pythonhosted.org/packages/9f/01/ad9d4ebbceddbed9979ab4a89ddb78c9760e74e6757b1880f1b2760e8295/sphinxcontrib-applehelp-1.0.2.tar.gz
-    - sha256: b4c750d546ab6d7e05bdff6ac24db8ae3e8b8253a3569b754e445110a0a12b66
-      type: file
-      url: https://files.pythonhosted.org/packages/d5/75/e2a582a0ce014dce99cab62f251c179712cb6c4377705deb7c9b474e4f35/Sphinx-2.4.4.tar.gz
-    - sha256: 2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc
-      type: file
-      url: https://files.pythonhosted.org/packages/e8/74/6e4f91745020f967d09332bb2b8b9b10090957334692eb88ea4afe91b77f/urllib3-1.25.8-py2.py3-none-any.whl
-    - sha256: a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa
-      type: file
-      url: https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl
-    - sha256: fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691
-      type: file
-      url: https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
-    - sha256: 017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3
-      type: file
-      url: https://files.pythonhosted.org/packages/b9/63/df50cac98ea0d5b006c55a399c3bf1db9da7b5a24de7890bc9cfd5dd9e99/certifi-2019.11.28-py2.py3-none-any.whl
-    - sha256: c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec
-      type: file
-      url: https://files.pythonhosted.org/packages/5d/bc/1e58593167fade7b544bfe9502a26dc860940a79ab306e651e7f13be68c2/pyparsing-2.4.6-py2.py3-none-any.whl
-    - sha256: 8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c
-      type: file
-      url: https://files.pythonhosted.org/packages/65/eb/1f97cb97bfc2390a276969c6fae16075da282f5058082d4cb10c6c5c1dba/six-1.14.0-py2.py3-none-any.whl
-    - sha256: 1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d
-      type: file
-      url: https://files.pythonhosted.org/packages/e7/f9/f0b53f88060247251bf481fa6ea62cd0d25bf1b11a87888e53ce5b7c8ad2/pytz-2019.3-py2.py3-none-any.whl
-    - sha256: 3c0bc24a2c41e340ac37c85ced6dafc879ab485c095b1d65d2461ac2f7cca86f
-      type: file
-      url: https://files.pythonhosted.org/packages/36/62/8222554b29b3acde8420128d6d3999c5904d40922ef4b6ccb370e2be7421/sphinxcontrib_htmlhelp-1.0.3-py2.py3-none-any.whl
-    - sha256: 2ec2eaebfb78f3f2078e73666b1415417a116cc848b72e5172e596c871103178
-      type: file
-      url: https://files.pythonhosted.org/packages/c2/42/4c8646762ee83602e3fb3fbe774c2fac12f317deb0b5dbeeedd2d3ba4b77/sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl
-    - sha256: 8165223f9a335cc1af7ffe1ed31d2871f325254c0423bc0c4c7cd1c1e4734a2e
-      type: file
-      url: https://files.pythonhosted.org/packages/c5/09/5de5ed43a521387f18bdf5f5af31d099605c992fd25372b2b9b825ce48ee/sphinxcontrib_devhelp-1.0.2-py2.py3-none-any.whl
-    - sha256: 43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee
-      type: file
-      url: https://files.pythonhosted.org/packages/1a/70/1935c770cb3be6e3a8b78ced23d7e0f3b187f5cbfab4749523ed65d7c9b1/requests-2.23.0-py2.py3-none-any.whl
-    - sha256: 446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359
-      type: file
-      url: https://files.pythonhosted.org/packages/10/ad/00b090d23a222943eb0eda509720a404f531a439e803f6538f35136cae9e/alabaster-0.7.12-py2.py3-none-any.whl
-    - sha256: b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49
-      type: file
-      url: https://files.pythonhosted.org/packages/27/24/4f35961e5c669e96f6559760042a55b9bcfcdb82b9bdb3c8753dbe042e35/Jinja2-2.11.1-py2.py3-none-any.whl
-    - sha256: bd9fc24bcb748a8d51fd4ecaade681350aa63009a347a8c14e637895444dfab6
-      type: file
-      url: https://files.pythonhosted.org/packages/2b/14/05f9206cf4e9cfca1afb5fd224c7cd434dcc3a433d6d9e4e0264d29c6cdb/sphinxcontrib_qthelp-1.0.3-py2.py3-none-any.whl
-    - sha256: 209f257d7533fdb3cb73bdbd24f436239ca3b2fa67d56f6ff88e86be08cc5ef0
-      type: file
-      url: https://files.pythonhosted.org/packages/7d/4b/cdf1113a0e88b641893b814e9c36f69a6fda28cd88b62c7f0d858cde3166/snowballstemmer-2.0.0-py2.py3-none-any.whl
-    - sha256: 82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752
-      type: file
-      url: https://files.pythonhosted.org/packages/62/0a/34641d2bf5c917c96db0ded85ae4da25b6cd922d6b794648d4e7e07c88e5/packaging-20.3-py2.py3-none-any.whl
-    - sha256: 806111e5e962be97c29ec4c1e7fe277bfd19e9652fb1a4392105b43e01af885a
-      type: file
-      url: https://files.pythonhosted.org/packages/dc/47/86022665a9433d89a66f5911b558ddff69861766807ba685de2e324bd6ed/sphinxcontrib_applehelp-1.0.2-py2.py3-none-any.whl
-    - sha256: ff7a40b4860b727ab48fad6360eb351cc1b33cbf9b15a0f689ca5353e9463324
-      type: file
-      url: https://files.pythonhosted.org/packages/2d/68/106af3ae51daf807e9cdcba6a90e518954eb8b70341cee52995540a53ead/Pygments-2.6.1-py3-none-any.whl
-    - sha256: 0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af
-      type: file
-      url: https://files.pythonhosted.org/packages/81/44/8a15e45ffa96e6cf82956dd8d7af9e666357e16b0d93b253903475ee947f/docutils-0.16-py2.py3-none-any.whl
-    - sha256: d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4
-      type: file
-      url: https://files.pythonhosted.org/packages/15/a1/522dccd23e5d2e47aed4b6a16795b8213e3272c7506e625f2425ad025a19/Babel-2.8.0-py2.py3-none-any.whl
-    - sha256: 6965f19a6a2039c7d48bca7dba2473069ff854c36ae6f19d2cde309d998228a1
-      type: file
-      url: https://files.pythonhosted.org/packages/31/b2/b5522a0c8d11e4aff83f8342f3f0dea68c2fb25aa44403e420587f0ce204/imagesize-1.2.0-py2.py3-none-any.whl
-    - sha256: f242a81d423f59617a8e5cf16f5d4d74e28ee9a66f9e5b637a18082991db5a9a
-      type: file
-      url: https://files.pythonhosted.org/packages/9a/ca/bfad79b79b3821d0c6361c431f0ef4aec16ee248338b2c2013008b34d345/sphinxcontrib_serializinghtml-1.1.4-py2.py3-none-any.whl
-    - sha256: fc312670b56cb54920d6cc2ced455a22a547910de10b3142276495ced49231cb
-      type: file
-      url: https://files.pythonhosted.org/packages/16/c1/1c8016475cb612a64ce613c6b61c16224fe6dcfd9527792016ce611c231c/Sphinx-2.4.4-py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'aiohttp; python_version >= '"'"'3.5'"'"''
-    buildsystem: simple
-    name: python3-aiohttp; python_version >
-    sources: []
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'aioresponses; python_version >= '"'"'3.5'"'"''
-    buildsystem: simple
-    name: python3-aioresponses; python_version >
-    sources: []
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'aiofiles; python_version >= '"'"'3.5'"'"''
-    buildsystem: simple
-    name: python3-aiofiles; python_version >
-    sources:
-    - sha256: 1e644c2573f953664368de28d2aa4c89dfd64550429d0c27c4680ccd3aa4985d
-      type: file
-      url: https://files.pythonhosted.org/packages/cf/f2/a67a23bc0bb61d88f82aa7fb84a2fb5f278becfbdc038c5cbb36c31feaf1/aiofiles-0.4.0-py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      'dataclasses; python_version < '"'"'3.7'"'"''
-    buildsystem: simple
-    name: python3-dataclasses; python_version < '3.7'
-    sources:
-    - sha256: 3459118f7ede7c8bea0fe795bff7c6c2ce287d01dd226202f7c9ebc0610a7836
-      type: file
-      url: https://files.pythonhosted.org/packages/e1/d2/6f02df2616fd4016075f60157c7a0452b38d8f7938ae94343911e0fb0b09/dataclasses-0.7-py3-none-any.whl
-  - build-commands:
-    - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-      m2r
-    buildsystem: simple
-    name: python3-m2r
-    sources:
-    - sha256: 0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af
-      type: file
-      url: https://files.pythonhosted.org/packages/81/44/8a15e45ffa96e6cf82956dd8d7af9e666357e16b0d93b253903475ee947f/docutils-0.16-py2.py3-none-any.whl
-    - sha256: 88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4
-      type: file
-      url: https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl
-    - sha256: bf90bad66cda1164b17e5ba4a037806d2443f2a4d5ddc9f6a5554a0322aaed99
-      type: file
-      url: https://files.pythonhosted.org/packages/39/e7/9fae11a45f5e1a3a21d8a98d02948e597c4afd7848a0dbe1a1ebd235f13e/m2r-0.2.1.tar.gz
-
-
+  # matrix-nio separate 
   - name: python3-matrix-nio
     buildsystem: simple
     build-commands: 
@@ -669,3 +806,16 @@ modules:
       - type: git
         url: https://github.com/mirukana/matrix-nio.git
         commit: ee2a90da2f1d7ce12df7153dd944fffdaf978787
+
+  # - name: mirage
+  #   buildsystem: qmake
+  #   sources:
+  #     - type: dir
+  #       path: .
+
+  - name: mirage
+    buildsystem: qmake
+    sources:
+      - type: git
+        url: https://github.com/mirukana/mirage.git
+        tag: v0.4.0
