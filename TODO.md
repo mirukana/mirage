@@ -62,6 +62,9 @@
 
 ## Interface
 
+- Make clicking on user/room mentions open relevant UI instead of matrix.to
+  URL in browser
+
 - Labeled text area component, use it for room creation/settings topic 
   - Linkify URLs in topic text areas
 
