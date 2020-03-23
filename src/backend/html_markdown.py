@@ -271,7 +271,7 @@ class HTMLProcessor:
 
         inlines_attributes = {
             "font": {"color"},
-            "a":    {"href", "class"},
+            "a":    {"href", "class", "data-mention"},
             "code": {"class"},
         }
         attributes = {**inlines_attributes, **{
@@ -451,16 +451,20 @@ class HTMLProcessor:
             return el
 
         if self.link_is_user_id_regex.match(href):
-            if el.text.lstrip().startswith("@"):
-                el.attrib["class"]  = "mention user-id-mention"
+            if el.text.strip().startswith("@"):
+                el.attrib["class"] = "mention user-id-mention"
             else:
-                el.attrib["class"]  = "mention username-mention"
+                el.attrib["class"] = "mention username-mention"
+
+            el.attrib["data-mention"] = el.text.strip()
 
         elif self.link_is_room_id_regex.match(href):
-            el.attrib["class"]  = "mention room-id-mention"
+            el.attrib["class"]        = "mention room-id-mention"
+            el.attrib["data-mention"] = el.text.strip()
 
         elif self.link_is_room_alias_regex.match(href):
-            el.attrib["class"]  = "mention room-alias-mention"
+            el.attrib["class"]        = "mention room-alias-mention"
+            el.attrib["data-mention"] = el.text.strip()
 
         return el
 
