@@ -3,7 +3,7 @@
 """HTML and Markdown processing tools."""
 
 import re
-from typing import DefaultDict, Dict
+from typing import DefaultDict, Dict, List, Tuple
 from urllib.parse import unquote
 
 import html_sanitizer.sanitizer as sanitizer
@@ -138,6 +138,9 @@ class HTMLProcessor:
         user_id_regex, room_id_regex, room_alias_regex,
     ]]
 
+    link_is_matrix_to_regex = re.compile(
+        r"https?://matrix.to/#/.+", re.IGNORECASE,
+    )
     link_is_user_id_regex = re.compile(
         r"https?://matrix.to/#/@.+", re.IGNORECASE,
     )
@@ -184,13 +187,21 @@ class HTMLProcessor:
         ]
 
 
-    def user_id_link_in_html(self, html: str, user_id: str) -> bool:
+    def mentions_in_html(self, html: str) -> List[Tuple[str, str]]:
         if not html.strip():
-            return False
+            return []
 
+        return [
+            (a_tag.text, href)
+            for a_tag, _, href, _ in lxml.html.iterlinks(html)
+            if self.link_is_matrix_to_regex.match(unquote(href.strip()))
+        ]
+
+
+    def user_id_link_in_html(self, html: str, user_id: str) -> bool:
         regex = re.compile(rf"https?://matrix.to/#/{user_id}", re.IGNORECASE)
 
-        for _, _, href, _ in lxml.html.iterlinks(html):
+        for _, href in self.mentions_in_html(html):
             if regex.match(unquote(href.strip())):
                 return True
 

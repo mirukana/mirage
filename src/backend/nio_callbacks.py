@@ -105,7 +105,11 @@ class NioCallbacks:
             rooms = self.client.models[self.client.user_id, "rooms"]
             rooms[room.room_id].mentions += 1
 
-        await self.client.register_nio_event(room, ev, content=co)
+        mention_list = HTML_PROCESSOR.mentions_in_html(co)
+
+        await self.client.register_nio_event(
+            room, ev, content=co, mentions=mention_list,
+        )
 
 
     async def onRoomMessageNotice(self, room, ev) -> None:

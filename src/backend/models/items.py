@@ -175,10 +175,11 @@ class Event(ModelItem):
     sender_name:   str                 = field()
     sender_avatar: str                 = field()
 
-    content:        str       = ""
-    inline_content: str       = ""
-    reason:         str       = ""
-    links:          List[str] = field(default_factory=list)
+    content:        str                   = ""
+    inline_content: str                   = ""
+    reason:         str                   = ""
+    links:          List[str]             = field(default_factory=list)
+    mentions:       List[Tuple[str, str]] = field(default_factory=list)
 
     type_specifier: TypeSpecifier = TypeSpecifier.Unset
 
