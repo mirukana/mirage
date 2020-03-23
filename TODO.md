@@ -1,5 +1,8 @@
 # TODO
 
+- cpu usage
+- room.mentions += 1 key error before registration
+
 ## Main goals for next version
 
 - Redacting messages

@@ -11,6 +11,24 @@ HRowLayout {
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
 
+    readonly property var mentions: JSON.parse(model.mentions)
+
+    readonly property string mentionsCSS: {
+        const lines = []
+
+        for (const [name, link] of mentions) {
+            if (name.startsWith("#") || name.startsWith("!")) continue
+
+            lines.push(
+                `.mention[data-mention='${name}'] { color: ` +
+                utils.nameColor(name) +
+                "}"
+            )
+        }
+
+        return "<style type='text/css'>" + lines.join("\n") + "</style>"
+    }
+
     readonly property string senderText:
         hideNameLine ? "" : (
             `<${smallAvatar ? "span" : "div"} class='sender'>` +
@@ -109,7 +127,7 @@ HRowLayout {
             textFormat: Text.RichText
             text:
                 // CSS
-                theme.chat.message.styleInclude +
+                theme.chat.message.styleInclude + mentionsCSS +
 
                 // Sender name & message body
                 (
