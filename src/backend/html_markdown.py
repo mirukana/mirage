@@ -194,7 +194,8 @@ class HTMLProcessor:
         return [
             (a_tag.text, href)
             for a_tag, _, href, _ in lxml.html.iterlinks(html)
-            if self.link_is_matrix_to_regex.match(unquote(href.strip()))
+            if a_tag.text and
+               self.link_is_matrix_to_regex.match(unquote(href.strip()))
         ]
 
 
@@ -458,7 +459,7 @@ class HTMLProcessor:
     def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
         href = el.attrib.get("href")
 
-        if not href:
+        if not href or not el.text:
             return el
 
         if self.link_is_user_id_regex.match(href):
