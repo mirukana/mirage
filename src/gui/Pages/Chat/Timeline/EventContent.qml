@@ -111,11 +111,14 @@ HRowLayout {
                 // CSS
                 theme.chat.message.styleInclude +
 
-                // Sender name
-                eventContent.senderText +
-
-                // Message body
-                eventContent.contentText +
+                // Sender name & message body
+                (
+                    smallAvatar && contentText.match(/^\s*<(p|h[1-6])>/) ?
+                    contentText.replace(
+                        /(^\s*<(p|h[1-6])>)/, "$1" + senderText,
+                    ) :
+                    senderText + contentText
+                ) +
 
                 // Time
                 // For some reason, if there's only one space,
