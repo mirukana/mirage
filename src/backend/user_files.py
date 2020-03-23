@@ -214,6 +214,7 @@ class UISettings(JSONDataFile):
             "collapseSidePanesUnderWindowWidth": 400,
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,
+            "hideUnknownEvents": False,
             "theme": "Midnight.qpl",
             "writeAliases": {},
             "media": {
