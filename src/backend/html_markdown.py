@@ -121,6 +121,9 @@ class HTMLProcessor:
     room_alias_regex = re.compile(
         r"(?=^|\W)(?P<body>#.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
+    message_id_regex = re.compile(
+        r"(?=^|\W)(?P<body>\$.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+    )
 
     link_regexes = [re.compile(r, re.IGNORECASE)
                     if isinstance(r, str) else r for r in [
@@ -135,7 +138,7 @@ class HTMLProcessor:
         # magnet:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
 
-        user_id_regex, room_id_regex, room_alias_regex,
+        user_id_regex, room_id_regex, room_alias_regex, message_id_regex,
     ]]
 
     link_is_matrix_to_regex = re.compile(
@@ -149,6 +152,9 @@ class HTMLProcessor:
     )
     link_is_room_alias_regex = re.compile(
         r"https?://matrix.to/#/#.+", re.IGNORECASE,
+    )
+    link_is_message_id_regex = re.compile(
+        r"https?://matrix.to/#/\$.+", re.IGNORECASE,
     )
 
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
@@ -440,10 +446,11 @@ class HTMLProcessor:
 
         id_regexes = (
             self.user_id_regex, self.room_id_regex, self.room_alias_regex,
+            self.message_id_regex,
         )
 
         for regex in id_regexes:
-            if regex.match(el.attrib["href"]):
+            if regex.match(unquote(el.attrib["href"])):
                 el.attrib["href"]  = f"https://matrix.to/#/{el.attrib['href']}"
 
         if room_id not in self.rooms_user_id_names:
@@ -457,7 +464,7 @@ class HTMLProcessor:
 
 
     def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
-        href = el.attrib.get("href")
+        href = unquote(el.attrib.get("href"))
 
         if not href or not el.text:
             return el
@@ -476,6 +483,10 @@ class HTMLProcessor:
 
         elif self.link_is_room_alias_regex.match(href):
             el.attrib["class"]        = "mention room-alias-mention"
+            el.attrib["data-mention"] = el.text.strip()
+
+        elif self.link_is_message_id_regex.match(href):
+            el.attrib["class"]        = "mention message-id-mention"
             el.attrib["data-mention"] = el.text.strip()
 
         return el
