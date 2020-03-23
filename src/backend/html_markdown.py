@@ -138,6 +138,16 @@ class HTMLProcessor:
         user_id_regex, room_id_regex, room_alias_regex,
     ]]
 
+    link_is_user_id_regex = re.compile(
+        r"https?://matrix.to/#/@.+", re.IGNORECASE,
+    )
+    link_is_room_id_regex = re.compile(
+        r"https?://matrix.to/#/!.+", re.IGNORECASE,
+    )
+    link_is_room_alias_regex = re.compile(
+        r"https?://matrix.to/#/#.+", re.IGNORECASE,
+    )
+
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
 
     quote_regex = re.compile(
@@ -224,7 +234,10 @@ class HTMLProcessor:
         )
 
         for a_tag in tree.iterdescendants("a"):
-            self._matrix_toify(a_tag, room_id)
+            self._mentions_to_matrix_to_links(a_tag, room_id)
+
+            if not outgoing:
+                self._matrix_to_links_add_classes(a_tag)
 
         html = etree.tostring(tree, encoding="utf-8", method="html").decode()
         html = sanit.sanitize(html).rstrip("\n")
@@ -258,7 +271,7 @@ class HTMLProcessor:
 
         inlines_attributes = {
             "font": {"color"},
-            "a":    {"href"},
+            "a":    {"href", "class"},
             "code": {"class"},
         }
         attributes = {**inlines_attributes, **{
@@ -398,8 +411,10 @@ class HTMLProcessor:
         return el
 
 
-    def _matrix_toify(self, el: HtmlElement, room_id: str = "") -> HtmlElement:
-        """Turn userID, usernames, roomID, room aliases into matrix.to URL."""
+    def _mentions_to_matrix_to_links(
+        self, el: HtmlElement, room_id: str = "",
+    ) -> HtmlElement:
+        """Turn user ID/names and room ID/aliases into matrix.to URL."""
 
         if el.tag != "a" or not el.attrib.get("href"):
             return el
@@ -410,16 +425,36 @@ class HTMLProcessor:
 
         for regex in id_regexes:
             if regex.match(el.attrib["href"]):
-                el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
+                el.attrib["href"]  = f"https://matrix.to/#/{el.attrib['href']}"
 
         if room_id not in self.rooms_user_id_names:
             return el
 
         for user_id, username in self.rooms_user_id_names[room_id].items():
             if unquote(el.attrib["href"]) == username:
-                el.attrib["href"] = f"https://matrix.to/#/{user_id}"
+                el.attrib["href"]  = f"https://matrix.to/#/{user_id}"
 
-        # print("ret 3", el.tag, el.attrib, el.text, el.tail, sep="||")
+        return el
+
+
+    def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
+        href = el.attrib.get("href")
+
+        if not href:
+            return el
+
+        if self.link_is_user_id_regex.match(href):
+            if el.text.lstrip().startswith("@"):
+                el.attrib["class"]  = "mention user-id-mention"
+            else:
+                el.attrib["class"]  = "mention username-mention"
+
+        elif self.link_is_room_id_regex.match(href):
+            el.attrib["class"]  = "mention room-id-mention"
+
+        elif self.link_is_room_alias_regex.match(href):
+            el.attrib["class"]  = "mention room-alias-mention"
+
         return el
 
 
