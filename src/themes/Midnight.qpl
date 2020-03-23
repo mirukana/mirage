@@ -390,7 +390,8 @@ chat:
             ".sender { margin-bottom: " + spacing / 2 + " }" +
             ".quote  { color: " + quote + " }" +
 
-            ".mention { text-decoration: none; }"
+            ".mention { text-decoration: none; }" +
+            ".room-id-mention, .room-alias-mention { font-weight: bold; }"
 
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
