@@ -337,7 +337,11 @@ class MatrixClient(nio.AsyncClient):
         tx_id = uuid4()
         content[f"{__app_name__}.transaction_id"] = str(tx_id)
 
-        await self._local_echo(room_id, tx_id, event_type, content=echo_body)
+        mentions = HTML.mentions_in_html(echo_body)
+        await self._local_echo(
+            room_id, tx_id, event_type, content=echo_body, mentions=mentions,
+        )
+
         await self._send_message(room_id, content)
 
 

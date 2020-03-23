@@ -1,8 +1,6 @@
 # TODO
 
-- mention color in local echo
-
-## Main goals for next version
+## Goals before 0.5.0
 
 - Redacting messages
 - Download progress bar for file events, "Save as..."
