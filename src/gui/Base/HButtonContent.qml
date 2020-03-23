@@ -25,7 +25,7 @@ HRowLayout {
         visible: button.icon.name || button.loading
 
         Layout.preferredWidth:
-            button.loading ? busyIndicator.width : icon.width
+            button.loading ? busyIndicatorLoader.width : icon.width
 
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
@@ -45,15 +45,18 @@ HRowLayout {
             Behavior on opacity { HNumberAnimation {} }
         }
 
-        HBusyIndicator {
-            id: busyIndicator
+        HLoader {
+            id: busyIndicatorLoader
             anchors.centerIn: parent
             width: height
             height: parent.height
             opacity: button.loading ? 1 : 0
-            visible: opacity > 0
+            active: opacity > 0
 
             Behavior on opacity { HNumberAnimation {} }
+
+            sourceComponent: HBusyIndicator {
+            }
         }
     }
 

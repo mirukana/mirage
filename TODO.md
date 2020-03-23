@@ -1,7 +1,6 @@
 # TODO
 
 - mention color in local echo
-- cpu usage
 
 ## Main goals for next version
 
