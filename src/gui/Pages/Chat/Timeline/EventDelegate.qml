@@ -27,14 +27,7 @@ HColumnLayout {
     property bool talkBreak: eventList.canTalkBreak(previousModel, model)
     property bool dayBreak: eventList.canDayBreak(previousModel, model)
 
-    readonly property bool smallAvatar:
-        compact || (
-            eventList.canCombine(model, nextModel) &&
-            (model.event_type === "RoomMessageEmote" ||
-             ! (model.event_type.startsWith("RoomMessage") ||
-                model.event_type.startsWith("RoomEncrypted")))
-        )
-
+    readonly property bool smallAvatar: compact
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight
 
