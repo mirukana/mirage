@@ -58,7 +58,7 @@ QtObject {
     }
 
 
-    function showError(type, traceback, sourceIndication="") {
+    function showError(type, traceback, sourceIndication="", message="") {
         console.error(`python: ${sourceIndication}\n${traceback}`)
 
         if (window.hideErrorTypes.has(type)) {
@@ -72,7 +72,7 @@ QtObject {
         utils.makePopup(
             "Popups/UnexpectedErrorPopup.qml",
             window,
-            { errorType: type, traceback },
+            { errorType: type, message, traceback },
         )
     }
 
