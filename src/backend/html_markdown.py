@@ -369,10 +369,12 @@ class HTMLProcessor:
 
 
     def _remove_extra_newlines(self, el: HtmlElement) -> HtmlElement:
-        """Remove excess `\\n` characters from non-`<pre>` HTML elements.
+        """Remove excess `\\n` characters from HTML elements.
 
         This is done to avoid additional blank lines when the CSS directive
         `white-space: pre` is used.
+
+        Text inside `<pre>` tags is ignored, except for the final newlines.
         """
 
         pre_parent = any(parent.tag == "pre" for parent in el.iterancestors())
@@ -382,6 +384,11 @@ class HTMLProcessor:
                 el.text = self.extra_newlines_regex.sub(r"\1", el.text)
             if el.tail:
                 el.tail = self.extra_newlines_regex.sub(r"\1", el.tail)
+        else:
+            if el.text and el.text.endswith("\n"):
+                el.text = el.text[:-1]
+            if el.tail and el.tail.endswith("\n"):
+                el.tail = el.tail[:-1]
 
         return el
 
