@@ -170,7 +170,8 @@ get_app_and_pip_dependencies() {
 
 initialize_appdir() {
     cd ~/mirage
-    if [ -f Makefile ]; then make clean; fi
+    rm -rf .qmake.stash Makefile build
+
     qmake mirage.pro
     make install INSTALL_ROOT=build/appdir
 }
