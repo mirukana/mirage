@@ -1,5 +1,9 @@
 # TODO
 
+- side pane back/forward buttons hard to use on touch
+- is it still slow on sway with wayland-egl?
+- room pane drag-scroll a tiny bit activates the delegates
+
 ## Goals before 0.5.0
 
 - Redacting messages
@@ -12,8 +16,6 @@
 - Publish on Flathub and AppImageHub
 
 ## Refactoring
-
-- Rewrite the message text selection buggy mess 
 
 - Put keybindings in the components they belong to instead of shoving them
   all in one central file

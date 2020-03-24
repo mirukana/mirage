@@ -7,183 +7,132 @@ import "../../.."
 import "../../../Base"
 
 Rectangle {
-    property alias selectableLabelContainer: selectableLabelContainer
-    property alias eventList: eventList
-
     color: theme.chat.eventList.background
 
-    HSelectableLabelContainer {
-        id: selectableLabelContainer
+
+    property Item selectableLabelContainer: Item {}
+    property alias eventList: eventList
+
+
+    HListView {
+        id: eventList
+        clip: true
+
         anchors.fill: parent
-        reversed: eventList.verticalLayoutDirection === ListView.BottomToTop
+        anchors.leftMargin: theme.spacing
+        anchors.rightMargin: theme.spacing
 
-        DragHandler {
-            target: null
-            onActiveChanged: if (! active) dragFlicker.speed = 0
-            onCentroidChanged: {
-                const left  = centroid.pressedButtons & Qt.LeftButton
-                const vel   = centroid.velocity.y
-                const pos   = centroid.position.y
-                const dist  = Math.min(selectableLabelContainer.height / 4, 50)
-                const boost = 20 * (pos < dist ?  -pos : -(height - pos))
+        topMargin: theme.spacing
+        bottomMargin: theme.spacing
+        verticalLayoutDirection: ListView.BottomToTop
 
-                dragFlicker.speed =
-                    left && vel && pos < dist          ? 1000 + boost :
-                    left && vel && pos > height - dist ? -1000 + -boost :
-                    0
+        // Keep x scroll pages cached, to limit images having to be
+        // reloaded from network.
+        cacheBuffer: Screen.desktopAvailableHeight * 2
+
+        model: ModelStore.get(chat.userId, chat.roomId, "events")
+        delegate: EventDelegate {}
+
+        // Since the list is BottomToTop, this is actually a header
+        footer: Item {
+            width: eventList.width
+            height: (button.height + theme.spacing * 2) * opacity
+            opacity: eventList.loading ? 1 : 0
+            visible: opacity > 0
+
+            Behavior on opacity { HNumberAnimation {} }
+
+            HButton {
+                id: button
+                width: Math.min(parent.width, implicitWidth)
+                anchors.centerIn: parent
+
+                loading: true
+                text: qsTr("Loading previous messages...")
+                enableRadius: true
+                iconItem.small: true
             }
         }
 
-        Timer {
-            id: dragFlicker
-            interval: 100
-            running: speed !== 0
-            repeat: true
+        onYPosChanged:
+            if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
 
-            onTriggered: {
-                if (eventList.verticalOvershoot !== 0) return
-                if (speed < 0 && eventList.atYEnd) return
-                if (eventList.atYBeggining) {
-                    if (bouncedStart) { return } else { bouncedStart = true }
-                }
+        // When an invited room becomes joined, we should now be able to
+        // fetch past events.
+        onInviterChanged: canLoad = true
 
-                eventList.flick(0, speed * acceleration)
-                acceleration = Math.min(8, acceleration * 1.05)
-            }
-            onRunningChanged: if (! running) {
-                acceleration = 1.0
-                bouncedStart = false
-                eventList.cancelFlick()
-                eventList.returnToBounds()
-            }
+        Component.onCompleted: shortcuts.flickTarget = eventList
 
-            property real speed: 0.0
-            property real acceleration: 1.0
-            property bool bouncedStart: false
+
+        property string inviter: chat.roomInfo.inviter || ""
+        property real yPos: visibleArea.yPosition
+        property bool canLoad: true
+        property bool loading: false
+
+        property bool ownEventsOnRight:
+            width < theme.chat.eventList.ownEventsOnRightUnderWidth
+
+
+        function canCombine(item, itemAfter) {
+            if (! item || ! itemAfter) return false
+
+            return Boolean(
+                ! canTalkBreak(item, itemAfter) &&
+                ! canDayBreak(item, itemAfter) &&
+                item.sender_id === itemAfter.sender_id &&
+                utils.minutesBetween(item.date, itemAfter.date) <= 5
+            )
         }
 
-        HListView {
-            id: eventList
-            clip: true
-            allowDragging: false
+        function canTalkBreak(item, itemAfter) {
+            if (! item || ! itemAfter) return false
 
-            anchors.fill: parent
-            anchors.leftMargin: theme.spacing
-            anchors.rightMargin: theme.spacing
+            return Boolean(
+                ! canDayBreak(item, itemAfter) &&
+                utils.minutesBetween(item.date, itemAfter.date) >= 20
+            )
+        }
 
-            topMargin: theme.spacing
-            bottomMargin: theme.spacing
-            verticalLayoutDirection: ListView.BottomToTop
+        function canDayBreak(item, itemAfter) {
+            if (itemAfter && itemAfter.event_type === "RoomCreateEvent")
+                return true
 
-            // Keep x scroll pages cached, to limit images having to be
-            // reloaded from network.
-            cacheBuffer: Screen.desktopAvailableHeight * 2
+            if (! item || ! itemAfter || ! item.date || ! itemAfter.date)
+                return false
 
-            onYPosChanged:
-                if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
+            return item.date.getDate() !== itemAfter.date.getDate()
+        }
 
-            // When an invited room becomes joined, we should now be able to
-            // fetch past events.
-            onInviterChanged: canLoad = true
+        function loadPastEvents() {
+            // try/catch blocks to hide pyotherside error when the
+            // component is destroyed but func is still running
 
-            // Since the list is BottomToTop, this is actually a header
-            footer: Item {
-                width: eventList.width
-                height: (button.height + theme.spacing * 2) * opacity
-                opacity: eventList.loading ? 1 : 0
-                visible: opacity > 0
+            try {
+                eventList.canLoad = false
+                eventList.loading = true
 
-                Behavior on opacity { HNumberAnimation {} }
+                py.callClientCoro(
+                    chat.userId,
+                    "load_past_events",
+                    [chat.roomId],
+                    moreToLoad => {
+                        try {
+                            eventList.canLoad = moreToLoad
 
-                HButton {
-                    id: button
-                    width: Math.min(parent.width, implicitWidth)
-                    anchors.centerIn: parent
+                            // Call yPosChanged() to run this func again
+                            // if the loaded messages aren't enough to fill
+                            // the screen.
+                            if (moreToLoad) yPosChanged()
 
-                    loading: true
-                    text: qsTr("Loading previous messages...")
-                    enableRadius: true
-                    iconItem.small: true
-                }
-            }
-
-            Component.onCompleted: shortcuts.flickTarget = eventList
-
-
-            property string inviter: chat.roomInfo.inviter || ""
-            property real yPos: visibleArea.yPosition
-            property bool canLoad: true
-            property bool loading: false
-
-            property bool ownEventsOnRight:
-                width < theme.chat.eventList.ownEventsOnRightUnderWidth
-
-
-            function canCombine(item, itemAfter) {
-                if (! item || ! itemAfter) return false
-
-                return Boolean(
-                    ! canTalkBreak(item, itemAfter) &&
-                    ! canDayBreak(item, itemAfter) &&
-                    item.sender_id === itemAfter.sender_id &&
-                    utils.minutesBetween(item.date, itemAfter.date) <= 5
-                )
-            }
-
-            function canTalkBreak(item, itemAfter) {
-                if (! item || ! itemAfter) return false
-
-                return Boolean(
-                    ! canDayBreak(item, itemAfter) &&
-                    utils.minutesBetween(item.date, itemAfter.date) >= 20
-                )
-            }
-
-            function canDayBreak(item, itemAfter) {
-                if (itemAfter && itemAfter.event_type === "RoomCreateEvent")
-                    return true
-
-                if (! item || ! itemAfter || ! item.date || ! itemAfter.date)
-                    return false
-
-                return item.date.getDate() !== itemAfter.date.getDate()
-            }
-
-            function loadPastEvents() {
-                // try/catch blocks to hide pyotherside error when the
-                // component is destroyed but func is still running
-
-                try {
-                    eventList.canLoad = false
-                    eventList.loading = true
-
-                    py.callClientCoro(
-                        chat.userId,
-                        "load_past_events",
-                        [chat.roomId],
-                        moreToLoad => {
-                            try {
-                                eventList.canLoad = moreToLoad
-
-                                // Call yPosChanged() to run this func again
-                                // if the loaded messages aren't enough to fill
-                                // the screen.
-                                if (moreToLoad) yPosChanged()
-
-                                eventList.loading = false
-                            } catch (err) {
-                                return
-                            }
+                            eventList.loading = false
+                        } catch (err) {
+                            return
                         }
-                    )
-                } catch (err) {
-                    return
-                }
+                    }
+                )
+            } catch (err) {
+                return
             }
-
-
-            model: ModelStore.get(chat.userId, chat.roomId, "events")
-            delegate: EventDelegate {}
         }
     }
 
@@ -192,5 +141,50 @@ Rectangle {
 
         visible: eventList.model.count < 1
         anchors.fill: parent
+    }
+
+    DragHandler {
+        target: null
+        onActiveChanged: if (! active) dragFlicker.speed = 0
+        onCentroidChanged: {
+            const left  = centroid.pressedButtons & Qt.LeftButton
+            const vel   = centroid.velocity.y
+            const pos   = centroid.position.y
+            const dist  = Math.min(selectableLabelContainer.height / 4, 50)
+            const boost = 20 * (pos < dist ?  -pos : -(height - pos))
+
+            dragFlicker.speed =
+                left && vel && pos < dist          ? 1000 + boost :
+                left && vel && pos > height - dist ? -1000 + -boost :
+                0
+        }
+    }
+
+    Timer {
+        id: dragFlicker
+        interval: 100
+        running: speed !== 0
+        repeat: true
+
+        onTriggered: {
+            if (eventList.verticalOvershoot !== 0) return
+            if (speed < 0 && eventList.atYEnd) return
+            if (eventList.atYBeggining) {
+                if (bouncedStart) { return } else { bouncedStart = true }
+            }
+
+            eventList.flick(0, speed * acceleration)
+            acceleration = Math.min(8, acceleration * 1.05)
+        }
+        onRunningChanged: if (! running) {
+            acceleration = 1.0
+            bouncedStart = false
+            eventList.cancelFlick()
+            eventList.returnToBounds()
+        }
+
+        property real speed: 0.0
+        property real acceleration: 1.0
+        property bool bouncedStart: false
     }
 }

@@ -109,8 +109,6 @@ HRowLayout {
 
         HSelectableLabel {
             id: contentLabel
-            container: selectableLabelContainer
-            index: model.index
             visible: ! pureMedia
 
             topPadding: theme.chat.message.verticalSpacing
@@ -158,13 +156,11 @@ HRowLayout {
 
             function selectAllText() {
                 // Select the message body without the date or name
-                container.clearSelection()
                 contentLabel.select(
                     0,
                     contentLabel.length -
                     timeText.length - 1  // - 1: separating space
                 )
-                contentLabel.updateContainerSelectedTexts()
             }
 
             HoverHandler { id: contentHover }
