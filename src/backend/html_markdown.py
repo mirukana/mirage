@@ -132,7 +132,7 @@ class HTMLProcessor:
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
 
         # mailto: and tel:
-        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9_.-]+[a-z](?:\:\d+)?))",
+        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.-:]*[a-z\d]))",
         r"tel:(?P<body>[0-9+-]+)(?P<host>)",
 
         # magnet:
