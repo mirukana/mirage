@@ -43,10 +43,11 @@ dev {
     shortcuts.path  = $$PREFIX/share/applications
     shortcuts.files = extra/linux/mirage.desktop
 
-    icons.path  = $$PREFIX/share/pixmaps
-    icons.files = extra/linux/mirage.png
+    icons256.path = $$PREFIX/share/icons/hicolor/256x256/apps
+    icons256.extra = mkdir -p $(INSTALL_ROOT)/$$PREFIX/share/icons/hicolor/256x256/apps && cp $$PWD/extra/linux/mirage.png $(INSTALL_ROOT)/$$PREFIX/share/icons/hicolor/256x256/apps/$${TARGET}.png
+    INSTALLS += icons256
 
-    INSTALLS += executables shortcuts icons
+    INSTALLS += executables shortcuts icons256
 }
 
 !dev:win32 {

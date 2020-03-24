@@ -13,6 +13,9 @@ finish-args:
   - --filesystem=xdg-download
   - --talk-name=org.freedesktop.Notifications
 
+rename-icon: mirage
+rename-desktop-file: mirage.desktop
+
 #cleanup:
 #  - /usr/include
 
@@ -807,15 +810,15 @@ modules:
         url: https://github.com/mirukana/matrix-nio.git
         commit: ee2a90da2f1d7ce12df7153dd944fffdaf978787
 
-  # - name: mirage
-  #   buildsystem: qmake
-  #   sources:
-  #     - type: dir
-  #       path: .
-
   - name: mirage
     buildsystem: qmake
     sources:
-      - type: git
-        url: https://github.com/mirukana/mirage.git
-        tag: v0.4.0
+      - type: dir
+        path: .
+
+  # - name: mirage
+  #   buildsystem: qmake
+  #   sources:
+  #     - type: git
+  #       url: https://github.com/mirukana/mirage.git
+  #       tag: v0.4.1
