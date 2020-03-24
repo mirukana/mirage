@@ -11,8 +11,10 @@ QtObject {
 
 
     function onAlertRequested() {
-        if (Qt.application.state !== Qt.ApplicationActive) {
-            window.alert(window.settings.alertOnMessageForMsec)
+        const msec = window.settings.alertOnMessageForMsec
+
+        if (Qt.application.state !== Qt.ApplicationActive && msec !== 0) {
+            window.alert(msec === -1 ? 0 : msec)  // -1 → 0 = no time out
         }
     }
 
