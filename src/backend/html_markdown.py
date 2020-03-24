@@ -132,7 +132,7 @@ class HTMLProcessor:
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
 
         # mailto: and tel:
-        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9_.-]+[a-z](?:\:\d+)?))",
+        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.-:]*[a-z\d]))",
         r"tel:(?P<body>[0-9+-]+)(?P<host>)",
 
         # magnet:
@@ -298,7 +298,7 @@ class HTMLProcessor:
             "span": {"data-mx-color"},
         }}
 
-        username_link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+        username_link_regexes = [re.compile(r) for r in [
             rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
             for username in self.rooms_user_id_names[room_id].values()
         ]]

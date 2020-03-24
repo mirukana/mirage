@@ -269,13 +269,13 @@ class NioCallbacks:
         # Profile changes
         changed = []
 
-        if prev and now["avatar_url"] != prev["avatar_url"]:
+        if prev and now.get("avatar_url") != prev.get("avatar_url"):
             changed.append("profile picture")  # TODO: <img>s
 
-        if prev and now["displayname"] != prev["displayname"]:
+        if prev and now.get("displayname") != prev.get("displayname"):
             changed.append('display name from "{}" to "{}"'.format(
-                prev["displayname"] or ev.state_key,
-                now["displayname"] or ev.state_key,
+                prev.get("displayname") or ev.state_key,
+                now.get("displayname") or ev.state_key,
             ))
 
         if changed:
@@ -285,8 +285,8 @@ class NioCallbacks:
 
                 if account.profile_updated < ev_date:
                     account.profile_updated = ev_date
-                    account.display_name    = now["displayname"] or ""
-                    account.avatar_url      = now["avatar_url"] or ""
+                    account.display_name    = now.get("displayname") or ""
+                    account.avatar_url      = now.get("avatar_url") or ""
 
             if self.client.backend.ui_settings["hideProfileChangeEvents"]:
                 self.client.skipped_events[room.room_id] += 1
