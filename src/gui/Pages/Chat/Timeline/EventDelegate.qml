@@ -106,7 +106,13 @@ HColumnLayout {
 
     TapHandler {
         acceptedButtons: Qt.RightButton
+        acceptedPointerTypes: PointerDevice.GenericPointer
         onTapped: openContextMenu()
+    }
+
+    TapHandler {
+        acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
+        onLongPressed: openContextMenu()
     }
 
     HMenu {
