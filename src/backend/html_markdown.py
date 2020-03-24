@@ -298,7 +298,7 @@ class HTMLProcessor:
             "span": {"data-mx-color"},
         }}
 
-        username_link_regexes = [re.compile(r, re.IGNORECASE) for r in [
+        username_link_regexes = [re.compile(r) for r in [
             rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
             for username in self.rooms_user_id_names[room_id].values()
         ]]
