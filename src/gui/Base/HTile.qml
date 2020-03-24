@@ -110,7 +110,7 @@ HButton {
 
     TapHandler {
         acceptedButtons: Qt.RightButton
-        acceptedPointerTypes: PointerDevice.GenericPointer
+        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
         onTapped: {
             rightClicked()
             if (contextMenu) contextMenuLoader.active = true
