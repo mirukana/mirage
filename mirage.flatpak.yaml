@@ -16,8 +16,16 @@ finish-args:
 rename-icon: mirage
 rename-desktop-file: mirage.desktop
 
-#cleanup:
-#  - /usr/include
+cleanup:
+  - /app/include
+  - /app/usr/tests
+  - /app/lib/cmake
+  - /app/bin/cairosvg
+  - /app/bin/chardetect
+  - /app/bin/futurize
+  - /app/bin/jsonschema
+  - /app/bin/pasteurize
+  - /app/bin/pwiz.py
 
 modules:
   - name: pyotherside
