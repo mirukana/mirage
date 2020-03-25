@@ -11,10 +11,7 @@ it.
 Note that the requirements are taken from
 [requirements.flatpak.txt](requirements.flatpak.txt) and the ones
 specified in the project' root
-[requirements.txt](../../requirements.txt). At the moment of writing,
-included packages are `multidict` with the version that installs in
-Flatpak (newer versions seem to have some issues), `uvloop`, and few
-packages required for building other packages.
+[requirements.txt](../../requirements.txt).
 
 In addition, the list of ignored packages is in
 [generate-flatpak-script.sh](generate-flatpak-script.sh).
@@ -27,11 +24,11 @@ marked placeholder with Python module dependencies.
 
 ## Building Flatpak
 
-To build flatpak package, you will need flatpak, flatpak-builder,
-runtime and SDK (KDE 5.12), and flatpak-builder. flatpak-builder is
-usually available from the same repository as flatpak. See
-https://flatpak.org/setup/ for setting it up. To install runtimes
-(adjust as needed if you prefer system-wide installation):
+To build flatpak package, you will need flatpak, flatpak-builder, and
+KDE 5.12 runtime with SDK. flatpak-builder is usually available from
+the same repository as flatpak. See https://flatpak.org/setup/ for
+setting it up. To install runtimes (adjust as needed if you prefer
+system-wide installation):
 
 ```
 flatpak install --user flathub org.kde.Platform//5.12 org.kde.Sdk//5.12
