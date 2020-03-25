@@ -44,7 +44,7 @@ dev {
     shortcuts.files = extra/linux/mirage.desktop
 
     icons256.path = $$PREFIX/share/icons/hicolor/256x256/apps
-    icons256.extra = mkdir -p $(INSTALL_ROOT)/$$PREFIX/share/icons/hicolor/256x256/apps && cp $$PWD/extra/linux/mirage.png $(INSTALL_ROOT)/$$PREFIX/share/icons/hicolor/256x256/apps/$${TARGET}.png
+    icons256.files = extra/linux/mirage.png
     INSTALLS += icons256
 
     INSTALLS += executables shortcuts icons256
@@ -107,3 +107,5 @@ for(file, $$list($$glob_filenames(*.py))) {
 QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
 QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
 QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env packaging/flatpak/requirements.txt packaging/flatpak/flatpak-requirements.txt
+QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder
