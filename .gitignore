@@ -6,6 +6,8 @@ __pycache__
 *.qmlc
 *.jsc
 
+*~
+
 tmp-*
 
 build
@@ -17,3 +19,10 @@ mirage.pro.user
 *.AppImage
 
 tags
+
+packaging/flatpak/flatpak-env
+packaging/flatpak/requirements.txt
+packaging/flatpak/flatpak-requirements.txt
+packaging/flatpak/flatpak-pip.json
+.flatpak-builder/
+flatpak-build/
