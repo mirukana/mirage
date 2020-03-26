@@ -43,10 +43,11 @@ dev {
     shortcuts.path  = $$PREFIX/share/applications
     shortcuts.files = extra/linux/mirage.desktop
 
-    icons.path  = $$PREFIX/share/pixmaps
-    icons.files = extra/linux/mirage.png
+    icons256.path = $$PREFIX/share/icons/hicolor/256x256/apps
+    icons256.files = extra/linux/mirage.png
+    INSTALLS += icons256
 
-    INSTALLS += executables shortcuts icons
+    INSTALLS += executables shortcuts icons256
 }
 
 !dev:win32 {
@@ -106,3 +107,6 @@ for(file, $$list($$glob_filenames(*.py))) {
 QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
 QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
 QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env packaging/flatpak/requirements.txt
+QMAKE_CLEAN *= packaging/flatpak/flatpak-requirements.txt
+QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder

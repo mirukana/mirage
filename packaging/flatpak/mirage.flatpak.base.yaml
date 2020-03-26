@@ -1,0 +1,113 @@
+id: io.github.mirukana.mirage
+runtime: org.kde.Platform
+sdk: org.kde.Sdk
+runtime-version: "5.12"
+
+command: mirage
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --filesystem=xdg-download
+  - --talk-name=org.freedesktop.Notifications
+
+rename-icon: mirage
+rename-desktop-file: mirage.desktop
+
+cleanup:
+  - /app/include
+  - /app/usr/tests
+  - /app/lib/cmake
+  - /app/bin/cairosvg
+  - /app/bin/chardetect
+  - /app/bin/futurize
+  - /app/bin/jsonschema
+  - /app/bin/pasteurize
+  - /app/bin/pwiz.py
+
+modules:
+  - name: pyotherside
+    buildsystem: qmake
+    make-install-args:
+      - INSTALL_ROOT=/app
+    post-install:
+      - mkdir -p /app/lib/qml
+      - ln -s /app/usr/lib/qml/io /app/lib/qml
+    sources:
+      - type: archive
+        url: https://github.com/thp/pyotherside/archive/1.5.3.tar.gz
+        sha256: 00049d5f42cac448368bc2a521edb8de36bb6d2a624e195b7f1004236758b805
+
+  - name: olm
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://gitlab.matrix.org/matrix-org/olm.git
+        tag: 3.1.4
+        commit: 6753595300767dd70150831dbbe6f92d64e75038
+    disable-shallow-clone: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+  
+  - name: libzen
+    subdir: Project/GNU/Library
+    config-opts:
+      - --enable-shared
+      - --disable-static
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+      - /lib/*.la
+    sources: 
+      - type: archive
+        url: https://mediaarea.net/download/source/libzen/0.4.37/libzen_0.4.37.tar.xz
+        sha256: 38c0a68b715b55d6685d2759eecda040adf37bd066955d79a5d01f91977bd9a0
+
+  - name: libmediainfo
+    subdir: Project/GNU/Library
+    config-opts:
+      - --enable-shared
+      - --disable-static
+      - --with-libcurl
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+      - /lib/*.la
+    sources:
+      - type: archive
+        url: https://mediaarea.net/download/source/libmediainfo/19.09/libmediainfo_19.09.tar.xz
+        sha256: ff06e1a449dfbe6f2c51f27ae1187d3e72386cb54476fbb189ffaacf845f478e
+
+  # Python dependencies
+  - name: PLACEHOLDER PYTHON DEPENDENCIES
+
+  # matrix-nio separate 
+  - name: python3-matrix-nio
+    buildsystem: simple
+    build-commands: 
+      - pip3 install --prefix=${FLATPAK_DEST} .
+    sources: 
+      - type: git
+        url: https://github.com/mirukana/matrix-nio.git
+        commit: ee2a90da2f1d7ce12df7153dd944fffdaf978787
+
+  - name: mirage
+    buildsystem: qmake
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - build
+          - .git
+          - .flatpak-builder
+
+  # - name: mirage
+  #   buildsystem: qmake
+  #   sources:
+  #     - type: git
+  #       url: https://github.com/mirukana/mirage.git
+  #       tag: v0.4.1
