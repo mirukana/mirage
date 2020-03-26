@@ -1,37 +1,4 @@
 #!/usr/bin/env bash
-
-# The image must be built on Ubuntu 16.04 Xenial, to ensure compatibility with
-# older systems.
-#
-# LXD/LXC can be used to setup a suitable container from any distro.
-#
-# If using LXD and not done already (all default settings are fine):
-#
-#     lxd init
-#
-# To restart from scratch if you already had a container:
-#
-#     lxc stop ubuntu; lxc delete ubuntu
-#
-# Initialize the container:
-#
-#     lxc launch images:ubuntu/xenial/amd64 ubuntu
-#
-# If you want to build an image for something else than the official unmodified
-# repo, either change the MIRAGE_REPO_URL variable or directly copy your
-# repository inside the container. Example:
-#
-#     lxc exec ubuntu -- /bin/mkdir -p /root/mirage
-#     lxc file push -vr <path to repo root>/* ubuntu/root/mirage
-#
-# Run this script inside the container:
-#
-#     lxc exec ubuntu -- /root/mirage/packaging/appimage/build.sh
-#
-# You can also start a shell inside (e.g. if something goes wrong):
-#
-#     lxc exec ubuntu -- /bin/bash
-
 set -eo pipefail
 
 MIRAGE_REPO_URL='https://github.com/mirukana/mirage'
@@ -41,7 +8,7 @@ check_distro() {
     if grep -q '^\s*Ubuntu\s*16.04' /etc/issue; then return; fi
 
     echo "Not running on expected distribution or version, aborting!" >&2
-    echo "Read the instructions inside this script for more info." >&2
+    echo "See <repo root>/packaging/appimage/README.md for more info." >&2
     exit 99
 }
 
