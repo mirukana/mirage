@@ -875,6 +875,18 @@ class MatrixClient(nio.AsyncClient):
 
         return (successes, errors)
 
+    async def room_mass_redact(
+        self, room_id: str, reason: str, *event_ids: str,
+    ):
+        """Redact events from a room in parallel.
+
+        Returns a list of sucessful redacts.
+        """
+
+        return await asyncio.gather(*[
+            self.room_redact(room_id, evt_id, reason)
+            for evt_id in event_ids
+        ])
 
     async def generate_thumbnail(
         self, data: UploadData, is_svg: bool = False,

@@ -218,6 +218,19 @@ HColumnLayout {
             }
         }
 
+        HMenuItemPopupSpawner {
+            icon.name: "remove-message"
+            text: qsTr("Remove")
+
+            popup: "Popups/RedactEvents.qml"
+            popupParent: chat
+            properties: ({
+                userId: chat.userId,
+                roomId: chat.roomId,
+                eventIds: [model.event_id]
+            })
+        }
+
         HMenuItem {
             icon.name: "debug"
             text: qsTr("Debug this event")
