@@ -10,6 +10,8 @@ HColumnLayout {
     id: eventDelegate
     width: eventList.width
 
+    ListView.onRemove: eventList.delegatesUnchecked(model.id)
+
 
     enum Media { Page, File, Image, Video, Audio }
 
@@ -20,6 +22,7 @@ HColumnLayout {
     readonly property var nextModel: eventList.model.get(model.index - 1)
     readonly property QtObject currentModel: model
 
+    property bool checked: model.id in eventList.checkedDelegates
     property bool compact: window.settings.compactMode
     property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
@@ -73,9 +76,14 @@ HColumnLayout {
         contextMenu.popup()
     }
 
+    function toggleChecked() {
+        eventDelegate.checked ?
+        eventList.delegatesUnchecked(model.index) :
+        eventList.delegatesChecked(model.index)
+    }
+
 
     Item {
-
         Layout.fillWidth: true
         Layout.preferredHeight:
             model.event_type === "RoomCreateEvent" ? 0 : separationSpacing
@@ -103,6 +111,10 @@ HColumnLayout {
         Behavior on x { HNumberAnimation {} }
     }
 
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        onTapped: toggleChecked()
+    }
 
     TapHandler {
         acceptedButtons: Qt.RightButton
@@ -122,6 +134,19 @@ HColumnLayout {
         property string link: ""
 
         onClosed: { media = []; link = "" }
+
+        HMenuItem {
+            icon.name: "toggle-select-message"
+            text: eventDelegate.checked ? qsTr("Unselect") : qsTr("Select")
+            onTriggered: eventDelegate.toggleChecked()
+        }
+
+        HMenuItem {
+            visible: eventList.selectedCount >= 2
+            icon.name: "unselect-all-messages"
+            text: qsTr("Unselect all")
+            onTriggered: eventList.checkedDelegates = {}
+        }
 
         HMenuItem {
             id: copyMedia
@@ -161,10 +186,21 @@ HColumnLayout {
         HMenuItem {
             icon.name: "copy-text"
             text: qsTr("Copy text")
-            visible: enabled || (! copyLink.visible && ! copyMedia.visible)
-            enabled: Boolean(selectableLabelContainer.joinedSelection)
-            onTriggered:
-                Clipboard.text = selectableLabelContainer.joinedSelection
+            visible: ! copyLink.visible && ! copyMedia.visible
+            onTriggered: {
+                if (! eventList.selectedCount) {
+                    Clipboard.text = JSON.parse(model.source).body
+                    return
+                }
+
+                const contents = []
+
+                for (const model of eventList.getSortedCheckedDelegates()) {
+                    contents.push(JSON.parse(model.source).body)
+                }
+
+                Clipboard.text = contents.join("\n\n")
+            }
         }
 
         HMenuItem {

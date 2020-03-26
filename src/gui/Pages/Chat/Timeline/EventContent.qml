@@ -110,6 +110,9 @@ HRowLayout {
         HSelectableLabel {
             id: contentLabel
             visible: ! pureMedia
+            enableLinkActivation: ! eventList.selectedCount
+
+            // selectByMouse: eventDelegate.checked  XXX
 
             topPadding: theme.chat.message.verticalSpacing
             bottomPadding: topPadding
@@ -165,6 +168,13 @@ HRowLayout {
 
             HoverHandler { id: contentHover }
 
+            TapHandler {
+                acceptedButtons: Qt.LeftButton
+                onTapped:
+                    if (! parent.hoveredLink || ! parent.enableLinkActivation)
+                        eventDelegate.toggleChecked()
+            }
+
             Rectangle {
                 width: Math.max(
                     parent.paintedWidth +
@@ -176,7 +186,9 @@ HRowLayout {
                 height: contentColumn.height
                 radius: theme.chat.message.radius
                 z: -100
-                color: isOwn?
+                color: eventDelegate.checked ?
+                       "blue" :  // XXX
+                       isOwn?
                        theme.chat.message.ownBackground :
                        theme.chat.message.background
 

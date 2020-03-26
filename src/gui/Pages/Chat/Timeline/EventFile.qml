@@ -22,8 +22,10 @@ HTile {
         svgName: "download"
     }
 
-    onLeftClicked: download(Qt.openUrlExternally)
     onRightClicked: eventDelegate.openContextMenu()
+    onLeftClicked:
+        eventList.selectedCount ?
+        eventDelegate.toggleChecked() : download(Qt.openUrlExternally)
 
     onHoveredChanged: {
         if (! hovered) {
@@ -44,4 +46,10 @@ HTile {
         JSON.parse(loader.singleMediaInfo.media_crypt_dict)
 
     readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
+
+
+    Binding on backgroundColor {
+        value: "blue"  // XXX
+        when: eventDelegate.checked
+    }
 }

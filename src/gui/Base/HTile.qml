@@ -9,6 +9,7 @@ HButton {
 
     signal leftClicked()
     signal rightClicked()
+    signal longPressed()
 
     default property alias additionalData: contentItem.data
 
@@ -106,6 +107,7 @@ HButton {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: leftClicked()
+        onLongPressed: tile.longPressed()
     }
 
     TapHandler {

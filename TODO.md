@@ -1,5 +1,11 @@
 # TODO
 
+- precise text selection for one message
+- long-press-drag to select multiple messages on touch
+- drag to select on non-touch
+- shift+click to select everything in between
+
+- remove radius on invite/left banner
 - side pane back/forward buttons hard to use on touch
 - is it still slow on sway with wayland-egl?
 - room pane drag-scroll a tiny bit activates the delegates

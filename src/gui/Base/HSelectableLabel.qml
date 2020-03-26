@@ -13,11 +13,13 @@ TextEdit {
     tabStopDistance: 4 * 4  // 4 spaces
 
     readOnly: true
-    persistentSelection: true
     activeFocusOnPress: false
     focus: false
 
-    onLinkActivated: Qt.openUrlExternally(link)
+    onLinkActivated: if (enableLinkActivation) Qt.openUrlExternally(link)
+
+
+    property bool enableLinkActivation: true
 
 
     function selectWordAt(position) {

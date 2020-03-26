@@ -10,9 +10,13 @@ Rectangle {
     color: theme.chat.eventList.background
 
 
-    property Item selectableLabelContainer: Item {}
     property alias eventList: eventList
 
+
+    HShortcut {
+        sequence: "Escape"
+        onActivated: eventList.checkedDelegates = {}
+    }
 
     HListView {
         id: eventList
@@ -136,6 +140,7 @@ Rectangle {
         }
     }
 
+
     HNoticePage {
         text: qsTr("No messages to show yet")
 
@@ -150,7 +155,7 @@ Rectangle {
             const left  = centroid.pressedButtons & Qt.LeftButton
             const vel   = centroid.velocity.y
             const pos   = centroid.position.y
-            const dist  = Math.min(selectableLabelContainer.height / 4, 50)
+            const dist  = Math.min(eventList.height / 4, 50)
             const boost = 20 * (pos < dist ?  -pos : -(height - pos))
 
             dragFlicker.speed =

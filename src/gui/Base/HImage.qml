@@ -21,6 +21,7 @@ Image {
     property bool animate: true
     property bool animated:
         utils.urlExtension(image.source).toLowerCase() === "gif"
+    property bool enabledAnimatedPausing: true
 
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
@@ -74,7 +75,9 @@ Image {
             property bool userPaused: ! window.settings.media.autoPlayGIF
 
             TapHandler {
+                enabled: image.enabledAnimatedPausing
                 onTapped: parent.userPaused = ! parent.userPaused
+                gesturePolicy: TapHandler.ReleaseWithinBounds
             }
 
             HIcon {

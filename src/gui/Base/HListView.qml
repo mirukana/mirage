@@ -68,6 +68,31 @@ ListView {
     property bool allowDragging: true
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
+    property var checkedDelegates: ({})
+    property int selectedCount: Object.keys(checkedDelegates).length
+
+
+    function delegatesChecked(...indices) {
+        for (const i of indices) {
+            const model = listView.model.get(i)
+            checkedDelegates[model.id] = model
+        }
+        checkedDelegatesChanged()
+    }
+
+    function delegatesUnchecked(...indices) {
+        for (const i of indices) {
+            const model = listView.model.get(i)
+            delete checkedDelegates[model.id]
+        }
+        checkedDelegatesChanged()
+    }
+
+    function getSortedCheckedDelegates() {
+        return Object.values(checkedDelegates).sort(
+            (a, b) => a.date > b.date ? 1 : -1
+        )
+    }
 
 
     Connections {

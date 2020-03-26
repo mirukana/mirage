@@ -8,6 +8,7 @@ HMxcImage {
     width: fitSize.width
     height: fitSize.height
     horizontalAlignment: Image.AlignLeft
+    enabledAnimatedPausing: ! eventList.selectedCount
 
     title: thumbnail ? loader.thumbnailTitle : loader.title
     animated: loader.singleMediaInfo.media_mime === "image/gif" ||
@@ -82,8 +83,11 @@ HMxcImage {
 
 
     TapHandler {
-        onTapped: if (! image.animated) getOpenUrl(Qt.openUrlExternally)
-        onDoubleTapped: getOpenUrl(Qt.openUrlExternally)
+        onTapped:
+            eventList.selectedCount ?
+            eventDelegate.toggleChecked() : getOpenUrl(Qt.openUrlExternally)
+
+        gesturePolicy: TapHandler.ReleaseWithinBounds
     }
 
     HoverHandler {
@@ -122,5 +126,13 @@ HMxcImage {
         visible: opacity > 0
 
         Behavior on opacity { HNumberAnimation {} }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        visible: eventDelegate.checked
+        // XXX
+        color: "blue"
+        opacity: 0.2
     }
 }
