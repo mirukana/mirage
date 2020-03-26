@@ -11,7 +11,7 @@
 #
 # To restart from scratch if you already had a container:
 #
-#     lxc stop ubuntu; lxc delete ubuntu  # if needed
+#     lxc stop ubuntu; lxc delete ubuntu
 #
 # Initialize the container:
 #
@@ -26,7 +26,7 @@
 #
 # Run this script inside the container:
 #
-#     lxc exec ubuntu -- /root/mirage/build-appimage.sh
+#     lxc exec ubuntu -- /root/mirage/packaging/appimage/build.sh
 #
 # You can also start a shell inside (e.g. if something goes wrong):
 #
