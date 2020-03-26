@@ -18,7 +18,9 @@ cat requirements.flatpak.txt ../../requirements.txt > requirements.txt
 flatpak-env/bin/pip install -Ur requirements.txt
 
 # freeze requirements and ignore blacklisted packages
-flatpak-env/bin/pip freeze | grep -v PyYAML | grep -v six= | grep -v matrix-nio > flatpak-requirements.txt
+flatpak-env/bin/pip freeze | \
+    grep -v PyYAML | grep -v six= | \
+    grep -v matrix-nio > flatpak-requirements.txt
 
 # generate flatpak requirements
 flatpak-env/bin/python flatpak-pip-generator --output flatpak-pip \

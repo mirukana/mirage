@@ -714,3 +714,7 @@ modules:
   sources:
   - type: dir
     path: ../..
+    skip:
+      - build
+      - .git
+      - .flatpak-builder
