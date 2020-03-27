@@ -196,18 +196,7 @@ HColumnLayout {
                     return
                 }
 
-                if (eventContent.selectedText) {
-                    Clipboard.text = eventContent.selectedText
-                    return
-                }
-
-                const contents = []
-
-                for (const model of eventList.getSortedCheckedDelegates()) {
-                    contents.push(JSON.parse(model.source).body)
-                }
-
-                Clipboard.text = contents.join("\n\n")
+                eventList.copySelectedDelegates()
             }
         }
 

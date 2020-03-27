@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
+import Clipboard 0.1
 import "../../.."
 import "../../../Base"
 
@@ -77,7 +78,23 @@ Rectangle {
             width < theme.chat.eventList.ownEventsOnRightUnderWidth
 
         property string delegateWithSelectedText: ""
+        property string selectedText: ""
 
+
+        function copySelectedDelegates() {
+            if (eventList.selectedText) {
+                Clipboard.text = eventList.selectedText
+                return
+            }
+
+            const contents = []
+
+            for (const model of eventList.getSortedCheckedDelegates()) {
+                contents.push(JSON.parse(model.source).body)
+            }
+
+            Clipboard.text = contents.join("\n\n")
+        }
 
         function canCombine(item, itemAfter) {
             if (! item || ! itemAfter) return false

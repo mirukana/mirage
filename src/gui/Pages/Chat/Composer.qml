@@ -18,7 +18,7 @@ Rectangle {
     Layout.maximumHeight: pageLoader.height / 2
 
 
-    property Item eventList
+    property HListView eventList
 
     property string indent: "    "
 
@@ -165,11 +165,6 @@ Rectangle {
                 }
             }
 
-            // XXX
-            // area.onSelectedTextChanged: if (area.selectedText && eventList) {
-                // eventList.selectableLabelContainer.clearSelection()
-            // }
-
             Component.onCompleted: {
                 area.Keys.onReturnPressed.connect(ev => {
                     ev.accepted = true
@@ -207,16 +202,15 @@ Rectangle {
                 })
 
                 area.Keys.onPressed.connect(ev => {
-                    // XXX
-                    // if (ev.matches(StandardKey.Copy) &&
-                    //     eventList &&
-                    //     eventList.selectableLabelContainer.joinedSelection
-                    // ) {
-                    //     ev.accepted = true
-                    //     Clipboard.text =
-                    //         eventList.selectableLabelContainer.joinedSelection
-                    //     return
-                    // }
+                    if (ev.matches(StandardKey.Copy) &&
+                            ! area.selectedText &&
+                            eventList &&
+                            eventList.selectedCount) {
+
+                        ev.accepted = true
+                        eventList.copySelectedDelegates()
+                        return
+                    }
 
                     // FIXME: buggy
                     // if (ev.modifiers === Qt.NoModifier &&

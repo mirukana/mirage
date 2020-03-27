@@ -162,8 +162,13 @@ HRowLayout {
             Layout.maximumWidth: eventContent.maxMessageWidth
             Layout.fillWidth: true
 
-            onSelectedTextChanged:
-                if (selectedText) eventList.delegateWithSelectedText = model.id
+            onSelectedTextChanged: if (selectedText) {
+                eventList.delegateWithSelectedText = model.id
+                eventList.selectedText             = selectedText
+            } else if (eventList.delegateWithSelectedText === model.id) {
+                eventList.delegateWithSelectedText = ""
+                eventList.selectedText             = ""
+            }
 
             Connections {
                 target: eventList

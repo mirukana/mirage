@@ -81,7 +81,7 @@ HColumnPage {
 
     Composer {
         id: composer
-        eventList: loadEventList ? eventListLoader.item : null
+        eventList: loadEventList ? eventListLoader.item.eventList : null
         visible:
             ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
     }
