@@ -159,56 +159,10 @@ Rectangle {
         }
     }
 
-
     HNoticePage {
         text: qsTr("No messages to show yet")
 
         visible: eventList.model.count < 1
         anchors.fill: parent
-    }
-
-    DragHandler {
-        target: null
-        onActiveChanged: if (! active) dragFlicker.speed = 0
-        onCentroidChanged: {
-            const left  = centroid.pressedButtons & Qt.LeftButton
-            const vel   = centroid.velocity.y
-            const pos   = centroid.position.y
-            const dist  = Math.min(eventList.height / 4, 50)
-            const boost = 20 * (pos < dist ?  -pos : -(height - pos))
-
-            dragFlicker.speed =
-                left && vel && pos < dist          ? 1000 + boost :
-                left && vel && pos > height - dist ? -1000 + -boost :
-                0
-        }
-    }
-
-    Timer {
-        id: dragFlicker
-        interval: 100
-        running: speed !== 0
-        repeat: true
-
-        onTriggered: {
-            if (eventList.verticalOvershoot !== 0) return
-            if (speed < 0 && eventList.atYEnd) return
-            if (eventList.atYBeggining) {
-                if (bouncedStart) { return } else { bouncedStart = true }
-            }
-
-            eventList.flick(0, speed * acceleration)
-            acceleration = Math.min(8, acceleration * 1.05)
-        }
-        onRunningChanged: if (! running) {
-            acceleration = 1.0
-            bouncedStart = false
-            eventList.cancelFlick()
-            eventList.returnToBounds()
-        }
-
-        property real speed: 0.0
-        property real acceleration: 1.0
-        property bool bouncedStart: false
     }
 }
