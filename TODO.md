@@ -1,6 +1,5 @@
 # TODO
 
-- show "copy selection" when right clicking on image
 - make it not select messages when closing context menu
 - long-press-drag to select multiple messages on touch
 - drag to select on non-touch

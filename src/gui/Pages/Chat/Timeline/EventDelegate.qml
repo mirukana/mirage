@@ -188,8 +188,15 @@ HColumnLayout {
 
         HMenuItem {
             icon.name: "copy-text"
-            text: qsTr("Copy text")
-            visible: ! copyLink.visible && ! copyMedia.visible
+            text:
+                eventList.selectedCount ?
+                qsTr("Copy selection") :
+
+                copyMedia.visible ?
+                qsTr("Copy filename") :
+
+                qsTr("Copy text")
+
             onTriggered: {
                 if (! eventList.selectedCount) {
                     Clipboard.text = JSON.parse(model.source).body
