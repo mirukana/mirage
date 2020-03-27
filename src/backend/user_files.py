@@ -270,7 +270,7 @@ class UISettings(JSONDataFile):
                     "10": "Alt+0",
                 },
 
-                "unfocusOrUnselectAllMessages": ["Escape"],
+                "unfocusOrDeselectAllMessages": ["Escape"],
                 "focusPreviousMessage":         ["Ctrl+Up", "Ctrl+K"],
                 "focusNextMessage":             ["Ctrl+Down", "Ctrl+J"],
                 "toggleSelectMessage":          ["Ctrl+Space"],

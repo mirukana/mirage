@@ -144,14 +144,14 @@ HColumnLayout {
 
         HMenuItem {
             icon.name: "toggle-select-message"
-            text: eventDelegate.checked ? qsTr("Unselect") : qsTr("Select")
+            text: eventDelegate.checked ? qsTr("Deselect") : qsTr("Select")
             onTriggered: eventDelegate.toggleChecked()
         }
 
         HMenuItem {
             visible: eventList.selectedCount >= 2
-            icon.name: "unselect-all-messages"
-            text: qsTr("Unselect all")
+            icon.name: "deselect-all-messages"
+            text: qsTr("Deselect all")
             onTriggered: eventList.checked = {}
         }
 

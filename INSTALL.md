@@ -5,6 +5,8 @@ but compiling on Windows and macOS should be possible with the right tools.
 
 - [Releases](#releases)
   - [Linux](#linux)
+    - [AppImage](#appimage)
+    - [Flatpak](#flatpak)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -18,36 +20,49 @@ but compiling on Windows and macOS should be possible with the right tools.
   - [Installing PyOtherSide manually](#installing-pyotherside-manually)
   - [Installing libolm manually](#installing-libolm-manually)
   - [Installing Mirage](#installing-mirage)
-- [Common issues](#common-issues)
-  - [cffi version mismatch](#cffi-version-mismatch)
-  - [Component is not ready](#component-is-not-ready)
+  - [Common issues](#common-issues)
+    - [cffi version mismatch](#cffi-version-mismatch)
+    - [Component is not ready](#component-is-not-ready)
 
 
 ## Releases
 
 ### Linux
 
-For **x86 64bit glibc-based systems**, Mirage is available as an **AppImage**
-on the [release page](https://github.com/mirukana/mirage/releases).  
-For other architectures and musl-based distros, see the 
-[manual installation section](#manual-installation).
+For developement, or if none of the release options are satisfying, 
+see [manual installation](#manual-installation).
+
+#### AppImage
+
+For **x86 64bit glibc-based systems**, Mirage is available as an AppImage
+on the [release page](https://github.com/mirukana/mirage/releases).
 
 AppImages are single executable files that contain the app and all 
 its dependencies.  
 Mirage images are built in Ubuntu 16.04, and should therefore run on any distro
-released in 2016 or later.
+released in April 2016 or later.
 
-To run from a terminal:
+[How to start AppImages](https://docs.appimage.org/introduction/quickstart.html#how-to-run-an-appimage)
+(TL;DR: `chmod +x Mirage-*.AppImage && ./Mirage-*.AppImage`)
+
+#### Flatpak
+
+For **x86 32bit or musl-based systems**, Mirage is also available
+as a Flatpak
+on the [release page](https://github.com/mirukana/mirage/releases).  
+
+To install and run it:
 
 ```sh
-chmod +x Mirage-x86_64.AppImage
-./Mirage-x86_64.AppImage
+    flatpak install --user flathub org.kde.Platform//5.12 mirage-*.flatpak
+    flatpak run io.github.mirukana.mirage
 ```
 
-To run from a file manager, give executable permission in the file's
-properties and double-click to launch.  
-[More detailed instructions](https://docs.appimage.org/introduction/quickstart.html#ref-quickstart)
+If the download fails for some reason, run `flatpak repair` before retrying.
 
+For **other architectures**, clone the repository and see
+[packaging/flatpak/README.md](packaging/flatpak/README.md) to build the
+package on your machine.
 
 ## Manual Installation
 
@@ -217,7 +232,7 @@ sudo make install
 ```
 
 
-## Installing Mirage
+### Installing Mirage
 
 After following the above sections instructions depending on your system,
 clone the repository, install the python dependencies, compile and install:
@@ -239,9 +254,9 @@ if you have trouble installing it.
 If everything went fine, run `mirage` to start.
 
 
-## Common Issues
+### Common Issues
 
-### cffi version mismatch
+#### cffi version mismatch
 
 When installing the python dependencies, if you get a version mismatch error
 related to `cffi`, try:
@@ -250,7 +265,7 @@ related to `cffi`, try:
 pip3 install --user --upgrade --force-reinstall cffi
 ```
 
-### Component is not ready
+#### Component is not ready
 
 If the application doesn't start when you run `mirage` and shows a 
 `QQmlComponent: Component is not ready` message in the terminal,
