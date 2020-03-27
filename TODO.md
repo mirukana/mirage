@@ -1,21 +1,5 @@
 # TODO
 
-- Long-press-drag to select multiple messages on touch
-- Drag to select multiple messages on non-touch
-
-- Drag-scrolling in room pane a tiny bit activates the delegates
-
-## Goals before 0.5.0
-
-- Redacting messages
-- Download progress bar for file events, "Save as..."
-- Make rooms fully manageable within Mirage: settings, permissions, kick, etc
-
-- Add AppImage metadata file
-- Pillow now bundle image libraries?
-  Update AppImage building script and INSTALL.md
-- Publish on Flathub and AppImageHub
-
 ## Refactoring
 
 - Put keybindings in the components they belong to instead of shoving them
@@ -34,11 +18,10 @@
 - Drop the `HBox` `buttonModel`/`buttonCallbacks` `HBox` approach,
   be more declarative
 
-- Look into Kirigami for QML
-
 ## Issues
 
-- If names are mentioned with a different case, they look like normal links
+- Drag-scrolling in room pane a tiny bit activates the delegates
+
 - When zooming in enough, "Mirage <version>" label overflows
 
 - Catch server 5xx errors when sending message and retry 
@@ -57,7 +40,6 @@
   in room "last message" subtitle
 
 - `Timer` and `Animation` are bound to framerate
-- Terrible performance using `QT_QPA_PLATFORM=wayland-egl`, must use `xcb`
 - Can't use `QQmlApplicationEngine`, problem with QApplication?
   See https://bugreports.qt.io/browse/QTBUG-50992
 - [HTML <hr> not rendered](https://bugreports.qt.io/browse/QTBUG-74342)
@@ -66,8 +48,13 @@
 
 ## Interface
 
+- Long-press-drag to select multiple messages on touch
+- Drag to select multiple messages on non-touch
+
+- Redacting messages
 - Make clicking on user/room mentions open relevant UI instead of matrix.to
   URL in browser
+- Make rooms fully manageable within Mirage: settings, permissions, kick, etc
 
 - Labeled text area component, use it for room creation/settings topic 
   - Linkify URLs in topic text areas
@@ -104,7 +91,7 @@
 
 - Device settings
 - Replies
-- Messages editing and redaction
+- Messages editing
 - Code highlighting
 - Adapt shortcuts flicking speed to font size 
 
@@ -137,6 +124,8 @@
 
 ## Media-related
 
+- UI for download progress (using `Transfer` like for uploads)
+
 - Add upload keybindings (close failed upload, pause, resume)
 - Handle errors when setting an avatar
 - Show confirmation box when picking file to upload or uploading from clipboard
@@ -145,7 +134,6 @@
 - Sentinel function to report local file paths for already downloaded media,
   without having to click and try downloading first
 - EventFile "Save as..." context menu entry
-- UI for download progress (using `Transfer` like for uploads)
 
 - Show a reason or HTTP error code for thumbnails that fail to load
 - Support `m.file` thumbnails
@@ -214,7 +202,12 @@
 
 ## Distribution and dependencies
 
-- Update to Mistune v2.0
+- Add AppImage metadata file
+- Pillow now bundle image libraries?
+  Update AppImage building script and INSTALL.md
+- Publish on Flathub and AppImageHub
+
+- Update to Mistune v2.0 when released
 
 ## Notable changes for future Qt version upgrade
 
