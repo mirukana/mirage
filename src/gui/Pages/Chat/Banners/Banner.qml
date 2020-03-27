@@ -39,6 +39,7 @@ Rectangle {
                 HUserAvatar {
                     id: bannerAvatar
                     anchors.centerIn: parent
+                    radius: 0
                 }
             }
 
