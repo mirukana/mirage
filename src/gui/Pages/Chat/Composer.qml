@@ -205,7 +205,8 @@ Rectangle {
                     if (ev.matches(StandardKey.Copy) &&
                             ! area.selectedText &&
                             eventList &&
-                            eventList.selectedCount) {
+                            (eventList.selectedCount ||
+                             eventList.currentIndex !== -1)) {
 
                         ev.accepted = true
                         eventList.copySelectedDelegates()

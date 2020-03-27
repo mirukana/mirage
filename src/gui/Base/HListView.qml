@@ -77,14 +77,12 @@ ListView {
 
 
     function delegatesChecked(...indices) {
-        print( indices)
         for (const i of indices) {
             const model = listView.model.get(i)
             checkedDelegates[model.id] = model
         }
 
         lastCheckedDelegateIndex = indices.slice(-1)[0]
-
         checkedDelegatesChanged()
     }
 
@@ -98,6 +96,27 @@ ListView {
             const model = listView.model.get(i)
             delete checkedDelegates[model.id]
         }
+
+        checkedDelegatesChanged()
+    }
+
+    function toggleCheck(...indices) {
+        const checkedIndices = []
+
+        for (const i of indices) {
+            const model = listView.model.get(i)
+
+            if (model.id in checkedDelegates) {
+                delete checkedDelegates[model.id]
+            } else {
+                checkedDelegates[model.id] = model
+                checkedIndices.push(i)
+            }
+        }
+
+        if (checkedIndices.length > 0)
+            lastCheckedDelegateIndex = checkedIndices.slice(-1)[0]
+
         checkedDelegatesChanged()
     }
 

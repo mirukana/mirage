@@ -270,8 +270,14 @@ class UISettings(JSONDataFile):
                     "10": "Alt+0",
                 },
 
-                "unselectAllMessages":         ["Escape"],
-                "clearRoomMessages":           ["Ctrl+L"],
+                "unfocusOrUnselectAllMessages": ["Escape"],
+                "focusPreviousMessage":         ["Ctrl+Up", "Ctrl+K"],
+                "focusNextMessage":             ["Ctrl+Down", "Ctrl+J"],
+                "toggleSelectMessage":          ["Ctrl+Space"],
+                "selectMessagesUntilHere":      ["Ctrl+Shift+Space"],
+                "debugFocusedMessage":          ["Ctrl+D"],
+                "clearRoomMessages":            ["Ctrl+L"],
+
                 "sendFile":                    ["Alt+S"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+S"],
 

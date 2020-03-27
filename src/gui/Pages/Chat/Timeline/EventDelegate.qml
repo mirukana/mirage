@@ -57,6 +57,8 @@ HColumnLayout {
             combine   ? theme.spacing / (compact ? 4 : 2) :
             theme.spacing * (compact ? 1 : 2)
 
+    readonly property alias eventContent: eventContent
+
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
     onCursorShapeChanged: eventList.cursorShape = cursorShape
@@ -209,7 +211,7 @@ HColumnLayout {
                 qsTr("Copy text")
 
             onTriggered: {
-                if (! eventList.selectedCount) {
+                if (! eventList.selectedCount && eventList.currentItem === -1){
                     Clipboard.text = JSON.parse(model.source).body
                     return
                 }

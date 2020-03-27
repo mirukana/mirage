@@ -15,13 +15,51 @@ Rectangle {
 
 
     HShortcut {
-        sequences: window.settings.keys.unselectAllMessages
-        onActivated: eventList.checkedDelegates = {}
+        sequences: window.settings.keys.unfocusOrUnselectAllMessages
+        onActivated: {
+            eventList.currentIndex !== -1 ?
+            eventList.currentIndex = -1 :
+            eventList.checkedDelegates = {}
+        }
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.focusPreviousMessage
+        onActivated: eventList.incrementCurrentIndex()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.focusNextMessage
+        onActivated:
+            eventList.currentIndex === 0 ?
+            eventList.currentIndex = -1 :
+            eventList.decrementCurrentIndex()
+    }
+
+    HShortcut {
+        enabled: eventList.currentItem
+        sequences: window.settings.keys.toggleSelectMessage
+        onActivated: eventList.toggleCheck(eventList.currentIndex)
+    }
+
+    HShortcut {
+        enabled: eventList.currentItem
+        sequences: window.settings.keys.selectMessagesUntilHere
+        onActivated:
+            eventList.delegatesFromLastToHereChecked(eventList.currentIndex)
+    }
+
+    HShortcut {
+        enabled: eventList.currentItem
+        sequences: window.settings.keys.debugFocusedMessage
+        onActivated:
+            eventList.currentItem.eventContent.debugConsoleLoader.toggle()
     }
 
     HListView {
         id: eventList
         clip: true
+        keyNavigationWraps: false
 
         anchors.fill: parent
         anchors.leftMargin: theme.spacing
@@ -84,6 +122,13 @@ Rectangle {
         function copySelectedDelegates() {
             if (eventList.selectedText) {
                 Clipboard.text = eventList.selectedText
+                return
+            }
+
+            if (! eventList.selectedCount && eventList.currentIndex !== -1) {
+                Clipboard.text = JSON.parse(
+                    eventList.model.get(eventList.currentIndex).source
+                ).body
                 return
             }
 
