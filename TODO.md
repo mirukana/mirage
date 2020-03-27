@@ -1,14 +1,10 @@
 # TODO
 
-- make it not select messages when closing context menu
-- long-press-drag to select multiple messages on touch
-- drag to select on non-touch
-- shift+click to select everything in between
+- Long-press-drag to select multiple messages on touch
+- Drag to select multiple messages on non-touch
+- Shift+click to select everything in between
 
-- remove radius on invite/left banner
-- side pane back/forward buttons hard to use on touch
-- is it still slow on sway with wayland-egl?
-- room pane drag-scroll a tiny bit activates the delegates
+- Drag-scrolling in room pane a tiny bit activates the delegates
 
 ## Goals before 0.5.0
 
@@ -90,7 +86,6 @@
 - Remember the previously focused item in page for ctrl+tab 
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
 - Improve when HDrawer should collapse when the ui is zoomed
-- Way to open context menus without a right mouse button
 - Make room invite/left banner buttons look better
 
 - Choose a better easing types for animations

@@ -5,6 +5,8 @@ import QtQuick.Controls 2.12
 
 Menu {
     id: menu
+    modal: true
+    dim: false
     padding: theme.controls.menu.borderWidth
 
     implicitWidth: {
