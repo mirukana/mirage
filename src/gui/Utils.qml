@@ -163,13 +163,19 @@ QtObject {
     }
 
 
-    function escapeHtml(string) {
+    function escapeHtml(text) {
         // Replace special HTML characters by encoded alternatives
-        return string.replace("&", "&amp;")
-                     .replace("<", "&lt;")
-                     .replace(">", "&gt;")
-                     .replace('"', "&quot;")
-                     .replace("'", "&#039;")
+        return text.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace('"', "&quot;")
+                    .replace("'", "&#039;")
+    }
+
+
+    function stripHtmlTags(text) {
+        // XXX: Potentially unsafe!
+        return text.replace(/<\/?[^>]+(>|$)/g, "")
     }
 
 

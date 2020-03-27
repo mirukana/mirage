@@ -126,9 +126,14 @@ Rectangle {
             }
 
             if (! eventList.selectedCount && eventList.currentIndex !== -1) {
-                Clipboard.text = JSON.parse(
-                    eventList.model.get(eventList.currentIndex).source
-                ).body
+                const model  = eventList.model.get(eventList.currentIndex)
+                const source = JSON.parse(model.source)
+
+                Clipboard.text =
+                    "body" in source ?
+                    source.body :
+                    utils.stripHtmlTags(utils.processedEventText(model))
+
                 return
             }
 
