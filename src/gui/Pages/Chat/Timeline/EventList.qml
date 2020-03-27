@@ -19,7 +19,7 @@ Rectangle {
         onActivated: {
             eventList.currentIndex !== -1 ?
             eventList.currentIndex = -1 :
-            eventList.checkedDelegates = {}
+            eventList.checked = {}
         }
     }
 
@@ -46,7 +46,7 @@ Rectangle {
         enabled: eventList.currentItem
         sequences: window.settings.keys.selectMessagesUntilHere
         onActivated:
-            eventList.delegatesFromLastToHereChecked(eventList.currentIndex)
+            eventList.checkFromLastToHere(eventList.currentIndex)
     }
 
     HShortcut {
@@ -139,7 +139,7 @@ Rectangle {
 
             const contents = []
 
-            for (const model of eventList.getSortedCheckedDelegates()) {
+            for (const model of eventList.getSortedChecked()) {
                 contents.push(JSON.parse(model.source).body)
             }
 

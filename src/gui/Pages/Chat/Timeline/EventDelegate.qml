@@ -10,7 +10,7 @@ HColumnLayout {
     id: eventDelegate
     width: eventList.width
 
-    ListView.onRemove: eventList.delegatesUnchecked(model.id)
+    ListView.onRemove: eventList.uncheck(model.id)
 
 
     enum Media { Page, File, Image, Video, Audio }
@@ -22,7 +22,7 @@ HColumnLayout {
     readonly property var nextModel: eventList.model.get(model.index - 1)
     readonly property QtObject currentModel: model
 
-    property bool checked: model.id in eventList.checkedDelegates
+    property bool checked: model.id in eventList.checked
     property bool compact: window.settings.compactMode
     property bool isOwn: chat.userId === model.sender_id
     property bool onRight: eventList.ownEventsOnRight && isOwn
@@ -79,9 +79,7 @@ HColumnLayout {
     }
 
     function toggleChecked() {
-        eventDelegate.checked ?
-        eventList.delegatesUnchecked(model.index) :
-        eventList.delegatesChecked(model.index)
+        eventList.toggleCheck(model.index)
     }
 
 
@@ -122,7 +120,7 @@ HColumnLayout {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         acceptedModifiers: Qt.ShiftModifier
-        onTapped: eventList.delegatesFromLastToHereChecked(model.index)
+        onTapped: eventList.checkFromLastToHere(model.index)
     }
 
     TapHandler {
@@ -154,14 +152,14 @@ HColumnLayout {
             visible: eventList.selectedCount >= 2
             icon.name: "unselect-all-messages"
             text: qsTr("Unselect all")
-            onTriggered: eventList.checkedDelegates = {}
+            onTriggered: eventList.checked = {}
         }
 
         HMenuItem {
             visible: model.index !== 0
             icon.name: "select-until-here"
             text: qsTr("Select until here")
-            onTriggered: eventList.delegatesFromLastToHereChecked(model.index)
+            onTriggered: eventList.checkFromLastToHere(model.index)
         }
 
         HMenuItem {

@@ -172,7 +172,7 @@ HRowLayout {
 
             Connections {
                 target: eventList
-                onCheckedDelegatesChanged: contentLabel.deselect()
+                onCheckedChanged: contentLabel.deselect()
                 onDelegateWithSelectedTextChanged:
                     if (eventList.delegateWithSelectedText !== model.id)
                         contentLabel.deselect()
@@ -193,14 +193,14 @@ HRowLayout {
                             (! parent.hoveredLink ||
                             ! parent.enableLinkActivation)) {
 
-                        eventList.delegatesChecked(model.index)
+                        eventList.check(model.index)
                         checkedNow = true
                     }
 
                     if (! active && eventDelegate.checked) {
                         checkedNow ?
                         checkedNow = false :
-                        eventList.delegatesUnchecked(model.index)
+                        eventList.uncheck(model.index)
                     }
                 }
 
@@ -220,7 +220,7 @@ HRowLayout {
                             (! parent.hoveredLink ||
                             ! parent.enableLinkActivation)) {
 
-                        eventList.delegatesFromLastToHereChecked(model.index)
+                        eventList.checkFromLastToHere(model.index)
                     }
                 }
             }

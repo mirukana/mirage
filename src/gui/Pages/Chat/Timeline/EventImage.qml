@@ -94,7 +94,7 @@ HMxcImage {
     TapHandler {
         acceptedModifiers: Qt.ShiftModifier
         onTapped:
-            eventList.delegatesFromLastToHereChecked(singleMediaInfo.index)
+            eventList.checkFromLastToHere(singleMediaInfo.index)
 
         gesturePolicy: TapHandler.ReleaseWithinBounds
     }

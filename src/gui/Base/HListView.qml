@@ -71,33 +71,33 @@ ListView {
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
-    property var checkedDelegates: ({})
+    property var checked: ({})
     property int lastCheckedDelegateIndex: 0
-    property int selectedCount: Object.keys(checkedDelegates).length
+    property int selectedCount: Object.keys(checked).length
 
 
-    function delegatesChecked(...indices) {
+    function check(...indices) {
         for (const i of indices) {
             const model = listView.model.get(i)
-            checkedDelegates[model.id] = model
+            checked[model.id] = model
         }
 
         lastCheckedDelegateIndex = indices.slice(-1)[0]
-        checkedDelegatesChanged()
+        checkedChanged()
     }
 
-    function delegatesFromLastToHereChecked(here) {
+    function checkFromLastToHere(here) {
         const indices = utils.range(lastCheckedDelegateIndex, here)
-        eventList.delegatesChecked(...indices)
+        eventList.check(...indices)
     }
 
-    function delegatesUnchecked(...indices) {
+    function uncheck(...indices) {
         for (const i of indices) {
             const model = listView.model.get(i)
-            delete checkedDelegates[model.id]
+            delete checked[model.id]
         }
 
-        checkedDelegatesChanged()
+        checkedChanged()
     }
 
     function toggleCheck(...indices) {
@@ -106,10 +106,10 @@ ListView {
         for (const i of indices) {
             const model = listView.model.get(i)
 
-            if (model.id in checkedDelegates) {
-                delete checkedDelegates[model.id]
+            if (model.id in checked) {
+                delete checked[model.id]
             } else {
-                checkedDelegates[model.id] = model
+                checked[model.id] = model
                 checkedIndices.push(i)
             }
         }
@@ -117,11 +117,11 @@ ListView {
         if (checkedIndices.length > 0)
             lastCheckedDelegateIndex = checkedIndices.slice(-1)[0]
 
-        checkedDelegatesChanged()
+        checkedChanged()
     }
 
-    function getSortedCheckedDelegates() {
-        return Object.values(checkedDelegates).sort(
+    function getSortedChecked() {
+        return Object.values(checked).sort(
             (a, b) => a.date > b.date ? 1 : -1
         )
     }

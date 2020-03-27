@@ -1,5 +1,6 @@
 # TODO
 
+- focus color
 - Long-press-drag to select multiple messages on touch
 - Drag to select multiple messages on non-touch
 
