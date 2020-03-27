@@ -183,6 +183,7 @@ HRowLayout {
             PointHandler {
                 id: mousePointHandler
                 acceptedButtons: Qt.LeftButton
+                acceptedModifiers: Qt.NoModifier
                 acceptedPointerTypes:
                     PointerDevice.GenericPointer | PointerDevice.Eraser
 
@@ -204,6 +205,24 @@ HRowLayout {
                 }
 
                 property bool checkedNow: false
+            }
+
+            PointHandler {
+                id: mouseShiftPointHandler
+                acceptedButtons: Qt.LeftButton
+                acceptedModifiers: Qt.ShiftModifier
+                acceptedPointerTypes:
+                    PointerDevice.GenericPointer | PointerDevice.Eraser
+
+                onActiveChanged: {
+                    if (active &&
+                            ! eventDelegate.checked &&
+                            (! parent.hoveredLink ||
+                            ! parent.enableLinkActivation)) {
+
+                        eventList.delegatesFromLastToHereChecked(model.index)
+                    }
+                }
             }
 
             TapHandler {
@@ -234,7 +253,8 @@ HRowLayout {
                 z: -100
                 color: eventDelegate.checked &&
                        ! contentLabel.selectedText &&
-                       ! mousePointHandler.active ?
+                       ! mousePointHandler.active &&
+                       ! mouseShiftPointHandler.active ?
                        theme.chat.message.checkedBackground :
 
                        isOwn?

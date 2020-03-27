@@ -64,20 +64,33 @@ ListView {
         }
     }
 
+    onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
+
 
     property bool allowDragging: true
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
+
     property var checkedDelegates: ({})
+    property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checkedDelegates).length
 
 
     function delegatesChecked(...indices) {
+        print( indices)
         for (const i of indices) {
             const model = listView.model.get(i)
             checkedDelegates[model.id] = model
         }
+
+        lastCheckedDelegateIndex = indices.slice(-1)[0]
+
         checkedDelegatesChanged()
+    }
+
+    function delegatesFromLastToHereChecked(here) {
+        const indices = utils.range(lastCheckedDelegateIndex, here)
+        eventList.delegatesChecked(...indices)
     }
 
     function delegatesUnchecked(...indices) {

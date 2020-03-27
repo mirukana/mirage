@@ -83,9 +83,18 @@ HMxcImage {
 
 
     TapHandler {
+        acceptedModifiers: Qt.NoModifier
         onTapped:
             eventList.selectedCount ?
             eventDelegate.toggleChecked() : getOpenUrl(Qt.openUrlExternally)
+
+        gesturePolicy: TapHandler.ReleaseWithinBounds
+    }
+
+    TapHandler {
+        acceptedModifiers: Qt.ShiftModifier
+        onTapped:
+            eventList.delegatesFromLastToHereChecked(singleMediaInfo.index)
 
         gesturePolicy: TapHandler.ReleaseWithinBounds
     }

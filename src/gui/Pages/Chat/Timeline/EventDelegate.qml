@@ -57,8 +57,6 @@ HColumnLayout {
             combine   ? theme.spacing / (compact ? 4 : 2) :
             theme.spacing * (compact ? 1 : 2)
 
-    readonly property alias leftTapHandler: leftTapHandler
-
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
     onCursorShapeChanged: eventList.cursorShape = cursorShape
@@ -114,9 +112,15 @@ HColumnLayout {
     }
 
     TapHandler {
-        id: leftTapHandler
         acceptedButtons: Qt.LeftButton
+        acceptedModifiers: Qt.NoModifier
         onTapped: toggleChecked()
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        acceptedModifiers: Qt.ShiftModifier
+        onTapped: eventList.delegatesFromLastToHereChecked(model.index)
     }
 
     TapHandler {
@@ -149,6 +153,13 @@ HColumnLayout {
             icon.name: "unselect-all-messages"
             text: qsTr("Unselect all")
             onTriggered: eventList.checkedDelegates = {}
+        }
+
+        HMenuItem {
+            visible: model.index !== 0
+            icon.name: "select-until-here"
+            text: qsTr("Select until here")
+            onTriggered: eventList.delegatesFromLastToHereChecked(model.index)
         }
 
         HMenuItem {

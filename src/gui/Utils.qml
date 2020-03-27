@@ -83,6 +83,26 @@ QtObject {
     }
 
 
+    function range(startOrEnd, end=null, ) {
+        // range(3) → [0, 1, 2, 3]
+        // range(3, 6) → [3, 4, 5, 6]
+        // range(3, -1) → [3, 2, 1, 0, -1]
+
+        const numbers = []
+        let realStart = end ? startOrEnd : 0
+        let realEnd   = end ? end : startOrEnd
+
+        if (realEnd < realStart)
+            for (let i = realStart;  i >= realEnd; i--)
+                numbers.push(i)
+        else
+            for (let i = realStart;  i <= realEnd; i++)
+                numbers.push(i)
+
+        return numbers
+    }
+
+
     function isEmptyObject(obj) {
         return Object.entries(obj).length === 0 && obj.constructor === Object
     }

@@ -2,7 +2,6 @@
 
 - Long-press-drag to select multiple messages on touch
 - Drag to select multiple messages on non-touch
-- Shift+click to select everything in between
 
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
