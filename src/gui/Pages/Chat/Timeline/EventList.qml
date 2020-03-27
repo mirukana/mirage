@@ -76,6 +76,8 @@ Rectangle {
         property bool ownEventsOnRight:
             width < theme.chat.eventList.ownEventsOnRightUnderWidth
 
+        property string delegateWithSelectedText: ""
+
 
         function canCombine(item, itemAfter) {
             if (! item || ! itemAfter) return false

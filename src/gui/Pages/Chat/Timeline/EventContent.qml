@@ -67,6 +67,8 @@ HRowLayout {
 
     readonly property alias debugConsoleLoader: debugConsoleLoader
 
+    readonly property alias selectedText: contentLabel.selectedText
+
 
     DebugConsoleLoader {
         id: debugConsoleLoader
@@ -112,7 +114,10 @@ HRowLayout {
             visible: ! pureMedia
             enableLinkActivation: ! eventList.selectedCount
 
-            // selectByMouse: eventDelegate.checked  XXX
+            selectByMouse:
+                eventList.selectedCount <= 1 &&
+                eventDelegate.checked &&
+                textSelectionBlocker.point.scenePosition === Qt.point(0, 0)
 
             topPadding: theme.chat.message.verticalSpacing
             bottomPadding: topPadding
@@ -157,25 +162,61 @@ HRowLayout {
             Layout.maximumWidth: eventContent.maxMessageWidth
             Layout.fillWidth: true
 
-            function selectAllText() {
-                // Select the message body without the date or name
-                contentLabel.select(
-                    0,
-                    contentLabel.length -
-                    timeText.length - 1  // - 1: separating space
-                )
+            onSelectedTextChanged:
+                if (selectedText) eventList.delegateWithSelectedText = model.id
+
+            Connections {
+                target: eventList
+                onCheckedDelegatesChanged: contentLabel.deselect()
+                onDelegateWithSelectedTextChanged:
+                    if (eventList.delegateWithSelectedText !== model.id)
+                        contentLabel.deselect()
             }
 
             HoverHandler { id: contentHover }
 
-            TapHandler {
+            PointHandler {
+                id: mousePointHandler
                 acceptedButtons: Qt.LeftButton
+                acceptedPointerTypes:
+                    PointerDevice.GenericPointer | PointerDevice.Eraser
+
+                onActiveChanged: {
+                    if (active &&
+                            ! eventDelegate.checked &&
+                            (! parent.hoveredLink ||
+                            ! parent.enableLinkActivation)) {
+
+                        eventList.delegatesChecked(model.index)
+                        checkedNow = true
+                    }
+
+                    if (! active && eventDelegate.checked) {
+                        checkedNow ?
+                        checkedNow = false :
+                        eventList.delegatesUnchecked(model.index)
+                    }
+                }
+
+                property bool checkedNow: false
+            }
+
+            TapHandler {
+                id: touchTapHandler
+                acceptedButtons: Qt.LeftButton
+                acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
                 onTapped:
                     if (! parent.hoveredLink || ! parent.enableLinkActivation)
                         eventDelegate.toggleChecked()
             }
 
+            TapHandler {
+                id: textSelectionBlocker
+                acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
+            }
+
             Rectangle {
+                id: contentBackground
                 width: Math.max(
                     parent.paintedWidth +
                     parent.leftPadding + parent.rightPadding,
@@ -186,11 +227,17 @@ HRowLayout {
                 height: contentColumn.height
                 radius: theme.chat.message.radius
                 z: -100
-                color: eventDelegate.checked ?
-                       "blue" :  // XXX
+                color: eventDelegate.checked &&
+                       ! contentLabel.selectedText &&
+                       ! mousePointHandler.active?
+                       "lightseagreen" :  // XXX
+
                        isOwn?
                        theme.chat.message.ownBackground :
+
                        theme.chat.message.background
+
+                Behavior on color { HColorAnimation {} }
 
                 Rectangle {
                     visible: model.event_type === "RoomMessageNotice"

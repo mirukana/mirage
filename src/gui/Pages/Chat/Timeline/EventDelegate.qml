@@ -57,6 +57,8 @@ HColumnLayout {
             combine   ? theme.spacing / (compact ? 4 : 2) :
             theme.spacing * (compact ? 1 : 2)
 
+    readonly property alias leftTapHandler: leftTapHandler
+
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
     onCursorShapeChanged: eventList.cursorShape = cursorShape
@@ -112,6 +114,7 @@ HColumnLayout {
     }
 
     TapHandler {
+        id: leftTapHandler
         acceptedButtons: Qt.LeftButton
         onTapped: toggleChecked()
     }
@@ -190,6 +193,11 @@ HColumnLayout {
             onTriggered: {
                 if (! eventList.selectedCount) {
                     Clipboard.text = JSON.parse(model.source).body
+                    return
+                }
+
+                if (eventContent.selectedText) {
+                    Clipboard.text = eventContent.selectedText
                     return
                 }
 

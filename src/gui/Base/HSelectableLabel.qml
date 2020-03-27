@@ -32,16 +32,6 @@ TextEdit {
     }
 
 
-    // XXX
-    // TapHandler {
-    //     acceptedButtons: Qt.LeftButton
-    //     onTapped: {
-    //         tapCount === 2 ? selectWordAt(eventPoint.position) :
-    //         tapCount === 3 ? selectAllText() :
-    //         null
-    //     }
-    // }
-
     MouseArea {
         anchors.fill: label
         acceptedButtons: Qt.NoButton
