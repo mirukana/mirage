@@ -50,7 +50,7 @@ modules:
     disable-shallow-clone: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
-  
+
   - name: libzen
     subdir: Project/GNU/Library
     config-opts:
@@ -61,7 +61,7 @@ modules:
       - /include
       - /lib/pkgconfig
       - /lib/*.la
-    sources: 
+    sources:
       - type: archive
         url: https://mediaarea.net/download/source/libzen/0.4.37/libzen_0.4.37.tar.xz
         sha256: 38c0a68b715b55d6685d2759eecda040adf37bd066955d79a5d01f91977bd9a0
@@ -85,12 +85,12 @@ modules:
   # Python dependencies
   - name: PLACEHOLDER PYTHON DEPENDENCIES
 
-  # matrix-nio separate 
+  # matrix-nio separate
   - name: python3-matrix-nio
     buildsystem: simple
-    build-commands: 
+    build-commands:
       - pip3 install --prefix=${FLATPAK_DEST} .
-    sources: 
+    sources:
       - type: git
         url: https://github.com/mirukana/matrix-nio.git
         commit: ee2a90da2f1d7ce12df7153dd944fffdaf978787
@@ -110,4 +110,4 @@ modules:
   #   sources:
   #     - type: git
   #       url: https://github.com/mirukana/mirage.git
-  #       tag: v0.4.1
+  #       tag: v0.4.2
