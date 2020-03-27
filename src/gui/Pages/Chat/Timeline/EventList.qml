@@ -145,7 +145,13 @@ Rectangle {
             const contents = []
 
             for (const model of eventList.getSortedChecked()) {
-                contents.push(JSON.parse(model.source).body)
+                const source = JSON.parse(model.source)
+
+                contents.push(
+                    "body" in source ?
+                    source.body :
+                    utils.stripHtmlTags(utils.processedEventText(model))
+                )
             }
 
             Clipboard.text = contents.join("\n\n")
