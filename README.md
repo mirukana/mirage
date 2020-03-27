@@ -62,11 +62,15 @@ See [INSTALL.md](INSTALL.md)
 The config file can be found at *$XDG_CONFIG_HOME/mirage/settings.json*, 
 or *~/.config/mirage/settings.json*.
 
+For Flatpak users, this will be
+*~/.var/app/io.github.mirukana.mirage/config/mirage* instead.
+
 The `theme` setting can be:
 
 - The name of a built-in theme (`Midnight` or `Glass`)
 - The filename without extension of a custom theme at 
-  *$XDG_DATA_HOME/mirage/themes*, or *~/.local/share/mirage/themes*
+  *$XDG_DATA_HOME/mirage/themes*, *~/.local/share/mirage/themes*,
+  or *~/.var/app/io.github.mirukana.mirage/data/mirage/themes* (Flatpak)
 
 A default theme from this repository can be copied to use as a base and edit,
 for example:
@@ -74,6 +78,13 @@ for example:
 ```sh
     cp mirage/src/themes/Midnight.qpl \
        "${XDG_DATA_HOME:-$HOME/.local/share}/mirage/themes/MyTheme.qpl"
+```
+
+Or for Flatpak users:
+
+```sh
+    cp mirage/src/themes/Midnight.qpl \
+       ~/.var/app/io.github.mirukana.mirage/data/mirage/themes/MyTheme.qpl
 ```
 
 The config setting `theme` would need to be set to `MyTheme` in this case.
