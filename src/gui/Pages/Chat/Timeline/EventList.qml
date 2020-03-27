@@ -15,7 +15,7 @@ Rectangle {
 
 
     HShortcut {
-        sequence: "Escape"
+        sequences: window.settings.keys.unselectAllMessages
         onActivated: eventList.checkedDelegates = {}
     }
 

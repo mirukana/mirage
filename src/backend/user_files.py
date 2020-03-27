@@ -270,6 +270,7 @@ class UISettings(JSONDataFile):
                     "10": "Alt+0",
                 },
 
+                "unselectAllMessages":         ["Escape"],
                 "clearRoomMessages":           ["Ctrl+L"],
                 "sendFile":                    ["Alt+S"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+S"],
