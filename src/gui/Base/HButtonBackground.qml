@@ -9,7 +9,7 @@ Rectangle {
              enabled ? 1 : theme.disabledElementsOpacity
 
 
-    property AbstractButton button
+    property var button
     property QtObject buttonTheme
 
 
