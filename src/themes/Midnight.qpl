@@ -47,7 +47,7 @@ colors:
     color strongBackground:
         hsluv(hue, bgSaturation * 2, intensity, opacity)
 
-    color accentBackground:    hsluv(hue, saturation, intensity * 32, 1)
+    color accentBackground:    hsluv(hue, saturation, intensity * 40, 1)
     color accentElement:       hsluv(hue, saturation * 1.5, intensity * 52, 1)
     color strongAccentElement: hsluv(hue, saturation * 1.5, intensity * 72, 1)
 
@@ -356,8 +356,9 @@ chat:
         int horizontalSpacing: theme.spacing / 1.25
         int verticalSpacing:   theme.spacing / 1.75
 
-        color background:    colors.weakBackground
-        color ownBackground: colors.mediumBackground
+        color background:        colors.weakBackground
+        color ownBackground:     colors.mediumBackground
+        color checkedBackground: colors.accentBackground
 
         color body: colors.text
         color date: colors.dimText
@@ -406,6 +407,8 @@ chat:
         // How much of the chat height thumbnails can take at most,
         // by default 0.4 for 40%.
         real thumbnailMaxHeightRatio: 0.4 * Math.min(1, uiScale)
+
+        real thumbnailCheckedOverlayOpacity: 0.4
 
     daybreak:
         color background: colors.mediumBackground

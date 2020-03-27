@@ -49,7 +49,9 @@ HTile {
 
 
     Binding on backgroundColor {
-        value: "blue"  // XXX
+        value: theme.chat.message.checkedBackground
         when: eventDelegate.checked
     }
+
+    Behavior on backgroundColor { HColorAnimation {} }
 }

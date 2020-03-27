@@ -130,9 +130,13 @@ HMxcImage {
 
     Rectangle {
         anchors.fill: parent
-        visible: eventDelegate.checked
-        // XXX
-        color: "blue"
-        opacity: 0.2
+        visible: opacity > 0
+        color: theme.chat.message.checkedBackground
+        opacity:
+            eventDelegate.checked ?
+            theme.chat.message.thumbnailCheckedOverlayOpacity :
+            0
+
+        Behavior on opacity { HNumberAnimation {} }
     }
 }

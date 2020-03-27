@@ -229,8 +229,8 @@ HRowLayout {
                 z: -100
                 color: eventDelegate.checked &&
                        ! contentLabel.selectedText &&
-                       ! mousePointHandler.active?
-                       "lightseagreen" :  // XXX
+                       ! mousePointHandler.active ?
+                       theme.chat.message.checkedBackground :
 
                        isOwn?
                        theme.chat.message.ownBackground :

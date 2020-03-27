@@ -345,6 +345,7 @@ chat:
 
         color background:    colors.mediumBackground
         color ownBackground: colors.strongBackground
+        color checkedBackground: colors.accentBackground
 
         color body: colors.text
         color date: colors.dimText
@@ -393,6 +394,8 @@ chat:
         // How much of the chat height thumbnails can take at most,
         // by default 0.4 for 40%.
         real thumbnailMaxHeightRatio: 0.4 * Math.min(1, uiScale)
+
+        real thumbnailCheckedOverlayOpacity: 0.4
 
     daybreak:
         color background: colors.mediumBackground
