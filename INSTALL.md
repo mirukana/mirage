@@ -47,9 +47,9 @@ released in April 2016 or later.
 
 #### Flatpak
 
-For **x86 32bit or musl-based systems**, Mirage is also available
+For **other architectures or musl-based systems**, Mirage is also available
 as a Flatpak
-on the [release page](https://github.com/mirukana/mirage/releases).  
+on the [release page](https://github.com/mirukana/mirage/releases).
 
 To install and run it:
 
@@ -60,8 +60,8 @@ To install and run it:
 
 If the download fails for some reason, run `flatpak repair` before retrying.
 
-For **other architectures**, clone the repository and see
-[packaging/flatpak/README.md](packaging/flatpak/README.md) to build the
+If your architecture is not listed on the release page, clone the repository
+and see [packaging/flatpak/README.md](packaging/flatpak/README.md) to build the
 package on your machine.
 
 ## Manual Installation
