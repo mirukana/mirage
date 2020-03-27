@@ -76,6 +76,11 @@ Rectangle {
         model: ModelStore.get(chat.userId, chat.roomId, "events")
         delegate: EventDelegate {}
 
+        highlight: Rectangle {
+            color: theme.chat.message.focusedHighlight
+            opacity: theme.chat.message.focusedHighlightOpacity
+        }
+
         // Since the list is BottomToTop, this is actually a header
         footer: Item {
             width: eventList.width
