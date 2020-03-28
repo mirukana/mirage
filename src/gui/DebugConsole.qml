@@ -4,6 +4,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 import "Base"
+import "ShortcutBundles"
 
 HDrawer {
     id: debugConsole
@@ -163,6 +164,11 @@ HDrawer {
 
                     Layout.fillWidth: true
                 }
+            }
+
+            FlickShortcuts {
+                enabled: debugConsole.visible
+                flickable: commandsView
             }
 
             Rectangle {

@@ -70,6 +70,7 @@ Rectangle {
     }
 
     FlickShortcuts {
+        enabled: ! mainUI.debugConsole.visible
         flickable: eventList
     }
 

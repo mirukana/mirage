@@ -16,6 +16,7 @@ HPage {
         contentHeight: column.childrenRect.height
 
         FlickShortcuts {
+            enabled: ! mainUI.debugConsole.visible
             flickable: flickable
         }
 
