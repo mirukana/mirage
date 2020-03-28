@@ -69,6 +69,8 @@ def _process_lines(content: str) -> Generator[str, None, None]:
 def convert_to_qml(theme_content: str) -> str:
     """Return valid QML code with imports from QPL content."""
 
+    theme_content = theme_content.replace("\t", "    ")
+
     lines  = [
         "import QtQuick 2.12",
         'import "../Base"',
