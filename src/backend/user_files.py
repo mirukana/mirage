@@ -208,7 +208,7 @@ class UISettings(JSONDataFile):
         return {
             "alertOnMessageForMsec": 4000,
             "alwaysCenterRoomHeader": False,
-            "compactMode": True,
+            "compactMode": False,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "collapseSidePanesUnderWindowWidth": 400,
