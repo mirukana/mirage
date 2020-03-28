@@ -67,8 +67,8 @@ For Flatpak users, this will be
 
 The `theme` setting can be:
 
-- The name of a built-in theme (`Midnight` or `Glass`)
-- The filename without extension of a custom theme at 
+- The filename of a built-in theme (`Midnight.qpl` or `Glass.qpl`)
+- The filename of a custom theme at 
   *$XDG_DATA_HOME/mirage/themes*, *~/.local/share/mirage/themes*,
   or *~/.var/app/io.github.mirukana.mirage/data/mirage/themes* (Flatpak)
 
@@ -87,7 +87,7 @@ Or for Flatpak users:
        ~/.var/app/io.github.mirukana.mirage/data/mirage/themes/MyTheme.qpl
 ```
 
-The config setting `theme` would need to be set to `MyTheme` in this case.
+The config setting `theme` would need to be set to `MyTheme.qpl` in this case.
 
 Theme files are nested-by-indentations sections of properties and values.  
 Properties are declared as `<type> <name>: <value>`.  
