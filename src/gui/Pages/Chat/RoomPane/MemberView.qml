@@ -93,6 +93,11 @@ HColumnLayout {
                 )
 
                 Layout.fillHeight: true
+
+                HShortcut {
+                    sequences: window.settings.keys.inviteToRoom
+                    onActivated: inviteButton.clicked()
+                }
             }
         }
     }

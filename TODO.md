@@ -61,9 +61,6 @@
   coroutines. Set `disabledWhileLoading` to `false` for all "OK" buttons where
   it makes sense.
 
-- Add missing room keybindings (e.g. to open the invite members popup)
-- Room pane keybindings
-
 - Remember the previously focused item in page for ctrl+tab 
 - https://doc.qt.io/qt-5/qml-qtquick-smoothedanimation.html for progress bars
 - Improve when HDrawer should collapse when the ui is zoomed
