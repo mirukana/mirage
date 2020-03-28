@@ -4,6 +4,7 @@
 
 import asyncio
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
@@ -45,9 +46,15 @@ class DataFile:
         """Full path of the file, even if it doesn't exist yet."""
 
         if self.is_config:
-            return Path(self.backend.appdirs.user_config_dir) / self.filename
+            return Path(
+                os.environ.get("MIRAGE_CONFIG_DIR") or
+                self.backend.appdirs.user_config_dir
+            ) / self.filename
 
-        return Path(self.backend.appdirs.user_data_dir) / self.filename
+        return Path(
+            os.environ.get("MIRAGE_DATA_DIR") or
+            self.backend.appdirs.user_data_dir
+        ) / self.filename
 
 
     async def default_data(self):
