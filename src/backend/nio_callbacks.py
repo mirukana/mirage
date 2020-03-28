@@ -161,6 +161,12 @@ class NioCallbacks:
         await self.onRoomMessageMedia(room, ev)
 
 
+    async def onRedactionEvent(self, room, ev) -> None:
+        await self.client.register_redact_event(
+            room, ev, redacts=ev.redacts, reason=ev.reason
+        )
+
+
     async def onRoomCreateEvent(self, room, ev) -> None:
         co = "%1 allowed users on other matrix servers to join this room" \
              if ev.federate else \

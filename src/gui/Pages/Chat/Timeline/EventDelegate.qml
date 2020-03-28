@@ -33,6 +33,7 @@ HColumnLayout {
     readonly property bool smallAvatar: compact
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight
+    readonly property bool isRedacted: model.event_type === "RedactionEvent"
 
     readonly property bool hideNameLine:
         model.event_type === "RoomMessageEmote" ||
@@ -221,6 +222,7 @@ HColumnLayout {
         HMenuItemPopupSpawner {
             icon.name: "remove-message"
             text: qsTr("Remove")
+            enabled: ! isRedacted
 
             popup: "Popups/RedactEvents.qml"
             popupParent: chat

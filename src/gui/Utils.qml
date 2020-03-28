@@ -200,6 +200,14 @@ QtObject {
             return qsTr(ev.content).arg(sender).arg(target)
         }
 
+        if (type === "RedactionEvent") {
+            return qsTr(
+                "<i>Removed message" +
+                `${ev.reason ? ". Reason: " + ev.reason : ""}` +
+                "</i>"
+            )
+        }
+
         return qsTr(ev.content).arg(sender)
     }
 
