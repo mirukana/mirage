@@ -8,15 +8,9 @@ Page {
     rightPadding: leftPadding
     background: null
 
-    Component.onCompleted:
-        if (becomeKeyboardFlickableTarget) shortcuts.flickTarget = focusTarget
-
 
     property int currentSpacing:
         Math.min(theme.spacing * width / 400, theme.spacing)
-
-    property Item focusTarget: this
-    property bool becomeKeyboardFlickableTarget: true
 
 
     Behavior on leftPadding { HNumberAnimation {} }

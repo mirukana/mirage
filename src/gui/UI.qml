@@ -18,7 +18,7 @@ Item {
     property bool accountsPresent:
         ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved
 
-    readonly property alias shortcuts: shortcuts
+    readonly property alias debugConsole: debugConsole
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
     readonly property alias pressAnimation: pressAnimation
@@ -39,14 +39,43 @@ Item {
         }
     }
 
-    GlobalShortcuts {
-        id: shortcuts
-        defaultDebugConsoleLoader: debugConsoleLoader
+    HShortcut {
+        sequences: window.settings.keys.startPythonDebugger
+        onActivated: py.call("BRIDGE.pdb")
     }
 
-    DebugConsoleLoader {
-        id: debugConsoleLoader
-        active: false
+    HShortcut {
+        sequences: window.settings.keys.reloadConfig
+        onActivated: reloadSettings()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.zoomIn
+        onActivated: theme.uiScale += 0.1
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.zoomOut
+        onActivated: theme.uiScale = Math.max(0.1, theme.uiScale - 0.1)
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.zoomReset
+        onActivated: theme.uiScale = 1
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.toggleCompactMode
+        onActivated: {
+            settings.compactMode = ! settings.compactMode
+            settingsChanged()
+        }
+    }
+
+    DebugConsole {
+        id: debugConsole
+        target: mainUI
+        visible: false
     }
 
     LinearGradient {

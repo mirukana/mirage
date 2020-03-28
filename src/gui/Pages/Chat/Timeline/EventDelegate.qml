@@ -221,7 +221,11 @@ HColumnLayout {
         HMenuItem {
             icon.name: "debug"
             text: qsTr("Debug this event")
-            onTriggered: eventContent.debugConsoleLoader.toggle()
+            onTriggered: {
+                mainUI.debugConsole.visible = true
+                mainUI.debugConsole.target  = eventContent
+                mainUI.debugConsole.runJS("t.parent.json()", false)
+            }
         }
 
         HMenuItemPopupSpawner {

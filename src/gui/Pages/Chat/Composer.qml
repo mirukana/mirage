@@ -243,10 +243,22 @@ Rectangle {
 
             Layout.fillHeight: true
 
+            HShortcut {
+                sequences: window.settings.keys.sendFileFromPathInClipboard
+                onActivated: utils.sendFile(
+                    chat.userId, chat.roomId, Clipboard.text.trim(),
+                )
+            }
+
             SendFilePicker {
                 id: sendFilePicker
                 userId: chat.userId
                 roomId: chat.roomId
+
+                HShortcut {
+                    sequences: window.settings.keys.sendFile
+                    onActivated: sendFilePicker.dialog.open()
+                }
             }
         }
     }

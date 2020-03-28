@@ -65,16 +65,8 @@ HRowLayout {
     // ~600px max with a 16px font
     readonly property int maxMessageWidth: theme.fontSize.normal * 0.5 * 75
 
-    readonly property alias debugConsoleLoader: debugConsoleLoader
-
     readonly property alias selectedText: contentLabel.selectedText
 
-
-    DebugConsoleLoader {
-        id: debugConsoleLoader
-        active: false
-        onLoaded: item.runJS("json()")
-    }
 
     Item {
         id: avatarWrapper

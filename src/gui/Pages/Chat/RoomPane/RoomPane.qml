@@ -77,4 +77,9 @@ MultiviewPane {
 
     MemberView {}
     SettingsView { fillAvailableHeight: true }
+
+    HShortcut {
+        sequences: window.settings.keys.toggleFocusRoomPane
+        onActivated: toggleFocus()
+    }
 }

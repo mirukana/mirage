@@ -6,6 +6,7 @@ import QtQuick.Window 2.12
 import Clipboard 0.1
 import "../../.."
 import "../../../Base"
+import "../../../ShortcutBundles"
 
 Rectangle {
     color: theme.chat.eventList.background
@@ -55,6 +56,23 @@ Rectangle {
         onActivated:
             eventList.currentItem.eventContent.debugConsoleLoader.toggle()
     }
+
+    HShortcut {
+        sequences: window.settings.keys.clearRoomMessages
+        onActivated: utils.makePopup(
+            "Popups/ClearMessagesPopup.qml",
+            mainUI,
+            {
+                userId: window.uiState.pageProperties.userId,
+                roomId: window.uiState.pageProperties.roomId,
+            }
+        )
+    }
+
+    FlickShortcuts {
+        flickable: eventList
+    }
+
 
     HListView {
         id: eventList
@@ -108,8 +126,6 @@ Rectangle {
         // When an invited room becomes joined, we should now be able to
         // fetch past events.
         onInviterChanged: canLoad = true
-
-        Component.onCompleted: shortcuts.flickTarget = eventList
 
 
         property string inviter: chat.roomInfo.inviter || ""

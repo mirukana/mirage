@@ -184,6 +184,8 @@ HListView {
 
     function goToRoom(index) {
         if (! currentItem) next()
+        if (! currentItem) return
+
         const room = currentItem.roomList.contentItem.children[index]
         if (room && room.activated) room.activated()
     }
@@ -194,6 +196,7 @@ HListView {
 
     function activate() {
         if (! currentItem) next()
+        if (! currentItem) return
 
         selectedRoom ?
         currentItem.roomList.currentItem.activated() :
@@ -204,6 +207,7 @@ HListView {
 
     function accountSettings() {
         if (! currentItem) next()
+        if (! currentItem) return
         currentItem.account.activated()
 
         detachedCurrentIndex = false
@@ -211,6 +215,7 @@ HListView {
 
     function addNewChat() {
         if (! currentItem) next()
+        if (! currentItem) return
         currentItem.account.addChat.clicked()
 
         detachedCurrentIndex = false
@@ -235,6 +240,42 @@ HListView {
             (activeAccountIndex === null ? -1 : activeAccountIndex) : -1
 
         when: ! detachedCurrentIndex
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.addNewChat
+        onActivated: addNewChat()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.accountSettings
+        onActivated: accountSettings()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.toggleCollapseAccount
+        onActivated: toggleCollapseAccount()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.goToPreviousRoom
+        onActivated: { previous(); requestActivate() }
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.goToNextRoom
+        onActivated: { next(); requestActivate() }
+    }
+
+    Repeater {
+        model: Object.keys(window.settings.keys.focusRoomAtIndex)
+
+        Item {
+            HShortcut {
+                sequence: window.settings.keys.focusRoomAtIndex[modelData]
+                onActivated: goToRoom(parseInt(modelData - 1, 10))
+            }
+        }
     }
 
     Timer {

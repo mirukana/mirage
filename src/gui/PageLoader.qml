@@ -95,4 +95,9 @@ HLoader {
         easing.type: Easing.OutBack
         duration: theme.animationDuration * 1.5
     }
+
+    HShortcut {
+        sequences: window.settings.keys.goToLastPage
+        onActivated: showPrevious()
+    }
 }

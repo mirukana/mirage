@@ -17,41 +17,7 @@ HDrawer {
     z: 9999
     position: 0
 
-    property Item previouslyFocused: null
-
-    property QtObject target: null
-    property alias t: debugConsole.target
-
-    property var history: window.history.console
-    property alias his: debugConsole.history
-    property int historyEntry: -1
-    property int maxHistoryLength: 4096
-
-    property string help: qsTr(
-        `Javascript debugging console
-
-        Useful variables:
-            window, theme, settings, shortcuts, utils, mainUI, pageLoader
-            py    Python interpreter
-            this  The console itself
-            t     Target item to debug for which this console was opened
-            his   History, list of commands entered
-
-        Special commands:
-            .j OBJECT, .json OBJECT  Print OBJECT as human-readable JSON
-
-            .t, .top     Attach the console to the parent window's top
-            .b, .bottom  Attach the console to the parent window's bottom
-            .l, .left    Attach the console to the parent window's left
-            .r, .right   Attach the console to the parent window's right
-            .h, .help    Show this help`.replace(/^ {8}/gm, "")
-    )
-
-    readonly property alias commandsView: commandsView
-
-
-    Component.onCompleted: {
-        position = 1
+    onTargetChanged: {
         commandsView.model.insert(0, {
             input: "t = " + String(target),
             output: "",
@@ -73,8 +39,41 @@ HDrawer {
             historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
 
 
-    function runJS(input) {
-        if (history.slice(-1)[0] !== input) {
+    property Item previouslyFocused: null
+
+    property QtObject target: null
+    property alias t: debugConsole.target
+
+    property var history: window.history.console
+    property alias his: debugConsole.history
+    property int historyEntry: -1
+    property int maxHistoryLength: 4096
+
+    property string help: qsTr(
+        `Javascript debugging console
+
+        Useful variables:
+            window, theme, settings, utils, mainUI, pageLoader
+            py    Python interpreter
+            this  The console itself
+            t     Target item to debug for which this console was opened
+            his   History, list of commands entered
+
+        Special commands:
+            .j OBJECT, .json OBJECT  Print OBJECT as human-readable JSON
+
+            .t, .top     Attach the console to the parent window's top
+            .b, .bottom  Attach the console to the parent window's bottom
+            .l, .left    Attach the console to the parent window's left
+            .r, .right   Attach the console to the parent window's right
+            .h, .help    Show this help`.replace(/^ {8}/gm, "")
+    )
+
+    readonly property alias commandsView: commandsView
+
+
+    function runJS(input, addToHistory=true) {
+        if (addToHistory && history.slice(-1)[0] !== input) {
             history.push(input)
             while (history.length > maxHistoryLength) history.shift()
             window.historyChanged()
@@ -117,10 +116,13 @@ HDrawer {
     }
 
 
+    HShortcut {
+        sequences: settings.keys.toggleDebugConsole
+        onActivated: debugConsole.visible = ! debugConsole.visible
+    }
+
     HColumnLayout {
         anchors.fill: parent
-
-        Keys.onEscapePressed: debugConsole.visible = false
 
         HListView {
             id: commandsView

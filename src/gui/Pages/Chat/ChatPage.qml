@@ -12,9 +12,6 @@ HColumnPage {
     leftPadding: 0
     rightPadding: 0
 
-    // The target will be our EventList, not the page itself
-    becomeKeyboardFlickableTarget: false
-
     onLoadEventListChanged: if (loadEventList) loadedOnce = true
 
 

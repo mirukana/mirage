@@ -27,6 +27,11 @@ Rectangle {
             onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
             Layout.fillHeight: true
+
+            HShortcut {
+                sequences: window.settings.keys.addNewAccount
+                onActivated: addAccountButton.clicked()
+            }
         }
 
         HTextField {
@@ -65,6 +70,11 @@ Rectangle {
             }
 
             Behavior on opacity { HNumberAnimation {} }
+
+            HShortcut {
+                sequences: window.settings.keys.clearRoomFilter
+                onActivated: filterField.text = ""
+            }
         }
     }
 }

@@ -2,8 +2,10 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import "../ShortcutBundles"
 
 TabBar {
+    id: tabBar
     spacing: 0
     position: TabBar.Header
 
@@ -14,5 +16,10 @@ TabBar {
             height: 2
             color: theme.controls.tab.bottomLine
         }
+    }
+
+
+    TabShortcuts {
+        container: tabBar
     }
 }

@@ -16,7 +16,6 @@ HColumnLayout {
 
     HTabBar {
         id: tabBar
-        Component.onCompleted: shortcuts.tabsTarget = this
 
         Layout.fillWidth: true
 

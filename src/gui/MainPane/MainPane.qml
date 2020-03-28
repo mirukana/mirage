@@ -47,6 +47,12 @@ HDrawer {
         when: ! mainUI.accountsPresent
     }
 
+    HShortcut {
+        enabled: mainUI.accountsPresent
+        sequences: window.settings.keys.toggleFocusMainPane
+        onActivated: toggleFocus()
+    }
+
     HColumnLayout {
         anchors.fill: parent
 

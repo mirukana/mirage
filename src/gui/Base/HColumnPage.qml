@@ -3,9 +3,6 @@
 import QtQuick 2.12
 
 HPage {
-    focusTarget: column
-
-
     default property alias columnData: column.data
 
 

@@ -2,9 +2,6 @@
 
 ## Refactoring
 
-- Put keybindings in the components they belong to instead of shoving them
-  all in one central file
-
 - Rewrite account settings using `HTabbedContainer`
   - Get rid of all `currentSpacing` stuff
   - Use new default/reset controls system 
@@ -12,8 +9,6 @@
 
 - Split `HScrollableTextArea` into `HTextArea` and `HScrollView` components
 - Refactor `Composer`
-
-- Make sure we don't store any state in delegates
 
 - Drop the `HBox` `buttonModel`/`buttonCallbacks` `HBox` approach,
   be more declarative
