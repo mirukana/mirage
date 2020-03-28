@@ -26,6 +26,24 @@ Item {
     readonly property alias roomPane: roomPaneLoader.item
 
 
+    HShortcut {
+        sequences: window.settings.keys.leaveRoom
+        onActivated: utils.makePopup(
+            "Popups/LeaveRoomPopup.qml",
+            chat,
+            {userId, roomId, roomName: roomInfo.display_name},
+        )
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.forgetRoom
+        onActivated: utils.makePopup(
+            "Popups/ForgetRoomPopup.qml",
+            chat,
+            {userId, roomId, roomName: roomInfo.display_name},
+        )
+    }
+
     Timer {
         interval: 100
         running: ! userInfo

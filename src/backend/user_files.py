@@ -288,6 +288,8 @@ class UISettings(JSONDataFile):
                 "sendFile":                    ["Alt+S"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+S"],
                 "inviteToRoom":                ["Alt+I"],
+                "leaveRoom":                   ["Alt+Escape"],
+                "forgetRoom":                  ["Alt+Shift+Escape"],
 
                 "toggleFocusRoomPane": ["Alt+R"],
             },
