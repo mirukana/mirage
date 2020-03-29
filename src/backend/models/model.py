@@ -129,21 +129,3 @@ class Model(MutableMapping):
         new = type(self)(sync_id=sync_id)
         new.update(self)
         return new
-
-
-    def get_event_id(self, event_id: str) -> "Model":
-        """Get an event from the internal dict by event_id field.
-
-        This function exists because not every event is indexed with its
-        event_id field.
-        """
-
-        event = self._data.get(event_id)
-        if event and event.event_id == event_id:
-            return event
-
-        for event in self._data.values():
-            if event.event_id == event_id:
-                return event
-
-        return None

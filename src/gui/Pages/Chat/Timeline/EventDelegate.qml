@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: LGPL-3.0-or-later
-
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
@@ -33,7 +31,7 @@ HColumnLayout {
     readonly property bool smallAvatar: compact
     readonly property bool collapseAvatar: combine
     readonly property bool hideAvatar: onRight
-    readonly property bool isRedacted: model.event_type === "RedactionEvent"
+    readonly property bool isRedacted: model.event_type === "RedactedEvent"
 
     readonly property bool hideNameLine:
         model.event_type === "RoomMessageEmote" ||
@@ -229,7 +227,9 @@ HColumnLayout {
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
-                eventIds: [model.event_id]
+                eventIds: eventList.selectedCount ?
+                          eventList.getSortedChecked().map(ev => ev.event_id) :
+                          [model.event_id]
             })
         }
 

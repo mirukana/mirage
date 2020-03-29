@@ -1186,7 +1186,8 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def register_nio_event(
-        self, room: nio.MatrixRoom, ev: nio.Event, **fields,
+        self, room: nio.MatrixRoom, ev: nio.Event, event_id: str = None,
+        **fields,
     ) -> None:
         """Register a `nio.Event` as a `Event` object in our model."""
 
@@ -1208,24 +1209,14 @@ class MatrixClient(nio.AsyncClient):
                 content, inline=True, room_id=room.room_id,
             )
 
-        age = 0
-        with suppress(Exception):
-            age = ev.source.get("age")
-        age = age or 0
-
         # Create Event ModelItem
 
         item = Event(
-            id            = ev.event_id,
+            id            = event_id or ev.event_id,
             event_id      = ev.event_id,
             event_type    = type(ev),
             source        = ev,
-            date          = datetime.fromtimestamp(
-                (
-                    datetime.fromtimestamp(ev.server_timestamp / 1000) -
-                    datetime.fromtimestamp(age / 1000)
-                ).total_seconds()
-            ),
+            date          = datetime.fromtimestamp(ev.server_timestamp / 1000),
             sender_id     = ev.sender,
             sender_name   = sender_name,
             sender_avatar = sender_avatar,
@@ -1253,60 +1244,3 @@ class MatrixClient(nio.AsyncClient):
 
         model[item.id] = item
         await self.set_room_last_event(room.room_id, item)
-
-
-    async def register_redact_event(
-        self, room: nio.MatrixRoom, ev: nio.Event, **fields
-    ) -> None:
-        """Register a `nio.events.room_events.RedactionEvent` in our model.
-
-        If .redacts attribute points to an existing model, it should get replaced.
-        Else register as a new Event.
-        """
-
-        model = self.models[self.user_id, room.room_id, "events"]
-        event = model.get_event_id(ev.redacts)
-
-        if event:
-            sender_name, sender_avatar = \
-            await self.get_member_name_avatar(room.room_id, ev.sender)
-
-            target_id = getattr(ev, "state_key", "") or ""
-
-            target_name, target_avatar = \
-                await self.get_member_name_avatar(room.room_id, target_id) \
-                if target_id else ("", "")
-
-            content = fields.get("content", "").strip()
-
-            if content and "inline_content" not in fields:
-                fields["inline_content"] = HTML.filter(
-                    content, inline=True, room_id=room.room_id,
-                )
-
-            age = ev.source["unsigned"]["age"]
-
-            item = Event(
-                id            = ev.event_id,
-                event_id      = ev.event_id,
-                event_type    = type(ev),
-                source        = ev,
-                date          = datetime.fromtimestamp(
-                    (
-                        datetime.fromtimestamp(ev.server_timestamp / 1000) -
-                        datetime.fromtimestamp(age / 1000)
-                    ).total_seconds()
-                ),
-                sender_id     = ev.sender,
-                sender_name   = sender_name,
-                sender_avatar = sender_avatar,
-                target_id     = target_id,
-                target_name   = target_name,
-                target_avatar = target_avatar,
-                links         = Event.parse_links(content),
-                **fields,
-            )
-
-            model[event.id] = item
-        else:
-            await self.register_nio_event(room, ev, **fields)

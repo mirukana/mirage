@@ -177,7 +177,6 @@ class Event(ModelItem):
 
     content:        str                   = ""
     inline_content: str                   = ""
-    redacts:        str                   = ""
     reason:         str                   = ""
     links:          List[str]             = field(default_factory=list)
     mentions:       List[Tuple[str, str]] = field(default_factory=list)

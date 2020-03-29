@@ -162,8 +162,35 @@ class NioCallbacks:
 
 
     async def onRedactionEvent(self, room, ev) -> None:
-        await self.client.register_redact_event(
-            room, ev, redacts=ev.redacts, reason=ev.reason
+        model = self.client.models[self.client.user_id, room.room_id, "events"]
+        event = None
+
+        for event in model._sorted_data:
+            if event.event_id == ev.redacts:
+                break
+
+        if (
+            event and
+            issubclass(event.event_type, nio.events.room_events.RoomMessage)
+        ):
+            event.source.source["content"] = {}
+            event.source.source["unsigned"] = {
+                "redacted_by":      ev.event_id,
+                "redacted_because": ev.source,
+            }
+
+            await self.client.register_nio_event(
+                room,
+                nio.events.room_events.RedactedEvent.from_dict(
+                    event.source.source,
+                ),
+                event_id = event.id,
+            )
+
+
+    async def onRedactedEvent(self, room, ev) -> None:
+        await self.client.register_nio_event(
+            room, ev, reason=ev.reason,
         )
 
 
