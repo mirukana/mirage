@@ -51,17 +51,21 @@ HBox {
                     "AccountSettings/AccountSettings", {userId}
                 )
 
-            }, type => {
+            }, (type, args, error, traceback, uuid) => {
                 loginFuture = null
                 signInTimeout.stop()
 
-                let txt = qsTr("Invalid request or login type")
+                let txt = qsTr(
+                    "Invalid request, login type or unknown error: %1",
+                ).arg(type)
 
-                if (type === "MatrixForbidden")
-                    txt = qsTr("Invalid username or password")
+                type === "MatrixForbidden" ?
+                txt = qsTr("Invalid username or password") :
 
-                if (type === "MatrixUserDeactivated")
-                    txt = qsTr("This account was deactivated")
+                type === "MatrixUserDeactivated" ?
+                txt = qsTr("This account was deactivated") :
+
+                utils.showError(type, traceback, uuid)
 
                 errorMessage.text = txt
             })
