@@ -4,6 +4,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import CppUtils 0.1
 import "../../../Base"
+import "../../../Base/HTile"
 
 HTile {
     id: file
@@ -14,12 +15,27 @@ HTile {
     )
     height: Math.max(theme.chat.message.avatarSize, implicitHeight)
 
-    title.text: loader.singleMediaInfo.media_title || qsTr("Untitled file")
-    title.elide: Text.ElideMiddle
-    subtitle.text: CppUtils.formattedBytes(loader.singleMediaInfo.media_size)
+    contentItem: ContentRow {
+        tile: file
 
-    image: HIcon {
-        svgName: "download"
+        HIcon {
+            svgName: "download"
+        }
+
+        HColumnLayout {
+            TitleLabel {
+                elide: Text.ElideMiddle
+                text: loader.singleMediaInfo.media_title ||
+                      qsTr("Untitled file")
+            }
+
+            SubtitleLabel {
+                tile: file
+                text: CppUtils.formattedBytes(
+                    loader.singleMediaInfo.media_size,
+                )
+            }
+        }
     }
 
     onRightClicked: eventDelegate.openContextMenu()

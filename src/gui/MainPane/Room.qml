@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 import Clipboard 0.1
 import ".."
 import "../Base"
+import "../Base/HTile"
 
 HTileDelegate {
     id: room
@@ -16,94 +17,118 @@ HTileDelegate {
     leftPadding: theme.spacing * 2
     rightPadding: theme.spacing
 
-    image: HRoomAvatar {
-        roomId: model.id
-        displayName: model.display_name
-        mxc: model.avatar_url
-        compact: room.compact
+    contentItem: ContentRow {
+        tile: room
 
-        radius:
-            mainPane.small ?
-            theme.mainPane.listView.room.collapsedAvatarRadius :
-            theme.mainPane.listView.room.avatarRadius
+        HRoomAvatar {
+            id: avatar
+            roomId: model.id
+            displayName: model.display_name
+            mxc: model.avatar_url
+            compact: room.compact
 
-        Behavior on radius { HNumberAnimation {} }
-    }
+            radius:
+                mainPane.small ?
+                theme.mainPane.listView.room.collapsedAvatarRadius :
+                theme.mainPane.listView.room.avatarRadius
 
-    title.color: theme.mainPane.listView.room.name
-    title.text: model.display_name || qsTr("Empty room")
-
-    additionalInfo.children: [
-        // HLabel {
-        //     text: model.mentions
-        //     font.pixelSize: theme.fontSize.small
-        //     verticalAlignment: Qt.AlignVCenter
-        //     leftPadding: theme.spacing / 4
-        //     rightPadding: leftPadding
-
-        //     scale: model.mentions === 0 ? 0 : 1
-        //     visible: scale > 0
-
-        //     background: Rectangle {
-        //         color: theme.colors.alertBackground
-        //         radius: theme.radius / 4
-        //     }
-
-        //     Behavior on scale { HNumberAnimation {} }
-        // },
-
-        HIcon {
-            svgName: "invite-received"
-            colorize: theme.colors.alertBackground
-            small: room.compact
-            visible: invited
-
-            Layout.maximumWidth: invited ? implicitWidth : 0
-
-            Behavior on Layout.maximumWidth { HNumberAnimation {} }
+            Behavior on radius { HNumberAnimation {} }
         }
-    ]
 
-    subtitle.color: theme.mainPane.listView.room.subtitle
-    subtitle.textFormat: Text.StyledText
-    subtitle.font.italic:
-        lastEvent && lastEvent.event_type === "RoomMessageEmote"
-    subtitle.text: {
-        if (! lastEvent) return ""
+        HColumnLayout {
+            HRowLayout {
+                spacing: room.spacing
 
-        const isEmote      = lastEvent.event_type === "RoomMessageEmote"
-        const isMsg        = lastEvent.event_type.startsWith("RoomMessage")
-        const isUnknownMsg = lastEvent.event_type === "RoomMessageUnknown"
-        const isCryptMedia = lastEvent.event_type.startsWith("RoomEncrypted")
+                TitleLabel {
+                    text: model.display_name || qsTr("Empty room")
+                    color: theme.mainPane.listView.room.name
+                }
 
-        // If it's a general event
-        if (isEmote || isUnknownMsg || (! isMsg && ! isCryptMedia))
-            return utils.processedEventText(lastEvent)
+                // HLabel {
+                //     text: model.mentions
+                //     font.pixelSize: theme.fontSize.small
+                //     verticalAlignment: Qt.AlignVCenter
+                //     leftPadding: theme.spacing / 4
+                //     rightPadding: leftPadding
 
-        const text = utils.coloredNameHtml(
-            lastEvent.sender_name, lastEvent.sender_id
-        ) + ": " + lastEvent.inline_content
+                //     scale: model.mentions === 0 ? 0 : 1
+                //     visible: scale > 0
 
-        return text.replace(
-            /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
-            `<font color="${theme.mainPane.listView.room.subtitleQuote}">` +
-            `$1</font>`,
-        )
-    }
+                //     background: Rectangle {
+                //         color: theme.colors.alertBackground
+                //         radius: theme.radius / 4
+                //     }
 
-    rightInfo.color: theme.mainPane.listView.room.lastEventDate
-    rightInfo.text: {
-        model.last_event_date < new Date(1) ?
-        "" :
+                //     Behavior on scale { HNumberAnimation {} }
+                // },
 
-        utils.dateIsToday(model.last_event_date) ?
-        utils.formatTime(model.last_event_date, false) :  // no seconds
+                HIcon {
+                    svgName: "invite-received"
+                    colorize: theme.colors.alertBackground
+                    small: room.compact
+                    visible: invited
 
-        model.last_event_date.getFullYear() === new Date().getFullYear() ?
-        Qt.formatDate(model.last_event_date, "d MMM") :  // e.g. "5 Dec"
+                    Layout.maximumWidth: invited ? implicitWidth : 0
 
-        // model.last_event_date.getFullYear() ?
-        Qt.formatDate(model.last_event_date, "MMM yyyy")  // e.g. "Jan 2020"
+                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
+                }
+
+                TitleRightInfoLabel {
+                    tile: room
+                    color: theme.mainPane.listView.room.lastEventDate
+                    text: {
+                        model.last_event_date < new Date(1) ?
+                        "" :
+
+                        // e.g. "03:24"
+                        utils.dateIsToday(model.last_event_date) ?
+                        utils.formatTime(model.last_event_date, false) :
+
+                        // e.g. "5 Dec"
+                        model.last_event_date.getFullYear() ===
+                        new Date().getFullYear() ?
+                        Qt.formatDate(model.last_event_date, "d MMM") :
+
+                        // e.g. "Jan 2020"
+                        Qt.formatDate(model.last_event_date, "MMM yyyy")
+                    }
+                }
+            }
+
+            SubtitleLabel {
+                tile: room
+                color: theme.mainPane.listView.room.subtitle
+                textFormat: Text.StyledText
+                font.italic:
+                    lastEvent && lastEvent.event_type === "RoomMessageEmote"
+
+                text: {
+                    if (! lastEvent) return ""
+
+                    const ev_type      = lastEvent.event_type
+                    const isEmote      = ev_type === "RoomMessageEmote"
+                    const isMsg        = ev_type.startsWith("RoomMessage")
+                    const isUnknownMsg = ev_type === "RoomMessageUnknown"
+                    const isCryptMedia = ev_type.startsWith("RoomEncrypted")
+
+                    // If it's a general event
+                    if (isEmote || isUnknownMsg || (! isMsg && ! isCryptMedia))
+                        return utils.processedEventText(lastEvent)
+
+                    const text = utils.coloredNameHtml(
+                        lastEvent.sender_name, lastEvent.sender_id
+                    ) + ": " + lastEvent.inline_content
+
+                    const subColor = theme.mainPane.listView.room.subtitleQuote
+
+                    return text.replace(
+                        /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
+                        `<font color="${subColor}">` +
+                        `$1</font>`,
+                    )
+                }
+            }
+        }
     }
 
     contextMenu: HMenu {
@@ -194,7 +219,7 @@ HTileDelegate {
     Behavior on leftPadding { HNumberAnimation {} }
 
     Binding on leftPadding {
-        value: (mainPane.minimumSize - loadedImage.width) / 2
+        value: (mainPane.minimumSize - avatar.width) / 2
         when: mainPane.small
     }
 

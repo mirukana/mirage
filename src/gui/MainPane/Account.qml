@@ -4,6 +4,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
 import "../Base"
+import "../Base/HTile"
 
 HTileDelegate {
     id: account
@@ -12,91 +13,35 @@ HTileDelegate {
     opacity: collapsed && ! mainPane.filter ?
              theme.mainPane.listView.account.collapsedOpacity : 1
 
-    title.text: model.display_name || model.id
-    title.font.pixelSize: theme.fontSize.big
-    title.color:
-        hovered ?
-        utils.nameColor(model.display_name || model.id.substring(1)) :
-        theme.mainPane.listView.account.name
+    contentItem: ContentRow {
+        tile: account
 
-    image: HUserAvatar {
-        userId: model.id
-        displayName: model.display_name
-        mxc: model.avatar_url
-        compact: account.compact
+        HUserAvatar {
+            id: avatar
+            userId: model.id
+            displayName: model.display_name
+            mxc: model.avatar_url
+            compact: account.compact
 
-        radius:
-            mainPane.small ?
-            theme.mainPane.listView.account.collapsedAvatarRadius :
-            theme.mainPane.listView.account.avatarRadius
+            radius:
+                mainPane.small ?
+                theme.mainPane.listView.account.collapsedAvatarRadius :
+                theme.mainPane.listView.account.avatarRadius
 
-        Behavior on radius { HNumberAnimation {} }
-    }
-
-    contextMenu: HMenu {
-        HMenuItem {
-            icon.name: "copy-user-id"
-            text: qsTr("Copy user ID")
-            onTriggered: Clipboard.text = model.id
+            Behavior on radius { HNumberAnimation {} }
         }
 
-        HMenuItemPopupSpawner {
-            icon.name: "sign-out"
-            icon.color: theme.colors.negativeBackground
-            text: qsTr("Sign out")
+        TitleLabel {
+            text: model.display_name || model.id
+            font.pixelSize: theme.fontSize.big
+            color:
+                hovered ?
+                utils.nameColor(model.display_name || model.id.substring(1)) :
+                theme.mainPane.listView.account.name
 
-            popup: "Popups/SignOutPopup.qml"
-            properties: { "userId": model.id }
+            Behavior on color { HColorAnimation {} }
         }
-    }
 
-    onActivated: {
-        pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": model.id }
-        )
-        mainPaneList.detachedCurrentIndex = false
-        mainPaneList.centerToHighlight    = false
-    }
-
-
-    readonly property alias addChat: addChat
-
-    readonly property bool collapsed:
-        (window.uiState.collapseAccounts[model.id] || false) &&
-        ! mainPane.filter
-
-
-    function setCollapse(collapse) {
-        window.uiState.collapseAccounts[model.id] = collapse
-        window.uiStateChanged()
-    }
-
-    function toggleCollapse() {
-        setCollapse(! collapsed)
-    }
-
-
-    Behavior on title.color { HColorAnimation {} }
-    Behavior on opacity { HNumberAnimation {} }
-    Behavior on leftPadding { HNumberAnimation {} }
-    Behavior on topPadding { HNumberAnimation {} }
-
-    Binding on leftPadding {
-        value: (mainPane.minimumSize - loadedImage.width) / 2
-        when: mainPane.small
-    }
-
-    Binding on topPadding {
-        value: theme.spacing
-        when: mainPane.small
-    }
-
-    Binding on bottomPadding {
-        value: theme.spacing
-        when: mainPane.small
-    }
-
-    HRowLayout {
         HButton {
             id: addChat
             iconItem.small: true
@@ -153,5 +98,67 @@ HTileDelegate {
             Behavior on Layout.maximumWidth { HNumberAnimation {} }
             Behavior on opacity { HNumberAnimation {} }
         }
+    }
+
+    contextMenu: HMenu {
+        HMenuItem {
+            icon.name: "copy-user-id"
+            text: qsTr("Copy user ID")
+            onTriggered: Clipboard.text = model.id
+        }
+
+        HMenuItemPopupSpawner {
+            icon.name: "sign-out"
+            icon.color: theme.colors.negativeBackground
+            text: qsTr("Sign out")
+
+            popup: "Popups/SignOutPopup.qml"
+            properties: { "userId": model.id }
+        }
+    }
+
+    onActivated: {
+        pageLoader.showPage(
+            "AccountSettings/AccountSettings", { "userId": model.id }
+        )
+        mainPaneList.detachedCurrentIndex = false
+        mainPaneList.centerToHighlight    = false
+    }
+
+
+    readonly property alias addChat: addChat
+
+    readonly property bool collapsed:
+        (window.uiState.collapseAccounts[model.id] || false) &&
+        ! mainPane.filter
+
+
+    function setCollapse(collapse) {
+        window.uiState.collapseAccounts[model.id] = collapse
+        window.uiStateChanged()
+    }
+
+    function toggleCollapse() {
+        setCollapse(! collapsed)
+    }
+
+
+    Behavior on opacity { HNumberAnimation {} }
+    Behavior on leftPadding { HNumberAnimation {} }
+    Behavior on topPadding { HNumberAnimation {} }
+
+    Binding on leftPadding {
+        value: (mainPane.minimumSize - avatar.width) / 2
+        when: mainPane.small
+    }
+
+    Binding on topPadding {
+        value: theme.spacing
+        when: mainPane.small
+    }
+
+    Binding on bottomPadding {
+        value: theme.spacing
+        when: mainPane.small
     }
 }
