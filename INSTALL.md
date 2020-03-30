@@ -3,10 +3,11 @@
 Instructions and releases are currently only available for Linux,
 but compiling on Windows and macOS should be possible with the right tools.
 
-- [Releases](#releases)
+- [Packages](#packages)
   - [Linux](#linux)
     - [AppImage](#appimage)
     - [Flatpak](#flatpak)
+    - [Arch Linux](#arch-linux)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -25,11 +26,11 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Component is not ready](#component-is-not-ready)
 
 
-## Releases
+## Packages
 
 ### Linux
 
-For developement, or if none of the release options are satisfying, 
+For developement, or if none of the package options are satisfying, 
 see [manual installation](#manual-installation).
 
 #### AppImage
@@ -70,6 +71,16 @@ run `flatpak repair` before retrying.
 If your architecture is not listed on the release page, clone the repository
 and see [packaging/flatpak/README.md](packaging/flatpak/README.md) to build the
 package on your machine.
+
+#### Arch Linux
+
+[Available on the AUR](https://aur.archlinux.org/packages/matrix-mirage-git/)
+
+Using a AUR helper to install it,
+in this example [yay](https://github.com/Jguer/yay):
+
+    yay -S matrix-mirage-git
+
 
 ## Manual Installation
 
