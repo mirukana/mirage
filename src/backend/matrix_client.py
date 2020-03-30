@@ -2101,6 +2101,23 @@ class MatrixClient(nio.AsyncClient):
             item.id                             = f"echo-{tx_id}"
             self.event_to_echo_ids[ev.event_id] = item.id
 
+            notif_room   = room.display_name
+            notif_sender = item.sender_name or item.sender_id
+            body_start   = f"{notif_sender}: "
+
+            if notif_room == notif_sender:
+                body_start = ""
+            elif isinstance(ev, nio.RoomMessageEmote):
+                body_start = f"<i>{notif_sender} </i>"
+
+            await self.backend.desktop_notify(
+                title = notif_room,
+                body  = f"{body_start}{item.inline_content}",
+                # await self.backend.media_cache.get_thumbnail(
+                #     item.sender_avatar, 32, 32,
+                # ),
+            )
+
         model[item.id] = item
         await self.set_room_last_event(room.room_id, item)
 

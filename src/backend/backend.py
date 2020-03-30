@@ -9,10 +9,11 @@ import time
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional, Tuple
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import aiohttp
+import plyer
 from appdirs import AppDirs
 
 import nio
@@ -538,3 +539,17 @@ class Backend:
 
         await asyncio.gather(*coros)
         await session.close()
+
+
+    async def desktop_notify(
+        self, title: str, body: str = "", image: Union[Path, str] = "",
+    ) -> None:
+        # XXX: images on windows must be .ICO
+        plyer.notification.notify(
+            title    = title,
+            message  = body,
+            app_name = __app_name__,
+            app_icon = str(image),
+            timeout  = 10,
+            toast    = False,
+        )
