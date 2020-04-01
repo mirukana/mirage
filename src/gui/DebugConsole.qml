@@ -183,7 +183,7 @@ HDrawer {
             }
 
             FlickShortcuts {
-                enabled: debugConsole.visible
+                active: debugConsole.visible
                 flickable: commandsView
             }
 

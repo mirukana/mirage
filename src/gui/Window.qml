@@ -45,6 +45,12 @@ ApplicationWindow {
 
     property var hideErrorTypes: new Set()
 
+    readonly property var visibleMenus: ({})
+    readonly property var visiblePopups: ({})
+    readonly property bool anyPopupOrMenu:
+        Object.keys(window.visibleMenus).length > 0 ||
+        Object.keys(window.visiblePopups).length > 0
+
 
     function saveState(obj) {
         if (! obj.saveName || ! obj.saveProperties ||

@@ -48,7 +48,7 @@ HDrawer {
     }
 
     HShortcut {
-        enabled: mainUI.accountsPresent
+        active: mainUI.accountsPresent
         sequences: window.settings.keys.toggleFocusMainPane
         onActivated: toggleFocus()
     }

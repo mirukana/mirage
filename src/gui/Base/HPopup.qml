@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import CppUtils 0.1
 
 Popup {
     id: popup
@@ -30,7 +31,15 @@ Popup {
     }
 
     onAboutToShow: previouslyFocused = window.activeFocusItem
-    onClosed: if (focusOnClosed) focusOnClosed.forceActiveFocus()
+    onOpened: {
+        window.visiblePopups[uuid] = this
+        window.visibleMenusChanged()
+    }
+    onClosed: {
+        if (focusOnClosed) focusOnClosed.forceActiveFocus()
+        delete window.visiblePopups[uuid]
+        window.visibleMenusChanged()
+    }
 
 
     property var previouslyFocused: null
@@ -41,4 +50,6 @@ Popup {
 
     readonly property int maximumPreferredHeight:
         window.height - topMargin - bottomMargin - topInset - bottomInset
+
+    readonly property string uuid: CppUtils.uuid()
 }

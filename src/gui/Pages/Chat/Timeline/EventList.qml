@@ -38,20 +38,20 @@ Rectangle {
     }
 
     HShortcut {
-        enabled: eventList.currentItem
+        active: eventList.currentItem
         sequences: window.settings.keys.toggleSelectMessage
         onActivated: eventList.toggleCheck(eventList.currentIndex)
     }
 
     HShortcut {
-        enabled: eventList.currentItem
+        active: eventList.currentItem
         sequences: window.settings.keys.selectMessagesUntilHere
         onActivated:
             eventList.checkFromLastToHere(eventList.currentIndex)
     }
 
     HShortcut {
-        enabled: eventList.currentItem
+        active: eventList.currentItem
         sequences: window.settings.keys.debugFocusedMessage
         onActivated:
             eventList.currentItem.eventContent.debugConsoleLoader.toggle()
@@ -70,7 +70,7 @@ Rectangle {
     }
 
     FlickShortcuts {
-        enabled: ! mainUI.debugConsole.visible
+        active: ! mainUI.debugConsole.visible
         flickable: eventList
     }
 

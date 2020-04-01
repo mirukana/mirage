@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import CppUtils 0.1
 
 Menu {
     id: menu
@@ -31,7 +32,15 @@ Menu {
         previouslyFocused = window.activeFocusItem
         focusOnClosed     = Qt.binding(() => previouslyFocused)
     }
-    onClosed: if (focusOnClosed) focusOnClosed.forceActiveFocus()
+    onOpened: {
+        window.visibleMenus[uuid] = this
+        window.visibleMenusChanged()
+    }
+    onClosed: {
+        if (focusOnClosed) focusOnClosed.forceActiveFocus()
+        delete window.visibleMenus[uuid]
+        window.visibleMenusChanged()
+    }
 
 
     property var previouslyFocused: null
@@ -40,4 +49,6 @@ Menu {
     // should set this to null. It will be reset to previouslyFocus when
     // the Menu is closed and opened again.
     property Item focusOnClosed: previouslyFocused
+
+    readonly property string uuid: CppUtils.uuid()
 }
