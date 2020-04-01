@@ -1,7 +1,5 @@
 # TODO
 
-- Fix escape to unselect events
-
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`

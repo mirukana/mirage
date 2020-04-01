@@ -73,6 +73,18 @@ HDrawer {
     readonly property alias commandsView: commandsView
 
 
+    function toggle(targetItem=mainUI, js="", addToHistory=false) {
+        if (debugConsole.visible) {
+            debugConsole.visible = false
+            return
+        }
+
+        debugConsole.visible = true
+        debugConsole.target  = targetItem
+        if (js) debugConsole.runJS(js, addToHistory)
+    }
+
+
     function runJS(input, addToHistory=true) {
         if (addToHistory && history.slice(-1)[0] !== input) {
             history.push(input)
@@ -119,7 +131,7 @@ HDrawer {
 
     HShortcut {
         sequences: settings.keys.toggleDebugConsole
-        onActivated: debugConsole.visible = ! debugConsole.visible
+        onActivated: debugConsole.toggle()
     }
 
     HColumnLayout {
