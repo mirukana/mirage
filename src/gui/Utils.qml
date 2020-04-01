@@ -202,7 +202,7 @@ QtObject {
 
         if (type === "RedactedEvent") {
             return qsTr(
-                `<font color="${theme.colors.dimText}"><i>` +
+                `<font color="${theme.chat.message.redactedBody}"><i>` +
                 escapeHtml(ev.content) +
                 "</i></font>"
             )

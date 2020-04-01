@@ -353,6 +353,8 @@ chat:
         color body: colors.text
         color date: colors.dimText
 
+        color redactedBody: colors.halfDimText
+
         color noticeBody:    colors.halfDimText
         int noticeLineWidth: 1 * uiScale
 

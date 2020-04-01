@@ -1,5 +1,8 @@
 # TODO
 
+- redact local echo effect
+- being able to redact local echos
+
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`

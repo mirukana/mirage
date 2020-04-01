@@ -11,6 +11,10 @@ BoxPopup {
         qsTr("Remove selected message?")
 
     details.color: theme.colors.warningText
+    details.text:
+        onlyOwnMessageWarning ?
+        qsTr("Only your messages will be removed") :
+        ""
 
     HLabeledTextField {
         id: reasonField
@@ -31,4 +35,5 @@ BoxPopup {
     property string userId: ""
 
     property var eventIds: []
+    property bool onlyOwnMessageWarning: false
 }

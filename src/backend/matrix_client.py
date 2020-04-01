@@ -885,8 +885,8 @@ class MatrixClient(nio.AsyncClient):
         """
 
         return await asyncio.gather(*[
-            self.room_redact(room_id, evt_id, reason)
-            for evt_id in event_ids
+            self.room_redact(room_id, ev_id, reason)
+            for ev_id in event_ids
         ])
 
 
@@ -1119,7 +1119,7 @@ class MatrixClient(nio.AsyncClient):
             guests_allowed  = room.guest_access == "can_join",
 
             can_invite           = levels.can_user_invite(self.user),
-            can_redact           = levels.can_user_redact(self.user),
+            can_redact_all       = levels.can_user_redact(self.user),
             can_send_messages    = can_send_msg(),
             can_set_name         = can_send_state("m.room.name"),
             can_set_topic        = can_send_state("m.room.topic"),
@@ -1190,8 +1190,8 @@ class MatrixClient(nio.AsyncClient):
 
     async def register_nio_event(
         self,
-        room: nio.MatrixRoom,
-        ev: nio.Event,
+        room:     nio.MatrixRoom,
+        ev:       nio.Event,
         event_id: str = "",
         **fields,
     ) -> None:

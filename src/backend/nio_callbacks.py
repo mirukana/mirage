@@ -165,9 +165,9 @@ class NioCallbacks:
         model = self.client.models[self.client.user_id, room.room_id, "events"]
         event = None
 
-        for evt in model._sorted_data:
-            if evt.event_id == ev.redacts:
-                event = evt
+        for existing in model._sorted_data:
+            if existing.event_id == ev.redacts:
+                event = existing
                 break
 
         if not (event and event.event_type is not nio.RedactedEvent):
@@ -187,16 +187,15 @@ class NioCallbacks:
 
 
     async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
-        # There is no way to know which kind of event was redacted in an
-        # encrypted room.
-        kind = "Message" if   ev.type == "m.room.encrypted" \
-                         else ev.type.split(".")[-1].capitalize() \
-                                                    .replace("_", " ")
+        kind       = ev.source["type"]
+        is_message = kind == "m.room.message"
+        kind       = kind.split(".")[-1].capitalize().replace("_", " ")
 
-        co = "%s event removed%s.%s" % (
+        co = "%s%s removed%s%s" % (
             kind,
-            f" by {ev.redacter}"     if ev.redacter != ev.sender else "",
-            f" Reason: {ev.reason}." if ev.reason                else "",
+            ""                        if is_message else " event",
+            f" by {ev.redacter}"      if ev.redacter != ev.sender else "",
+            f", reason: {ev.reason}." if ev.reason else "",
         )
 
         await self.client.register_nio_event(

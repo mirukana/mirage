@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import Clipboard 0.1
@@ -222,27 +224,31 @@ HColumnLayout {
             text: qsTr("Remove")
             enabled: properties.eventIds.length
 
-            popup: "Popups/RedactEvents.qml"
+            popup: "Popups/RedactPopup.qml"
             popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
+
                 eventIds:
-                    (
-                        eventList.selectedCount ?
-                        eventList.getSortedChecked() :
-                        [model]
-                    ).filter(ev =>
-                        (
-                            ev.sender_id === chat.userId ||
-                            chat.roomInfo.can_redact
-                        ) && ! isRedacted
-                    ).map(ev => ev.event_id),
-                "details.text":
-                    (! chat.roomInfo.can_redact && eventList.selectedCount) ?
-                    qsTr("Only your messages will be removed") :
-                    ""
+                    redactableEvents
+                        .filter(ev => ev.event_type !== "RedactedEvent")
+                        .map(ev => ev.event_id),
+
+                onlyOwnMessageWarning:
+                    ! chat.roomInfo.can_redact_all &&
+                    redactableEvents.length < eventList.selectedCount
             })
+
+            readonly property var redactableEvents:
+                (
+                    eventList.selectedCount ?
+                    eventList.getSortedChecked() :
+                    [model]
+                ).filter(ev =>
+                    ev.sender_id === chat.userId ||
+                    chat.roomInfo.can_redact_all
+                )
         }
 
         HMenuItem {
