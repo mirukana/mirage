@@ -57,7 +57,7 @@ MultiviewPane {
 
 
     function toggleFocus() {
-        if (swipeView.currentItem.keybindFocusItem.activeFocus) {
+        if (roomPane.activeFocus) {
             if (roomPane.collapse) roomPane.close()
             pageLoader.takeFocus()
             return

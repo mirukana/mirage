@@ -26,7 +26,7 @@ HDrawer {
 
 
     function toggleFocus() {
-        if (bottomBar.filterField.activeFocus) {
+        if (mainPane.activeFocus) {
             pageLoader.takeFocus()
             return
         }
