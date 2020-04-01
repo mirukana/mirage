@@ -73,14 +73,18 @@ HDrawer {
     readonly property alias commandsView: commandsView
 
 
-    function toggle(targetItem=mainUI, js="", addToHistory=false) {
+    function toggle(targetItem=null, js="", addToHistory=false) {
         if (debugConsole.visible) {
             debugConsole.visible = false
             return
         }
 
         debugConsole.visible = true
-        debugConsole.target  = targetItem
+        debugConsole.target  =
+            ! targetItem && ! debugConsole.target ? mainUI :
+            targetItem ? targetItem :
+            debugConsole.target
+
         if (js) debugConsole.runJS(js, addToHistory)
     }
 
