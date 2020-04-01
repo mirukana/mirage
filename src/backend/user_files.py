@@ -5,6 +5,7 @@
 import asyncio
 import json
 import os
+import platform
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
@@ -48,12 +49,12 @@ class DataFile:
         if self.is_config:
             return Path(
                 os.environ.get("MIRAGE_CONFIG_DIR") or
-                self.backend.appdirs.user_config_dir
+                self.backend.appdirs.user_config_dir,
             ) / self.filename
 
         return Path(
             os.environ.get("MIRAGE_DATA_DIR") or
-            self.backend.appdirs.user_data_dir
+            self.backend.appdirs.user_data_dir,
         ) / self.filename
 
 
@@ -212,6 +213,10 @@ class UISettings(JSONDataFile):
 
 
     async def default_data(self) -> JsonData:
+        def alt_or_cmd() -> str:
+            # Ctrl in Qt corresponds to Cmd on OSX
+            return "Ctrl" if platform.system() == "Darwin" else "Alt"
+
         return {
             "alertOnMessageForMsec": 4000,
             "alwaysCenterRoomHeader": False,
@@ -265,16 +270,16 @@ class UISettings(JSONDataFile):
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [ "Alt+O"],
                 "focusRoomAtIndex": {
-                    "01": "Alt+1",
-                    "02": "Alt+2",
-                    "03": "Alt+3",
-                    "04": "Alt+4",
-                    "05": "Alt+5",
-                    "06": "Alt+6",
-                    "07": "Alt+7",
-                    "08": "Alt+8",
-                    "09": "Alt+9",
-                    "10": "Alt+0",
+                    "01": f"{alt_or_cmd()}+1",
+                    "02": f"{alt_or_cmd()}+2",
+                    "03": f"{alt_or_cmd()}+3",
+                    "04": f"{alt_or_cmd()}+4",
+                    "05": f"{alt_or_cmd()}+5",
+                    "06": f"{alt_or_cmd()}+6",
+                    "07": f"{alt_or_cmd()}+7",
+                    "08": f"{alt_or_cmd()}+8",
+                    "09": f"{alt_or_cmd()}+9",
+                    "10": f"{alt_or_cmd()}+0",
                 },
 
                 "unfocusOrDeselectAllMessages": ["Escape"],
