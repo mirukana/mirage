@@ -165,32 +165,46 @@ class NioCallbacks:
         model = self.client.models[self.client.user_id, room.room_id, "events"]
         event = None
 
-        for event in model._sorted_data:
-            if event.event_id == ev.redacts:
+        for evt in model._sorted_data:
+            if evt.event_id == ev.redacts:
+                event = evt
                 break
 
-        if (
-            event and
-            issubclass(event.event_type, nio.events.room_events.RoomMessage)
-        ):
-            event.source.source["content"] = {}
-            event.source.source["unsigned"] = {
-                "redacted_by":      ev.event_id,
-                "redacted_because": ev.source,
-            }
+        if not (event and event.event_type is not nio.RedactedEvent):
+            return
 
-            await self.client.register_nio_event(
-                room,
-                nio.events.room_events.RedactedEvent.from_dict(
-                    event.source.source,
-                ),
-                event_id = event.id,
-            )
+        event.source.source["content"]  = {}
+        event.source.source["unsigned"] = {
+            "redacted_by":      ev.event_id,
+            "redacted_because": ev.source,
+        }
+
+        await self.onRedactedEvent(
+            room,
+            nio.RedactedEvent.from_dict(event.source.source),
+            event_id = event.id,
+        )
 
 
-    async def onRedactedEvent(self, room, ev) -> None:
+    async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
+        # There is no way to know which kind of event was redacted in an
+        # encrypted room.
+        kind = "Message" if   ev.type == "m.room.encrypted" \
+                         else ev.type.split(".")[-1].capitalize() \
+                                                    .replace("_", " ")
+
+        co = "%s event removed%s.%s" % (
+            kind,
+            f" by {ev.redacter}"     if ev.redacter != ev.sender else "",
+            f" Reason: {ev.reason}." if ev.reason                else "",
+        )
+
         await self.client.register_nio_event(
-            room, ev, reason=ev.reason,
+            room,
+            ev,
+            event_id = event_id,
+            reason   = ev.reason or "",
+            content  = co,
         )
 
 

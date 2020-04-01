@@ -165,11 +165,11 @@ QtObject {
 
     function escapeHtml(text) {
         // Replace special HTML characters by encoded alternatives
-        return text.replace("&", "&amp;")
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;")
-                    .replace('"', "&quot;")
-                    .replace("'", "&#039;")
+        return text.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;")
     }
 
 
@@ -202,9 +202,9 @@ QtObject {
 
         if (type === "RedactedEvent") {
             return qsTr(
-                "<i>Removed message" +
-                `${ev.reason ? ". Reason: " + ev.reason : ""}` +
-                "</i>"
+                `<font color="${theme.colors.dimText}"><i>` +
+                escapeHtml(ev.content) +
+                "</i></font>"
             )
         }
 

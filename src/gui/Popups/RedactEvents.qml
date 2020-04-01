@@ -10,6 +10,8 @@ BoxPopup {
         qsTr("Remove selected messages?") :
         qsTr("Remove selected message?")
 
+    details.color: theme.colors.warningText
+
     HLabeledTextField {
         id: reasonField
         label.text: qsTr("Reason (optional):")

@@ -70,6 +70,7 @@ class Room(ModelItem):
     guests_allowed:  bool = True
 
     can_invite:           bool = False
+    can_redact:           bool = False
     can_send_messages:    bool = False
     can_set_name:         bool = False
     can_set_topic:        bool = False

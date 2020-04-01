@@ -875,9 +875,10 @@ class MatrixClient(nio.AsyncClient):
 
         return (successes, errors)
 
+
     async def room_mass_redact(
         self, room_id: str, reason: str, *event_ids: str,
-    ):
+    ) -> List[nio.responses.RoomRedactResponse]:
         """Redact events from a room in parallel.
 
         Returns a list of sucessful redacts.
@@ -887,6 +888,7 @@ class MatrixClient(nio.AsyncClient):
             self.room_redact(room_id, evt_id, reason)
             for evt_id in event_ids
         ])
+
 
     async def generate_thumbnail(
         self, data: UploadData, is_svg: bool = False,
@@ -1117,6 +1119,7 @@ class MatrixClient(nio.AsyncClient):
             guests_allowed  = room.guest_access == "can_join",
 
             can_invite           = levels.can_user_invite(self.user),
+            can_redact           = levels.can_user_redact(self.user),
             can_send_messages    = can_send_msg(),
             can_set_name         = can_send_state("m.room.name"),
             can_set_topic        = can_send_state("m.room.topic"),
@@ -1186,7 +1189,10 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def register_nio_event(
-        self, room: nio.MatrixRoom, ev: nio.Event, event_id: str = None,
+        self,
+        room: nio.MatrixRoom,
+        ev: nio.Event,
+        event_id: str = "",
         **fields,
     ) -> None:
         """Register a `nio.Event` as a `Event` object in our model."""

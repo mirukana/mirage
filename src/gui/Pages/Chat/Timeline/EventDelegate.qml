@@ -220,16 +220,28 @@ HColumnLayout {
         HMenuItemPopupSpawner {
             icon.name: "remove-message"
             text: qsTr("Remove")
-            enabled: ! isRedacted
+            enabled: properties.eventIds.length
 
             popup: "Popups/RedactEvents.qml"
             popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
-                eventIds: eventList.selectedCount ?
-                          eventList.getSortedChecked().map(ev => ev.event_id) :
-                          [model.event_id]
+                eventIds:
+                    (
+                        eventList.selectedCount ?
+                        eventList.getSortedChecked() :
+                        [model]
+                    ).filter(ev =>
+                        (
+                            ev.sender_id === chat.userId ||
+                            chat.roomInfo.can_redact
+                        ) && ! isRedacted
+                    ).map(ev => ev.event_id),
+                "details.text":
+                    (! chat.roomInfo.can_redact && eventList.selectedCount) ?
+                    qsTr("Only your messages will be removed") :
+                    ""
             })
         }
 
