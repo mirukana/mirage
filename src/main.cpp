@@ -18,9 +18,6 @@
 
 
 int main(int argc, char *argv[]) {
-    // Force a default universal QML style, we have our own theming mechanism
-    qputenv("QT_STYLE_OVERRIDE","Fusion");
-
     // Define some basic info about the app before creating the QApplication
     QApplication::setOrganizationName("mirage");
     QApplication::setApplicationName("mirage");
@@ -28,6 +25,11 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationVersion("0.4.2");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+
+    // Force the default universal QML style, notably prevents
+    // KDE from hijacking base controls and messing up everything
+    QQuickStyle::setStyle("Fusion");
+    QQuickStyle::setFallbackStyle("Default");
 
     // Register default theme fonts. Take the files  from the
     // Qt resource system if possible (resources stored in the app executable),
