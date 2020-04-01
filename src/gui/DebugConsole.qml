@@ -70,6 +70,8 @@ HDrawer {
             .h, .help    Show this help`.replace(/^ {8}/gm, "")
     )
 
+    property bool doUselessThing: false
+
     readonly property alias commandsView: commandsView
 
 
@@ -210,6 +212,32 @@ HDrawer {
 
             Layout.fillWidth: true
 
+        }
+    }
+
+    NumberAnimation {
+        running: doUselessThing
+        target: mainUI.mainPane.mainPaneList
+        property: "rotation"
+        duration: 250
+        from: 360
+        to: 0
+        loops: Animation.Infinite
+        onStopped: target.rotation = 0
+    }
+
+    NumberAnimation {
+        running: doUselessThing
+        target: mainUI.pageLoader
+        property: "scale"
+        duration: 250
+        from: 1
+        to: -1
+        onStopped: if (doUselessThing) {
+            [from, to] = [to, from]
+            start()
+        } else {
+            target.scale = 1
         }
     }
 }
