@@ -1,4 +1,7 @@
-# Mirage ⋅ [![Latest release](https://img.shields.io/github/v/release/mirukana/mirage)](https://github.com/mirukana/mirage/releases) [![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org)](https://matrix.to/#/#mirage-client:matrix.org)
+# Mirage
+
+[![Latest release](https://img.shields.io/github/v/release/mirukana/mirage)](https://github.com/mirukana/mirage/releases)
+[![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org)](https://matrix.to/#/#mirage-client:matrix.org)
 
 [Features](#currently-implemented-features) ⬥
 [Installation](INSTALL.md) ⬥
@@ -120,7 +123,7 @@ restarting the app.
 
 - API currently unstable: theme properties are often renamed, added or deleted.
 - The file format for both config and themes will soon change
-- The current file format currently forces all theme to have all properties
+- The current file format forces all theme to have all properties
   defined, instead of being able to only specify the ones to override from the
   default theme.
 
