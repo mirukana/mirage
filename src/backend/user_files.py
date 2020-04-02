@@ -287,7 +287,7 @@ class UISettings(JSONDataFile):
                 "focusNextMessage":                ["Ctrl+Down", "Ctrl+J"],
                 "toggleSelectMessage":             ["Ctrl+Space"],
                 "selectMessagesUntilHere":         ["Ctrl+Shift+Space"],
-                "removeFocusedOrSelectedMessages": ["Ctrl+R", "Ctrl+Del"],
+                "removeFocusedOrSelectedMessages": ["Ctrl+R", "Alt+Del"],
                 "debugFocusedMessage":             ["Ctrl+D"],
                 "clearRoomMessages":               ["Ctrl+L"],
 
