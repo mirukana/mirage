@@ -83,7 +83,8 @@ Rectangle {
         function findLastRemovableDelegate() {
             for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
                 const event = eventList.model.get(i)
-                if (eventList.canRedact(event)) return [event]
+                if (eventList.canRedact(event) &&
+                    event.sender_id === chat.userId) return [event]
             }
             return []
         }
