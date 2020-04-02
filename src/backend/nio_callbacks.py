@@ -28,8 +28,10 @@ class NioCallbacks:
     automatically be registered in nio.
 
     For room event content strings, the `%1` and `%2` placeholders
-    refer to the event's sender and who this event targets (`state_key`).
-    These are processed from QML, to allow translations of the strings.
+    refer to the event's sender and who this event targets (`state_key`) or
+    the redactor of this event.
+    These are processed from QML, to allow for future translations of
+    the strings.
     """
 
     client: "MatrixClient" = field()
@@ -187,23 +189,28 @@ class NioCallbacks:
 
 
     async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
-        kind       = ev.source["type"]
-        is_message = kind == "m.room.message"
-        kind       = kind.split(".")[-1].capitalize().replace("_", " ")
+        kind = ev.source["type"].split(".")[-1].replace("_", " ")
 
-        co = "%s%s removed%s%s" % (
-            kind,
-            ""                        if is_message else " event",
-            f" by {ev.redacter}"      if ev.redacter != ev.sender else "",
-            f", reason: {ev.reason}." if ev.reason else "",
-        )
+        if kind != "message":
+            kind = f"{kind} event"
+
+        co = f"%1 removed this {kind}" if ev.redacter == ev.sender else \
+             f"%1's {kind} was removed by %2"
+
+        if ev.reason:
+            co = f"{co}, reason: {ev.reason}"
 
         await self.client.register_nio_event(
             room,
             ev,
-            event_id = event_id,
-            reason   = ev.reason or "",
-            content  = co,
+            event_id      = event_id,
+            reason        = ev.reason or "",
+            content       = co,
+            redacter_id   = ev.redacter or "",
+            redacter_name =
+                (await self.client.get_member_name_avatar(
+                    room.room_id, ev.redacter,
+                ))[0] if ev.redacter else "",
         )
 
 

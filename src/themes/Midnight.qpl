@@ -31,12 +31,14 @@ fontFamily:
 colors:
     int hue: 240
 
-    real intensity:            1.0
-    real coloredTextIntensity: intensity * 71
+    real intensity:               1.0
+    real coloredTextIntensity:    intensity * 71
+    real dimColoredTextIntensity: intensity * 60
 
-    int saturation:            60
-    int bgSaturation:          saturation
-    int coloredTextSaturation: saturation + 20
+    int saturation:               60
+    int bgSaturation:             saturation
+    int coloredTextSaturation:    saturation + 20
+    int dimColoredTextSaturation: saturation
 
     real opacity: 0.7
 
@@ -242,8 +244,10 @@ controls:
             real opacity:   1.0
 
     displayName:
-        int saturation: colors.coloredTextSaturation
-        int lightness:  colors.coloredTextIntensity
+        int saturation:    colors.coloredTextSaturation
+        int lightness:     colors.coloredTextIntensity
+        int dimSaturation: colors.dimColoredTextSaturation
+        int dimLightness:  colors.dimColoredTextIntensity
 
 
 // Specific interface parts
@@ -366,7 +370,7 @@ chat:
         color body: colors.text
         color date: colors.dimText
 
-        color redactedBody: colors.halfDimText
+        color redactedBody: colors.dimText
 
         color noticeBody:    colors.halfDimText
         int noticeLineWidth: 1 * uiScale

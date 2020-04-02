@@ -145,19 +145,26 @@ QtObject {
     }
 
 
-    function nameColor(name) {
+    function nameColor(name, dim=false) {
         return hsluv(
             hueFrom(name),
+
+            dim ?
+            theme.controls.displayName.dimSaturation :
             theme.controls.displayName.saturation,
+
+            dim ?
+            theme.controls.displayName.dimLightness :
             theme.controls.displayName.lightness,
         )
     }
 
 
-    function coloredNameHtml(name, userId, displayText=null,
-                             disambiguate=false) {
+    function coloredNameHtml(
+        name, userId, displayText=null, disambiguate=false, dim=false,
+    ) {
         // substring: remove leading @
-        return `<font color="${nameColor(name || userId.substring(1))}">` +
+        return `<font color="${nameColor(name || userId.substring(1), dim)}">`+
                escapeHtml(displayText || name || userId) +
                "</font>"
     }
@@ -195,17 +202,25 @@ QtObject {
         if (type.startsWith("RoomEncrypted"))
             return ev.content
 
+        if (type === "RedactedEvent") {
+            print("c", ev.content)
+            let content = qsTr(escapeHtml(ev.content)).arg(sender)
+
+            if (ev.content.includes("%2"))
+            content = content.arg(coloredNameHtml(
+                ev.redacter_name, ev.redacter_id, "", false, true,
+            ))
+
+            return qsTr(
+                `<font color="${theme.chat.message.redactedBody}">` +
+                content +
+                "</font>"
+            )
+        }
+
         if (ev.content.includes("%2")) {
             const target = coloredNameHtml(ev.target_name, ev.target_id)
             return qsTr(ev.content).arg(sender).arg(target)
-        }
-
-        if (type === "RedactedEvent") {
-            return qsTr(
-                `<font color="${theme.chat.message.redactedBody}"><i>` +
-                escapeHtml(ev.content) +
-                "</i></font>"
-            )
         }
 
         return qsTr(ev.content).arg(sender)

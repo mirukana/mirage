@@ -2,8 +2,6 @@
 
 - redact local echo effect
 - being able to redact local echos
-- message removed by *display name*
-- do action on last msg if none selected
 - unselect before unfocusing
 
 ## Refactoring

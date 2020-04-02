@@ -187,6 +187,8 @@ class Event(ModelItem):
     target_id:     str = ""
     target_name:   str = ""
     target_avatar: str = ""
+    redacter_id:   str = ""
+    redacter_name: str = ""
 
     is_local_echo: bool                = False
     source:        Optional[nio.Event] = None

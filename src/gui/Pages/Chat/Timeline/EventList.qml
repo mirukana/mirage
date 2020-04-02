@@ -218,7 +218,6 @@ Rectangle {
         }
 
         function canRedact(eventModel) {
-            print(eventModel)
             return eventModel.event_type !== "RedactedEvent" &&
                    (chat.roomInfo.can_redact_all ||
                     eventModel.sender_id === chat.userId)
