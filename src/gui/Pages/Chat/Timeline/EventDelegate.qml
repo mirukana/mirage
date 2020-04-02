@@ -229,26 +229,22 @@ HColumnLayout {
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
-
-                eventIds:
-                    redactableEvents
-                        .filter(ev => ev.event_type !== "RedactedEvent")
-                        .map(ev => ev.event_id),
+                eventIds: events.map(ev => ev.event_id),
 
                 onlyOwnMessageWarning:
                     ! chat.roomInfo.can_redact_all &&
-                    redactableEvents.length < eventList.selectedCount
+                    events.length < eventList.selectedCount
             })
 
-            readonly property var redactableEvents:
-                (
-                    eventList.selectedCount ?
-                    eventList.getSortedChecked() :
-                    [model]
-                ).filter(ev =>
-                    ev.sender_id === chat.userId ||
-                    chat.roomInfo.can_redact_all
-                )
+            readonly property var events: {
+                eventList.selectedCount ?
+                eventList.redactableCheckedEvents :
+
+                eventList.canRedact(currentModel) ?
+                [model] :
+
+                []
+            }
         }
 
         HMenuItem {

@@ -51,6 +51,45 @@ Rectangle {
     }
 
     HShortcut {
+        sequences: window.settings.keys.removeFocusedOrSelectedMessages
+        onActivated: utils.makePopup(
+            "Popups/RedactPopup.qml",
+            chat,
+            {
+                userId: chat.userId,
+                roomId: chat.roomId,
+                eventIds:
+                    (events || findLastRemovableDelegate()).map(
+                        ev => ev.event_id,
+                    ),
+                isLast: ! events,
+                onlyOwnMessageWarning:
+                    ! chat.roomInfo.can_redact_all &&
+                    events &&
+                    events.length < eventList.selectedCount
+            }
+        )
+
+        readonly property var events:
+            eventList.selectedCount ?
+            eventList.redactableCheckedEvents :
+
+            eventList.currentItem &&
+            eventList.canRedact(eventList.currentItem.currentModel) ?
+            [eventList.currentItem.currentModel] :
+
+            null
+
+        function findLastRemovableDelegate() {
+            for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
+                const event = eventList.model.get(i)
+                if (eventList.canRedact(event)) return [event]
+            }
+            return []
+        }
+    }
+
+    HShortcut {
         active: eventList.currentItem
         sequences: window.settings.keys.debugFocusedMessage
         onActivated:
@@ -140,6 +179,9 @@ Rectangle {
         property string delegateWithSelectedText: ""
         property string selectedText: ""
 
+        readonly property var redactableCheckedEvents:
+            getSortedChecked().filter(ev => eventList.canRedact(ev))
+
 
         function copySelectedDelegates() {
             if (eventList.selectedText) {
@@ -172,6 +214,13 @@ Rectangle {
             }
 
             Clipboard.text = contents.join("\n\n")
+        }
+
+        function canRedact(eventModel) {
+            print(eventModel)
+            return eventModel.event_type !== "RedactedEvent" &&
+                   (chat.roomInfo.can_redact_all ||
+                    eventModel.sender_id === chat.userId)
         }
 
         function canCombine(item, itemAfter) {
