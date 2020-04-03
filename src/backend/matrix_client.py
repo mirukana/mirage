@@ -88,6 +88,23 @@ class MatrixClient(nio.AsyncClient):
     room_id_or_alias_regex = re.compile(r"^[#!].+:.+")
     http_s_url             = re.compile(r"^https?://")
 
+    server_filter = {
+        "room": {
+            "ephemeral": {
+                "lazy_load_members": True,
+            },
+            "state": {
+                "lazy_load_members": True,
+            },
+            "timeline": {
+                "lazy_load_members": True,
+            },
+            "account_data": {
+                "lazy_load_members": True,
+            },
+        },
+    }
+
 
     def __init__(self,
                  backend,
@@ -281,9 +298,10 @@ class MatrixClient(nio.AsyncClient):
 
         while True:
             try:
-                self.sync_task = asyncio.ensure_future(
-                    self.sync_forever(timeout=10_000),
-                )
+                self.sync_task = asyncio.ensure_future(self.sync_forever(
+                    timeout     = 10_000,
+                    sync_filter = self.server_filter,
+                ))
                 await self.sync_task
                 break  # task cancelled
             except Exception as err:
@@ -688,7 +706,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_past_events(self, room_id: str) -> bool:
-        """Ask the server for 100 previous events  of the room.
+        """Ask the server for 100 previous events of the room.
 
         Events from before the client was started will be requested and
         registered into our models.
@@ -709,9 +727,10 @@ class MatrixClient(nio.AsyncClient):
             await asyncio.sleep(0.1)
 
         response = await self.room_messages(
-            room_id = room_id,
-            start   = self.past_tokens[room_id],
-            limit   = 100 if room_id in self.loaded_once_rooms else 25,
+            room_id        = room_id,
+            start          = self.past_tokens[room_id],
+            limit          = 100 if room_id in self.loaded_once_rooms else 25,
+            message_filter = self.server_filter,
         )
 
         self.loaded_once_rooms.add(room_id)
