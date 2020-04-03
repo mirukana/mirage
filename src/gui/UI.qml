@@ -18,6 +18,16 @@ Item {
     property bool accountsPresent:
         ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved
 
+    readonly property var accountIds: {
+        const ids   = []
+        const model = ModelStore.get("accounts")
+
+        for (let i = 0; i < model.count; i++)
+            ids.push(model.get(i).id)
+
+        return ids
+    }
+
     readonly property alias debugConsole: debugConsole
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader

@@ -222,14 +222,16 @@ HColumnLayout {
         HMenuItemPopupSpawner {
             icon.name: "remove-message"
             text: qsTr("Remove")
-            enabled: properties.eventIds.length
+            enabled: properties.eventSenderAndIds.length
 
             popup: "Popups/RedactPopup.qml"
             popupParent: chat
             properties: ({
-                userId: chat.userId,
+                preferUserId: chat.userId,
                 roomId: chat.roomId,
-                eventIds: events.map(ev => ev.event_id),
+
+                eventSenderAndIds:
+                    events.map(ev => [ev.sender_id, ev.event_id]),
 
                 onlyOwnMessageWarning:
                     ! chat.roomInfo.can_redact_all &&

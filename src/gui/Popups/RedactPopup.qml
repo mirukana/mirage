@@ -9,8 +9,8 @@ BoxPopup {
         isLast ?
         qsTr("Remove your last message?") :
 
-        eventIds.length > 1 ?
-        qsTr("Remove %1 messages?").arg(eventIds.length) :
+        eventSenderAndIds.length > 1 ?
+        qsTr("Remove %1 messages?").arg(eventSenderAndIds.length) :
 
         qsTr("Remove this message?")
 
@@ -23,17 +23,31 @@ BoxPopup {
     okText: qsTr("Remove")
     box.focusButton: "ok"
 
-    onOk: py.callClientCoro(
-        userId,
-        "room_mass_redact",
-        [roomId, reasonField.field.text, ...eventIds]
-    )
+    onOk: {
+        const idsForSender = {}  // {senderId: [eventId, ...]}
+
+        for (const [senderId, eventId] of eventSenderAndIds) {
+            if (! idsForSender[senderId])
+                idsForSender[senderId] = []
+
+            idsForSender[senderId].push(eventId)
+        }
+
+        print( JSON.stringify( idsForSender, null, 4))
+
+        for (const [senderId, eventIds] of Object.entries(idsForSender))
+            py.callClientCoro(
+                mainUI.accountIds.includes(senderId) ? senderId : preferUserId,
+                "room_mass_redact",
+                [roomId, reasonField.field.text, ...eventIds]
+            )
+    }
 
 
+    property string preferUserId: ""
     property string roomId: ""
-    property string userId: ""
 
-    property var eventIds: []
+    property var eventSenderAndIds: []  // [[senderId, eventId], ...]
     property bool onlyOwnMessageWarning: false
     property bool isLast: false
 

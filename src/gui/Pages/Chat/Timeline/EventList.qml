@@ -56,13 +56,16 @@ Rectangle {
             "Popups/RedactPopup.qml",
             chat,
             {
-                userId: chat.userId,
+                preferUserId: chat.userId,
                 roomId: chat.roomId,
-                eventIds:
+
+                eventSenderAndIds:
                     (events || findLastRemovableDelegate()).map(
-                        ev => ev.event_id,
+                        ev => [ev.sender_id, ev.event_id],
                     ),
+
                 isLast: ! events,
+
                 onlyOwnMessageWarning:
                     ! chat.roomInfo.can_redact_all &&
                     events &&
@@ -84,7 +87,7 @@ Rectangle {
             for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
                 const event = eventList.model.get(i)
                 if (eventList.canRedact(event) &&
-                    event.sender_id === chat.userId) return [event]
+                    mainUI.accountIds.includes(event.sender_id)) return [event]
             }
             return []
         }
@@ -220,7 +223,7 @@ Rectangle {
         function canRedact(eventModel) {
             return eventModel.event_type !== "RedactedEvent" &&
                    (chat.roomInfo.can_redact_all ||
-                    eventModel.sender_id === chat.userId)
+                    mainUI.accountIds.includes(eventModel.sender_id))
         }
 
         function canCombine(item, itemAfter) {
