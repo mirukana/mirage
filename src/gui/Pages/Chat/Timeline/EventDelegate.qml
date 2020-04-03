@@ -210,7 +210,7 @@ HColumnLayout {
                 qsTr("Copy text")
 
             onTriggered: {
-                if (! eventList.selectedCount && eventList.currentItem === -1){
+                if (! eventList.selectedCount && ! eventList.currentItem){
                     Clipboard.text = JSON.parse(model.source).body
                     return
                 }
