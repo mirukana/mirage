@@ -116,8 +116,9 @@ class MatrixClient(nio.AsyncClient):
         self.sync_task:          Optional[asyncio.Future] = None
         self.load_rooms_task:    Optional[asyncio.Future] = None
 
-        self.upload_monitors: Dict[UUID, nio.TransferMonitor] = {}
-        self.upload_tasks:    Dict[UUID, asyncio.Task]        = {}
+        self.upload_monitors:    Dict[UUID, nio.TransferMonitor] = {}
+        self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
+        self.send_message_tasks: Dict[UUID, asyncio.Task]        = {}
 
         self.first_sync_done: asyncio.Event      = asyncio.Event()
         self.first_sync_date: Optional[datetime] = None
@@ -342,7 +343,7 @@ class MatrixClient(nio.AsyncClient):
             room_id, tx_id, event_type, content=echo_body, mentions=mentions,
         )
 
-        await self._send_message(room_id, content)
+        await self._send_message(room_id, content, tx_id)
 
 
     async def toggle_pause_upload(
@@ -592,7 +593,7 @@ class MatrixClient(nio.AsyncClient):
                 content["info"].get("thumbnail_info", {}).get("mimetype", ""),
         )
 
-        await self._send_message(room_id, content)
+        await self._send_message(room_id, content, transaction_id)
 
 
     async def _local_echo(
@@ -648,8 +649,13 @@ class MatrixClient(nio.AsyncClient):
         await self.set_room_last_event(room_id, event)
 
 
-    async def _send_message(self, room_id: str, content: dict) -> None:
+    async def _send_message(
+        self, room_id: str, content: dict, transaction_id: UUID,
+    ) -> None:
         """Send a message event with `content` dict to a room."""
+
+        self.send_message_tasks[transaction_id] = \
+            asyncio.current_task()  # type: ignore
 
         async with self.backend.send_locks[room_id]:
             await self.room_send(
@@ -915,12 +921,19 @@ class MatrixClient(nio.AsyncClient):
                 if not event:
                     continue
 
-                if user_id == self.user_id:
-                    tasks.append(
-                        self.room_redact(room_id, event.event_id, reason),
-                    )
+                if event.is_local_echo:
+                    if user_id == self.user_id:
+                        uuid = UUID(event.id.replace("echo-", ""))
+                        self.send_message_tasks[uuid].cancel()
 
-                event.is_local_echo = True
+                    event.is_local_echo = False
+                else:
+                    if user_id == self.user_id:
+                        tasks.append(
+                            self.room_redact(room_id, event.event_id, reason),
+                        )
+
+                    event.is_local_echo = True
 
                 event.content = await self.get_redacted_event_content(
                     event.event_type, self.user_id, event.sender_id, reason,

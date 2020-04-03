@@ -1,6 +1,5 @@
 # TODO
 
-- redact local echo effect
 - being able to redact local echos
 - unselect before unfocusing
 
