@@ -61,7 +61,7 @@ Rectangle {
 
                 eventSenderAndIds:
                     (events || findLastRemovableDelegate()).map(
-                        ev => [ev.sender_id, ev.event_id],
+                        ev => [ev.sender_id, ev.id],
                     ),
 
                 isLast: ! events,

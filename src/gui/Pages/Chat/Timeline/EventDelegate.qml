@@ -229,9 +229,7 @@ HColumnLayout {
             properties: ({
                 preferUserId: chat.userId,
                 roomId: chat.roomId,
-
-                eventSenderAndIds:
-                    events.map(ev => [ev.sender_id, ev.event_id]),
+                eventSenderAndIds: events.map(ev => [ev.sender_id, ev.id]),
 
                 onlyOwnMessageWarning:
                     ! chat.roomInfo.can_redact_all &&

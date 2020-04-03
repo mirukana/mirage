@@ -24,22 +24,20 @@ BoxPopup {
     box.focusButton: "ok"
 
     onOk: {
-        const idsForSender = {}  // {senderId: [eventId, ...]}
+        const idsForSender = {}  // {senderId: [event.id, ...]}
 
-        for (const [senderId, eventId] of eventSenderAndIds) {
+        for (const [senderId, eventClientId] of eventSenderAndIds) {
             if (! idsForSender[senderId])
                 idsForSender[senderId] = []
 
-            idsForSender[senderId].push(eventId)
+            idsForSender[senderId].push(eventClientId)
         }
 
-        print( JSON.stringify( idsForSender, null, 4))
-
-        for (const [senderId, eventIds] of Object.entries(idsForSender))
+        for (const [senderId, eventClientIds] of Object.entries(idsForSender))
             py.callClientCoro(
                 mainUI.accountIds.includes(senderId) ? senderId : preferUserId,
                 "room_mass_redact",
-                [roomId, reasonField.field.text, ...eventIds]
+                [roomId, reasonField.field.text, ...eventClientIds]
             )
     }
 
@@ -47,7 +45,7 @@ BoxPopup {
     property string preferUserId: ""
     property string roomId: ""
 
-    property var eventSenderAndIds: []  // [[senderId, eventId], ...]
+    property var eventSenderAndIds: []  // [[senderId, event.id], ...]
     property bool onlyOwnMessageWarning: false
     property bool isLast: false
 

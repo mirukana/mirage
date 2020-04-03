@@ -199,7 +199,7 @@ class NioCallbacks:
             reason   = ev.reason or "",
 
             content = await self.client.get_redacted_event_content(
-                ev.source["type"], ev.redacter, ev.sender, ev.reason,
+                type(ev), ev.redacter, ev.sender, ev.reason,
             ),
 
             redacter_id   = ev.redacter or "",

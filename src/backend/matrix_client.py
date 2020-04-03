@@ -877,12 +877,19 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def get_redacted_event_content(
-        self, m_type: str, redacter: str, sender: str, reason: str = "",
+        self,
+        nio_type: Type[nio.Event],
+        redacter: str,
+        sender:   str,
+        reason:   str = "",
     ) -> str:
-        kind = m_type.split(".")[-1].replace("_", " ")
+        """Get content to be displayed in place of a redacted event."""
 
-        if kind != "message":
-            kind = f"{kind} event"
+        kind = (
+            "message" if issubclass(nio_type, nio.RoomMessage) else
+            "media" if issubclass(nio_type, nio.RoomMessageMedia) else
+            "event"
+        )
 
         content = f"%1 removed this {kind}" if redacter == sender else \
                   f"%1's {kind} was removed by %2"
@@ -894,28 +901,32 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def room_mass_redact(
-        self, room_id: str, reason: str, *event_ids: str,
+        self, room_id: str, reason: str, *event_client_ids: str,
     ) -> List[nio.RoomRedactResponse]:
         """Redact events from a room in parallel."""
 
-        model = self.models[self.user_id, room_id, "events"]
         tasks = []
 
-        for event in model._sorted_data:
-            m_type = event.source.source["type"]
+        for user_id in self.backend.clients:
+            for client_id in event_client_ids:
 
-            if event.event_id in event_ids:
+                event = self.models[user_id, room_id, "events"].get(client_id)
+
+                if not event:
+                    continue
+
+                if user_id == self.user_id:
+                    tasks.append(
+                        self.room_redact(room_id, event.event_id, reason),
+                    )
+
                 event.is_local_echo = True
 
                 event.content = await self.get_redacted_event_content(
-                    m_type, self.user_id, event.sender_id, reason,
+                    event.event_type, self.user_id, event.sender_id, reason,
                 )
 
                 event.event_type = nio.RedactedEvent
-
-                tasks.append(
-                    self.room_redact(room_id, event.event_id, reason),
-                )
 
         return await asyncio.gather(*tasks)
 
