@@ -18,9 +18,9 @@ Rectangle {
     HShortcut {
         sequences: window.settings.keys.unfocusOrDeselectAllMessages
         onActivated: {
-            eventList.currentIndex !== -1 ?
-            eventList.currentIndex = -1 :
-            eventList.checked = {}
+            eventList.selectedCount ?
+            eventList.checked = {} :
+            eventList.currentIndex = -1
         }
     }
 

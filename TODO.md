@@ -1,8 +1,5 @@
 # TODO
 
-- being able to redact local echos
-- unselect before unfocusing
-
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`
