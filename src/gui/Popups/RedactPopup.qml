@@ -21,8 +21,9 @@ BoxPopup {
         ""
 
     okText: qsTr("Remove")
-    box.focusButton: "ok"
+    // box.focusButton: "ok"
 
+    onOpened: reasonField.field.forceActiveFocus()
     onOk: {
         const idsForSender = {}  // {senderId: [event.id, ...]}
 
@@ -53,6 +54,7 @@ BoxPopup {
     HLabeledTextField {
         id: reasonField
         label.text: qsTr("Optional reason:")
+
         Layout.fillWidth: true
     }
 }
