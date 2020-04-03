@@ -46,7 +46,6 @@
 - Long-press-drag to select multiple messages on touch
 - Drag to select multiple messages on non-touch
 
-- Redacting messages
 - Make clicking on user/room mentions open relevant UI instead of matrix.to
   URL in browser
 - Make rooms fully manageable within Mirage: settings, permissions, kick, etc

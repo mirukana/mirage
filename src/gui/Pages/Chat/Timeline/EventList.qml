@@ -51,6 +51,7 @@ Rectangle {
     }
 
     HShortcut {
+        enabled: (events && events.length > 0) || events === null
         sequences: window.settings.keys.removeFocusedOrSelectedMessages
         onActivated: utils.makePopup(
             "Popups/RedactPopup.qml",
@@ -81,6 +82,8 @@ Rectangle {
             eventList.canRedact(eventList.currentItem.currentModel) ?
             [eventList.currentItem.currentModel] :
 
+            eventList.currentItem ?
+            [] :
             null
 
         function findLastRemovableDelegate() {
