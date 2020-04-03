@@ -51,6 +51,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - Client-side Matrix & HTTP URL **image previews**, including animated GIF 
 - User ID, display names, room ID and room aliases **mentions**
   (no notification yet)
+- Individual and mass **message removal**
 
 ### Presence
 
