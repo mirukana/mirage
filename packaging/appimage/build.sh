@@ -151,6 +151,10 @@ complete_appdir() {
     cp -r ~/.local/lib/python3.8/site-packages/* \
           appdir/usr/lib/python3.8/site-packages
 
+    cd ~/mirage/build/appdir/usr/lib
+    ln -s python3.8/site-packages/Pillow.libs/* .
+    cd ~/mirage/build
+
     if ! [ -f ~/linuxdeployqt.AppImage ]; then
         wget 'https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage' \
              -O ~/linuxdeployqt.AppImage
