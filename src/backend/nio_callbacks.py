@@ -172,7 +172,10 @@ class NioCallbacks:
                 event = existing
                 break
 
-        if not (event and event.event_type is not nio.RedactedEvent):
+        if not (
+            event and
+            (event.event_type is not nio.RedactedEvent or event.is_local_echo)
+        ):
             return
 
         event.source.source["content"]  = {}

@@ -884,10 +884,19 @@ class MatrixClient(nio.AsyncClient):
         Returns a list of sucessful redacts.
         """
 
-        return await asyncio.gather(*[
-            self.room_redact(room_id, ev_id, reason)
-            for ev_id in event_ids
-        ])
+        model = self.models[self.user_id, room_id, "events"]
+        gather_list = []
+
+        for event in model._sorted_data:
+            if event.event_id in event_ids:
+                event.is_local_echo = True
+                event.content       = "Removing..."
+                event.event_type    = nio.RedactedEvent
+                gather_list.append(
+                    self.room_redact(room_id, event.event_id, reason),
+                )
+
+        return await asyncio.gather(*gather_list)
 
 
     async def generate_thumbnail(
