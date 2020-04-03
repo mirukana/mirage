@@ -192,23 +192,16 @@ class NioCallbacks:
 
 
     async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
-        kind = ev.source["type"].split(".")[-1].replace("_", " ")
-
-        if kind != "message":
-            kind = f"{kind} event"
-
-        co = f"%1 removed this {kind}" if ev.redacter == ev.sender else \
-             f"%1's {kind} was removed by %2"
-
-        if ev.reason:
-            co = f"{co}, reason: {ev.reason}"
-
         await self.client.register_nio_event(
             room,
             ev,
-            event_id      = event_id,
-            reason        = ev.reason or "",
-            content       = co,
+            event_id = event_id,
+            reason   = ev.reason or "",
+
+            content = await self.client.get_redacted_event_content(
+                ev.source["type"], ev.redacter, ev.sender, ev.reason,
+            ),
+
             redacter_id   = ev.redacter or "",
             redacter_name =
                 (await self.client.get_member_name_avatar(
