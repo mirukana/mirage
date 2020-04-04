@@ -451,6 +451,6 @@ class NioCallbacks:
         room_item = self.client.models[self.client.user_id, "rooms"][room_id]
 
         room_item.typing_members = sorted(
-            room.user_name(user_id) for user_id in ev.users
+            room.user_name(user_id) or user_id for user_id in ev.users
             if user_id not in self.client.backend.clients
         )
