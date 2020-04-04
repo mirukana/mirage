@@ -138,7 +138,6 @@ class MatrixClient(nio.AsyncClient):
         self.profile_task:       Optional[asyncio.Future] = None
         self.server_config_task: Optional[asyncio.Future] = None
         self.sync_task:          Optional[asyncio.Future] = None
-        self.load_rooms_task:    Optional[asyncio.Future] = None
 
         self.upload_monitors:    Dict[UUID, nio.TransferMonitor] = {}
         self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
@@ -215,10 +214,7 @@ class MatrixClient(nio.AsyncClient):
     async def logout(self) -> None:
         """Logout from the server. This will delete the device."""
 
-        tasks = (
-            self.profile_task, self.load_rooms_task, self.sync_task,
-            self.server_config_task,
-        )
+        tasks = (self.profile_task, self.sync_task, self.server_config_task)
 
         for task in tasks:
             if task:
@@ -748,40 +744,6 @@ class MatrixClient(nio.AsyncClient):
                     await cb.func(self.all_rooms[room_id], event)
 
         return more_to_load
-
-
-    async def load_rooms_without_visible_events(self) -> None:
-        """Call `_load_room_without_visible_events` for all joined rooms."""
-
-        for room_id in self.models[self.user_id, "rooms"]:
-            asyncio.ensure_future(
-                self._load_room_without_visible_events(room_id),
-            )
-
-
-    async def _load_room_without_visible_events(self, room_id: str) -> None:
-        """Request past events for rooms without any suitable event to show.
-
-        Some events are currently not supported, or processed but not
-        shown in the UI timeline/room "last event" subtitle, e.g.
-        the "x changed their name/avatar" events.
-
-        It could happen that all the initial events received in the initial
-        sync for a room are such events,
-        and thus we'd have nothing to show in the room.
-
-        This method tries to load past events until we have at least one
-        to show or there is nothing left to load.
-        """
-
-        events = self.models[self.user_id, room_id, "events"]
-        more   = True
-
-        while self.skipped_events[room_id] and not events and more:
-            try:
-                more = await self.load_past_events(room_id)
-            except MatrixError:
-                break
 
 
     async def new_direct_chat(self, invite: str, encrypt: bool = False) -> str:

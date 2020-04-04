@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-import asyncio
 import json
 import logging as log
 from contextlib import suppress
@@ -80,10 +79,6 @@ class NioCallbacks:
             )
 
         if not self.client.first_sync_done.is_set():
-            self.client.load_rooms_task = asyncio.ensure_future(
-                self.client.load_rooms_without_visible_events(),
-            )
-
             self.client.first_sync_done.set()
             self.client.first_sync_date = datetime.now()
 
