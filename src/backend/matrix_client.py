@@ -89,17 +89,27 @@ class MatrixClient(nio.AsyncClient):
     http_s_url             = re.compile(r"^https?://")
 
     server_filter = {
+        "presence": {
+            "limit": 1,
+        },
+        "account_data": {
+            "limit": 1,
+        },
         "room": {
             "ephemeral": {
+                "limit": 1,
                 "lazy_load_members": True,
             },
             "state": {
+                "limit": 1,
                 "lazy_load_members": True,
             },
             "timeline": {
+                "limit": 1,
                 "lazy_load_members": True,
             },
             "account_data": {
+                "limit": 1,
                 "lazy_load_members": True,
             },
         },
