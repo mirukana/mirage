@@ -190,6 +190,7 @@ class Accounts(JSONDataFile):
                 "homeserver": client.homeserver,
                 "token":      client.access_token,
                 "device_id":  client.device_id,
+                "enabled":    True,
             },
         })
 

@@ -153,6 +153,7 @@ class Backend:
         return await asyncio.gather(*(
             resume(uid, info)
             for uid, info in (await self.saved_accounts.read()).items()
+            if info.get("enabled", True)
         ))
 
 
