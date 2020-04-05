@@ -10,10 +10,12 @@ import "../Base/HTile"
 HTileDelegate {
     id: room
     backgroundColor: theme.mainPane.listView.room.background
-    opacity: model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
+    opacity:
+        model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
 
     topPadding: theme.spacing / (model.index === 0 ? 1 : 1.5)
-    bottomPadding: theme.spacing / (model.index === view.count - 1 ? 1 : 1.5)
+    bottomPadding:
+        theme.spacing / (model.index === view.count - 1 ? 1 : 1.5)
     leftPadding: theme.spacing * 2
     rightPadding: theme.spacing
 
@@ -213,6 +215,8 @@ HTileDelegate {
 
 
     property string userId
+    property QtObject model
+
     readonly property bool joined: ! invited && ! parted
     readonly property bool invited: model.inviter_id && ! parted
     readonly property bool parted: model.left

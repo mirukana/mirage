@@ -148,6 +148,7 @@
 ## Backend
 
 - Saving the room settings
+- Optimize Model item replacement
 - Refetch profile after manual profile change, don't wait for a room event
 
 - Better config file format

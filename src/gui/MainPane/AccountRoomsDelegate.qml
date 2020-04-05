@@ -10,7 +10,8 @@ Column {
     // visible: account.opacity > 0
 
 
-    property string userId: model.id
+    readonly property string userId: model.id
+    readonly property bool firstSyncDone: model.first_sync_done
     readonly property HListView view: ListView.view
     readonly property int listIndex: index
     readonly property bool noFilterResults:
@@ -53,13 +54,39 @@ Column {
             ]
         }
 
-        delegate: Room {
+        delegate: HLoader {
+            active: firstSyncDone && (inView || model.index === 0)
             width: roomList.width
-            userId: accountRooms.userId
+            height: roomList.firstDelegateHeight
+
+            // XXX: these assume the view has no spacing/margins/header/footer
+            readonly property int yTop:
+                accountRooms.y + account.height + accountRooms.spacing +
+                model.index * height
+            readonly property int yBottom: yTop + height
+            readonly property bool inView:
+                yBottom >= mainPaneList.contentY &&
+                yTop <= mainPaneList.contentY + mainPaneList.height
+
+            readonly property var sourceModel: model
+
+            sourceComponent: Room {
+                width: roomList.width
+                userId: accountRooms.userId
+                view: roomList
+                model: sourceModel
+            }
         }
 
         highlight: null  // managed by the AccountRoomsList
 
+
+        // Delete 0 must *always* be loaded, and all delegates must have the
+        // same height
+        readonly property int firstDelegateHeight:
+            contentItem.visibleChildren[0] ?
+            contentItem.visibleChildren[0].implicitHeight :
+            0
 
         readonly property bool hasActiveRoom:
             window.uiState.page === "Pages/Chat/Chat.qml" &&

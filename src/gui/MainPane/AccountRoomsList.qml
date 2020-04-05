@@ -71,7 +71,7 @@ HListView {
     property bool detachedCurrentIndex: false
     property bool centerToHighlight: true
 
-    readonly property Room selectedRoom:
+    readonly property HLoader selectedRoom:
         currentItem ? currentItem.roomList.currentItem : null
 
     readonly property bool hasActiveAccount:
@@ -187,7 +187,8 @@ HListView {
         if (! currentItem) return
 
         const room = currentItem.roomList.contentItem.children[index]
-        if (room && room.activated) room.activated()
+        print(index, room, room.item)
+        if (room && room.item && room.item.activated) room.item.activated()
     }
 
     function requestActivate() {
@@ -199,7 +200,7 @@ HListView {
         if (! currentItem) return
 
         selectedRoom ?
-        currentItem.roomList.currentItem.activated() :
+        currentItem.roomList.currentItem.item.activated() :
         currentItem.account.activated()
 
         detachedCurrentIndex = false
