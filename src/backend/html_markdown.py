@@ -112,17 +112,20 @@ class HTMLProcessor:
         "table", "thead", "tbody", "tr", "th", "td", "pre",
     }
 
+    opaque_id         = r"[a-zA-Z\d._-]+?"
+    user_id_localpart = r"[\x21-\x39\x3D-\x7E]+?"
+
     user_id_regex = re.compile(
-        r"(?=^|\W)(?P<body>@.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        rf"(?P<body>@{user_id_localpart}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
     room_id_regex = re.compile(
-        r"(?=^|\W)(?P<body>!.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        rf"(?P<body>!{opaque_id}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
     room_alias_regex = re.compile(
-        r"(?=^|\W)(?P<body>#.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        r"(?=^|\W)(?P<body>#\S+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
     message_id_regex = re.compile(
-        r"(?=^|\W)(?P<body>\$.+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        rf"(?P<body>\${opaque_id}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
 
     link_regexes = [re.compile(r, re.IGNORECASE)
@@ -142,19 +145,19 @@ class HTMLProcessor:
     ]]
 
     link_is_matrix_to_regex = re.compile(
-        r"https?://matrix.to/#/.+", re.IGNORECASE,
+        r"https?://matrix.to/#/\S+", re.IGNORECASE,
     )
     link_is_user_id_regex = re.compile(
-        r"https?://matrix.to/#/@.+", re.IGNORECASE,
+        r"https?://matrix.to/#/@\S+", re.IGNORECASE,
     )
     link_is_room_id_regex = re.compile(
-        r"https?://matrix.to/#/!.+", re.IGNORECASE,
+        r"https?://matrix.to/#/!\S+", re.IGNORECASE,
     )
     link_is_room_alias_regex = re.compile(
-        r"https?://matrix.to/#/#.+", re.IGNORECASE,
+        r"https?://matrix.to/#/#\S+", re.IGNORECASE,
     )
     link_is_message_id_regex = re.compile(
-        r"https?://matrix.to/#/\$.+", re.IGNORECASE,
+        r"https?://matrix.to/#/\$\S+", re.IGNORECASE,
     )
 
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
