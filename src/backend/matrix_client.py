@@ -11,13 +11,13 @@ import re
 import sys
 import traceback
 from contextlib import suppress
-from copy import copy
+from copy import deepcopy
 from datetime import datetime, timedelta
 from functools import partial
 from pathlib import Path
 from typing import (
-    TYPE_CHECKING, Any, DefaultDict, Dict, List, NamedTuple, Optional, Set,
-    Tuple, Type, Union,
+    TYPE_CHECKING, Any, ClassVar, DefaultDict, Dict, List, NamedTuple,
+    Optional, Set, Tuple, Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -86,32 +86,26 @@ class MatrixClient(nio.AsyncClient):
 
     user_id_regex          = re.compile(r"^@.+:.+")
     room_id_or_alias_regex = re.compile(r"^[#!].+:.+")
-    http_s_url             = re.compile(r"^https?://")
+    http_s_url_regex       = re.compile(r"^https?://")
 
-    server_filter = {
-        "presence": {
-            "limit": 1,
-        },
-        "account_data": {
-            "limit": 1,
-        },
+    lazy_load_filter: ClassVar[Dict[str, Any]] = {
         "room": {
-            "ephemeral": {
-                "limit": 1,
-                "lazy_load_members": True,
-            },
-            "state": {
-                "limit": 1,
-                "lazy_load_members": True,
-            },
-            "timeline": {
-                "limit": 1,
-                "lazy_load_members": True,
-            },
-            "account_data": {
-                "limit": 1,
-                "lazy_load_members": True,
-            },
+            "ephemeral":    {"lazy_load_members": True},
+            "state":        {"lazy_load_members": True},
+            "timeline":     {"lazy_load_members": True},
+            "account_data": {"lazy_load_members": True},
+        },
+    }
+
+    limit_1_filter: ClassVar[Dict[str, Any]] = {
+        "presence":     {"limit": 1},
+        "account_data": {"limit": 1},
+
+        "room": {
+            "ephemeral":    {"limit": 1},
+            "state":        {"limit": 1},
+            "timeline":     {"limit": 1},
+            "account_data": {"limit": 1},
         },
     }
 
@@ -302,11 +296,15 @@ class MatrixClient(nio.AsyncClient):
         )
         self.server_config_task.add_done_callback(on_server_config_response)
 
+        filter1 = deepcopy(self.lazy_load_filter)
+        utils.dict_update_recursive(filter1, self.limit_1_filter)
+
         while True:
             try:
                 self.sync_task = asyncio.ensure_future(self.sync_forever(
-                    timeout     = 10_000,
-                    sync_filter = self.server_filter,
+                    timeout           = 10_000,
+                    sync_filter       = self.lazy_load_filter,
+                    first_sync_filter = filter1,
                 ))
                 await self.sync_task
                 break  # task cancelled
@@ -689,7 +687,7 @@ class MatrixClient(nio.AsyncClient):
         for user_id in self.models["accounts"]:
             if user_id in self.models[self.user_id, room_id, "members"]:
                 key = f"echo-{transaction_id}"
-                self.models[user_id, room_id, "events"][key] = copy(event)
+                self.models[user_id, room_id, "events"][key] = deepcopy(event)
 
         await self.set_room_last_event(room_id, event)
 
@@ -735,8 +733,8 @@ class MatrixClient(nio.AsyncClient):
         response = await self.room_messages(
             room_id        = room_id,
             start          = self.past_tokens[room_id],
-            limit          = 100 if room_id in self.loaded_once_rooms else 25,
-            message_filter = self.server_filter,
+            limit          = 100 if room_id in self.loaded_once_rooms else 20,
+            message_filter = self.lazy_load_filter,
         )
 
         self.loaded_once_rooms.add(room_id)
@@ -805,7 +803,7 @@ class MatrixClient(nio.AsyncClient):
 
         string = alias_or_id_or_url.strip()
 
-        if self.http_s_url.match(string):
+        if self.http_s_url_regex.match(string):
             for part in urlparse(string).fragment.split("/"):
                 if self.room_id_or_alias_regex.match(part):
                     string = part
@@ -1083,7 +1081,7 @@ class MatrixClient(nio.AsyncClient):
 
             _, room_id, _ = sync_id
 
-            for ev in model.copy().values():
+            for ev in deepcopy(model).values():
                 room = self.all_rooms[room_id]
 
                 if isinstance(ev.source, nio.MegolmEvent):
