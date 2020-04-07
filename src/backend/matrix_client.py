@@ -16,8 +16,8 @@ from datetime import datetime, timedelta
 from functools import partial
 from pathlib import Path
 from typing import (
-    TYPE_CHECKING, Any, ClassVar, DefaultDict, Dict, List, NamedTuple,
-    Optional, Set, Tuple, Type, Union,
+    TYPE_CHECKING, Any, ClassVar, Dict, List, NamedTuple, Optional, Set, Tuple,
+    Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -109,6 +109,27 @@ class MatrixClient(nio.AsyncClient):
         },
     }
 
+    no_profile_events_filter: ClassVar[Dict[str, Any]] = {
+        "room": {
+            "timeline": {"not_types": ["m.room.member"]},
+        },
+    }
+
+    no_unknown_events_filter: ClassVar[Dict[str, Any]] = {
+        "room": {
+            "timeline": {
+                "not_types": [
+                    "m.room.message.feedback",
+                    "m.room.pinned_events",
+                    "m.call.*",
+                    "m.room.third_part_invite",
+                    "m.room.tombstone",
+                    "m.reaction",
+                ],
+            },
+        },
+    }
+
 
     def __init__(self,
                  backend,
@@ -154,8 +175,6 @@ class MatrixClient(nio.AsyncClient):
         self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
         self.loaded_once_rooms:    Set[str]       = set()  # {room_id}
         self.cleared_events_rooms: Set[str]       = set()  # {room_id}
-
-        self.skipped_events: DefaultDict[str, int] = DefaultDict(lambda: 0)
 
         self.nio_callbacks = NioCallbacks(self)
 
@@ -298,6 +317,16 @@ class MatrixClient(nio.AsyncClient):
 
         filter1 = deepcopy(self.lazy_load_filter)
         utils.dict_update_recursive(filter1, self.limit_1_filter)
+
+
+        cfg = self.backend.ui_settings
+        if cfg["hideProfileChangeEvents"] or cfg["hideMembershipEvents"]:
+            utils.dict_update_recursive(filter1, self.no_profile_events_filter)
+
+        if cfg["hideUnknownEvents"]:
+            filter1["room"]["timeline"]["not_types"].extend(
+                self.no_unknown_events_filter["room"]["timeline"]["not_types"],
+            )
 
         while True:
             try:

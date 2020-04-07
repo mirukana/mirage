@@ -264,7 +264,6 @@ class NioCallbacks:
         # Membership changes
         if not prev or membership != prev_membership:
             if self.client.backend.ui_settings["hideMembershipEvents"]:
-                self.client.skipped_events[room.room_id] += 1
                 return None
 
             reason = f", reason: {now['reason']}" if now.get("reason") else ""
@@ -327,7 +326,6 @@ class NioCallbacks:
                     account.avatar_url      = now.get("avatar_url") or ""
 
             if self.client.backend.ui_settings["hideProfileChangeEvents"]:
-                self.client.skipped_events[room.room_id] += 1
                 return None
 
             return (
@@ -419,7 +417,6 @@ class NioCallbacks:
 
     async def onUnknownEvent(self, room, ev) -> None:
         if self.client.backend.ui_settings["hideUnknownEvents"]:
-            self.client.skipped_events[room.room_id] += 1
             return
 
         co = f"%1 sent an unsupported <b>{ev.type}</b> event"
