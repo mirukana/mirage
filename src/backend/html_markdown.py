@@ -467,7 +467,7 @@ class HTMLProcessor:
 
 
     def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
-        href = unquote(el.attrib.get("href"))
+        href = unquote(el.attrib.get("href", ""))
 
         if not href or not el.text:
             return el
