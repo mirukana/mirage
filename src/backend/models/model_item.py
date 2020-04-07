@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
-from ..pyotherside_events import ModelItemFieldChanged
+from ..pyotherside_events import ModelItemSet
 from ..utils import serialize_value_for_qml
 
 if TYPE_CHECKING:
@@ -38,17 +38,19 @@ class ModelItem:
         with self.parent_model._write_lock:
             super().__setattr__(name, value)
 
-            old_index = self.parent_model._sorted_data.index(self)
+            if self.parent_model.sync_id:
+                index_then = self.parent_model._sorted_data.index(self)
+
             self.parent_model._sorted_data.sort()
-            new_index = self.parent_model._sorted_data.index(self)
 
             if self.parent_model.sync_id:
-                ModelItemFieldChanged(
+                index_now = self.parent_model._sorted_data.index(self)
+
+                ModelItemSet(
                     self.parent_model.sync_id,
-                    old_index,
-                    new_index,
-                    name,
-                    self.serialize_field(name),
+                    index_then,
+                    index_now,
+                    {name: self.serialize_field(name)},
                 )
 
 

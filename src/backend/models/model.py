@@ -8,9 +8,7 @@ from typing import (
 
 from blist import blist
 
-from ..pyotherside_events import (
-    ModelCleared, ModelItemDeleted, ModelItemInserted,
-)
+from ..pyotherside_events import ModelCleared, ModelItemDeleted, ModelItemSet
 from . import SyncId
 
 if TYPE_CHECKING:
@@ -61,36 +59,49 @@ class Model(MutableMapping):
 
 
     def __setitem__(self, key, value: "ModelItem") -> None:
-        """Merge new item with an existing one if possible, else add it.
-
-        If an existing item with the passed `key` is found, its fields will be
-        updated with the passed `ModelItem`'s fields.
-        In other cases, the item is simply added to the model.
-
-        This also sets the `ModelItem.parent_model` hidden attributes on
-        the passed item.
-        """
-
         with self._write_lock:
             existing = self._data.get(key)
             new      = value
 
-            if existing:
-                for field in new.__dataclass_fields__:  # type: ignore
-                    # The same shared item is in _sorted_data, no need to find
-                    # and modify it explicitely.
-                    setattr(existing, field, getattr(new, field))
-                return
+            # Collect changed fields
+
+            changed_fields = {}
+
+            for field in new.__dataclass_fields__:  # type: ignore
+                changed = True
+
+                if existing:
+                    changed = getattr(new, field) != getattr(existing, field)
+
+                if changed:
+                    changed_fields[field] = new.serialize_field(field)
+
+            # Set parent model on new item
 
             if self.sync_id:
                 new.parent_model = self
 
-            self._data[key] = new
-            index           = bisect(self._sorted_data, new)
-            self._sorted_data.insert(index, new)
+            # Insert into sorted data
 
-            if self.sync_id:
-                ModelItemInserted(self.sync_id, index, new)
+            index_then = None
+
+            if existing:
+                index_then = self._sorted_data.index(existing)
+                del self._sorted_data[index_then]
+
+            index_now = bisect(self._sorted_data, new)
+            self._sorted_data.insert(index_now, new)
+
+            # Insert into dict data
+
+            self._data[key] = new
+
+            # Emit PyOtherSide event
+
+            if self.sync_id and (index_then != index_now or changed_fields):
+                ModelItemSet(
+                    self.sync_id, index_then, index_now, changed_fields,
+                )
 
 
     def __delitem__(self, key) -> None:

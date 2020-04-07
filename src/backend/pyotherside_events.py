@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import pyotherside
 
@@ -9,7 +9,6 @@ from .utils import serialize_value_for_qml
 
 if TYPE_CHECKING:
     from .models import SyncId
-    from .models.model_item import ModelItem
 
 
 @dataclass
@@ -70,21 +69,12 @@ class ModelEvent(PyOtherSideEvent):
 
 
 @dataclass
-class ModelItemInserted(ModelEvent):
-    """Indicate a `ModelItem` insertion into a `Backend` `Model`."""
+class ModelItemSet(ModelEvent):
+    """Indicate `ModelItem` insert or field changes in a `Backend` `Model`."""
 
-    index: int         = field()
-    item:  "ModelItem" = field()
-
-
-@dataclass
-class ModelItemFieldChanged(ModelEvent):
-    """Indicate a `ModelItem`'s field value change in a `Backend` `Model`."""
-
-    item_index_then: int = field()
-    item_index_now:  int = field()
-    changed_field:   str = field()
-    field_value:     Any = field()
+    index_then: Optional[int]  = field()
+    index_now:  int            = field()
+    fields:     Dict[str, Any] = field()
 
 
 @dataclass
