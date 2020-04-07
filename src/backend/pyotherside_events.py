@@ -17,11 +17,12 @@ class PyOtherSideEvent:
     """Event that will be sent on instanciation to QML by PyOtherSide."""
 
     def __post_init__(self) -> None:
-        # CPython 3.6 or any Python implemention >= 3.7 is required for correct
-        # __dataclass_fields__ dict order.
+        # XXX: CPython 3.6 or any Python implemention >= 3.7 is required for
+        # correct __dataclass_fields__ dict order.
         args = [
             serialize_value_for_qml(getattr(self, field))
             for field in self.__dataclass_fields__  # type: ignore
+            if field != "callbacks"
         ]
         pyotherside.send(type(self).__name__, *args)
 
@@ -62,35 +63,37 @@ class LoopException(PyOtherSideEvent):
 
 
 @dataclass
-class ModelItemInserted(PyOtherSideEvent):
+class ModelEvent(PyOtherSideEvent):
+    """Base class for model change events."""
+
+    sync_id: "SyncId" = field()
+
+
+@dataclass
+class ModelItemInserted(ModelEvent):
     """Indicate a `ModelItem` insertion into a `Backend` `Model`."""
 
-    sync_id: "SyncId"    = field()
-    index:   int         = field()
-    item:    "ModelItem" = field()
+    index: int         = field()
+    item:  "ModelItem" = field()
 
 
 @dataclass
-class ModelItemFieldChanged(PyOtherSideEvent):
+class ModelItemFieldChanged(ModelEvent):
     """Indicate a `ModelItem`'s field value change in a `Backend` `Model`."""
 
-    sync_id:         "SyncId" = field()
-    item_index_then: int      = field()
-    item_index_now:  int      = field()
-    changed_field:   str      = field()
-    field_value:     Any      = field()
+    item_index_then: int = field()
+    item_index_now:  int = field()
+    changed_field:   str = field()
+    field_value:     Any = field()
 
 
 @dataclass
-class ModelItemDeleted(PyOtherSideEvent):
+class ModelItemDeleted(ModelEvent):
     """Indicate the removal of a `ModelItem` from a `Backend` `Model`."""
 
-    sync_id: "SyncId" = field()
-    index:   int      = field()
+    index: int = field()
 
 
 @dataclass
-class ModelCleared(PyOtherSideEvent):
+class ModelCleared(ModelEvent):
     """Indicate that a `Backend` `Model` was cleared."""
-
-    sync_id: "SyncId" = field()
