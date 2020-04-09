@@ -36,7 +36,6 @@ class NioCallbacks:
 
     client: "MatrixClient" = field()
 
-
     def __post_init__(self) -> None:
         """Register our methods as callbacks."""
 
@@ -109,9 +108,11 @@ class NioCallbacks:
             room, ev, content=co, mentions=mention_list,
         )
 
-        if HTML_PROCESSOR.user_id_link_in_html(co, self.client.user_id):
-            rooms = self.client.models[self.client.user_id, "rooms"]
-            rooms[room.room_id].mentions += 1
+        if self.client.first_sync_done.is_set() and self.client.open_room != room.room_id:
+            room = self.client.models[self.client.user_id, "rooms"][room.room_id]
+            room.unreads += 1
+            if HTML_PROCESSOR.user_id_link_in_html(co, self.client.user_id):
+                room.mentions += 1
 
 
 

@@ -110,6 +110,7 @@ class MatrixClient(nio.AsyncClient):
 
         self.backend: "Backend"  = backend
         self.models:  ModelStore = self.backend.models
+        self.open_room: str      = None
 
         self.profile_task:       Optional[asyncio.Future] = None
         self.server_config_task: Optional[asyncio.Future] = None
@@ -825,6 +826,18 @@ class MatrixClient(nio.AsyncClient):
 
         await super().room_forget(room_id)
 
+    async def room_read(self, room_id: str) -> None:
+        """Mark all messages in a room as read
+
+        Currently, this doesn't handle sending a read receipt to the server,
+        only cleaning up any unread indicators.
+        """
+
+        self.open_room = room_id
+        if self.first_sync_done.is_set():
+            room = self.models[self.user_id, "rooms"][room_id]
+            room.mentions = 0
+            room.unreads = 0
 
     async def room_mass_invite(
         self, room_id: str, *user_ids: str,
@@ -1146,10 +1159,12 @@ class MatrixClient(nio.AsyncClient):
             last_event_date = registered.last_event_date
             typing_members  = registered.typing_members
             mentions        = registered.mentions
+            unreads         = registered.unreads
         except KeyError:
             last_event_date = datetime.fromtimestamp(0)
             typing_members  = []
             mentions        = 0
+            unreads         = 0
 
         self.models[self.user_id, "rooms"][room.room_id] = Room(
             id             = room.room_id,
@@ -1184,6 +1199,7 @@ class MatrixClient(nio.AsyncClient):
 
             last_event_date = last_event_date,
             mentions        = mentions,
+            unreads         = unreads,
 
         )
 

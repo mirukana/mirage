@@ -61,6 +61,8 @@ HLoader {
     function showRoom(userId, roomId) {
         _show("Pages/Chat/Chat.qml", {userId, roomId})
 
+        py.callClientCoro(userId, "room_read", [roomId], () => {})
+
         window.uiState.page           = "Pages/Chat/Chat.qml"
         window.uiState.pageProperties = {userId, roomId}
         window.uiStateChanged()
