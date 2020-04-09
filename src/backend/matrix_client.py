@@ -98,14 +98,16 @@ class MatrixClient(nio.AsyncClient):
     }
 
     limit_1_filter: ClassVar[Dict[str, Any]] = {
-        "presence":     {"limit": 1},
-        "account_data": {"limit": 1},
+        "presence": {"limit": 1},
 
         "room": {
-            "ephemeral":    {"limit": 1},
-            "state":        {"limit": 1},
-            "timeline":     {"limit": 1},
-            "account_data": {"limit": 1},
+            "ephemeral": {"limit": 1},
+            "timeline":  {
+                "limit": 1,
+                # This kind says another event was redacted, but we wouldn't
+                # have it in our model, so nothing would be shown
+                "not_types": ["m.room.redaction"],
+            },
         },
     }
 

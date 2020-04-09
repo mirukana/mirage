@@ -56,7 +56,14 @@ class NioCallbacks:
     # Response callbacks
 
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
+        room_model = self.client.models[self.client.user_id, "rooms"]
+
         for room_id, info in resp.rooms.join.items():
+            if room_id not in room_model:
+                # Just in case we don't get any events for that room that
+                # triggers other callbacks
+                await self.client.register_nio_room(self.client.rooms[room_id])
+
             if room_id not in self.client.past_tokens:
                 self.client.past_tokens[room_id] = info.timeline.prev_batch
 
@@ -165,6 +172,7 @@ class NioCallbacks:
             event and
             (event.event_type is not nio.RedactedEvent or event.is_local_echo)
         ):
+            await self.client.register_nio_room(room)
             return
 
         event.source.source["content"]  = {}
