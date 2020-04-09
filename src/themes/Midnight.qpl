@@ -62,6 +62,9 @@ colors:
     color negativeBackground:
         hsluv(0, saturation * 1.5, intensity * 52, opacity)
 
+    color unreadBackground:
+        hsluv(188, saturation * 1.5, intensity * 52, 1)
+
     color alertBackground: negativeBackground
 
     color brightText:  hsluv(0, 0, intensity * 100)
