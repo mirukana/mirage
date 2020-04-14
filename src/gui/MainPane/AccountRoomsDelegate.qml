@@ -21,6 +21,8 @@ Column {
     readonly property alias collapsed: account.collapsed
     readonly property alias roomList: roomList
 
+    onFirstSyncDoneChanged: print("fsd")
+
 
     Account {
         id: account
@@ -55,7 +57,11 @@ Column {
         }
 
         delegate: HLoader {
-            active: firstSyncDone && (inView || model.index === 0)
+            asynchronous: false
+            active: firstSyncDone && inView
+
+            onInViewChanged: print("iv")
+
             width: roomList.width
             height: roomList.firstDelegateHeight
 
@@ -80,13 +86,17 @@ Column {
 
         highlight: null  // managed by the AccountRoomsList
 
+        onFirstDelegateHeightChanged: firstDelegateHeight = firstDelegateHeight
+
 
         // Delete 0 must *always* be loaded, and all delegates must have the
         // same height
-        readonly property int firstDelegateHeight:
+        property int firstDelegateHeight:
             contentItem.visibleChildren[0] ?
             contentItem.visibleChildren[0].implicitHeight :
             0
+        property var pr: firstDelegateHeight
+        onPrChanged: print("pr changed:", pr)
 
         readonly property bool hasActiveRoom:
             window.uiState.page === "Pages/Chat/Chat.qml" &&

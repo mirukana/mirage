@@ -51,13 +51,13 @@ QtObject {
 
     function onModelItemSet(syncId, indexThen, indexNow, changedFields){
         if (indexThen === undefined) {
-            print("insert", syncId, indexThen, indexNow,
-                  JSON.stringify(changedFields))
+            // print("insert", syncId, indexThen, indexNow,
+                  // JSON.stringify(changedFields))
             ModelStore.get(syncId).insert(indexNow, changedFields)
 
         } else {
-            print("set", syncId, indexThen, indexNow,
-                  JSON.stringify(changedFields))
+            // print("set", syncId, indexThen, indexNow,
+                  // JSON.stringify(changedFields))
             const model = ModelStore.get(syncId)
             model.set(indexThen, changedFields)
             if (indexThen !== indexNow) model.move(indexThen, indexNow, 1)
