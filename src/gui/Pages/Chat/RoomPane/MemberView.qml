@@ -14,7 +14,17 @@ HColumnLayout {
         id: memberList
         clip: true
 
-        model: HSortFilterProxyModel {
+        // https://github.com/oKcerG/SortFilterProxyModel/issues/75
+        model: filterField.text ? proxy : proxy.sourceModel
+
+        delegate: MemberDelegate {
+            width: memberList.width
+        }
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
+        readonly property HSortFilterProxyModel proxy: HSortFilterProxyModel {
             sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
 
             filters: ExpressionFilter {
@@ -23,13 +33,6 @@ HColumnLayout {
                 )
             }
         }
-
-        delegate: MemberDelegate {
-            width: memberList.width
-        }
-
-        Layout.fillWidth: true
-        Layout.fillHeight: true
 
         Rectangle {
             anchors.fill: parent

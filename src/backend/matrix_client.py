@@ -761,7 +761,6 @@ class MatrixClient(nio.AsyncClient):
             # If a new room was added, wait for onSyncResponse to set the token
             await asyncio.sleep(0.1)
 
-        print( self.lazy_load_filter)
         response = await self.room_messages(
             room_id        = room_id,
             start          = self.past_tokens[room_id],

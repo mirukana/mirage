@@ -21,8 +21,6 @@ Column {
     readonly property alias collapsed: account.collapsed
     readonly property alias roomList: roomList
 
-    onFirstSyncDoneChanged: print("fsd")
-
 
     Account {
         id: account
@@ -39,28 +37,15 @@ Column {
         height: contentHeight
         interactive: false
 
-        model: HSortFilterProxyModel {
-            sourceModel: ModelStore.get(accountRooms.userId, "rooms")
-
-            filters: [
-                ExpressionFilter {
-                    expression: ! account.collapsed
-                    enabled: ! mainPane.filter
-                },
-
-                ExpressionFilter {
-                    expression: utils.filterMatches(
-                        mainPane.filter, model.display_name,
-                    )
-                }
-            ]
-        }
+        // https://github.com/oKcerG/SortFilterProxyModel/issues/75
+        model:
+            mainPane.filter ? proxy :
+            account.collapsed ? null :
+            proxy.sourceModel
 
         delegate: HLoader {
             asynchronous: false
             active: firstSyncDone && inView
-
-            onInViewChanged: print("iv")
 
             width: roomList.width
             height: roomList.firstDelegateHeight
@@ -95,8 +80,6 @@ Column {
             contentItem.visibleChildren[0] ?
             contentItem.visibleChildren[0].implicitHeight :
             0
-        property var pr: firstDelegateHeight
-        onPrChanged: print("pr changed:", pr)
 
         readonly property bool hasActiveRoom:
             window.uiState.page === "Pages/Chat/Chat.qml" &&
@@ -105,6 +88,16 @@ Column {
         readonly property var activeRoomIndex:
             hasActiveRoom ?
             model.findIndex(window.uiState.pageProperties.roomId) : null
+
+        readonly property HSortFilterProxyModel proxy: HSortFilterProxyModel {
+            sourceModel: ModelStore.get(accountRooms.userId, "rooms")
+
+            filters: ExpressionFilter {
+                expression: utils.filterMatches(
+                    mainPane.filter, model.display_name,
+                )
+            }
+        }
 
 
         Binding on currentIndex {
