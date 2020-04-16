@@ -55,11 +55,16 @@ HTileDelegate {
 
                     background: Rectangle {
                         color:
-                            model.mentions === 0 ?
-                            theme.colors.unreadBackground :
-                            theme.colors.alertBackground
+                            model.mentions ?
+                            indicatorTheme.mentionBackground :
+                            indicatorTheme.background
 
                         radius: theme.radius / 4
+
+                        readonly property QtObject indicatorTheme:
+                            theme.mainPane.listView.room.unreadIndicator
+
+                        Behavior on color { HColorAnimation {} }
                     }
 
                     Behavior on scale { HNumberAnimation {} }

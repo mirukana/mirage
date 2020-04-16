@@ -62,9 +62,6 @@ colors:
     color negativeBackground:
         hsluv(0, saturation * 1.5, intensity * 52, opacity)
 
-    color unreadBackground:
-        hsluv(188, saturation * 1.5, intensity * 52, 1)
-
     color alertBackground: negativeBackground
 
     color brightText:  hsluv(0, 0, intensity * 100)
@@ -305,6 +302,10 @@ mainPane:
 
             int avatarRadius:          controls.avatar.radius
             int collapsedAvatarRadius: controls.avatar.radius
+
+            unreadIndicator:
+                color background:        colors.accentBackground
+                color mentionBackground: colors.alertBackground
 
     bottomBar:
         color background:               colors.strongBackground
