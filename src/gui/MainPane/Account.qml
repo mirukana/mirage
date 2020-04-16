@@ -15,6 +15,7 @@ HTileDelegate {
 
     contentItem: ContentRow {
         tile: account
+        spacing: 0
 
         HUserAvatar {
             id: avatar
@@ -38,6 +39,9 @@ HTileDelegate {
                 hovered ?
                 utils.nameColor(model.display_name || model.id.substring(1)) :
                 theme.mainPane.listView.account.name
+
+            Layout.leftMargin: theme.spacing
+            Layout.rightMargin: theme.spacing
 
             Behavior on color { HColorAnimation {} }
         }
