@@ -13,15 +13,28 @@ HColumnPage {
     rightPadding: 0
 
     onLoadEventListChanged: if (loadEventList) loadedOnce = true
+    Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()
 
 
     property bool loadedOnce: false
+    property var loadMembersFuture: null
 
     readonly property alias composer: composer
     readonly property bool loadEventList:
         mainUI.mainPane.collapse ?
         ! mainUI.mainPane.visible : ! pageLoader.appearAnimation.running
 
+
+    Timer {
+        interval: 200
+        running: true
+        onTriggered: loadMembersFuture = py.callClientCoro(
+            chat.userId,
+            "load_all_room_members",
+            [chat.roomId],
+            () => { loadMembersFuture = null },
+        )
+    }
 
     RoomHeader {
         Layout.fillWidth: true

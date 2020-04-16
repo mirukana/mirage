@@ -740,6 +740,13 @@ class MatrixClient(nio.AsyncClient):
             )
 
 
+    async def load_all_room_members(self, room_id: str) -> None:
+        room = self.all_rooms[room_id]
+
+        if not room.members_synced:
+            await super().joined_members(room_id)
+
+
     async def load_past_events(self, room_id: str) -> bool:
         """Ask the server for 100 previous events of the room.
 
