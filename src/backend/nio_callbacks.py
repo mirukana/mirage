@@ -108,12 +108,15 @@ class NioCallbacks:
             room, ev, content=co, mentions=mention_list,
         )
 
-        if self.client.first_sync_done.is_set() and self.client.open_room != room.room_id:
-            room = self.client.models[self.client.user_id, "rooms"][room.room_id]
+        is_past = await self.client.event_is_past(ev)
+
+        if not is_past and self.client.open_room != room.room_id:
+            model         = self.client.models[self.client.user_id, "rooms"]
+            room          = model[room.room_id]
             room.unreads += 1
+
             if HTML_PROCESSOR.user_id_link_in_html(co, self.client.user_id):
                 room.mentions += 1
-
 
 
     async def onRoomMessageNotice(self, room, ev) -> None:
