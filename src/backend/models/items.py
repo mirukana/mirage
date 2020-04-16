@@ -96,11 +96,15 @@ class Room(ModelItem):
         return (
             self.left,
             other.inviter_id,
+            other.mentions,
+            other.unreads,
             other.last_event_date,
             (self.display_name or self.id).lower(),
         ) < (
             other.left,
             self.inviter_id,
+            self.mentions,
+            self.unreads,
             self.last_event_date,
             (other.display_name or other.id).lower(),
         )
