@@ -97,13 +97,13 @@ class MatrixClient(nio.AsyncClient):
         },
     }
 
-    limit_1_filter: ClassVar[Dict[str, Any]] = {
+    low_limit_filter: ClassVar[Dict[str, Any]] = {
         "presence": {"limit": 1},
 
         "room": {
             "ephemeral": {"limit": 1},
             "timeline":  {
-                "limit": 1,
+                "limit": 5,
                 # This kind says another event was redacted, but we wouldn't
                 # have it in our model, so nothing would be shown
                 "not_types": ["m.room.redaction"],
@@ -124,7 +124,7 @@ class MatrixClient(nio.AsyncClient):
                     "m.room.message.feedback",
                     "m.room.pinned_events",
                     "m.call.*",
-                    "m.room.third_part_invite",
+                    "m.room.third_party_invite",
                     "m.room.tombstone",
                     "m.reaction",
                 ],
@@ -318,8 +318,7 @@ class MatrixClient(nio.AsyncClient):
         self.server_config_task.add_done_callback(on_server_config_response)
 
         filter1 = deepcopy(self.lazy_load_filter)
-        utils.dict_update_recursive(filter1, self.limit_1_filter)
-
+        utils.dict_update_recursive(filter1, self.low_limit_filter)
 
         cfg = self.backend.ui_settings
         if cfg["hideProfileChangeEvents"] or cfg["hideMembershipEvents"]:
