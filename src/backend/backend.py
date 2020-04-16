@@ -242,6 +242,26 @@ class Backend:
         return await client.download(server_name, media_id)
 
 
+    async def room_read(self, room_id: str) -> None:
+        """Mark all messages in a room as read for all accounts part of it
+
+        Currently, this doesn't handle sending a read receipt to the server,
+        only cleaning up any unread indicators.
+        """
+
+        for client in self.clients.values():
+            client.open_room = room_id
+
+            if not client.first_sync_done.is_set():
+                continue
+
+            room = self.models[client.user_id, "rooms"].get(room_id)
+
+            if room:
+                room.mentions = 0
+                room.unreads  = 0
+
+
     # General functions
 
     async def get_config_dir(self) -> Path:
