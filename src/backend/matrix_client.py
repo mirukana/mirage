@@ -114,9 +114,9 @@ class MatrixClient(nio.AsyncClient):
             ),
         )
 
-        self.backend: "Backend"  = backend
-        self.models:  ModelStore = self.backend.models
-        self.open_room: str      = None
+        self.backend:   "Backend"     = backend
+        self.models:    ModelStore    = self.backend.models
+        self.open_room: Optional[str] = None
 
         self.profile_task:       Optional[asyncio.Future] = None
         self.server_config_task: Optional[asyncio.Future] = None
@@ -1304,13 +1304,26 @@ class MatrixClient(nio.AsyncClient):
         tx_id = ev.source.get("content", {}).get(
             f"{__app_name__}.transaction_id",
         )
-        local_sender = ev.sender in self.backend.clients
+        from_us = ev.sender in self.backend.clients
 
-        if local_sender and tx_id and f"echo-{tx_id}" in model:
+        if from_us and tx_id and f"echo-{tx_id}" in model:
             item.id = f"echo-{tx_id}"
-
-        if not local_sender and not await self.event_is_past(ev):
-            AlertRequested()
 
         model[item.id] = item
         await self.set_room_last_event(room.room_id, item)
+
+        # Alerts
+
+        if from_us or await self.event_is_past(ev):
+            return
+
+        AlertRequested()
+
+        if self.open_room != room.room_id:
+            room          = self.models[self.user_id, "rooms"][room.room_id]
+            room.unreads += 1
+
+            content = fields.get("content", "")
+
+            if HTML.user_id_link_in_html(content, self.user_id):
+                room.mentions += 1
