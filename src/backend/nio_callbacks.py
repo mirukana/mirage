@@ -108,9 +108,10 @@ class NioCallbacks:
             room, ev, content=co, mentions=mention_list,
         )
 
-        is_past = await self.client.event_is_past(ev)
+        past    = await self.client.event_is_past(ev)
+        from_us = ev.sender in self.client.backend.clients
 
-        if not is_past and self.client.open_room != room.room_id:
+        if not past and not from_us and self.client.open_room != room.room_id:
             model         = self.client.models[self.client.user_id, "rooms"]
             room          = model[room.room_id]
             room.unreads += 1
