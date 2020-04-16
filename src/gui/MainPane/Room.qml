@@ -52,6 +52,7 @@ HTileDelegate {
                     rightPadding: leftPadding
 
                     scale: model.unreads === 0 ? 0 : 1
+                    visible: model.unreads !== 0
 
                     background: Rectangle {
                         color:
