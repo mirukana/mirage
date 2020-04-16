@@ -52,10 +52,13 @@ HTileDelegate {
                     rightPadding: leftPadding
 
                     scale: model.unreads === 0 ? 0 : 1
-                    visible: scale > 0
 
                     background: Rectangle {
-                        color: model.mentions === 0 ? theme.colors.unreadBackground : theme.colors.alertBackground
+                        color:
+                            model.mentions === 0 ?
+                            theme.colors.unreadBackground :
+                            theme.colors.alertBackground
+
                         radius: theme.radius / 4
                     }
 
