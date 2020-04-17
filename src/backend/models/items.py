@@ -85,26 +85,27 @@ class Room(ModelItem):
     unreads:  int = 0
 
     def __lt__(self, other: "Room") -> bool:
-        """Sort by join state, then descending last event date, then name.
+        """Sort by membership, mentions/unread events, last event date, name.
 
         Invited rooms are first, then joined rooms, then left rooms.
         Within these categories, sort by last event date (room with recent
-        messages are first), then by display names.
+        messages are first), then by display names, but
+        keep rooms with mentions on top, followed by rooms with unread events.
         """
 
         # Left rooms may still have an inviter_id, so check left first.
         return (
             self.left,
             other.inviter_id,
-            other.mentions,
-            other.unreads,
+            bool(other.mentions),
+            bool(other.unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
         ) < (
             other.left,
             self.inviter_id,
-            self.mentions,
-            self.unreads,
+            bool(self.mentions),
+            bool(self.unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
         )
