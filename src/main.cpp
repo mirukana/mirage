@@ -10,6 +10,11 @@
 #include <QFileInfo>
 #include <QQuickStyle>
 #include <QFontDatabase>
+#include <QDateTime>
+
+#ifdef Q_OS_UNIX
+#include <unistd.h>
+#endif
 
 #include "../submodules/RadialBarDemo/radialbar.h"
 
@@ -17,7 +22,63 @@
 #include "clipboard.h"
 
 
+void loggingHandler(
+    QtMsgType type,
+    const QMessageLogContext &context,
+    const QString &msg
+) {
+    // Override default QML logger to provide colorful logging with times
+
+    Q_UNUSED(context)
+
+    // Hide dumb warnings about thing we can't fix without breaking
+    // compatibilty with Qt < 5.14
+    if (msg.contains("QML Binding: Not restoring previous value because"))
+        return;
+
+    const char* level =
+        type == QtDebugMsg ?    "~" :
+        type == QtInfoMsg ?     "i" :
+        type == QtWarningMsg ?  "!" :
+        type == QtCriticalMsg ? "X" :
+        type == QtFatalMsg ?    "F" :
+        "?";
+
+    QString boldColor = "", color = "", clearFormatting = "";
+
+#ifdef Q_OS_UNIX
+    // Don't output escape codes if stderr is piped or redirected to a file
+    if (isatty(fileno(stderr))) {
+        const QString ansiColor =
+            type == QtInfoMsg ?     "2" :  // green
+            type == QtWarningMsg ?  "3" :  // yellow
+            type == QtCriticalMsg ? "1" :  // red
+            type == QtFatalMsg ?    "5" :  // purple
+            "7";                           // white (gray)
+
+        boldColor       = "\e[1;3" + ansiColor + "m";
+        color           = "\e[3" + ansiColor + "m";
+        clearFormatting = "\e[0m";
+    }
+#endif
+
+    fprintf(
+        stderr,
+        "%s%s %s |%s %s%s%s\n",
+        boldColor.toUtf8().constData(),
+        level,
+        QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().constData(),
+        clearFormatting.toUtf8().constData(),
+        color.toUtf8().constData(),
+        msg.toUtf8().constData(),
+        clearFormatting.toUtf8().constData()
+    );
+}
+
+
 int main(int argc, char *argv[]) {
+    qInstallMessageHandler(loggingHandler);
+
     // Define some basic info about the app before creating the QApplication
     QApplication::setOrganizationName("mirage");
     QApplication::setApplicationName("mirage");
