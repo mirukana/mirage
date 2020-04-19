@@ -48,7 +48,7 @@
 
 - Make clicking on user/room mentions open relevant UI instead of matrix.to
   URL in browser
-- Make rooms fully manageable within Mirage: settings, permissions, kick, etc
+- Make rooms fully manageable within Mirage: settings, permissions, unban
 
 - Labeled text area component, use it for room creation/settings topic 
   - Linkify URLs in topic text areas
@@ -185,7 +185,6 @@
 - `RoomMessageMedia` and `RoomAvatarEvent` info attributes
 - Handle `m.room.aliases` events
 
-- Support "Empty room (was ...)" after peer left
 - Left room events after client reboot
 - Previewing room without joining
 

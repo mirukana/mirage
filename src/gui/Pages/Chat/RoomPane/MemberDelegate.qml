@@ -4,6 +4,7 @@ import QtQuick 2.12
 import Clipboard 0.1
 import "../../../Base"
 import "../../../Base/HTile"
+import "../../../Popups"
 
 HTileDelegate {
     id: member
@@ -59,19 +60,46 @@ HTileDelegate {
             text: model.invited ? qsTr("Disinvite") : qsTr("Kick")
             enabled: false
 
-            popup: "Popups/KickPopup.qml"
+            popup: "Popups/RemoveMemberPopup.qml"
             popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
                 targetUserId: model.id,
                 targetDisplayName: model.display_name,
-                targetIsInvited: model.invited,
+                operation:
+                    model.invited ?
+                    RemoveMemberPopup.Operation.Disinvite :
+                    RemoveMemberPopup.Operation.Kick,
             })
 
             Component.onCompleted: py.callClientCoro(
                 chat.userId,
                 "can_kick",
+                [chat.roomId, model.id],
+                can => { enabled = can },
+            )
+        }
+
+        HMenuItemPopupSpawner {
+            icon.name: "room-ban"
+            icon.color: theme.colors.negativeBackground
+            text: qsTr("Ban")
+            enabled: false
+
+            popup: "Popups/RemoveMemberPopup.qml"
+            popupParent: chat
+            properties: ({
+                userId: chat.userId,
+                roomId: chat.roomId,
+                targetUserId: model.id,
+                targetDisplayName: model.display_name,
+                operation: RemoveMemberPopup.Operation.Ban,
+            })
+
+            Component.onCompleted: py.callClientCoro(
+                chat.userId,
+                "can_ban",
                 [chat.roomId, model.id],
                 can => { enabled = can },
             )

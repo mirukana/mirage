@@ -698,7 +698,8 @@ class MatrixClient(nio.AsyncClient):
 
         if room_id in self.fully_loaded_rooms or \
            room_id in self.invited_rooms or \
-           room_id in self.cleared_events_rooms:
+           room_id in self.cleared_events_rooms or \
+           self.models[self.user_id, "rooms"][room_id].left:
             return False
 
         await self.first_sync_done.wait()

@@ -7,25 +7,39 @@ import "../Base"
 BoxPopup {
     summary.textFormat: Text.StyledText
     summary.text:
-        targetIsInvited ?
-        qsTr("Withdraw %1's invitation?").arg(coloredTarget) :
-        qsTr("Kick %1 out of the room?").arg(coloredTarget)
+        operation === RemoveMemberPopup.Operation.Disinvite ?
+        qsTr("Disinvite %1 from the room?").arg(coloredTarget) :
 
-    okText: qsTr("Kick")
+        operation === RemoveMemberPopup.Operation.Kick ?
+        qsTr("Kick %1 out of the room?").arg(coloredTarget) :
+
+        qsTr("Ban %1 from the room?").arg(coloredTarget)
+
+    okText:
+        operation === RemoveMemberPopup.Operation.Disinvite ?
+        qsTr("Disinvite") :
+
+        operation === RemoveMemberPopup.Operation.Kick ?
+        qsTr("Kick") :
+
+        qsTr("Ban")
 
     onOpened: reasonField.field.forceActiveFocus()
     onOk: py.callClientCoro(
         userId,
-        "room_kick",
+        operation === RemoveMemberPopup.Operation.Ban ?
+        "room_ban" : "room_kick",
         [roomId, targetUserId, reasonField.field.text || null],
     )
 
+
+    enum Operation { Disinvite, Kick, Ban }
 
     property string userId
     property string roomId
     property string targetUserId
     property string targetDisplayName
-    property bool targetIsInvited: false
+    property int operation
 
     readonly property string coloredTarget:
         utils.coloredNameHtml(targetDisplayName, targetUserId)
