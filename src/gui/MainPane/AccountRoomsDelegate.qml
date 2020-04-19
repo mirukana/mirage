@@ -66,10 +66,6 @@ Column {
 
         highlight: null  // managed by the AccountRoomsList
 
-        onFirstDelegateHeightChanged:
-            if (firstDelegateHeight !== 0)
-                firstDelegateHeight = firstDelegateHeight
-
 
         // Delete 0 must *always* be loaded, and all delegates must have the
         // same height
