@@ -64,14 +64,14 @@ void loggingHandler(
 
     fprintf(
         stderr,
-        "%s%s %s |%s %s%s%s\n",
+        "%s%s%s %s%s |%s %s\n",
         boldColor.toUtf8().constData(),
         level,
-        QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().constData(),
         clearFormatting.toUtf8().constData(),
         color.toUtf8().constData(),
-        msg.toUtf8().constData(),
-        clearFormatting.toUtf8().constData()
+        QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().constData(),
+        clearFormatting.toUtf8().constData(),
+        msg.toUtf8().constData()
     );
 }
 
