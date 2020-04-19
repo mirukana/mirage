@@ -57,7 +57,7 @@ HTileDelegate {
             icon.name: "room-kick"
             icon.color: theme.colors.negativeBackground
             text: model.invited ? qsTr("Disinvite") : qsTr("Kick")
-            enabled: chat.roomInfo.can_kick
+            enabled: false
 
             popup: "Popups/KickPopup.qml"
             popupParent: chat
@@ -68,6 +68,13 @@ HTileDelegate {
                 targetDisplayName: model.display_name,
                 targetIsInvited: model.invited,
             })
+
+            Component.onCompleted: py.callClientCoro(
+                chat.userId,
+                "can_kick",
+                [chat.roomId, model.id],
+                can => { enabled = can },
+            )
         }
     }
 

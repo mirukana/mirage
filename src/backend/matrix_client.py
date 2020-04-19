@@ -306,6 +306,20 @@ class MatrixClient(nio.AsyncClient):
         return (await self.content_repository_config()).upload_size
 
 
+    async def can_kick(self, room_id: str, target_user_id: str) -> bool:
+        """Return whether we can kick a certain user in a room."""
+
+        levels = self.all_rooms[room_id].power_levels
+        return levels.can_user_kick(self.user_id, target_user_id)
+
+
+    async def can_ban(self, room_id: str, target_user_id: str) -> bool:
+        """Return whether we can ban/unbun a certain user in a room."""
+
+        levels = self.all_rooms[room_id].power_levels
+        return levels.can_user_ban(self.user_id, target_user_id)
+
+
     @property
     def all_rooms(self) -> Dict[str, nio.MatrixRoom]:
         """Return dict containing both our joined and invited rooms."""
