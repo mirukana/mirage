@@ -54,7 +54,7 @@ void loggingHandler(
             type == QtWarningMsg ?  "3" :  // yellow
             type == QtCriticalMsg ? "1" :  // red
             type == QtFatalMsg ?    "5" :  // purple
-            "7";                           // white (gray)
+            "4";                           // blue
 
         boldColor       = "\e[1;3" + ansiColor + "m";
         color           = "\e[3" + ansiColor + "m";
