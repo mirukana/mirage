@@ -160,9 +160,7 @@ QtObject {
     }
 
 
-    function coloredNameHtml(
-        name, userId, displayText=null, disambiguate=false, dim=false,
-    ) {
+    function coloredNameHtml(name, userId, displayText=null, dim=false) {
         // substring: remove leading @
         return `<font color="${nameColor(name || userId.substring(1), dim)}">`+
                escapeHtml(displayText || name || userId) +
@@ -210,7 +208,7 @@ QtObject {
 
             if (ev.content.includes("%2"))
             content = content.arg(coloredNameHtml(
-                ev.redacter_name, ev.redacter_id, "", false, true,
+                ev.redacter_name, ev.redacter_id, "", true,
             ))
 
             return qsTr(

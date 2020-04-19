@@ -1182,6 +1182,7 @@ class MatrixClient(nio.AsyncClient):
             guests_allowed  = room.guest_access == "can_join",
 
             can_invite           = levels.can_user_invite(self.user),
+            can_kick             = levels.can_user_kick(self.user),
             can_redact_all       = levels.can_user_redact(self.user),
             can_send_messages    = can_send_msg(),
             can_set_name         = can_send_state("m.room.name"),

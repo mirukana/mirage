@@ -52,6 +52,23 @@ HTileDelegate {
             text: qsTr("Copy user ID")
             onTriggered: Clipboard.text = model.id
         }
+
+        HMenuItemPopupSpawner {
+            icon.name: "room-kick"
+            icon.color: theme.colors.negativeBackground
+            text: model.invited ? qsTr("Disinvite") : qsTr("Kick")
+            enabled: chat.roomInfo.can_kick
+
+            popup: "Popups/KickPopup.qml"
+            popupParent: chat
+            properties: ({
+                userId: chat.userId,
+                roomId: chat.roomId,
+                targetUserId: model.id,
+                targetDisplayName: model.display_name,
+                targetIsInvited: model.invited,
+            })
+        }
     }
 
 

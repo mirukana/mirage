@@ -10,7 +10,7 @@ Banner {
     avatar.userId: chat.userId
     avatar.displayName: chat.userInfo.display_name
     avatar.mxc: chat.userInfo.avatar_url
-    labelText: qsTr("You are not part of this room anymore")
+    labelText: qsTr("You are no longer part of this room")
 
     buttonModel: [
         {

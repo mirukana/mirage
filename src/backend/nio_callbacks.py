@@ -272,7 +272,7 @@ class NioCallbacks:
                 self.client.skipped_events[room.room_id] += 1
                 return None
 
-            reason = f". Reason: {now['reason']}" if now.get("reason") else ""
+            reason = f", reason: {now['reason']}" if now.get("reason") else ""
 
             if membership == "join":
                 return (
@@ -303,7 +303,7 @@ class NioCallbacks:
                     f"%1 unbanned %2 from the room{reason}"
                     if prev and prev_membership == "ban" else
 
-                    f"%1 kicked out %2 from the room{reason}",
+                    f"%1 kicked %2 out from the room{reason}",
                 )
 
             if membership == "ban":
