@@ -740,10 +740,18 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_all_room_members(self, room_id: str) -> None:
+        """Request a room's full member list if it hasn't already been loaded.
+
+        Member lazy-loading is used to accelerate the initial sync with the
+        server. This method will be called from QML to load a room's entire
+        member list when the user is currently viewing the room.
+        """
+
         room = self.all_rooms[room_id]
 
         if not room.members_synced:
             await super().joined_members(room_id)
+            await self.register_nio_room(self.all_rooms[room_id])
 
 
     async def load_past_events(self, room_id: str) -> bool:
