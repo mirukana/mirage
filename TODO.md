@@ -1,5 +1,10 @@
 # TODO
 
+- fix alt+shift+j/k when going to the end of a list is taller than window
+- fix focusRoomAtIndex
+- if last room event is a membership change, it won't be visible in timeline
+- use uiState instead of open_room
+
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`
@@ -143,7 +148,6 @@
 ## Backend
 
 - Saving the room settings
-- Optimize Model item replacement
 - Refetch profile after manual profile change, don't wait for a room event
 
 - Better config file format
