@@ -1,7 +1,8 @@
 # TODO
 
-- fix alt+shift+j/k when going to the end of a list is taller than window
-- fix focusRoomAtIndex
+- message delegate too tall
+
+- fix escape keybinds (filter rooms, message selection)
 - if last room event is a membership change, it won't be visible in timeline
 - use uiState instead of open_room
 

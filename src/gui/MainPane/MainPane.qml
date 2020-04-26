@@ -8,36 +8,12 @@ HDrawer {
     id: mainPane
     saveName: "mainPane"
     color: theme.mainPane.background
-    minimumSize: bottomBar.addAccountButton.width
+    // minimumSize: bottomBar.addAccountButton.width
 
-    onHasFocusChanged:
-        if (! hasFocus) mainPaneList.detachedCurrentIndex = false
-
-
-    property alias filter: bottomBar.roomFilter
+    // property alias filter: bottomBar.roomFilter
 
     readonly property bool small:
         width < theme.controls.avatar.size + theme.spacing * 2
-
-    readonly property bool hasFocus: bottomBar.filterField.activeFocus
-    readonly property alias mainPaneList: mainPaneList
-    readonly property alias topBar: topBar
-    readonly property alias bottomBar: bottomBar
-
-
-    function toggleFocus() {
-        if (mainPane.activeFocus) {
-            pageLoader.takeFocus()
-            return
-        }
-
-        mainPane.open()
-        bottomBar.filterField.forceActiveFocus()
-    }
-
-    function addccount() {
-        bottomBar.addAccountButton.clicked()
-    }
 
 
     Behavior on opacity { HNumberAnimation {} }
@@ -47,38 +23,22 @@ HDrawer {
         when: ! mainUI.accountsPresent
     }
 
-    HShortcut {
-        active: mainUI.accountsPresent
-        sequences: window.settings.keys.toggleFocusMainPane
-        onActivated: toggleFocus()
-    }
-
-    HColumnLayout {
+    HRowLayout {
         anchors.fill: parent
 
-        TopBar {
-            id: topBar
+        AccountBar {
+            id: accountBar
+            roomContainer: roomPane
 
-            Layout.fillWidth: true
-            Layout.fillHeight: false
-            Layout.preferredHeight: theme.baseElementsHeight
+            Layout.fillWidth: false
         }
 
-        AccountRoomsList {
-            id: mainPaneList
-            clip: true
+        RoomPane {
+            id: roomPane
+            currentIndex: 0
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-        }
-
-        BottomBar {
-            id: bottomBar
-            mainPaneList: mainPaneList
-
-            Layout.fillWidth: true
-            Layout.fillHeight: false
-            Layout.preferredHeight: theme.baseElementsHeight
         }
     }
 }

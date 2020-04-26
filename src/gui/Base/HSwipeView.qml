@@ -12,8 +12,17 @@ SwipeView {
         saveEnabled = true
     }
 
-    onCurrentIndexChanged: if (saveEnabled) window.saveState(this)
+    onCurrentIndexChanged: {
+        if (saveEnabled) window.saveState(this)
 
+        if (currentIndex < previousIndex) lastMove = HSwipeView.Move.ToPrevious
+        if (currentIndex > previousIndex) lastMove = HSwipeView.Move.ToNext
+
+        previousIndex = currentIndex
+    }
+
+
+    enum Move { ToPrevious, ToNext }
 
     property string saveName: ""
     property var saveId: "ALL"
@@ -22,7 +31,9 @@ SwipeView {
     // Prevent onCurrentIndexChanged from running before Component.onCompleted
     property bool saveEnabled: false
 
+    property int previousIndex: 0
     property int defaultIndex: 0
+    property int lastMove: HSwipeView.Move.ToNext
     property bool changed: currentIndex !== defaultIndex
 
 
