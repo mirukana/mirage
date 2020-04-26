@@ -8,6 +8,7 @@ import io
 import logging as log
 import platform
 import re
+import sys
 import traceback
 from contextlib import suppress
 from copy import copy
@@ -44,6 +45,11 @@ from .pyotherside_events import AlertRequested, LoopException
 
 if TYPE_CHECKING:
     from .backend import Backend
+
+if sys.version_info >= (3, 7):
+    current_task = asyncio.current_task
+else:
+    current_task = asyncio.Task.current_task
 
 CryptDict = Dict[str, Any]
 
@@ -403,7 +409,7 @@ class MatrixClient(nio.AsyncClient):
         self.models[room_id, "uploads"][str(item_uuid)] = upload_item
 
         self.upload_monitors[item_uuid] = monitor
-        self.upload_tasks[item_uuid]    = asyncio.current_task() # type: ignore
+        self.upload_tasks[item_uuid]    = current_task()  # type: ignore
 
         def on_transferred(transferred: int) -> None:
             upload_item.uploaded  = transferred
@@ -655,7 +661,7 @@ class MatrixClient(nio.AsyncClient):
         """Send a message event with `content` dict to a room."""
 
         self.send_message_tasks[transaction_id] = \
-            asyncio.current_task()  # type: ignore
+            current_task()  # type: ignore
 
         async with self.backend.send_locks[room_id]:
             await self.room_send(
