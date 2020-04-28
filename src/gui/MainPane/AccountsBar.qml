@@ -8,7 +8,7 @@ import "../Base"
 import "../Base/HTile"
 
 HColumnLayout {
-    property RoomPane roomContainer
+    property AccountView accountView
 
 
     HButton {
@@ -25,7 +25,7 @@ HColumnLayout {
     HListView {
         id: accountList
         model: ModelStore.get("accounts")
-        currentIndex: roomContainer.currentIndex
+        currentIndex: accountView.currentIndex
 
         delegate: HTileDelegate {
             id: tile
@@ -49,7 +49,7 @@ HColumnLayout {
                 }
             }
 
-            onLeftClicked: roomContainer.currentIndex = model.index
+            onLeftClicked: accountView.currentIndex = model.index
         }
 
         Layout.fillWidth: true
@@ -57,12 +57,12 @@ HColumnLayout {
 
         HShortcut {
             sequences: window.settings.keys.goToPreviousAccount
-            onActivated: roomContainer.decrementWrapIndex()
+            onActivated: accountView.decrementWrapIndex()
         }
 
         HShortcut {
             sequences: window.settings.keys.goToNextAccount
-            onActivated: roomContainer.incrementWrapIndex()
+            onActivated: accountView.incrementWrapIndex()
         }
     }
 

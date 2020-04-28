@@ -26,15 +26,15 @@ HDrawer {
     HRowLayout {
         anchors.fill: parent
 
-        AccountBar {
+        AccountsBar {
             id: accountBar
-            roomContainer: roomPane
+            accountView: accView
 
             Layout.fillWidth: false
         }
 
-        RoomPane {
-            id: roomPane
+        AccountView {
+            id: accView
             currentIndex: 0
 
             Layout.fillWidth: true

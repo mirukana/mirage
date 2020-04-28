@@ -1,5 +1,6 @@
 # TODO
 
+- save/restore swipeview current rooms for accounts
 - lag when switching accounts
 - message delegate too tall
 
