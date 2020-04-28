@@ -52,7 +52,7 @@ HSwipeView {
 
                     placeholderText: qsTr("Filter rooms")
                     backgroundColor:
-                        theme.mainPane.bottomBar.filterFieldBackground
+                        theme.accountView.bottomBar.filterFieldBackground
                     bordered: false
                     opacity: width >= 16 * theme.uiScale ? 1 : 0
 

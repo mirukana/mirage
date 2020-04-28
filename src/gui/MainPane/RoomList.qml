@@ -75,4 +75,10 @@ HListView {
                 wheel.accepted = false
         }
     }
+
+    Rectangle {
+        anchors.fill: parent
+        z: -100
+        color: theme.accountView.roomList.background
+    }
 }

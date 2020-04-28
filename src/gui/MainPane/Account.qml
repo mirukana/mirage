@@ -9,7 +9,7 @@ import "../Base/HTile"
 HTile {
     id: account
     implicitHeight: theme.baseElementsHeight
-    backgroundColor: theme.mainPane.listView.account.background
+    backgroundColor: theme.accountView.account.background
     padded: false
 
     contentItem: ContentRow {
@@ -28,7 +28,7 @@ HTile {
             color:
                 hovered ?
                 utils.nameColor(model.display_name || model.id.substring(1)) :
-                theme.mainPane.listView.account.name
+                theme.accountView.account.name
 
             Behavior on color { HColorAnimation {} }
         }

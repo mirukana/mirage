@@ -13,7 +13,7 @@ HColumnLayout {
 
     HButton {
         id: settingsButton
-        backgroundColor: "transparent"
+        backgroundColor: theme.accountsBar.settingsButtonBackground
         icon.name: "settings"
         toolTip.text: qsTr("Open config folder")
 
@@ -30,7 +30,7 @@ HColumnLayout {
         delegate: HTileDelegate {
             id: tile
             width: accountList.width
-            backgroundColor: theme.mainPane.listView.account.background
+            backgroundColor: theme.accountsBar.accountList.account.background
             leftPadding: 0
             rightPadding: leftPadding
 
@@ -45,7 +45,7 @@ HColumnLayout {
                     mxc: model.avatar_url
                     // compact: account.compact
 
-                    radius: theme.mainPane.listView.account.avatarRadius
+                    radius: theme.accountsBar.accountList.account.avatarRadius
                 }
             }
 
@@ -64,13 +64,19 @@ HColumnLayout {
             sequences: window.settings.keys.goToNextAccount
             onActivated: accountView.incrementWrapIndex()
         }
+
+        Rectangle {
+            anchors.fill: parent
+            z: -100
+            color: theme.accountsBar.accountList.background
+        }
     }
 
     HButton {
         id: addAccountButton
         icon.name: "add-account"
         toolTip.text: qsTr("Add another account")
-        backgroundColor: theme.mainPane.bottomBar.settingsButtonBackground
+        backgroundColor: theme.accountsBar.addAccountButtonBackground
         onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.preferredHeight: theme.baseElementsHeight

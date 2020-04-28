@@ -9,13 +9,9 @@ import "../Base/HTile"
 
 HTileDelegate {
     id: room
-    backgroundColor: theme.mainPane.listView.room.background
+    backgroundColor: theme.accountView.roomList.room.background
     opacity:
-        model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
-
-    // topPadding: theme.spacing / (model.index === 0 ? 1 : 1.5)
-    // bottomPadding:
-    //     theme.spacing / (model.index === view.count - 1 ? 1 : 1.5)
+        model.left ? theme.accountView.roomList.room.leftRoomOpacity : 1
 
     contentItem: ContentRow {
         tile: room
@@ -29,8 +25,8 @@ HTileDelegate {
 
             radius:
                 mainPane.small ?
-                theme.mainPane.listView.room.collapsedAvatarRadius :
-                theme.mainPane.listView.room.avatarRadius
+                theme.accountView.roomList.room.collapsedAvatarRadius :
+                theme.accountView.roomList.room.avatarRadius
 
             Behavior on radius { HNumberAnimation {} }
         }
@@ -41,7 +37,7 @@ HTileDelegate {
 
                 TitleLabel {
                     text: model.display_name || qsTr("Empty room")
-                    color: theme.mainPane.listView.room.name
+                    color: theme.accountView.roomList.room.name
                 }
 
                 HLabel {
@@ -63,7 +59,7 @@ HTileDelegate {
                         radius: theme.radius / 4
 
                         readonly property QtObject indicatorTheme:
-                            theme.mainPane.listView.room.unreadIndicator
+                            theme.accountView.roomList.room.unreadIndicator
 
                         Behavior on color { HColorAnimation {} }
                     }
@@ -84,7 +80,7 @@ HTileDelegate {
 
                 TitleRightInfoLabel {
                     tile: room
-                    color: theme.mainPane.listView.room.lastEventDate
+                    color: theme.accountView.roomList.room.lastEventDate
                     text: {
                         model.last_event_date < new Date(1) ?
                         "" :
@@ -106,7 +102,7 @@ HTileDelegate {
 
             SubtitleLabel {
                 tile: room
-                color: theme.mainPane.listView.room.subtitle
+                color: theme.accountView.roomList.room.subtitle
                 textFormat: Text.StyledText
                 font.italic:
                     lastEvent && lastEvent.event_type === "RoomMessageEmote"
@@ -128,7 +124,8 @@ HTileDelegate {
                         lastEvent.sender_name, lastEvent.sender_id
                     ) + ": " + lastEvent.inline_content
 
-                    const subColor = theme.mainPane.listView.room.subtitleQuote
+                    const subColor =
+                        theme.accountView.roomList.room.subtitleQuote
 
                     return text.replace(
                         /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,

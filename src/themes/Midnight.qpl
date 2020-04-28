@@ -43,10 +43,12 @@ colors:
     real opacity: 0.7
 
     color weakBackground:
-        hsluv(hue, bgSaturation, intensity * 2.5, opacity)
+        hsluv(hue, bgSaturation, intensity * 10, opacity)
     color mediumBackground:
-        hsluv(hue, bgSaturation, intensity * 7, opacity)
+        hsluv(hue, bgSaturation, intensity * 8, opacity)
     color strongBackground:
+        hsluv(hue, bgSaturation, intensity * 3, opacity)
+    color strongerBackground:
         hsluv(hue, bgSaturation * 2, intensity, opacity)
 
     color accentBackground:    hsluv(hue, saturation, intensity * 40, 1)
@@ -272,23 +274,25 @@ ui:
     // color gradientEndColor: hsluv(0, 0, 0, 0.5)
 
 
-mainPane:
-    color background: "transparent"
+accountsBar:
+    color settingsButtonBackground: colors.strongerBackground
+    color addAccountButtonBackground: colors.strongerBackground
 
-    topBar:
-        color background:       colors.strongBackground
-        color nameVersionLabel: colors.text
-
-    listView:
-        color background: colors.mediumBackground
+    accountList:
+        color background: colors.strongerBackground
 
         account:
-            real collapsedOpacity:     0.3
-            color background:          "transparent"
-            color name:                colors.text
+            color background: "transparent"
+            int avatarRadius: controls.avatar.radius
 
-            int avatarRadius:          controls.avatar.radius
-            int collapsedAvatarRadius: controls.avatar.size / 2
+
+accountView:
+    account:
+        color background: colors.strongBackground
+        color name:       colors.text
+
+    roomList:
+        color background: colors.mediumBackground
 
         room:
             real leftRoomOpacity: 0.65
@@ -308,9 +312,7 @@ mainPane:
                 color mentionBackground: colors.alertBackground
 
     bottomBar:
-        color background:               colors.strongBackground
-        color settingsButtonBackground: "transparent"
-        color filterFieldBackground:    "transparent"
+        color filterFieldBackground: colors.strongBackground
 
 
 chat:
@@ -367,8 +369,8 @@ chat:
         color focusedHighlight:       colors.accentBackground
         real focusedHighlightOpacity: 0.4
 
-        color background:        colors.weakBackground
-        color ownBackground:     colors.mediumBackground
+        color background:        colors.mediumBackground
+        color ownBackground:     colors.strongBackground
         color checkedBackground: colors.accentBackground
 
         color body: colors.text

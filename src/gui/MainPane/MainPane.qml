@@ -7,7 +7,7 @@ import "../Base"
 HDrawer {
     id: mainPane
     saveName: "mainPane"
-    color: theme.mainPane.background
+    background: null
     // minimumSize: bottomBar.addAccountButton.width
 
     // property alias filter: bottomBar.roomFilter
