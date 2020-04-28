@@ -1,5 +1,6 @@
 # TODO
 
+- lag when switching accounts
 - message delegate too tall
 
 - fix escape keybinds (filter rooms, message selection)

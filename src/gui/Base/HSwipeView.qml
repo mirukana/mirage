@@ -39,6 +39,18 @@ SwipeView {
 
     function reset() { setCurrentIndex(defaultIndex) }
 
+    function incrementWrapIndex() {
+        currentIndex === count - 1 ?
+        setCurrentIndex(0) :
+        incrementCurrentIndex()
+    }
+
+    function decrementWrapIndex() {
+        currentIndex === 0 ?
+        setCurrentIndex(count - 1) :
+        decrementCurrentIndex()
+    }
+
 
     TabShortcuts {
         container: swipeView

@@ -9,6 +9,7 @@ HSwipeView {
     id: swipeView
     orientation: Qt.Vertical
 
+
     Repeater {
         model: ModelStore.get("accounts")
 

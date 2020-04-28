@@ -15,6 +15,8 @@ HListView {
         onActivated: showRoom(model.index)
     }
 
+    onIsCurrentChanged: if (isCurrent) showRoom()
+
 
     property var accountModel
     property var roomPane
@@ -22,6 +24,8 @@ HListView {
 
 
     function showRoom(index=currentIndex) {
+        if (index === -1) index = 0
+        if (index >= model.count) return
         pageLoader.showRoom(accountModel.id, model.get(index).id)
         currentIndex = index
     }

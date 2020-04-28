@@ -54,6 +54,16 @@ HColumnLayout {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        HShortcut {
+            sequences: window.settings.keys.goToPreviousAccount
+            onActivated: roomContainer.decrementWrapIndex()
+        }
+
+        HShortcut {
+            sequences: window.settings.keys.goToNextAccount
+            onActivated: roomContainer.incrementWrapIndex()
+        }
     }
 
     HButton {

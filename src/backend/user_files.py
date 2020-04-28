@@ -267,6 +267,8 @@ class UISettings(JSONDataFile):
                 "addNewChat":          ["Alt+C"],
 
                 "goToLastPage":          ["Ctrl+Tab"],
+                "goToPreviousAccount":   ["Alt+Shift+N"],
+                "goToNextAccount":       ["Alt+N"],
                 "goToPreviousRoom":      ["Alt+Shift+Up", "Alt+Shift+K"],
                 "goToNextRoom":          ["Alt+Shift+Down", "Alt+Shift+J"],
                 "toggleCollapseAccount": [ "Alt+O"],
