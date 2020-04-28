@@ -12,14 +12,18 @@ HColumnLayout {
 
 
     HButton {
-        id: settingsButton
-        backgroundColor: theme.accountsBar.settingsButtonBackground
-        icon.name: "settings"
-        toolTip.text: qsTr("Open config folder")
-
-        onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+        id: everyRoomButton
+        icon.name: "every-room"
+        toolTip.text: qsTr("Every room")
+        backgroundColor: theme.accountsBar.everyRoomButtonBackground
+        // onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.preferredHeight: theme.baseElementsHeight
+
+        HShortcut {
+            sequences: window.settings.keys.showEveryRoom
+            onActivated: everyRoomButton.clicked()
+        }
     }
 
     HListView {
@@ -106,5 +110,16 @@ HColumnLayout {
             sequences: window.settings.keys.addNewAccount
             onActivated: addAccountButton.clicked()
         }
+    }
+
+    HButton {
+        id: settingsButton
+        backgroundColor: theme.accountsBar.settingsButtonBackground
+        icon.name: "settings"
+        toolTip.text: qsTr("Open config folder")
+
+        onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+
+        Layout.preferredHeight: theme.baseElementsHeight
     }
 }

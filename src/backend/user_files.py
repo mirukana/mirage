@@ -260,11 +260,12 @@ class UISettings(JSONDataFile):
                 "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
                 "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
 
+                "showEveryRoom":       ["Alt+E"],
+                "addNewAccount":       ["Alt+Shift+A"],
+                "accountSettings":     ["Alt+A"],
+                "addNewChat":          ["Alt+C"],
                 "toggleFocusMainPane": ["Alt+F"],
                 "clearRoomFilter":     ["Alt+Shift+F"],
-                "accountSettings":     ["Alt+A"],
-                "addNewAccount":       ["Alt+Shift+A"],
-                "addNewChat":          ["Alt+C"],
 
                 "goToLastPage":          ["Ctrl+Tab"],
                 "goToPreviousAccount":   ["Alt+Shift+N"],
