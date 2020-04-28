@@ -8,6 +8,7 @@
 - lag when switching accounts
 - message delegate too tall
 - unread counts on accounts
+- fix compact mode
 
 - fix escape keybinds (filter rooms, message selection)
 - if last room event is a membership change, it won't be visible in timeline

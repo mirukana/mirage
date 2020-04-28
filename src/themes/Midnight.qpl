@@ -285,6 +285,11 @@ accountsBar:
             color background: "transparent"
             int avatarRadius: controls.avatar.radius
 
+            color selectedBackground: colors.accentBackground
+            real selectedBackgroundOpacity: 0.3
+            color selectedBorder: colors.strongAccentElement
+            int selectedBorderSize: 2
+
 
 accountView:
     account:

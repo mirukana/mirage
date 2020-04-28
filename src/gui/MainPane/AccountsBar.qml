@@ -24,13 +24,34 @@ HColumnLayout {
 
     HListView {
         id: accountList
+        clip: true
         model: ModelStore.get("accounts")
         currentIndex: accountView.currentIndex
+
+        highlight: Item {
+
+            Rectangle {
+                anchors.fill: parent
+                color: theme.accountsBar.accountList.account.selectedBackground
+                opacity: theme.accountsBar.accountList.account
+                              .selectedBackgroundOpacity
+            }
+
+            Rectangle {
+                z: 100
+                width: theme.accountsBar.accountList.account.selectedBorderSize
+                height: parent.height
+                color: theme.accountsBar.accountList.account.selectedBorder
+            }
+        }
 
         delegate: HTileDelegate {
             id: tile
             width: accountList.width
             backgroundColor: theme.accountsBar.accountList.account.background
+
+            topPadding: (accountList.width - avatar.width) / 4
+            bottomPadding: topPadding
             leftPadding: 0
             rightPadding: leftPadding
 
