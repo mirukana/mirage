@@ -8,7 +8,7 @@ import "../Base"
 import "../Base/HTile"
 
 HColumnLayout {
-    property AccountView accountView
+    property AccountSwipeView accountSwipeView
 
 
     HButton {
@@ -30,7 +30,7 @@ HColumnLayout {
         id: accountList
         clip: true
         model: ModelStore.get("accounts")
-        currentIndex: accountView.currentIndex
+        currentIndex: accountSwipeView.currentIndex
 
         highlight: Item {
 
@@ -74,7 +74,7 @@ HColumnLayout {
                 }
             }
 
-            onLeftClicked: accountView.currentIndex = model.index
+            onLeftClicked: accountSwipeView.currentIndex = model.index
         }
 
         Layout.fillWidth: true
@@ -82,12 +82,12 @@ HColumnLayout {
 
         HShortcut {
             sequences: window.settings.keys.goToPreviousAccount
-            onActivated: accountView.decrementWrapIndex()
+            onActivated: accountSwipeView.decrementWrapIndex()
         }
 
         HShortcut {
             sequences: window.settings.keys.goToNextAccount
-            onActivated: accountView.incrementWrapIndex()
+            onActivated: accountSwipeView.incrementWrapIndex()
         }
 
         Rectangle {

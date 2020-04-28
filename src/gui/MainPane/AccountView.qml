@@ -5,97 +5,42 @@ import QtQuick.Layouts 1.12
 import ".."
 import "../Base"
 
-HSwipeView {
-    id: swipeView
-    orientation: Qt.Vertical
+HLoader {
+    id: loader
+    active:
+        HSwipeView.isCurrentItem ||
+        HSwipeView.isNextItem ||
+        HSwipeView.isPreviousItem
 
+    readonly property bool isCurrent: HSwipeView.isCurrentItem
 
-    Repeater {
-        model: ModelStore.get("accounts")
+    sourceComponent: HColumnLayout {
+        id: column
 
-        HLoader {
-            id: loader
-            active:
-                HSwipeView.isCurrentItem ||
-                HSwipeView.isNextItem ||
-                HSwipeView.isPreviousItem
+        readonly property QtObject accountModel: model
+        readonly property alias roomList: roomList
 
-            readonly property bool isCurrent: HSwipeView.isCurrentItem
+        Account {
+            id: account
+            isCurrent: loader.isCurrent
 
-            sourceComponent: HColumnLayout {
-                id: column
+            Layout.fillWidth: true
+        }
 
-                readonly property QtObject accountModel: model
-                readonly property alias roomList: roomList
+        RoomList {
+            id: roomList
+            clip: true
+            accountModel: column.accountModel
+            roomPane: swipeView
+            isCurrent: loader.isCurrent
 
-                Account {
-                    id: account
-                    isCurrent: loader.isCurrent
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
 
-                    Layout.fillWidth: true
-                }
-
-                RoomList {
-                    id: roomList
-                    clip: true
-                    accountModel: column.accountModel
-                    roomPane: swipeView
-                    isCurrent: loader.isCurrent
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-
-                HTextField {
-                    id: filterField
-                    saveName: "roomFilterField"
-
-                    placeholderText: qsTr("Filter rooms")
-                    backgroundColor:
-                        theme.accountView.bottomBar.filterFieldBackground
-                    bordered: false
-                    opacity: width >= 16 * theme.uiScale ? 1 : 0
-
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: theme.baseElementsHeight
-
-                    Keys.onUpPressed: roomList.decrementCurrentIndex()
-                    Keys.onDownPressed: roomList.incrementCurrentIndex()
-
-                    Keys.onEnterPressed: Keys.onReturnPressed(event)
-                    Keys.onReturnPressed: {
-                        if (window.settings.clearRoomFilterOnEnter) text = ""
-                        roomList.showRoom()
-                    }
-
-                    Keys.onEscapePressed: {
-                        if (window.settings.clearRoomFilterOnEscape) text = ""
-                        mainUI.pageLoader.forceActiveFocus()
-                    }
-
-                    Behavior on opacity { HNumberAnimation {} }
-
-                    HShortcut {
-                        enabled: loader.isCurrent
-                        sequences: window.settings.keys.clearRoomFilter
-                        onActivated: filterField.text = ""
-                    }
-
-                    HShortcut {
-                        enabled: loader.isCurrent
-                        sequences: window.settings.keys.toggleFocusMainPane
-                        onActivated: {
-                            if (filterField.activeFocus) {
-                                pageLoader.takeFocus()
-                                return
-                            }
-
-                            mainPane.open()
-                            filterField.forceActiveFocus()
-                        }
-                    }
-                }
-            }
+        FilterRoomsField {
+            roomList: roomList
+            Layout.fillWidth: true
         }
     }
 }

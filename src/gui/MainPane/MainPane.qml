@@ -28,13 +28,13 @@ HDrawer {
 
         AccountsBar {
             id: accountBar
-            accountView: accView
+            accountSwipeView: accountSwipeView
 
             Layout.fillWidth: false
         }
 
-        AccountView {
-            id: accView
+        AccountSwipeView {
+            id: accountSwipeView
             currentIndex: 0
 
             Layout.fillWidth: true
