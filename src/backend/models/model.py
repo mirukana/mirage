@@ -79,7 +79,7 @@ class Model(MutableMapping):
             # Set parent model on new item
 
             if self.sync_id:
-                new.parent_model = self
+                new.parent_models[self.sync_id] = self
 
             # Insert into sorted data
 
@@ -106,8 +106,11 @@ class Model(MutableMapping):
 
     def __delitem__(self, key) -> None:
         with self._write_lock:
-            item              = self._data[key]
-            item.parent_model = None
+            item = self._data[key]
+
+            if self.sync_id:
+                del item.parent_models[self.sync_id]
+
             del self._data[key]
 
             index = self._sorted_data.index(item)

@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict
 
 from ..pyotherside_events import ModelItemSet
 from ..utils import serialize_value_for_qml
+from . import SyncId
 
 if TYPE_CHECKING:
     from .model import Model
@@ -21,37 +22,31 @@ class ModelItem:
     """
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
-        cls.parent_model: Optional[Model] = None
+        cls.parent_models: Dict[SyncId, Model] = {}
         return super().__new__(cls)
 
 
     def __setattr__(self, name: str, value) -> None:
         """If this item is in a `Model`, alert it of attribute changes."""
 
-        if name == "parent_model" or self.parent_model is None:
+        if name == "parent_model" or not self.parent_models:
             super().__setattr__(name, value)
             return
 
         if getattr(self, name) == value:
             return
 
-        with self.parent_model._write_lock:
-            super().__setattr__(name, value)
+        super().__setattr__(name, value)
 
-            if self.parent_model.sync_id:
-                index_then = self.parent_model._sorted_data.index(self)
+        for sync_id, model in self.parent_models.items():
+            with model._write_lock:
+                index_then = model._sorted_data.index(self)
+                model._sorted_data.sort()
+                index_now = model._sorted_data.index(self)
 
-            self.parent_model._sorted_data.sort()
+                fields = {name: self.serialize_field(name)}
 
-            if self.parent_model.sync_id:
-                index_now = self.parent_model._sorted_data.index(self)
-
-                ModelItemSet(
-                    self.parent_model.sync_id,
-                    index_then,
-                    index_now,
-                    {name: self.serialize_field(name)},
-                )
+                ModelItemSet(sync_id, index_then, index_now, fields)
 
 
     def __delattr__(self, name: str) -> None:
@@ -72,6 +67,6 @@ class ModelItem:
         return {
             name: self.serialize_field(name) for name in dir(self)
             if not (
-                name.startswith("_") or name in ("parent_model", "serialized")
+                name.startswith("_") or name in ("parent_models", "serialized")
             )
         }
