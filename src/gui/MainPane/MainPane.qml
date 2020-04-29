@@ -10,7 +10,9 @@ HDrawer {
     background: null
     // minimumSize: bottomBar.addAccountButton.width
 
-    // property alias filter: bottomBar.roomFilter
+    readonly property alias accountBar: accountBar
+    readonly property alias roomList: roomList
+    readonly property alias filterRoomsField: filterRoomsField
 
     readonly property bool small:
         width < theme.controls.avatar.size + theme.spacing * 2
@@ -28,17 +30,26 @@ HDrawer {
 
         AccountsBar {
             id: accountBar
-            accountSwipeView: accountSwipeView
+            roomList: roomList
 
             Layout.fillWidth: false
         }
 
-        AccountSwipeView {
-            id: accountSwipeView
-            currentIndex: 0
+        HColumnLayout {
+            RoomList {
+                id: roomList
+                clip: true
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            FilterRoomsField {
+                id: filterRoomsField
+                roomList: roomList
+
+                Layout.fillWidth: true
+            }
         }
     }
 }

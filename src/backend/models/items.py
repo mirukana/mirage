@@ -40,9 +40,9 @@ class Account(ModelItem):
     first_sync_done: bool     = False
 
     def __lt__(self, other: "Account") -> bool:
-        """Sort by display name or user ID."""
-        name       = self.display_name or self.id[1:]
-        other_name = other.display_name or other.id[1:]
+        """Sort by user ID."""
+        name       = self.id[1:]
+        other_name = other.id[1:]
         return name.lower() < other_name.lower()
 
 
@@ -51,6 +51,7 @@ class Room(ModelItem):
     """A matrix room we are invited to, are or were member of."""
 
     id:             str  = field()
+    for_account:    str  = field()
     given_name:     str  = ""
     display_name:   str  = ""
     main_alias:     str  = ""
@@ -90,19 +91,22 @@ class Room(ModelItem):
 
         Invited rooms are first, then joined rooms, then left rooms.
         Within these categories, sort by last event date (room with recent
-        messages are first), then by display names, but
+        messages are first), then by display names, then account, but
         keep rooms with mentions on top, followed by rooms with unread events.
         """
 
         # Left rooms may still have an inviter_id, so check left first.
         return (
+            self.for_account,
             self.left,
             other.inviter_id,
             bool(other.mentions),
             bool(other.unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
+
         ) < (
+            other.for_account,
             other.left,
             self.inviter_id,
             bool(self.mentions),

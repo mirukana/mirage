@@ -217,27 +217,12 @@ HDrawer {
 
     NumberAnimation {
         running: doUselessThing
-        target: mainUI.mainPane.mainPaneList
+        target: mainUI.mainPane.roomList
         property: "rotation"
         duration: 250
         from: 360
         to: 0
         loops: Animation.Infinite
         onStopped: target.rotation = 0
-    }
-
-    NumberAnimation {
-        running: doUselessThing
-        target: mainUI.pageLoader
-        property: "scale"
-        duration: 250
-        from: 1
-        to: -1
-        onStopped: if (doUselessThing) {
-            [from, to] = [to, from]
-            start()
-        } else {
-            target.scale = 1
-        }
     }
 }

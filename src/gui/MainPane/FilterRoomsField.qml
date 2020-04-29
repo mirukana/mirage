@@ -21,7 +21,7 @@ HTextField {
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     Keys.onReturnPressed: {
         if (window.settings.clearRoomFilterOnEnter) text = ""
-        roomList.showRoom()
+        roomList.showRoomAtIndex()
     }
 
     Keys.onEscapePressed: {
@@ -36,13 +36,11 @@ HTextField {
     Behavior on opacity { HNumberAnimation {} }
 
     HShortcut {
-        enabled: loader.isCurrent
         sequences: window.settings.keys.clearRoomFilter
         onActivated: filterField.text = ""
     }
 
     HShortcut {
-        enabled: loader.isCurrent
         sequences: window.settings.keys.toggleFocusMainPane
         onActivated: {
             if (filterField.activeFocus) {

@@ -17,17 +17,19 @@ HTile {
 
         HUserAvatar {
             id: avatar
-            userId: model.id
-            displayName: model.display_name
-            mxc: model.avatar_url
+            userId: accountModel.id
+            displayName: accountModel.display_name
+            mxc: accountModel.avatar_url
             radius: 0
         }
 
         TitleLabel {
-            text: model.display_name || model.id
+            text: accountModel.display_name || accountModel.id
             color:
                 hovered ?
-                utils.nameColor(model.display_name || model.id.substring(1)) :
+                utils.nameColor(
+                    accountModel.display_name || accountModel.id.substring(1),
+                ) :
                 theme.accountView.account.name
 
             Behavior on color { HColorAnimation {} }
@@ -40,7 +42,7 @@ HTile {
             backgroundColor: "transparent"
             toolTip.text: qsTr("Add new chat")
             onClicked: pageLoader.showPage(
-                "AddChat/AddChat", {userId: model.id},
+                "AddChat/AddChat", {userId: accountModel.id},
             )
 
             Layout.fillHeight: true
@@ -59,7 +61,7 @@ HTile {
         HMenuItem {
             icon.name: "copy-user-id"
             text: qsTr("Copy user ID")
-            onTriggered: Clipboard.text = model.id
+            onTriggered: Clipboard.text = accountModel.id
         }
 
         HMenuItemPopupSpawner {
@@ -68,17 +70,18 @@ HTile {
             text: qsTr("Sign out")
 
             popup: "Popups/SignOutPopup.qml"
-            properties: { "userId": model.id }
+            properties: { "userId": accountModel.id }
         }
     }
 
     onLeftClicked: {
         pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": model.id }
+            "AccountSettings/AccountSettings", { "userId": accountModel.id }
         )
     }
 
 
+    property var accountModel
     property bool isCurrent: false
 
 

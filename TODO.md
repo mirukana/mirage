@@ -1,5 +1,7 @@
 # TODO
 
+- rename goto*account → scrollto*account
+- account number binds
 - update glass theme
 - back/front buttons in small window
 - minimum sizes

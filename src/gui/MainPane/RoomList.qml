@@ -7,44 +7,78 @@ import "../Base"
 
 HListView {
     id: roomList
-    model: ModelStore.get(accountModel.id, "rooms")
+    model: ModelStore.get("every_room")
+
+    section.property: "for_account"
+    section.labelPositioning:
+        ViewSection.InlineLabels | ViewSection.CurrentLabelAtStart
+    section.delegate: Account {
+        accountModel: ModelStore.get("accounts").find(section)
+        width: roomList.width
+    }
 
     delegate: Room {
         width: roomList.width
-        userId: accountModel.id
-        onActivated: showRoom(model.index)
+        onActivated: showRoomAtIndex(model.index)
     }
 
-    onIsCurrentChanged: if (isCurrent) showRoom()
+
+    readonly property var sectionIndice: {
+        const sections = {}
+        const accounts = ModelStore.get("accounts")
+        let total      = 0
+
+        for (let i = 0; i < accounts.count; i++) {
+            const userId = accounts.get(i).id
+            sections[userId] = total
+            total += ModelStore.get(userId, "rooms").count
+        }
+
+        return sections
+    }
 
 
-    property var accountModel
-    property var roomPane
-    property bool isCurrent: false
+    function goToAccount(userId) {
+        currentIndex = sectionIndice[userId]
+    }
 
+    function goToAccountNumber(num) {
+        currentIndex = Object.values(sectionIndice).sort()[num]
+    }
 
-    function showRoom(index=currentIndex) {
+    function showRoomAtIndex(index=currentIndex) {
         if (index === -1) index = 0
-        if (index >= model.count) return
-        pageLoader.showRoom(accountModel.id, model.get(index).id)
+        index = Math.min(index, model.count - 1)
+
+        const room = model.get(index)
+        pageLoader.showRoom(room.for_account, room.id)
         currentIndex = index
+    }
+
+    function showAccountRoomAtIndex(index) {
+        const userId =
+            model.get(currentIndex === -1 ? 0 : currentIndex).for_account
+
+        const rooms = ModelStore.get(userId, "rooms")
+        if (! rooms.count) return
+
+        const room = rooms.get(utils.numberWrapAt(index, rooms.count))
+        showRoomAtIndex(model.findIndex(room.id))
     }
 
 
     Timer {
         id: showRoomLimiter
         interval: 200
-        onTriggered: showRoom()
+        onTriggered: showRoomAtIndex()
     }
 
     HShortcut {
-        enabled: isCurrent
         sequences: window.settings.keys.goToPreviousRoom
         onActivated: { decrementCurrentIndex(); showRoomLimiter.restart() }
     }
 
     HShortcut {
-        enabled: isCurrent
         sequences: window.settings.keys.goToNextRoom
         onActivated: { incrementCurrentIndex(); showRoomLimiter.restart() }
     }
@@ -54,25 +88,10 @@ HListView {
 
         Item {
             HShortcut {
-                enabled: isCurrent
                 sequence: window.settings.keys.focusRoomAtIndex[modelData]
-                onActivated: showRoom(parseInt(modelData - 1, 10))
+                onActivated:
+                    showAccountRoomAtIndex(parseInt(modelData - 1, 10))
             }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        onWheel: {
-            const goingDown = wheel.angleDelta.y < 0
-
-            if (! goingDown && roomList.atYBeginning)
-                roomPane.decrementCurrentIndex()
-            else if (goingDown && roomList.atYEnd)
-                roomPane.incrementCurrentIndex()
-            else
-                wheel.accepted = false
         }
     }
 

@@ -8,21 +8,21 @@ import "../Base"
 import "../Base/HTile"
 
 HColumnLayout {
-    property AccountSwipeView accountSwipeView
+    property RoomList roomList
 
 
     HButton {
-        id: everyRoomButton
-        icon.name: "every-room"
-        toolTip.text: qsTr("Every room")
-        backgroundColor: theme.accountsBar.everyRoomButtonBackground
-        // onClicked: pageLoader.showPage("AddAccount/AddAccount")
+        id: addAccountButton
+        icon.name: "add-account"
+        toolTip.text: qsTr("Add another account")
+        backgroundColor: theme.accountsBar.addAccountButtonBackground
+        onClicked: pageLoader.showPage("AddAccount/AddAccount")
 
         Layout.preferredHeight: theme.baseElementsHeight
 
         HShortcut {
-            sequences: window.settings.keys.showEveryRoom
-            onActivated: everyRoomButton.clicked()
+            sequences: window.settings.keys.addNewAccount
+            onActivated: addAccountButton.clicked()
         }
     }
 
@@ -30,10 +30,14 @@ HColumnLayout {
         id: accountList
         clip: true
         model: ModelStore.get("accounts")
-        currentIndex: accountSwipeView.currentIndex
+        currentIndex:
+            roomList.currentIndex === -1 ?
+            -1 :
+            model.findIndex(
+                roomList.model.get(roomList.currentIndex).for_account, -1,
+            )
 
         highlight: Item {
-
             Rectangle {
                 anchors.fill: parent
                 color: theme.accountsBar.accountList.account.selectedBackground
@@ -74,7 +78,7 @@ HColumnLayout {
                 }
             }
 
-            onLeftClicked: accountSwipeView.currentIndex = model.index
+            onLeftClicked: roomList.goToAccount(model.id)
         }
 
         Layout.fillWidth: true
@@ -82,33 +86,24 @@ HColumnLayout {
 
         HShortcut {
             sequences: window.settings.keys.goToPreviousAccount
-            onActivated: accountSwipeView.decrementWrapIndex()
+            onActivated: {
+                accountList.decrementCurrentIndex()
+                accountList.currentItem.leftClicked()
+            }
         }
 
         HShortcut {
             sequences: window.settings.keys.goToNextAccount
-            onActivated: accountSwipeView.incrementWrapIndex()
+            onActivated: {
+                accountList.incrementCurrentIndex()
+                accountList.currentItem.leftClicked()
+            }
         }
 
         Rectangle {
             anchors.fill: parent
             z: -100
             color: theme.accountsBar.accountList.background
-        }
-    }
-
-    HButton {
-        id: addAccountButton
-        icon.name: "add-account"
-        toolTip.text: qsTr("Add another account")
-        backgroundColor: theme.accountsBar.addAccountButtonBackground
-        onClicked: pageLoader.showPage("AddAccount/AddAccount")
-
-        Layout.preferredHeight: theme.baseElementsHeight
-
-        HShortcut {
-            sequences: window.settings.keys.addNewAccount
-            onActivated: addAccountButton.clicked()
         }
     }
 
