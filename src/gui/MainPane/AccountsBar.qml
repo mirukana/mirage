@@ -34,7 +34,10 @@ HColumnLayout {
             roomList.currentIndex === -1 ?
             -1 :
             model.findIndex(
-                roomList.model.get(roomList.currentIndex).for_account, -1,
+                roomList.model.filtered.get(
+                    roomList.currentIndex,
+                ).model.for_account,
+                -1,
             )
 
         highlight: Item {

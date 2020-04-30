@@ -20,13 +20,13 @@ HTextField {
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     Keys.onReturnPressed: {
-        if (window.settings.clearRoomFilterOnEnter) text = ""
         roomList.showRoomAtIndex()
+        if (window.settings.clearRoomFilterOnEnter) text = ""
     }
 
     Keys.onEscapePressed: {
-        if (window.settings.clearRoomFilterOnEscape) text = ""
         mainUI.pageLoader.forceActiveFocus()
+        if (window.settings.clearRoomFilterOnEscape) text = ""
     }
 
 

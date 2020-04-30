@@ -2,7 +2,6 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import SortFilterProxyModel 0.2
 import "../../.."
 import "../../../Base"
 
@@ -14,25 +13,16 @@ HColumnLayout {
         id: memberList
         clip: true
 
-        // https://github.com/oKcerG/SortFilterProxyModel/issues/75
-        model: filterField.text ? proxy : proxy.sourceModel
+        model: HFilterModel {
+            model: ModelStore.get(chat.userId, chat.roomId, "members")
+            delegate: MemberDelegate { width: memberList.width }
 
-        delegate: MemberDelegate {
-            width: memberList.width
+            acceptItem: item =>
+                utils.filterMatches(filterField.text, item.display_name)
         }
 
         Layout.fillWidth: true
         Layout.fillHeight: true
-
-        readonly property HSortFilterProxyModel proxy: HSortFilterProxyModel {
-            sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
-
-            filters: ExpressionFilter {
-                expression: utils.filterMatches(
-                   filterField.text, model.display_name,
-                )
-            }
-        }
 
         Rectangle {
             anchors.fill: parent
@@ -67,6 +57,8 @@ HColumnLayout {
                 // FIXME: fails to display sometimes for some reason if
                 // declared normally
                 Component.onCompleted: placeholderText = qsTr("Filter members")
+
+                onTextChanged: memberList.model.refilterAll()
 
                 Behavior on opacity { HNumberAnimation {} }
             }

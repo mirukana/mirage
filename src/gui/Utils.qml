@@ -227,6 +227,8 @@ QtObject {
     }
 
     function filterMatches(filter, text) {
+        if (! filter) return true
+
         const filter_lower = filter.toLowerCase()
 
         if (filter_lower === filter) {

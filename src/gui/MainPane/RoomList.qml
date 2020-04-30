@@ -2,13 +2,21 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import SortFilterProxyModel 0.2
 import ".."
 import "../Base"
 
 HListView {
     id: roomList
-    model: filter ? proxyModel : proxyModel.sourceModel
+
+    model: HFilterModel {
+        model: ModelStore.get("every_room")
+        delegate: Room {
+            width: roomList.width
+            onActivated: showRoomAtIndex(model.index)
+        }
+
+        acceptItem: item => utils.filterMatches(filter, item.display_name)
+    }
 
     section.property: "for_account"
     section.labelPositioning:
@@ -18,10 +26,7 @@ HListView {
         width: roomList.width
     }
 
-    delegate: Room {
-        width: roomList.width
-        onActivated: showRoomAtIndex(model.index)
-    }
+    onFilterChanged: model.refilterAll()
 
 
     property string filter: ""
@@ -50,22 +55,23 @@ HListView {
 
     function showRoomAtIndex(index=currentIndex) {
         if (index === -1) index = 0
-        index = Math.min(index, model.count - 1)
+        index = Math.min(index, model.filtered.count - 1)
 
-        const room = model.get(index)
+        const room = model.filtered.get(index).model
         pageLoader.showRoom(room.for_account, room.id)
         currentIndex = index
     }
 
     function showAccountRoomAtIndex(index) {
-        const userId =
-            model.get(currentIndex === -1 ? 0 : currentIndex).for_account
+        const userId = model.filtered.get(
+            currentIndex === -1 ?  0 : currentIndex
+        ).model.for_account
 
         const rooms = ModelStore.get(userId, "rooms")
         if (! rooms.count) return
 
         const room = rooms.get(utils.numberWrapAt(index, rooms.count))
-        showRoomAtIndex(model.findIndex(room.id))
+        showRoomAtIndex(model.filteredFindIndex(room.id))
     }
 
 
@@ -94,15 +100,6 @@ HListView {
                 onActivated:
                     showAccountRoomAtIndex(parseInt(modelData - 1, 10))
             }
-        }
-    }
-
-    HSortFilterProxyModel {
-        id: proxyModel
-        sourceModel: ModelStore.get("every_room")
-
-        filters: ExpressionFilter {
-            expression: utils.filterMatches(filter, model.display_name)
         }
     }
 

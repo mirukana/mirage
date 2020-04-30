@@ -58,11 +58,6 @@ dev {
 }
 
 
-# Libraries includes
-
-include(submodules/SortFilterProxyModel/SortFilterProxyModel.pri)
-
-
 # Custom functions
 
 defineReplace(glob_filenames) {
