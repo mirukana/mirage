@@ -2,12 +2,13 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import SortFilterProxyModel 0.2
 import ".."
 import "../Base"
 
 HListView {
     id: roomList
-    model: ModelStore.get("every_room")
+    model: filter ? proxyModel : proxyModel.sourceModel
 
     section.property: "for_account"
     section.labelPositioning:
@@ -23,6 +24,7 @@ HListView {
     }
 
 
+    property string filter: ""
     readonly property var sectionIndice: {
         const sections = {}
         const accounts = ModelStore.get("accounts")
@@ -92,6 +94,15 @@ HListView {
                 onActivated:
                     showAccountRoomAtIndex(parseInt(modelData - 1, 10))
             }
+        }
+    }
+
+    HSortFilterProxyModel {
+        id: proxyModel
+        sourceModel: ModelStore.get("every_room")
+
+        filters: ExpressionFilter {
+            expression: utils.filterMatches(filter, model.display_name)
         }
     }
 

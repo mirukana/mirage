@@ -5,7 +5,6 @@
 - update glass theme
 - back/front buttons in small window
 - minimum sizes
-- filter
 - save/restore swipeview current rooms for accounts
 - lag when switching accounts
 - message delegate too tall

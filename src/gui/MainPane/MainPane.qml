@@ -39,6 +39,7 @@ HDrawer {
             RoomList {
                 id: roomList
                 clip: true
+                filter: filterRoomsField.text
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
