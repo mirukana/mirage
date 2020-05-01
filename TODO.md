@@ -1,5 +1,6 @@
 # TODO
 
+- account context menu
 - add account number binds
 - rename goto*account → scrollto*account
 
