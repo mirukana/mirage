@@ -8,6 +8,7 @@
 - fix message delegate too tall
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
+- fix nio 429
 
 - lag when switching accounts
 - update glass theme

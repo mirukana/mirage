@@ -36,31 +36,11 @@ HTileDelegate {
                     color: theme.accountView.roomList.room.name
                 }
 
-                HLabel {
-                    text: model.unreads
-                    font.pixelSize: theme.fontSize.small
-                    verticalAlignment: Qt.AlignVCenter
-                    leftPadding: theme.spacing / 4
-                    rightPadding: leftPadding
-
-                    scale: model.unreads === 0 ? 0 : 1
-                    visible: model.unreads !== 0
-
-                    background: Rectangle {
-                        color:
-                            model.mentions ?
-                            indicatorTheme.mentionBackground :
-                            indicatorTheme.background
-
-                        radius: theme.radius / 4
-
-                        readonly property QtObject indicatorTheme:
-                            theme.accountView.roomList.room.unreadIndicator
-
-                        Behavior on color { HColorAnimation {} }
-                    }
-
-                    Behavior on scale { HNumberAnimation {} }
+                MessageIndicator {
+                    indicatorTheme:
+                        theme.accountView.roomList.room.unreadIndicator
+                    unreads: model.unreads
+                    mentions: model.mentions
                 }
 
                 HIcon {
