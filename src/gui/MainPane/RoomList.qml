@@ -7,14 +7,25 @@ import "../Base"
 
 HListView {
     id: roomList
+    add: null  // See the XXX comment in HListView.qml
 
     model: HStringFilterModel {
         id: filterModel
         sourceModel: ModelStore.get("every_room")
         field: "display_name"
+
         delegate: Room {
+            id: room
             width: roomList.width
             onActivated: showRoomAtIndex(model.index)
+            ListView.onAdd: ParallelAnimation {
+                HNumberAnimation {
+                    target: room; property: "opacity"; from: 0; to: 1;
+                }
+                HNumberAnimation {
+                    target: room; property: "scale"; from: 0; to: 1;
+                }
+            }
         }
     }
 

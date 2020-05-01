@@ -12,12 +12,25 @@ HColumnLayout {
     HListView {
         id: memberList
         clip: true
+        add: null  // See the XXX comment in HListView.qml
 
         model: HStringFilterModel {
             sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
             field: "display_name"
             filter: filterField.text
-            delegate: MemberDelegate { width: memberList.width }
+
+            delegate: MemberDelegate {
+                id: member
+                width: memberList.width
+                ListView.onAdd: ParallelAnimation {
+                    HNumberAnimation {
+                        target: member; property: "opacity"; from: 0; to: 1;
+                    }
+                    HNumberAnimation {
+                        target: member; property: "scale"; from: 0; to: 1;
+                    }
+                }
+            }
         }
 
         Layout.fillWidth: true

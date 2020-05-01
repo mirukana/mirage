@@ -29,39 +29,34 @@ ListView {
 
     // property bool debug: false
 
-    // Make sure to handle when a previous transition gets interrupted
+    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
+    // #handling-interrupted-animations
+    // XXX: add transitions are buggy when using DelegateModel, `add` should be
+    // set to `null` and delegates should have `ListView.onAdd: ...` instead.
     add: Transition {
-        ParallelAnimation {
-            // ScriptAction { script: if (listView.debug) print("add") }
-            HNumberAnimation { property:   "opacity"; from: 0; to: 1 }
-            HNumberAnimation { property:   "scale";   from: 0; to: 1 }
-        }
+        // ScriptAction { script: if (listView.debug) print("add") }
+        HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+        HNumberAnimation { property: "scale";   from: 0; to: 1 }
     }
 
     move: Transition {
-        ParallelAnimation {
-            // ScriptAction { script: if (listView.debug) print("move") }
-            HNumberAnimation { property:   "opacity"; to: 1 }
-            HNumberAnimation { property:   "scale";   to: 1 }
-            HNumberAnimation { properties: "x,y" }
-        }
+        // ScriptAction { script: if (listView.debug) print("move") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
     }
 
     remove: Transition {
-        ParallelAnimation {
-            // ScriptAction { script: if (listView.debug) print("remove") }
-            HNumberAnimation { property:   "opacity"; to: 0 }
-            HNumberAnimation { property:   "scale";   to: 0 }
-        }
+        // ScriptAction { script: if (listView.debug) print("remove") }
+        HNumberAnimation { property: "opacity"; to: 0 }
+        HNumberAnimation { property: "scale";   to: 0 }
     }
 
     displaced: Transition {
-        ParallelAnimation {
-            // ScriptAction { script: if (listView.debug) print("displaced") }
-            HNumberAnimation { property:   "opacity"; to: 1 }
-            HNumberAnimation { property:   "scale";   to: 1 }
-            HNumberAnimation { properties: "x,y" }
-        }
+        // ScriptAction { script: if (listView.debug) print("displaced") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
