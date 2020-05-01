@@ -12,6 +12,7 @@
 
 - lag when switching accounts
 - update glass theme
+- improve room highlight
 
 - if last room event is a membership change, it won't be visible in timeline
 - use uiState instead of open_room

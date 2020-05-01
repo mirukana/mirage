@@ -297,6 +297,10 @@ accountView:
         color background: colors.strongBackground
         color name:       colors.text
 
+        unreadIndicator:
+            color background:        colors.accentBackground
+            color mentionBackground: colors.alertBackground
+
     roomList:
         color background: colors.mediumBackground
 
