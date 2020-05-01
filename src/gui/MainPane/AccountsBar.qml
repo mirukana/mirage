@@ -75,7 +75,7 @@ HColumnLayout {
                     userId: model.id
                     displayName: model.display_name
                     mxc: model.avatar_url
-                    // compact: account.compact
+                    // compact: tile.compact
 
                     radius: theme.accountsBar.accountList.account.avatarRadius
                 }

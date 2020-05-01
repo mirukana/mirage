@@ -4,9 +4,9 @@
 - add account number binds
 - rename goto*account → scrollto*account
 
+- fix interrupted transitions
 - fix back/front buttons in small window
 - fix message delegate too tall
-- fix compact mode
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 

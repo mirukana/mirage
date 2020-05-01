@@ -21,6 +21,7 @@ HTile {
             displayName: accountModel.display_name
             mxc: accountModel.avatar_url
             radius: 0
+            compact: account.compact
         }
 
         TitleLabel {
