@@ -13,12 +13,11 @@ HColumnLayout {
         id: memberList
         clip: true
 
-        model: HFilterModel {
-            model: ModelStore.get(chat.userId, chat.roomId, "members")
+        model: HStringFilterModel {
+            sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
+            field: "display_name"
+            filter: filterField.text
             delegate: MemberDelegate { width: memberList.width }
-
-            acceptItem: item =>
-                utils.filterMatches(filterField.text, item.display_name)
         }
 
         Layout.fillWidth: true
@@ -57,8 +56,6 @@ HColumnLayout {
                 // FIXME: fails to display sometimes for some reason if
                 // declared normally
                 Component.onCompleted: placeholderText = qsTr("Filter members")
-
-                onTextChanged: memberList.model.refilterAll()
 
                 Behavior on opacity { HNumberAnimation {} }
             }

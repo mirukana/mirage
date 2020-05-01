@@ -8,14 +8,14 @@ import "../Base"
 HListView {
     id: roomList
 
-    model: HFilterModel {
-        model: ModelStore.get("every_room")
+    model: HStringFilterModel {
+        id: filterModel
+        sourceModel: ModelStore.get("every_room")
+        field: "display_name"
         delegate: Room {
             width: roomList.width
             onActivated: showRoomAtIndex(model.index)
         }
-
-        acceptItem: item => utils.filterMatches(filter, item.display_name)
     }
 
     section.property: "for_account"
@@ -26,10 +26,8 @@ HListView {
         width: roomList.width
     }
 
-    onFilterChanged: model.refilterAll()
 
-
-    property string filter: ""
+    property alias filter: filterModel.filter
     readonly property var sectionIndice: {
         const sections = {}
         const accounts = ModelStore.get("accounts")
