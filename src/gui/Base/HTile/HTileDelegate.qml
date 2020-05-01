@@ -6,10 +6,8 @@ import ".."
 
 HTile {
     id: tile
-    topPadding:
-        padded ? spacing / (firstInSection ? 1 : 2) / (compact ? 2 : 1) : 0
-    bottomPadding:
-        padded ? spacing / (lastInSection ? 1 : 2) / (compact ? 2 : 1) : 0
+    topPadding: padded ? spacing / (compact ? 4 : 2) : 0
+    bottomPadding: topPadding
 
     onLeftClicked: {
         view.highlightRangeMode    = ListView.NoHighlightRange
@@ -23,9 +21,4 @@ HTile {
     signal activated()
 
     property HListView view: ListView.view
-
-    readonly property bool firstInSection:
-        ListView.previousSection !== ListView.section
-    readonly property bool lastInSection:
-        ListView.nextSection !== ListView.section
 }

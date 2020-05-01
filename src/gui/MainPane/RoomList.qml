@@ -33,9 +33,10 @@ HListView {
     section.property: "for_account"
     section.labelPositioning:
         ViewSection.InlineLabels | ViewSection.CurrentLabelAtStart
+
     section.delegate: Account {
-        accountModel: ModelStore.get("accounts").find(section)
         width: roomList.width
+        accountModel: ModelStore.get("accounts").find(section)
     }
 
 
