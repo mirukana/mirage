@@ -1,17 +1,18 @@
 # TODO
 
+- add unread counts on accounts
+- add account number binds
 - rename goto*account → scrollto*account
-- account number binds
-- update glass theme
-- back/front buttons in small window
-- minimum sizes
-- lag when switching accounts
-- message delegate too tall
-- unread counts on accounts
-- fix compact mode
-- left rooms opacity
 
+- fix back/front buttons in small window
+- fix message delegate too tall
+- fix compact mode
+- fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
+
+- lag when switching accounts
+- update glass theme
+
 - if last room event is a membership change, it won't be visible in timeline
 - use uiState instead of open_room
 

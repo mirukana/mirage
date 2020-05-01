@@ -85,25 +85,6 @@ HTile {
     property bool isCurrent: false
 
 
-    Behavior on leftPadding { HNumberAnimation {} }
-    Behavior on topPadding { HNumberAnimation {} }
-
-    Binding on leftPadding {
-        value: (mainPane.minimumSize - avatar.width) / 2
-        when: mainPane.small
-    }
-
-    Binding on topPadding {
-        value: theme.spacing
-        when: mainPane.small
-    }
-
-    Binding on bottomPadding {
-        value: theme.spacing
-        when: mainPane.small
-    }
-
-
     HShortcut {
         enabled: isCurrent
         sequences: window.settings.keys.accountSettings

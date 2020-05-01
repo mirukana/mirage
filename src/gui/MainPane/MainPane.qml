@@ -8,14 +8,12 @@ HDrawer {
     id: mainPane
     saveName: "mainPane"
     background: null
-    // minimumSize: bottomBar.addAccountButton.width
+    minimumSize:
+        accountBar.width + theme.controls.avatar.size + theme.spacing * 2
 
     readonly property alias accountBar: accountBar
     readonly property alias roomList: roomList
     readonly property alias filterRoomsField: filterRoomsField
-
-    readonly property bool small:
-        width < theme.controls.avatar.size + theme.spacing * 2
 
 
     Behavior on opacity { HNumberAnimation {} }

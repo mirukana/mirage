@@ -8,7 +8,7 @@ Button {
     id: button
     enabled: ! button.loading
     spacing: theme.spacing
-    topPadding: padded ? spacing / (circle ? 1.75 : 1.5) : 0
+    topPadding: padded ? spacing / (circle ? 1.75 : 2) : 0
     bottomPadding: topPadding
     leftPadding: padded ? spacing / (circle ? 1.5 : 1) : 0
     rightPadding: leftPadding

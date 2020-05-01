@@ -18,6 +18,9 @@ HButton {
     property alias contextMenu: contextMenuLoader.sourceComponent
 
 
+    Behavior on topPadding { HNumberAnimation {} }
+    Behavior on bottomPadding { HNumberAnimation {} }
+
     Binding on topPadding {
         value: spacing / 4
         when: compact

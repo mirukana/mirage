@@ -310,8 +310,7 @@ accountView:
             color subtitle:      colors.dimText
             color subtitleQuote: chat.message.quote
 
-            int avatarRadius:          controls.avatar.radius
-            int collapsedAvatarRadius: controls.avatar.radius
+            int avatarRadius: controls.avatar.radius
 
             unreadIndicator:
                 color background:        colors.accentBackground

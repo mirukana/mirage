@@ -22,11 +22,7 @@ HTileDelegate {
             displayName: model.display_name
             mxc: model.avatar_url
             compact: room.compact
-
-            radius:
-                mainPane.small ?
-                theme.accountView.roomList.room.collapsedAvatarRadius :
-                theme.accountView.roomList.room.avatarRadius
+            radius: theme.accountView.roomList.room.avatarRadius
 
             Behavior on radius { HNumberAnimation {} }
         }
@@ -215,20 +211,4 @@ HTileDelegate {
 
 
     Behavior on opacity { HNumberAnimation {} }
-    Behavior on leftPadding { HNumberAnimation {} }
-
-    Binding on leftPadding {
-        value: (mainPane.minimumSize - avatar.width) / 2
-        when: mainPane.small
-    }
-
-    Binding on topPadding {
-        value: leftPadding / 2
-        when: mainPane.small
-    }
-
-    Binding on bottomPadding {
-        value: leftPadding / 2
-        when: mainPane.small
-    }
 }
