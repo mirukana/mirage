@@ -42,14 +42,16 @@ HListView {
 
     property alias filter: filterModel.filter
     readonly property var sectionIndice: {
-        const sections = {}
-        const accounts = ModelStore.get("accounts")
-        let total      = 0
+        const sections    = {}
+        let currentUserId = null
 
-        for (let i = 0; i < accounts.count; i++) {
-            const userId = accounts.get(i).id
-            sections[userId] = total
-            total += ModelStore.get(userId, "rooms").count
+        for (let i = 0; i < model.filtered.count; i++) {
+            const userId = model.filtered.get(i).model.for_account
+
+            if (userId !== currentUserId) {
+                sections[userId] = i
+                currentUserId    = userId
+            }
         }
 
         return sections
