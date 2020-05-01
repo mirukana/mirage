@@ -90,6 +90,8 @@ HColumnLayout {
                 }
             }
 
+            contextMenu: AccountContextMenu { userId: model.id }
+
             onLeftClicked: roomList.goToAccount(model.id)
         }
 

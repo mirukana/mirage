@@ -2,7 +2,6 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import Clipboard 0.1
 import "../Base"
 import "../Base/HTile"
 
@@ -58,22 +57,7 @@ HTile {
         }
     }
 
-    contextMenu: HMenu {
-        HMenuItem {
-            icon.name: "copy-user-id"
-            text: qsTr("Copy user ID")
-            onTriggered: Clipboard.text = accountModel.id
-        }
-
-        HMenuItemPopupSpawner {
-            icon.name: "sign-out"
-            icon.color: theme.colors.negativeBackground
-            text: qsTr("Sign out")
-
-            popup: "Popups/SignOutPopup.qml"
-            properties: { "userId": accountModel.id }
-        }
-    }
+    contextMenu: AccountContextMenu { userId: accountModel.id }
 
     onLeftClicked: {
         pageLoader.showPage(
