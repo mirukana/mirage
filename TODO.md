@@ -1,6 +1,5 @@
 # TODO
 
-- account context menu
 - add account number binds
 - rename goto*account → scrollto*account
 
@@ -11,6 +10,7 @@
 - fix escape keybinds (filter rooms, message selection)
 - fix nio 429
 
+- account delegates refactor
 - lag when switching accounts
 - update glass theme
 - improve room highlight

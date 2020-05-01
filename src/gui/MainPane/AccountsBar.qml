@@ -29,7 +29,6 @@ HColumnLayout {
     HListView {
         id: accountList
         clip: true
-        model: ModelStore.get("accounts")
         currentIndex:
             roomList.currentIndex === -1 ?
             -1 :
@@ -39,6 +38,63 @@ HColumnLayout {
                 ).model.for_account,
                 -1,
             )
+
+        model: HFilterModel {
+            model: ModelStore.get("accounts")
+            acceptItem: item =>
+                ! roomFilter || item.id in roomList.sectionIndice
+
+            delegate: HTileDelegate {
+                id: tile
+                width: accountList.width
+                backgroundColor:
+                    theme.accountsBar.accountList.account.background
+
+                topPadding: (accountList.width - avatar.width) / 4
+                bottomPadding: topPadding
+                leftPadding: 0
+                rightPadding: leftPadding
+
+                contentItem: Item {
+                    implicitHeight: avatar.height
+
+                    HUserAvatar {
+                        id: avatar
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        userId: model.id
+                        displayName: model.display_name
+                        mxc: model.avatar_url
+                        // compact: tile.compact
+
+                        radius:
+                            theme.accountsBar.accountList.account.avatarRadius
+                    }
+
+                    MessageIndicator {
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+
+                        indicatorTheme:
+                            theme.accountView.account.unreadIndicator
+                        unreads: model.total_unread
+                        mentions: model.total_mentions
+                    }
+                }
+
+                contextMenu: AccountContextMenu { userId: model.id }
+
+                onLeftClicked: {
+                    model.id in roomList.sectionIndice ?
+                    roomList.goToAccount(model.id) :
+                    pageLoader.showPage("AddChat/AddChat", {userId: model.id})
+                }
+            }
+
+
+            onRoomFilterChanged: refilterAll()
+
+            readonly property string roomFilter: roomList.filter
+        }
 
         highlight: Item {
             Rectangle {
@@ -53,49 +109,6 @@ HColumnLayout {
                 width: theme.accountsBar.accountList.account.selectedBorderSize
                 height: parent.height
                 color: theme.accountsBar.accountList.account.selectedBorder
-            }
-        }
-
-        delegate: HTileDelegate {
-            id: tile
-            width: accountList.width
-            backgroundColor: theme.accountsBar.accountList.account.background
-
-            topPadding: (accountList.width - avatar.width) / 4
-            bottomPadding: topPadding
-            leftPadding: 0
-            rightPadding: leftPadding
-
-            contentItem: Item {
-                implicitHeight: avatar.height
-
-                HUserAvatar {
-                    id: avatar
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    userId: model.id
-                    displayName: model.display_name
-                    mxc: model.avatar_url
-                    // compact: tile.compact
-
-                    radius: theme.accountsBar.accountList.account.avatarRadius
-                }
-
-                MessageIndicator {
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-
-                    indicatorTheme: theme.accountView.account.unreadIndicator
-                    unreads: model.total_unread
-                    mentions: model.total_mentions
-                }
-            }
-
-            contextMenu: AccountContextMenu { userId: model.id }
-
-            onLeftClicked: {
-                model.id in roomList.sectionIndice ?
-                roomList.goToAccount(model.id) :
-                pageLoader.showPage("AddChat/AddChat", {userId: model.id})
             }
         }
 
