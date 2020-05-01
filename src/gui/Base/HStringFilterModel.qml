@@ -12,4 +12,9 @@ HFilterModel {
     property string field: "id"
     property string filter: ""
     property ListModel sourceModel
+
+    readonly property Connections sourceModelConnections: Connections {
+        target: sourceModel  // model is non-notifiable
+        onFieldsChanged: if (field in changes) refilterAt(index)
+    }
 }

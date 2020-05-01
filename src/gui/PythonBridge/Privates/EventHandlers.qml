@@ -60,7 +60,10 @@ QtObject {
                   // JSON.stringify(changedFields))
             const model = ModelStore.get(syncId)
             model.set(indexThen, changedFields)
+
             if (indexThen !== indexNow) model.move(indexThen, indexNow, 1)
+
+            model.fieldsChanged(indexNow, changedFields)
         }
     }
 

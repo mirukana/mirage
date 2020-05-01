@@ -12,6 +12,9 @@ QtObject {
 
         readonly property Component model: Component {
             ListModel {
+                // Used by HFilterModel
+                signal fieldsChanged(int index, var changes)
+
                 property var modelId
 
                 function findIndex(id, default_=null) {
