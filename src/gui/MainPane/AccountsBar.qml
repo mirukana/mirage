@@ -92,7 +92,11 @@ HColumnLayout {
 
             contextMenu: AccountContextMenu { userId: model.id }
 
-            onLeftClicked: roomList.goToAccount(model.id)
+            onLeftClicked: {
+                model.id in roomList.sectionIndice ?
+                roomList.goToAccount(model.id) :
+                pageLoader.showPage("AddChat/AddChat", {userId: model.id})
+            }
         }
 
         Layout.fillWidth: true

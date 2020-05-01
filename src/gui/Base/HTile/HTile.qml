@@ -18,6 +18,7 @@ HButton {
     property real contentOpacity: 1
 
     property alias contextMenu: contextMenuLoader.sourceComponent
+    readonly property alias contextMenuLoader: contextMenuLoader
 
 
     Behavior on topPadding { HNumberAnimation {} }
