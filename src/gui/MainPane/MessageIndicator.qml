@@ -30,6 +30,5 @@ HLabel {
     property int mentions: 0
 
 
-
     Behavior on scale { HNumberAnimation {} }
 }

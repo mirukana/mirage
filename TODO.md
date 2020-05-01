@@ -1,9 +1,9 @@
 # TODO
 
-- add unread counts on accounts
 - add account number binds
 - rename goto*account → scrollto*account
 
+- fix python error
 - fix back/front buttons in small window
 - fix message delegate too tall
 - fix left rooms opacity

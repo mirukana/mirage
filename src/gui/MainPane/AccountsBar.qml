@@ -79,6 +79,16 @@ HColumnLayout {
 
                     radius: theme.accountsBar.accountList.account.avatarRadius
                 }
+
+                MessageIndicator {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+
+                    indicatorTheme:
+                        theme.accountView.roomList.room.unreadIndicator
+                    unreads: model.total_unread
+                    mentions: model.total_mentions
+                }
             }
 
             onLeftClicked: roomList.goToAccount(model.id)

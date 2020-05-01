@@ -38,6 +38,8 @@ class Account(ModelItem):
     max_upload_size: int      = 0
     profile_updated: datetime = ZeroDate
     first_sync_done: bool     = False
+    total_unread:    int      = 0
+    total_mentions:  int      = 0
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by user ID."""

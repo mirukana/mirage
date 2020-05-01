@@ -249,15 +249,19 @@ class Backend:
         only cleaning up any unread indicators.
         """
 
-        for client in self.clients.values():
+        for user_id, client in self.clients.items():
             client.open_room = room_id
 
             if not client.first_sync_done.is_set():
                 continue
 
-            room = self.models[client.user_id, "rooms"].get(room_id)
+            room = self.models[user_id, "rooms"].get(room_id)
 
             if room:
+                account                 = self.models["accounts"][user_id]
+                account.total_unread   -= room.unreads
+                account.total_mentions -= room.mentions
+
                 room.mentions = 0
                 room.unreads  = 0
 

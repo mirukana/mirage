@@ -1374,10 +1374,14 @@ class MatrixClient(nio.AsyncClient):
         AlertRequested()
 
         if self.open_room != room.room_id:
-            room          = self.models[self.user_id, "rooms"][room.room_id]
-            room.unreads += 1
+            account = self.models["accounts"][self.user_id]
+            room    = self.models[self.user_id, "rooms"][room.room_id]
+
+            account.total_unread += 1
+            room.unreads         += 1
 
             content = fields.get("content", "")
 
             if HTML.user_id_link_in_html(content, self.user_id):
-                room.mentions += 1
+                account.total_mentions += 1
+                room.mentions          += 1
