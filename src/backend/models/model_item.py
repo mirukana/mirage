@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Dict
 
 from ..pyotherside_events import ModelItemSet
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
     from .model import Model
 
 
+@dataclass
 class ModelItem:
     """Base class for items stored inside a `Model`.
 
@@ -20,6 +22,9 @@ class ModelItem:
     to provide support for comparisons with the `<`, `>`, `<=`, `=>` operators
     and thus allow a `Model` to keep its data sorted.
     """
+
+    id: Any = field()
+
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
         cls.parent_models: Dict[SyncId, Model] = {}

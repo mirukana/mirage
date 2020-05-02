@@ -3,6 +3,7 @@
 - add account number binds
 - rename goto*account → scrollto*account
 
+- fix opacity
 - fix python error
 - fix back/front buttons in small window
 - fix message delegate too tall
@@ -17,6 +18,9 @@
 
 - if last room event is a membership change, it won't be visible in timeline
 - use uiState instead of open_room
+- clicking on a room with unread counter to see it move right away is weird
+- rooms without messages on first sync
+- avatar loading performance problem?
 
 ## Refactoring
 
@@ -35,17 +39,12 @@
 
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
-- When zooming in enough, "Mirage <version>" label overflows
-
 - Catch server 5xx errors when sending message and retry 
 
 - Popups and room settings can't be scrolled when not enough height to show all
 
 - Handle cases where a known account's access token is invalid
 - If an account is gone from the user's config, discard UI state last page
-
-- First sent message in E2E room is sometimes undecryptable
-  (can be fixed by logging out and in again) (still valid?)
 
 - After forgetting a room, it comes back because of the "you left" event
 
