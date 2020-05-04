@@ -32,7 +32,7 @@ HColumnLayout {
         currentIndex:
             roomList.currentIndex === -1 ?
             -1 :
-            model.findIndex(
+            model.filteredFindIndex(
                 roomList.model.filtered.get(
                     roomList.currentIndex,
                 ).model.for_account,

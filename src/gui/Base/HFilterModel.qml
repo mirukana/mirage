@@ -34,17 +34,17 @@ DelegateModel {
         for (let i = 0; i < items.count; i++) refilterAt(i)
     }
 
-    function filteredFindIndex(id) {
+    function filteredFindIndex(id, default_=null) {
         for (let i = 0; i < filtered.count; i++)
             if (filtered.get(i).id === id) return i
 
-        return null
+        return default_
     }
 
-    function filteredFind(id) {
+    function filteredFind(id, default_=null) {
         for (let i = 0; i < filtered.count; i++)
             if (filtered.get(i).id === id) return get(i)
 
-        return null
+        return default_
     }
 }

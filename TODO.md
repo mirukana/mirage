@@ -3,6 +3,7 @@
 - add account number binds
 - rename goto*account → scrollto*account
 
+- fix up/down type error when filtering
 - fix opacity
 - fix python error
 - fix back/front buttons in small window
