@@ -82,6 +82,7 @@ class ModelItemDeleted(ModelEvent):
     """Indicate the removal of a `ModelItem` from a `Backend` `Model`."""
 
     index: int = field()
+    count: int = 1
 
 
 @dataclass

@@ -26,6 +26,7 @@ Python {
         const future = privates.makeFuture()
 
         Globals.pendingCoroutines[uuid] = {future, onSuccess, onError}
+        Globals.pendingCoroutinesChanged()
 
         call("BRIDGE.call_backend_coro", [name, uuid, args], pyFuture => {
             future.privates.pythonFuture = pyFuture
@@ -43,6 +44,7 @@ Python {
             const uuid = accountId + "." + name + "." + CppUtils.uuid()
 
             Globals.pendingCoroutines[uuid] = {onSuccess, onError}
+            Globals.pendingCoroutinesChanged()
 
             const call_args = [accountId, name, uuid, args]
 

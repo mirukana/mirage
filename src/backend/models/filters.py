@@ -58,7 +58,7 @@ class ModelFilter(ModelProxy):
         take_out   = []
         bring_back = []
 
-        for key, item in self.items():
+        for key, item in sorted(self.items(), key=lambda kv: kv[1]):
             if not self.accept_item(item):
                 take_out.append(key)
 
@@ -66,8 +66,9 @@ class ModelFilter(ModelProxy):
             if self.accept_item(item):
                 bring_back.append(key)
 
-        for key in take_out:
-            self.filtered_out[key] = self.pop(key)
+        with self.batch_remove():
+            for key in take_out:
+                self.filtered_out[key] = self.pop(key)
 
         for key in bring_back:
             self[key] = self.filtered_out.pop(key)

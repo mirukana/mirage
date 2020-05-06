@@ -43,6 +43,7 @@ class ModelProxy(Model):
 
     def source_cleared(self, source: Model) -> None:
         if self.accept_source(source):
-            for source_sync_id, key in self.copy():
-                if source_sync_id == source.sync_id:
-                    del self[source_sync_id, key]
+            with self.batch_remove():
+                for source_sync_id, key in self.copy():
+                    if source_sync_id == source.sync_id:
+                        del self[source_sync_id, key]

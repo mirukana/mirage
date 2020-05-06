@@ -24,6 +24,7 @@ QtObject {
         const onError   = Globals.pendingCoroutines[uuid].onError
 
         delete Globals.pendingCoroutines[uuid]
+        Globals.pendingCoroutinesChanged()
 
         if (error) {
             const type = py.getattr(py.getattr(error, "__class__"), "__name__")
@@ -43,6 +44,7 @@ QtObject {
 
 
     function onLoopException(message, error, traceback) {
+        if (traceback.includes("429, None")) return
         // No need to log these here, the asyncio exception handler does it
         const type = py.getattr(py.getattr(error, "__class__"), "__name__")
         utils.showError(type, traceback, message)
@@ -68,9 +70,10 @@ QtObject {
     }
 
 
-    function onModelItemDeleted(syncId, index) {
-        // print("delete", syncId, index)
-        ModelStore.get(syncId).remove(index)
+    function onModelItemDeleted(syncId, index, count=1) {
+        // print("delete", syncId, index, count)
+        print(syncId, index, count)
+        ModelStore.get(syncId).remove(index, count)
     }
 
 

@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+import itertools
 from bisect import bisect
+from contextlib import contextmanager
 from threading import RLock
 from typing import (
     TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional,
@@ -41,6 +43,8 @@ class Model(MutableMapping):
         self._write_lock:  RLock                  = RLock()
 
         self.take_items_ownership: bool = True
+
+        self._active_batch_remove_indice: Optional[List[int]] = None
 
         if self.sync_id:
             self.instances[self.sync_id] = self
@@ -144,7 +148,10 @@ class Model(MutableMapping):
                     proxy.source_item_deleted(self, key)
 
             if self.sync_id:
-                ModelItemDeleted(self.sync_id, index)
+                if self._active_batch_remove_indice is None:
+                    ModelItemDeleted(self.sync_id, index)
+                else:
+                    self._active_batch_remove_indice.append(index)
 
 
     def __iter__(self) -> Iterator:
@@ -170,3 +177,18 @@ class Model(MutableMapping):
         new = type(self)(sync_id=sync_id)
         new.update(self)
         return new
+
+
+    @contextmanager
+    def batch_remove(self):
+        try:
+            self._active_batch_remove_indice = []
+            yield None
+        finally:
+            indice = self._active_batch_remove_indice
+            groups = [list(group) for item, group in itertools.groupby(indice)]
+
+            for grp in groups:
+                ModelItemDeleted(self.sync_id, index=grp[0], count=len(grp))
+
+            self._active_batch_remove_indice = None
