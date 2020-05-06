@@ -13,6 +13,7 @@ from . import SyncId
 
 if TYPE_CHECKING:
     from .model_item import ModelItem
+    from .proxy import ModelProxy  # noqa
 
 
 class Model(MutableMapping):
@@ -28,6 +29,10 @@ class Model(MutableMapping):
 
     Items in the model are kept sorted using the `ModelItem` subclass `__lt__`.
     """
+
+    instances: Dict[SyncId, "Model"]      = {}
+    proxies:   Dict[SyncId, "ModelProxy"] = {}
+
 
     def __init__(self, sync_id: Optional[SyncId]) -> None:
         self.sync_id:      Optional[SyncId]       = sync_id
