@@ -55,23 +55,24 @@ class ModelFilter(ModelProxy):
 
 
     def refilter(self) -> None:
-        take_out   = []
-        bring_back = []
+        with self._write_lock:
+            take_out   = []
+            bring_back = []
 
-        for key, item in sorted(self.items(), key=lambda kv: kv[1]):
-            if not self.accept_item(item):
-                take_out.append(key)
+            for key, item in sorted(self.items(), key=lambda kv: kv[1]):
+                if not self.accept_item(item):
+                    take_out.append(key)
 
-        for key, item in self.filtered_out.items():
-            if self.accept_item(item):
-                bring_back.append(key)
+            for key, item in self.filtered_out.items():
+                if self.accept_item(item):
+                    bring_back.append(key)
 
-        with self.batch_remove():
-            for key in take_out:
-                self.filtered_out[key] = self.pop(key)
+            with self.batch_remove():
+                for key in take_out:
+                    self.filtered_out[key] = self.pop(key)
 
-        for key in bring_back:
-            self[key] = self.filtered_out.pop(key)
+            for key in bring_back:
+                self[key] = self.filtered_out.pop(key)
 
 
 class FieldSubstringFilter(ModelFilter):
