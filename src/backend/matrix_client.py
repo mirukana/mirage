@@ -350,7 +350,7 @@ class MatrixClient(nio.AsyncClient):
                 else:
                     LoopException(str(err), err, trace)
 
-                await asyncio.sleep(2)
+            await asyncio.sleep(5)
 
 
     async def get_server_config(self) -> int:
