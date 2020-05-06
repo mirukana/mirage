@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from ..pyotherside_events import ModelItemSet
 from ..utils import serialize_value_for_qml
-from . import SyncId
 
 if TYPE_CHECKING:
     from .model import Model
@@ -27,14 +26,14 @@ class ModelItem:
 
 
     def __new__(cls, *_args, **_kwargs) -> "ModelItem":
-        cls.parent_models: Dict[SyncId, Model] = {}
+        cls.parent_model: Optional[Model] = None
         return super().__new__(cls)
 
 
     def __setattr__(self, name: str, value) -> None:
         """If this item is in a `Model`, alert it of attribute changes."""
 
-        if name == "parent_model" or not self.parent_models:
+        if name == "parent_model" or not self.parent_model:
             super().__setattr__(name, value)
             return
 
@@ -43,15 +42,19 @@ class ModelItem:
 
         super().__setattr__(name, value)
 
-        for sync_id, model in self.parent_models.items():
-            with model._write_lock:
-                index_then = model._sorted_data.index(self)
-                model._sorted_data.sort()
-                index_now = model._sorted_data.index(self)
+        model = self.parent_model
 
-                fields = {name: self.serialize_field(name)}
+        if not model.sync_id:
+            return
 
-                ModelItemSet(sync_id, index_then, index_now, fields)
+        with model._write_lock:
+            index_then = model._sorted_data.index(self)
+            model._sorted_data.sort()
+            index_now = model._sorted_data.index(self)
+
+            fields = {name: self.serialize_field(name)}
+
+            ModelItemSet(model.sync_id, index_then, index_now, fields)
 
 
     def __delattr__(self, name: str) -> None:
@@ -72,6 +75,6 @@ class ModelItem:
         return {
             name: self.serialize_field(name) for name in dir(self)
             if not (
-                name.startswith("_") or name in ("parent_models", "serialized")
+                name.startswith("_") or name in ("parent_model", "serialized")
             )
         }

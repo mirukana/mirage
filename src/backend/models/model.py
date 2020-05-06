@@ -79,7 +79,7 @@ class Model(MutableMapping):
             # Set parent model on new item
 
             if self.sync_id:
-                new.parent_models[self.sync_id] = self
+                new.parent_model = self
 
             # Insert into sorted data
 
@@ -109,7 +109,7 @@ class Model(MutableMapping):
             item = self._data[key]
 
             if self.sync_id:
-                del item.parent_models[self.sync_id]
+                item.parent_model = None
 
             del self._data[key]
 
