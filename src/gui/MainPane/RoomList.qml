@@ -76,15 +76,11 @@ HListView {
     }
 
     function showAccountRoomAtIndex(index) {
-        const userId = model.filtered.get(
+        const currentUserId = model.filtered.get(
             currentIndex === -1 ?  0 : currentIndex
         ).model.for_account
 
-        const rooms = ModelStore.get(userId, "rooms")
-        if (! rooms.count) return
-
-        const room = rooms.get(utils.numberWrapAt(index, rooms.count))
-        showRoomAtIndex(model.filteredFindIndex(room.id))
+        showRoomAtIndex(sectionIndice[currentUserId] + index)
     }
 
 
