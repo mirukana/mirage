@@ -7,16 +7,20 @@ import traceback
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional
 
-import nio
 from appdirs import AppDirs
+
+import nio
 
 from . import __app_name__
 from .errors import MatrixError
 from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
+from .models.filters import FieldSubstringFilter
 from .models.items import Account
+from .models.model import Model
 from .models.model_store import ModelStore
+from .models.special_models import AllRooms
 from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
@@ -77,8 +81,9 @@ class Backend:
         self.ui_state:       UIState    = UIState(self)
         self.history:        History    = History(self)
 
-        self.models:  ModelStore              = ModelStore()
-        self.clients: Dict[str, MatrixClient] = {}
+        self.all_rooms: AllRooms                = AllRooms()
+        self.models:    ModelStore              = ModelStore()
+        self.clients:   Dict[str, MatrixClient] = {}
 
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
@@ -304,3 +309,12 @@ class Backend:
 
                 await asyncio.sleep(0.1)
                 failures += 1
+
+
+    async def set_substring_filter(self, model_id: SyncId, value: str) -> None:
+        model = Model.proxies[model_id]
+
+        if not isinstance(model, FieldSubstringFilter):
+            raise TypeError("model_id must point to a FieldSubstringFilter")
+
+        model.filter = value

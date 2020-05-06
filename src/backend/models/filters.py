@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from typing import TYPE_CHECKING, Collection, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Collection, Dict, Optional, Tuple
 
 from . import SyncId
 from .model import Model
@@ -20,10 +20,20 @@ class ModelFilter(ModelProxy):
         return True
 
 
-    def source_item_set(self, source: Model, key, value: "ModelItem") -> None:
+    def source_item_set(
+        self,
+        source: Model,
+        key,
+        value: "ModelItem",
+        _changed_fields: Optional[Dict[str, Any]] = None,
+    ) -> None:
         if self.accept_source(source):
-            dct = self if self.accept_item(value) else self.filtered_out
-            dct[source.sync_id, key] = value
+            if self.accept_item(value):
+                self.__setitem__((source.sync_id, key), value, _changed_fields)
+                self.filtered_out.pop((source.sync_id, key), None)
+            else:
+                self.filtered_out[source.sync_id, key] = value
+                self.pop((source.sync_id, key), None)
 
 
     def source_item_deleted(self, source: Model, key) -> None:
@@ -64,11 +74,11 @@ class ModelFilter(ModelProxy):
 
 
 class FieldSubstringFilter(ModelFilter):
-    def __init__(self, fields: Collection[str], *args, **kwargs) -> None:
+    def __init__(self, sync_id: SyncId, fields: Collection[str]) -> None:
         self.fields:  Collection[str] = fields
         self._filter: str             = ""
 
-        super().__init__(*args, **kwargs)
+        super().__init__(sync_id)
 
 
     @property

@@ -42,19 +42,23 @@ class ModelItem:
 
         super().__setattr__(name, value)
 
-        model = self.parent_model
+        parent = self.parent_model
 
-        if not model.sync_id:
+        if not parent.sync_id:
             return
 
-        with model._write_lock:
-            index_then = model._sorted_data.index(self)
-            model._sorted_data.sort()
-            index_now = model._sorted_data.index(self)
+        fields = {name: self.serialize_field(name)}
 
-            fields = {name: self.serialize_field(name)}
+        with parent._write_lock:
+            index_then = parent._sorted_data.index(self)
+            parent._sorted_data.sort()
+            index_now = parent._sorted_data.index(self)
 
-            ModelItemSet(model.sync_id, index_then, index_now, fields)
+            ModelItemSet(parent.sync_id, index_then, index_now, fields)
+
+        for sync_id, proxy in parent.proxies.items():
+            if sync_id != parent.sync_id:
+                proxy.source_item_set(parent, self.id, self, fields)
 
 
     def __delattr__(self, name: str) -> None:

@@ -871,7 +871,6 @@ class MatrixClient(nio.AsyncClient):
         """
 
         self.models[self.user_id, "rooms"].pop(room_id, None)
-        self.models["every_room"].pop((self.user_id, room_id), None)
         self.models.pop((self.user_id, room_id, "events"), None)
         self.models.pop((self.user_id, room_id, "members"), None)
 
@@ -1248,8 +1247,7 @@ class MatrixClient(nio.AsyncClient):
             unreads         = unreads,
         )
 
-        self.models[self.user_id, "rooms"][room.room_id]      = room_item
-        self.models["every_room"][self.user_id, room.room_id] = room_item
+        self.models[self.user_id, "rooms"][room.room_id] = room_item
 
         # List members that left the room, then remove them from our model
         left_the_room = [

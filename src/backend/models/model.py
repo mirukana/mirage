@@ -40,6 +40,11 @@ class Model(MutableMapping):
         self._sorted_data: List["ModelItem"]      = blist()
         self._write_lock:  RLock                  = RLock()
 
+        self.take_items_ownership: bool = True
+
+        if self.sync_id:
+            self.instances[self.sync_id] = self
+
 
     def __repr__(self) -> str:
         """Provide a full representation of the model and its content."""
@@ -63,27 +68,34 @@ class Model(MutableMapping):
         return self._data[key]
 
 
-    def __setitem__(self, key, value: "ModelItem") -> None:
+    def __setitem__(
+        self,
+        key,
+        value: "ModelItem",
+        _changed_fields: Optional[Dict[str, Any]] = None,
+    ) -> None:
         with self._write_lock:
             existing = self._data.get(key)
             new      = value
 
             # Collect changed fields
 
-            changed_fields = {}
+            changed_fields = _changed_fields or {}
 
-            for field in new.__dataclass_fields__:  # type: ignore
-                changed = True
+            if not changed_fields:
+                for field in new.__dataclass_fields__:  # type: ignore
+                    changed = True
 
-                if existing:
-                    changed = getattr(new, field) != getattr(existing, field)
+                    if existing:
+                        changed = \
+                            getattr(new, field) != getattr(existing, field)
 
-                if changed:
-                    changed_fields[field] = new.serialize_field(field)
+                    if changed:
+                        changed_fields[field] = new.serialize_field(field)
 
             # Set parent model on new item
 
-            if self.sync_id:
+            if self.sync_id and self.take_items_ownership:
                 new.parent_model = self
 
             # Insert into sorted data
@@ -100,6 +112,12 @@ class Model(MutableMapping):
             # Insert into dict data
 
             self._data[key] = new
+
+            # Callbacks
+
+            for sync_id, proxy in self.proxies.items():
+                if sync_id != self.sync_id:
+                    proxy.source_item_set(self, key, value)
 
             # Emit PyOtherSide event
 
@@ -120,6 +138,10 @@ class Model(MutableMapping):
 
             index = self._sorted_data.index(item)
             del self._sorted_data[index]
+
+            for sync_id, proxy in self.proxies.items():
+                if sync_id != self.sync_id:
+                    proxy.source_item_deleted(self, key)
 
             if self.sync_id:
                 ModelItemDeleted(self.sync_id, index)
