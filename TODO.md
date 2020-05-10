@@ -4,8 +4,6 @@
 - rename goto*account → scrollto*account
 
 - fix opacity
-- fix back/front buttons in small window
-- fix message delegate too tall
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room

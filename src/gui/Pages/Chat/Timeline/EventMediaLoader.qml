@@ -5,6 +5,7 @@ import "../../../Base"
 
 HLoader {
     id: loader
+    visible: Boolean(item)
     x: eventContent.spacing
 
     onTypeChanged: {
