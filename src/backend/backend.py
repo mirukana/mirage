@@ -20,7 +20,6 @@ from .models.filters import FieldSubstringFilter
 from .models.items import Account
 from .models.model import Model
 from .models.model_store import ModelStore
-from .models.special_models import AllRooms, MatchingAccounts
 from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
@@ -76,14 +75,12 @@ class Backend:
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
-        self.saved_accounts: Accounts   = Accounts(self)
-        self.ui_settings:    UISettings = UISettings(self)
-        self.ui_state:       UIState    = UIState(self)
-        self.history:        History    = History(self)
+        self.saved_accounts = Accounts(self)
+        self.ui_settings    = UISettings(self)
+        self.ui_state       = UIState(self)
+        self.history        = History(self)
 
-        self.all_rooms         = AllRooms()
-        self.matching_accounts = MatchingAccounts(self.all_rooms)
-        self.models            = ModelStore()
+        self.models = ModelStore()
 
         self.clients: Dict[str, MatrixClient] = {}
 

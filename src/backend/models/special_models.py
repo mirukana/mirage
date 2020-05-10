@@ -20,9 +20,10 @@ class AllRooms(FieldSubstringFilter):
 
 class MatchingAccounts(ModelFilter):
     def __init__(self, all_rooms: AllRooms) -> None:
-        super().__init__(sync_id="matching_accounts")
         self.all_rooms = all_rooms
         self.all_rooms.items_changed_callbacks.append(self.refilter)
+
+        super().__init__(sync_id="matching_accounts")
 
 
     def accept_source(self, source: Model) -> bool:

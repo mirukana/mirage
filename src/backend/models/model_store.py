@@ -2,11 +2,11 @@
 
 from collections import UserDict
 from dataclasses import dataclass, field
-from typing import Dict, Type
+from typing import Dict
 
 from . import SyncId
 from .model import Model
-from .special_models import FilteredMembers
+from .special_models import AllRooms, FilteredMembers, MatchingAccounts
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,11 @@ class ModelStore(UserDict):
 
         model: Model
 
-        if is_tuple and len(key) == 3 and key[2] == "filtered_members":
+        if key == "all_rooms":
+            model = AllRooms()
+        elif key == "matching_accounts":
+            model = MatchingAccounts(self["all_rooms"])
+        elif is_tuple and len(key) == 3 and key[2] == "filtered_members":
             model = FilteredMembers(user_id=key[0], room_id=key[1])
         else:
             model = Model(sync_id=key)  # type: ignore
