@@ -33,6 +33,17 @@ HTextField {
     property RoomList roomList
 
 
+    function toggleFocus() {
+        if (filterField.activeFocus) {
+            pageLoader.takeFocus()
+            return
+        }
+
+        mainPane.open()
+        filterField.forceActiveFocus()
+    }
+
+
     Behavior on opacity { HNumberAnimation {} }
 
     HShortcut {
@@ -42,14 +53,6 @@ HTextField {
 
     HShortcut {
         sequences: window.settings.keys.toggleFocusMainPane
-        onActivated: {
-            if (filterField.activeFocus) {
-                pageLoader.takeFocus()
-                return
-            }
-
-            mainPane.open()
-            filterField.forceActiveFocus()
-        }
+        onActivated: toggleFocus()
     }
 }
