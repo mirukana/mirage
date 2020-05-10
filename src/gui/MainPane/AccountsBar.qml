@@ -53,6 +53,7 @@ HColumnLayout {
             rightPadding: leftPadding
 
             contentItem: Item {
+                id: tileContent
                 implicitHeight: avatar.height
 
                 HUserAvatar {
@@ -75,6 +76,24 @@ HColumnLayout {
                         theme.accountView.account.unreadIndicator
                     unreads: model.total_unread
                     mentions: model.total_mentions
+                }
+
+                HLoader {
+                    anchors.fill: parent
+                    opacity: model.first_sync_done ? 0 : 1
+
+                    active: opacity > 0
+                    sourceComponent: Rectangle {
+                        color: utils.hsluv(0, 0, 0, 0.5)
+
+                        HBusyIndicator {
+                            anchors.centerIn: parent
+                            width: tileContent.width / 2
+                            height: width
+                        }
+                    }
+
+                    Behavior on opacity { HNumberAnimation {} }
                 }
             }
 

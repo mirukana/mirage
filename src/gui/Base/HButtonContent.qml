@@ -51,12 +51,11 @@ HRowLayout {
             width: height
             height: parent.height
             opacity: button.loading ? 1 : 0
+
             active: opacity > 0
+            sourceComponent: HBusyIndicator {}
 
             Behavior on opacity { HNumberAnimation {} }
-
-            sourceComponent: HBusyIndicator {
-            }
         }
     }
 
