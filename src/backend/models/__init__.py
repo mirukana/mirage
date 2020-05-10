@@ -4,4 +4,4 @@
 
 from typing import Tuple, Union
 
-SyncId = Union[str, Tuple[str]]
+SyncId = Union[str, Tuple[str, ...]]

@@ -72,7 +72,6 @@ QtObject {
 
     function onModelItemDeleted(syncId, index, count=1) {
         // print("delete", syncId, index, count)
-        print(syncId, index, count)
         ModelStore.get(syncId).remove(index, count)
     }
 

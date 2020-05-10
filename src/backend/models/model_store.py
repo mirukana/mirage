@@ -31,8 +31,7 @@ class ModelStore(UserDict):
         if is_tuple and len(key) == 3 and key[2] == "filtered_members":
             model = FilteredMembers(user_id=key[0], room_id=key[1])
         else:
-            model = Model(sync_id=key)
-        print( key, model)
+            model = Model(sync_id=key)  # type: ignore
 
         self.data[key] = model
         return model
