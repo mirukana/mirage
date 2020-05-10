@@ -24,6 +24,8 @@
 - rooms without messages on first sync
 - avatar loading performance problem?
 
+- docstrings
+
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`

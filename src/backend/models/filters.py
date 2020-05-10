@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-from typing import TYPE_CHECKING, Any, Collection, Dict, Optional, Tuple
+from typing import (
+    TYPE_CHECKING, Any, Callable, Collection, Dict, List, Optional, Tuple,
+)
 
 from . import SyncId
 from .model import Model
@@ -13,6 +15,7 @@ if TYPE_CHECKING:
 class ModelFilter(ModelProxy):
     def __init__(self, sync_id: SyncId) -> None:
         self.filtered_out: Dict[Tuple[Optional[SyncId], str], "ModelItem"] = {}
+        self.items_changed_callbacks: List[Callable[[], None]] = []
         super().__init__(sync_id)
 
 
@@ -35,6 +38,9 @@ class ModelFilter(ModelProxy):
                 self.filtered_out[source.sync_id, key] = value
                 self.pop((source.sync_id, key), None)
 
+            for callback in self.items_changed_callbacks:
+                callback()
+
 
     def source_item_deleted(self, source: Model, key) -> None:
         if self.accept_source(source):
@@ -42,6 +48,9 @@ class ModelFilter(ModelProxy):
                 del self[source.sync_id, key]
             except KeyError:
                 del self.filtered_out[source.sync_id, key]
+
+            for callback in self.items_changed_callbacks:
+                callback()
 
 
     def source_cleared(self, source: Model) -> None:
@@ -52,6 +61,9 @@ class ModelFilter(ModelProxy):
                         del self[source.sync_id, key]
                     except KeyError:
                         del self.filtered_out[source.sync_id, key]
+
+            for callback in self.items_changed_callbacks:
+                callback()
 
 
     def refilter(self) -> None:
@@ -73,6 +85,9 @@ class ModelFilter(ModelProxy):
 
             for key in bring_back:
                 self[key] = self.filtered_out.pop(key)
+
+            for callback in self.items_changed_callbacks:
+                callback()
 
 
 class FieldSubstringFilter(ModelFilter):

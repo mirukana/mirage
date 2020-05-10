@@ -39,61 +39,52 @@ HColumnLayout {
                 -1,
             )
 
-        model: HFilterModel {
-            model: ModelStore.get("accounts")
-            acceptItem: item =>
-                ! roomFilter || item.id in roomList.sectionIndice
+        model: ModelStore.get("matching_accounts")
 
-            delegate: HTileDelegate {
-                id: tile
-                width: accountList.width
-                backgroundColor:
-                    theme.accountsBar.accountList.account.background
+        delegate: HTileDelegate {
+            id: tile
+            width: accountList.width
+            backgroundColor:
+                theme.accountsBar.accountList.account.background
 
-                topPadding: (accountList.width - avatar.width) / 4
-                bottomPadding: topPadding
-                leftPadding: 0
-                rightPadding: leftPadding
+            topPadding: (accountList.width - avatar.width) / 4
+            bottomPadding: topPadding
+            leftPadding: 0
+            rightPadding: leftPadding
 
-                contentItem: Item {
-                    implicitHeight: avatar.height
+            contentItem: Item {
+                implicitHeight: avatar.height
 
-                    HUserAvatar {
-                        id: avatar
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        userId: model.id
-                        displayName: model.display_name
-                        mxc: model.avatar_url
-                        // compact: tile.compact
+                HUserAvatar {
+                    id: avatar
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    userId: model.id
+                    displayName: model.display_name
+                    mxc: model.avatar_url
+                    // compact: tile.compact
 
-                        radius:
-                            theme.accountsBar.accountList.account.avatarRadius
-                    }
-
-                    MessageIndicator {
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-
-                        indicatorTheme:
-                            theme.accountView.account.unreadIndicator
-                        unreads: model.total_unread
-                        mentions: model.total_mentions
-                    }
+                    radius:
+                        theme.accountsBar.accountList.account.avatarRadius
                 }
 
-                contextMenu: AccountContextMenu { userId: model.id }
+                MessageIndicator {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
 
-                onLeftClicked: {
-                    model.id in roomList.sectionIndice ?
-                    roomList.goToAccount(model.id) :
-                    pageLoader.showPage("AddChat/AddChat", {userId: model.id})
+                    indicatorTheme:
+                        theme.accountView.account.unreadIndicator
+                    unreads: model.total_unread
+                    mentions: model.total_mentions
                 }
             }
 
+            contextMenu: AccountContextMenu { userId: model.id }
 
-            onRoomFilterChanged: refilterAll()
-
-            readonly property string roomFilter: roomList.filter
+            onLeftClicked: {
+                model.id in roomList.sectionIndice ?
+                roomList.goToAccount(model.id) :
+                pageLoader.showPage("AddChat/AddChat", {userId: model.id})
+            }
         }
 
         highlight: Item {

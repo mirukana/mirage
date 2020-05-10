@@ -20,7 +20,7 @@ from .models.filters import FieldSubstringFilter
 from .models.items import Account
 from .models.model import Model
 from .models.model_store import ModelStore
-from .models.special_models import AllRooms
+from .models.special_models import AllRooms, MatchingAccounts
 from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
@@ -81,9 +81,11 @@ class Backend:
         self.ui_state:       UIState    = UIState(self)
         self.history:        History    = History(self)
 
-        self.all_rooms: AllRooms                = AllRooms()
-        self.models:    ModelStore              = ModelStore()
-        self.clients:   Dict[str, MatrixClient] = {}
+        self.all_rooms         = AllRooms()
+        self.matching_accounts = MatchingAccounts(self.all_rooms)
+        self.models            = ModelStore()
+
+        self.clients: Dict[str, MatrixClient] = {}
 
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
