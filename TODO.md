@@ -10,7 +10,6 @@
 - fix message delegate too tall
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
-- fix nio 429
 - fix python getting stuck when loading large room
 
 - account delegates refactor

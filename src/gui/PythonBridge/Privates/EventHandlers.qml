@@ -44,7 +44,6 @@ QtObject {
 
 
     function onLoopException(message, error, traceback) {
-        if (traceback.includes("429, None")) return
         // No need to log these here, the asyncio exception handler does it
         const type = py.getattr(py.getattr(error, "__class__"), "__name__")
         utils.showError(type, traceback, message)
