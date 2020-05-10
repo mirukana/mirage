@@ -7,28 +7,25 @@ import "../../../Base"
 
 HColumnLayout {
     readonly property alias keybindFocusItem: filterField
-
+    readonly property var modelSyncId:
+        [chat.userId, chat.roomId, "filtered_members"]
 
     HListView {
         id: memberList
         clip: true
         add: null  // See the XXX comment in HListView.qml
 
-        model: HStringFilterModel {
-            sourceModel: ModelStore.get(chat.userId, chat.roomId, "members")
-            field: "display_name"
-            filter: filterField.text
+        model: ModelStore.get(modelSyncId)
 
-            delegate: MemberDelegate {
-                id: member
-                width: memberList.width
-                ListView.onAdd: ParallelAnimation {
-                    HNumberAnimation {
-                        target: member; property: "opacity"; from: 0; to: 1;
-                    }
-                    HNumberAnimation {
-                        target: member; property: "scale"; from: 0; to: 1;
-                    }
+        delegate: MemberDelegate {
+            id: member
+            width: memberList.width
+            ListView.onAdd: ParallelAnimation {
+                HNumberAnimation {
+                    target: member; property: "opacity"; from: 0; to: 1;
+                }
+                HNumberAnimation {
+                    target: member; property: "scale"; from: 0; to: 1;
                 }
             }
         }
@@ -69,6 +66,9 @@ HColumnLayout {
                 // FIXME: fails to display sometimes for some reason if
                 // declared normally
                 Component.onCompleted: placeholderText = qsTr("Filter members")
+
+                onTextChanged:
+                    py.callCoro("set_substring_filter", [modelSyncId, text])
 
                 Behavior on opacity { HNumberAnimation {} }
             }

@@ -314,6 +314,9 @@ class Backend:
 
 
     async def set_substring_filter(self, model_id: SyncId, value: str) -> None:
+        if isinstance(model_id, list):  # QML can't pass tuples
+            model_id = tuple(model_id)
+
         model = Model.proxies[model_id]
 
         if not isinstance(model, FieldSubstringFilter):

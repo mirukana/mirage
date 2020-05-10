@@ -37,3 +37,16 @@ class MatchingAccounts(ModelFilter):
             (r for r in self.all_rooms.values() if r.for_account == item.id),
             False,
         )
+
+
+class FilteredMembers(FieldSubstringFilter):
+    def __init__(self, user_id: str, room_id: str) -> None:
+        self.user_id = user_id
+        self.room_id = room_id
+        sync_id      = (user_id, room_id, "filtered_members")
+
+        super().__init__(sync_id=sync_id, fields=("display_name",))
+
+
+    def accept_source(self, source: Model) -> bool:
+        return source.sync_id == (self.user_id, self.room_id, "members")

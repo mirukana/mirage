@@ -38,9 +38,12 @@ QtObject {
     function get(...modelId) {
         if (modelId.length === 1) modelId = modelId[0]
 
-        if (! privates.store[modelId])
+        if (! privates.store[modelId]) {
+            privates.py.callCoro("models.ensure_exists_from_qml", [modelId])
+
             privates.store[modelId] =
                 privates.model.createObject(this, {modelId})
+        }
 
         return privates.store[modelId]
     }
