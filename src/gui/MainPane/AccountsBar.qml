@@ -30,13 +30,10 @@ HColumnLayout {
         id: accountList
         clip: true
         currentIndex:
-            roomList.currentIndex === -1 ?
+            roomList.count === 0 || roomList.currentIndex === -1 ?
             -1 :
-            model.filteredFindIndex(
-                roomList.model.filtered.get(
-                    roomList.currentIndex,
-                ).model.for_account,
-                -1,
+            model.findIndex(
+                roomList.model.get(roomList.currentIndex).for_account, -1,
             )
 
         model: ModelStore.get("matching_accounts")

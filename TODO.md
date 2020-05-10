@@ -3,14 +3,13 @@
 - add account number binds
 - rename goto*account → scrollto*account
 
-- fix up/down type error when filtering
 - fix opacity
-- fix python error
 - fix back/front buttons in small window
 - fix message delegate too tall
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room
+- fix room out of bounds (above section) when filtering and only one match
 
 - account delegates refactor
 - lag when switching accounts
