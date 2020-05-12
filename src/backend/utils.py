@@ -147,7 +147,8 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
     - For `Sequence` and `Mapping` subclasses (includes `list` and `dict`):
       a JSON dump if `json_list_dicts` is `True`, else the unchanged value
 
-    - If the value as a `serialized` attribute or property, return that
+    - If the value is an instancied object and has a `serialized` attribute or
+      property, return that
 
     - For `Enum` members, the actual value of the member
 
@@ -168,7 +169,7 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
     if json_list_dicts and isinstance(value, (Sequence, Mapping)):
         return json.dumps(value)
 
-    if hasattr(value, "serialized"):
+    if not inspect.isclass(value) and hasattr(value, "serialized"):
         return value.serialized
 
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
