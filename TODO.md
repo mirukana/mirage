@@ -2,7 +2,6 @@
 
 - add account number binds
 
-- remove  `import QtQml.Models 2.12`s
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room
