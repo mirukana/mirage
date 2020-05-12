@@ -1,13 +1,11 @@
 # TODO
 
 - add account number binds
-- rename goto*account → scrollto*account
 
-- fix opacity
+- remove  `import QtQml.Models 2.12`s
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room
-- fix room out of bounds (above section) when filtering and only one match
 
 - account delegates refactor
 - lag when switching accounts

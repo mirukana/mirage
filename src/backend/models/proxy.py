@@ -25,6 +25,10 @@ class ModelProxy(Model):
         return True
 
 
+    def convert_item(self, item: "ModelItem") -> "ModelItem":
+        return item
+
+
     def source_item_set(
         self,
         source: Model,
@@ -33,6 +37,7 @@ class ModelProxy(Model):
         _changed_fields: Optional[Dict[str, Any]] = None,
     ) -> None:
         if self.accept_source(source):
+            value = self.convert_item(value)
             self.__setitem__((source.sync_id, key), value, _changed_fields)
 
 

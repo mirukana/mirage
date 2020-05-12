@@ -16,19 +16,19 @@ HTile {
 
         HUserAvatar {
             id: avatar
-            userId: accountModel.id
-            displayName: accountModel.display_name
-            mxc: accountModel.avatar_url
+            userId: model.id
+            displayName: model.display_name
+            mxc: model.avatar_url
             radius: 0
             compact: account.compact
         }
 
         TitleLabel {
-            text: accountModel.display_name || accountModel.id
+            text: model.display_name || model.id
             color:
                 hovered ?
                 utils.nameColor(
-                    accountModel.display_name || accountModel.id.substring(1),
+                    model.display_name || model.id.substring(1),
                 ) :
                 theme.accountView.account.name
 
@@ -42,7 +42,7 @@ HTile {
             backgroundColor: "transparent"
             toolTip.text: qsTr("Add new chat")
             onClicked: pageLoader.showPage(
-                "AddChat/AddChat", {userId: accountModel.id},
+                "AddChat/AddChat", {userId: model.id},
             )
 
             Layout.fillHeight: true
@@ -57,16 +57,15 @@ HTile {
         }
     }
 
-    contextMenu: AccountContextMenu { userId: accountModel.id }
+    contextMenu: AccountContextMenu { userId: model.id }
 
     onLeftClicked: {
         pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": accountModel.id }
+            "AccountSettings/AccountSettings", { "userId": model.id }
         )
     }
 
 
-    property var accountModel
     property bool isCurrent: false
 
 

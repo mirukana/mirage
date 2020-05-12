@@ -53,7 +53,7 @@ class Room(ModelItem):
     """A matrix room we are invited to, are or were member of."""
 
     id:             str  = field()
-    for_account:    str  = field()
+    for_account:    str  = ""
     given_name:     str  = ""
     display_name:   str  = ""
     main_alias:     str  = ""
@@ -109,6 +109,33 @@ class Room(ModelItem):
 
         ) < (
             other.for_account,
+            other.left,
+            self.inviter_id,
+            bool(self.mentions),
+            bool(self.unreads),
+            self.last_event_date,
+            (other.display_name or other.id).lower(),
+        )
+
+
+@dataclass
+class AccountOrRoom(Account, Room):
+    type: Union[Type[Account], Type[Room]] = Account
+
+    def __lt__(self, other: "AccountOrRoom") -> bool:  # type: ignore
+        return (
+            self.id if self.type is Account else self.for_account,
+            other.type is Account,
+            self.left,
+            other.inviter_id,
+            bool(other.mentions),
+            bool(other.unreads),
+            other.last_event_date,
+            (self.display_name or self.id).lower(),
+
+        ) < (
+            other.id if other.type is Account else other.for_account,
+            self.type is Account,
             other.left,
             self.inviter_id,
             bool(self.mentions),

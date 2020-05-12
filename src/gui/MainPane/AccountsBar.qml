@@ -33,7 +33,9 @@ HColumnLayout {
             roomList.count === 0 || roomList.currentIndex === -1 ?
             -1 :
             model.findIndex(
-                roomList.model.get(roomList.currentIndex).for_account, -1,
+                roomList.model.get(roomList.currentIndex).for_account ||
+                roomList.model.get(roomList.currentIndex).id,
+                -1,
             )
 
         model: ModelStore.get("matching_accounts")
@@ -77,6 +79,11 @@ HColumnLayout {
 
                 HLoader {
                     anchors.fill: parent
+                    anchors.leftMargin:
+                        accountList.highlightItem ?
+                        accountList.highlightItem.border.width :
+                        0
+
                     opacity: model.first_sync_done ? 0 : 1
 
                     active: opacity > 0
@@ -96,14 +103,12 @@ HColumnLayout {
 
             contextMenu: AccountContextMenu { userId: model.id }
 
-            onLeftClicked: {
-                model.id in roomList.sectionIndice ?
-                roomList.goToAccount(model.id) :
-                pageLoader.showPage("AddChat/AddChat", {userId: model.id})
-            }
+            onLeftClicked: roomList.goToAccount(model.id)
         }
 
         highlight: Item {
+            readonly property alias border: border
+
             Rectangle {
                 anchors.fill: parent
                 color: theme.accountsBar.accountList.account.selectedBackground
@@ -112,7 +117,7 @@ HColumnLayout {
             }
 
             Rectangle {
-                z: 100
+                id: border
                 width: theme.accountsBar.accountList.account.selectedBorderSize
                 height: parent.height
                 color: theme.accountsBar.accountList.account.selectedBorder

@@ -31,6 +31,8 @@ class ModelFilter(ModelProxy):
         _changed_fields: Optional[Dict[str, Any]] = None,
     ) -> None:
         if self.accept_source(source):
+            value = self.convert_item(value)
+
             if self.accept_item(value):
                 self.__setitem__((source.sync_id, key), value, _changed_fields)
                 self.filtered_out.pop((source.sync_id, key), None)
@@ -66,16 +68,25 @@ class ModelFilter(ModelProxy):
                 callback()
 
 
-    def refilter(self) -> None:
+    def refilter(
+        self,
+        only_if: Optional[Callable[["ModelItem"], bool]] = None,
+    ) -> None:
         with self._write_lock:
             take_out   = []
             bring_back = []
 
             for key, item in sorted(self.items(), key=lambda kv: kv[1]):
+                if only_if and not only_if(item):
+                    continue
+
                 if not self.accept_item(item):
                     take_out.append(key)
 
             for key, item in self.filtered_out.items():
+                if only_if and not only_if(item):
+                    continue
+
                 if self.accept_item(item):
                     bring_back.append(key)
 
@@ -86,8 +97,9 @@ class ModelFilter(ModelProxy):
             for key in bring_back:
                 self[key] = self.filtered_out.pop(key)
 
-            for callback in self.items_changed_callbacks:
-                callback()
+            if take_out or bring_back:
+                for callback in self.items_changed_callbacks:
+                    callback()
 
 
 class FieldSubstringFilter(ModelFilter):
