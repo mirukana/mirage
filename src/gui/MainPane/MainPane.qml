@@ -7,12 +7,12 @@ import "../Base"
 HDrawer {
     id: mainPane
     saveName: "mainPane"
-    background: null
+    background: theme.mainPane.background
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
     readonly property alias accountsBar: accountsBar
     readonly property alias roomList: roomList
-    readonly property alias filterRoomsField: filterRoomsField
+    readonly property alias bottomBar: bottomBar
 
 
     Behavior on opacity { HNumberAnimation {} }
@@ -27,7 +27,6 @@ HDrawer {
 
         TopBar {
             Layout.fillWidth: true
-            Layout.preferredHeight: theme.baseElementsHeight
         }
 
         AccountsBar {
@@ -41,14 +40,14 @@ HDrawer {
         RoomList {
             id: roomList
             clip: true
-            filter: filterRoomsField.text
+            filter: bottomBar.filterField.text
 
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
-        FilterRoomsField {
-            id: filterRoomsField
+        BottomBar {
+            id: bottomBar
             roomList: roomList
 
             Layout.fillWidth: true

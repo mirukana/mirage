@@ -6,6 +6,7 @@ import "../Base"
 
 Rectangle {
     clip: true
+    implicitHeight: theme.baseElementsHeight
     color: theme.mainPaneTopBar.background
 
     HRowLayout {
