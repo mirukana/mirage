@@ -7,7 +7,7 @@ import "../Base"
 HDrawer {
     id: mainPane
     saveName: "mainPane"
-    background: theme.mainPane.background
+    background: Rectangle { color: theme.mainPane.background }
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
     readonly property alias accountsBar: accountsBar

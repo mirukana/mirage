@@ -117,6 +117,6 @@ HListView {
     Rectangle {
         anchors.fill: parent
         z: -100
-        color: theme.accountView.roomList.background
+        color: theme.mainPane.listView.background
     }
 }

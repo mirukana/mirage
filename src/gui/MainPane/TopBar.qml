@@ -7,7 +7,7 @@ import "../Base"
 Rectangle {
     clip: true
     implicitHeight: theme.baseElementsHeight
-    color: theme.mainPaneTopBar.background
+    color: theme.mainPane.topBar.background
 
     HRowLayout {
         anchors.fill: parent
@@ -27,7 +27,7 @@ Rectangle {
 
             text: qsTr("%1 %2")
                   .arg(Qt.application.displayName).arg(Qt.application.version)
-            label.color: theme.mainPaneTopBar.nameVersionLabel
+            label.color: theme.mainPane.topBar.nameVersionLabel
             toolTip.text: qsTr("Open project repository")
 
             onClicked:

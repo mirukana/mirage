@@ -7,7 +7,7 @@ import "../Base/HTile"
 
 HTileDelegate {
     id: account
-    backgroundColor: theme.accountView.account.background
+    backgroundColor: theme.mainPane.listView.account.background
     leftPadding: theme.spacing
     rightPadding: 0  // the "add chat" button has padding
 
@@ -19,7 +19,7 @@ HTileDelegate {
             userId: model.id
             displayName: model.display_name
             mxc: model.avatar_url
-            radius: 0
+            radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
         }
 
@@ -30,7 +30,7 @@ HTileDelegate {
                 utils.nameColor(
                     model.display_name || model.id.substring(1),
                 ) :
-                theme.accountView.account.name
+                theme.mainPane.listView.account.name
 
             Behavior on color { HColorAnimation {} }
         }

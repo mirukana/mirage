@@ -9,7 +9,7 @@ import "../Base/HTile"
 
 Rectangle {
     implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
-    color: theme.accountsBar.accountList.background
+    color: theme.mainPane.accountBar.background
 
 
     property RoomList roomList
@@ -48,7 +48,7 @@ Rectangle {
             width: accountList.cellWidth
             height: accountList.cellHeight
             padded: false
-            backgroundColor: theme.accountsBar.accountList.account.background
+            backgroundColor: theme.mainPane.accountBar.account.background
 
             contentItem: Item {
                 id: tileContent
@@ -61,7 +61,7 @@ Rectangle {
                     mxc: model.avatar_url
                     // compact: tile.compact
 
-                    radius: theme.accountsBar.accountList.account.avatarRadius
+                    radius: theme.mainPane.accountBar.account.avatarRadius
                 }
 
                 MessageIndicator {
@@ -69,7 +69,7 @@ Rectangle {
                     anchors.bottom: parent.bottom
 
                     indicatorTheme:
-                        theme.accountView.account.unreadIndicator
+                        theme.mainPane.accountBar.account.unreadIndicator
                     unreads: model.total_unread
                     mentions: model.total_mentions
                 }
@@ -107,8 +107,8 @@ Rectangle {
 
             Rectangle {
                 anchors.fill: parent
-                color: theme.accountsBar.accountList.account.selectedBackground
-                opacity: theme.accountsBar.accountList.account
+                color: theme.mainPane.accountBar.account.selectedBackground
+                opacity: theme.mainPane.accountBar.account
                               .selectedBackgroundOpacity
             }
 
@@ -117,8 +117,8 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 width: parent.width
                 height:
-                    theme.accountsBar.accountList.account.selectedBorderSize
-                color: theme.accountsBar.accountList.account.selectedBorder
+                    theme.mainPane.accountBar.account.selectedBorderSize
+                color: theme.mainPane.accountBar.account.selectedBorder
             }
         }
 

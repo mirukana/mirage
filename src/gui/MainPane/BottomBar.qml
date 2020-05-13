@@ -50,7 +50,7 @@ Rectangle {
             saveName: "roomFilterField"
 
             placeholderText: qsTr("Filter rooms")
-            backgroundColor: theme.accountView.bottomBar.filterFieldBackground
+            backgroundColor: theme.mainPane.bottomBar.filterFieldBackground
             bordered: false
             opacity: width >= 16 * theme.uiScale ? 1 : 0
 

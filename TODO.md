@@ -1,6 +1,8 @@
 # TODO
 
 - add account number binds
+- revise pane collapse mode
+- bring back account collapsing
 
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)

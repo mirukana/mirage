@@ -43,12 +43,10 @@ colors:
     real opacity: 0.7
 
     color weakBackground:
-        hsluv(hue, bgSaturation, intensity * 10, opacity)
+        hsluv(hue, bgSaturation, intensity * 2.5, opacity)
     color mediumBackground:
-        hsluv(hue, bgSaturation, intensity * 8, opacity)
+        hsluv(hue, bgSaturation, intensity * 7, opacity)
     color strongBackground:
-        hsluv(hue, bgSaturation, intensity * 3, opacity)
-    color strongerBackground:
         hsluv(hue, bgSaturation * 2, intensity, opacity)
 
     color accentBackground:    hsluv(hue, saturation, intensity * 40, 1)
@@ -273,16 +271,15 @@ ui:
     // color gradientStartColor: hsluv(0, 0, 0, 0.5)
     // color gradientEndColor: hsluv(0, 0, 0, 0.5)
 
-mainPaneTopBar:
-    color background:       colors.strongBackground
-    color nameVersionLabel: colors.text
 
-accountsBar:
-    color everyRoomButtonBackground: colors.strongerBackground
-    color addAccountButtonBackground: colors.strongerBackground
-    color settingsButtonBackground: colors.strongerBackground
+mainPane:
+    color background: "transparent"
 
-    accountList:
+    topBar:
+        color background:       colors.strongBackground
+        color nameVersionLabel: colors.text
+
+    accountBar:
         color background: colors.mediumBackground
 
         account:
@@ -294,18 +291,20 @@ accountsBar:
             color selectedBorder: colors.strongAccentElement
             int selectedBorderSize: 2
 
+            unreadIndicator:
+                color background:        colors.accentBackground
+                color mentionBackground: colors.alertBackground
 
-accountView:
-    account:
-        color background: "transparent"
-        color name:       colors.text
-
-        unreadIndicator:
-            color background:        colors.accentBackground
-            color mentionBackground: colors.alertBackground
-
-    roomList:
+    listView:
         color background: colors.mediumBackground
+
+        account:
+            real collapsedOpacity:     0.3
+            color background:          "transparent"
+            color name:                colors.text
+
+            int avatarRadius:          controls.avatar.radius
+            int collapsedAvatarRadius: controls.avatar.size / 2
 
         room:
             real leftRoomOpacity: 0.65
@@ -317,14 +316,17 @@ accountView:
             color subtitle:      colors.dimText
             color subtitleQuote: chat.message.quote
 
-            int avatarRadius: controls.avatar.radius
+            int avatarRadius:          controls.avatar.radius
+            int collapsedAvatarRadius: controls.avatar.radius
 
             unreadIndicator:
                 color background:        colors.accentBackground
                 color mentionBackground: colors.alertBackground
 
     bottomBar:
-        color filterFieldBackground: colors.strongBackground
+        color background:               "transparent"
+        color settingsButtonBackground: colors.strongBackground
+        color filterFieldBackground:    colors.strongBackground
 
 
 chat:
@@ -381,8 +383,8 @@ chat:
         color focusedHighlight:       colors.accentBackground
         real focusedHighlightOpacity: 0.4
 
-        color background:        colors.mediumBackground
-        color ownBackground:     colors.strongBackground
+        color background:        colors.weakBackground
+        color ownBackground:     colors.mediumBackground
         color checkedBackground: colors.accentBackground
 
         color body: colors.text
