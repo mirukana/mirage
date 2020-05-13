@@ -13,21 +13,12 @@ HColumnLayout {
     HListView {
         id: memberList
         clip: true
-        add: null  // See the XXX comment in HListView.qml
 
         model: ModelStore.get(modelSyncId)
 
         delegate: MemberDelegate {
             id: member
             width: memberList.width
-            ListView.onAdd: ParallelAnimation {
-                HNumberAnimation {
-                    target: member; property: "opacity"; from: 0; to: 1;
-                }
-                HNumberAnimation {
-                    target: member; property: "scale"; from: 0; to: 1;
-                }
-            }
         }
 
         Layout.fillWidth: true
