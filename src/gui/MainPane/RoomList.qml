@@ -15,7 +15,10 @@ HListView {
 
         DelegateChoice {
             roleValue: "Account"
-            Account { width: roomList.width }
+            Account {
+                width: roomList.width
+                filterActive: Boolean(filter)
+            }
         }
 
         DelegateChoice {
