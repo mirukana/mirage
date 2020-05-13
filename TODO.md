@@ -5,6 +5,8 @@
 - fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room
+- fix accounts in room list not getting their profile updated if mirage starts
+  with a filter
 
 - account delegates refactor
 - lag when switching accounts

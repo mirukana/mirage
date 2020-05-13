@@ -8,10 +8,9 @@ HDrawer {
     id: mainPane
     saveName: "mainPane"
     background: null
-    minimumSize:
-        accountBar.width + theme.controls.avatar.size + theme.spacing * 2
+    minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
-    readonly property alias accountBar: accountBar
+    readonly property alias accountsBar: accountsBar
     readonly property alias roomList: roomList
     readonly property alias filterRoomsField: filterRoomsField
 
@@ -23,32 +22,36 @@ HDrawer {
         when: ! mainUI.accountsPresent
     }
 
-    HRowLayout {
+    HColumnLayout {
         anchors.fill: parent
 
-        AccountsBar {
-            id: accountBar
-            roomList: roomList
-
-            Layout.fillWidth: false
+        TopBar {
+            Layout.fillWidth: true
+            Layout.preferredHeight: theme.baseElementsHeight
         }
 
-        HColumnLayout {
-            RoomList {
-                id: roomList
-                clip: true
-                filter: filterRoomsField.text
+        AccountsBar {
+            id: accountsBar
+            roomList: roomList
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
+            Layout.fillWidth: true
+            Layout.maximumHeight: parent.height / 3
+        }
 
-            FilterRoomsField {
-                id: filterRoomsField
-                roomList: roomList
+        RoomList {
+            id: roomList
+            clip: true
+            filter: filterRoomsField.text
 
-                Layout.fillWidth: true
-            }
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        FilterRoomsField {
+            id: filterRoomsField
+            roomList: roomList
+
+            Layout.fillWidth: true
         }
     }
 }

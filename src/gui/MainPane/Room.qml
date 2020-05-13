@@ -10,6 +10,8 @@ import "../Base/HTile"
 HTileDelegate {
     id: room
     backgroundColor: theme.accountView.roomList.room.background
+    leftPadding: theme.spacing * 2
+    rightPadding: theme.spacing
     opacity:
         model.left ? theme.accountView.roomList.room.leftRoomOpacity : 1
 

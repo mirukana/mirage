@@ -2,33 +2,36 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
 import ".."
 import "../Base"
 import "../Base/HTile"
 
-HColumnLayout {
+
+Rectangle {
+    implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
+    color: theme.accountsBar.accountList.background
+
+
     property RoomList roomList
+    readonly property alias accountList: accountList
 
 
-    HButton {
-        id: addAccountButton
-        icon.name: "add-account"
-        toolTip.text: qsTr("Add another account")
-        backgroundColor: theme.accountsBar.addAccountButtonBackground
-        onClicked: pageLoader.showPage("AddAccount/AddAccount")
+    Behavior on implicitHeight { HNumberAnimation {} }
 
-        Layout.preferredHeight: theme.baseElementsHeight
-
-        HShortcut {
-            sequences: window.settings.keys.addNewAccount
-            onActivated: addAccountButton.clicked()
-        }
-    }
-
-    HListView {
+    HGridView {
         id: accountList
+        anchors.centerIn: parent
+        width: Math.min(cellWidth * count, parent.width)
+        height: parent.height
+        // anchors.topMargin: theme.spacing / 2
+        // anchors.bottomMargin: anchors.topMargin
+        // anchors.leftMargin: -theme.spacing / 2
+        // anchors.rightMargin: anchors.leftMargin
+
+
         clip: true
+        cellWidth: theme.controls.avatar.size + theme.spacing
+        cellHeight: cellWidth
         currentIndex:
             roomList.count === 0 || roomList.currentIndex === -1 ?
             -1 :
@@ -42,29 +45,23 @@ HColumnLayout {
 
         delegate: HTileDelegate {
             id: tile
-            width: accountList.width
-            backgroundColor:
-                theme.accountsBar.accountList.account.background
-
-            topPadding: (accountList.width - avatar.width) / 4
-            bottomPadding: topPadding
-            leftPadding: 0
-            rightPadding: leftPadding
+            width: accountList.cellWidth
+            height: accountList.cellHeight
+            padded: false
+            backgroundColor: theme.accountsBar.accountList.account.background
 
             contentItem: Item {
                 id: tileContent
-                implicitHeight: avatar.height
 
                 HUserAvatar {
                     id: avatar
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.centerIn: parent
                     userId: model.id
                     displayName: model.display_name
                     mxc: model.avatar_url
                     // compact: tile.compact
 
-                    radius:
-                        theme.accountsBar.accountList.account.avatarRadius
+                    radius: theme.accountsBar.accountList.account.avatarRadius
                 }
 
                 MessageIndicator {
@@ -78,16 +75,15 @@ HColumnLayout {
                 }
 
                 HLoader {
-                    anchors.fill: parent
-                    anchors.leftMargin:
-                        accountList.highlightItem ?
-                        accountList.highlightItem.border.width :
-                        0
-
+                    visible: false // XXX
+                    anchors.centerIn: parent
+                    width: avatar.width
+                    height: avatar.height
                     opacity: model.first_sync_done ? 0 : 1
 
                     active: opacity > 0
                     sourceComponent: Rectangle {
+                        radius: avatar.radius
                         color: utils.hsluv(0, 0, 0, 0.5)
 
                         HBusyIndicator {
@@ -118,14 +114,14 @@ HColumnLayout {
 
             Rectangle {
                 id: border
-                width: theme.accountsBar.accountList.account.selectedBorderSize
-                height: parent.height
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height:
+                    theme.accountsBar.accountList.account.selectedBorderSize
                 color: theme.accountsBar.accountList.account.selectedBorder
             }
         }
 
-        Layout.fillWidth: true
-        Layout.fillHeight: true
 
         HShortcut {
             sequences: window.settings.keys.goToPreviousAccount
@@ -142,22 +138,30 @@ HColumnLayout {
                 accountList.currentItem.leftClicked()
             }
         }
-
-        Rectangle {
-            anchors.fill: parent
-            z: -100
-            color: theme.accountsBar.accountList.background
-        }
-    }
-
-    HButton {
-        id: settingsButton
-        backgroundColor: theme.accountsBar.settingsButtonBackground
-        icon.name: "settings"
-        toolTip.text: qsTr("Open config folder")
-
-        onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
-
-        Layout.preferredHeight: theme.baseElementsHeight
     }
 }
+
+    // HButton {
+    //     id: settingsButton
+    //     backgroundColor: theme.accountsBar.settingsButtonBackground
+    //     icon.name: "settings"
+    //     toolTip.text: qsTr("Open config folder")
+
+    //     onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+
+    //     Layout.preferredHeight: theme.baseElementsHeight
+    // }
+    // HButton {
+    //     id: addAccountButton
+    //     icon.name: "add-account"
+    //     toolTip.text: qsTr("Add another account")
+    //     backgroundColor: theme.accountsBar.addAccountButtonBackground
+    //     onClicked: pageLoader.showPage("AddAccount/AddAccount")
+
+    //     Layout.preferredHeight: theme.baseElementsHeight
+
+    //     HShortcut {
+    //         sequences: window.settings.keys.addNewAccount
+    //         onActivated: addAccountButton.clicked()
+    //     }
+    // }

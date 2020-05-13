@@ -5,11 +5,11 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../Base/HTile"
 
-HTile {
+HTileDelegate {
     id: account
-    implicitHeight: theme.baseElementsHeight
     backgroundColor: theme.accountView.account.background
-    padded: false
+    leftPadding: theme.spacing
+    rightPadding: 0  // the "add chat" button has padding
 
     contentItem: ContentRow {
         tile: account

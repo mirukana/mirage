@@ -20,7 +20,7 @@ HTextField {
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     Keys.onReturnPressed: {
-        roomList.showRoomAtIndex()
+        roomList.showItemAtIndex()
         if (window.settings.clearRoomFilterOnEnter) text = ""
     }
 

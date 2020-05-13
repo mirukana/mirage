@@ -3,16 +3,15 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-ListView {
-    id: listView
+GridView {
+    id: gridView
     interactive: allowDragging
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
-    highlightResizeDuration: theme.animationDuration
 
     // Keep highlighted delegate at the center
-    highlightRangeMode: ListView.ApplyRange
+    highlightRangeMode: GridView.ApplyRange
     preferredHighlightBegin: height / 2 - currentItemHeight / 2
     preferredHighlightEnd: height / 2 + currentItemHeight / 2
 
@@ -20,11 +19,11 @@ ListView {
 
 
     highlight: Rectangle {
-        color: theme.controls.listView.highlight
+        color: theme.controls.gridView.highlight
     }
 
     ScrollBar.vertical: ScrollBar {
-        visible: listView.interactive || ! listView.allowDragging
+        visible: gridView.interactive || ! gridView.allowDragging
     }
 
     // property bool debug: false
@@ -32,26 +31,26 @@ ListView {
     // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
     // #handling-interrupted-animations
     add: Transition {
-        // ScriptAction { script: if (listView.debug) print("add") }
+        // ScriptAction { script: if (gridView.debug) print("add") }
         HNumberAnimation { property: "opacity"; from: 0; to: 1 }
         HNumberAnimation { property: "scale";   from: 0; to: 1 }
     }
 
     move: Transition {
-        // ScriptAction { script: if (listView.debug) print("move") }
+        // ScriptAction { script: if (gridView.debug) print("move") }
         HNumberAnimation { property:   "opacity"; to: 1 }
         HNumberAnimation { property:   "scale";   to: 1 }
         HNumberAnimation { properties: "x,y" }
     }
 
     remove: Transition {
-        // ScriptAction { script: if (listView.debug) print("remove") }
+        // ScriptAction { script: if (gridView.debug) print("remove") }
         HNumberAnimation { property: "opacity"; to: 0 }
         HNumberAnimation { property: "scale";   to: 0 }
     }
 
     displaced: Transition {
-        // ScriptAction { script: if (listView.debug) print("displaced") }
+        // ScriptAction { script: if (gridView.debug) print("displaced") }
         HNumberAnimation { property:   "opacity"; to: 1 }
         HNumberAnimation { property:   "scale";   to: 1 }
         HNumberAnimation { properties: "x,y" }
@@ -71,7 +70,7 @@ ListView {
 
     function check(...indices) {
         for (const i of indices) {
-            const model = listView.model.get(i)
+            const model = gridView.model.get(i)
             checked[model.id] = model
         }
 
@@ -86,7 +85,7 @@ ListView {
 
     function uncheck(...indices) {
         for (const i of indices) {
-            const model = listView.model.get(i)
+            const model = gridView.model.get(i)
             delete checked[model.id]
         }
 
@@ -97,7 +96,7 @@ ListView {
         const checkedIndices = []
 
         for (const i of indices) {
-            const model = listView.model.get(i)
+            const model = gridView.model.get(i)
 
             if (model.id in checked) {
                 delete checked[model.id]
@@ -121,10 +120,10 @@ ListView {
 
 
     Connections {
-        target: listView
-        enabled: ! listView.allowDragging
+        target: gridView
+        enabled: ! gridView.allowDragging
         // interactive gets temporarily set to true below to allow wheel scroll
-        onDraggingChanged: listView.interactive = false
+        onDraggingChanged: gridView.interactive = false
     }
 
     MouseArea {

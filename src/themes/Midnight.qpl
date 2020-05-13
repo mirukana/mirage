@@ -273,6 +273,9 @@ ui:
     // color gradientStartColor: hsluv(0, 0, 0, 0.5)
     // color gradientEndColor: hsluv(0, 0, 0, 0.5)
 
+mainPaneTopBar:
+    color background:       colors.strongBackground
+    color nameVersionLabel: colors.text
 
 accountsBar:
     color everyRoomButtonBackground: colors.strongerBackground
@@ -280,7 +283,7 @@ accountsBar:
     color settingsButtonBackground: colors.strongerBackground
 
     accountList:
-        color background: colors.strongerBackground
+        color background: colors.mediumBackground
 
         account:
             color background: "transparent"
@@ -294,7 +297,7 @@ accountsBar:
 
 accountView:
     account:
-        color background: colors.strongBackground
+        color background: "transparent"
         color name:       colors.text
 
         unreadIndicator:
