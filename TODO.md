@@ -2,9 +2,7 @@
 
 - add account number binds
 - revise pane collapse mode
-- bring back account collapsing
 
-- fix left rooms opacity
 - fix escape keybinds (filter rooms, message selection)
 - fix python getting stuck when loading large room
 - fix accounts in room list not getting their profile updated if mirage starts

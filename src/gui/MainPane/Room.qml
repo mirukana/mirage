@@ -12,11 +12,12 @@ HTileDelegate {
     backgroundColor: theme.mainPane.listView.room.background
     leftPadding: theme.spacing * 2
     rightPadding: theme.spacing
-    opacity:
-        model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
 
     contentItem: ContentRow {
         tile: room
+        opacity: model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
+
+        Behavior on opacity { HNumberAnimation {} }
 
         HRoomAvatar {
             id: avatar
@@ -190,7 +191,4 @@ HTileDelegate {
 
     readonly property QtObject lastEvent:
         eventModel.count > 0 ? eventModel.get(0) : null
-
-
-    Behavior on opacity { HNumberAnimation {} }
 }
