@@ -1,6 +1,7 @@
 # TODO
 
 - add account number binds
+- next room with unread/mention keybinds
 - revise pane collapse mode
 
 - fix escape keybinds (filter rooms, message selection)
