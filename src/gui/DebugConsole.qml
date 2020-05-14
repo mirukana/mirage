@@ -207,8 +207,11 @@ HDrawer {
 
             Keys.onUpPressed:
                 if (historyEntry + 1 < history.length ) historyEntry += 1
+
             Keys.onDownPressed:
                 if (historyEntry - 1 >= -1) historyEntry -= 1
+
+            Keys.onEscapePressed: debugConsole.close()
 
             Layout.fillWidth: true
 

@@ -61,6 +61,11 @@ HColumnLayout {
                 onTextChanged:
                     py.callCoro("set_substring_filter", [modelSyncId, text])
 
+                Keys.onEscapePressed: {
+                    roomPane.toggleFocus()
+                    if (window.settings.clearMemberFilterOnEscape) text = ""
+                }
+
                 Behavior on opacity { HNumberAnimation {} }
             }
 

@@ -224,6 +224,7 @@ class UISettings(JSONDataFile):
             "compactMode": False,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
+            "clearMemberFilterOnEscape": True,
             "collapseSidePanesUnderWindowWidth": 400,
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,

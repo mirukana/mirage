@@ -24,7 +24,7 @@ Drawer {
     position: 1
     visible: ! collapse
     modal: false
-    closePolicy: Popup.CloseOnEscape
+    closePolicy: Popup.NoAutoClose
 
     background: Rectangle { id: bg; color: theme.colors.strongBackground }
 
