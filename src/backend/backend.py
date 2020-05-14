@@ -106,6 +106,7 @@ class Backend:
         password:   str,
         device_id:  Optional[str] = None,
         homeserver: str           = "https://matrix.org",
+        order:      int           = -1,
    ) -> str:
         """Create and register a `MatrixClient`, login and return a user ID."""
 
@@ -120,15 +121,18 @@ class Backend:
             raise
 
         self.clients[client.user_id]            = client
-        self.models["accounts"][client.user_id] = Account(client.user_id)
+        self.models["accounts"][client.user_id] = Account(client.user_id,order)
         return client.user_id
 
 
-    async def resume_client(self,
-                            user_id:    str,
-                            token:      str,
-                            device_id:  str,
-                            homeserver: str = "https://matrix.org") -> None:
+    async def resume_client(
+        self,
+        user_id:    str,
+        token:      str,
+        device_id:  str,
+        homeserver: str = "https://matrix.org",
+        order:      int = -1,
+    ) -> None:
         """Create and register a `MatrixClient` with known account details."""
 
         client = MatrixClient(
@@ -137,7 +141,7 @@ class Backend:
         )
 
         self.clients[user_id]            = client
-        self.models["accounts"][user_id] = Account(user_id)
+        self.models["accounts"][user_id] = Account(user_id, order)
 
         await client.resume(user_id=user_id, token=token, device_id=device_id)
 
@@ -145,12 +149,13 @@ class Backend:
     async def load_saved_accounts(self) -> List[str]:
         """Call `resume_client` for all saved accounts in user config."""
 
-        async def resume(user_id: str, info: Dict[str, str]) -> str:
+        async def resume(user_id: str, info: Dict[str, Any]) -> str:
             await self.resume_client(
                 user_id    = user_id,
                 token      = info["token"],
                 device_id  = info["device_id"],
                 homeserver = info["homeserver"],
+                order      = info.get("order", -1),
             )
             return user_id
 

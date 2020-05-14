@@ -33,6 +33,7 @@ class Account(ModelItem):
     """A logged in matrix account."""
 
     id:              str      = field()
+    order:           int      = -1
     display_name:    str      = ""
     avatar_url:      str      = ""
     max_upload_size: int      = 0
@@ -42,10 +43,8 @@ class Account(ModelItem):
     total_mentions:  int      = 0
 
     def __lt__(self, other: "Account") -> bool:
-        """Sort by user ID."""
-        name       = self.id[1:]
-        other_name = other.id[1:]
-        return name.lower() < other_name.lower()
+        """Sort by order, then by user ID."""
+        return (self.order, self.id.lower()) < (other.order, other.id.lower())
 
 
 @dataclass
@@ -120,10 +119,12 @@ class Room(ModelItem):
 
 @dataclass
 class AccountOrRoom(Account, Room):
-    type: Union[Type[Account], Type[Room]] = Account
+    type:          Union[Type[Account], Type[Room]] = Account
+    account_order: int                              = -1
 
     def __lt__(self, other: "AccountOrRoom") -> bool:  # type: ignore
         return (
+            self.account_order,
             self.id if self.type is Account else self.for_account,
             other.type is Account,
             self.left,
@@ -134,6 +135,7 @@ class AccountOrRoom(Account, Room):
             (self.display_name or self.id).lower(),
 
         ) < (
+            other.account_order,
             other.id if other.type is Account else other.for_account,
             self.type is Account,
             other.left,

@@ -183,14 +183,19 @@ class Accounts(JSONDataFile):
         """
 
         client = self.backend.clients[user_id]
+        saved  = await self.read()
 
         await self.write({
-            **await self.read(),
+            **saved,
             client.user_id: {
                 "homeserver": client.homeserver,
                 "token":      client.access_token,
                 "device_id":  client.device_id,
                 "enabled":    True,
+                "order":      max(
+                    account.get("order", i)
+                    for i, account in enumerate(saved.values())
+                ) + 1,
             },
         })
 

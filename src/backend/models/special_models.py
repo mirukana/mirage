@@ -10,9 +10,11 @@ from .model_item import ModelItem
 
 
 class AllRooms(FieldSubstringFilter):
-    def __init__(self) -> None:
+    def __init__(self, accounts: Model) -> None:
         super().__init__(sync_id="all_rooms", fields=("display_name",))
         self.items_changed_callbacks.append(self.refilter_accounts)
+
+        self.accounts = accounts
 
         self._collapsed: Set[str] = set()
 
@@ -39,7 +41,14 @@ class AllRooms(FieldSubstringFilter):
 
 
     def convert_item(self, item: ModelItem) -> AccountOrRoom:
-        return AccountOrRoom(**asdict(item), type=type(item))  # type: ignore
+        return AccountOrRoom(
+            **asdict(item),
+            type = type(item),  # type: ignore
+
+            account_order =
+                item.order if isinstance(item, Account) else
+                self.accounts[item.for_account].order,  # type: ignore
+        )
 
 
     def accept_item(self, item: ModelItem) -> bool:

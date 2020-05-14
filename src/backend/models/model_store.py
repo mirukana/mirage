@@ -29,7 +29,7 @@ class ModelStore(UserDict):
         model: Model
 
         if key == "all_rooms":
-            model = AllRooms()
+            model = AllRooms(self["accounts"])
         elif key == "matching_accounts":
             model = MatchingAccounts(self["all_rooms"])
         elif is_tuple and len(key) == 3 and key[2] == "filtered_members":
