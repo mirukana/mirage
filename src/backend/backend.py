@@ -284,6 +284,11 @@ class Backend:
         history  = await self.history.read()
         theme    = await Theme(self, settings["theme"]).read()
 
+        state_data = self.ui_state._data
+        if state_data:
+            for user, collapse in state_data["collapseAccounts"].items():
+                self.models["all_rooms"].set_account_collapse(user, collapse)
+
         return (settings, ui_state, history, theme)
 
 
@@ -320,3 +325,7 @@ class Backend:
             raise TypeError("model_id must point to a FieldSubstringFilter")
 
         model.filter = value
+
+
+    async def set_account_collapse(self, user_id: str, collapse: bool) -> None:
+        self.models["all_rooms"].set_account_collapse(user_id, collapse)

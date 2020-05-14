@@ -116,6 +116,8 @@ HTileDelegate {
     function setCollapse(collapse) {
         window.uiState.collapseAccounts[model.id] = collapse
         window.uiStateChanged()
+
+        py.callCoro("set_account_collapse", [model.id, collapse])
     }
 
     function toggleCollapse() {

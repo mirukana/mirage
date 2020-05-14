@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import asdict
+from typing import Set
 
 from .filters import FieldSubstringFilter, ModelFilter
-from .items import Account, AccountOrRoom
+from .items import Account, AccountOrRoom, Room
 from .model import Model
 from .model_item import ModelItem
 
@@ -12,6 +13,21 @@ class AllRooms(FieldSubstringFilter):
     def __init__(self) -> None:
         super().__init__(sync_id="all_rooms", fields=("display_name",))
         self.items_changed_callbacks.append(self.refilter_accounts)
+
+        self._collapsed: Set[str] = set()
+
+
+    def set_account_collapse(self, user_id: str, collapsed: bool) -> None:
+        def only_if(item):
+            return item.type is Room and item.for_account == user_id
+
+        if collapsed and user_id not in self._collapsed:
+            self._collapsed.add(user_id)
+            self.refilter(only_if)
+
+        if not collapsed and user_id in self._collapsed:
+            self._collapsed.remove(user_id)
+            self.refilter(only_if)
 
 
     def accept_source(self, source: Model) -> bool:
@@ -27,9 +43,16 @@ class AllRooms(FieldSubstringFilter):
 
 
     def accept_item(self, item: ModelItem) -> bool:
+        assert isinstance(item, AccountOrRoom)  # nosec
+
+        if not self.filter and \
+           item.type is Room and \
+           item.for_account in self._collapsed:
+            return False
+
         matches_filter = super().accept_item(item)
 
-        if item.type is not Account or not self.filter:  # type: ignore
+        if item.type is not Account or not self.filter:
             return matches_filter
 
         return next(
@@ -38,9 +61,7 @@ class AllRooms(FieldSubstringFilter):
 
 
     def refilter_accounts(self) -> None:
-        self.refilter(
-            lambda i: isinstance(i, AccountOrRoom) and i.type is Account,
-        )
+        self.refilter(lambda i: i.type is Account)  # type: ignore
 
 
 class MatchingAccounts(ModelFilter):
