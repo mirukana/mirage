@@ -57,6 +57,13 @@ Rectangle {
                     // compact: tile.compact
 
                     radius: theme.mainPane.accountBar.account.avatarRadius
+
+                    opacity:
+                        tile.collapsed ?
+                        theme.mainPane.accountBar.account.collapsedOpacity :
+                        1
+
+                    Behavior on opacity { HNumberAnimation {} }
                 }
 
                 MessageIndicator {
@@ -94,6 +101,10 @@ Rectangle {
             contextMenu: AccountContextMenu { userId: model.id }
 
             onLeftClicked: roomList.goToAccount(model.id)
+
+            readonly property bool collapsed:
+                (window.uiState.collapseAccounts[model.id] || false) &&
+                ! roomList.filter
         }
 
         highlight: Item {

@@ -283,13 +283,14 @@ mainPane:
         color background: colors.mediumBackground
 
         account:
-            color background: "transparent"
-            int avatarRadius: controls.avatar.radius
+            real collapsedOpacity: 0.3
+            color background:      "transparent"
+            int avatarRadius:      controls.avatar.radius
 
-            color selectedBackground: colors.accentBackground
+            color selectedBackground:       colors.accentBackground
             real selectedBackgroundOpacity: 0.3
-            color selectedBorder: colors.strongAccentElement
-            int selectedBorderSize: 2
+            color selectedBorder:           colors.strongAccentElement
+            int selectedBorderSize:         2
 
             unreadIndicator:
                 color background:        colors.accentBackground
