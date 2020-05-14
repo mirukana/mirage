@@ -7,7 +7,7 @@ import ".."
 import "../Base"
 import "../Base/HTile"
 
-HTileDelegate {
+HTile {
     id: room
     backgroundColor: theme.mainPane.listView.room.background
     leftPadding: theme.spacing * 2

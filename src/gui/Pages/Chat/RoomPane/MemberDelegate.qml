@@ -6,7 +6,7 @@ import "../../../Base"
 import "../../../Base/HTile"
 import "../../../Popups"
 
-HTileDelegate {
+HTile {
     id: member
     backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
