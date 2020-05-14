@@ -106,7 +106,7 @@ HListView {
     function setCorrectCurrentItem() {
         if (! currentShouldBeRoom && ! currentShouldBeAccount) {
             currentIndex = -1
-            return
+            return null
         }
 
         for (let i = 0; i < model.count; i++) {
@@ -124,11 +124,20 @@ HListView {
                 item.for_account === wantedUserId
             )) {
                 currentIndex = i
-                return
+                return true
             }
         }
+
+        return false
     }
 
+
+    Connections {
+        target: pageLoader
+        onPreviousShown:
+            // Will trigger the timer above if item isn't found
+            if (setCorrectCurrentItem() === false) currentIndex = -1
+    }
 
     Timer {
         // On startup, the account/room takes an unknown amount of time to

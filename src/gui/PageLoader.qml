@@ -33,6 +33,9 @@ HLoader {
     }
 
 
+    signal previousShown(string componentUrl, var properties)
+
+
     property bool isWide: width > theme.contentIsWideAbove
 
     // List of previously loaded [componentUrl, {properties}]
@@ -79,6 +82,7 @@ HLoader {
         window.uiState.page           = componentUrl
         window.uiState.pageProperties = properties
         window.uiStateChanged()
+        previousShown(componentUrl, properties)
         return true
     }
 
