@@ -1,6 +1,5 @@
 # TODO
 
-- set open_room correctly when using other ways to change rooms than clicking
 - merge AccountBar account and RoomList account delegates code
 
 - fix python getting stuck when loading large room

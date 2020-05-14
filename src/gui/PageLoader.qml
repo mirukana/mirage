@@ -50,6 +50,9 @@ HLoader {
         if (history.length > historyLength) history.pop()
 
         pageLoader.setSource(componentUrl, properties)
+
+        if (componentUrl === "Pages/Chat/Chat.qml" && properties.roomId)
+            py.callCoro("room_read", [properties.roomId])
     }
 
     function showPage(name, properties={}) {
@@ -63,8 +66,6 @@ HLoader {
 
     function showRoom(userId, roomId) {
         _show("Pages/Chat/Chat.qml", {userId, roomId})
-
-        py.callCoro("room_read", [roomId])
 
         window.uiState.page           = "Pages/Chat/Chat.qml"
         window.uiState.pageProperties = {userId, roomId}
