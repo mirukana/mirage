@@ -291,13 +291,13 @@ class UISettings(JSONDataFile):
                     "10": f"{alt_or_cmd()}+0",
                 },
 
-                "unfocusOrDeselectAllMessages":    ["Escape"],
+                "unfocusOrDeselectAllMessages":    ["Ctrl+D"],
                 "focusPreviousMessage":            ["Ctrl+Up", "Ctrl+K"],
                 "focusNextMessage":                ["Ctrl+Down", "Ctrl+J"],
                 "toggleSelectMessage":             ["Ctrl+Space"],
                 "selectMessagesUntilHere":         ["Ctrl+Shift+Space"],
                 "removeFocusedOrSelectedMessages": ["Ctrl+R", "Alt+Del"],
-                "debugFocusedMessage":             ["Ctrl+D"],
+                "debugFocusedMessage":             ["Ctrl+Shift+D"],
                 "clearRoomMessages":               ["Ctrl+L"],
 
                 "sendFile":                    ["Alt+S"],
