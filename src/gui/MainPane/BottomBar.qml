@@ -16,17 +16,6 @@ Rectangle {
     readonly property alias filterField: filterField
 
 
-    function toggleFocus() {
-        if (filterField.activeFocus) {
-            pageLoader.takeFocus()
-            return
-        }
-
-        mainPane.open()
-        filterField.forceActiveFocus()
-    }
-
-
     HRowLayout {
         anchors.fill: parent
 
@@ -67,7 +56,7 @@ Rectangle {
             }
 
             Keys.onEscapePressed: {
-                mainUI.pageLoader.forceActiveFocus()
+                mainPane.toggleFocus()
                 if (window.settings.clearRoomFilterOnEscape) text = ""
             }
 
@@ -81,7 +70,7 @@ Rectangle {
 
             HShortcut {
                 sequences: window.settings.keys.toggleFocusMainPane
-                onActivated: toggleFocus()
+                onActivated: mainPane.toggleFocus()
             }
         }
     }

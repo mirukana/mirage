@@ -26,7 +26,7 @@ Rectangle {
             icon.name: "go-back-to-main-pane"
             toolTip.text: qsTr("Go back to main pane")
 
-            onClicked: mainUI.mainPane.filterRoomsField.toggleFocus()
+            onClicked: mainUI.mainPane.toggleFocus()
 
             Layout.preferredWidth: theme.baseElementsHeight
             Layout.fillHeight: true

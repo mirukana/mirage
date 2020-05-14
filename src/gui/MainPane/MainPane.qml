@@ -15,6 +15,17 @@ HDrawer {
     readonly property alias bottomBar: bottomBar
 
 
+    function toggleFocus() {
+        if (bottomBar.filterField.activeFocus) {
+            pageLoader.takeFocus()
+            return
+        }
+
+        mainPane.open()
+        bottomBar.filterField.forceActiveFocus()
+    }
+
+
     Behavior on opacity { HNumberAnimation {} }
 
     Binding on visible {

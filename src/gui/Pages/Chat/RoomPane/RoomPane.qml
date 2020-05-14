@@ -80,6 +80,6 @@ MultiviewPane {
 
     HShortcut {
         sequences: window.settings.keys.toggleFocusRoomPane
-        onActivated: toggleFocus()
+        onActivated: roomPane.toggleFocus()
     }
 }
