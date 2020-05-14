@@ -23,11 +23,6 @@ Rectangle {
         anchors.centerIn: parent
         width: Math.min(cellWidth * count, parent.width)
         height: parent.height
-        // anchors.topMargin: theme.spacing / 2
-        // anchors.bottomMargin: anchors.topMargin
-        // anchors.leftMargin: -theme.spacing / 2
-        // anchors.rightMargin: anchors.leftMargin
-
 
         clip: true
         cellWidth: theme.controls.avatar.size + theme.spacing
@@ -75,7 +70,6 @@ Rectangle {
                 }
 
                 HLoader {
-                    visible: false // XXX
                     anchors.centerIn: parent
                     width: avatar.width
                     height: avatar.height
