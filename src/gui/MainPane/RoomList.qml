@@ -102,6 +102,26 @@ HListView {
         showItemAtIndex(accountIndice[currentUserId] + 1 + index)
     }
 
+    function cycleUnreadRooms(forward=true, mentions=false) {
+        const prop  = mentions ? "mentions" : "unreads"
+        const start = currentIndex === -1 ? 0 : currentIndex
+        let index   = start
+
+        while (true) {
+            index += forward ? 1 : -1
+
+            if (index < 0)               index = model.count - 1
+            if (index > model.count - 1) index = 0
+            if (index === start)         return false
+
+            const item = model.get(index)
+
+            if (item.type === "Room" && item[prop]) {
+                currentIndex = index
+                return true
+            }
+        }
+    }
 
     function setCorrectCurrentItem() {
         if (! currentShouldBeRoom && ! currentShouldBeAccount) {
@@ -164,6 +184,27 @@ HListView {
         sequences: window.settings.keys.goToNextRoom
         onActivated: { incrementCurrentIndex(); showItemLimiter.restart() }
     }
+
+    HShortcut {
+        sequences: window.settings.keys.goToPreviousUnreadRoom
+        onActivated: { cycleUnreadRooms(false) && showItemLimiter.restart() }
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.goToNextUnreadRoom
+        onActivated: { cycleUnreadRooms(true) && showItemLimiter.restart() }
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.goToPreviousMentionedRoom
+        onActivated: cycleUnreadRooms(false, true) && showItemLimiter.restart()
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.goToNextMentionedRoom
+        onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
+    }
+
 
     Repeater {
         model: Object.keys(window.settings.keys.focusRoomAtIndex)
