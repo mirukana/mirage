@@ -3,7 +3,7 @@
 """`ModelItem` subclasses definitions."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
@@ -224,7 +224,12 @@ class Event(ModelItem):
 
     def serialize_field(self, field: str) -> Any:
         if field == "source":
-            source_dict = nio.attr.asdict(self.source) if self.source else {}
+            try:
+                as_dict = nio.attr.asdict  # nio < 0.11
+            except AttributeError:
+                as_dict = asdict
+
+            source_dict = as_dict(self.source) if self.source else {}
             return json.dumps(source_dict)
 
         return super().serialize_field(field)
