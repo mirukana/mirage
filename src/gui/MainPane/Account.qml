@@ -130,4 +130,10 @@ HTileDelegate {
         sequences: window.settings.keys.accountSettings
         onActivated: leftClicked()
     }
+
+    HShortcut {
+        enabled: isCurrent
+        sequences: window.settings.keys.toggleCollapseAccount
+        onActivated: toggleCollapse()
+    }
 }
