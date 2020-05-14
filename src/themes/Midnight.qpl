@@ -290,7 +290,7 @@ mainPane:
             color selectedBackground:       colors.accentBackground
             real selectedBackgroundOpacity: 0.3
             color selectedBorder:           colors.strongAccentElement
-            int selectedBorderSize:         2
+            int selectedBorderSize:         1
 
             unreadIndicator:
                 color background:        colors.accentBackground
