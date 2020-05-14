@@ -140,28 +140,3 @@ Rectangle {
         }
     }
 }
-
-    // HButton {
-    //     id: settingsButton
-    //     backgroundColor: theme.accountsBar.settingsButtonBackground
-    //     icon.name: "settings"
-    //     toolTip.text: qsTr("Open config folder")
-
-    //     onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
-
-    //     Layout.preferredHeight: theme.baseElementsHeight
-    // }
-    // HButton {
-    //     id: addAccountButton
-    //     icon.name: "add-account"
-    //     toolTip.text: qsTr("Add another account")
-    //     backgroundColor: theme.accountsBar.addAccountButtonBackground
-    //     onClicked: pageLoader.showPage("AddAccount/AddAccount")
-
-    //     Layout.preferredHeight: theme.baseElementsHeight
-
-    //     HShortcut {
-    //         sequences: window.settings.keys.addNewAccount
-    //         onActivated: addAccountButton.clicked()
-    //     }
-    // }

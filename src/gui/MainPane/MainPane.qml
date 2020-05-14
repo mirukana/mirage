@@ -10,7 +10,7 @@ HDrawer {
     background: Rectangle { color: theme.mainPane.background }
     minimumSize: theme.controls.avatar.size + theme.spacing * 2
 
-    readonly property alias accountsBar: accountsBar
+    readonly property alias accountBar: accountBar
     readonly property alias roomList: roomList
     readonly property alias bottomBar: bottomBar
 
@@ -29,8 +29,8 @@ HDrawer {
             Layout.fillWidth: true
         }
 
-        AccountsBar {
-            id: accountsBar
+        AccountBar {
+            id: accountBar
             roomList: roomList
 
             Layout.fillWidth: true
