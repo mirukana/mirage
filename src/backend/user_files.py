@@ -260,7 +260,6 @@ class UISettings(JSONDataFile):
                 "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
                 "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
 
-                "showEveryRoom":         ["Alt+E"],
                 "addNewAccount":         ["Alt+Shift+A"],
                 "accountSettings":       ["Alt+A"],
                 "addNewChat":            ["Alt+C"],
