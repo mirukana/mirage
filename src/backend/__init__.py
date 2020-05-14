@@ -4,4 +4,4 @@
 
 __app_name__     = "mirage"
 __display_name__ = "Mirage"
-__version__      = "0.4.3"
+__version__      = "0.5.0"

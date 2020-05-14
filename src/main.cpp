@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     QApplication::setOrganizationName("mirage");
     QApplication::setApplicationName("mirage");
     QApplication::setApplicationDisplayName("Mirage");
-    QApplication::setApplicationVersion("0.4.3");
+    QApplication::setApplicationVersion("0.5.0");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
