@@ -9,13 +9,13 @@ HTile {
     topPadding: padded ? spacing / (compact ? 4 : 2) : 0
     bottomPadding: topPadding
 
-    onLeftClicked: {
-        view.highlightRangeMode    = ListView.NoHighlightRange
-        view.highlightMoveDuration = 0
-        activated()
-        view.highlightRangeMode    = ListView.ApplyRange
-        view.highlightMoveDuration = theme.animationDuration
-    }
+    // onLeftClicked: {
+    //     view.highlightRangeMode    = ListView.NoHighlightRange
+    //     view.highlightMoveDuration = 0
+    //     activated()
+    //     view.highlightRangeMode    = ListView.ApplyRange
+    //     view.highlightMoveDuration = theme.animationDuration
+    // }
 
 
     signal activated()

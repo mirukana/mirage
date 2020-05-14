@@ -17,11 +17,20 @@ HListView {
             roleValue: "Account"
             Account {
                 width: roomList.width
+                leftPadding: theme.spacing
+                rightPadding: 0  // the right buttons have padding
+
                 filterActive: Boolean(filter)
-                isCurrent:
+                enableKeybinds:
                     currentIndexModel &&
                     (currentIndexModel.for_account || currentIndexModel.id) ===
                     model.id
+
+                totalMessageIndicator.visible: false
+
+                onLeftClicked: pageLoader.showPage(
+                    "AccountSettings/AccountSettings", {userId: model.id}
+                )
             }
         }
 
@@ -29,7 +38,7 @@ HListView {
             roleValue: "Room"
             Room {
                 width: roomList.width
-                onActivated: showItemAtIndex(model.index)
+                onLeftClicked: showItemAtIndex(model.index)
             }
         }
     }

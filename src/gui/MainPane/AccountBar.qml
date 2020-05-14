@@ -38,79 +38,18 @@ Rectangle {
 
         model: ModelStore.get("matching_accounts")
 
-        delegate: HTile {
-            id: tile
+        delegate: Account {
             width: accountList.cellWidth
             height: accountList.cellHeight
             padded: false
-            backgroundColor: theme.mainPane.accountBar.account.background
+            compact: false
+            filterActive: Boolean(roomList.filter)
 
-            contentItem: Item {
-                id: tileContent
+            title.visible: false
+            addChat.visible: false
+            expand.visible: false
 
-                HUserAvatar {
-                    id: avatar
-                    anchors.centerIn: parent
-                    userId: model.id
-                    displayName: model.display_name
-                    mxc: model.avatar_url
-                    // compact: tile.compact
-
-                    radius: theme.mainPane.accountBar.account.avatarRadius
-
-                    opacity:
-                        tile.collapsed ?
-                        theme.mainPane.accountBar.account.collapsedOpacity :
-                        1
-
-                    Behavior on opacity { HNumberAnimation {} }
-                }
-
-                MessageIndicator {
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-
-                    indicatorTheme:
-                        theme.mainPane.accountBar.account.unreadIndicator
-                    unreads: model.total_unread
-                    mentions: model.total_mentions
-                }
-
-                HLoader {
-                    anchors.centerIn: parent
-                    width: avatar.width
-                    height: avatar.height
-                    opacity: model.first_sync_done ? 0 : 1
-
-                    active: opacity > 0
-                    sourceComponent: Rectangle {
-                        radius: avatar.radius
-                        color: utils.hsluv(0, 0, 0, 0.5)
-
-                        HBusyIndicator {
-                            anchors.centerIn: parent
-                            width: tileContent.width / 2
-                            height: width
-                        }
-                    }
-
-                    Behavior on opacity { HNumberAnimation {} }
-                }
-            }
-
-            contextMenu: AccountContextMenu { userId: model.id }
-
-            onLeftClicked: {
-                accountList.highlightRangeMode    = GridView.NoHighlightRange
-                accountList.highlightMoveDuration = 0
-                roomList.goToAccount(model.id)
-                accountList.highlightRangeMode    = GridView.ApplyRange
-                accountList.highlightMoveDuration = theme.animationDuration
-            }
-
-            readonly property bool collapsed:
-                (window.uiState.collapseAccounts[model.id] || false) &&
-                ! roomList.filter
+            onLeftClicked: roomList.goToAccount(model.id)
         }
 
         highlight: Item {

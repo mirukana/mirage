@@ -1,6 +1,6 @@
 # TODO
 
-- merge AccountBar account and RoomList account delegates code
+- better initial highlight position when filtering
 
 - fix python getting stuck when loading large room
 - fix accounts in room list not getting their profile updated if mirage starts
@@ -12,7 +12,7 @@
 - fix: there are rooms without messages on first sync
 - avatar loading performance problem?
 
-- update docstrings
+- update docstrings and readme
 - update flatpak nio required version
 - final test
 

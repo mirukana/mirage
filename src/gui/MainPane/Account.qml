@@ -5,16 +5,15 @@ import QtQuick.Layouts 1.12
 import "../Base"
 import "../Base/HTile"
 
-HTileDelegate {
+HTile {
     id: account
     backgroundColor: theme.mainPane.listView.account.background
-    leftPadding: theme.spacing
-    rightPadding: 0  // the right buttons have padding
 
     contentItem: ContentRow {
         tile: account
         spacing: 0
-        opacity: collapsed ? theme.mainPane.listView.account.collapsedOpacity : 1
+        opacity:
+            collapsed ? theme.mainPane.listView.account.collapsedOpacity : 1
 
         Behavior on opacity { HNumberAnimation {} }
 
@@ -25,9 +24,45 @@ HTileDelegate {
             mxc: model.avatar_url
             radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
+
+            Layout.alignment: Qt.AlignCenter
+
+            HLoader {
+                anchors.fill: parent
+                z: 9998
+                opacity: model.first_sync_done ? 0 : 1
+                active: opacity > 0
+
+                sourceComponent: Rectangle {
+                    radius: avatar.radius
+                    color: utils.hsluv(0, 0, 0, 0.6)
+
+                    HBusyIndicator {
+                        anchors.centerIn: parent
+                        width: parent.width / 2
+                        height: width
+                    }
+                }
+
+                Behavior on opacity { HNumberAnimation {} }
+            }
+
+            MessageIndicator {
+                id: totalMessageIndicator
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                z: 9999
+
+                indicatorTheme:
+                    theme.mainPane.accountBar.account.unreadIndicator
+                unreads: model.total_unread
+                mentions: model.total_mentions
+            }
+
         }
 
         TitleLabel {
+            id: title
             text: model.display_name || model.id
             color:
                 hovered ?
@@ -59,7 +94,7 @@ HTileDelegate {
                 account.width >= 100 * theme.uiScale ?  implicitWidth : 0
 
             HShortcut {
-                enabled: isCurrent
+                enabled: enableKeybinds
                 sequences: window.settings.keys.addNewChat
                 onActivated: addChat.clicked()
             }
@@ -98,19 +133,19 @@ HTileDelegate {
 
     contextMenu: AccountContextMenu { userId: model.id }
 
-    onLeftClicked: {
-        pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": model.id }
-        )
-    }
 
-
-    property bool isCurrent: false
+    property bool enableKeybinds: false
     property bool filterActive: false
 
     readonly property bool collapsed:
         (window.uiState.collapseAccounts[model.id] || false) &&
         ! filterActive
+
+    readonly property alias avatar: title
+    readonly property alias totalMessageIndicator: totalMessageIndicator
+    readonly property alias title: title
+    readonly property alias addChat: addChat
+    readonly property alias expand: expand
 
 
     function setCollapse(collapse) {
@@ -126,13 +161,13 @@ HTileDelegate {
 
 
     HShortcut {
-        enabled: isCurrent
+        enabled: enableKeybinds
         sequences: window.settings.keys.accountSettings
         onActivated: leftClicked()
     }
 
     HShortcut {
-        enabled: isCurrent
+        enabled: enableKeybinds
         sequences: window.settings.keys.toggleCollapseAccount
         onActivated: toggleCollapse()
     }
