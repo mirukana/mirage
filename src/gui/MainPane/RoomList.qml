@@ -61,6 +61,7 @@ HListView {
 
 
     function goToAccount(userId) {
+        accountIndice[userId] + 1 <= model.count -1 &&
         model.get(accountIndice[userId] + 1).type === "Room" ?
         currentIndex = accountIndice[userId] + 1 :
         currentIndex = accountIndice[userId]

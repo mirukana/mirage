@@ -38,7 +38,7 @@ Rectangle {
 
         model: ModelStore.get("matching_accounts")
 
-        delegate: HTileDelegate {
+        delegate: HTile {
             id: tile
             width: accountList.cellWidth
             height: accountList.cellHeight
@@ -100,7 +100,13 @@ Rectangle {
 
             contextMenu: AccountContextMenu { userId: model.id }
 
-            onLeftClicked: roomList.goToAccount(model.id)
+            onLeftClicked: {
+                accountList.highlightRangeMode    = GridView.NoHighlightRange
+                accountList.highlightMoveDuration = 0
+                roomList.goToAccount(model.id)
+                accountList.highlightRangeMode    = GridView.ApplyRange
+                accountList.highlightMoveDuration = theme.animationDuration
+            }
 
             readonly property bool collapsed:
                 (window.uiState.collapseAccounts[model.id] || false) &&
@@ -131,7 +137,7 @@ Rectangle {
         HShortcut {
             sequences: window.settings.keys.goToPreviousAccount
             onActivated: {
-                accountList.decrementCurrentIndex()
+                accountList.moveCurrentIndexLeft()
                 accountList.currentItem.leftClicked()
             }
         }
@@ -139,7 +145,7 @@ Rectangle {
         HShortcut {
             sequences: window.settings.keys.goToNextAccount
             onActivated: {
-                accountList.incrementCurrentIndex()
+                accountList.moveCurrentIndexRight()
                 accountList.currentItem.leftClicked()
             }
         }
