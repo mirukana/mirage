@@ -214,6 +214,10 @@ class UISettings(JSONDataFile):
 
 
     async def default_data(self) -> JsonData:
+        def ctrl_or_osx_ctrl() -> str:
+            # Meta in Qt corresponds to Ctrl on OSX
+            return "Meta" if platform.system() == "Darwin" else "Ctrl"
+
         def alt_or_cmd() -> str:
             # Ctrl in Qt corresponds to Cmd on OSX
             return "Ctrl" if platform.system() == "Darwin" else "Alt"
@@ -278,6 +282,19 @@ class UISettings(JSONDataFile):
                 "goToPreviousMentionedRoom": ["Alt+Shift+M"],
                 "goToNextMentionedRoom":     ["Alt+M"],
 
+                "focusAccountAtIndex": {
+                    "01": f"{ctrl_or_osx_ctrl()}+1",
+                    "02": f"{ctrl_or_osx_ctrl()}+2",
+                    "03": f"{ctrl_or_osx_ctrl()}+3",
+                    "04": f"{ctrl_or_osx_ctrl()}+4",
+                    "05": f"{ctrl_or_osx_ctrl()}+5",
+                    "06": f"{ctrl_or_osx_ctrl()}+6",
+                    "07": f"{ctrl_or_osx_ctrl()}+7",
+                    "08": f"{ctrl_or_osx_ctrl()}+8",
+                    "09": f"{ctrl_or_osx_ctrl()}+9",
+                    "10": f"{ctrl_or_osx_ctrl()}+0",
+                },
+                # On OSX, alt+numbers if used for symbols, use cmd instead
                 "focusRoomAtIndex": {
                     "01": f"{alt_or_cmd()}+1",
                     "02": f"{alt_or_cmd()}+2",

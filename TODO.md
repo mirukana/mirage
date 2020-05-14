@@ -1,6 +1,5 @@
 # TODO
 
-- add account number binds
 - revise pane collapse mode
 
 - fix python getting stuck when loading large room

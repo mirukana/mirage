@@ -69,7 +69,7 @@ HListView {
     }
 
     function goToAccountNumber(num) {
-        const index = Object.values(accountIndice).sort()[num]
+        const index = Object.entries(accountIndice).sort()[num][1]
 
         model.get(index + 1).type === "Room" ?
         currentIndex = index + 1 :
@@ -205,6 +205,16 @@ HListView {
         onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
     }
 
+    Repeater {
+        model: Object.keys(window.settings.keys.focusAccountAtIndex)
+
+        Item {
+            HShortcut {
+                sequence: window.settings.keys.focusAccountAtIndex[modelData]
+                onActivated: goToAccountNumber(parseInt(modelData - 1, 10))
+            }
+        }
+    }
 
     Repeater {
         model: Object.keys(window.settings.keys.focusRoomAtIndex)
