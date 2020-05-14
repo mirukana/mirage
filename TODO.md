@@ -1,21 +1,21 @@
 # TODO
 
-- revise pane collapse mode
+- set open_room correctly when using other ways to change rooms than clicking
+- merge AccountBar account and RoomList account delegates code
 
 - fix python getting stuck when loading large room
 - fix accounts in room list not getting their profile updated if mirage starts
   with a filter
+- fix lag when clicking accounts in the AccountBar with a very long room list
 
-- account delegates refactor
-- lag when switching accounts
-
-- if last room event is a membership change, it won't be visible in timeline
-- use uiState instead of open_room
-- clicking on a room with unread counter to see it move right away is weird
-- rooms without messages on first sync
+- fix: on startup, if a room's last event is a membership change,
+  it won't be visible in timeline no matter what the user config is
+- fix: there are rooms without messages on first sync
 - avatar loading performance problem?
 
-- docstrings
+- update docstrings
+- update flatpak nio required version
+- final test
 
 ## Refactoring
 
