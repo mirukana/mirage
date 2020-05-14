@@ -266,12 +266,7 @@ class Event(ModelItem):
 
     def serialize_field(self, field: str) -> Any:
         if field == "source":
-            try:
-                as_dict = nio.attr.asdict  # nio < 0.11
-            except AttributeError:
-                as_dict = asdict
-
-            source_dict = as_dict(self.source) if self.source else {}
+            source_dict = asdict(self.source) if self.source else {}
             return json.dumps(source_dict)
 
         return super().serialize_field(field)
