@@ -18,6 +18,12 @@ HListView {
             Account {
                 width: roomList.width
                 filterActive: Boolean(filter)
+                isCurrent:
+                    currentIndex !== -1 &&
+                    (
+                        roomList.model.get(currentIndex).for_account ||
+                        roomList.model.get(currentIndex).id
+                    ) === model.id
             }
         }
 
