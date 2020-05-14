@@ -42,9 +42,9 @@ colors:
 
     real opacity: 0.7
 
-    color weakBackground:   hsluv(hue, bgSaturation, intensity * 9, opacity)
-    color mediumBackground: hsluv(hue, bgSaturation, intensity * 6.8, opacity)
-    color strongBackground: hsluv(hue, bgSaturation * 2, 0, opacity)
+    color weakBackground:   hsluv(hue, bgSaturation, intensity * 2.5, opacity)
+    color mediumBackground: hsluv(hue, bgSaturation, intensity * 7, opacity)
+    color strongBackground: hsluv(hue, bgSaturation * 2, intensity, opacity)
 
     color accentBackground:    hsluv(hue, saturation, intensity * 42, 1)
     color accentElement:       hsluv(hue, saturation * 1.5, intensity * 52, 1)
@@ -266,6 +266,23 @@ mainPane:
         color background:       colors.strongBackground
         color nameVersionLabel: colors.text
 
+    accountBar:
+        color background: colors.mediumBackground
+
+        account:
+            real collapsedOpacity: 0.3
+            color background:      "transparent"
+            int avatarRadius:      controls.avatar.radius
+
+            color selectedBackground:       colors.accentBackground
+            real selectedBackgroundOpacity: 0.3
+            color selectedBorder:           colors.strongAccentElement
+            int selectedBorderSize:         1
+
+            unreadIndicator:
+                color background:        colors.accentBackground
+                color mentionBackground: colors.alertBackground
+
     listView:
         color background: colors.mediumBackground
 
@@ -295,9 +312,9 @@ mainPane:
                 color mentionBackground: colors.alertBackground
 
     bottomBar:
-        color background:               colors.strongBackground
-        color settingsButtonBackground: "transparent"
-        color filterFieldBackground:    "transparent"
+        color background:               "transparent"
+        color settingsButtonBackground: colors.strongBackground
+        color filterFieldBackground:    colors.strongBackground
 
 
 chat:
@@ -354,8 +371,8 @@ chat:
         color focusedHighlight:       colors.accentBackground
         real focusedHighlightOpacity: 0.4
 
-        color background:    colors.mediumBackground
-        color ownBackground: colors.strongBackground
+        color background:        colors.weakBackground
+        color ownBackground:     colors.mediumBackground
         color checkedBackground: colors.accentBackground
 
         color body: colors.text
