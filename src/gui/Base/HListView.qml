@@ -118,10 +118,8 @@ ListView {
     }
 
 
-    HScrollMouseArea {
+    HTrackpadFix {
         id: mouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        flickable: listView
     }
 }

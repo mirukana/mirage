@@ -241,6 +241,7 @@ class UISettings(JSONDataFile):
             "maxMessageCharactersPerLine": 65,
             "ownMessagesOnLeftAboveWidth": 895,
             "theme": "Midnight.qpl",
+            "useTrackpadFix": False,
             "writeAliases": {},
             "media": {
                 "autoLoad": True,

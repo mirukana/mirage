@@ -117,14 +117,8 @@ GridView {
     }
 
 
-    MouseArea {
+    HTrackpadFix {
         id: mouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        onWheel: {
-            // Allow wheel usage, will be back to false on any drag attempt
-            parent.interactive = true
-            wheel.accepted = false
-        }
     }
 }
