@@ -325,7 +325,7 @@ QtObject {
     function flickPages(flickable, pages) {
         // Adapt velocity and deceleration for the number of pages to flick.
         // If this is a repeated flicking, flick faster than a single flick.
-        if (! flickable.interactive && flickable.allowDragging) return
+        if (! flickable.interactive) return
 
         const futureVelocity  = -flickable.height * pages
         const currentVelocity = -flickable.verticalVelocity
@@ -351,7 +351,7 @@ QtObject {
 
 
     function flickToTop(flickable) {
-        if (! flickable.interactive && flickable.allowDragging) return
+        if (! flickable.interactive) return
         if (flickable.visibleArea.yPosition < 0) return
 
         flickable.contentY -= flickable.contentHeight
@@ -361,7 +361,7 @@ QtObject {
 
 
     function flickToBottom(flickable) {
-        if (! flickable.interactive && flickable.allowDragging) return
+        if (! flickable.interactive) return
         if (flickable.visibleArea.yPosition < 0) return
 
         flickable.contentY = flickable.contentHeight - flickable.height

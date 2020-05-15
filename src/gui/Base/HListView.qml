@@ -5,8 +5,6 @@ import QtQuick.Controls 2.12
 
 ListView {
     id: listView
-    //interactive: allowDragging
-    interactive: false
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -25,7 +23,7 @@ ListView {
     }
 
     ScrollBar.vertical: ScrollBar {
-        visible: listView.interactive || ! listView.allowDragging
+        visible: listView.interactive
     }
 
     // property bool debug: false
@@ -61,7 +59,6 @@ ListView {
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
 
 
-    property bool allowDragging: true
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
@@ -121,17 +118,9 @@ ListView {
     }
 
 
-    Connections {
-        target: listView
-        enabled: ! listView.allowDragging
-        // interactive gets temporarily set to true below to allow wheel scroll
-        onDraggingChanged: listView.interactive = false
-    }
-
     HScrollMouseArea {
         id: mouseArea
         anchors.fill: parent
-        enabled: ! parent.allowDragging || cursorShape !== Qt.ArrowCursor
         acceptedButtons: Qt.NoButton
         flickable: listView
     }
