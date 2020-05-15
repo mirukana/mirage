@@ -68,9 +68,6 @@ ListView {
     property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checked).length
 
-    readonly property var currentIndexModel:
-        currentIndex === -1 ? null : model.get(currentIndex)
-
 
     function check(...indices) {
         for (const i of indices) {

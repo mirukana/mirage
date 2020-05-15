@@ -21,10 +21,12 @@ HListView {
                 rightPadding: 0  // the right buttons have padding
 
                 filterActive: Boolean(filter)
-                enableKeybinds:
-                    currentIndexModel &&
-                    (currentIndexModel.for_account || currentIndexModel.id) ===
-                    model.id
+                enableKeybinds: Boolean(
+                    roomList.model.get(currentIndex) && (
+                        roomList.model.get(currentIndex).for_account ||
+                        roomList.model.get(currentIndex).id
+                    ) === model.id
+                )
 
                 totalMessageIndicator.visible: false
 
@@ -43,7 +45,25 @@ HListView {
         }
     }
 
-    onFilterChanged: py.callCoro("set_substring_filter", ["all_rooms", filter])
+    onFilterChanged: {
+        py.callCoro("set_substring_filter", ["all_rooms", filter])
+
+        const item = model.get(currentIndex)
+
+        if (
+            ! filter &&
+            item && ((
+                currentShouldBeAccount &&
+                wantedUserId !== item.id
+            ) || (
+                currentShouldBeRoom && (
+                    wantedUserId !== item.for_account ||
+                    wantedRoomId !== item.id
+                )
+            ))
+        )
+            currentIndex = -1  // will trigger the correctTimer
+    }
 
 
     property string filter: ""
@@ -172,6 +192,7 @@ HListView {
     Timer {
         // On startup, the account/room takes an unknown amount of time to
         // arrive in the model, try to find it until then.
+        id: correctTimer
         interval: 200
         running: currentIndex === -1
         repeat: true
