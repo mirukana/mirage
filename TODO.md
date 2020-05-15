@@ -1,8 +1,6 @@
 # TODO
 
 - fix python getting stuck when loading large room
-- fix accounts in room list not getting their profile updated if mirage starts
-  with a filter
 - fix lag when clicking accounts in the AccountBar with a very long room list
 
 - fix: on startup, if a room's last event is a membership change,

@@ -135,7 +135,7 @@ class Model(MutableMapping):
         with self._write_lock:
             item = self._data[key]
 
-            if self.sync_id:
+            if self.sync_id and self.take_items_ownership:
                 item.parent_model = None
 
             del self._data[key]
