@@ -333,6 +333,7 @@ class MatrixClient(nio.AsyncClient):
             try:
                 self.sync_task = asyncio.ensure_future(self.sync_forever(
                     timeout           = 10_000,
+                    loop_sleep_time   = 1000,
                     sync_filter       = self.lazy_load_filter,
                     first_sync_filter = filter1,
                 ))
