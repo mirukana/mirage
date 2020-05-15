@@ -46,23 +46,31 @@ HListView {
     }
 
     onFilterChanged: {
-        py.callCoro("set_substring_filter", ["all_rooms", filter])
+        py.callCoro("set_substring_filter", ["all_rooms", filter], () => {
+            if (filter) {
+                currentIndex = 1  // highlight the first matching room
+                return
+            }
 
-        const item = model.get(currentIndex)
+            const item = model.get(currentIndex)
 
-        if (
-            ! filter &&
-            item && ((
-                currentShouldBeAccount &&
-                wantedUserId !== item.id
-            ) || (
-                currentShouldBeRoom && (
-                    wantedUserId !== item.for_account ||
-                    wantedRoomId !== item.id
+            if (
+                ! filter &&
+                item && (
+                    currentIndex === 1 || // required, related to the if above
+                    (
+                        currentShouldBeAccount &&
+                        wantedUserId !== item.id
+                    ) || (
+                        currentShouldBeRoom && (
+                            wantedUserId !== item.for_account ||
+                            wantedRoomId !== item.id
+                        )
+                     )
                 )
-            ))
-        )
-            currentIndex = -1  // will trigger the correctTimer
+            )
+                currentIndex = -1  // will trigger the correctTimer
+        })
     }
 
 

@@ -1,7 +1,5 @@
 # TODO
 
-- better initial highlight position when filtering
-
 - fix python getting stuck when loading large room
 - fix accounts in room list not getting their profile updated if mirage starts
   with a filter
