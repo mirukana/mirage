@@ -3,19 +3,15 @@
 import QtQuick 2.12
 import io.thp.pyotherside 1.5
 import CppUtils 0.1
-import "Privates"
+import "."
 
 Python {
     id: py
 
 
-    readonly property QtObject privates: QtObject {
-        function makeFuture(callback) {
-            return Qt.createComponent("Future.qml")
-                     .createObject(py, { bridge: py })
-        }
+    function makeFuture(callback) {
+        return Qt.createComponent("Future.qml").createObject(py, {bridge: py})
     }
-
 
     function setattr(obj, attr, value, callback=null) {
         py.call(py.getattr(obj, "__setattr__"), [attr, value], callback)
@@ -23,7 +19,7 @@ Python {
 
     function callCoro(name, args=[], onSuccess=null, onError=null) {
         const uuid   = name + "." + CppUtils.uuid()
-        const future = privates.makeFuture()
+        const future = makeFuture()
 
         Globals.pendingCoroutines[uuid] = {future, onSuccess, onError}
         Globals.pendingCoroutinesChanged()
@@ -38,7 +34,7 @@ Python {
     function callClientCoro(
         accountId, name, args=[], onSuccess=null, onError=null
     ) {
-        const future = privates.makeFuture()
+        const future = makeFuture()
 
         callCoro("get_client", [accountId], () => {
             const uuid = accountId + "." + name + "." + CppUtils.uuid()
