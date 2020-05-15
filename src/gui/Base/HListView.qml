@@ -5,7 +5,8 @@ import QtQuick.Controls 2.12
 
 ListView {
     id: listView
-    interactive: allowDragging
+    //interactive: allowDragging
+    interactive: false
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -127,15 +128,11 @@ ListView {
         onDraggingChanged: listView.interactive = false
     }
 
-    MouseArea {
+    HScrollMouseArea {
         id: mouseArea
         anchors.fill: parent
         enabled: ! parent.allowDragging || cursorShape !== Qt.ArrowCursor
         acceptedButtons: Qt.NoButton
-        onWheel: {
-            // Allow wheel usage, will be back to false on any drag attempt
-            parent.interactive = true
-            wheel.accepted = false
-        }
+        flickable: listView
     }
 }
