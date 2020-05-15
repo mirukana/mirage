@@ -148,9 +148,13 @@ HListView {
         while (true) {
             index += forward ? 1 : -1
 
-            if (index < 0)               index = model.count - 1
+            if (index < 0) index = model.count - 1
             if (index > model.count - 1) index = 0
-            if (index === start)         return false
+
+            if (index === start && mentions)
+                return cycleUnreadRooms(forward, false)
+            else if (index === start)
+                return false
 
             const item = model.get(index)
 
