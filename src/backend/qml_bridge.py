@@ -40,11 +40,15 @@ class QMLBridge:
     """
 
     def __init__(self) -> None:
+        try:
+            self._loop = asyncio.get_event_loop()
+        except RuntimeError:
+            self._loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self._loop)
+        self._loop.set_exception_handler(self._loop_exception_handler)
+
         from .backend import Backend
         self.backend: Backend = Backend()
-
-        self._loop = asyncio.get_event_loop()
-        self._loop.set_exception_handler(self._loop_exception_handler)
 
         Thread(target=self._start_asyncio_loop).start()
 
