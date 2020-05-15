@@ -8,7 +8,7 @@
 - fix: there are rooms without messages on first sync
 - avatar loading performance problem?
 
-- update docstrings and readme
+- update docstrings 
 - update flatpak nio required version
 - final test
 
