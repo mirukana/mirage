@@ -25,7 +25,7 @@ HColumnLayout {
     property bool checked: model.id in eventList.checked
     property bool compact: window.settings.compactMode
     property bool isOwn: chat.userId === model.sender_id
-    property bool onRight: eventList.ownEventsOnRight && isOwn
+    property bool onRight: ! eventList.ownEventsOnLeft && isOwn
     property bool combine: eventList.canCombine(previousModel, model)
     property bool talkBreak: eventList.canTalkBreak(previousModel, model)
     property bool dayBreak: eventList.canDayBreak(previousModel, model)

@@ -365,8 +365,7 @@ chat:
                 color background: "transparent"
 
     eventList:
-        int ownEventsOnRightUnderWidth: 896 * theme.uiScale
-        color background:               "transparent"
+        color background: "transparent"
 
     message:
         int avatarSize:          56 * uiScale

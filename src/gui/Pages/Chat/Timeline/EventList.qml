@@ -180,8 +180,10 @@ Rectangle {
         property bool canLoad: true
         property bool loading: false
 
-        property bool ownEventsOnRight:
-            width < theme.chat.eventList.ownEventsOnRightUnderWidth
+        property bool ownEventsOnLeft:
+            window.settings.ownMessagesOnLeftAboveWidth < 0 ?
+            false :
+            width > window.settings.ownMessagesOnLeftAboveWidth * theme.uiScale
 
         property string delegateWithSelectedText: ""
         property string selectedText: ""
