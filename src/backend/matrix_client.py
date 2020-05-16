@@ -1021,6 +1021,7 @@ class MatrixClient(nio.AsyncClient):
             filename,
             encrypt,
             monitor,
+            filesize,
         )
 
         return UploadReturn(response.content_uri, mime, decryption_dict)
