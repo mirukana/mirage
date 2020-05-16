@@ -33,6 +33,9 @@ HListView {
                 onLeftClicked: pageLoader.showPage(
                     "AccountSettings/AccountSettings", {userId: model.id}
                 )
+
+                onCollapsedChanged: { print(wantedUserId, model.id);
+                    if (wantedUserId === model.id) correctTimer.start()}
             }
         }
 
@@ -69,7 +72,7 @@ HListView {
                      )
                 )
             )
-                currentIndex = -1  // will trigger the correctTimer
+                correctTimer.start()
         })
     }
 
@@ -197,8 +200,7 @@ HListView {
     Connections {
         target: pageLoader
         onPreviousShown:
-            // Will trigger the timer above if item isn't found
-            if (setCorrectCurrentItem() === false) currentIndex = -1
+            if (setCorrectCurrentItem() === false) correctTimer.start()
     }
 
     Timer {
@@ -210,6 +212,7 @@ HListView {
         repeat: true
         triggeredOnStart: true
         onTriggered: setCorrectCurrentItem()
+        onRunningChanged: if (running && currentIndex !== -1) currentIndex = -1
     }
 
     Timer {
