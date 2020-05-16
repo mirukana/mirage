@@ -62,8 +62,13 @@ HRowLayout {
         ) :
         0
 
-    // ~600px max with a 16px font
-    readonly property int maxMessageWidth: theme.fontSize.normal * 0.5 * 75
+    readonly property int maxMessageWidth:
+        window.settings.maxMessageCharactersPerLine < 0 ?
+        -1 :
+        Math.ceil(
+            mainUI.fontMetrics.averageCharacterWidth *
+            window.settings.maxMessageCharactersPerLine
+        )
 
     readonly property alias selectedText: contentLabel.selectedText
 

@@ -238,6 +238,7 @@ class UISettings(JSONDataFile):
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,
             "hideUnknownEvents": False,
+            "maxMessageCharactersPerLine": 65,
             "theme": "Midnight.qpl",
             "writeAliases": {},
             "media": {

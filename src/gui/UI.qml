@@ -32,6 +32,7 @@ Item {
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
     readonly property alias pressAnimation: pressAnimation
+    readonly property alias fontMetrics: fontMetrics
 
 
     function reloadSettings() {
@@ -80,6 +81,13 @@ Item {
             settings.compactMode = ! settings.compactMode
             settingsChanged()
         }
+    }
+
+    FontMetrics {
+        id: fontMetrics
+        font.family: theme.fontFamily.sans
+        font.pixelSize: theme.fontSize.normal
+        font.pointSize: -1
     }
 
     DebugConsole {
