@@ -31,8 +31,8 @@ HListView {
                 totalMessageIndicator.visible: false
 
                 onLeftClicked: showItemAtIndex(model.index)
-                onCollapsedChanged: { print(wantedUserId, model.id);
-                    if (wantedUserId === model.id) correctTimer.start()}
+                onCollapsedChanged:
+                    if (wantedUserId === model.id) correctTimer.start()
             }
         }
 
