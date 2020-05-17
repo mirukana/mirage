@@ -38,6 +38,8 @@ class NioCallbacks:
     def __post_init__(self) -> None:
         """Register our methods as callbacks."""
 
+        self.models = self.client.models
+
         for name, class_ in utils.classes_defined_in(nio.responses).items():
             with suppress(AttributeError):
                 method = getattr(self, f"on{name}")
@@ -53,10 +55,15 @@ class NioCallbacks:
         )
 
 
+    @property
+    def user_id(self) -> str:
+        return self.client.user_id
+
+
     # Response callbacks
 
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
-        room_model = self.client.models[self.client.user_id, "rooms"]
+        room_model = self.models[self.user_id, "rooms"]
 
         for room_id, info in resp.rooms.join.items():
             if room_id not in room_model:
@@ -89,7 +96,7 @@ class NioCallbacks:
             self.client.first_sync_done.set()
             self.client.first_sync_date = datetime.now()
 
-            account = self.client.models["accounts"][self.client.user_id]
+            account = self.models["accounts"][self.user_id]
             account.first_sync_done = True
 
 
@@ -160,7 +167,7 @@ class NioCallbacks:
 
 
     async def onRedactionEvent(self, room, ev) -> None:
-        model = self.client.models[self.client.user_id, room.room_id, "events"]
+        model = self.models[self.user_id, room.room_id, "events"]
         event = None
 
         for existing in model._sorted_data:
@@ -325,8 +332,8 @@ class NioCallbacks:
 
         if changed:
             # Update our account profile if the event is newer than last update
-            if ev.state_key == self.client.user_id:
-                account = self.client.models["accounts"][self.client.user_id]
+            if ev.state_key == self.user_id:
+                account = self.models["accounts"][self.user_id]
 
                 if account.profile_updated < ev_date:
                     account.profile_updated = ev_date
@@ -453,7 +460,7 @@ class NioCallbacks:
 
         room_id = room.room_id
 
-        room_item = self.client.models[self.client.user_id, "rooms"][room_id]
+        room_item = self.models[self.user_id, "rooms"][room_id]
 
         room_item.typing_members = sorted(
             room.user_name(user_id) or user_id for user_id in ev.users
