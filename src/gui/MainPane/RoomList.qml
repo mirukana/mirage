@@ -182,8 +182,7 @@ HListView {
             ) || (
                 currentShouldBeAccount &&
                 item.type === "Account" &&
-                item.id === wantedRoomId &&
-                item.for_account === wantedUserId
+                item.id === wantedUserId
             )) {
                 currentIndex = i
                 return true
