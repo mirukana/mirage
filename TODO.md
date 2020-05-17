@@ -1,5 +1,7 @@
 # TODO
 
+- shorten indicator numbers with hundreds 
+
 - fix python getting stuck when loading large room
 - fix lag when clicking accounts in the AccountBar with a very long room list
 

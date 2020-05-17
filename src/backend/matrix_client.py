@@ -752,7 +752,7 @@ class MatrixClient(nio.AsyncClient):
 
         if not room.members_synced:
             await super().joined_members(room_id)
-            await self.register_nio_room(self.all_rooms[room_id])
+            await self.register_nio_room(room, force_register_members=True)
 
 
     async def load_past_events(self, room_id: str) -> bool:
@@ -1188,7 +1188,10 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def register_nio_room(
-        self, room: nio.MatrixRoom, left: bool = False,
+        self,
+        room:                   nio.MatrixRoom,
+        left:                   bool = False,
+        force_register_members: bool = False,
     ) -> None:
         """Register a `nio.MatrixRoom` as a `Room` object in our model."""
 
@@ -1199,16 +1202,18 @@ class MatrixClient(nio.AsyncClient):
         can_send_msg   = partial(levels.can_user_send_message, self.user_id)
 
         try:
-            registered      = self.models[self.user_id, "rooms"][room.room_id]
-            last_event_date = registered.last_event_date
-            typing_members  = registered.typing_members
-            mentions        = registered.mentions
-            unreads         = registered.unreads
+            registered = self.models[self.user_id, "rooms"][room.room_id]
         except KeyError:
+            registered      = None
             last_event_date = datetime.fromtimestamp(0)
             typing_members  = []
             mentions        = 0
             unreads         = 0
+        else:
+            last_event_date = registered.last_event_date
+            typing_members  = registered.typing_members
+            mentions        = registered.mentions
+            unreads         = registered.unreads
 
         room_item = Room(
             id             = room.room_id,
@@ -1250,35 +1255,32 @@ class MatrixClient(nio.AsyncClient):
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item
 
-        # List members that left the room, then remove them from our model
-        left_the_room = [
-            user_id
-            for user_id in self.models[self.user_id, room.room_id, "members"]
-            if user_id not in room.users
-        ]
+        if not registered or force_register_members:
+            for user_id in room.users:
+                await self.add_member(room, user_id)
 
-        for user_id in left_the_room:
-            del self.models[self.user_id, room.room_id, "members"][user_id]
-            HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
-        # Add the room members to the added room
-        new_dict = {
-            user_id: Member(
-                id           = user_id,
-                display_name = room.user_name(user_id)  # disambiguated
-                               if member.display_name else "",
-                avatar_url   = member.avatar_url or "",
-                typing       = user_id in room.typing_users,
-                power_level  = member.power_level,
-                invited      = member.invited,
-            ) for user_id, member in room.users.items()
-        }
-        self.models[self.user_id, room.room_id, "members"].update(new_dict)
+    async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
+        member = room.users[user_id]
 
-        for user_id, member in room.users.items():
-            if member.display_name:
-                HTML.rooms_user_id_names[room.room_id][user_id] = \
-                    member.display_name
+        self.models[self.user_id, room.room_id, "members"][user_id] = Member(
+            id           = user_id,
+            display_name = room.user_name(user_id)  # disambiguated
+                           if member.display_name else "",
+            avatar_url   = member.avatar_url or "",
+            typing       = user_id in room.typing_users,
+            power_level  = member.power_level,
+            invited      = member.invited,
+        )
+
+        if member.display_name:
+            HTML.rooms_user_id_names[room.room_id][user_id] = \
+                member.display_name
+
+
+    async def remove_member(self, room: nio.MatrixRoom, user_id: str) -> None:
+        self.models[self.user_id, room.room_id, "members"].pop(user_id, None)
+        HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
 
     async def get_member_name_avatar(

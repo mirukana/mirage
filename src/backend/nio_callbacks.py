@@ -353,6 +353,11 @@ class NioCallbacks:
 
 
     async def onRoomMemberEvent(self, room, ev) -> None:
+        if ev.membership in ("invite", "join") and ev.state_key in room.users:
+            await self.client.add_member(room, user_id=ev.state_key)
+        elif ev.membership in ("left", "ban"):
+            await self.client.remove_member(room, user_id=ev.state_key)
+
         type_and_content = await self.process_room_member_event(room, ev)
 
         if type_and_content is not None:
