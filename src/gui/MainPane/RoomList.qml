@@ -30,10 +30,7 @@ HListView {
 
                 totalMessageIndicator.visible: false
 
-                onLeftClicked: pageLoader.showPage(
-                    "AccountSettings/AccountSettings", {userId: model.id}
-                )
-
+                onLeftClicked: showItemAtIndex(model.index)
                 onCollapsedChanged: { print(wantedUserId, model.id);
                     if (wantedUserId === model.id) correctTimer.start()}
             }
