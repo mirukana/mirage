@@ -26,4 +26,9 @@ HPage {
             height: flickable.height
         }
     }
+
+    HTrackpadFix {
+        flickable: flickable
+        anchors.fill: flickable
+    }
 }

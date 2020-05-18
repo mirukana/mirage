@@ -11,7 +11,8 @@ MouseArea {
 
 
     onWheel: {
-        wheel.accepted = false // Disable wheel to avoid too much scroll
+        // Make components below the stack notice the wheel event
+        wheel.accepted = false
 
         const pos = getNewPosition(flickable, wheel)
         flickable.flick(0, 0)
@@ -20,6 +21,7 @@ MouseArea {
 
 
     property Flickable flickable: parent
+    property int scrollFactor: 5
 
     // Used to get default flickDeceleration value
     readonly property Flickable dummy: Flickable {}
@@ -32,7 +34,10 @@ MouseArea {
         // When higher pixelDelta, more scroll will be applied
         const pixelDelta =
             wheel.pixelDelta.y ||
-            wheel.angleDelta.y / 24 * Qt.styleHints.wheelScrollLines
+            wheel.angleDelta.y /
+                24 *
+                Qt.styleHints.wheelScrollLines *
+                scrollFactor
 
         // Return current position if there was not any movement
         if (flickable.contentHeight < flickable.height || !pixelDelta)
@@ -55,7 +60,13 @@ MouseArea {
 
     Binding {
         target: flickable
+        property: "maximumFlickVelocity"
+        value: mouseArea.enabled ? scrollFactor : 4000.0
+    }
+
+    Binding {
+        target: flickable
         property: "flickDeceleration"
-        value: mouseArea.enabled ? 8000.0 : dummy.flickDeceleration
+        value: mouseArea.enabled ? scrollFactor * 3 : dummy.flickDeceleration
     }
 }
