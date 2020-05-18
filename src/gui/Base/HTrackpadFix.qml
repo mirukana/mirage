@@ -2,7 +2,7 @@
 
 import QtQuick 2.12
 
-// Mouse area model to fix scroll on trackpad
+// MouseArea component to fix scroll on trackpad
 MouseArea {
     id: mouseArea
     enabled: window.settings.useTrackpadFix
@@ -20,6 +20,9 @@ MouseArea {
 
 
     property Flickable flickable: parent
+
+    // Used to get default flickDeceleration value
+    readonly property Flickable dummy: Flickable {}
 
 
     function getNewPosition(flickable, wheel) {
@@ -53,7 +56,6 @@ MouseArea {
     Binding {
         target: flickable
         property: "flickDeceleration"
-        value: 8000
-        when: mouseArea.enabled
+        value: mouseArea.enabled ? 8000.0 : dummy.flickDeceleration
     }
 }
