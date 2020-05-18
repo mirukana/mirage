@@ -33,7 +33,7 @@ MouseArea {
         // low resolution trackpads.
         // When higher pixelDelta, more scroll will be applied
         const pixelDelta =
-            wheel.pixelDelta.y ||
+            wheel.pixelDelta.y * scrollFactor ||
             wheel.angleDelta.y /
                 24 *
                 Qt.styleHints.wheelScrollLines *
