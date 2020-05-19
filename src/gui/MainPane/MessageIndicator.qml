@@ -4,7 +4,11 @@ import QtQuick 2.12
 import "../Base"
 
 HLabel {
-    text: unreads
+    text:
+        unreads >= 1000000 ? Math.floor(unreads / 1000000) + "M" :
+        unreads >= 1000 ? Math.floor(unreads / 1000) + "K" :
+        unreads
+
     font.pixelSize: theme.fontSize.small
     verticalAlignment: Qt.AlignVCenter
     leftPadding: theme.spacing / 4
