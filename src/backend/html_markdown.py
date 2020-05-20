@@ -127,9 +127,6 @@ class HTMLProcessor:
     room_alias_regex = re.compile(
         r"(?=^|\W)(?P<body>#\S+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
     )
-    message_id_regex = re.compile(
-        rf"(?P<body>\${opaque_id}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
-    )
 
     link_regexes = [re.compile(r, re.IGNORECASE)
                     if isinstance(r, str) else r for r in [
@@ -144,7 +141,7 @@ class HTMLProcessor:
         # magnet:
         r"(?P<body>magnet:\?xt=urn:[a-z0-9]+:.+)(?P<host>)",
 
-        user_id_regex, room_id_regex, room_alias_regex, message_id_regex,
+        user_id_regex, room_id_regex, room_alias_regex,
     ]]
 
     link_is_matrix_to_regex = re.compile(
@@ -160,7 +157,7 @@ class HTMLProcessor:
         r"https?://matrix.to/#/#\S+", re.IGNORECASE,
     )
     link_is_message_id_regex = re.compile(
-        r"https?://matrix.to/#/\$\S+", re.IGNORECASE,
+        r"https?://matrix.to/#/[!#]\S+/\$\S+", re.IGNORECASE,
     )
 
     inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
@@ -464,7 +461,6 @@ class HTMLProcessor:
 
         id_regexes = (
             self.user_id_regex, self.room_id_regex, self.room_alias_regex,
-            self.message_id_regex,
         )
 
         for regex in id_regexes:
@@ -484,14 +480,20 @@ class HTMLProcessor:
 
 
     def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
-        "Add special CSS classes to matrix.to mention links."""
+        """Add special CSS classes to matrix.to mention links."""
 
         href = unquote(el.attrib.get("href", ""))
 
         if not href or not el.text:
             return el
 
-        if self.link_is_user_id_regex.match(href):
+
+        # This must be first, or link will be mistaken by room ID/alias regex
+        if self.link_is_message_id_regex.match(href):
+            el.attrib["class"]        = "mention message-id-mention"
+            el.attrib["data-mention"] = el.text.strip()
+
+        elif self.link_is_user_id_regex.match(href):
             if el.text.strip().startswith("@"):
                 el.attrib["class"] = "mention user-id-mention"
             else:
@@ -505,10 +507,6 @@ class HTMLProcessor:
 
         elif self.link_is_room_alias_regex.match(href):
             el.attrib["class"]        = "mention room-alias-mention"
-            el.attrib["data-mention"] = el.text.strip()
-
-        elif self.link_is_message_id_regex.match(href):
-            el.attrib["class"]        = "mention message-id-mention"
             el.attrib["data-mention"] = el.text.strip()
 
         return el
