@@ -84,8 +84,11 @@ class MarkdownRenderer(mistune.Renderer):
 class HTMLProcessor:
     """Provide HTML filtering and conversion from Markdown.
 
-    Filtering sanitizes HTML and ensures it complies with the supported Qt
-    subset for usage in QML: https://doc.qt.io/qt-5/richtext-html-subset.html
+    Filtering sanitizes HTML and ensures it complies both with the Matrix
+    specification:
+    https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
+    and the supported Qt HTML subset for usage in QML:
+    https://doc.qt.io/qt-5/richtext-html-subset.html
 
     Some methods take an `outgoing` argument, specifying if the HTML is
     intended to be sent to matrix servers or used locally in our application.
@@ -197,6 +200,8 @@ class HTMLProcessor:
 
 
     def mentions_in_html(self, html: str) -> List[Tuple[str, str]]:
+        """Return list of (text, href) tuples for all mention links in html."""
+
         if not html.strip():
             return []
 
@@ -209,6 +214,8 @@ class HTMLProcessor:
 
 
     def user_id_link_in_html(self, html: str, user_id: str) -> bool:
+        """Return whether html contains a mention link for user_id."""
+
         regex = re.compile(rf"https?://matrix.to/#/{user_id}", re.IGNORECASE)
 
         for _, href in self.mentions_in_html(html):
@@ -255,7 +262,7 @@ class HTMLProcessor:
         )
 
         for a_tag in tree.iterdescendants("a"):
-            self._mentions_to_matrix_to_links(a_tag, room_id)
+            self._mentions_to_matrix_to_links(a_tag, room_id, outgoing)
 
             if not outgoing:
                 self._matrix_to_links_add_classes(a_tag)
@@ -301,10 +308,13 @@ class HTMLProcessor:
             "span": {"data-mx-color"},
         }}
 
-        username_link_regexes = [re.compile(r) for r in [
-            rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
-            for username in self.rooms_user_id_names[room_id].values()
-        ]]
+        username_link_regexes = []
+
+        if outgoing:
+            username_link_regexes = [re.compile(r) for r in [
+                rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
+                for username in self.rooms_user_id_names[room_id].values()
+            ]]
 
         return {
             "tags": inline_tags if inline else all_tags,
@@ -390,7 +400,7 @@ class HTMLProcessor:
 
 
     def _remove_extra_newlines(self, el: HtmlElement) -> HtmlElement:
-        """Remove excess `\\n` characters from HTML elements.
+        r"""Remove excess `\n` characters from HTML elements.
 
         This is done to avoid additional blank lines when the CSS directive
         `white-space: pre` is used.
@@ -440,9 +450,14 @@ class HTMLProcessor:
 
 
     def _mentions_to_matrix_to_links(
-        self, el: HtmlElement, room_id: str = "",
+        self, el: HtmlElement, room_id: str = "", outgoing: bool = False,
     ) -> HtmlElement:
-        """Turn user ID/names and room ID/aliases into matrix.to URL."""
+        """Turn user ID/names and room ID/aliases into matrix.to URL.
+
+        After the HTML sanitizer autolinks these, the links's hrefs will be the
+        link text, e.g. `<a href="@foo:bar.com">@foo:bar.com</a>`.
+        We turn them into proper matrix.to URL in this function.
+        """
 
         if el.tag != "a" or not el.attrib.get("href"):
             return el
@@ -454,19 +469,23 @@ class HTMLProcessor:
 
         for regex in id_regexes:
             if regex.match(unquote(el.attrib["href"])):
-                el.attrib["href"]  = f"https://matrix.to/#/{el.attrib['href']}"
+                el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
+                return el
 
-        if room_id not in self.rooms_user_id_names:
+        if not outgoing or room_id not in self.rooms_user_id_names:
             return el
 
         for user_id, username in self.rooms_user_id_names[room_id].items():
             if unquote(el.attrib["href"]) == username:
-                el.attrib["href"]  = f"https://matrix.to/#/{user_id}"
+                el.attrib["href"] = f"https://matrix.to/#/{user_id}"
+                return el
 
         return el
 
 
     def _matrix_to_links_add_classes(self, el: HtmlElement) -> HtmlElement:
+        "Add special CSS classes to matrix.to mention links."""
+
         href = unquote(el.attrib.get("href", ""))
 
         if not href or not el.text:

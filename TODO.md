@@ -1,8 +1,7 @@
 # TODO
 
-- shorten indicator numbers with hundreds 
+- Defer retrieving profiles for events from members not anymore in the room 
 
-- fix python getting stuck when loading large room
 - fix lag when clicking accounts in the AccountBar with a very long room list
 
 - fix: on startup, if a room's last event is a membership change,
