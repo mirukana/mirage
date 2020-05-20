@@ -192,6 +192,9 @@ Rectangle {
                     py.callClientCoro(writingUserId, "send_text", args)
 
                     area.clear()
+                    chat.replyToEventId     = ""
+                    chat.replyToUserId      = ""
+                    chat.replyToDisplayName = ""
                 })
 
                 area.Keys.onEnterPressed.connect(area.Keys.onReturnPressed)
