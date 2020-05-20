@@ -426,15 +426,19 @@ class MatrixClient(nio.AsyncClient):
             to: Event = \
                 self.models[self.user_id, room_id, "events"][reply_to_event_id]
 
+            source_body = getattr(to.source, "body", "")
+
             content["format"] = "org.matrix.custom.html"
-            content["body"]   = f"> <{to.sender_id}> {to.origin_body}"
+            content["body"]   = f"> <{to.sender_id}> {source_body}"
 
             to_html = REPLY_FALLBACK.format(
                 room_id  = room_id,
                 event_id = reply_to_event_id,
                 user_id  = to.sender_id,
                 content  =
-                    to.origin_formatted_body or html.escape(to.origin_body),
+                    getattr(to.source, "formatted_body", "") or
+                    source_body or
+                    html.escape(to.source.source["type"] if to.source else ""),
 
                 reply_content = to_html,
             )
@@ -457,10 +461,8 @@ class MatrixClient(nio.AsyncClient):
             room_id,
             tx_id,
             event_type,
-            content               = echo_body,
-            mentions              = mentions,
-            origin_body           = content["body"],
-            origin_formatted_body = content.get("formatted_body") or "",
+            content  = echo_body,
+            mentions = mentions,
         )
 
         await self._send_message(room_id, content, tx_id)
@@ -697,7 +699,6 @@ class MatrixClient(nio.AsyncClient):
             transaction_id,
             event_type,
             inline_content   = content["body"],
-            origin_body      = content["body"],
             media_url        = url,
             media_title      = path.name,
             media_width      = content["info"].get("w", 0),
@@ -1436,9 +1437,6 @@ class MatrixClient(nio.AsyncClient):
             target_name   = target_name,
             target_avatar = target_avatar,
             links         = Event.parse_links(content),
-
-            origin_body           = getattr(ev, "body", "") or "",
-            origin_formatted_body = getattr(ev, "formatted_body", "") or "",
 
             fetch_profile =
                 (must_fetch_sender or must_fetch_target)
