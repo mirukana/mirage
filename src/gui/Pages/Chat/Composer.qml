@@ -166,6 +166,14 @@ Rectangle {
             }
 
             Component.onCompleted: {
+                area.Keys.onEscapePressed.connect(ev => {
+                    if (chat.replyToEventId) {
+                        chat.replyToEventId     = ""
+                        chat.replyToUserId      = ""
+                        chat.replyToDisplayName = ""
+                    }
+                })
+
                 area.Keys.onReturnPressed.connect(ev => {
                     ev.accepted = true
 
