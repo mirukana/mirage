@@ -9,7 +9,7 @@ InfoBar {
     icon.svgName: "reply-to"
     label.textFormat: Text.StyledText
     label.text:
-        replyToUserId ?
+        replyToEventId ?
         utils.coloredNameHtml(replyToDisplayName, replyToUserId) :
         ""
 
@@ -17,6 +17,7 @@ InfoBar {
     signal cancel()
 
 
+    property string replyToEventId: ""
     property string replyToUserId: ""
     property string replyToDisplayName: ""
 
@@ -25,9 +26,6 @@ InfoBar {
         backgroundColor: "transparent"
         icon.name: "reply-cancel"
         icon.color: theme.colors.negativeBackground
-        // iconItem.small: true
-        // topPadding: 0
-        // bottomPadding: topPadding
         onClicked: cancel()
 
         Layout.fillHeight: true

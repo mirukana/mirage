@@ -53,6 +53,18 @@ else:
 
 CryptDict = Dict[str, Any]
 
+REPLY_FALLBACK = (
+"<mx-reply>"
+    "<blockquote>"
+        '<a href="https://matrix.to/#/{room_id}/{event_id}">In reply to</a> '
+        '<a href="https://matrix.to/#/{user_id}">{user_id}</a>'
+        "<br>"
+        "{content}"
+    "</blockquote>"
+"</mx-reply>"
+"{reply_content}"
+)
+
 
 class UploadReturn(NamedTuple):
     """Details for an uploaded file."""
@@ -380,7 +392,9 @@ class MatrixClient(nio.AsyncClient):
         return {**self.invited_rooms, **self.rooms}
 
 
-    async def send_text(self, room_id: str, text: str) -> None:
+    async def send_text(
+        self, room_id: str, text: str, reply_to_event_id: Optional[str] = None,
+    ) -> None:
         """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""
 
         from_md = partial(HTML.from_markdown, room_id=room_id)
@@ -389,6 +403,8 @@ class MatrixClient(nio.AsyncClient):
         if text.startswith("//") or text.startswith(r"\/"):
             escape = True
             text   = text[1:]
+
+        content: Dict[str, Any]
 
         if text.startswith("/me ") and not escape:
             event_type = nio.RoomMessageEmote
@@ -406,6 +422,30 @@ class MatrixClient(nio.AsyncClient):
             content["format"]         = "org.matrix.custom.html"
             content["formatted_body"] = to_html
 
+        if reply_to_event_id:
+            to: Event = \
+                self.models[self.user_id, room_id, "events"][reply_to_event_id]
+
+            content["format"] = "org.matrix.custom.html"
+            content["body"]   = f"> <{to.sender_id}> {to.origin_body}"
+
+            to_html = REPLY_FALLBACK.format(
+                room_id  = room_id,
+                event_id = reply_to_event_id,
+                user_id  = to.sender_id,
+                content  =
+                    to.origin_formatted_body or html.escape(to.origin_body),
+
+                reply_content = to_html,
+            )
+
+            echo_body                 = HTML.filter(to_html)
+            content["formatted_body"] = HTML.filter(to_html, outgoing=True)
+
+            content["m.relates_to"] = {
+                "m.in_reply_to": { "event_id": reply_to_event_id },
+            }
+
         # Can't use the standard Matrix transaction IDs; they're only visible
         # to the sender so our other accounts wouldn't be able to replace
         # local echoes by real messages.
@@ -414,7 +454,13 @@ class MatrixClient(nio.AsyncClient):
 
         mentions = HTML.mentions_in_html(echo_body)
         await self._local_echo(
-            room_id, tx_id, event_type, content=echo_body, mentions=mentions,
+            room_id,
+            tx_id,
+            event_type,
+            content               = echo_body,
+            mentions              = mentions,
+            origin_body           = content["body"],
+            origin_formatted_body = content.get("formatted_body") or "",
         )
 
         await self._send_message(room_id, content, tx_id)
@@ -650,7 +696,8 @@ class MatrixClient(nio.AsyncClient):
             room_id,
             transaction_id,
             event_type,
-            inline_content   = path.name,
+            inline_content   = content["body"],
+            origin_body      = content["body"],
             media_url        = url,
             media_title      = path.name,
             media_width      = content["info"].get("w", 0),
@@ -1389,6 +1436,10 @@ class MatrixClient(nio.AsyncClient):
             target_name   = target_name,
             target_avatar = target_avatar,
             links         = Event.parse_links(content),
+
+            origin_body           = getattr(ev, "body", "") or "",
+            origin_formatted_body = getattr(ev, "formatted_body", "") or "",
+
             fetch_profile =
                 (must_fetch_sender or must_fetch_target)
                 if override_fetch_profile is None else

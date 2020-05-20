@@ -69,9 +69,11 @@ HColumnPage {
     }
 
     ReplyBar {
+        replyToEventId: chat.replyToEventId
         replyToUserId: chat.replyToUserId
         replyToDisplayName: chat.replyToDisplayName
         onCancel: {
+            chat.replyToEventId     = ""
             chat.replyToUserId      = ""
             chat.replyToDisplayName = ""
         }

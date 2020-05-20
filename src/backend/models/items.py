@@ -219,11 +219,13 @@ class Event(ModelItem):
     sender_avatar: str                 = field()
     fetch_profile: bool                = False
 
-    content:        str                   = ""
-    inline_content: str                   = ""
-    reason:         str                   = ""
-    links:          List[str]             = field(default_factory=list)
-    mentions:       List[Tuple[str, str]] = field(default_factory=list)
+    origin_body:           str                   = ""
+    origin_formatted_body: str                   = ""
+    content:               str                   = ""
+    inline_content:        str                   = ""
+    reason:                str                   = ""
+    links:                 List[str]             = field(default_factory=list)
+    mentions:              List[Tuple[str, str]] = field(default_factory=list)
 
     type_specifier: TypeSpecifier = TypeSpecifier.Unset
 

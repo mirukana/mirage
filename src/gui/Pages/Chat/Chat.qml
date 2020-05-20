@@ -22,6 +22,7 @@ Item {
     property bool ready: Boolean(userInfo && roomInfo)
     property bool longLoading: false
 
+    property string replyToEventId: ""
     property string replyToUserId: ""
     property string replyToDisplayName: ""
 

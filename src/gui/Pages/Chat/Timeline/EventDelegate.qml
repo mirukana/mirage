@@ -233,6 +233,7 @@ HColumnLayout {
             text: qsTr("Reply")
 
             onTriggered: {
+                chat.replyToEventId     = model.id
                 chat.replyToUserId      = model.sender_id
                 chat.replyToDisplayName = model.sender_name
             }

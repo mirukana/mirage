@@ -188,7 +188,7 @@ Rectangle {
 
                     if (textArea.text === "") { return }
 
-                    const args = [chat.roomId, toSend]
+                    const args = [chat.roomId, toSend, chat.replyToEventId]
                     py.callClientCoro(writingUserId, "send_text", args)
 
                     area.clear()
