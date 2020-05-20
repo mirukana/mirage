@@ -63,6 +63,8 @@ HRowLayout {
         0
 
     readonly property int maxMessageWidth:
+        contentText.includes("<pre>") ?
+        -1 :
         window.settings.maxMessageCharactersPerLine < 0 ?
         -1 :
         Math.ceil(
