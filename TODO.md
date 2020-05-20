@@ -1,7 +1,10 @@
 # TODO
 
+- fix ctrl shift D
+- deselect/unfocus after removing or replying to messages
 - add room members loading indicator
 
+- fix event ID mention regex
 - fix lag when clicking accounts in the AccountBar with a very long room list
 - fix: on startup, if a room's last event is a membership change,
   it won't be visible in timeline no matter what the user config is

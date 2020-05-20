@@ -429,7 +429,7 @@ class MatrixClient(nio.AsyncClient):
             source_body = getattr(to.source, "body", "")
 
             content["format"] = "org.matrix.custom.html"
-            content["body"]   = f"> <{to.sender_id}> {source_body}"
+            content["body"]   = f"> <{to.sender_id}> {source_body}\n{text}"
 
             to_html = REPLY_FALLBACK.format(
                 room_id  = room_id,
