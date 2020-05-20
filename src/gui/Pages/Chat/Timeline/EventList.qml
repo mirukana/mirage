@@ -101,7 +101,11 @@ Rectangle {
         onActivated: {
             let event = eventList.model.get(0)
 
-            if (eventList.currentIndex === -1) {
+            if (eventList.currentIndex !== -1) {
+                event = eventList.model.get(eventList.currentIndex)
+            } else if (eventList.selectedCount) {
+                event = eventList.getSortedChecked.slice(-1)[0]
+            } else {
                 // Find most recent event that wasn't sent by us
                 for (let i = 0; i < eventList.model.count; i++) {
                     const potentialEvent = eventList.model.get(i)
@@ -111,8 +115,6 @@ Rectangle {
                         break
                     }
                 }
-            } else {
-                event = eventList.model.get(eventList.currentIndex)
             }
 
             if (! event) return
