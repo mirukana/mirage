@@ -1,13 +1,12 @@
 # TODO
 
-- Defer retrieving profiles for events from members not anymore in the room 
+- add room members loading indicator
 
 - fix lag when clicking accounts in the AccountBar with a very long room list
-
 - fix: on startup, if a room's last event is a membership change,
   it won't be visible in timeline no matter what the user config is
 - fix: there are rooms without messages on first sync
-- avatar loading performance problem?
+- fix binding loops?
 
 - update docstrings 
 - update flatpak nio required version

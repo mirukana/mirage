@@ -217,6 +217,7 @@ class Event(ModelItem):
     sender_id:     str                 = field()
     sender_name:   str                 = field()
     sender_avatar: str                 = field()
+    fetch_profile: bool                = False
 
     content:        str                   = ""
     inline_content: str                   = ""

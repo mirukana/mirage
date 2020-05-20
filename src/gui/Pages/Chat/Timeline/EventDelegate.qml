@@ -17,6 +17,8 @@ HColumnLayout {
 
     property var hoveredMediaTypeUrl: []
 
+    property var fetchProfilesFuture: null
+
     // Remember timeline goes from newest message at index 0 to oldest
     readonly property var previousModel: eventList.model.get(model.index + 1)
     readonly property var nextModel: eventList.model.get(model.index - 1)
@@ -63,6 +65,13 @@ HColumnLayout {
     // Needed because of eventList's MouseArea which steals the
     // HSelectableLabel's MouseArea hover events
     onCursorShapeChanged: eventList.cursorShape = cursorShape
+
+    Component.onCompleted: if (model.fetch_profile) py.callClientCoro(
+        chat.userId, "get_event_profiles", [chat.roomId, model.id],
+    )
+
+    Component.onDestruction:
+        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
 
 
     function json() {

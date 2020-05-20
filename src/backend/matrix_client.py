@@ -1283,49 +1283,89 @@ class MatrixClient(nio.AsyncClient):
         HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
 
-    async def get_member_name_avatar(
-        self, room_id: str, user_id: str,
-    ) -> Tuple[str, str]:
-        """Return a room member's display name and avatar.
+    async def get_event_profiles(self, room_id: str, event_id: str) -> None:
+        """Fetch from network an event's sender, target and remover's profile.
 
-        If the member isn't found in the room (e.g. they left), their
+        This should be called from QML, see `MatrixClient.get_member_profile`'s
+        docstring.
+        """
+
+        ev: Event = self.models[self.user_id, room_id, "events"][event_id]
+
+        if not ev.fetch_profile:
+            return
+
+        get_profile = partial(
+            self.get_member_profile, room_id, can_fetch_from_network=True,
+        )
+
+        if not ev.sender_name and not ev.sender_avatar:
+            sender_name, sender_avatar, _ = await get_profile(ev.sender_id)
+            ev.sender_name                = sender_name
+            ev.sender_avatar              = sender_avatar
+
+        if ev.target_id and not ev.target_name and not ev.target_avatar:
+            target_name, target_avatar, _ = await get_profile(ev.target_id)
+            ev.target_name                = target_name
+            ev.target_avatar              = target_avatar
+
+        if ev.redacter_id and not ev.redacter_name:
+            redacter_name, _, _ = await get_profile(ev.target_id)
+            ev.redacter_name    = redacter_name
+
+        ev.fetch_profile = False
+
+
+    async def get_member_profile(
+        self, room_id: str, user_id: str, can_fetch_from_network: bool = False,
+    ) -> Tuple[str, str, bool]:
+        """Return a room member's (display_name, avatar, should_lazy_fetch)
+
+        The returned tuple's last element tells whether
+        `MatrixClient.get_event_profiles()` should be called by QML
+        with `can_fetch_from_network = True` when appropriate,
+        e.g. when this message comes in the user's view.
+
+        If the member isn't found in the room (e.g. they left) and
+        `can_fetch_from_network` is `True`, their
         profile is retrieved using `MatrixClient.backend.get_profile()`.
         """
 
         try:
-            item = self.models[self.user_id, room_id, "members"][user_id]
+            member = self.models[self.user_id, room_id, "members"][user_id]
+            return (member.display_name, member.avatar_url, False)
 
-        except KeyError:  # e.g. user is not anymore in the room
+        except KeyError:  # e.g. member is not in the room anymore
+            if not can_fetch_from_network:
+                return ("", "", True)
+
             try:
                 info = await self.backend.get_profile(user_id)
-                return (info.displayname or "", info.avatar_url or "")
-
+                return (info.displayname or "", info.avatar_url or "", False)
             except MatrixError:
-                return ("", "")
-
-        else:
-            return (item.display_name, item.avatar_url)
+                return ("", "", False)
 
 
     async def register_nio_event(
         self,
-        room:     nio.MatrixRoom,
-        ev:       nio.Event,
-        event_id: str = "",
+        room:                   nio.MatrixRoom,
+        ev:                     nio.Event,
+        event_id:               str            = "",
+        override_fetch_profile: Optional[bool] = None,
         **fields,
     ) -> None:
         """Register a `nio.Event` as a `Event` object in our model."""
 
         await self.register_nio_room(room)
 
-        sender_name, sender_avatar = \
-            await self.get_member_name_avatar(room.room_id, ev.sender)
+        sender_name, sender_avatar, must_fetch_sender = \
+            await self.get_member_profile(room.room_id, ev.sender)
 
         target_id = getattr(ev, "state_key", "") or ""
 
-        target_name, target_avatar = \
-            await self.get_member_name_avatar(room.room_id, target_id) \
-            if target_id else ("", "")
+        target_name, target_avatar, must_fetch_target = \
+            await self.get_member_profile(room.room_id, target_id) \
+            if target_id else ("", "", False)
 
         content = fields.get("content", "").strip()
 
@@ -1349,6 +1389,10 @@ class MatrixClient(nio.AsyncClient):
             target_name   = target_name,
             target_avatar = target_avatar,
             links         = Event.parse_links(content),
+            fetch_profile =
+                (must_fetch_sender or must_fetch_target)
+                if override_fetch_profile is None else
+                override_fetch_profile,
             **fields,
         )
 

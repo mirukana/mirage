@@ -196,6 +196,10 @@ class NioCallbacks:
 
 
     async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
+        redacter_name, _, must_fetch_redacter = \
+            await self.client.get_member_profile(room.room_id, ev.redacter) \
+            if ev.redacter else ("", "", False)
+
         await self.client.register_nio_event(
             room,
             ev,
@@ -206,11 +210,9 @@ class NioCallbacks:
                 type(ev), ev.redacter, ev.sender, ev.reason,
             ),
 
-            redacter_id   = ev.redacter or "",
-            redacter_name =
-                (await self.client.get_member_name_avatar(
-                    room.room_id, ev.redacter,
-                ))[0] if ev.redacter else "",
+            redacter_id            = ev.redacter or "",
+            redacter_name          = redacter_name,
+            override_fetch_profile = True,
         )
 
 
