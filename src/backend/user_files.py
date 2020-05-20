@@ -321,6 +321,7 @@ class UISettings(JSONDataFile):
                 "toggleSelectMessage":             ["Ctrl+Space"],
                 "selectMessagesUntilHere":         ["Ctrl+Shift+Space"],
                 "removeFocusedOrSelectedMessages": ["Ctrl+R", "Alt+Del"],
+                "replyToFocusedOrLastMessage":     ["Ctrl+Q"],  # Q for Quote
                 "debugFocusedMessage":             ["Ctrl+Shift+D"],
                 "clearRoomMessages":               ["Ctrl+L"],
 

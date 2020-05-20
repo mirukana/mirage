@@ -97,6 +97,34 @@ Rectangle {
     }
 
     HShortcut {
+        sequences: window.settings.keys.replyToFocusedOrLastMessage
+        onActivated: {
+            let event = eventList.model.get(0)
+
+            if (eventList.currentIndex === -1) {
+                // Find most recent event that wasn't sent by us
+                for (let i = 0; i < eventList.model.count; i++) {
+                    const potentialEvent = eventList.model.get(i)
+
+                    if (potentialEvent.sender_id !== chat.userId) {
+                        event = potentialEvent
+                        break
+                    }
+                }
+            } else {
+                event = eventList.model.get(eventList.currentIndex)
+            }
+
+            if (! event) return
+
+            chat.replyToEventId     = event.id
+            chat.replyToUserId      = event.sender_id
+            chat.replyToDisplayName = event.sender_name
+        }
+    }
+
+
+    HShortcut {
         active: eventList.currentItem
         sequences: window.settings.keys.debugFocusedMessage
         onActivated:
