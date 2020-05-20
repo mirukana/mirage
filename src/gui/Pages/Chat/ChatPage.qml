@@ -64,6 +64,18 @@ HColumnPage {
 
     TypingMembersBar {
         typingMembers: JSON.parse(chat.roomInfo.typing_members)
+
+        Layout.fillWidth: true
+    }
+
+    ReplyBar {
+        replyToUserId: chat.replyToUserId
+        replyToDisplayName: chat.replyToDisplayName
+        onCancel: {
+            chat.replyToUserId      = ""
+            chat.replyToDisplayName = ""
+        }
+
         Layout.fillWidth: true
     }
 

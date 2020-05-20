@@ -228,6 +228,16 @@ HColumnLayout {
             }
         }
 
+        HMenuItem {
+            icon.name: "reply-to"
+            text: qsTr("Reply")
+
+            onTriggered: {
+                chat.replyToUserId      = model.sender_id
+                chat.replyToDisplayName = model.sender_name
+            }
+        }
+
         HMenuItemPopupSpawner {
             icon.name: "remove-message"
             text: qsTr("Remove")

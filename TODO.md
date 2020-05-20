@@ -88,7 +88,7 @@
 - Animate `DayBreak` apparition
 
 - Device settings
-- Replies
+- Proparly formatted rich replies
 - Messages editing
 - Code highlighting
 - Adapt shortcuts flicking speed to font size 

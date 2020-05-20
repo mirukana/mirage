@@ -11,12 +11,14 @@ Rectangle {
 
     readonly property alias icon: icon
     readonly property alias label: label
+    default property alias rowLayoutData: rowLayout.data
 
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
     HRowLayout {
         id: rowLayout
+        width: parent.width
         spacing: theme.spacing
 
         HIcon {

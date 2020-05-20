@@ -22,6 +22,9 @@ Item {
     property bool ready: Boolean(userInfo && roomInfo)
     property bool longLoading: false
 
+    property string replyToUserId: ""
+    property string replyToDisplayName: ""
+
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
 
