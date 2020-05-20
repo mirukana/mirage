@@ -237,7 +237,7 @@ class UISettings(JSONDataFile):
             "collapseSidePanesUnderWindowWidth": 400,
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,
-            "hideUnknownEvents": False,
+            "hideUnknownEvents": True,
             "maxMessageCharactersPerLine": 65,
             "ownMessagesOnLeftAboveWidth": 895,
             "theme": "Midnight.qpl",
