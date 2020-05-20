@@ -63,6 +63,7 @@ HColumnPage {
     }
 
     TypingMembersBar {
+        typingMembers: JSON.parse(chat.roomInfo.typing_members)
         Layout.fillWidth: true
     }
 
