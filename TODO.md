@@ -1,6 +1,5 @@
 # TODO
 
-- fix ctrl shift D
 - deselect/unfocus after removing or replying to messages
 - add room members loading indicator
 

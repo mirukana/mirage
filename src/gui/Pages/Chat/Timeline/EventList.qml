@@ -129,8 +129,9 @@ Rectangle {
     HShortcut {
         active: eventList.currentItem
         sequences: window.settings.keys.debugFocusedMessage
-        onActivated:
-            eventList.currentItem.eventContent.debugConsoleLoader.toggle()
+        onActivated: mainUI.debugConsole.toggle(
+            eventList.currentItem.eventContent, "t.parent.json()",
+        )
     }
 
     HShortcut {
