@@ -1,5 +1,7 @@
 # TODO
 
+- highlight messages being responded to
+- highlight messages with mention
 - add room members loading indicator
 
 - fix main pane appearance when collapsed

@@ -1,5 +1,4 @@
 multidict       == 4.5.2
-uvloop          == 0.14.0
 
 pytest-runner
 setuptools-scm

@@ -259,15 +259,11 @@ clone the repository, install the python dependencies, compile and install:
 git clone --recursive https://github.com/mirukana/mirage
 cd mirage
 pip3 install --user -Ur requirements.txt
-pip3 install --user -U uvloop==0.14.0
 
 qmake mirage.pro
 make
 sudo make install
 ```
-
-`uvloop` brings performance improvements, but can be skipped 
-if you have trouble installing it.
 
 If everything went fine, run `mirage` to start.
 

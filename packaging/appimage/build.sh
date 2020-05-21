@@ -131,7 +131,7 @@ get_app_and_pip_dependencies() {
 
     cd mirage
     pip3 install --user -Ur requirements.txt
-    pip3 install --user -U uvloop==0.14.0 certifi
+    pip3 install --user -U certifi
 }
 
 

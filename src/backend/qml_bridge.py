@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-"""Install `uvloop` if possible and provide a `QMLBridge`."""
-
 # WARNING: make sure to not top-level import the media_cache module here,
 # directly or indirectly via another module import (e.g. backend).
 # See https://stackoverflow.com/a/55918049
@@ -17,13 +15,6 @@ from threading import Thread
 from typing import Coroutine, Sequence
 
 from .pyotherside_events import CoroutineDone, LoopException
-
-try:
-    import uvloop
-except ModuleNotFoundError:
-    log.warning("uvloop module not found, using slower default asyncio loop")
-else:
-    uvloop.install()
 
 
 class QMLBridge:

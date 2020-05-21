@@ -656,15 +656,6 @@ modules:
   - type: file
     url: https://files.pythonhosted.org/packages/96/da/2ebf30d2fdf0f4dc949b4935e408aaa9cca948963e55ea3c99730b1f74c0/unpaddedbase64-1.1.0-py2.py3-none-any.whl
     sha256: 81cb4eaaa28cc6a282dd3f2c3855eaa1fbaafa736b5ee64df69889e20540a339
-- name: python3-uvloop
-  buildsystem: simple
-  build-commands:
-  - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-    uvloop==0.14.0
-  sources:
-  - type: file
-    url: https://files.pythonhosted.org/packages/84/2e/462e7a25b787d2b40cf6c9864a9e702f358349fc9cfb77e83c38acb73048/uvloop-0.14.0.tar.gz
-    sha256: 123ac9c0c7dd71464f58f1b4ee0bbd81285d96cdda8bc3519281b8973e3a461e
 - name: python3-webencodings
   buildsystem: simple
   build-commands:
