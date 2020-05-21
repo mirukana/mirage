@@ -441,6 +441,7 @@ class NioCallbacks:
 
     async def onUnknownEvent(self, room, ev) -> None:
         if self.client.backend.ui_settings["hideUnknownEvents"]:
+            await self.client.register_nio_room(room)
             return
 
         co = f"%1 sent an unsupported <b>{ev.type}</b> event"
