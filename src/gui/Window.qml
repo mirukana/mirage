@@ -42,7 +42,7 @@ ApplicationWindow {
 
     property var theme: null
 
-    property var hideErrorTypes: new Set()
+    property var hideErrorTypes: new Set(["socket.gaierror"])
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
