@@ -118,7 +118,7 @@ ListView {
     }
 
 
-    HTrackpadFix {
+    HKineticScrollingDisabler {
         id: mouseArea
         anchors.fill: parent
     }

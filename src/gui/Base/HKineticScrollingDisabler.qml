@@ -2,10 +2,10 @@
 
 import QtQuick 2.12
 
-// MouseArea component to fix scroll on trackpad
+// MouseArea component to disable kinetic scrolling
 MouseArea {
     id: mouseArea
-    enabled: window.settings.useTrackpadFix
+    enabled: ! window.settings.enableKineticScrolling
     propagateComposedEvents: true
     acceptedButtons: Qt.NoButton
 
@@ -21,7 +21,6 @@ MouseArea {
 
 
     property Flickable flickable: parent
-    property int scrollFactor: 5
 
     // Used to get default flickDeceleration value
     readonly property Flickable dummy: Flickable {}
@@ -33,11 +32,8 @@ MouseArea {
         // low resolution trackpads.
         // When higher pixelDelta, more scroll will be applied
         const pixelDelta =
-            wheel.pixelDelta.y * scrollFactor ||
-            wheel.angleDelta.y /
-                24 *
-                Qt.styleHints.wheelScrollLines *
-                scrollFactor
+            wheel.pixelDelta.y ||
+            wheel.angleDelta.y / 8 * Qt.styleHints.wheelScrollLines
 
         // Return current position if there was not any movement
         if (flickable.contentHeight < flickable.height || !pixelDelta)
@@ -61,12 +57,12 @@ MouseArea {
     Binding {
         target: flickable
         property: "maximumFlickVelocity"
-        value: mouseArea.enabled ? scrollFactor : 4000.0
+        value: mouseArea.enabled ? 0 : 4000.0
     }
 
     Binding {
         target: flickable
         property: "flickDeceleration"
-        value: mouseArea.enabled ? scrollFactor * 3 : dummy.flickDeceleration
+        value: mouseArea.enabled ? 0 : dummy.flickDeceleration
     }
 }

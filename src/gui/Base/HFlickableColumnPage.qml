@@ -27,7 +27,7 @@ HPage {
         }
     }
 
-    HTrackpadFix {
+    HKineticScrollingDisabler {
         flickable: flickable
         anchors.fill: flickable
     }
