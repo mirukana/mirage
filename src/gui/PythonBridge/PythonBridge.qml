@@ -26,6 +26,7 @@ Python {
 
         Globals.pendingCoroutines[uuid] = {future, onSuccess, onError}
         Globals.pendingCoroutinesChanged()
+        // if (name  === "models.ensure_exists_from_qml") { print("r");  return}
 
         call("BRIDGE.call_backend_coro", [name, uuid, args], pyFuture => {
             future.privates.pythonFuture = pyFuture

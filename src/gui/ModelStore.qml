@@ -6,6 +6,11 @@ import "PythonBridge"
 
 QtObject {
     property QtObject privates: QtObject {
+        onEnsureModelExists:
+            py.callCoro("models.ensure_exists_from_qml", [modelId])
+
+        signal ensureModelExists(var modelId)
+
         readonly property var store: ({})
 
         readonly property PythonBridge py: PythonBridge {}
@@ -39,7 +44,8 @@ QtObject {
         if (modelId.length === 1) modelId = modelId[0]
 
         if (! privates.store[modelId]) {
-            privates.py.callCoro("models.ensure_exists_from_qml", [modelId])
+            // Using a signal somehow avoids a binding loop
+            privates.ensureModelExists(modelId)
 
             privates.store[modelId] =
                 privates.model.createObject(this, {modelId})

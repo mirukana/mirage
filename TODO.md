@@ -8,7 +8,6 @@
 - fix: on startup, if a room's last event is a membership change,
   it won't be visible in timeline no matter what the user config is
 - fix: there are rooms without messages on first sync
-- fix binding loops?
 
 - update docstrings 
 - update flatpak nio required version
