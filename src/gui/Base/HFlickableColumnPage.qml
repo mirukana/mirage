@@ -26,4 +26,9 @@ HPage {
             height: flickable.height
         }
     }
+
+    HKineticScrollingDisabler {
+        flickable: flickable
+        anchors.fill: flickable
+    }
 }

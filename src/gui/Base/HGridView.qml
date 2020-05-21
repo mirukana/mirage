@@ -5,7 +5,6 @@ import QtQuick.Controls 2.12
 
 GridView {
     id: gridView
-    interactive: allowDragging
     currentIndex: -1
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -23,7 +22,7 @@ GridView {
     }
 
     ScrollBar.vertical: ScrollBar {
-        visible: gridView.interactive || ! gridView.allowDragging
+        visible: gridView.interactive
     }
 
     // property bool debug: false
@@ -59,7 +58,6 @@ GridView {
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
 
 
-    property bool allowDragging: true
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
@@ -119,22 +117,8 @@ GridView {
     }
 
 
-    Connections {
-        target: gridView
-        enabled: ! gridView.allowDragging
-        // interactive gets temporarily set to true below to allow wheel scroll
-        onDraggingChanged: gridView.interactive = false
-    }
-
-    MouseArea {
+    HKineticScrollingDisabler {
         id: mouseArea
         anchors.fill: parent
-        enabled: ! parent.allowDragging || cursorShape !== Qt.ArrowCursor
-        acceptedButtons: Qt.NoButton
-        onWheel: {
-            // Allow wheel usage, will be back to false on any drag attempt
-            parent.interactive = true
-            wheel.accepted = false
-        }
     }
 }
