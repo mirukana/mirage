@@ -110,10 +110,7 @@ Image {
 
         sourceComponent: HCircleProgressBar {
             id: progressBar
-            value: image.progress
-            text: Math.round(value * 100) + "%"
-
-            Behavior on value { HNumberAnimation { factor: 2 } }
+            progress: image.progress
         }
     }
 

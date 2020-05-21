@@ -16,8 +16,6 @@
 #include <unistd.h>
 #endif
 
-#include "../submodules/RadialBarDemo/radialbar.h"
-
 #include "utils.h"
 #include "clipboard.h"
 
@@ -148,12 +146,6 @@ int main(int argc, char *argv[]) {
             return new Utils();
         }
     );
-
-    // Register our custom visual items that will be importable from QML, e.g.
-    //     import RadialBar 1.0
-    //     ...
-    //     RadialBar { ... }
-    qmlRegisterType<RadialBar>("RadialBar", 1, 0, "RadialBar");
 
     // Create the QML root component by loading its file from the Qt Resource
     // System or local file system if not possible.

@@ -13,10 +13,8 @@ QRC_FILE = $$BUILD_DIR/resources.qrc
 
 RESOURCES += $$QRC_FILE
 HEADERS   += src/utils.h src/clipboard.h \
-             submodules/RadialBarDemo/radialbar.h \
              submodules/hsluv-c/src/hsluv.h
 SOURCES   += src/main.cpp src/utils.cpp src/clipboard.cpp \
-             submodules/RadialBarDemo/radialbar.cpp \
              submodules/hsluv-c/src/hsluv.c
 TARGET     = mirage
 

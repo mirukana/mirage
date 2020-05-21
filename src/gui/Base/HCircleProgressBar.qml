@@ -1,50 +1,76 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import RadialBar 1.0
+import QtQuick.Shapes 1.12
 
-RadialBar {
-    id: bar
+
+Item {
     implicitWidth: 96 * (theme ? theme.uiScale : 1)
     implicitHeight: implicitWidth
-    foregroundColor: theme.controls.circleProgressBar.background
-    progressColor: theme.controls.circleProgressBar.foreground
-    dialWidth: theme.controls.circleProgressBar.thickness
-    startAngle: 0
-    spanAngle: 360
 
-    from: 0
-    to: 1
-    value: 0
-
-    showText: true
-    textFont.pixelSize: theme ? theme.fontSize.big : 22
-    textColor: theme ? theme.controls.circleProgressBar.text : "white"
+    layer.enabled: true
+    layer.samples: 4
+    layer.smooth: true
 
 
-    property alias from: bar.minValue
-    property alias to: bar.maxValue
-    property bool indeterminate: false
+    property real progress: 0  // 0-1
 
-    property real indeterminateSpan:
-        theme.controls.circleProgressBar.indeterminateSpan
+    readonly property alias baseCircle: baseCircle
+    readonly property alias progressCircle: progressCircle
+    readonly property alias label: label
 
 
-    Binding on value {
-        value: bar.to * bar.indeterminateSpan
-        when: bar.indeterminate
+    HLabel {
+        id: label
+        anchors.centerIn: parent
+        text: progressNumber + "%"
+        font.pixelSize: theme ? theme.fontSize.big : 22
+
+        property int progressNumber: Math.floor(progress * 100)
+
+        Behavior on progressNumber { HNumberAnimation { factor: 2 } }
     }
 
-    Binding on showText {
-        value: false
-        when: bar.indeterminate
-    }
+    Shape {
+        id: shape
+        anchors.fill: parent
+        asynchronous: true
 
-    HNumberAnimation on rotation {
-        running: bar.indeterminate
-        from: 0
-        to: 360
-        loops: Animation.Infinite
-        duration: theme ? (theme.animationDuration * 6) : 600
+        ShapePath {
+            id: baseCircle
+            fillColor: "transparent"
+            strokeColor: theme.controls.circleProgressBar.background
+            strokeWidth: theme.controls.circleProgressBar.thickness
+            capStyle: ShapePath.RoundCap
+            startX: shape.width / 2
+            startY: strokeWidth
+
+            PathAngleArc {
+                centerX: shape.width / 2
+                centerY: shape.height / 2
+                radiusX: shape.width / 2 - baseCircle.strokeWidth
+                radiusY: shape.height / 2 - baseCircle.strokeWidth
+                sweepAngle: 360
+            }
+        }
+
+        ShapePath {
+            id: progressCircle
+            fillColor: baseCircle.fillColor
+            strokeColor: theme.controls.circleProgressBar.foreground
+            strokeWidth: baseCircle.strokeWidth
+
+            PathAngleArc {
+                centerX: shape.width / 2
+                centerY: shape.height / 2
+                radiusX: shape.width / 2 - progressCircle.strokeWidth
+                radiusY: shape.height / 2 - progressCircle.strokeWidth
+                startAngle: 270
+                sweepAngle: progress * 360
+
+                Behavior on startAngle { HNumberAnimation {} }
+                Behavior on sweepAngle { HNumberAnimation {} }
+            }
+        }
     }
 }
