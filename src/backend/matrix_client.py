@@ -282,17 +282,17 @@ class MatrixClient(nio.AsyncClient):
             if future.cancelled():  # Account logged out
                 return
 
-            exception = future.exception()
-
-            if exception:
-                log.warn("On %s client startup: %r", self.user_id, exception)
+            try:
+                resp = future.result()
+            except Exception:
+                trace = traceback.format_exc().rstrip()
+                log.warn("On %s profile retrieval: %s", self.user_id, trace)
                 self.profile_task = asyncio.ensure_future(
                     self.backend.get_profile(self.user_id),
                 )
                 self.profile_task.add_done_callback(on_profile_response)
                 return
 
-            resp                    = future.result()
             account                 = self.models["accounts"][self.user_id]
             account.profile_updated = datetime.now()
             account.display_name    = resp.displayname or ""
@@ -304,20 +304,21 @@ class MatrixClient(nio.AsyncClient):
             if future.cancelled():  # Account logged out
                 return
 
-            exception = future.exception()
+            account = self.models["accounts"][self.user_id]
 
-            if exception:
-                log.warn("On %s client startup: %r", self.user_id, exception)
+            try:
+                account.max_upload_size = future.result()
+            except Exception:
+                trace = traceback.format_exc().rstrip()
+                log.warn(
+                    "On %s server config retrieval: %s", self.user_id, trace,
+                )
                 self.server_config_task = asyncio.ensure_future(
                     self.get_server_config(),
                 )
                 self.server_config_task.add_done_callback(
                     on_server_config_response,
                 )
-                return
-
-            account                 = self.models["accounts"][self.user_id]
-            account.max_upload_size = future.result()
 
         self.profile_task = asyncio.ensure_future(
             self.backend.get_profile(self.user_id),
