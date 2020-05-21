@@ -4,7 +4,6 @@
 - highlight messages with mention
 - add room members loading indicator
 
-- fix media_mime
 - fix lag when clicking accounts in the AccountBar with a very long room list
 - fix: on startup, if a room's last event is a membership change,
   it won't be visible in timeline no matter what the user config is

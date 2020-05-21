@@ -149,7 +149,7 @@ class NioCallbacks:
             media_height     = info.get("h") or 0,
             media_duration   = info.get("duration") or 0,
             media_size       = info.get("size") or 0,
-            media_mime       = info.get("mimetype") or 0,
+            media_mime       = info.get("mimetype") or "",
             media_crypt_dict = media_crypt_dict,
 
             thumbnail_url =
