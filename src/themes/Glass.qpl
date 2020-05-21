@@ -260,6 +260,7 @@ ui:
 
 
 mainPane:
+    int minimumSize: 144 * uiScale
     color background: "transparent"
 
     topBar:

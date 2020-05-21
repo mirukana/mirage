@@ -8,7 +8,7 @@ HDrawer {
     id: mainPane
     saveName: "mainPane"
     background: Rectangle { color: theme.mainPane.background }
-    minimumSize: theme.controls.avatar.size + theme.spacing * 2
+    minimumSize: theme.mainPane.minimumSize
 
     readonly property alias accountBar: accountBar
     readonly property alias roomList: roomList

@@ -234,7 +234,7 @@ class UISettings(JSONDataFile):
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
             "clearMemberFilterOnEscape": True,
-            "collapseSidePanesUnderWindowWidth": 400,
+            "collapseSidePanesUnderWindowWidth": 450,
             "enableKineticScrolling": True,
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,

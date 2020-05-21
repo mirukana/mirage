@@ -54,7 +54,7 @@ HDrawer {
         `Javascript debugging console
 
         Useful variables:
-            window, theme, settings, utils, mainUI, pageLoader
+            window, theme, settings, utils, mainPane, mainUI, pageLoader
             py    Python interpreter
             this  The console itself
             t     Target item to debug for which this console was opened
