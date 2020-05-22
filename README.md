@@ -38,6 +38,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - Create, join, leave and forget rooms
 - Send, accept and refuse invites
 - Kick and ban users
+- Rooms with unread messages or mentions for your user are highlighted
 
 ### Messages
 
@@ -52,6 +53,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - Client-side Matrix & HTTP URL **image previews**, including animated GIF 
 - User ID, display names, room ID and room aliases **mentions**
 - Individual and mass **message removal**
+- Sending **rich replies**
 
 ### Presence
 
