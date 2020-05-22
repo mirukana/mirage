@@ -170,13 +170,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance**:
   - Stop rendering and keeping in RAM rooms that aren't currently visible in
     the left pane.  
-    This fixes the massive memory usage that occured with hundreds of rooms and
-    their avatar images loaded all at once.
+    This fixes the massive memory usage that occurred with hundreds of rooms
+    and their avatar images loaded all at once.
 
   - Room elements in the left pane will no longer be reloaded every time 
     a list movement happens (e.g. a room is bumped to the top due to a new 
     message).  
-    This also lets the movement animation correctly play insteas of being
+    This also lets the movement animation correctly play instead of being
     skipped.
 
 - Don't show a popup when pressing the redact message keybind if that
