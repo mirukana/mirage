@@ -181,6 +181,12 @@ class Model(MutableMapping):
 
     @contextmanager
     def batch_remove(self):
+        """Context manager that accumulates item removal events.
+
+        When the context manager exits, sequences of removed items are grouped
+        and one `ModelItemDeleted` pyotherside event is fired per sequence.
+        """
+
         try:
             self._active_batch_remove_indice = []
             yield None

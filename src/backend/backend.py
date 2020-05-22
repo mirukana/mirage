@@ -45,7 +45,7 @@ class Backend:
             synchronized between the Python backend and the QML UI.
             The models should only ever be modified from the backend.
 
-            If a non-existent key is accessed, it is creating with an
+            If a non-existent key is accessed, it is created and an
             associated `Model` and returned.
 
             The mapping keys are the `Model`'s synchronization ID,
@@ -65,6 +65,17 @@ class Backend:
 
             - `("<user_id>", "<room_id>", "events")`: state events and messages
               in the room `room_id` that our account `user_id` is part of.
+
+            Special models:
+
+            - `"all_rooms"`: See `models.special_models.AllRooms` docstring
+
+            - `"matching_accounts"`
+              See `models.special_models.MatchingAccounts` docstring
+
+            - `("<user_id>", "<room_id>", "filtered_members")`:
+              See `models.special_models.FilteredMembers` docstring
+
 
         clients: A `{user_id: MatrixClient}` dict for the logged-in clients
             we managed. Every client is logged to one matrix account.
@@ -321,6 +332,11 @@ class Backend:
 
 
     async def set_substring_filter(self, model_id: SyncId, value: str) -> None:
+        """Set a FieldSubstringFilter model's filter property.
+
+        This should only be called from QML.
+        """
+
         if isinstance(model_id, list):  # QML can't pass tuples
             model_id = tuple(model_id)
 
@@ -333,4 +349,8 @@ class Backend:
 
 
     async def set_account_collapse(self, user_id: str, collapse: bool) -> None:
+        """Call `set_account_collapse()` on the `all_rooms` model.
+
+        This should only be called from QML.
+        """
         self.models["all_rooms"].set_account_collapse(user_id, collapse)

@@ -1,5 +1,8 @@
 # TODO
 
+- pdb
+- remove await_model_item
+- uplaod/download use kwargs
 - highlight messages being responded to
 - highlight messages with mention
 - add room members loading indicator
@@ -9,7 +12,6 @@
   it won't be visible in timeline no matter what the user config is
 - fix: there are rooms without messages on first sync
 
-- update docstrings 
 - update flatpak nio required version
 - final test
 

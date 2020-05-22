@@ -22,7 +22,11 @@ class ModelStore(UserDict):
 
 
     def __missing__(self, key: SyncId) -> Model:
-        """When accessing a non-existent model, create and return it."""
+        """When accessing a non-existent model, create and return it.
+
+        Special models rather than a generic `Model` object may be returned
+        depending on the passed key.
+        """
 
         is_tuple = isinstance(key, tuple)
 
@@ -51,6 +55,8 @@ class ModelStore(UserDict):
 
 
     async def ensure_exists_from_qml(self, sync_id: SyncId) -> None:
+        """Create model if it doesn't exist. Should only be called by QML."""
+
         if isinstance(sync_id, list):  # QML can't pass tuples
             sync_id = tuple(sync_id)
 

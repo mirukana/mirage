@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class ModelFilter(ModelProxy):
+    """Filter data from one or more source models."""
+
     def __init__(self, sync_id: SyncId) -> None:
         self.filtered_out: Dict[Tuple[Optional[SyncId], str], "ModelItem"] = {}
         self.items_changed_callbacks: List[Callable[[], None]] = []
@@ -20,6 +22,7 @@ class ModelFilter(ModelProxy):
 
 
     def accept_item(self, item: "ModelItem") -> bool:
+        """Return whether an item should be present or filtered out."""
         return True
 
 
@@ -72,6 +75,8 @@ class ModelFilter(ModelProxy):
         self,
         only_if: Optional[Callable[["ModelItem"], bool]] = None,
     ) -> None:
+        """Recheck every item to decide if they should be filtered out."""
+
         with self._write_lock:
             take_out   = []
             bring_back = []
@@ -103,6 +108,17 @@ class ModelFilter(ModelProxy):
 
 
 class FieldSubstringFilter(ModelFilter):
+    """Filter source models based on if their fields matches a string.
+
+    This is used for filter fields in QML: the user enters some text and only
+    items with a certain field (typically `display_name`) that contain the
+    words of the text (can be partial, e.g. "red" matches "red" or "tired")
+    will be shown.
+
+    Matching is done using "smart case": insensitive if the filter text is
+    all lowercase, sensitive otherwise.
+    """
+
     def __init__(self, sync_id: SyncId, fields: Collection[str]) -> None:
         self.fields:  Collection[str] = fields
         self._filter: str             = ""

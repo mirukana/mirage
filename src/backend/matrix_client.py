@@ -1242,7 +1242,7 @@ class MatrixClient(nio.AsyncClient):
         left:                   bool = False,
         force_register_members: bool = False,
     ) -> None:
-        """Register a `nio.MatrixRoom` as a `Room` object in our model."""
+        """Register/update a `nio.MatrixRoom` as a `models.items.Room`."""
 
         # Add room
         inviter        = getattr(room, "inviter", "") or ""
@@ -1310,6 +1310,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
+        """Register/update a room member into our models."""
         member = room.users[user_id]
 
         self.models[self.user_id, room.room_id, "members"][user_id] = Member(
@@ -1328,6 +1329,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def remove_member(self, room: nio.MatrixRoom, user_id: str) -> None:
+        """Remove a room member from our models."""
         self.models[self.user_id, room.room_id, "members"].pop(user_id, None)
         HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
@@ -1403,7 +1405,7 @@ class MatrixClient(nio.AsyncClient):
         override_fetch_profile: Optional[bool] = None,
         **fields,
     ) -> None:
-        """Register a `nio.Event` as a `Event` object in our model."""
+        """Register/update a `nio.Event` as a `models.items.Event` object."""
 
         await self.register_nio_room(room)
 

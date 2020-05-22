@@ -10,6 +10,8 @@ from .model_item import ModelItem
 
 
 class AllRooms(FieldSubstringFilter):
+    """Flat filtered list of all accounts and their rooms."""
+
     def __init__(self, accounts: Model) -> None:
         super().__init__(sync_id="all_rooms", fields=("display_name",))
         self.items_changed_callbacks.append(self.refilter_accounts)
@@ -20,6 +22,8 @@ class AllRooms(FieldSubstringFilter):
 
 
     def set_account_collapse(self, user_id: str, collapsed: bool) -> None:
+        """Set whether the rooms for an account should be filtered out."""
+
         def only_if(item):
             return item.type is Room and item.for_account == user_id
 
@@ -74,6 +78,10 @@ class AllRooms(FieldSubstringFilter):
 
 
 class MatchingAccounts(ModelFilter):
+    """List of our accounts in `AllRooms` with at least one matching room if
+    a `filter` is set, else list of all accounts.
+    """
+
     def __init__(self, all_rooms: AllRooms) -> None:
         self.all_rooms = all_rooms
         self.all_rooms.items_changed_callbacks.append(self.refilter)
@@ -96,6 +104,8 @@ class MatchingAccounts(ModelFilter):
 
 
 class FilteredMembers(FieldSubstringFilter):
+    """Filtered list of members for a room."""
+
     def __init__(self, user_id: str, room_id: str) -> None:
         self.user_id = user_id
         self.room_id = room_id
