@@ -1,18 +1,5 @@
 # TODO
 
-- timer fix thing
-- highlight messages being responded to
-- highlight messages with mention
-- add room members loading indicator
-
-- fix lag when clicking accounts in the AccountBar with a very long room list
-- fix: on startup, if a room's last event is a membership change,
-  it won't be visible in timeline no matter what the user config is
-- fix: there are rooms without messages on first sync
-
-- update flatpak nio required version
-- final test
-
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`
@@ -27,6 +14,13 @@
   be more declarative
 
 ## Issues
+
+- Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
+  laggy with hundreds of rooms in between
+- On startup, if a room's last event is a membership change,
+  it won't be visible in timeline no matter what the user config is
+- There are rooms without messages to show as last message subtitle after
+  initial sync
 
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
@@ -50,6 +44,10 @@
   (no real solution possible?)
 
 ## Interface
+
+- When responding to a message, highlight that message in the timeline
+- Highlight timeline messages that mentions our user
+- Add room members loading indicator, similar to the "Loading past messages..."
 
 - Long-press-drag to select multiple messages on touch
 - Drag to select multiple messages on non-touch
@@ -199,7 +197,9 @@
 
 ## Distribution and dependencies
 
-- Add AppImage metadata file
+- Remove unused Python dependencies in AppImage & Flatpak (attrs, uvloop)
+- Use Qt 5.14 for AppImage & Flatpak
+- Add AppImage & Flatpak metadata file
 - Pillow now bundle image libraries?
   Update AppImage building script and INSTALL.md
 - Publish on Flathub and AppImageHub
