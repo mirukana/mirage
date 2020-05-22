@@ -1,7 +1,6 @@
 # TODO
 
 - pdb
-- remove await_model_item
 - uplaod/download use kwargs
 - highlight messages being responded to
 - highlight messages with mention

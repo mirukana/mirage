@@ -308,29 +308,6 @@ class Backend:
         return (settings, ui_state, history, theme)
 
 
-    async def await_model_item(
-        self, model_id: SyncId, item_id: Any,
-    ) -> Dict[str, Any]:
-
-        if isinstance(model_id, list):  # when called from QML
-            model_id = tuple(model_id)
-
-        failures = 0
-
-        while True:
-            try:
-                return self.models[model_id][item_id].serialized
-            except KeyError:
-                if failures and failures % 300 == 0:
-                    log.warn(
-                        "Item %r not found in model %r after %ds",
-                        item_id, model_id, failures / 10,
-                    )
-
-                await asyncio.sleep(0.1)
-                failures += 1
-
-
     async def set_substring_filter(self, model_id: SyncId, value: str) -> None:
         """Set a FieldSubstringFilter model's filter property.
 
