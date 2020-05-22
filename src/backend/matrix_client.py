@@ -1115,12 +1115,12 @@ class MatrixClient(nio.AsyncClient):
         mime = mime or await utils.guess_mime(data_provider(0, 0))
 
         response, decryption_dict = await super().upload(
-            data_provider,
-            "application/octet-stream" if encrypt else mime,
-            filename,
-            encrypt,
-            monitor,
-            filesize,
+            data_provider = data_provider,
+            content_type  = "application/octet-stream" if encrypt else mime,
+            filename      = filename,
+            encrypt       = encrypt,
+            monitor       = monitor,
+            filesize      = filesize,
         )
 
         return UploadReturn(response.content_uri, mime, decryption_dict)

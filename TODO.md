@@ -1,6 +1,5 @@
 # TODO
 
-- uplaod/download use kwargs
 - highlight messages being responded to
 - highlight messages with mention
 - add room members loading indicator
