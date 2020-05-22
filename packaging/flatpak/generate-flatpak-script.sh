@@ -27,4 +27,4 @@ flatpak-env/bin/python flatpak-pip-generator --output flatpak-pip \
                        --requirements-file=flatpak-requirements.txt
 
 flatpak-env/bin/pip install PyYAML
-python collector.py
+python3 collector.py
