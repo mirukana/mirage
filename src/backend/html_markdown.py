@@ -113,6 +113,7 @@ class HTMLProcessor:
         "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
         "p", "ul", "ol", "li", "hr", "br",
         "table", "thead", "tbody", "tr", "th", "td", "pre",
+        "mx-reply",
     }
 
     opaque_id         = r"[a-zA-Z\d._-]+?"
@@ -289,7 +290,6 @@ class HTMLProcessor:
         """Return an html_sanitizer configuration."""
 
         # https://matrix.org/docs/spec/client_server/latest#m-room-message-msgtypes
-        # TODO: mx-reply and the new hidden thing
 
         inline_tags = self.inline_tags
         all_tags    = inline_tags | self.block_tags
