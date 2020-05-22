@@ -1,6 +1,5 @@
 # TODO
 
-- `i <= 1000` resp
 - highlight messages being responded to
 - highlight messages with mention
 - add room members loading indicator

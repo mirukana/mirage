@@ -107,7 +107,7 @@ Rectangle {
                 event = eventList.getSortedChecked.slice(-1)[0]
             } else {
                 // Find most recent event that wasn't sent by us
-                for (let i = 0; i < eventList.model.count; i++) {
+                for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
                     const potentialEvent = eventList.model.get(i)
 
                     if (potentialEvent.sender_id !== chat.userId) {
