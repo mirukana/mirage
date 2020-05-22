@@ -189,6 +189,7 @@ sudo apt install qt5-default qt5-qmake qt5-image-formats-plugins \
                  qml-module-qtquick2 qml-module-qtquick-window2 \
                  qml-module-qtquick-layouts qml-module-qtquick-dialogs \
                  qml-module-qt-labs-platform \
+                 qml-module-qtquick-shapes \
                  qtdeclarative5-dev \
                  qtquickcontrols2-5-dev \
                  python3-dev python3-pip \
