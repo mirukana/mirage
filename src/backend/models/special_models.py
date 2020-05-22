@@ -13,12 +13,11 @@ class AllRooms(FieldSubstringFilter):
     """Flat filtered list of all accounts and their rooms."""
 
     def __init__(self, accounts: Model) -> None:
+        self.accounts = accounts
+        self._collapsed: Set[str] = set()
+
         super().__init__(sync_id="all_rooms", fields=("display_name",))
         self.items_changed_callbacks.append(self.refilter_accounts)
-
-        self.accounts = accounts
-
-        self._collapsed: Set[str] = set()
 
 
     def set_account_collapse(self, user_id: str, collapsed: bool) -> None:
