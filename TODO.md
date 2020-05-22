@@ -15,6 +15,8 @@
 
 ## Issues
 
+- SSL error on python 3.7
+
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
   laggy with hundreds of rooms in between
 - On startup, if a room's last event is a membership change,

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-"""Matrix client and related classes."""
+"""Matrix client to interact with a homeserver and other related classes."""
 
 import asyncio
 import html

@@ -4,6 +4,15 @@
 # directly or indirectly via another module import (e.g. backend).
 # See https://stackoverflow.com/a/55918049
 
+"""Provide `BRIDGE`, main object accessed by QML to interact with Python.
+
+PyOtherSide, the library that handles interaction between our Python backend
+and QML UI, will access the `BRIDGE` object and call its methods directly.
+
+The `BRIDGE` object should be the only existing instance of the `QMLBridge`
+class.
+"""
+
 import asyncio
 import logging as log
 import os
@@ -18,16 +27,16 @@ from .pyotherside_events import CoroutineDone, LoopException
 
 
 class QMLBridge:
-    """Setup asyncio and provide synchronous methods to call coroutines.
+    """Setup asyncio and provide methods to call coroutines from QML.
 
     A thread is created to run the asyncio loop in, to ensure all calls from
     QML return instantly.
-    Methods are provided for QML to call coroutines using PyOtherSide, which
-    doesn't have this ability out of the box.
+    Synchronous methods are provided for QML to call coroutines using
+    PyOtherSide, which doesn't have this ability out of the box.
 
     Attributes:
-        backend: The `Backend` containing the coroutines of interest and
-            `MatrixClient` objects.
+        backend: The `backend.Backend` object containing general coroutines
+            for QML and that manages `MatrixClient` objects.
     """
 
     def __init__(self) -> None:

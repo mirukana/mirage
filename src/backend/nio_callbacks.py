@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 class NioCallbacks:
     """Register callbacks for nio's request responses and room events.
 
-    For every nio `Response` and `Event` subclasses, this class can have a
+    For every `nio.Response` and `nio.Event` subclasses, this class can have a
     method named `on<ClassName>` (e.g. `onRoomMessageText`) that will
     automatically be registered in nio.
 

@@ -1,6 +1,15 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-"""This package provides a Python backend accessible from the QML UI side."""
+"""This package provides Mirage's backend side that can interact with the UI.
+
+To learn more about how this package works, you might want to check the
+documentation in the following modules first:
+
+- `qml_bridge`
+- `backend`
+- `matrix_client`
+- `nio_callbacks`
+"""
 
 __app_name__     = "mirage"
 __display_name__ = "Mirage"
