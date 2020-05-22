@@ -6,7 +6,7 @@ DIR="$(dirname "$(readlink -f "$0")")"
 
 cd "$DIR"
 
-python3 -m venv flatpak-env
+python3.7 -m venv flatpak-env
 export PATH="$DIR/flatpak-env/bin:$PATH"
 
 if [ ! -f flatpak-pip-generator ]; then

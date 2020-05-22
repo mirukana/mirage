@@ -3,7 +3,7 @@
 ## Building Flatpak
 
 To build the Flatpak package, you will need `flatpak`, `flatpak-builder`, and
-KDE 5.12 runtime with SDK. `flatpak-builder` is usually available from
+KDE 5.14 runtime with SDK. `flatpak-builder` is usually available from
 the same repository as `flatpak`.
 
 [Flatpak setup instructions](https://flatpak.org/setup/)
@@ -12,7 +12,7 @@ To install the runtimes (remove the `--user` flag and run as root if you
 prefer system-wide installation):
 
 ```
-flatpak install --user flathub org.kde.Platform//5.12 org.kde.Sdk//5.12
+flatpak install --user flathub org.kde.Platform//5.14 org.kde.Sdk//5.14
 ```
 
 If the download fails for some reason, run `flatpak repair` before retrying.
