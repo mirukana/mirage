@@ -125,6 +125,33 @@ Rectangle {
         }
     }
 
+    HShortcut {
+        sequences: window.settings.keys.openMessagesLinks
+        onActivated: {
+            let events = []
+
+            if (eventList.selectedCount) {
+                events = eventList.getSortedChecked()
+            } else if (eventList.currentIndex !== -1) {
+                events = [eventList.model.get(eventList.currentIndex)]
+            } else {
+                // Find most recent event containing links
+                for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
+                    const ev = eventList.model.get(i)
+
+                    if (JSON.parse(ev.links).length) {
+                        events = [ev]
+                        break
+                    }
+                }
+            }
+
+            for (const event of events) {
+                for (const link of JSON.parse(event.links))
+                    Qt.openUrlExternally(link)
+            }
+        }
+    }
 
     HShortcut {
         active: eventList.currentItem
