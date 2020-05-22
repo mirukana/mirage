@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 import itertools
+import time
 from bisect import bisect
 from contextlib import contextmanager
 from threading import RLock
@@ -193,8 +194,21 @@ class Model(MutableMapping):
         finally:
             indice = self._active_batch_remove_indice
             groups = [list(group) for item, group in itertools.groupby(indice)]
+            last   = None
+
+            if groups:
+                last = groups[-1].pop()
+                if not groups[-1]:
+                    del groups[-1]
 
             for grp in groups:
                 ModelItemDeleted(self.sync_id, index=grp[0], count=len(grp))
+
+            # Seems QML ListView has an horrible bug where removing a large
+            # amount of items at once will result in a corrupted empty display,
+            # this dumb workaround is the only way I've found
+            if last:
+                time.sleep(0.2)
+                ModelItemDeleted(self.sync_id, index=last, count=1)
 
             self._active_batch_remove_indice = None

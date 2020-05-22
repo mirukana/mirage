@@ -1,5 +1,6 @@
 # TODO
 
+- timer fix thing
 - highlight messages being responded to
 - highlight messages with mention
 - add room members loading indicator
