@@ -1,7 +1,7 @@
 id: io.github.mirukana.mirage
 runtime: org.kde.Platform
 sdk: org.kde.Sdk
-runtime-version: "5.12"
+runtime-version: "5.14"
 
 command: mirage
 finish-args:
@@ -89,6 +89,7 @@ modules:
   - name: python3-matrix-nio
     buildsystem: simple
     build-commands:
+      - rm pyproject.toml
       - pip3 install --prefix=${FLATPAK_DEST} .
     sources:
       - type: git
