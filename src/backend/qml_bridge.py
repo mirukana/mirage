@@ -106,20 +106,32 @@ class QMLBridge:
         ba  = self.backend                 # noqa
         mo  = self.backend.models          # noqa
         cl  = self.backend.clients
-        gcl = lambda user: cl[f"@{user}:matrix.org"]  # noqa
+        gcl = lambda user: cl[f"@{user}"]  # noqa
 
         rc = lambda c: asyncio.run_coroutine_threadsafe(c, self._loop)  # noqa
 
         p = print  # pdb's `p` doesn't print a class's __str__  # noqa
         try:
+            log.warning("\nThe pprintpp python package is not installed.")
             from pprintpp import pprint as pp  # noqa
         except ModuleNotFoundError:
             pass
 
-        log.info("\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
-                 "to connect to pdb.")
-        import remote_pdb
-        remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
+        try:
+            import remote_pdb
+        except ModuleNotFoundError:
+            log.warning(
+                "\nThe remote_pdb python package is not installed, falling "
+                "back to pdb.",
+            )
+            import pdb
+            pdb.set_trace()
+        else:
+            log.info(
+                "\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
+                "to connect to the debugger.",
+            )
+            remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
 
 # The AppImage AppRun script overwrites some environment path variables to
