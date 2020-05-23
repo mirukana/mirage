@@ -116,7 +116,7 @@
 
 - Settings page
 - Notifications
-- Opening links with keyboard
+- Opening files with keyboard
 - Better `<pre>` 
 
 - Replace the rubbish default filepicker on Linux
@@ -160,13 +160,7 @@
 - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
 - Logout previous session when adding an account that's already connected
 
-- Startup improvements:
-  - Initial sync filter to get more events on first sync
-  - Lazy loading members
-  - Cache and restore profiles, room events and states
-  - Use AsyncClient `store_sync_tokens`
-    - Make sure to all members are fetched before sending an E2E message 
-    - Fetch all members when using the filter members bar
+- Cache and restore profiles, room events and client states
 
 - Properly handle direct chats 
 - Live-reloading accounts.json
@@ -179,14 +173,27 @@
   - Provide help when undecryptable messages occur, including:
     - Trigger `nio.AsyncClient.request_room_key`
     - Option to export-logout-login-import to fix one-time key problems
+  - Cross-signing
+
 - Read receipts
 - Status message and presence
+
+- Methods of signing in that aren't handled yet:
+  - `m.login.password`
+    - `m.id.thirdparty`
+    - `m.id.phone`
+  - `m.login.recaptcha`
+  - `m.login.oauth2`
+  - `m.login.email.identity`
+  - `m.login.msisdn`
+  - `m.login.token`
+  - `m.login.dummy`
+  - Web page fallback
 
 ## Nio contributions
 
 - Streaming download & decrypt
 - Running blocking DB function calls in executor (WIP)
-- `AsyncClient.share_group_session`: send device batches concurrently (WIP)
 
 - Dedicated error for invalid password on key import
 - `RoomMessageMedia` and `RoomAvatarEvent` info attributes
@@ -195,12 +202,9 @@
 - Left room events after client reboot
 - Previewing room without joining
 
-- Add the `resume()` account "login" method
-
 ## Distribution and dependencies
 
-- Remove unused Python dependencies in AppImage & Flatpak (attrs, uvloop)
-- Use Qt 5.14 for AppImage & Flatpak
+- Use Qt 5.14 for AppImage
 - Add AppImage & Flatpak metadata file
 - Pillow now bundle image libraries?
   Update AppImage building script and INSTALL.md
