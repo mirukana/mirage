@@ -182,11 +182,11 @@
   - `m.login.password`
     - `m.id.thirdparty`
     - `m.id.phone`
-  - `m.login.recaptcha`
+  - `m.login.recaptcha` (need browser, just use fallback?)
   - `m.login.oauth2`
   - `m.login.email.identity`
-  - `m.login.msisdn`
-  - `m.login.token`
+  - `m.login.msisdn` (phone)
+  - `m.login.sso` + `m.login.token`
   - `m.login.dummy`
   - Web page fallback
 
