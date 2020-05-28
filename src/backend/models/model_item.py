@@ -49,7 +49,7 @@ class ModelItem:
 
         fields = {name: self.serialize_field(name)}
 
-        with parent._write_lock:
+        with parent.write_lock:
             index_then = parent._sorted_data.index(self)
             parent._sorted_data.sort()
             index_now = parent._sorted_data.index(self)

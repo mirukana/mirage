@@ -77,7 +77,7 @@ class ModelFilter(ModelProxy):
     ) -> None:
         """Recheck every item to decide if they should be filtered out."""
 
-        with self._write_lock:
+        with self.write_lock:
             take_out   = []
             bring_back = []
 

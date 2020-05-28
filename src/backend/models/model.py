@@ -39,9 +39,9 @@ class Model(MutableMapping):
 
     def __init__(self, sync_id: Optional[SyncId]) -> None:
         self.sync_id:      Optional[SyncId]       = sync_id
+        self.write_lock:   RLock                  = RLock()
         self._data:        Dict[Any, "ModelItem"] = {}
         self._sorted_data: List["ModelItem"]      = blist()
-        self._write_lock:  RLock                  = RLock()
 
         self.take_items_ownership: bool = True
 
@@ -79,7 +79,7 @@ class Model(MutableMapping):
         value: "ModelItem",
         _changed_fields: Optional[Dict[str, Any]] = None,
     ) -> None:
-        with self._write_lock:
+        with self.write_lock:
             existing = self._data.get(key)
             new      = value
 
@@ -133,7 +133,7 @@ class Model(MutableMapping):
 
 
     def __delitem__(self, key) -> None:
-        with self._write_lock:
+        with self.write_lock:
             item = self._data[key]
 
             if self.sync_id and self.take_items_ownership:
