@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import Qt.labs.platform 1.1
 import "../Popups"
 import "../PythonBridge"
@@ -27,7 +28,7 @@ HFileDialogOpener {
             qsTr("Passphrase used to protect this file:")
         okText: qsTr("Import")
 
-        onCancelled: if (importFuture) importFuture.cancel()
+        onClosed: if (importFuture) importFuture.cancel()
 
 
         property url file: ""
@@ -72,6 +73,12 @@ HFileDialogOpener {
 
                 if (unknown) utils.showError(type, traceback, uuid)
             })
+        }
+
+
+        Binding on closePolicy {
+            value: Popup.CloseOnEscape
+            when: importing
         }
     }
 }
