@@ -1176,22 +1176,25 @@ class MatrixClient(nio.AsyncClient):
 
             _, room_id, _ = sync_id
 
-            for ev in deepcopy(model).values():
-                room = self.all_rooms[room_id]
+            with model.write_lock:
+                for ev in model.values():
+                    room = self.all_rooms[room_id]
 
-                if isinstance(ev.source, nio.MegolmEvent):
-                    try:
-                        decrypted = self.decrypt_event(ev.source)
+                    if isinstance(ev.source, nio.MegolmEvent):
+                        try:
+                            decrypted = self.decrypt_event(ev.source)
 
-                        if not decrypted:
-                            raise nio.EncryptionError()
+                            if not decrypted:
+                                raise nio.EncryptionError()
 
-                    except nio.EncryptionError:
-                        continue
+                        except nio.EncryptionError:
+                            continue
 
-                    for cb in self.event_callbacks:
-                        if not cb.filter or isinstance(decrypted, cb.filter):
-                            await asyncio.coroutine(cb.func)(room, decrypted)
+                        for callback in self.event_callbacks:
+                            filter_ = callback.filter
+                            if not filter_ or isinstance(decrypted, filter_):
+                                coro = asyncio.coroutine(callback.func)
+                                await coro(room, decrypted)
 
 
     async def clear_events(self, room_id: str) -> None:
