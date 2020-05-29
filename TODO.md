@@ -7,11 +7,11 @@
   - Use new default/reset controls system 
   - Display name field text should be colored 
 
-- Split `HScrollableTextArea` into `HTextArea` and `HScrollView` components
-- Refactor `Composer`
-
 - Drop the `HBox` `buttonModel`/`buttonCallbacks` `HBox` approach,
   be more declarative
+
+- Reorder QML object declarations,
+  conform to https://doc-snapshots.qt.io/qt5-dev/qml-codingconventions.html
 
 ## Issues
 

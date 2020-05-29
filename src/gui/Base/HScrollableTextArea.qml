@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
@@ -25,7 +24,6 @@ ScrollView {
     property var saveId: "ALL"
     property var saveProperties: ["text"]
 
-    property alias backgroundColor: textAreaBackground.color
     property alias placeholderText: textArea.placeholderText
     property alias placeholderTextColor: textArea.placeholderTextColor
     property alias area: textArea

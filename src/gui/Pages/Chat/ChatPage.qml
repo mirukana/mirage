@@ -4,8 +4,9 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 import "Banners"
-import "Timeline"
+import "Composer"
 import "FileTransfer"
+import "Timeline"
 
 HColumnPage {
     id: chatPage
@@ -101,6 +102,7 @@ HColumnPage {
     LeftBanner {
         id: leftBanner
         visible: chat.roomInfo.left
+
         Layout.fillWidth: true
     }
 
@@ -109,6 +111,8 @@ HColumnPage {
         eventList: loadEventList ? eventListLoader.item.eventList : null
         visible:
             ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
-    }
 
+        Layout.fillWidth: true
+        Layout.maximumHeight: parent.height / 2
+    }
 }
