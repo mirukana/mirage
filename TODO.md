@@ -29,6 +29,7 @@
 - Catch server 5xx errors when sending message and retry 
 
 - Popups and room settings can't be scrolled when not enough height to show all
+- `TextArea`s in Popups grow past window height instead of being scrollable
 
 - Handle cases where a known account's access token is invalid
 - If an account is gone from the user's config, discard UI state last page

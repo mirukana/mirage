@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
@@ -20,12 +21,14 @@ BoxPopup {
     property string traceback: ""
 
 
-    HScrollableTextArea {
-        text: [message, traceback].join("\n\n") || qsTr("No info available")
-        area.readOnly: true
-        area.font.family: theme.fontFamily.mono
-
+    ScrollView {
         Layout.fillWidth: true
+
+        HTextArea {
+            text: [message, traceback].join("\n\n") || qsTr("No info available")
+            readOnly: true
+            font.family: theme.fontFamily.mono
+        }
     }
 
     HCheckBox {

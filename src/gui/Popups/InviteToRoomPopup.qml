@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 
@@ -12,7 +13,7 @@ BoxPopup {
     okText: qsTr("Invite")
     okEnabled: invitingAllowed && Boolean(inviteArea.text.trim())
 
-    onOpened: inviteArea.area.forceActiveFocus()
+    onOpened: inviteArea.forceActiveFocus()
 
     onInvitingAllowedChanged:
         if (! invitingAllowed && inviteFuture) inviteFuture.cancel()
@@ -60,14 +61,16 @@ BoxPopup {
     property var failedInvites: []
 
 
-    HScrollableTextArea {
-        id: inviteArea
-        focusItemOnTab: box.firstButton
-        area.placeholderText:
-            qsTr("User IDs (e.g. @bob:matrix.org @alice:localhost)")
-
+    ScrollView {
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        HTextArea {
+            id: inviteArea
+            focusItemOnTab: box.firstButton
+            placeholderText:
+                qsTr("User IDs (e.g. @bob:matrix.org @alice:localhost)")
+        }
     }
 
     HLabel {
