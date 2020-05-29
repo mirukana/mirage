@@ -82,7 +82,7 @@ TextField {
 
     Binding on implicitHeight {
         value: disabledTextLabel.implicitHeight
-        when: disabledText !== null && ! textArea.enabled
+        when: disabledText !== null && ! field.enabled
     }
 
 
