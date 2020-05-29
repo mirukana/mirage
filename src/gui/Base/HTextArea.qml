@@ -20,7 +20,7 @@ TextArea {
 
 
     function reset() { clear(); text = defaultText }
-    function append(text) { insert(cursorPosition, text) }
+    function insertAtCursor(text) { insert(cursorPosition, text) }
 
 
     text: defaultText

@@ -75,7 +75,7 @@ HTextArea {
         }
 
         const add = indent.repeat(indents)
-        textArea.append("\n" + add)
+        textArea.insertAtCursor("\n" + add)
     }
 
     function sendText() {
@@ -176,7 +176,7 @@ HTextArea {
 
     Keys.onTabPressed: ev => {
         ev.accepted = true
-        textArea.append(indent)
+        textArea.insertAtCursor(indent)
     }
 
     Keys.onPressed: ev => {
