@@ -32,8 +32,8 @@ from nio.crypto import async_generator_from_data
 
 from . import __app_name__, __display_name__, utils
 from .errors import (
-    BadMimeType, InvalidUserId, InvalidUserInContext, MatrixError,
-    MatrixNotFound, MatrixTooLarge, UneededThumbnail,
+    BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
+    MatrixError, MatrixNotFound, MatrixTooLarge, UneededThumbnail,
     UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
@@ -964,7 +964,7 @@ class MatrixClient(nio.AsyncClient):
 
             try:
                 await self.get_profile(user_id)
-            except MatrixNotFound as err:
+            except (MatrixNotFound, MatrixBadGateway) as err:
                 return err
 
             return await self.room_invite(room_id, user_id)

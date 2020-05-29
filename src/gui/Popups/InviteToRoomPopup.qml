@@ -108,6 +108,10 @@ BoxPopup {
                     qsTr("%1 not found, please verify the entered user ID")
                     .arg(user) :
 
+                    type === "MatrixBadGateway" ?
+                    qsTr("Server error while trying to find %1, please " +
+                         "verify the entered user ID").arg(user) :
+
                     type === "MatrixUnsupportedRoomVersion" ?
                     qsTr("%1's server does not support this room's version")
                     .arg(user) :

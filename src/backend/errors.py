@@ -3,9 +3,9 @@
 """Custom exception definitions."""
 
 from dataclasses import dataclass, field
+from typing import Optional
 
 import nio
-
 
 # Matrix Errors
 
@@ -13,8 +13,8 @@ import nio
 class MatrixError(Exception):
     """An error returned by a Matrix server."""
 
-    http_code: int = 400
-    m_code:    str = "M_UNKNOWN"
+    http_code: int           = 400
+    m_code:    Optional[str] = None
 
     @classmethod
     def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
@@ -23,7 +23,7 @@ class MatrixError(Exception):
         # Check for the M_CODE first: some errors for an API share the same
         # http code, but have different M_CODEs (e.g. POST /login 403).
         for subcls in cls.__subclasses__():
-            if subcls.m_code == response.status_code:
+            if subcls.m_code and subcls.m_code == response.status_code:
                 return subcls()
 
         for subcls in cls.__subclasses__():
@@ -67,6 +67,12 @@ class MatrixNotFound(MatrixError):
 class MatrixTooLarge(MatrixError):
     http_code: int = 413
     m_code:    str = "M_TOO_LARGE"
+
+
+@dataclass
+class MatrixBadGateway(MatrixError):
+    http_code: int = 502
+    m_code:    str = ""
 
 
 # Client errors
