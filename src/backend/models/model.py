@@ -188,27 +188,28 @@ class Model(MutableMapping):
         and one `ModelItemDeleted` pyotherside event is fired per sequence.
         """
 
-        try:
-            self._active_batch_remove_indice = []
-            yield None
-        finally:
-            indice = self._active_batch_remove_indice
-            groups = [list(group) for item, group in itertools.groupby(indice)]
-            last   = None
+        with self.write_lock:
+            try:
+                self._active_batch_remove_indice = []
+                yield None
+            finally:
+                indice = self._active_batch_remove_indice
+                groups = [list(group) for item, group in itertools.groupby(indice)]
+                last   = None
 
-            if groups:
-                last = groups[-1].pop()
-                if not groups[-1]:
-                    del groups[-1]
+                if groups:
+                    last = groups[-1].pop()
+                    if not groups[-1]:
+                        del groups[-1]
 
-            for grp in groups:
-                ModelItemDeleted(self.sync_id, index=grp[0], count=len(grp))
+                for grp in groups:
+                    ModelItemDeleted(self.sync_id, index=grp[0], count=len(grp))
 
-            # Seems QML ListView has an horrible bug where removing a large
-            # amount of items at once will result in a corrupted empty display,
-            # this dumb workaround is the only way I've found
-            if last:
-                time.sleep(0.2)
-                ModelItemDeleted(self.sync_id, index=last, count=1)
+                # Seems QML ListView has an horrible bug where removing a large
+                # amount of items at once will result in a corrupted empty display,
+                # this dumb workaround is the only way I've found
+                if last:
+                    time.sleep(0.2)
+                    ModelItemDeleted(self.sync_id, index=last, count=1)
 
-            self._active_batch_remove_indice = None
+                self._active_batch_remove_indice = None

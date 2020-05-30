@@ -33,42 +33,47 @@ class ModelFilter(ModelProxy):
         value: "ModelItem",
         _changed_fields: Optional[Dict[str, Any]] = None,
     ) -> None:
-        if self.accept_source(source):
-            value = self.convert_item(value)
+        with self.write_lock:
+            if self.accept_source(source):
+                value = self.convert_item(value)
 
-            if self.accept_item(value):
-                self.__setitem__((source.sync_id, key), value, _changed_fields)
-                self.filtered_out.pop((source.sync_id, key), None)
-            else:
-                self.filtered_out[source.sync_id, key] = value
-                self.pop((source.sync_id, key), None)
+                if self.accept_item(value):
+                    self.__setitem__(
+                        (source.sync_id, key), value, _changed_fields,
+                    )
+                    self.filtered_out.pop((source.sync_id, key), None)
+                else:
+                    self.filtered_out[source.sync_id, key] = value
+                    self.pop((source.sync_id, key), None)
 
-            for callback in self.items_changed_callbacks:
-                callback()
+                for callback in self.items_changed_callbacks:
+                    callback()
 
 
     def source_item_deleted(self, source: Model, key) -> None:
-        if self.accept_source(source):
-            try:
-                del self[source.sync_id, key]
-            except KeyError:
-                del self.filtered_out[source.sync_id, key]
+        with self.write_lock:
+            if self.accept_source(source):
+                try:
+                    del self[source.sync_id, key]
+                except KeyError:
+                    del self.filtered_out[source.sync_id, key]
 
-            for callback in self.items_changed_callbacks:
-                callback()
+                for callback in self.items_changed_callbacks:
+                    callback()
 
 
     def source_cleared(self, source: Model) -> None:
-        if self.accept_source(source):
-            for source_sync_id, key in self.copy():
-                if source_sync_id == source.sync_id:
-                    try:
-                        del self[source.sync_id, key]
-                    except KeyError:
-                        del self.filtered_out[source.sync_id, key]
+        with self.write_lock:
+            if self.accept_source(source):
+                for source_sync_id, key in self.copy():
+                    if source_sync_id == source.sync_id:
+                        try:
+                            del self[source.sync_id, key]
+                        except KeyError:
+                            del self.filtered_out[source.sync_id, key]
 
-            for callback in self.items_changed_callbacks:
-                callback()
+                for callback in self.items_changed_callbacks:
+                    callback()
 
 
     def refilter(

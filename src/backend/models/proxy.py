@@ -17,10 +17,11 @@ class ModelProxy(Model):
         self.take_items_ownership = False
         Model.proxies[sync_id] = self
 
-        for sync_id, model in Model.instances.items():
-            if sync_id != self.sync_id and self.accept_source(model):
-                for key, item in model.items():
-                    self.source_item_set(model, key, item)
+        with self.write_lock:
+            for sync_id, model in Model.instances.items():
+                if sync_id != self.sync_id and self.accept_source(model):
+                    for key, item in model.items():
+                        self.source_item_set(model, key, item)
 
 
     def accept_source(self, source: Model) -> bool:
