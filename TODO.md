@@ -207,8 +207,6 @@
 
 - Use Qt 5.14 for AppImage
 - Add AppImage & Flatpak metadata file
-- Pillow now bundle image libraries?
-  Update AppImage building script and INSTALL.md
 - Publish on Flathub and AppImageHub
 
 - Update to Mistune v2.0 when released
