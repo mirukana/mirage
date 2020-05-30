@@ -139,7 +139,7 @@ initialize_appdir() {
     cd ~/mirage
     rm -rf .qmake.stash Makefile build
 
-    qmake mirage.pro
+    qmake mirage.pro PREFIX=/usr
     make install INSTALL_ROOT=build/appdir
 }
 

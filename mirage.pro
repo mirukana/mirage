@@ -33,7 +33,7 @@ dev {
 # Files to copy for `make install`
 
 !dev:unix {
-    isEmpty(PREFIX) { PREFIX = /usr }
+    isEmpty(PREFIX) { PREFIX = /usr/local }
 
     executables.path  = $$PREFIX/bin
     executables.files = $$TARGET
