@@ -20,7 +20,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Void Linux / xbps](#void-linux--xbps)
   - [Installing PyOtherSide manually](#installing-pyotherside-manually)
   - [Installing libolm manually](#installing-libolm-manually)
-  - [Installing Mirage](#installing-mirage)
+  - [Installing or updating Mirage](#installing-or-updating-mirage)
   - [Common issues](#common-issues)
     - [cffi version mismatch](#cffi-version-mismatch)
     - [Component is not ready](#component-is-not-ready)
@@ -251,14 +251,18 @@ sudo make install
 ```
 
 
-### Installing Mirage
+### Installing or updating Mirage
 
-After following the above sections instructions depending on your system,
-clone the repository, install the python dependencies, compile and install:
+After following the above sections instructions depending on your system;
+clone the repository, initalize the submodules,
+install the python dependencies, compile and install:
 
 ```sh
-git clone --recursive https://github.com/mirukana/mirage
+git clone https://github.com/mirukana/mirage
 cd mirage
+
+git pull
+git submodule update --init submodules/*
 pip3 install --user -Ur requirements.txt
 
 qmake mirage.pro
