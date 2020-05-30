@@ -278,3 +278,8 @@
   (e.g. `DragHandler`) will change the cursor when the active state is true.
   `HoverHandler` will change it when the mouse is hovering over the `Item` that
   contains the `HoverHandler`.
+
+- Added `selectTextByMouse` property to `ComboBox`.
+
+- Technology Preview: Support for running Qt Quick (2D) on top of 
+  Direct3D, Metal and Vulkan
