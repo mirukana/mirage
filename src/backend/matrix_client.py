@@ -1212,6 +1212,21 @@ class MatrixClient(nio.AsyncClient):
         self.models[self.user_id, "rooms"][room_id].last_event_date = \
             ZeroDate
 
+
+    async def update_account_unread_counts(self) -> None:
+        """Recalculate total unread notifications/highlights for our account"""
+
+        unreads = highlights = 0
+
+        for room in self.models[self.user_id, "rooms"].values():
+            unreads    += room.unreads
+            highlights += room.highlights
+
+        account                  = self.models["accounts"][self.user_id]
+        account.total_unread     = unreads
+        account.total_highlights = highlights
+
+
     # Functions to register data into models
 
     async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
@@ -1256,12 +1271,17 @@ class MatrixClient(nio.AsyncClient):
         try:
             registered = self.models[self.user_id, "rooms"][room.room_id]
         except KeyError:
-            registered      = None
-            last_event_date = datetime.fromtimestamp(0)
-            typing_members  = []
+            registered                   = None
+            last_event_date              = datetime.fromtimestamp(0)
+            typing_members               = []
+            update_account_unread_counts = True
         else:
-            last_event_date = registered.last_event_date
-            typing_members  = registered.typing_members
+            last_event_date              = registered.last_event_date
+            typing_members               = registered.typing_members
+            update_account_unread_counts = (
+                registered.unreads != room.unread_notifications or
+                registered.highlights != room.unread_highlights
+            )
 
         room_item = Room(
             id             = room.room_id,
@@ -1307,6 +1327,9 @@ class MatrixClient(nio.AsyncClient):
         if not registered or force_register_members:
             for user_id in room.users:
                 await self.add_member(room, user_id)
+
+        if update_account_unread_counts:
+            await self.update_account_unread_counts()
 
 
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
