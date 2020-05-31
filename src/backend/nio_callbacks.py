@@ -2,7 +2,6 @@
 
 import json
 import logging as log
-from contextlib import suppress
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Tuple
@@ -10,9 +9,9 @@ from urllib.parse import quote
 
 import nio
 
-from . import utils
 from .html_markdown import HTML_PROCESSOR
 from .models.items import TypeSpecifier
+from .utils import classes_defined_in, plain2html
 
 if TYPE_CHECKING:
     from .matrix_client import MatrixClient
@@ -20,11 +19,12 @@ if TYPE_CHECKING:
 
 @dataclass
 class NioCallbacks:
-    """Register callbacks for nio's request responses and room events.
+    """Register callbacks for nio's request responses and events.
 
-    For every `nio.Response` and `nio.Event` subclasses, this class can have a
-    method named `on<ClassName>` (e.g. `onRoomMessageText`) that will
-    automatically be registered in nio.
+    For every class defined in the `nio.responses` and `nio.events` modules,
+    this class can have a method named
+    `on<ClassName>` (e.g. `onRoomMessageText`) that will
+    automatically be registered in the `client`'s callbacks.
 
     For room event content strings, the `%1` and `%2` placeholders
     refer to the event's sender and who this event targets (`state_key`) or
@@ -40,19 +40,26 @@ class NioCallbacks:
 
         self.models = self.client.models
 
-        for name, class_ in utils.classes_defined_in(nio.responses).items():
-            with suppress(AttributeError):
-                method = getattr(self, f"on{name}")
-                self.client.add_response_callback(method, class_)
+        for name, response_class in classes_defined_in(nio.responses).items():
+            method = getattr(self, f"on{name}", None)
 
-        for name, class_ in utils.classes_defined_in(nio.events).items():
-            with suppress(AttributeError):
-                method = getattr(self, f"on{name}")
-                self.client.add_event_callback(method, class_)
+            if method:
+                self.client.add_response_callback(method, response_class)
 
-        self.client.add_ephemeral_callback(
-            self.onTypingNoticeEvent, nio.events.TypingNoticeEvent,
-        )
+        for name, event_class in classes_defined_in(nio.events).items():
+            method = getattr(self, f"on{name}", None)
+
+            if not method:
+                continue
+
+            if issubclass(event_class, nio.EphemeralEvent):
+                self.client.add_ephemeral_callback(method, event_class)
+            elif issubclass(event_class, nio.ToDeviceEvent):
+                self.client.add_to_device_callback(method, event_class)
+            elif issubclass(event_class, nio.AccountDataEvent):
+                self.client.add_room_account_data_callback(method, event_class)
+            else:
+                self.client.add_event_callback(method, event_class)
 
 
     @property
@@ -106,7 +113,7 @@ class NioCallbacks:
         co = HTML_PROCESSOR.filter(
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else
-            utils.plain2html(ev.body),
+            plain2html(ev.body),
 
             room_id = room.room_id,
         )
