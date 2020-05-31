@@ -6,6 +6,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+
+### Removed
+
+- Removed delay when multiple rooms are removed/hidden from the list.
+  This should provide a smoother experience when filtering rooms or collapsing
+  accounts.
+  If you encounter issues with these operations like the room list becoming
+  invisible, make sure first that your Qt installation is up-to-date
+  (latest minor version, e.g. 5.14.2).
+
+### Changed
+
+- While an E2E key import operation is running, prevent accidentally closing
+  the popup by clicking outside of it
+
+- For manual installations, `make install` will now copy files to `/usr/local`
+  instead of `/usr` by default.
+  This can be changed by setting `PREFIX` when running `qmake`,
+  e.g. `qmake PREFIX=/usr`.
+  After pulling the latest version, make sure to clean up old installation
+  and build files before regenerating the Makefile and installing:
+  `sudo make uninstall; make clean; qmake && make && sudo make install`
+
+### Fixed
+
+- Avoid potential error if the room list data model is initialized after an
+  initial sync has already been completed
+
+- Closing the import key popup by pressing escape will now correctly
+  cancel any running import operation
+
+- Fix Python pickling error when trying to redecrypt events after importing
+  E2E keys (#50)
+
+- Fix hiding `socket.gaierror` error popups that appeared when
+  the internet connection dropped 
+
+- Handle Matrix 502 errors returned when trying to invite a user with an
+  incorrect or unresponsive server in their ID
+
+
 ## 0.5.0
 
 ### Added
