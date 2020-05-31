@@ -537,3 +537,20 @@ class NioCallbacks:
             room.user_name(user_id) or user_id for user_id in ev.users
             if user_id not in self.client.backend.clients
         )
+
+
+    async def onReceiptEvent(
+        self, room: nio.MatrixRoom, ev: nio.ReceiptEvent,
+    ) -> None:
+        model = self.models[self.user_id, room.room_id, "members"]
+
+        for receipt in ev.receipts:
+            if receipt.receipt_type != "m.read":
+                continue
+
+            member = model.get(receipt.user_id)
+
+            if member:
+                member.last_read_event = receipt.event_id
+                timestamp              = receipt.timestamp / 1000
+                member.last_read_at    = datetime.fromtimestamp(timestamp)

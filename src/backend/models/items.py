@@ -158,6 +158,8 @@ class Member(ModelItem):
     power_level:     int      = 0
     invited:         bool     = False
     profile_updated: datetime = ZeroDate
+    last_read_event: str      = ""
+    last_read_at:    datetime = ZeroDate
 
     def __lt__(self, other: "Member") -> bool:
         """Sort by power level, then by display name/user ID."""
