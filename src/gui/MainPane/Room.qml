@@ -43,7 +43,7 @@ HTile {
                     indicatorTheme:
                         theme.mainPane.listView.room.unreadIndicator
                     unreads: model.unreads
-                    mentions: model.mentions
+                    highlights: model.highlights
                 }
 
                 HIcon {

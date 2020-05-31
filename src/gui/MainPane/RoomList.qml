@@ -140,8 +140,8 @@ HListView {
         showItemAtIndex(accountIndice[currentUserId] + 1 + index)
     }
 
-    function cycleUnreadRooms(forward=true, mentions=false) {
-        const prop  = mentions ? "mentions" : "unreads"
+    function cycleUnreadRooms(forward=true, highlights=false) {
+        const prop  = highlights ? "highlights" : "unreads"
         const start = currentIndex === -1 ? 0 : currentIndex
         let index   = start
 
@@ -151,7 +151,7 @@ HListView {
             if (index < 0) index = model.count - 1
             if (index > model.count - 1) index = 0
 
-            if (index === start && mentions)
+            if (index === start && highlights)
                 return cycleUnreadRooms(forward, false)
             else if (index === start)
                 return false

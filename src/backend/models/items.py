@@ -32,15 +32,15 @@ class TypeSpecifier(AutoStrEnum):
 class Account(ModelItem):
     """A logged in matrix account."""
 
-    id:              str      = field()
-    order:           int      = -1
-    display_name:    str      = ""
-    avatar_url:      str      = ""
-    max_upload_size: int      = 0
-    profile_updated: datetime = ZeroDate
-    first_sync_done: bool     = False
-    total_unread:    int      = 0
-    total_mentions:  int      = 0
+    id:               str      = field()
+    order:            int      = -1
+    display_name:     str      = ""
+    avatar_url:       str      = ""
+    max_upload_size:  int      = 0
+    profile_updated:  datetime = ZeroDate
+    first_sync_done:  bool     = False
+    total_unread:     int      = 0
+    total_highlights: int      = 0
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
@@ -84,16 +84,17 @@ class Room(ModelItem):
 
     last_event_date: datetime = ZeroDate
 
-    mentions: int = 0
-    unreads:  int = 0
+    unreads:    int = 0
+    highlights: int = 0
 
     def __lt__(self, other: "Room") -> bool:
-        """Sort by membership, mentions/unread events, last event date, name.
+        """Sort by membership, highlights/unread events, last event date, name.
 
         Invited rooms are first, then joined rooms, then left rooms.
         Within these categories, sort by last event date (room with recent
         messages are first), then by display names, then account, but
-        keep rooms with mentions on top, followed by rooms with unread events.
+        keep rooms with highlights on top,
+        followed by rooms with unread events.
         """
 
         # Left rooms may still have an inviter_id, so check left first.
@@ -101,7 +102,7 @@ class Room(ModelItem):
             self.for_account,
             self.left,
             other.inviter_id,
-            bool(other.mentions),
+            bool(other.highlights),
             bool(other.unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
@@ -110,7 +111,7 @@ class Room(ModelItem):
             other.for_account,
             other.left,
             self.inviter_id,
-            bool(self.mentions),
+            bool(self.highlights),
             bool(self.unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
@@ -129,7 +130,7 @@ class AccountOrRoom(Account, Room):
             other.type is Account,
             self.left,
             other.inviter_id,
-            bool(other.mentions),
+            bool(other.highlights),
             bool(other.unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
@@ -140,7 +141,7 @@ class AccountOrRoom(Account, Room):
             self.type is Account,
             other.left,
             self.inviter_id,
-            bool(self.mentions),
+            bool(self.highlights),
             bool(self.unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),

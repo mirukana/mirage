@@ -1298,8 +1298,8 @@ class MatrixClient(nio.AsyncClient):
 
             last_event_date = last_event_date,
 
-            mentions = room.unread_highlights,
-            unreads  = room.unread_notifications,
+            unreads    = room.unread_notifications,
+            highlights = room.unread_highlights,
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item

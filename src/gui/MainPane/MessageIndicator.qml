@@ -19,7 +19,7 @@ HLabel {
 
     background: Rectangle {
         color:
-            mentions ?
+            highlights ?
             indicatorTheme.mentionBackground :
             indicatorTheme.background
 
@@ -31,7 +31,7 @@ HLabel {
 
     property QtObject indicatorTheme
     property int unreads: 0
-    property int mentions: 0
+    property int highlights: 0
 
 
     Behavior on scale { HNumberAnimation {} }

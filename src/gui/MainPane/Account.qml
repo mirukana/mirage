@@ -56,7 +56,7 @@ HTile {
                 indicatorTheme:
                     theme.mainPane.accountBar.account.unreadIndicator
                 unreads: model.total_unread
-                mentions: model.total_mentions
+                highlights: model.total_highlights
             }
 
         }

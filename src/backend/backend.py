@@ -278,12 +278,12 @@ class Backend:
             room = self.models[user_id, "rooms"].get(room_id)
 
             if room:
-                account                 = self.models["accounts"][user_id]
-                account.total_unread   -= room.unreads
-                account.total_mentions -= room.mentions
+                account                   = self.models["accounts"][user_id]
+                account.total_unread     -= room.unreads
+                account.total_highlights -= room.highlights
 
-                room.mentions = 0
-                room.unreads  = 0
+                room.highlights = 0
+                room.unreads    = 0
 
 
     # General functions
