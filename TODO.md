@@ -15,6 +15,9 @@
 
 ## Issues
 
+- Don't send typing notification when switching to a room where the composer 
+  has loaded text 
+
 - SSL error on python 3.7
 
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
