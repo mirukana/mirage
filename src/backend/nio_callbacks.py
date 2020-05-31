@@ -107,9 +107,11 @@ class NioCallbacks:
             account.first_sync_done = True
 
 
-    # Event callbacks
+    # Room events, invite events and misc events callbacks
 
-    async def onRoomMessageText(self, room, ev) -> None:
+    async def onRoomMessageText(
+        self, room: nio.MatrixRoom, ev: nio.RoomMessageText,
+    ) -> None:
         co = HTML_PROCESSOR.filter(
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else
@@ -125,20 +127,28 @@ class NioCallbacks:
         )
 
 
-    async def onRoomMessageNotice(self, room, ev) -> None:
+    async def onRoomMessageNotice(
+        self, room: nio.MatrixRoom, ev: nio.RoomMessageNotice,
+    ) -> None:
         await self.onRoomMessageText(room, ev)
 
 
-    async def onRoomMessageEmote(self, room, ev) -> None:
+    async def onRoomMessageEmote(
+        self, room: nio.MatrixRoom, ev: nio.RoomMessageEmote,
+    ) -> None:
         await self.onRoomMessageText(room, ev)
 
 
-    async def onRoomMessageUnknown(self, room, ev) -> None:
+    async def onRoomMessageUnknown(
+        self, room: nio.MatrixRoom, ev: nio.RoomMessageUnknown,
+    ) -> None:
         co = f"%1 sent an unsupported <b>{ev.msgtype}</b> message"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomMessageMedia(self, room, ev) -> None:
+    async def onRoomMessageMedia(
+        self, room: nio.MatrixRoom, ev: nio.RoomMessageMedia,
+    ) -> None:
         info             = ev.source["content"].get("info", {})
         media_crypt_dict = ev.source["content"].get("file", {})
         thumb_info       = info.get("thumbnail_info", {})
@@ -169,11 +179,15 @@ class NioCallbacks:
         )
 
 
-    async def onRoomEncryptedMedia(self, room, ev) -> None:
+    async def onRoomEncryptedMedia(
+        self, room: nio.MatrixRoom, ev: nio.RoomEncryptedMedia,
+    ) -> None:
         await self.onRoomMessageMedia(room, ev)
 
 
-    async def onRedactionEvent(self, room, ev) -> None:
+    async def onRedactionEvent(
+        self, room: nio.MatrixRoom, ev: nio.RedactionEvent,
+    ) -> None:
         model = self.models[self.user_id, room.room_id, "events"]
         event = None
 
@@ -202,7 +216,9 @@ class NioCallbacks:
         )
 
 
-    async def onRedactedEvent(self, room, ev, event_id: str = "") -> None:
+    async def onRedactedEvent(
+        self, room: nio.MatrixRoom, ev: nio.RedactedEvent, event_id: str = "",
+    ) -> None:
         redacter_name, _, must_fetch_redacter = \
             await self.client.get_member_profile(room.room_id, ev.redacter) \
             if ev.redacter else ("", "", False)
@@ -223,26 +239,34 @@ class NioCallbacks:
         )
 
 
-    async def onRoomCreateEvent(self, room, ev) -> None:
+    async def onRoomCreateEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomCreateEvent,
+    ) -> None:
         co = "%1 allowed users on other matrix servers to join this room" \
              if ev.federate else \
              "%1 blocked users on other matrix servers from joining this room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomGuestAccessEvent(self, room, ev) -> None:
+    async def onRoomGuestAccessEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomGuestAccessEvent,
+    ) -> None:
         allowed = "allowed" if ev.guest_access else "forbad"
         co      = f"%1 {allowed} guests to join the room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomJoinRulesEvent(self, room, ev) -> None:
+    async def onRoomJoinRulesEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomJoinRulesEvent,
+    ) -> None:
         access = "public" if ev.join_rule == "public" else "invite-only"
         co     = f"%1 made the room {access}"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomHistoryVisibilityEvent(self, room, ev) -> None:
+    async def onRoomHistoryVisibilityEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomHistoryVisibilityEvent,
+    ) -> None:
         if ev.history_visibility == "shared":
             to = "all room members"
         elif ev.history_visibility == "world_readable":
@@ -260,7 +284,9 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onPowerLevelsEvent(self, room, ev) -> None:
+    async def onPowerLevelsEvent(
+        self, room: nio.MatrixRoom, ev: nio.PowerLevelsEvent,
+    ) -> None:
         co = "%1 changed the room's permissions"  # TODO: improve
         await self.client.register_nio_event(room, ev, content=co)
 
@@ -361,7 +387,9 @@ class NioCallbacks:
         return None
 
 
-    async def onRoomMemberEvent(self, room, ev) -> None:
+    async def onRoomMemberEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomMemberEvent,
+    ) -> None:
         # The event can be a past event, don't trust it to update the model
         # room's current state.
         if ev.state_key in room.users:
@@ -383,7 +411,9 @@ class NioCallbacks:
             await self.client.register_nio_room(room)
 
 
-    async def onRoomAliasEvent(self, room, ev) -> None:
+    async def onRoomAliasEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomAliasEvent,
+    ) -> None:
         if ev.canonical_alias:
             url  = f"https://matrix.to/#/{quote(ev.canonical_alias)}"
             link = f"<a href='{url}'>{ev.canonical_alias}</a>"
@@ -394,7 +424,9 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomNameEvent(self, room, ev) -> None:
+    async def onRoomNameEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomNameEvent,
+    ) -> None:
         if ev.name:
             co = f"%1 changed the room's name to \"{ev.name}\""
         else:
@@ -403,7 +435,9 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomAvatarEvent(self, room, ev) -> None:
+    async def onRoomAvatarEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomAvatarEvent,
+    ) -> None:
         if ev.avatar_url:
             co = "%1 changed the room's picture"
         else:
@@ -414,7 +448,9 @@ class NioCallbacks:
         )
 
 
-    async def onRoomTopicEvent(self, room, ev) -> None:
+    async def onRoomTopicEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomTopicEvent,
+    ) -> None:
         if ev.topic:
             topic = HTML_PROCESSOR.filter(
                 ev.topic, inline=True, room_id=room.room_id,
@@ -426,27 +462,37 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onRoomEncryptionEvent(self, room, ev) -> None:
+    async def onRoomEncryptionEvent(
+        self, room: nio.MatrixRoom, ev: nio.RoomEncryptionEvent,
+    ) -> None:
         co = "%1 turned on encryption for this room"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onMegolmEvent(self, room, ev) -> None:
+    async def onMegolmEvent(
+        self, room: nio.MatrixRoom, ev: nio.MegolmEvent,
+    ) -> None:
         co = "%1 sent an undecryptable message"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onBadEvent(self, room, ev) -> None:
+    async def onBadEvent(
+        self, room: nio.MatrixRoom, ev: nio.BadEvent,
+    ) -> None:
         co = f"%1 sent a malformed <b>{ev.type}</b> event"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onUnknownBadEvent(self, room, ev) -> None:
+    async def onUnknownBadEvent(
+        self, room: nio.MatrixRoom, ev: nio.UnknownBadEvent,
+    ) -> None:
         co = "%1 sent a malformed event lacking a minimal structure"
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onUnknownEvent(self, room, ev) -> None:
+    async def onUnknownEvent(
+        self, room: nio.MatrixRoom, ev: nio.UnknownEvent,
+    ) -> None:
         if self.client.backend.ui_settings["hideUnknownEvents"]:
             await self.client.register_nio_room(room)
             return
@@ -455,7 +501,9 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onUnknownEncryptedEvent(self, room, ev) -> None:
+    async def onUnknownEncryptedEvent(
+        self, room: nio.MatrixRoom, ev: nio.UnknownEncryptedEvent,
+    ) -> None:
         co = (
             f"%1 sent an <b>{ev.type}</b> event encrypted with "
             f"unsupported <b>{ev.algorithm}</b> algorithm"
@@ -463,11 +511,17 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onInviteEvent(self, room, ev) -> None:
+    async def onInviteEvent(
+        self, room: nio.MatrixRoom, ev: nio.InviteEvent,
+    ) -> None:
         await self.client.register_nio_room(room)
 
 
-    async def onTypingNoticeEvent(self, room, ev) -> None:
+    # Ephemeral event callbacks
+
+    async def onTypingNoticeEvent(
+        self, room: nio.MatrixRoom, ev: nio.TypingNoticeEvent,
+    ) -> None:
         # Prevent recent past typing notices from being shown for a split
         # second on client startup:
         if not self.client.first_sync_done.is_set():
