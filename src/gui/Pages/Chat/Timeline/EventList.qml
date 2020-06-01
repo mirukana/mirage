@@ -352,6 +352,20 @@ Rectangle {
         }
     }
 
+    Timer {
+        interval: 1000
+
+        running:
+            (chat.roomInfo.unreads || chat.roomInfo.highlights) &&
+            Qt.application.state === Qt.ApplicationActive &&
+            (eventList.contentY + eventList.height) > -50
+
+        onTriggered: {
+            const eventId = eventList.model.get(0).id
+            py.callCoro("update_room_read_marker", [chat.roomId, eventId])
+        }
+    }
+
     HNoticePage {
         text: qsTr("No messages to show yet")
 

@@ -170,9 +170,8 @@ class MatrixClient(nio.AsyncClient):
             ),
         )
 
-        self.backend:   "Backend"     = backend
-        self.models:    ModelStore    = self.backend.models
-        self.open_room: Optional[str] = None
+        self.backend: "Backend"  = backend
+        self.models:  ModelStore = self.backend.models
 
         self.profile_task:       Optional[asyncio.Future] = None
         self.server_config_task: Optional[asyncio.Future] = None
@@ -1213,6 +1212,8 @@ class MatrixClient(nio.AsyncClient):
             ZeroDate
 
 
+    # Functions to register/modify data into models
+
     async def update_account_unread_counts(self) -> None:
         """Recalculate total unread notifications/highlights for our account"""
 
@@ -1226,8 +1227,6 @@ class MatrixClient(nio.AsyncClient):
         account.total_unread     = unreads
         account.total_highlights = highlights
 
-
-    # Functions to register data into models
 
     async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
         """Return whether an event was created before this client started."""

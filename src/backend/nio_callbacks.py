@@ -70,13 +70,11 @@ class NioCallbacks:
     # Response callbacks
 
     async def onSyncResponse(self, resp: nio.SyncResponse) -> None:
-        room_model = self.models[self.user_id, "rooms"]
+        for room_id in resp.rooms.invite:
+            await self.client.register_nio_room(self.client.all_rooms[room_id])
 
         for room_id, info in resp.rooms.join.items():
-            if room_id not in room_model:
-                # Just in case we don't get any events for that room that
-                # triggers other callbacks
-                await self.client.register_nio_room(self.client.rooms[room_id])
+            await self.client.register_nio_room(self.client.rooms[room_id])
 
             if room_id not in self.client.past_tokens:
                 self.client.past_tokens[room_id] = info.timeline.prev_batch

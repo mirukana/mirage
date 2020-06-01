@@ -262,28 +262,20 @@ class Backend:
         return await client.download(server_name, media_id)
 
 
-    async def room_read(self, room_id: str) -> None:
-        """Mark all messages in a room as read for all accounts part of it
-
-        Currently, this doesn't handle sending a read receipt to the server,
-        only cleaning up any unread indicators.
+    async def update_room_read_marker(
+        self, room_id: str, event_id: str,
+    ) -> None:
+        """Update room's read marker to an event for all accounts part of it.
         """
 
-        for user_id, client in self.clients.items():
-            client.open_room = room_id
+        async def update(client: MatrixClient) -> None:
+            room = self.models[client.user_id, "rooms"].get(room_id)
 
-            if not client.first_sync_done.is_set():
-                continue
+            if room and room.unreads + room.highlights:
+                await client.update_receipt_marker(room_id, event_id)
+                await client.update_account_unread_counts()
 
-            room = self.models[user_id, "rooms"].get(room_id)
-
-            if room:
-                account                   = self.models["accounts"][user_id]
-                account.total_unread     -= room.unreads
-                account.total_highlights -= room.highlights
-
-                room.highlights = 0
-                room.unreads    = 0
+        await asyncio.gather(*[update(c) for c in self.clients.values()])
 
 
     # General functions
