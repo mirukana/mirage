@@ -239,6 +239,7 @@ class UISettings(JSONDataFile):
             "hideProfileChangeEvents": True,
             "hideMembershipEvents": False,
             "hideUnknownEvents": True,
+            "markRoomReadMsecDelay": 200,
             "maxMessageCharactersPerLine": 65,
             "ownMessagesOnLeftAboveWidth": 895,
             "theme": "Midnight.qpl",

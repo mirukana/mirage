@@ -353,7 +353,7 @@ Rectangle {
     }
 
     Timer {
-        interval: 1000
+        interval: window.settings.markRoomReadMsecDelay
 
         running:
             (chat.roomInfo.unreads || chat.roomInfo.highlights) &&

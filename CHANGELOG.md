@@ -10,6 +10,11 @@ and this project adheres to
 
 ## Unreleased
 
+### Added
+
+- `markRoomReadMsecDelay` to configure how long in milliseconds Mirage will
+  wait before marking a focused room as read, defaults to `200`
+
 ### Changed
 
 - **Unread message/highlight counters**:
