@@ -272,8 +272,10 @@ class Backend:
             room = self.models[client.user_id, "rooms"].get(room_id)
 
             if room and room.unreads + room.highlights:
-                await client.update_receipt_marker(room_id, event_id)
+                room.unreads    = 0
+                room.highlights = 0
                 await client.update_account_unread_counts()
+                await client.update_receipt_marker(room_id, event_id)
 
         await asyncio.gather(*[update(c) for c in self.clients.values()])
 
