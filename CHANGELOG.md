@@ -1,23 +1,20 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
 ## Unreleased
 
-### Removed
-
-- Removed delay when multiple rooms are removed/hidden from the list.
-  This should provide a smoother experience when filtering rooms or collapsing
-  accounts.
-  If you encounter issues with these operations like the room list becoming
-  invisible, make sure first that your Qt installation is up-to-date
-  (latest minor version, e.g. 5.14.2).
-
 ### Changed
+
+- **Unread message/highlight counters**:
+  - The counters are now implemented in a cross-client, persistent way
+  - Read receipts will be sent to the server to mark rooms as read
 
 - While an E2E key import operation is running, prevent accidentally closing
   the popup by clicking outside of it
@@ -29,6 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   After pulling the latest version, make sure to clean up old installation
   and build files before regenerating the Makefile and installing:
   `sudo make uninstall; make clean; qmake && make && sudo make install`
+
+### Removed
+
+- Removed delay when multiple rooms are removed/hidden from the list.
+  This should provide a smoother experience when filtering rooms or collapsing
+  accounts.
+  If you encounter issues with these operations like the room list becoming
+  invisible, make sure first that your Qt installation is up-to-date
+  (latest x.y.Z version, e.g. 5.14.2).
 
 ### Fixed
 

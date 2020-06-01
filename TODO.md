@@ -179,11 +179,12 @@
     - Option to export-logout-login-import to fix one-time key problems
   - Cross-signing
 
-- Read receipts
 - Status message and presence
+- Display read receipts on events (who/how many people have read an event)
+- Fully read markers
 
 - Methods of signing in that aren't handled yet:
-  - `m.login.password`
+  - `m.login.password` alternate logins methods:
     - `m.id.thirdparty`
     - `m.id.phone`
   - `m.login.recaptcha` (need browser, just use fallback?)
