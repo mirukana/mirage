@@ -11,7 +11,7 @@ from urllib.parse import quote
 import nio
 
 from .html_markdown import HTML_PROCESSOR
-from .models.items import TypeSpecifier
+from .models.items import Presence, TypeSpecifier
 from .pyotherside_events import DevicesUpdated
 from .utils import classes_defined_in, plain2html
 
@@ -60,6 +60,8 @@ class NioCallbacks:
                 self.client.add_to_device_callback(method, event_class)
             elif issubclass(event_class, nio.AccountDataEvent):
                 self.client.add_room_account_data_callback(method, event_class)
+            elif issubclass(event_class, nio.PresenceEvent):
+                self.client.add_presence_callback(method, event_class)
             else:
                 self.client.add_event_callback(method, event_class)
 
@@ -585,3 +587,19 @@ class NioCallbacks:
                     last_read_event = receipt.event_id,
                     last_read_at    = datetime.fromtimestamp(timestamp),
                 )
+
+
+    # Presence event callbacks
+
+    async def onPresenceEvent(self, ev: nio.PresenceEvent) -> None:
+        for room_id in self.models[self.user_id, "rooms"]:
+            member = \
+                self.models[self.user_id, room_id, "members"].get(ev.user_id)
+
+            if member:
+                member.last_active_ago = \
+                    -1 if ev.last_active_ago is None else ev.last_active_ago
+
+                member.currently_active = ev.currently_active or False
+                member.presence         = ev.presence or Presence.Offline
+                member.status_message   = ev.status_msg or ""

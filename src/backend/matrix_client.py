@@ -39,7 +39,9 @@ from .errors import (
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
-from .models.items import Event, Member, Room, Upload, UploadStatus, ZeroDate
+from .models.items import (
+    Event, Member, Presence, Room, Upload, UploadStatus, ZeroDate,
+)
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
 from .pyotherside_events import AlertRequested, LoopException
@@ -1573,6 +1575,13 @@ class MatrixClient(nio.AsyncClient):
             typing       = user_id in room.typing_users,
             power_level  = member.power_level,
             invited      = member.invited,
+
+            last_active_ago  = -1 if member.last_active_ago is None else
+                                  member.last_active_ago,
+
+            currently_active = member.currently_active or False,
+            presence         = member.presence or Presence.Offline,
+            status_message   = member.status_msg or "",
         )
 
         if member.display_name:

@@ -41,7 +41,9 @@ HTile {
 
             SubtitleLabel {
                 tile: member
-                text: model.display_name ? model.id : ""
+                // text: model.display_name ? model.id : ""
+                text: [model.last_active_ago, model.currently_active,
+                       model.presence, model.status_message].join(" | ")
                 color: theme.chat.roomPane.listView.member.subtitle
             }
         }
