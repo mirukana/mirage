@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import UUID
 
 import lxml  # nosec
+
 import nio
 
 from ..utils import AutoStrEnum, auto
@@ -26,6 +27,12 @@ class TypeSpecifier(AutoStrEnum):
     Unset            = auto()
     ProfileChange    = auto()
     MembershipChange = auto()
+
+
+class Presence(AutoStrEnum):
+    Offline     = auto()  # can mean offline, invisible or unknwon
+    Unavailable = auto()
+    Online      = auto()
 
 
 @dataclass
@@ -172,8 +179,15 @@ class Member(ModelItem):
     power_level:     int      = 0
     invited:         bool     = False
     profile_updated: datetime = ZeroDate
+
     last_read_event: str      = ""
     last_read_at:    datetime = ZeroDate
+
+    last_active_ago:  int      = -1
+    currently_active: bool     = False
+    presence:         Presence = Presence.Offline
+    status_message:   str      = ""
+
 
     def __lt__(self, other: "Member") -> bool:
         """Sort by power level, then by display name/user ID."""
