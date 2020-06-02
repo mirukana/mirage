@@ -42,7 +42,7 @@ ApplicationWindow {
 
     property var theme: null
 
-    property var hideErrorTypes: new Set(["gaierror"])
+    property var hideErrorTypes: new Set(["gaierror", "SSLError"])
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})

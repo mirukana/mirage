@@ -62,10 +62,7 @@ QtObject {
         console.error(`python: ${sourceIndication}\n${traceback}`)
 
         if (window.hideErrorTypes.has(type)) {
-            console.info(
-                "Not showing GUI popup for error type " + type +
-                "due to user choice"
-            )
+            console.info("Not showing popup for ignored error type " + type)
             return
         }
 

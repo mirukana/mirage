@@ -12,13 +12,14 @@ and this project adheres to
 
 ### Added
 
-- `markRoomReadMsecDelay` to configure how long in milliseconds Mirage will
-  wait before marking a focused room as read, defaults to `200`
+- `markRoomReadMsecDelay` setting to configure how long in milliseconds Mirage
+  will wait before marking a focused room as read, defaults to `200`
 
 ### Changed
 
 - **Unread message/highlight counters**:
-  - The counters are now implemented in a cross-client, persistent way
+  - The counters are now implemented in a cross-client, persistent way,
+    and respect configured push rules for your account
   - Read receipts will be sent to the server to mark rooms as read
 
 - While an E2E key import operation is running, prevent accidentally closing
@@ -50,13 +51,17 @@ and this project adheres to
   cancel any running import operation
 
 - Fix Python pickling error when trying to redecrypt events after importing
-  E2E keys (#50)
-
-- Fix hiding `socket.gaierror` error popups that appeared when
-  the internet connection dropped 
+  E2E keys ([#50](https://github.com/mirukana/mirage/issues/50))
 
 - Handle Matrix 502 errors returned when trying to invite a user with an
   incorrect or unresponsive server in their ID
+
+- Correctly hide `socket.gaierror` error popups that appear when the
+  internet connection drops
+
+- Hide popups for pointless
+  `ssl.SSLError: [SSL: KRB5_S_INIT] application data after close notify`
+  exceptions that occur in the Flatpak releases due to a Python 3.7 bug
 
 
 ## 0.5.0
