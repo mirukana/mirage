@@ -328,6 +328,30 @@ QtObject {
     }
 
 
+    function formatRelativeTime(milliseconds) {
+        const seconds = Math.floor(milliseconds / 1000)
+
+        return (
+            seconds < 60 ?
+            qsTr("%1s").arg(seconds) :
+
+            seconds < 60 * 60 ?
+            qsTr("%1mn").arg(Math.floor(seconds / 60)) :
+
+            seconds < 60 * 60 * 24 ?
+            qsTr("%1h").arg(Math.floor(seconds / 60 / 60)) :
+
+            seconds < 60 * 60 * 24 * 30 ?
+            qsTr("%1d").arg(Math.floor(seconds / 60 / 60 / 24)) :
+
+            seconds < 60 * 60 * 24 * 30 * 12 ?
+            qsTr("%1mo").arg(Math.floor(seconds / 60 / 60 / 24 / 30)) :
+
+            qsTr("%1y").arg(Math.floor(seconds / 60 / 60 / 24 / 30 / 12))
+        )
+    }
+
+
     function formatDuration(milliseconds) {
         const totalSeconds = milliseconds / 1000
 
