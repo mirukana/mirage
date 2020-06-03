@@ -275,28 +275,6 @@ class MatrixClient(nio.AsyncClient):
     async def _start(self) -> None:
         """Fetch our user profile, server config and enter the sync loop."""
 
-        def on_profile_response(future) -> None:
-            """Update our model `Account` with the received profile details."""
-
-            if future.cancelled():  # Account logged out
-                return
-
-            try:
-                resp = future.result()
-            except Exception:
-                trace = traceback.format_exc().rstrip()
-                log.warn("On %s profile retrieval: %s", self.user_id, trace)
-                self.profile_task = asyncio.ensure_future(
-                    self.backend.get_profile(self.user_id),
-                )
-                self.profile_task.add_done_callback(on_profile_response)
-                return
-
-            account                 = self.models["accounts"][self.user_id]
-            account.profile_updated = datetime.now()
-            account.display_name    = resp.displayname or ""
-            account.avatar_url      = resp.avatar_url or ""
-
         def on_server_config_response(future) -> None:
             """Update our model `Account` with the received config details."""
 
@@ -319,10 +297,7 @@ class MatrixClient(nio.AsyncClient):
                     on_server_config_response,
                 )
 
-        self.profile_task = asyncio.ensure_future(
-            self.backend.get_profile(self.user_id),
-        )
-        self.profile_task.add_done_callback(on_profile_response)
+        self.profile_task = asyncio.ensure_future(self.update_own_profile())
 
         self.server_config_task = asyncio.ensure_future(
             self.get_server_config(),
@@ -364,6 +339,19 @@ class MatrixClient(nio.AsyncClient):
                     LoopException(str(err), err, trace)
 
             await asyncio.sleep(5)
+
+
+    async def update_own_profile(self) -> None:
+        """Fetch our profile from server and Update our model `Account`."""
+
+        # XXX: verify this works when logging out quickly
+
+        resp = await self.backend.get_profile(self.user_id)
+
+        account                 = self.models["accounts"][self.user_id]
+        account.profile_updated = datetime.now()
+        account.display_name    = resp.displayname or ""
+        account.avatar_url      = resp.avatar_url or ""
 
 
     async def get_server_config(self) -> int:
