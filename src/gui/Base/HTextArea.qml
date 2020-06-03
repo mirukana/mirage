@@ -19,7 +19,7 @@ TextArea {
     property alias backgroundColor: textAreaBackground.color
 
 
-    function reset() { clear(); text = defaultText }
+    function reset() { clear(); text = Qt.binding(() => defaultText) }
     function insertAtCursor(text) { insert(cursorPosition, text) }
 
 
@@ -51,6 +51,9 @@ TextArea {
         text                    = window.getState(this, "text", "")
         textArea.cursorPosition = text.length
     }
+
+    onActiveFocusChanged:
+        text = activeFocus || changed ? text : Qt.binding(() => defaultText)
 
     onTextChanged: window.saveState(this)
 

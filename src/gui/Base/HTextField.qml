@@ -39,6 +39,9 @@ TextField {
 
     onTextChanged: window.saveState(this)
 
+    onActiveFocusChanged:
+        text = activeFocus || changed ? text : Qt.binding(() => defaultText)
+
     Keys.onPressed: if (
         event.modifiers & Qt.AltModifier ||
         event.modifiers & Qt.MetaModifier
@@ -67,7 +70,7 @@ TextField {
     readonly property bool changed: text !== defaultText
 
 
-    function reset() { clear(); text = defaultText }
+    function reset() { clear(); text = Qt.binding(() => defaultText)}
 
 
     Binding on color {
