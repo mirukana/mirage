@@ -33,6 +33,9 @@ and this project adheres to
   and build files before regenerating the Makefile and installing:
   `sudo make uninstall; make clean; qmake && make && sudo make install`
 
+- Improve the error messages shown when trying to start a direct chat with or 
+  invite a non-existing user
+
 ### Removed
 
 - Removed delay when multiple rooms are removed/hidden from the list.
@@ -52,9 +55,6 @@ and this project adheres to
 
 - Fix Python pickling error when trying to redecrypt events after importing
   E2E keys ([#50](https://github.com/mirukana/mirage/issues/50))
-
-- Fix the error message shown when trying to start a direct chat with or 
-  invite a non-existing user
 
 - Handle Matrix 502 errors returned when trying to start a direct chat or 
   invite a user with an incorrect or unresponsive server in their ID

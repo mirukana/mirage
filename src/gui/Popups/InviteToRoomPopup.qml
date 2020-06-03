@@ -105,12 +105,12 @@ BoxPopup {
                          "servers, can't invite %1").arg(user) :
 
                     type === "MatrixNotFound" ?
-                    qsTr("%1 not found, please verify the entered user ID")
+                    qsTr("%1 not found, please verify the entered ID")
                     .arg(user) :
 
                     type === "MatrixBadGateway" ?
-                    qsTr("Server error while trying to find %1, please " +
-                         "verify the entered user ID").arg(user) :
+                    qsTr("Could not contact %1's server, " +
+                         "please verify the entered ID").arg(user) :
 
                     type === "MatrixUnsupportedRoomVersion" ?
                     qsTr("%1's server does not support this room's version")

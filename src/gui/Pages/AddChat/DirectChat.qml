@@ -45,12 +45,12 @@ HBox {
                                "@username:homeserver")
 
                 if (type === "MatrixNotFound")
-                    txt = qsTr("This user does not exist")
+                    txt = qsTr("User not found, please verify the entered ID")
 
                 if (type === "MatrixBadGateway")
                     txt = qsTr(
-                        "Server error while trying to find user, please " +
-                        "verify the entered user ID"
+                        "Could not contact this user's server, " +
+                        "please verify the entered ID"
                     )
 
                 errorMessage.text = txt
