@@ -112,6 +112,11 @@ HBox {
             placeholderText: qsTr("This room is about...")
             defaultText: chat.roomInfo.plain_topic
             enabled: chat.roomInfo.can_set_topic
+
+            focusItemOnTab:
+                encryptCheckBox.checked ?
+                requireInviteCheckbox :
+                encryptCheckBox
         }
     }
 

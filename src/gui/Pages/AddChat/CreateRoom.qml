@@ -94,6 +94,7 @@ HBox {
         HTextArea {
             width: parent.width
             placeholderText: qsTr("This room is about...")
+            focusItemOnTab: publicCheckBox
         }
     }
 

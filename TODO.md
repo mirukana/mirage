@@ -1,6 +1,5 @@
 # TODO
 
-- text area tab handling
 - fix cursor over field
 - update room highlight when creating new room
 - keyerror when forgetting room while loading members
