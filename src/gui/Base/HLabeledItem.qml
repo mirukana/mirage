@@ -20,6 +20,7 @@ HColumnLayout {
 
         HLabel {
             id: label
+            opacity: item.opacity
             wrapMode: Text.Wrap
 
             Layout.fillWidth: true
@@ -27,6 +28,7 @@ HColumnLayout {
 
         HIcon {
             svgName: "field-tooltip-available"
+            opacity: item.opacity
             visible: toolTip.text
 
             Binding on colorize {
@@ -61,6 +63,7 @@ HColumnLayout {
 
     HLabel {
         id: errorLabel
+        opacity: item.opacity
         visible: Layout.maximumHeight > 0
         wrapMode: Text.Wrap
         color: theme.colors.errorText
