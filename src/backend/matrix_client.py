@@ -972,6 +972,62 @@ class MatrixClient(nio.AsyncClient):
         return (successes, errors)
 
 
+    async def room_put_state_builder(
+        self, room_id: str, builder: nio.EventBuilder,
+    ) -> str:
+        """Send state event to room based from a `nio.EventBuilder` object."""
+
+        dct = builder.as_dict()
+
+        response = await self.room_put_state(
+            room_id    = room_id,
+            event_type = dct["type"],
+            content    = dct["content"],
+            state_key  = dct["state_key"],
+        )
+        return response.event_id
+
+
+    async def room_set(
+        self,
+        room_id:        str,
+        name:           Optional[str]  = None,
+        topic:          Optional[str]  = None,
+        encrypt:        Optional[bool] = None,
+        require_invite: Optional[bool] = None,
+        forbid_guests:  Optional[bool] = None,
+    ) -> None:
+        """Send setting state events for arguments that aren't `None`."""
+
+        builders: List[nio.EventBuilder] = []
+
+        if name is not None:
+            builders.append(nio.ChangeNameBuilder(name=name))
+
+        if topic is not None:
+            builders.append(nio.ChangeTopicBuilder(topic=topic))
+
+        if encrypt is False:
+            raise ValueError("Cannot disable encryption in a E2E room")
+
+        if encrypt is True:
+            builders.append(nio.EnableEncryptionBuilder())
+
+        if require_invite is not None:
+            builders.append(nio.ChangeJoinRulesBuilder(
+                rule="invite" if require_invite else "public",
+            ))
+
+        if forbid_guests is not None:
+            builders.append(nio.ChangeGuestAccessBuilder(
+                access = "forbidden" if forbid_guests else "can_join",
+            ))
+
+        await asyncio.gather(*[
+            self.room_put_state_builder(room_id, b) for b in builders
+        ])
+
+
     async def get_redacted_event_content(
         self,
         nio_type: Type[nio.Event],

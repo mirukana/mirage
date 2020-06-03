@@ -1,6 +1,6 @@
 # TODO
 
-- fields/areas defaultText not updating when unchanged
+- text area tab handling
 - fix cursor over field
 - update room highlight when creating new room
 - keyerror when forgetting room while loading members
@@ -23,6 +23,9 @@
 - Don't send typing notification when switching to a room where the composer 
   has loaded text 
 
+- Popups and room settings can't be scrolled when not enough height to show all
+- `TextArea`s in Popups grow past window height instead of being scrollable
+
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
   laggy with hundreds of rooms in between
 - On startup, if a room's last event is a membership change,
@@ -33,9 +36,6 @@
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
 - Catch server 5xx errors when sending message and retry 
-
-- Popups and room settings can't be scrolled when not enough height to show all
-- `TextArea`s in Popups grow past window height instead of being scrollable
 
 - Handle cases where a known account's access token is invalid
 - If an account is gone from the user's config, discard UI state last page
@@ -63,7 +63,15 @@
 
 - Make clicking on user/room mentions open relevant UI instead of matrix.to
   URL in browser
-- Make rooms fully manageable within Mirage: settings, permissions, unban
+
+- Missing room settings:
+  - Set whether to publish this room in the server room directory
+  - Set history visibility
+  - Set aliases 
+  - Change members power level
+  - Setup permissions 
+  - Unban members
+  - Set flair (which community this room belongs to)
 
 - Linkify URLs in topic text areas
 

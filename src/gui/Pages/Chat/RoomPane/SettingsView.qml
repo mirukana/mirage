@@ -12,8 +12,7 @@ HBox {
             name: "apply",
             text: qsTr("Save"),
             iconName: "apply",
-            // enabled: anyChange, TODO
-            enabled: false,
+            enabled: anyChange,
             loading: saveFuture !== null,
             disableWhileLoading: false,
         },
@@ -28,7 +27,25 @@ HBox {
     buttonCallbacks: ({
         apply: button => {
             if (saveFuture) saveFuture.cancel()
-            // TODO
+
+            const args = [
+                chat.roomId,
+                nameField.item.changed ? nameField.item.text : undefined,
+                topicArea.item.changed ? topicArea.item.text : undefined,
+                encryptCheckBox.changed ? true : undefined,
+
+                requireInviteCheckbox.changed ?
+                requireInviteCheckbox.checked : undefined,
+
+                forbidGuestsCheckBox.changed ?
+                forbidGuestsCheckBox.checked : undefined,
+            ]
+
+            function onDone() { saveFuture = null }
+
+            saveFuture = py.callClientCoro(
+                chat.userId, "room_set", args, onDone, onDone,
+            )
         },
 
         cancel: button => {

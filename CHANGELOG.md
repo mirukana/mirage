@@ -12,6 +12,10 @@ and this project adheres to
 
 ### Added
 
+- **Saving room settings**: room name, topic, guest access, invite requirement,
+  guest access and encryption can now be changed and saved from the room's 
+  settings pane 
+
 - `markRoomReadMsecDelay` setting to configure how long in milliseconds Mirage
   will wait before marking a focused room as read, defaults to `200`
 
