@@ -38,7 +38,7 @@ HBox {
             }
 
             nameField.item.reset()
-            topicField.item.reset()
+            topicArea.item.reset()
             encryptCheckBox.reset()
             requireInviteCheckbox.reset()
             forbidGuestsCheckBox.reset()
@@ -49,7 +49,7 @@ HBox {
     property var saveFuture: null
 
     readonly property bool anyChange:
-        nameField.item.changed || topicField.item.changed ||
+        nameField.item.changed || topicArea.item.changed ||
         encryptCheckBox.changed || requireInviteCheckbox.changed ||
         forbidGuestsCheckBox.changed
 
@@ -85,12 +85,12 @@ HBox {
     }
 
     HLabeledItem {
-        id: topicField
+        id: topicArea
         label.text: qsTr("Topic:")
 
         Layout.fillWidth: true
 
-        HTextField {
+        HTextArea {
             width: parent.width
             placeholderText: qsTr("This room is about...")
             defaultText: chat.roomInfo.plain_topic

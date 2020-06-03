@@ -22,7 +22,7 @@ HBox {
 
             const args = [
                 nameField.item.text,
-                topicField.item.text,
+                topicArea.item.text,
                 publicCheckBox.checked,
                 encryptCheckBox.checked,
                 ! blockOtherServersCheckBox.checked,
@@ -41,7 +41,7 @@ HBox {
 
         cancel: button => {
             nameField.item.text               = ""
-            topicField.item.text              = ""
+            topicArea.item.text               = ""
             publicCheckBox.checked            = false
             encryptCheckBox.checked           = false
             blockOtherServersCheckBox.checked = false
@@ -86,12 +86,12 @@ HBox {
     }
 
     HLabeledItem {
-        id: topicField
+        id: topicArea
         label.text: qsTr("Topic:")
 
         Layout.fillWidth: true
 
-        HTextField {
+        HTextArea {
             width: parent.width
             placeholderText: qsTr("This room is about...")
         }

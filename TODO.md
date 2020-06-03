@@ -1,5 +1,6 @@
 # TODO
 
+- fields/areas defaultText not updating when unchanged
 - fix cursor over field
 - update room highlight when creating new room
 - keyerror when forgetting room while loading members
@@ -21,8 +22,6 @@
 
 - Don't send typing notification when switching to a room where the composer 
   has loaded text 
-
-- SSL error on python 3.7
 
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
   laggy with hundreds of rooms in between
@@ -66,8 +65,7 @@
   URL in browser
 - Make rooms fully manageable within Mirage: settings, permissions, unban
 
-- Labeled text area component, use it for room creation/settings topic 
-  - Linkify URLs in topic text areas
+- Linkify URLs in topic text areas
 
 - Expand the room pane if it's currently too small to show room settings
 - Use a loader for items not in view for the `HTabContainer`'s `SwipeView`

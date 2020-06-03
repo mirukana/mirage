@@ -44,6 +44,9 @@ and this project adheres to
 - Improve the error messages shown when trying to start a direct chat with or 
   invite a non-existing user
 
+- In room settings or creation, use a text area for the topic instead of a
+  field limited to a single line 
+
 ### Removed
 
 - Removed delay when multiple rooms are removed/hidden from the list.
