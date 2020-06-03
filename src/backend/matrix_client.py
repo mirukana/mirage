@@ -1276,7 +1276,9 @@ class MatrixClient(nio.AsyncClient):
             avatar_url     = room.gen_avatar_url or "",
             plain_topic    = room.topic or "",
             topic          = HTML.filter(
-                room.topic or "", inline=True, room_id=room.room_id,
+                utils.plain2html(room.topic or ""),
+                inline  = True,
+                room_id = room.room_id,
             ),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",

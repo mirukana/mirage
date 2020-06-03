@@ -83,6 +83,9 @@ and this project adheres to
 - When signing in a new account, correctly position it after the other
   existing ones without needing a restart
 
+- Correctly handle room topics containing new lines, hard tabs or text inside
+  `<>` brackets 
+
 ## 0.5.0
 
 ### Added

@@ -451,7 +451,7 @@ class NioCallbacks:
     ) -> None:
         if ev.topic:
             topic = HTML_PROCESSOR.filter(
-                ev.topic, inline=True, room_id=room.room_id,
+                plain2html(ev.topic), inline=True, room_id=room.room_id,
             )
             co = f"%1 changed the room's topic to \"{topic}\""
         else:
