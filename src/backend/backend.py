@@ -229,11 +229,13 @@ class Backend:
 
     # Client functions that don't need authentification
 
-    async def get_profile(self, user_id: str) -> nio.ProfileGetResponse:
+    async def get_profile(
+        self, user_id: str, use_cache: bool = True,
+    ) -> nio.ProfileGetResponse:
         """Cache and return the matrix profile of `user_id`."""
 
         async with self.get_profile_locks[user_id]:
-            if user_id in self.profile_cache:
+            if use_cache and user_id in self.profile_cache:
                 return self.profile_cache[user_id]
 
             client   = await self.get_any_client()

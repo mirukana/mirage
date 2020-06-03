@@ -66,6 +66,9 @@ and this project adheres to
   `ssl.SSLError: [SSL: KRB5_S_INIT] application data after close notify`
   exceptions that occur in the Flatpak releases due to a Python 3.7 bug
 
+- Make sure the account shown in the left pane is immediatly updated 
+  after changing display name or avatar in the accounty settings
+
 
 ## 0.5.0
 

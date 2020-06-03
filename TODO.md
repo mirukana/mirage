@@ -4,7 +4,6 @@
 - update room highlight when creating new room
 - keyerror when forgetting room while loading members
 - account order, and verify not adding to config fiel works
-- Refetch profile after manual profile change, don't wait for a room event
 
 ## Refactoring
 

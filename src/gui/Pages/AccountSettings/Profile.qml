@@ -13,9 +13,11 @@ HGridLayout {
 
             py.callClientCoro(
                 userId, "set_displayname", [nameField.item.text], () => {
-                    saveButton.nameChangeRunning = false
-                    accountSettings.headerName =
-                        Qt.binding(() => accountInfo.display_name)
+                    py.callClientCoro(userId, "update_own_profile", [], () => {
+                        saveButton.nameChangeRunning = false
+                        accountSettings.headerName =
+                            Qt.binding(() => accountInfo.display_name)
+                    })
                 }
             )
         }
@@ -32,7 +34,9 @@ HGridLayout {
                 Qt.resolvedUrl(avatar.sourceOverride).replace(/^file:/, "")
 
             py.callClientCoro(userId, "set_avatar_from_file", [path], () => {
-                saveButton.avatarChangeRunning = false
+                py.callClientCoro(userId, "update_own_profile", [], () => {
+                    saveButton.avatarChangeRunning = false
+                })
             }, (errType, [httpCode]) => {
                 console.error("Avatar upload failed:", httpCode, errType)
                 saveButton.avatarChangeRunning = false

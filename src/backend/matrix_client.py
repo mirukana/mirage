@@ -344,9 +344,7 @@ class MatrixClient(nio.AsyncClient):
     async def update_own_profile(self) -> None:
         """Fetch our profile from server and Update our model `Account`."""
 
-        # XXX: verify this works when logging out quickly
-
-        resp = await self.backend.get_profile(self.user_id)
+        resp = await self.backend.get_profile(self.user_id, use_cache=False)
 
         account                 = self.models["accounts"][self.user_id]
         account.profile_updated = datetime.now()
