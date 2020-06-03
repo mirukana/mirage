@@ -104,7 +104,7 @@ BoxPopup {
                     qsTr("This room rejects users from other matrix " +
                          "servers, can't invite %1").arg(user) :
 
-                    type === "UserNotFound" ?
+                    type === "MatrixNotFound" ?
                     qsTr("%1 not found, please verify the entered user ID")
                     .arg(user) :
 

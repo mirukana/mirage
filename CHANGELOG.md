@@ -53,6 +53,9 @@ and this project adheres to
 - Fix Python pickling error when trying to redecrypt events after importing
   E2E keys ([#50](https://github.com/mirukana/mirage/issues/50))
 
+- Fix the error message shown when trying to start a direct chat with or 
+  invite a non-existing user
+
 - Handle Matrix 502 errors returned when trying to invite a user with an
   incorrect or unresponsive server in their ID
 

@@ -44,7 +44,7 @@ HBox {
                     txt = qsTr("Invalid user ID, expected format is " +
                                "@username:homeserver")
 
-                if (type === "UserNotFound")
+                if (type === "MatrixNotFound")
                     txt = qsTr("This user does not exist")
 
                 errorMessage.text = txt
