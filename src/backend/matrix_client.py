@@ -1476,4 +1476,5 @@ class MatrixClient(nio.AsyncClient):
         if from_us or await self.event_is_past(ev):
             return
 
-        AlertRequested()
+        mentions_us = HTML.user_id_link_in_html(item.content, self.user_id)
+        AlertRequested(high_importance=mentions_us)

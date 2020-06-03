@@ -41,6 +41,8 @@ class AlertRequested(PyOtherSideEvent):
     flashes the taskbar icon on Windows.
     """
 
+    high_importance: bool = False
+
 
 @dataclass
 class CoroutineDone(PyOtherSideEvent):

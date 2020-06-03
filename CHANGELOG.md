@@ -15,12 +15,20 @@ and this project adheres to
 - `markRoomReadMsecDelay` setting to configure how long in milliseconds Mirage
   will wait before marking a focused room as read, defaults to `200`
 
+- `alertOnMentionForMsec` setting separate from `alertOnMessageForMsec`,
+  defaulting to `-1`: will trigger a non-expiring window highlight on
+  messages received that mention your user
+  (the behavior differs depending on desktop environment or window manager)
+
 ### Changed
 
 - **Unread message/highlight counters**:
   - The counters are now implemented in a cross-client, persistent way,
     and respect configured push rules for your account
   - Read receipts will be sent to the server to mark rooms as read
+
+- The `alertOnMessageForMsec` setting now defaults to `0`, disabling window
+  highlights for messages not mentioning you
 
 - While an E2E key import operation is running, prevent accidentally closing
   the popup by clicking outside of it

@@ -228,7 +228,8 @@ class UISettings(JSONDataFile):
             return "Ctrl" if platform.system() == "Darwin" else "Alt"
 
         return {
-            "alertOnMessageForMsec": 4000,
+            "alertOnMentionForMsec": -1,
+            "alertOnMessageForMsec": 0,
             "alwaysCenterRoomHeader": False,
             "compactMode": False,
             "clearRoomFilterOnEnter": True,
