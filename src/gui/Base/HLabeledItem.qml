@@ -7,10 +7,12 @@ HColumnLayout {
     spacing: theme.spacing / 2
 
 
-    property alias label: label
-    property alias errorLabel: errorLabel
-    property alias field: field
-    property alias toolTip: toolTip
+    default property alias insideData: itemHolder.data
+
+    readonly property Item item: itemHolder.visibleChildren[0]
+    readonly property alias label: label
+    readonly property alias errorLabel: errorLabel
+    readonly property alias toolTip: toolTip
 
 
     HRowLayout {
@@ -49,9 +51,10 @@ HColumnLayout {
         }
     }
 
-    HTextField {
-        id: field
-        radius: 2
+    Item {
+        id: itemHolder
+        // implicitWidth: childrenRect.width
+        implicitHeight: childrenRect.height
 
         Layout.fillWidth: true
     }

@@ -23,7 +23,7 @@ BoxPopup {
     okText: qsTr("Remove")
     // box.focusButton: "ok"
 
-    onOpened: reasonField.field.forceActiveFocus()
+    onOpened: reasonField.item.forceActiveFocus()
     onOk: {
         const idsForSender = {}  // {senderId: [event.id, ...]}
 
@@ -38,7 +38,7 @@ BoxPopup {
             py.callClientCoro(
                 mainUI.accountIds.includes(senderId) ? senderId : preferUserId,
                 "room_mass_redact",
-                [roomId, reasonField.field.text, ...eventClientIds]
+                [roomId, reasonField.item.text, ...eventClientIds]
             )
     }
 
@@ -51,10 +51,14 @@ BoxPopup {
     property bool isLast: false
 
 
-    HLabeledTextField {
+    HLabeledItem {
         id: reasonField
         label.text: qsTr("Optional reason:")
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+        }
     }
 }

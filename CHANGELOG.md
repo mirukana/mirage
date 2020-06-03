@@ -37,7 +37,7 @@ and this project adheres to
 
 - Removed delay when multiple rooms are removed/hidden from the list.
   This should provide a smoother experience when filtering rooms or collapsing
-  accounts.
+  accounts, and prevent the account duplication bug.
   If you encounter issues with these operations like the room list becoming
   invisible, make sure first that your Qt installation is up-to-date
   (latest x.y.Z version, e.g. 5.14.2).

@@ -8,7 +8,7 @@ HBox {
     id: signInBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: idField.field.forceActiveFocus()
+    onFocusChanged: idField.item.forceActiveFocus()
 
     buttonModel: [
         {
@@ -31,8 +31,8 @@ HBox {
             errorMessage.text = ""
 
             const args = [
-                idField.field.text.trim(), passwordField.field.text,
-                undefined, serverField.field.text.trim(),
+                idField.item.text.trim(), passwordField.item.text,
+                undefined, serverField.item.text.trim(),
             ]
 
             loginFuture = py.callCoro("login_client", args, userId => {
@@ -86,8 +86,8 @@ HBox {
     property string signInWith: "username"
 
     readonly property bool canSignIn:
-        serverField.field.text.trim() && idField.field.text.trim() &&
-        passwordField.field.text && ! serverField.field.error
+        serverField.item.text.trim() && idField.item.text.trim() &&
+        passwordField.item.text && ! serverField.item.error
 
 
     Timer {
@@ -128,7 +128,7 @@ HBox {
         }
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: idField
         label.text: qsTr(
             signInWith === "email" ? "Email:" :
@@ -137,26 +137,29 @@ HBox {
         )
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+        }
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: passwordField
         label.text: qsTr("Password:")
-        field.echoMode: HTextField.Password
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+            echoMode: HTextField.Password
+        }
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: serverField
         label.text: qsTr("Homeserver:")
-        field.text: "https://matrix.org"
-        field.error: ! /.+:\/\/.+/.test(cleanText)
 
         Layout.fillWidth: true
-
-
-        readonly property string cleanText: field.text.toLowerCase().trim()
 
         // 2019-11-11 https://www.hello-matrix.net/public_servers.php
         readonly property var knownServers: [
@@ -177,7 +180,15 @@ HBox {
         ]
 
         readonly property bool knownServerChosen:
-            knownServers.includes(cleanText)
+            knownServers.includes(item.cleanText)
+
+        HTextField {
+            width: parent.width
+            text: "https://matrix.org"
+            error: ! /.+:\/\/.+/.test(cleanText)
+
+            readonly property string cleanText: text.toLowerCase().trim()
+        }
     }
 
     HCheckBox {

@@ -8,7 +8,7 @@ HBox {
     id: addChatBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: nameField.field.forceActiveFocus()
+    onFocusChanged: nameField.item.forceActiveFocus()
 
     buttonModel: [
         { name: "apply", text: qsTr("Create"), iconName: "room-create" },
@@ -21,8 +21,8 @@ HBox {
             errorMessage.text = ""
 
             const args = [
-                nameField.field.text,
-                topicField.field.text,
+                nameField.item.text,
+                topicField.item.text,
                 publicCheckBox.checked,
                 encryptCheckBox.checked,
                 ! blockOtherServersCheckBox.checked,
@@ -40,8 +40,8 @@ HBox {
         },
 
         cancel: button => {
-            nameField.field.text              = ""
-            topicField.field.text             = ""
+            nameField.item.text               = ""
+            topicField.item.text              = ""
             publicCheckBox.checked            = false
             encryptCheckBox.checked           = false
             blockOtherServersCheckBox.checked = false
@@ -57,7 +57,7 @@ HBox {
     HRoomAvatar {
         id: avatar
         roomId: ""
-        displayName: nameField.field.text
+        displayName: nameField.item.text
 
         Layout.alignment: Qt.AlignCenter
         Layout.preferredWidth: 128
@@ -66,27 +66,35 @@ HBox {
         CurrentUserAvatar {
             anchors.fill: parent
             z: 10
-            opacity: nameField.field.text ? 0 : 1
+            opacity: nameField.item.text ? 0 : 1
             visible: opacity > 0
 
             Behavior on opacity { HNumberAnimation {} }
         }
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: nameField
         label.text: qsTr("Name:")
-        field.maximumLength: 255
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+            maximumLength: 255
+        }
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: topicField
         label.text: qsTr("Topic:")
-        field.placeholderText: qsTr("This room is about...")
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+            placeholderText: qsTr("This room is about...")
+        }
     }
 
     HCheckBox {

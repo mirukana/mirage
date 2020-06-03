@@ -24,12 +24,12 @@ BoxPopup {
 
         qsTr("Ban")
 
-    onOpened: reasonField.field.forceActiveFocus()
+    onOpened: reasonField.item.forceActiveFocus()
     onOk: py.callClientCoro(
         userId,
         operation === RemoveMemberPopup.Operation.Ban ?
         "room_ban" : "room_kick",
-        [roomId, targetUserId, reasonField.field.text || null],
+        [roomId, targetUserId, reasonField.item.text || null],
     )
 
 
@@ -45,10 +45,14 @@ BoxPopup {
         utils.coloredNameHtml(targetDisplayName, targetUserId)
 
 
-    HLabeledTextField {
+    HLabeledItem {
         id: reasonField
         label.text: qsTr("Optional reason:")
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+        }
     }
 }

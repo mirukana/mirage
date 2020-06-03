@@ -12,7 +12,7 @@ HGridLayout {
             saveButton.nameChangeRunning = true
 
             py.callClientCoro(
-                userId, "set_displayname", [nameField.field.text], () => {
+                userId, "set_displayname", [nameField.item.text], () => {
                     saveButton.nameChangeRunning = false
                     accountSettings.headerName =
                         Qt.binding(() => accountInfo.display_name)
@@ -21,7 +21,7 @@ HGridLayout {
         }
 
         if (aliasField.changed) {
-            window.settings.writeAliases[userId] = aliasField.field.text
+            window.settings.writeAliases[userId] = aliasField.item.text
             window.settingsChanged()
         }
 
@@ -41,8 +41,8 @@ HGridLayout {
     }
 
     function cancelChanges() {
-        nameField.field.text    = accountInfo.display_name
-        aliasField.field.text   = aliasField.currentAlias
+        nameField.item.text     = accountInfo.display_name
+        aliasField.item.text    = aliasField.currentAlias
         fileDialog.selectedFile = ""
         fileDialog.file         = ""
 
@@ -53,14 +53,14 @@ HGridLayout {
     flow: pageLoader.isWide ? GridLayout.LeftToRight : GridLayout.TopToBottom
     rowSpacing: currentSpacing
 
-    Component.onCompleted: nameField.field.forceActiveFocus()
+    Component.onCompleted: nameField.item.forceActiveFocus()
 
     HUserAvatar {
         property bool changed: Boolean(sourceOverride)
 
         id: avatar
         userId: accountSettings.userId
-        displayName: nameField.field.text
+        displayName: nameField.item.text
         mxc: accountInfo.avatar_url
         toolTipMxc: ""
         sourceOverride: fileDialog.selectedFile || fileDialog.file
@@ -155,36 +155,38 @@ HGridLayout {
                 Layout.fillWidth: true
             }
 
-            HLabeledTextField {
-                property bool changed: field.text !== accountInfo.display_name
-
-                readonly property string fText: field.text
-                onFTextChanged: accountSettings.headerName = field.text
+            HLabeledItem {
+                property bool changed: item.text !== accountInfo.display_name
 
                 id: nameField
                 label.text: qsTr("Display name:")
-                field.maximumLength: 255
-                field.onAccepted: applyChanges()
-
-                Component.onCompleted: field.text = accountInfo.display_name
-
-                Keys.onEscapePressed: cancelChanges()
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
+
+                HTextField {
+                    width: parent.width
+                    maximumLength: 255
+
+                    onAccepted: applyChanges()
+                    onTextChanged: accountSettings.headerName = text
+                    Component.onCompleted: text = accountInfo.display_name
+
+                    Keys.onEscapePressed: cancelChanges()
+                }
             }
 
-            HLabeledTextField {
+            HLabeledItem {
                 property string currentAlias: aliases[userId] || ""
-                property bool changed: field.text !== currentAlias
+                property bool changed: item.text !== currentAlias
 
                 readonly property var aliases: window.settings.writeAliases
 
                 readonly property string alreadyTakenBy: {
-                    if (! field.text) return ""
+                    if (! item.text) return ""
 
                     for (const [id, idAlias] of Object.entries(aliases))
-                        if (id !== userId && idAlias === field.text) return id
+                        if (id !== userId && idAlias === item.text) return id
 
                     return ""
                 }
@@ -199,14 +201,6 @@ HGridLayout {
                     qsTr("Taken by %1").arg(alreadyTakenBy) :
                     ""
 
-                field.error: alreadyTakenBy !== ""
-                field.onAccepted: applyChanges()
-                field.placeholderText: qsTr("e.g. %1").arg((
-                    nameField.field.text ||
-                    accountInfo.display_name ||
-                    userId.substring(1)
-                )[0])
-
                 toolTip.text: qsTr(
                     "From any chat, start a message with specified alias " +
                     "followed by a space to type and send as this " +
@@ -215,12 +209,23 @@ HGridLayout {
                     "To ignore the alias when typing, prepend it with a space."
                 )
 
-                Component.onCompleted: field.text = currentAlias
-
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
 
-                Keys.onEscapePressed: cancelChanges()
+                HTextField {
+                    width: parent.width
+                    error: aliasField.alreadyTakenBy !== ""
+                    onAccepted: applyChanges()
+                    placeholderText: qsTr("e.g. %1").arg((
+                        nameField.item.text ||
+                        accountInfo.display_name ||
+                        userId.substring(1)
+                    )[0])
+
+                    Component.onCompleted: text = aliasField.currentAlias
+
+                    Keys.onEscapePressed: cancelChanges()
+                }
             }
         }
 

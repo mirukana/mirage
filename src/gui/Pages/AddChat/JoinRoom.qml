@@ -8,14 +8,14 @@ HBox {
     id: addChatBox
     clickButtonOnEnter: "apply"
 
-    onFocusChanged: roomField.field.forceActiveFocus()
+    onFocusChanged: roomField.item.forceActiveFocus()
 
     buttonModel: [
         {
             name: "apply",
             text: qsTr("Join"),
             iconName: "room-join",
-            enabled: Boolean(roomField.field.text.trim()),
+            enabled: Boolean(roomField.item.text.trim()),
         },
         { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
     ]
@@ -25,7 +25,7 @@ HBox {
             button.loading    = true
             errorMessage.text = ""
 
-            const args = [roomField.field.text.trim()]
+            const args = [roomField.item.text.trim()]
 
             py.callClientCoro(userId, "room_join", args, roomId => {
                 button.loading    = false
@@ -51,8 +51,8 @@ HBox {
         },
 
         cancel: button => {
-            roomField.field.text = ""
-            errorMessage.text    = ""
+            roomField.item.text = ""
+            errorMessage.text   = ""
             pageLoader.showPrevious()
         }
     })
@@ -67,13 +67,17 @@ HBox {
         Layout.preferredHeight: Layout.preferredWidth
     }
 
-    HLabeledTextField {
+    HLabeledItem {
         id: roomField
         label.text: qsTr("Alias, URL or room ID:")
-        field.placeholderText: qsTr("#example:matrix.org")
-        field.error: Boolean(errorMessage.text)
 
         Layout.fillWidth: true
+
+        HTextField {
+            width: parent.width
+            placeholderText: qsTr("#example:matrix.org")
+            error: Boolean(errorMessage.text)
+        }
     }
 
     HLabel {
