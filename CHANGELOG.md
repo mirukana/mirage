@@ -56,8 +56,8 @@ and this project adheres to
 - Fix the error message shown when trying to start a direct chat with or 
   invite a non-existing user
 
-- Handle Matrix 502 errors returned when trying to invite a user with an
-  incorrect or unresponsive server in their ID
+- Handle Matrix 502 errors returned when trying to start a direct chat or 
+  invite a user with an incorrect or unresponsive server in their ID
 
 - Correctly hide `socket.gaierror` error popups that appear when the
   internet connection drops

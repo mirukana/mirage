@@ -47,6 +47,12 @@ HBox {
                 if (type === "MatrixNotFound")
                     txt = qsTr("This user does not exist")
 
+                if (type === "MatrixBadGateway")
+                    txt = qsTr(
+                        "Server error while trying to find user, please " +
+                        "verify the entered user ID"
+                    )
+
                 errorMessage.text = txt
             })
         },
