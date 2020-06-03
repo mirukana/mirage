@@ -117,7 +117,7 @@ class Backend:
         password:   str,
         device_id:  Optional[str] = None,
         homeserver: str           = "https://matrix.org",
-        order:      int           = -1,
+        order:      Optional[int] = None,
    ) -> str:
         """Create and register a `MatrixClient`, login and return a user ID."""
 
@@ -130,6 +130,14 @@ class Backend:
         except MatrixError:
             await client.close()
             raise
+
+        if order is None and not self.models["accounts"]:
+            order = 0
+        elif order is None:
+            order = max(
+                account.order
+                for i, account in enumerate(self.models["accounts"].values())
+            ) + 1
 
         self.clients[client.user_id]            = client
         self.models["accounts"][client.user_id] = Account(client.user_id,order)

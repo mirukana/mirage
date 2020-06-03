@@ -3,7 +3,6 @@
 - fix cursor over field
 - update room highlight when creating new room
 - keyerror when forgetting room while loading members
-- account order, and verify not adding to config fiel works
 
 ## Refactoring
 

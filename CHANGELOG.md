@@ -69,6 +69,8 @@ and this project adheres to
 - Make sure the account shown in the left pane is immediatly updated 
   after changing display name or avatar in the accounty settings
 
+- When signing in a new account, correctly position it after the other
+  existing ones without needing a restart
 
 ## 0.5.0
 
