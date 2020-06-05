@@ -70,7 +70,7 @@ and this project adheres to
 - Closing the import key popup by pressing escape will now correctly
   cancel any running import operation
 
-- Fix Python pickling error when trying to redecrypt events after importing
+- Fix Python pickling error when trying to re-decrypt events after importing
   E2E keys ([#50](https://github.com/mirukana/mirage/issues/50))
 
 - Handle Matrix 502 errors returned when trying to start a direct chat or 
@@ -83,8 +83,8 @@ and this project adheres to
   `ssl.SSLError: [SSL: KRB5_S_INIT] application data after close notify`
   exceptions that occur in the Flatpak releases due to a Python 3.7 bug
 
-- Make sure the account shown in the left pane is immediatly updated 
-  after changing display name or avatar in the accounty settings
+- Make sure the account shown in the left pane is immediately updated 
+  after changing display name or avatar in the account settings
 
 - When signing in a new account, correctly position it after the other
   existing ones without needing a restart
@@ -97,7 +97,7 @@ and this project adheres to
 
 - Fix `KeyError` when forgetting a room
 
-- Fix cursor shape not changing to carret when hovering text fields and areas.
+- Fix cursor shape not changing to caret when hovering text fields and areas.
   This fix can only apply when the `enableKineticScrolling` setting is `true`,
   until the project switches to Qt 5.15.
 
