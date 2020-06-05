@@ -41,6 +41,10 @@ Button {
         buttonTheme: theme.controls.button
     }
 
+    Keys.onReturnPressed: if (enabled) clicked()
+    Keys.onEnterPressed: Keys.onReturnPressed(event)
+    activeFocusOnTab: true
+
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label

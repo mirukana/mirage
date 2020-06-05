@@ -29,6 +29,9 @@ Item {
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
 
+    readonly property bool composerHasFocus:
+        Boolean(loader.item && loader.item.composer.hasFocus)
+
 
     HShortcut {
         sequences: window.settings.keys.leaveRoom

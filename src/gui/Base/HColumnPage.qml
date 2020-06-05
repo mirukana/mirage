@@ -3,6 +3,9 @@
 import QtQuick 2.12
 
 HPage {
+    id: page
+
+
     default property alias columnData: column.data
 
 

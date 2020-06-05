@@ -7,6 +7,7 @@ import "../../../Base"
 
 Rectangle {
     property alias eventList: messageArea.eventList
+    readonly property bool hasFocus: messageArea.activeFocus
 
 
     function takeFocus() { messageArea.forceActiveFocus() }

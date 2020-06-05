@@ -3,66 +3,9 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../../Base"
+import "../../../Base/ButtonLayout"
 
-HBox {
-    color: theme.chat.roomPane.roomSettings.background
-
-    buttonModel: [
-        {
-            name: "apply",
-            text: qsTr("Save"),
-            iconName: "apply",
-            enabled: anyChange,
-            loading: saveFuture !== null,
-            disableWhileLoading: false,
-        },
-        {
-            name: "cancel",
-            text: qsTr("Cancel"),
-            iconName: "cancel",
-            enabled: anyChange || saveFuture !== null,
-        },
-    ]
-
-    buttonCallbacks: ({
-        apply: button => {
-            if (saveFuture) saveFuture.cancel()
-
-            const args = [
-                chat.roomId,
-                nameField.item.changed ? nameField.item.text : undefined,
-                topicArea.item.changed ? topicArea.item.text : undefined,
-                encryptCheckBox.changed ? true : undefined,
-
-                requireInviteCheckbox.changed ?
-                requireInviteCheckbox.checked : undefined,
-
-                forbidGuestsCheckBox.changed ?
-                forbidGuestsCheckBox.checked : undefined,
-            ]
-
-            function onDone() { saveFuture = null }
-
-            saveFuture = py.callClientCoro(
-                chat.userId, "room_set", args, onDone, onDone,
-            )
-        },
-
-        cancel: button => {
-            if (saveFuture) {
-                saveFuture.cancel()
-                saveFuture = null
-            }
-
-            nameField.item.reset()
-            topicArea.item.reset()
-            encryptCheckBox.reset()
-            requireInviteCheckbox.reset()
-            forbidGuestsCheckBox.reset()
-        },
-    })
-
-
+HFlickableColumnPage {
     property var saveFuture: null
 
     readonly property bool anyChange:
@@ -71,6 +14,69 @@ HBox {
         forbidGuestsCheckBox.changed
 
     readonly property Item keybindFocusItem: nameField.item
+
+
+    function save() {
+        if (saveFuture) saveFuture.cancel()
+
+        const args = [
+            chat.roomId,
+            nameField.item.changed ? nameField.item.text : undefined,
+            topicArea.item.changed ? topicArea.item.text : undefined,
+            encryptCheckBox.changed ? true : undefined,
+
+            requireInviteCheckbox.changed ?
+            requireInviteCheckbox.checked : undefined,
+
+            forbidGuestsCheckBox.changed ?
+            forbidGuestsCheckBox.checked : undefined,
+        ]
+
+        function onDone() { saveFuture = null }
+
+        saveFuture = py.callClientCoro(
+            chat.userId, "room_set", args, onDone, onDone,
+        )
+    }
+
+    function cancel() {
+        if (saveFuture) {
+            saveFuture.cancel()
+            saveFuture = null
+        }
+
+        nameField.item.reset()
+        topicArea.item.reset()
+        encryptCheckBox.reset()
+        requireInviteCheckbox.reset()
+        forbidGuestsCheckBox.reset()
+    }
+
+
+    useVariableSpacing: false
+    column.spacing: theme.spacing * 1.5
+
+    flickShortcuts.active:
+        ! mainUI.debugConsole.visible && ! chat.composerHasFocus
+
+    background: Rectangle {
+        color: theme.chat.roomPane.roomSettings.background
+    }
+
+    footer: ButtonLayout {
+        ApplyButton {
+            enabled: anyChange
+            loading: saveFuture !== null
+            disableWhileLoading: false
+            onClicked: save()
+
+        }
+
+        CancelButton {
+            enabled: anyChange || saveFuture !== null
+            onClicked: cancel()
+        }
+    }
 
 
     HRoomAvatar {
@@ -108,6 +114,7 @@ HBox {
         Layout.fillWidth: true
 
         HTextArea {
+            // TODO: limit height
             width: parent.width
             placeholderText: qsTr("This room is about...")
             defaultText: chat.roomInfo.plain_topic

@@ -3,7 +3,6 @@
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`
-  - Get rid of all `currentSpacing` stuff
   - Use new default/reset controls system 
   - Display name field text should be colored 
 
@@ -16,9 +15,13 @@
 ## Issues
 
 - Don't send typing notification when switching to a room where the composer 
-  has loaded text 
+  has preloaded text 
 
-- Popups and room settings can't be scrolled when not enough height to show all
+- When calling `Backend.update_room_read_marker()` for a recent message,
+  the marker will only be updated for accounts that have already received
+  it (server lag) 
+
+- Popups can't be scrolled when not enough height to show all
 - `TextArea`s in Popups grow past window height instead of being scrollable
 
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
@@ -37,8 +40,8 @@
 
 - After forgetting a room, it comes back because of the "you left" event
 
-- `code` and links in quote ("> http://example.com") aren't properly colored
-  in room "last message" subtitle
+- `code`, mentions and links in quote ("> http://example.com") aren't properly
+  colored in room delegate "last message" subtitle
 
 - `Timer` and `Animation` are bound to framerate
 - Can't use `QQmlApplicationEngine`, problem with QApplication?

@@ -76,7 +76,7 @@ MultiviewPane {
     }
 
     MemberView {}
-    SettingsView { fillAvailableHeight: true }
+    SettingsView {}
 
     HShortcut {
         sequences: window.settings.keys.toggleFocusRoomPane

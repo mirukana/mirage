@@ -62,6 +62,8 @@ and this project adheres to
 
 ### Fixed
 
+- The room settings pane is now scrollable
+
 - Avoid potential error if the room list data model is initialized after an
   initial sync has already been completed
 

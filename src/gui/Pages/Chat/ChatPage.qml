@@ -10,8 +10,7 @@ import "Timeline"
 
 HColumnPage {
     id: chatPage
-    leftPadding: 0
-    rightPadding: 0
+    padding: 0
 
     onLoadEventListChanged: if (loadEventList) loadedOnce = true
     Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()

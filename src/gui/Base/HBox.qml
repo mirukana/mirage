@@ -103,8 +103,6 @@ Rectangle {
                     Keys.onUpPressed: previous.forceActiveFocus()
                     Keys.onRightPressed: next.forceActiveFocus()
                     Keys.onDownPressed: next.forceActiveFocus()
-                    Keys.onReturnPressed: if (button.enabled) button.clicked()
-                    Keys.onEnterPressed: Keys.onReturnPressed(event)
 
                     Component.onCompleted:
                         if (name === focusButton) forceActiveFocus()

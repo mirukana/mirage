@@ -4,8 +4,16 @@ import QtQuick 2.12
 import "../ShortcutBundles"
 
 HPage {
-    property alias flickable: flickable
+    id: page
+
+
     default property alias columnData: column.data
+    property alias column: column
+    property alias flickable: flickable
+    property alias flickShortcuts: flickShortcuts
+
+
+    padding: 0
 
 
     HFlickable {
@@ -16,14 +24,20 @@ HPage {
         contentHeight: column.childrenRect.height
 
         FlickShortcuts {
+            id: flickShortcuts
             active: ! mainUI.debugConsole.visible
             flickable: flickable
         }
 
         HColumnLayout {
             id: column
-            width: flickable.width
-            height: flickable.height
+            x: padding
+            y: padding
+            width: flickable.width - padding * 2
+            height: flickable.height - padding * 2
+
+            property int padding:
+                page.currentSpacing < theme.spacing ? 0 : page.currentSpacing
         }
     }
 

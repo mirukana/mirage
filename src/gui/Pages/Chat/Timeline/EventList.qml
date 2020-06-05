@@ -175,7 +175,7 @@ Rectangle {
     }
 
     FlickShortcuts {
-        active: ! mainUI.debugConsole.visible
+        active: chat.composerHasFocus
         flickable: eventList
     }
 
