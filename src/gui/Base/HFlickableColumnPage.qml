@@ -21,7 +21,7 @@ HPage {
         anchors.fill: parent
         clip: true
         contentWidth: parent.width
-        contentHeight: column.childrenRect.height
+        contentHeight: column.childrenRect.height + column.padding * 2
 
         FlickShortcuts {
             id: flickShortcuts
