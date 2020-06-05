@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../../Base"
 import "../../../Base/ButtonLayout"
 
 HFlickableColumnPage {
+    id: settingsView
+
+
     property var saveFuture: null
 
     readonly property bool anyChange:
@@ -113,17 +117,23 @@ HFlickableColumnPage {
 
         Layout.fillWidth: true
 
-        HTextArea {
-            // TODO: limit height
+        ScrollView {
+            clip: true
             width: parent.width
-            placeholderText: qsTr("This room is about...")
-            defaultText: chat.roomInfo.plain_topic
-            enabled: chat.roomInfo.can_set_topic
+            height:
+                Math.min(topicAreaIn.implicitHeight, settingsView.height / 2)
 
-            focusItemOnTab:
-                encryptCheckBox.checked ?
-                requireInviteCheckbox :
-                encryptCheckBox
+            HTextArea {
+                id: topicAreaIn
+                placeholderText: qsTr("This room is about...")
+                defaultText: chat.roomInfo.plain_topic
+                enabled: chat.roomInfo.can_set_topic
+
+                focusItemOnTab:
+                    encryptCheckBox.checked ?
+                    requireInviteCheckbox :
+                    encryptCheckBox
+            }
         }
     }
 
