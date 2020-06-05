@@ -74,12 +74,14 @@ package on your machine.
 
 #### Arch Linux
 
-[Available on the AUR](https://aur.archlinux.org/packages/matrix-mirage-git/)
+Available on the AUR:
+- [release](https://aur.archlinux.org/packages/matrix-mirage-git/)
+- [git master](https://aur.archlinux.org/packages/matrix-mirage/)
 
 Using a AUR helper to install it,
-in this example [yay](https://github.com/Jguer/yay):
+in this example [yay](https://github.com/Jguer/yay) for the release version:
 
-    yay -S matrix-mirage-git
+    yay -S matrix-mirage
 
 
 ## Manual Installation
