@@ -13,7 +13,7 @@ HFlickableColumnPage {
     property var saveFuture: null
 
     readonly property bool anyChange:
-        nameField.item.changed || topicArea.item.changed ||
+        nameField.item.changed || topicArea.item.area.changed ||
         encryptCheckBox.changed || requireInviteCheckbox.changed ||
         forbidGuestsCheckBox.changed
 
@@ -26,7 +26,7 @@ HFlickableColumnPage {
         const args = [
             chat.roomId,
             nameField.item.changed ? nameField.item.text : undefined,
-            topicArea.item.changed ? topicArea.item.text : undefined,
+            topicArea.item.area.changed ? topicArea.item.area.text : undefined,
             encryptCheckBox.changed ? true : undefined,
 
             requireInviteCheckbox.changed ?
@@ -50,7 +50,7 @@ HFlickableColumnPage {
         }
 
         nameField.item.reset()
-        topicArea.item.reset()
+        topicArea.item.area.reset()
         encryptCheckBox.reset()
         requireInviteCheckbox.reset()
         forbidGuestsCheckBox.reset()
@@ -122,6 +122,8 @@ HFlickableColumnPage {
             width: parent.width
             height:
                 Math.min(topicAreaIn.implicitHeight, settingsView.height / 2)
+
+            readonly property alias area: topicAreaIn
 
             HTextArea {
                 id: topicAreaIn
