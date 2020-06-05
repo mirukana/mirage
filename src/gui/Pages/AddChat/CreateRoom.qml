@@ -31,6 +31,7 @@ HBox {
             py.callClientCoro(userId, "new_group_chat", args, roomId => {
                 button.loading = false
                 pageLoader.showRoom(userId, roomId)
+                mainPane.roomList.startCorrectItemSearch()
 
             }, (type, args) => {
                 button.loading = false

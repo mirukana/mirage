@@ -32,7 +32,7 @@ HListView {
 
                 onLeftClicked: showItemAtIndex(model.index)
                 onCollapsedChanged:
-                    if (wantedUserId === model.id) correctTimer.start()
+                    if (wantedUserId === model.id) startCorrectItemSearch()
             }
         }
 
@@ -69,7 +69,7 @@ HListView {
                      )
                 )
             )
-                correctTimer.start()
+                startCorrectItemSearch()
         })
     }
 
@@ -165,6 +165,10 @@ HListView {
         }
     }
 
+    function startCorrectItemSearch() {
+        correctTimer.start()
+    }
+
     function setCorrectCurrentItem() {
         if (! currentShouldBeRoom && ! currentShouldBeAccount) {
             currentIndex = -1
@@ -196,7 +200,7 @@ HListView {
     Connections {
         target: pageLoader
         onPreviousShown:
-            if (setCorrectCurrentItem() === false) correctTimer.start()
+            if (setCorrectCurrentItem() === false) startCorrectItemSearch()
     }
 
     Timer {

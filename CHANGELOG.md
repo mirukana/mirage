@@ -90,6 +90,9 @@ and this project adheres to
 - Correctly handle room topics containing new lines, hard tabs or text inside
   `<>` brackets 
 
+- Starting a direct chat, creating or joining a room will now correctly 
+  update the left pane room list's highlighted item
+
 ## 0.5.0
 
 ### Added

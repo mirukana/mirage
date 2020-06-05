@@ -31,6 +31,7 @@ HBox {
                 button.loading    = false
                 errorMessage.text = ""
                 pageLoader.showRoom(userId, roomId)
+                mainPane.roomList.startCorrectItemSearch()
 
             }, (type, args) => {
                 button.loading = false
