@@ -29,6 +29,7 @@ HPage {
 
     HKineticScrollingDisabler {
         flickable: flickable
-        anchors.fill: flickable
+        width: enabled ? flickable.width : 0
+        height: enabled ? flickable.height : 0
     }
 }

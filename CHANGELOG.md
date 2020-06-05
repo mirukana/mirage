@@ -95,6 +95,11 @@ and this project adheres to
 
 - Fix `KeyError` when forgetting a room
 
+- Fix cursor shape not changing to carret when hovering text fields and areas.
+  This fix can only apply when the `enableKineticScrolling` setting is `true`,
+  until the project switches to Qt 5.15.
+
+
 ## 0.5.0
 
 ### Added

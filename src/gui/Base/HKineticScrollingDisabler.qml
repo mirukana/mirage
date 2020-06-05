@@ -2,7 +2,6 @@
 
 import QtQuick 2.12
 
-// MouseArea component to disable kinetic scrolling
 MouseArea {
     id: mouseArea
     enabled: ! window.settings.enableKineticScrolling

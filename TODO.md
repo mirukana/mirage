@@ -1,8 +1,5 @@
 # TODO
 
-- fix cursor over field
-- keyerror when forgetting room while loading members
-
 ## Refactoring
 
 - Rewrite account settings using `HTabbedContainer`
@@ -255,6 +252,7 @@
 
 - Added `WheelHandler`, an Event Handler for the mouse wheel, and optionally
   for emulated mouse wheel events coming from a trackpad.
+  - Rewrite `HKineticScrollingDisabler` with it 
 
 - Added `BoundaryRule` in Qt.labs.animation: a `PropertyValueInterceptor` that
   restricts the range of values a numeric property can have, applies

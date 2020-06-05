@@ -119,6 +119,7 @@ GridView {
 
     HKineticScrollingDisabler {
         id: mouseArea
-        anchors.fill: parent
+        width: enabled ? parent.width : 0
+        height: enabled ? parent.height : 0
     }
 }
