@@ -1,12 +1,17 @@
 #!/usr/bin/env sh
 
-# pdb won't be usable with entr,
-# use https://pypi.org/project/remote-pdb/ instead.
-
-# An argument can be given to specify which QML file in src/gui to load.
+# Dependencies: findutils, entr
+#
+# This script will watch for source file changes and recompile-restart Mirage
+# when needed. If it gets stuck restarting in loop, press CTRL-C a bunch of
+# times and try again.
+#
+# pdb won't be usable due to entr, use https://pypi.org/project/remote-pdb/
+# instead (should be present if you install requirements-dev.txt).
+#
+# An argument can be given to specify which QML file in src/gui to load,
+# for example "Test.qml" would load "src/gui/Test.qml".
 # If no argument is given, the default is "UI.qml".
-
-export QT_QPA_PLATFORM=xcb
 
 make clean
 qmake mirage.pro CONFIG+=dev && make
