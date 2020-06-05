@@ -246,7 +246,7 @@ class Backend:
             if use_cache and user_id in self.profile_cache:
                 return self.profile_cache[user_id]
 
-            client   = await self.get_any_client()
+            client   = self.clients.get(user_id) or await self.get_any_client()
             response = await client.get_profile(user_id)
 
             self.profile_cache[user_id] = response
