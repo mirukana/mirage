@@ -8,7 +8,7 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## 0.5.1
+## 0.5.1 (2020-06-05)
 
 ### Added
 
@@ -102,7 +102,7 @@ and this project adheres to
   until the project switches to Qt 5.15.
 
 
-## 0.5.0
+## 0.5.0 (2020-05-22)
 
 ### Added
 
@@ -309,7 +309,7 @@ and this project adheres to
   strings in messages as matrix.to URLs also need a room ID to make sense
 
 
-## 0.4.3
+## 0.4.3 (2020-04-03)
 
 ### Added
 
@@ -356,7 +356,7 @@ and this project adheres to
   focused in narrow mode
 
 
-## 0.4.2
+## 0.4.2 (2020-03-27)
 
 ### Added
 
@@ -412,7 +412,7 @@ messages at once on desktop is not implemented yet.
   on new message for most desktops, "ready" notification on Gnome)
 
 
-## 0.4.1
+## 0.4.1 (2020-03-23)
 
 ### Added
 
@@ -458,6 +458,6 @@ messages at once on desktop is not implemented yet.
   while unneeded and invisible
 
 
-## 0.4.0
+## 0.4.0 (2020-03-21)
 
 Initial public release.
