@@ -909,6 +909,8 @@ class MatrixClient(nio.AsyncClient):
         self.models.pop((self.user_id, room_id, "events"), None)
         self.models.pop((self.user_id, room_id, "members"), None)
 
+        await self.update_account_unread_counts()
+
         try:
             await super().room_leave(room_id)
         except MatrixNotFound:  # already left
