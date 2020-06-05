@@ -93,6 +93,8 @@ and this project adheres to
 - Starting a direct chat, creating or joining a room will now correctly 
   update the left pane room list's highlighted item
 
+- Fix `KeyError` when forgetting a room
+
 ## 0.5.0
 
 ### Added

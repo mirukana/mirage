@@ -727,7 +727,7 @@ class MatrixClient(nio.AsyncClient):
         replace the local one we registered.
         """
 
-        our_info = self.models[self.user_id, room_id, "members"][self.user_id]
+        our_info = self.models["accounts"][self.user_id]
 
         content = event_fields.get("content", "").strip()
 
@@ -782,9 +782,10 @@ class MatrixClient(nio.AsyncClient):
         member list when the user is currently viewing the room.
         """
 
-        room = self.all_rooms[room_id]
+        # Room may be gone by the time this is called due to room_forget()
+        room = self.all_rooms.get(room_id)
 
-        if not room.members_synced:
+        if room and not room.members_synced:
             await super().joined_members(room_id)
             await self.register_nio_room(room, force_register_members=True)
 
