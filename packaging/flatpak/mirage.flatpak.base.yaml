@@ -94,7 +94,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/mirukana/matrix-nio.git
-        commit: 5b565f84cd8798200118c80a0582fd4ccb867e0d
+        commit: b2562d53ebbb016eb39d85a4ce703f9c8a6bb62b
 
   - name: mirage
     buildsystem: qmake
