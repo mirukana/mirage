@@ -6,6 +6,7 @@ import QtQuick.Window 2.12
 import Clipboard 0.1
 import "../../.."
 import "../../../Base"
+import "../../../PythonBridge"
 import "../../../ShortcutBundles"
 
 Rectangle {
@@ -238,6 +239,8 @@ Rectangle {
         property bool canLoad: true
         property bool loading: false
 
+        property Future updateMarkerFuture: null
+
         property bool ownEventsOnLeft:
             window.settings.ownMessagesOnLeftAboveWidth < 0 ?
             false :
@@ -353,16 +356,28 @@ Rectangle {
     }
 
     Timer {
-        interval: window.settings.markRoomReadMsecDelay
+        interval: Math.max(100, window.settings.markRoomReadMsecDelay)
 
         running:
+            ! eventList.updateMarkerFuture &&
             (chat.roomInfo.unreads || chat.roomInfo.highlights) &&
             Qt.application.state === Qt.ApplicationActive &&
             (eventList.contentY + eventList.height) > -50
 
         onTriggered: {
-            const eventId = eventList.model.get(0).id
-            py.callCoro("update_room_read_marker", [chat.roomId, eventId])
+            for (let i = 0; i < eventList.model.count; i++) {
+                const item = eventList.model.get(i)
+
+                if (item.sender !== chat.userId) {
+                    eventList.updateMarkerFuture = py.callCoro(
+                        "update_room_read_marker",
+                        [chat.roomId, item.event_id],
+                        () => { eventList.updateMarkerFuture = null },
+                        () => { eventList.updateMarkerFuture = null },
+                    )
+                    return
+                }
+            }
         }
     }
 
