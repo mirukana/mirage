@@ -176,7 +176,13 @@ controls:
         color placeholderText: colors.dimText
 
     textArea:
-        color background:      colors.strongBackground
+        color background: colors.strongBackground
+
+        int borderWidth:     1
+        color border:        "transparent"
+        color focusedBorder: colors.accentElement
+        color errorBorder:   colors.negativeBackground
+
         color text:            colors.text
         color placeholderText: controls.textField.placeholderText
 

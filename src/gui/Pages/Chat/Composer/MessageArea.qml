@@ -97,6 +97,7 @@ HTextArea {
     placeholderText: qsTr("Type a message...")
 
     backgroundColor: "transparent"
+    focusedBorderColor: "transparent"
     tabStopDistance: 4 * 4  // 4 spaces
     focus: true
 

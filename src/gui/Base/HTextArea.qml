@@ -11,12 +11,19 @@ TextArea {
     property var saveId: "ALL"
     property var saveProperties: ["text"]
 
+    property bool error: false
+    property alias radius: textAreaBackground.radius
+    property bool bordered: true
+
     property var focusItemOnTab: null
     property var disabledText: null
     property string defaultText: ""
     readonly property bool changed: text !== defaultText
 
     property alias backgroundColor: textAreaBackground.color
+    property color borderColor: theme.controls.textArea.border
+    property color errorBorder: theme.controls.textArea.errorBorder
+    property color focusedBorderColor: theme.controls.textArea.focusedBorder
 
 
     function reset() { clear(); text = Qt.binding(() => defaultText) }
@@ -42,8 +49,27 @@ TextArea {
 
     background: Rectangle {
         id: textAreaBackground
-        color: theme.controls.textArea.background
         radius: theme.radius
+        color: theme.controls.textArea.background
+
+        border.width: bordered ? theme.controls.textArea.borderWidth : 0
+        border.color: borderColor
+
+        HRectangleBottomBorder {
+            id: bottomBorder
+            borderHeight: theme.controls.textArea.borderWidth
+            color: error ? errorBorder : focusedBorderColor
+
+            transform: Scale {
+                origin.x: bottomBorder.width / 2
+                origin.y: bottomBorder.height / 2
+                xScale: textArea.activeFocus ? 1 : 0
+
+                Behavior on xScale { HNumberAnimation {} }
+            }
+
+            Behavior on color { HColorAnimation {} }
+        }
     }
 
     // Set it only on component creation to avoid binding loops
