@@ -24,11 +24,27 @@ TextField {
 
     background: Rectangle {
         id: textFieldBackground
+        radius: theme.radius
         color: field.activeFocus ? focusedBackgroundColor : backgroundColor
-        border.color: error ? errorBorder :
-                      field.activeFocus ? focusedBorderColor : borderColor
+
         border.width: bordered ? theme.controls.textField.borderWidth : 0
-        radius: bordered ? theme.radius : 0
+        border.color: borderColor
+
+        HRectangleBottomBorder {
+            id: bottomBorder
+            borderHeight: theme.controls.textField.borderWidth
+            color: error ? errorBorder : focusedBorderColor
+
+            transform: Scale {
+                origin.x: bottomBorder.width / 2
+                origin.y: bottomBorder.height / 2
+                xScale: field.activeFocus ? 1 : 0
+
+                Behavior on xScale { HNumberAnimation {} }
+            }
+
+            Behavior on color { HColorAnimation {} }
+        }
     }
 
     // Set it only on component creation to avoid binding loops
