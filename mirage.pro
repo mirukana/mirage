@@ -12,10 +12,8 @@ RCC_DIR     = $$BUILD_DIR/rcc
 QRC_FILE = $$BUILD_DIR/resources.qrc
 
 RESOURCES += $$QRC_FILE
-HEADERS   += src/utils.h src/clipboard.h \
-             submodules/hsluv-c/src/hsluv.h
-SOURCES   += src/main.cpp src/clipboard.cpp \
-             submodules/hsluv-c/src/hsluv.c
+HEADERS   += src/utils.h src/clipboard.h submodules/hsluv-c/src/hsluv.h
+SOURCES   += src/main.cpp submodules/hsluv-c/src/hsluv.c
 TARGET     = mirage
 
 
