@@ -73,10 +73,14 @@ or *~/.config/mirage/settings.json*.
 For Flatpak users, this will be
 *~/.var/app/io.github.mirukana.mirage/config/mirage* instead.
 
-The config folder where *settings.json* is located can be overriden by
-setting the `MIRAGE_CONFIG_DIR` environment variable.  
-The user data folder where *themes*, saved encryption data and other files
+The config folder where *accounts.json* and  *settings.json* is located can be
+overriden by setting the `MIRAGE_CONFIG_DIR` environment variable.  
+
+The user data folder where *themes*, encryption data and interface states
 are saved can be overriden with `MIRAGE_DATA_DIR`.
+
+The cache folder where downloaded files and thumbnails are saved can be
+overriden with `MIRAGE_CACHE_DIR`.
 
 The `theme` setting can be:
 

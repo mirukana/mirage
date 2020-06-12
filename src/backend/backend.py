@@ -2,6 +2,7 @@
 
 import asyncio
 import logging as log
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -102,7 +103,10 @@ class Backend:
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
                 DefaultDict(asyncio.Lock)  # {room_id: lock}
 
-        cache_dir                    = Path(self.appdirs.user_cache_dir)
+        cache_dir = Path(
+            os.environ.get("MIRAGE_CACHE_DIR") or self.appdirs.user_cache_dir,
+        )
+
         self.media_cache: MediaCache = MediaCache(self, cache_dir)
 
 
