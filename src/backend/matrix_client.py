@@ -12,6 +12,7 @@ import sys
 import traceback
 from contextlib import suppress
 from copy import deepcopy
+from dataclasses import asdict
 from datetime import datetime, timedelta
 from functools import partial
 from pathlib import Path
@@ -1255,6 +1256,39 @@ class MatrixClient(nio.AsyncClient):
 
         self.models[self.user_id, "rooms"][room_id].last_event_date = \
             ZeroDate
+
+
+    async def devices_info(self) -> List[Dict[str, Any]]:
+        """Get list of devices and their info for our user."""
+
+        def get_trust(device_id: str) -> str:
+            # Returns "verified", "blacklisted", "ignored" or "unset"
+
+            if device_id not in self.olm.device_store[self.user_id]:
+                return "unset"
+
+            trust = self.olm.device_store[self.user_id][device_id].trust_state
+            return trust.name
+
+        devices = [
+            {
+                "id":                device.id,
+                "display_name":      device.display_name or "",
+                "last_seen_ip":      device.last_seen_ip or "",
+                "last_seen_date":    device.last_seen_date or ZeroDate,
+                "last_seen_country": "",
+                "trusted":           get_trust(device.id) == "verified",
+                "blacklisted":       get_trust(device.id) == "blacklisted",
+            }
+            for device in (await self.devices()).devices
+        ]
+
+        return sorted(
+            devices,
+            # The current device will always be first
+            key = lambda d: (d["id"] == self.device_id, d["last_seen_date"]),
+            reverse = True,
+        )
 
 
     # Functions to register/modify data into models
