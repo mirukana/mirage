@@ -21,7 +21,7 @@ GridView {
         color: theme.controls.gridView.highlight
     }
 
-    ScrollBar.vertical: ScrollBar {
+    ScrollBar.vertical: HScrollBar {
         visible: gridView.interactive
     }
 

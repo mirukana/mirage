@@ -22,7 +22,7 @@ ListView {
         color: theme.controls.listView.highlight
     }
 
-    ScrollBar.vertical: ScrollBar {
+    ScrollBar.vertical: HScrollBar {
         visible: listView.interactive
     }
 
