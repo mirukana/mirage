@@ -117,7 +117,7 @@ HFlickableColumnPage {
 
         Layout.fillWidth: true
 
-        ScrollView {
+        HScrollView {
             clip: true
             width: parent.width
             height:

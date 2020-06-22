@@ -61,7 +61,7 @@ BoxPopup {
     property var failedInvites: []
 
 
-    ScrollView {
+    HScrollView {
         Layout.fillWidth: true
         Layout.fillHeight: true
 

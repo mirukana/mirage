@@ -21,7 +21,7 @@ BoxPopup {
     property string traceback: ""
 
 
-    ScrollView {
+    HScrollView {
         Layout.fillWidth: true
 
         HTextArea {
