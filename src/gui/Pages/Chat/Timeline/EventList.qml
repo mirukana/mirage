@@ -182,13 +182,11 @@ Rectangle {
 
     HListView {
         id: eventList
+        anchors.fill: parent
         clip: true
         keyNavigationWraps: false
-
-        anchors.fill: parent
-        anchors.leftMargin: theme.spacing
-        anchors.rightMargin: theme.spacing
-
+        leftMargin: theme.spacing
+        rightMargin: theme.spacing
         topMargin: theme.spacing
         bottomMargin: theme.spacing
         verticalLayoutDirection: ListView.BottomToTop

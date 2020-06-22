@@ -8,7 +8,7 @@ import "../../../Base"
 
 HColumnLayout {
     id: eventDelegate
-    width: eventList.width
+    width: eventList.width - eventList.leftMargin - eventList.rightMargin
 
     ListView.onRemove: eventList.uncheck(model.id)
 
