@@ -98,6 +98,18 @@ icons:
 // Generic UI controls
 
 controls:
+    scrollbar:
+        int width: theme.spacing
+
+        color track: colors.strongBackground
+
+        color slider:        colors.accentElement
+        color hoveredSlider: colors.accentElement
+        color pressedSlider: colors.strongAccentElement
+
+        int sliderPadding: 2
+        int sliderRadius:  theme.radius
+
     box:
         int defaultWidth: minimumSupportedWidth
         color background: colors.mediumBackground
