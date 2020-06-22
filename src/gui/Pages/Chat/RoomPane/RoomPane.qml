@@ -71,8 +71,9 @@ MultiviewPane {
     Connections {
         target: swipeView
 
-        onCurrentItemChanged:
+        function onCurrentItemChanged() {
             swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+        }
     }
 
     MemberView {}

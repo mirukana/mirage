@@ -199,8 +199,10 @@ HListView {
 
     Connections {
         target: pageLoader
-        onPreviousShown:
+
+        function onPreviousShown(componentUrl, properties) {
             if (setCorrectCurrentItem() === false) startCorrectItemSearch()
+        }
     }
 
     Timer {

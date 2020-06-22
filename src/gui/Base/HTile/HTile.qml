@@ -50,7 +50,8 @@ HButton {
     Connections {
         enabled: contextMenuLoader.status === Loader.Ready
         target: contextMenuLoader.item
-        onClosed: contextMenuLoader.active = false
+
+        function onClosed() { contextMenuLoader.active = false }
     }
 
     HLoader {
