@@ -55,20 +55,10 @@ TextArea {
         border.width: bordered ? theme.controls.textArea.borderWidth : 0
         border.color: borderColor
 
-        HRectangleBottomBorder {
-            id: bottomBorder
+        HBottomFocusLine {
+            show: textArea.activeFocus
             borderHeight: theme.controls.textArea.borderWidth
             color: error ? errorBorder : focusedBorderColor
-
-            transform: Scale {
-                origin.x: bottomBorder.width / 2
-                origin.y: bottomBorder.height / 2
-                xScale: textArea.activeFocus ? 1 : 0
-
-                Behavior on xScale { HNumberAnimation {} }
-            }
-
-            Behavior on color { HColorAnimation {} }
         }
     }
 

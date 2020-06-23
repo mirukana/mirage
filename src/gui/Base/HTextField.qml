@@ -30,20 +30,10 @@ TextField {
         border.width: bordered ? theme.controls.textField.borderWidth : 0
         border.color: borderColor
 
-        HRectangleBottomBorder {
-            id: bottomBorder
+        HBottomFocusLine {
+            show: field.activeFocus
             borderHeight: theme.controls.textField.borderWidth
             color: error ? errorBorder : focusedBorderColor
-
-            transform: Scale {
-                origin.x: bottomBorder.width / 2
-                origin.y: bottomBorder.height / 2
-                xScale: field.activeFocus ? 1 : 0
-
-                Behavior on xScale { HNumberAnimation {} }
-            }
-
-            Behavior on color { HColorAnimation {} }
         }
     }
 
