@@ -58,10 +58,16 @@ TextField {
     onActiveFocusChanged:
         text = activeFocus || changed ? text : Qt.binding(() => defaultText)
 
+    // Prevent alt/super+any key from typing text
     Keys.onPressed: if (
         event.modifiers & Qt.AltModifier ||
         event.modifiers & Qt.MetaModifier
-    ) event.accepted = true  // XXX Still needed?
+    ) event.accepted = true
+
+    // Prevent leaking arrow presses to parent elements when the carret is at
+    // the beginning or end of the text
+    Keys.onLeftPressed: event.accepted = cursorPosition === 0
+    Keys.onRightPressed: event.accepted = cursorPosition === length
 
 
     property string saveName: ""
