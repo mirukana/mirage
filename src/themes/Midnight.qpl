@@ -124,8 +124,10 @@ controls:
         color background: colors.strongBackground
 
     button:
-        color background: colors.strongBackground
-        color text:       colors.text
+        color background:       colors.strongBackground
+        color text:             colors.text
+        color focusedBorder:    colors.accentElement
+        int focusedBorderWidth: 1
 
         color hoveredOverlay: hsluv(0, 0, 50, 0.2)
         color pressedOverlay: hsluv(0, 0, 50, 0.5)
@@ -140,7 +142,10 @@ controls:
             colors.intensity * 4,
             Math.max(0.6, colors.opacity)
         )
-        color bottomLine: background
+
+        color bottomLine:       background
+        color focusedBorder:    colors.accentElement
+        int focusedBorderWidth: 1
 
         color hoveredOverlay: controls.button.hoveredOverlay
         color pressedOverlay: controls.button.pressedOverlay

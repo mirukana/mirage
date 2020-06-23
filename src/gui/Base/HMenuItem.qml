@@ -17,6 +17,7 @@ MenuItem {
     background: HButtonBackground {
         button: menuItem
         buttonTheme: theme.controls.menuItem
+        useFocusLine: false
     }
 
     contentItem: HButtonContent {

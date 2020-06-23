@@ -50,6 +50,11 @@ Button {
     readonly property alias label: contentItem.label
 
     property color backgroundColor: theme.controls.button.background
+    property color focusLineColor:
+        Qt.colorEqual(icon.color, theme.icons.colorize) ?
+        theme.controls.button.focusedBorder :
+        icon.color
+
     property bool disableWhileLoading: true
     property bool loading: false
     property bool circle: false

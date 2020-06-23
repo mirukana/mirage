@@ -4,30 +4,41 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 Rectangle {
-    color: buttonTheme.background
-    opacity: loading ? theme.loadingElementsOpacity :
-             enabled ? 1 : theme.disabledElementsOpacity
-
-
     property var button
     property QtObject buttonTheme
+    property bool useFocusLine: true
+
+
+    color: buttonTheme.background
+    opacity:
+        loading ? theme.loadingElementsOpacity :
+        enabled ? 1 :
+        theme.disabledElementsOpacity
 
 
     Behavior on opacity { HNumberAnimation {} }
 
-
     Rectangle {
         anchors.fill: parent
         radius: parent.radius
-        color: button.checked ? buttonTheme.checkedOverlay :
+        color:
+            button.checked ? buttonTheme.checkedOverlay :
 
-               button.enabled && button.pressed ? buttonTheme.pressedOverlay :
+            button.enabled && button.pressed ? buttonTheme.pressedOverlay :
 
-               (button.enabled && button.hovered) || button.activeFocus ?
-               buttonTheme.hoveredOverlay :
+            button.enabled && ! useFocusLine && button.activeFocus ?
+            buttonTheme.hoveredOverlay :
 
-               "transparent"
+            button.enabled && button.hovered ? buttonTheme.hoveredOverlay :
+
+            "transparent"
 
         Behavior on color { HColorAnimation { factor: 0.5 } }
+    }
+
+    HBottomFocusLine {
+        show: useFocusLine && button.activeFocus
+        borderHeight: useFocusLine ? buttonTheme.focusedBorderWidth : 0
+        color: useFocusLine ? button.focusLineColor : "transparent"
     }
 }

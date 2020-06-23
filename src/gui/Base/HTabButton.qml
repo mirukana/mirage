@@ -35,6 +35,11 @@ TabButton {
         TabBar.index % 2 === 0 ?
         theme.controls.tab.background : theme.controls.tab.alternateBackground
 
+    property color focusLineColor:
+        Qt.colorEqual(icon.color, theme.icons.colorize) ?
+        theme.controls.tab.focusedBorder :
+        icon.color
+
     property bool loading: false
 
     property HToolTip toolTip: HToolTip {
