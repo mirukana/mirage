@@ -11,6 +11,7 @@ MenuItem {
     topPadding: spacing / 1.75
     bottomPadding: topPadding
     height: visible ? implicitHeight : 0
+    enabled: visible  // prevent focusing invisible items by using keyboard
 
     icon.color: theme.icons.colorize
 
