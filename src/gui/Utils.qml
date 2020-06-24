@@ -299,6 +299,25 @@ QtObject {
     }
 
 
+    function smartFormatDate(date) {
+        return (
+            date < new Date(1) ?
+            "" :
+
+            // e.g. "03:24"
+            dateIsToday(date) ?
+            formatTime(date, false) :
+
+            // e.g. "5 Dec"
+            date.getFullYear() === new Date().getFullYear() ?
+            Qt.formatDate(date, "d MMM") :
+
+            // e.g. "Jan 2020"
+            Qt.formatDate(date, "MMM yyyy")
+        )
+    }
+
+
     function formatDuration(milliseconds) {
         const totalSeconds = milliseconds / 1000
 

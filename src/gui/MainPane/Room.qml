@@ -60,22 +60,7 @@ HTile {
                 TitleRightInfoLabel {
                     tile: room
                     color: theme.mainPane.listView.room.lastEventDate
-                    text: {
-                        model.last_event_date < new Date(1) ?
-                        "" :
-
-                        // e.g. "03:24"
-                        utils.dateIsToday(model.last_event_date) ?
-                        utils.formatTime(model.last_event_date, false) :
-
-                        // e.g. "5 Dec"
-                        model.last_event_date.getFullYear() ===
-                        new Date().getFullYear() ?
-                        Qt.formatDate(model.last_event_date, "d MMM") :
-
-                        // e.g. "Jan 2020"
-                        Qt.formatDate(model.last_event_date, "MMM yyyy")
-                    }
+                    text: utils.smartFormatDate(model.last_event_date)
                 }
             }
 
