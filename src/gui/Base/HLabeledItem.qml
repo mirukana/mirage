@@ -9,6 +9,8 @@ HColumnLayout {
 
     default property alias insideData: itemHolder.data
 
+    property bool loading: false
+
     readonly property Item item: itemHolder.children[0]
     readonly property alias label: label
     readonly property alias errorLabel: errorLabel
@@ -16,7 +18,7 @@ HColumnLayout {
 
 
     HRowLayout {
-        spacing: parent.spacing
+        spacing: theme.spacing
 
         HLabel {
             id: label
@@ -50,6 +52,17 @@ HColumnLayout {
         HToolTip {
             id: toolTip
             visible: toolTip.text && hoverHandler.hovered
+        }
+
+        HLoader {
+            source: "HBusyIndicator.qml"
+            active: loading
+            visible: height > 0
+
+            Layout.preferredWidth: height
+            Layout.preferredHeight: active ? label.height : 0
+
+            Behavior on Layout.preferredHeight { HNumberAnimation {} }
         }
     }
 

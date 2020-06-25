@@ -37,16 +37,27 @@ TextField {
         }
     }
 
-    // Set it only on component creation to avoid binding loops
-    Component.onCompleted: if (! text) {
-        text           = window.getState(this, "text", "")
-        cursorPosition = text.length
+    Component.onCompleted: {
+        // Break binding
+        previousDefaultText = previousDefaultText
+
+        // Set it only on component creation to avoid binding loops
+        if (! text) {
+            text           = window.getState(this, "text", "")
+            cursorPosition = text.length
+        }
     }
 
     onTextChanged: window.saveState(this)
 
-    onActiveFocusChanged:
-        text = activeFocus || changed ? text : Qt.binding(() => defaultText)
+    onActiveFocusChanged: text = text  // Break binding
+
+    onDefaultTextChanged: {
+        if (text === previousDefaultText)
+            text = Qt.binding(() => defaultText)
+
+        previousDefaultText = defaultText
+    }
 
     // Prevent alt/super+any key from typing text
     Keys.onPressed: if (
@@ -80,6 +91,8 @@ TextField {
     property var disabledText: null
     property string defaultText: ""
     readonly property bool changed: text !== defaultText
+
+    property string previousDefaultText: ""  // private
 
 
     function reset() { clear(); text = Qt.binding(() => defaultText)}

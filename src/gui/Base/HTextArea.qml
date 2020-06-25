@@ -25,6 +25,8 @@ TextArea {
     property color errorBorder: theme.controls.textArea.errorBorder
     property color focusedBorderColor: theme.controls.textArea.focusedBorder
 
+    property string previousDefaultText: ""  // private
+
 
     function reset() { clear(); text = Qt.binding(() => defaultText) }
     function insertAtCursor(text) { insert(cursorPosition, text) }
@@ -62,16 +64,27 @@ TextArea {
         }
     }
 
-    // Set it only on component creation to avoid binding loops
-    Component.onCompleted: if (! text) {
-        text                    = window.getState(this, "text", "")
-        textArea.cursorPosition = text.length
+    Component.onCompleted: {
+        // Break binding
+        previousDefaultText = previousDefaultText
+
+        // Set it only on component creation to avoid binding loops
+        if (! text) {
+            text           = window.getState(this, "text", "")
+            cursorPosition = text.length
+        }
     }
 
-    onActiveFocusChanged:
-        text = activeFocus || changed ? text : Qt.binding(() => defaultText)
-
     onTextChanged: window.saveState(this)
+
+    onActiveFocusChanged: text = text  // Break binding
+
+    onDefaultTextChanged: {
+        if (text === previousDefaultText)
+            text = Qt.binding(() => defaultText)
+
+        previousDefaultText = defaultText
+    }
 
     // Prevent alt/super+any key from typing text
     Keys.onPressed: if (
