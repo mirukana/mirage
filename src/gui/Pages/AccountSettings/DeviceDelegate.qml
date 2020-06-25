@@ -84,6 +84,7 @@ HTile {
                 HTextField {
                     id: nameField
                     defaultText: model.display_name
+                    maximumLength: 255
                     horizontalAlignment: Qt.AlignHCenter
                     onAccepted: renameDeviceRequest(text)
 
