@@ -1,16 +1,17 @@
 # TODO
 
+- room settings: make letter avatar respond to name change in real time
 - sessions page size
 - menu click-through padding to close it easily
 - clear listview checked on message clear
 - unregister popup/menu when destroyed without being closed
 - flickshortcuts
-- Account: wait until accountInfo available
 - avatar upload/change component
 - show scrollbars for a few secs if there's content to scroll on beginning
 - can leave room with a reason?
 - field/area focus line in popups weird
 - use new nio `restore_login()`
+- verify all popups and boxes work
 
 ## Refactoring
 

@@ -28,7 +28,7 @@ Item {
     property int fileType: HFileDialogOpener.FileType.All
 
 
-    TapHandler { enabled: fill; onTapped: fileDialog.open() }
+    TapHandler { enabled: opener.enabled && fill; onTapped: fileDialog.open() }
 
     FileDialog {
         id: fileDialog

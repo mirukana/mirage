@@ -14,6 +14,7 @@ HFlickableColumnPage {
 
     property string userId
     readonly property QtObject account: ModelStore.get("accounts").find(userId)
+    readonly property bool ready: account && account.profile_updated >= new Date(1)
 
 
     function takeFocus() {
@@ -95,7 +96,7 @@ HFlickableColumnPage {
         id: avatar
         userId: page.userId
         displayName: nameField.item.text
-        mxc: account.avatar_url
+        mxc: account ? account.avatar_url : ""
         toolTipMxc: ""
         sourceOverride: fileDialog.selectedFile || fileDialog.file
 
@@ -105,13 +106,18 @@ HFlickableColumnPage {
         Layout.preferredHeight: width
 
         Rectangle {
+            anchors.fill: parent
             z: 10
             visible: opacity > 0
-            opacity: ! fileDialog.dialog.visible &&
-                     ((! avatar.mxc && ! avatar.changed) || avatar.hovered) ?
-                     1 : 0
+            opacity:
+                ! fileDialog.dialog.visible &&
+                (
+                    (! avatar.mxc && ! avatar.changed) ||
+                    avatar.hovered ||
+                    ! ready
+                ) ?
+                1 : 0
 
-            anchors.fill: parent
             color: utils.hsluv(
                 0, 0, 0, (! avatar.mxc && overlayHover.hovered) ? 0.8 : 0.7,
             )
@@ -123,16 +129,34 @@ HFlickableColumnPage {
 
             MouseArea {
                 anchors.fill: parent
+                enabled: ready
                 acceptedButtons: Qt.NoButton
                 cursorShape:
                     overlayHover.hovered ?
                     Qt.PointingHandCursor : Qt.ArrowCursor
             }
 
+            HLoader {
+                anchors.centerIn: parent
+                width: avatar.width / 3
+                height: width
+
+                source: "../../Base/HBusyIndicator.qml"
+                active: ! ready
+                opacity: active ? 1 : 0
+                visible: opacity > 0
+
+                Behavior on opacity { HNumberAnimation {} }
+            }
+
             HColumnLayout {
                 anchors.centerIn: parent
                 spacing: currentSpacing
                 width: parent.width
+                opacity: ready ? 1 : 0
+                visible: opacity > 0
+
+                Behavior on opacity { HNumberAnimation {} }
 
                 HIcon {
                     svgName: "upload-avatar"
@@ -165,9 +189,10 @@ HFlickableColumnPage {
 
         HFileDialogOpener {
             id: fileDialog
+            enabled: ready
             fileType: HFileDialogOpener.FileType.Images
             dialog.title: qsTr("Select profile picture for %1")
-                              .arg(account.display_name)
+                              .arg(account ? account.display_name : "")
         }
     }
 
@@ -183,13 +208,15 @@ HFlickableColumnPage {
 
     HLabeledItem {
         id: nameField
+        loading: ! ready
         label.text: qsTr("Display name:")
 
         Layout.fillWidth: true
 
         HTextField {
             width: parent.width
-            defaultText: account.display_name
+            enabled: ready
+            defaultText: ready ? account.display_name : ""
             maximumLength: 255
 
             // TODO: Qt 5.14+: use a Binding enabled when text not empty
@@ -239,7 +266,7 @@ HFlickableColumnPage {
             defaultText: aliasField.currentAlias
             placeholderText: qsTr("e.g. %1").arg((
                 nameField.item.text ||
-                account.display_name ||
+                (ready && account.display_name) ||
                 userId.substring(1)
             )[0])
         }
