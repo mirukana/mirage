@@ -249,7 +249,7 @@ class NioCallbacks:
     async def onRoomGuestAccessEvent(
         self, room: nio.MatrixRoom, ev: nio.RoomGuestAccessEvent,
     ) -> None:
-        allowed = "allowed" if ev.guest_access else "forbad"
+        allowed = "allowed" if ev.guest_access == "can_join" else "forbad"
         co      = f"%1 {allowed} guests to join the room"
         await self.client.register_nio_event(room, ev, content=co)
 
