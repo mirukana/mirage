@@ -103,6 +103,27 @@ HTile {
 
         HMenuSeparator {}
 
+        HLabel {
+            id: noKeysLabel
+            visible: model.type === "no_keys"
+            width: parent.width
+            height: visible ? implicitHeight : 0  // avoid empty space
+
+            wrapMode: HLabel.Wrap
+            horizontalAlignment: Qt.AlignHCenter
+            textFormat: HLabel.RichText
+            color: theme.colors.warningText
+            text: qsTr(
+                "This session doesn't support encryption or " +
+                "failed to upload a verification key"
+            )
+        }
+
+        HMenuSeparator {
+            visible: noKeysLabel.visible
+            height: visible ? implicitHeight : 0
+        }
+
         HLabeledItem {
             width: parent.width
             label.text: qsTr("Actions:")
@@ -112,8 +133,10 @@ HTile {
                 width: parent.width
 
                 ApplyButton {
-                    enabled:
-                        model.type !== "current" && model.type !== "verified"
+                    enabled: [
+                        "unset", "ignored", "blacklisted",
+                    ].includes(model.type)
+
                     text: qsTr("Verify")
                     icon.name: "device-verify"
                 }

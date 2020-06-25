@@ -22,10 +22,11 @@ HRowLayout {
 
         text:
             section === "current" ? qsTr("Current session") :
+            section === "unset" ? qsTr("Unverified") :
+            section === "no_keys" ? qsTr("Unverifiable") :
             section === "verified" ? qsTr("Verified") :
             section === "ignored" ? qsTr("Ignored") :
-            section === "blacklisted" ? qsTr("Blacklisted") :
-            qsTr("Unverified")
+            qsTr("Blacklisted")
 
         tristate: true
 
@@ -67,10 +68,10 @@ HRowLayout {
         verticalAlignment: Qt.AlignVCenter
 
         color:
-            section === "current" || section === "verified" ?
+            ["current", "verified"].includes(section) ?
             theme.colors.positiveText :
 
-            section === "unset" || section === "ignored" ?
+            ["unset", "ignored", "no_keys"].includes(section) ?
             theme.colors.warningText :
 
             theme.colors.errorText

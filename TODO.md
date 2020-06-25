@@ -1,5 +1,6 @@
 # TODO
 
+- verify & delete devices
 - sessions page size
 - flickshortcuts
 - avatar upload/change component

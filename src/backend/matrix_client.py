@@ -9,6 +9,7 @@ import logging as log
 import platform
 import re
 import sys
+import textwrap
 import traceback
 from contextlib import suppress
 from copy import deepcopy
@@ -1261,16 +1262,27 @@ class MatrixClient(nio.AsyncClient):
         """Get sorted list of devices and their info for our user."""
 
         def get_type(device_id: str) -> str:
-            # Return "current", "verified", "blacklisted", "ignored" or "unset"
+            # Return "current", "no_keys", "verified", "blacklisted",
+            # "ignored" or "unset"
 
             if device_id == self.device_id:
                 return "current"
 
             if device_id not in self.olm.device_store[self.user_id]:
-                return "unset"
+                return "no_keys"
 
             trust = self.olm.device_store[self.user_id][device_id].trust_state
             return trust.name
+
+        def get_ed25519(device_id: str) -> str:
+            key = ""
+
+            if device_id == self.device_id:
+                key = self.olm.account.identity_keys["ed25519"]
+            elif device_id in self.olm.device_store[self.user_id]:
+                key = self.olm.device_store[self.user_id][device_id].ed25519
+
+            return " ".join(textwrap.wrap(key, 4))
 
         devices = [
             {
@@ -1280,14 +1292,16 @@ class MatrixClient(nio.AsyncClient):
                 "last_seen_date":    device.last_seen_date or ZeroDate,
                 "last_seen_country": "",
                 "type":              get_type(device.id),
+                "ed25519_key":       get_ed25519(device.id),
             }
             for device in (await self.devices()).devices
         ]
 
         # Reversed due to sorted(reverse=True) call below
         types_order = {
-            "current": 4,
-            "unset": 3,
+            "current": 5,
+            "unset": 4,
+            "no_keys": 3,
             "verified": 2,
             "ignored": 1,
             "blacklisted": 0,
