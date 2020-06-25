@@ -85,7 +85,7 @@ HFlickableColumnPage {
     HRoomAvatar {
         id: avatar
         roomId: chat.roomId
-        displayName: chat.roomInfo.display_name
+        displayName: nameField.item.text || chat.roomInfo.display_name
         mxc: chat.roomInfo.avatar_url
         // enabled: chat.roomInfo.can_set_avatar  # put this in "change avatar"
 

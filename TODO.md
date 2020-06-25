@@ -1,6 +1,5 @@
 # TODO
 
-- room settings: make letter avatar respond to name change in real time
 - sessions page size
 - menu click-through padding to close it easily
 - clear listview checked on message clear
