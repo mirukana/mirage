@@ -1258,7 +1258,7 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def devices_info(self) -> List[Dict[str, Any]]:
-        """Get list of devices and their info for our user."""
+        """Get sorted list of devices and their info for our user."""
 
         def get_type(device_id: str) -> str:
             # Return "current", "verified", "blacklisted", "ignored" or "unset"
@@ -1299,6 +1299,16 @@ class MatrixClient(nio.AsyncClient):
             key     = lambda d: (types_order[d["type"]], d["last_seen_date"]),
             reverse = True,
         )
+
+
+    async def rename_device(self, device_id: str, name: str) -> bool:
+        """Rename one of our device, return `False` if it doesn't exist."""
+
+        try:
+            await self.update_device(device_id, {"display_name": name})
+            return True
+        except MatrixNotFound:
+            return False
 
 
     # Functions to register/modify data into models

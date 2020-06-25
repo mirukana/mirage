@@ -12,6 +12,8 @@ HTile {
 
     property HListView view
 
+    signal renameDeviceRequest(string name)
+
 
     backgroundColor: "transparent"
     compact: false
@@ -81,6 +83,7 @@ HTile {
                 width: parent.width
                 defaultText: model.display_name
                 horizontalAlignment: Qt.AlignHCenter
+                onAccepted: renameDeviceRequest(text)
             }
         }
 

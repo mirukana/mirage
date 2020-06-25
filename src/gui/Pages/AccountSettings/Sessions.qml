@@ -29,6 +29,16 @@ HColumnPage {
         })
     }
 
+    function renameDevice(index, name) {
+        const device = deviceList.model.get(index)
+
+        device.display_name = name
+
+        py.callClientCoro(userId, "rename_device", [device.id, name], ok => {
+            if (! ok) deviceList.model.remove(index)  // 404 happened
+        })
+    }
+
 
     footer: ButtonLayout {
         visible: height >= 0
@@ -67,6 +77,7 @@ HColumnPage {
         delegate: DeviceDelegate {
             width: deviceList.width
             view: deviceList
+            onRenameDeviceRequest: name => renameDevice(model.index, name)
         }
 
         section.property: "type"
