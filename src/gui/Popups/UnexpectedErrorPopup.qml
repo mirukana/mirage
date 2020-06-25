@@ -47,7 +47,7 @@ HColumnPopup {
             text: [message, traceback].join("\n\n") || qsTr("No info available")
             readOnly: true
             font.family: theme.fontFamily.mono
-            focusOnTab: hideCheckBox
+            focusItemOnTab: hideCheckBox
         }
     }
 
