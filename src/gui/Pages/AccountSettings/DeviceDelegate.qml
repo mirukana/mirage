@@ -69,7 +69,7 @@ HTile {
 
     contextMenu: HMenu {
         id: actionMenu
-        implicitWidth: Math.min(320 * theme.uiScale, window.width)
+        implicitWidth: Math.min(360 * theme.uiScale, window.width)
         onOpened: nameField.forceActiveFocus()
 
         HLabeledItem {
@@ -78,12 +78,25 @@ HTile {
             label.text: qsTr("Public display name:")
             label.horizontalAlignment: Qt.AlignHCenter
 
-            HTextField {
-                id: nameField
+            HRowLayout {
                 width: parent.width
-                defaultText: model.display_name
-                horizontalAlignment: Qt.AlignHCenter
-                onAccepted: renameDeviceRequest(text)
+
+                HTextField {
+                    id: nameField
+                    defaultText: model.display_name
+                    horizontalAlignment: Qt.AlignHCenter
+                    onAccepted: renameDeviceRequest(text)
+
+                    Layout.fillWidth: true
+                }
+
+                HButton {
+                    icon.name: "apply"
+                    icon.color: theme.colors.positiveBackground
+                    onClicked: renameDeviceRequest(nameField.text)
+
+                    Layout.fillHeight: true
+                }
             }
         }
 
