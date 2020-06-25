@@ -15,8 +15,8 @@ HRowLayout {
     readonly property int sectionTotalCount:
         deviceList.sectionItemCounts[section] || 0
 
-
     HCheckBox {
+        id: checkBox
         padding: theme.spacing
         topPadding: padding * (section === "current" ? 1 : 2)
 
@@ -62,7 +62,10 @@ HRowLayout {
             .arg(sectionCheckedCount).arg(sectionTotalCount) :
             sectionTotalCount
 
+        topPadding: checkBox.topPadding - theme.spacing * 0.75
         rightPadding: theme.spacing * 1.5
+        verticalAlignment: Qt.AlignVCenter
+
         color:
             section === "current" || section === "verified" ?
             theme.colors.positiveText :
@@ -71,5 +74,7 @@ HRowLayout {
             theme.colors.warningText :
 
             theme.colors.errorText
+
+        Layout.fillHeight: true
     }
 }
