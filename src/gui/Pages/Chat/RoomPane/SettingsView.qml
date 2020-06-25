@@ -79,7 +79,8 @@ HFlickableColumnPage {
         }
     }
 
-    Keys.onEscapePressed: cancel()
+    onKeyboardAccept: save()
+    onKeyboardCancel: cancel()
 
 
     HRoomAvatar {

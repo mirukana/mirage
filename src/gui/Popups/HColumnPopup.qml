@@ -10,6 +10,8 @@ HPopup {
     default property alias pageData: page.columnData
     readonly property alias page: page
 
+    signal keyboardAccept()
+
 
     HColumnPage {
         id: page
@@ -23,5 +25,8 @@ HPopup {
             topPadding + bottomPadding + implicitContentHeight,
         )
         useVariableSpacing: false
+
+        Keys.onReturnPressed: popup.keyboardAccept()
+        Keys.onEnterPressed: popup.keyboardAccept()
     }
 }

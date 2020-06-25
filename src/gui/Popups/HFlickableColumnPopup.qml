@@ -10,6 +10,8 @@ HPopup {
     default property alias pageData: page.columnData
     readonly property alias page: page
 
+    signal keyboardAccept()
+
 
     HFlickableColumnPage {
         id: page
@@ -21,5 +23,8 @@ HPopup {
             popup.maximumPreferredHeight,
             implicitHeaderHeight + implicitFooterHeight + contentHeight,
         )
+
+        Keys.onReturnPressed: popup.keyboardAccept()
+        Keys.onEnterPressed: popup.keyboardAccept()
     }
 }

@@ -69,7 +69,7 @@ HFlickableColumnPage {
         }
     }
 
-    Keys.onEscapePressed: cancel()
+    onKeyboardCancel: cancel()
 
 
     CurrentUserAvatar {

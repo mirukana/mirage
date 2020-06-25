@@ -7,10 +7,6 @@ HFlickableColumnPage {
     implicitWidth: Math.min(parent.width, theme.controls.box.defaultWidth)
     implicitHeight: Math.min(parent.height, flickable.contentHeight)
 
-    // XXX
-    // Keys.onReturnPressed: if (clickButtonOnEnter) enterClickButton()
-    // Keys.onEnterPressed: Keys.onReturnPressed(event)
-
     background: Rectangle {
         color: theme.controls.box.background
         radius: theme.controls.box.radius

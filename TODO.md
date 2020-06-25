@@ -10,7 +10,7 @@
 - can leave room with a reason?
 - field/area focus line in popups weird
 - use new nio `restore_login()`
-- verify all popups and boxes work
+- verify all popups and boxes work: enter/esc, tab focus, operations
 
 ## Refactoring
 

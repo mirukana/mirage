@@ -51,6 +51,7 @@ HFlickableColumnPopup {
     }
 
     onOpened: reasonField.item.forceActiveFocus()
+    onKeyboardAccept: popup.remove()
 
 
     SummaryLabel {
@@ -80,7 +81,6 @@ HFlickableColumnPopup {
 
         HTextField {
             width: parent.width
-            onAccepted: popup.remove()
         }
     }
 }

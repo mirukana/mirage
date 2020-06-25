@@ -74,6 +74,7 @@ HFlickableColumnPopup {
     }
 
     onOpened: passwordField.forceActiveFocus()
+    onKeyboardAccept: popup.validate()
 
 
     SummaryLabel { id: summary }
@@ -89,8 +90,6 @@ HFlickableColumnPopup {
 
             onTextChanged: passwordValid =
                 validateWhileTyping ? verifyPassword(text) : null
-
-            onAccepted: popup.validate()
 
             Layout.fillWidth: true
         }

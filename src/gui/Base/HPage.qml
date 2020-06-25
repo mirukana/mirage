@@ -7,6 +7,10 @@ Page {
     padding: currentSpacing < theme.spacing ? 0 : currentSpacing
     background: null
 
+    Keys.onReturnPressed: keyboardAccept()
+    Keys.onEnterPressed: keyboardAccept()
+    Keys.onEscapePressed: keyboardCancel()
+
 
     property bool useVariableSpacing: true
 
@@ -18,6 +22,9 @@ Page {
             theme.spacing,
         ) :
         theme.spacing
+
+    signal keyboardAccept()
+    signal keyboardCancel()
 
 
     Behavior on padding { HNumberAnimation {} }

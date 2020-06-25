@@ -92,7 +92,7 @@ HFlickableColumnPage {
         }
     }
 
-    Keys.onEscapePressed: page.cancel()
+    onKeyboardCancel: page.cancel()
 
 
     Timer {

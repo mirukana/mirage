@@ -87,7 +87,8 @@ HFlickableColumnPage {
         }
     }
 
-    Keys.onEscapePressed: cancel()
+    onKeyboardCancel: cancel()
+    onKeyboardAccept: applyChanges()
 
 
     HUserAvatar {
@@ -221,8 +222,6 @@ HFlickableColumnPage {
 
             // TODO: Qt 5.14+: use a Binding enabled when text not empty
             color: utils.nameColor(text)
-
-            onAccepted: applyChanges()
         }
     }
 
@@ -262,7 +261,6 @@ HFlickableColumnPage {
         HTextField {
             width: parent.width
             error: aliasField.alreadyTakenBy !== ""
-            onAccepted: applyChanges()
             defaultText: aliasField.currentAlias
             placeholderText: qsTr("e.g. %1").arg((
                 nameField.item.text ||
