@@ -3,28 +3,30 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: signInBox
-    clickButtonOnEnter: "ok"
+HFlickableColumnPage {
+    function takeFocus() { registerButton.forceActiveFocus() }
 
-    buttonModel: [
-        { name: "ok", text: qsTr("Register from Riot"), iconName: "register" },
-    ]
 
-    buttonCallbacks: ({
-        ok: button => {
-            Qt.openUrlExternally("https://riot.im/app/#/register")
+    footer: ButtonLayout {
+        ApplyButton {
+            id: registerButton
+            text: qsTr("Register from Riot")
+            icon.name: "register"
+            onClicked: Qt.openUrlExternally("https://riot.im/app/#/register")
+
+            Layout.fillWidth: true
         }
-    })
+    }
 
 
     HLabel {
         wrapMode: Text.Wrap
         horizontalAlignment: Qt.AlignHCenter
         text: qsTr(
-            "Not yet implemented\n\nYou can create a new " +
-            "account from another client such as Riot."
+            "Not implemented yet\n\n" +
+            "You can create a new account from another client such as Riot."
         )
 
         Layout.fillWidth: true

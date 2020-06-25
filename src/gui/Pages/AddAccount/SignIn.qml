@@ -3,82 +3,10 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: signInBox
-    clickButtonOnEnter: "apply"
-
-    onFocusChanged: idField.item.forceActiveFocus()
-
-    buttonModel: [
-        {
-            name: "apply",
-            text: qsTr("Sign in"),
-            enabled: canSignIn,
-            iconName: "sign-in",
-            loading: loginFuture !== null,
-            disableWhileLoading: false,
-        },
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel"},
-    ]
-
-    buttonCallbacks: ({
-        apply: button => {
-            if (loginFuture) loginFuture.cancel()
-
-            signInTimeout.restart()
-
-            errorMessage.text = ""
-
-            const args = [
-                idField.item.text.trim(), passwordField.item.text,
-                undefined, serverField.item.text.trim(),
-            ]
-
-            loginFuture = py.callCoro("login_client", args, userId => {
-                signInTimeout.stop()
-                errorMessage.text = ""
-                loginFuture       = null
-
-                py.callCoro(
-                    rememberAccount.checked ?
-                    "saved_accounts.add": "saved_accounts.delete",
-
-                    [userId]
-                )
-
-                pageLoader.showPage(
-                    "AccountSettings/AccountSettings", {userId}
-                )
-
-            }, (type, args, error, traceback, uuid) => {
-                loginFuture = null
-                signInTimeout.stop()
-
-                let txt = qsTr(
-                    "Invalid request, login type or unknown error: %1",
-                ).arg(type)
-
-                type === "MatrixForbidden" ?
-                txt = qsTr("Invalid username or password") :
-
-                type === "MatrixUserDeactivated" ?
-                txt = qsTr("This account was deactivated") :
-
-                utils.showError(type, traceback, uuid)
-
-                errorMessage.text = txt
-            })
-        },
-
-        cancel: button => {
-            if (! loginFuture) return
-
-            signInTimeout.stop()
-            loginFuture.cancel()
-            loginFuture    = null
-        }
-    })
+HFlickableColumnPage {
+    id: page
 
 
     property var loginFuture: null
@@ -88,6 +16,83 @@ HBox {
     readonly property bool canSignIn:
         serverField.item.text.trim() && idField.item.text.trim() &&
         passwordField.item.text && ! serverField.item.error
+
+
+    function takeFocus() { idField.item.forceActiveFocus() }
+
+    function signIn() {
+        if (page.loginFuture) page.loginFuture.cancel()
+
+        signInTimeout.restart()
+
+        errorMessage.text = ""
+
+        const args = [
+            idField.item.text.trim(), passwordField.item.text,
+            undefined, serverField.item.text.trim(),
+        ]
+
+        page.loginFuture = py.callCoro("login_client", args, userId => {
+            signInTimeout.stop()
+            errorMessage.text = ""
+            page.loginFuture  = null
+
+            py.callCoro(
+                rememberAccount.checked ?
+                "saved_accounts.add": "saved_accounts.delete",
+
+                [userId]
+            )
+
+            pageLoader.showPage(
+                "AccountSettings/AccountSettings", {userId}
+            )
+
+        }, (type, args, error, traceback, uuid) => {
+            page.loginFuture = null
+            signInTimeout.stop()
+
+            let txt = qsTr(
+                "Invalid request, login type or unknown error: %1",
+            ).arg(type)
+
+            type === "MatrixForbidden" ?
+            txt = qsTr("Invalid username or password") :
+
+            type === "MatrixUserDeactivated" ?
+            txt = qsTr("This account was deactivated") :
+
+            utils.showError(type, traceback, uuid)
+
+            errorMessage.text = txt
+        })
+    }
+
+    function cancel() {
+        if (! page.loginFuture) return
+
+        signInTimeout.stop()
+        page.loginFuture.cancel()
+        page.loginFuture = null
+    }
+
+
+    footer: ButtonLayout {
+        ApplyButton {
+            enabled: page.canSignIn
+            text: qsTr("Sign in")
+            icon.name: "sign-in"
+            loading: page.loginFuture !== null
+            disableWhileLoading: false
+            onClicked: page.signIn()
+        }
+
+        CancelButton {
+            onClicked: page.cancel()
+        }
+    }
+
+    Keys.onEscapePressed: page.cancel()
 
 
     Timer {
@@ -120,10 +125,10 @@ HBox {
             HButton {
                 icon.name: modelData
                 circle: true
-                checked: signInWith === modelData
+                checked: page.signInWith === modelData
                 enabled: modelData === "username"
                 autoExclusive: true
-                onClicked: signInWith = modelData
+                onClicked: page.signInWith = modelData
             }
         }
     }
@@ -131,8 +136,8 @@ HBox {
     HLabeledItem {
         id: idField
         label.text: qsTr(
-            signInWith === "email" ? "Email:" :
-            signInWith === "phone" ? "Phone:" :
+            page.signInWith === "email" ? "Email:" :
+            page.signInWith === "phone" ? "Phone:" :
             "Username:"
         )
 
@@ -157,9 +162,6 @@ HBox {
 
     HLabeledItem {
         id: serverField
-        label.text: qsTr("Homeserver:")
-
-        Layout.fillWidth: true
 
         // 2019-11-11 https://www.hello-matrix.net/public_servers.php
         readonly property var knownServers: [
@@ -181,6 +183,10 @@ HBox {
 
         readonly property bool knownServerChosen:
             knownServers.includes(item.cleanText)
+
+        label.text: qsTr("Homeserver:")
+
+        Layout.fillWidth: true
 
         HTextField {
             width: parent.width

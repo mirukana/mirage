@@ -16,17 +16,16 @@ HFileDialogOpener {
 
 
     property string userId: ""
-    property bool importing: false
     property Future importFuture: null
 
 
     PasswordPopup {
         id: importPasswordPopup
-        details.text:
-            importing ?
+        summary.text:
+            importFuture ?
             qsTr("This might take a while...") :
             qsTr("Passphrase used to protect this file:")
-        okText: qsTr("Import")
+        validateButton.text: qsTr("Import")
 
         onClosed: if (importFuture) importFuture.cancel()
 
@@ -35,13 +34,10 @@ HFileDialogOpener {
 
 
         function verifyPassword(pass, callback) {
-            importing  = true
-
             const call = py.callClientCoro
             const path = file.toString().replace(/^file:\/\//, "")
 
             importFuture = call(userId, "import_keys", [path, pass], () => {
-                importing    = false
                 importFuture = null
                 callback(true)
 
@@ -78,7 +74,7 @@ HFileDialogOpener {
 
         Binding on closePolicy {
             value: Popup.CloseOnEscape
-            when: importing
+            when: importFuture
         }
     }
 }

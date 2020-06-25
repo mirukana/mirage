@@ -6,55 +6,26 @@ import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
 
-HFlickableColumnPage {
-    id: accountSettings
-    title: qsTr("Account settings")
-    header: HPageHeader {}
+HPage {
+    id: page
 
 
-    property int avatarPreferredSize: 256 * theme.uiScale
-
-    property string userId: ""
-
-    readonly property bool ready:
-        accountInfo !== null && accountInfo.profile_updated > new Date(1)
-
-    readonly property QtObject accountInfo:
-        ModelStore.get("accounts").find(userId)
-
-    property string headerName: ready ? accountInfo.display_name : userId
+    property string userId
 
 
-    HSpacer {}
+    HTabbedBox {
+        anchors.centerIn: parent
+        width: Math.min(implicitWidth, page.availableWidth)
+        height: Math.min(implicitHeight, page.availableHeight)
 
-    Repeater {
-        id: repeater
-        model: ["Profile.qml", "ImportExportKeys.qml"]
-
-        Rectangle {
-            color: ready ? theme.controls.box.background : "transparent"
-            Behavior on color { HColorAnimation {} }
-
-            Layout.alignment: Qt.AlignCenter
-            Layout.topMargin: index > 0 ? theme.spacing : 0
-            Layout.bottomMargin: index < repeater.count - 1 ? theme.spacing : 0
-
-            Layout.maximumWidth: Math.min(parent.width, 640)
-            Layout.preferredWidth:
-                pageLoader.isWide ? parent.width : avatarPreferredSize
-
-            Layout.preferredHeight: childrenRect.height
-
-            HLoader {
-                anchors.centerIn: parent
-                width: ready ? parent.width : 96
-                source: ready ?
-                        modelData :
-                        (modelData === "Profile.qml" ?
-                         "../../Base/HBusyIndicator.qml" : "")
-            }
+        header: HTabBar {
+            HTabButton { text: qsTr("Account") }
+            HTabButton { text: qsTr("Encryption") }
+            HTabButton { text: qsTr("Sessions") }
         }
-    }
 
-    HSpacer {}
+        Account { userId: page.userId }
+        Encryption { userId: page.userId }
+        Sessions { userId: page.userId }
+    }
 }

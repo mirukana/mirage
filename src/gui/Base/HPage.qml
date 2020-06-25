@@ -12,7 +12,11 @@ Page {
 
     property int currentSpacing:
         useVariableSpacing ?
-        Math.min(theme.spacing * width / 400, theme.spacing) :
+        Math.min(
+            theme.spacing * width / 400,
+            theme.spacing * height / 400,
+            theme.spacing,
+        ) :
         theme.spacing
 
 

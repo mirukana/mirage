@@ -2,27 +2,28 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../.."
 import "../../Base"
 
-HFlickableColumnPage {
-    id: addChatPage
-    title: qsTr("Add new chat")
-    header: HPageHeader {}
+HPage {
+    id: page
 
 
     property string userId
 
-    readonly property QtObject account: ModelStore.get("accounts").find(userId)
 
+    HTabbedBox {
+        anchors.centerIn: parent
+        width: Math.min(implicitWidth, page.availableWidth)
+        height: Math.min(implicitHeight, page.availableHeight)
 
-    HTabContainer {
-        tabModel: [
-            qsTr("Direct chat"), qsTr("Join room"), qsTr("Create room"),
-        ]
+        header: HTabBar {
+            HTabButton { text: qsTr("Direct chat") }
+            HTabButton { text: qsTr("Join room") }
+            HTabButton { text: qsTr("Create room") }
+        }
 
-        DirectChat { Component.onCompleted: forceActiveFocus() }
-        JoinRoom {}
-        CreateRoom {}
+        DirectChat { userId: page.userId }
+        JoinRoom { userId: page.userId }
+        CreateRoom { userId: page.userId }
     }
 }

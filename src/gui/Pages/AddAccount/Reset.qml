@@ -3,32 +3,31 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: signInBox
-    clickButtonOnEnter: "ok"
+HFlickableColumnPage {
+    function takeFocus() { resetButton.forceActiveFocus() }
 
-    buttonModel: [
-        {
-            name: "ok",
-            text: qsTr("Reset password from Riot"),
-            iconName: "reset-password"
-        },
-    ]
 
-    buttonCallbacks: ({
-        ok: button => {
-            Qt.openUrlExternally("https://riot.im/app/#/forgot_password")
+    footer: ButtonLayout {
+        ApplyButton {
+            id: resetButton
+            text: qsTr("Reset password from Riot")
+            icon.name: "reset-password"
+            onClicked:
+                Qt.openUrlExternally("https://riot.im/app/#/forgot_password")
+
+            Layout.fillWidth: true
         }
-    })
+    }
 
 
     HLabel {
         wrapMode: Text.Wrap
         horizontalAlignment: Qt.AlignHCenter
         text: qsTr(
-            "Not yet implemented\n\nYou can reset your " +
-            "password using another client such as Riot."
+            "Not implemented yet\n\n" +
+            "You can reset your password from another client such as Riot."
         )
 
         Layout.fillWidth: true

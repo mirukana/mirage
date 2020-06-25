@@ -5,6 +5,9 @@ import "../ShortcutBundles"
 
 HPage {
     id: page
+    implicitWidth: theme.controls.box.defaultWidth
+    contentHeight:
+        flickable.contentHeight + flickable.topMargin + flickable.bottomMargin
 
 
     default property alias columnData: column.data
@@ -19,9 +22,14 @@ HPage {
     HFlickable {
         id: flickable
         anchors.fill: parent
-        clip: true
         contentWidth: parent.width
-        contentHeight: column.childrenRect.height + column.padding * 2
+        contentHeight: column.implicitHeight
+        clip: true
+
+        topMargin: theme.spacing
+        bottomMargin: topMargin
+        leftMargin: topMargin
+        rightMargin: topMargin
 
         FlickShortcuts {
             id: flickShortcuts
@@ -31,13 +39,9 @@ HPage {
 
         HColumnLayout {
             id: column
-            x: padding
-            y: padding
-            width: flickable.width - padding * 2
-            height: flickable.height - padding * 2
-
-            property int padding:
-                page.currentSpacing < theme.spacing ? 0 : page.currentSpacing
+            width:
+                flickable.width - flickable.leftMargin - flickable.rightMargin
+            spacing: theme.spacing * 1.5
         }
     }
 

@@ -5,10 +5,10 @@ import QtQuick.Layouts 1.12
 import ".."
 
 HButton {
-    implicitHeight: theme.baseElementsHeight
     text: qsTr("Apply")
     icon.name: "apply"
     icon.color: theme.colors.positiveBackground
 
+    Layout.preferredHeight: theme.baseElementsHeight
     Layout.fillWidth: true
 }

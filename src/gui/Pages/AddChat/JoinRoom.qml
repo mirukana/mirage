@@ -2,70 +2,79 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: addChatBox
-    clickButtonOnEnter: "apply"
+HFlickableColumnPage {
+    id: page
 
-    onFocusChanged: roomField.item.forceActiveFocus()
 
-    buttonModel: [
-        {
-            name: "apply",
-            text: qsTr("Join"),
-            iconName: "room-join",
-            enabled: Boolean(roomField.item.text.trim()),
-        },
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
-    ]
+    property string userId
+    readonly property QtObject account: ModelStore.get("accounts").find(userId)
 
-    buttonCallbacks: ({
-        apply: button => {
-            button.loading    = true
-            errorMessage.text = ""
 
-            const args = [roomField.item.text.trim()]
+    function takeFocus() {
+        roomField.item.forceActiveFocus()
+    }
 
-            py.callClientCoro(userId, "room_join", args, roomId => {
-                button.loading    = false
-                errorMessage.text = ""
-                pageLoader.showRoom(userId, roomId)
-                mainPane.roomList.startCorrectItemSearch()
+    function join() {
+        joinButton.loading    = true
+        errorMessage.text = ""
 
-            }, (type, args) => {
-                button.loading = false
+        const args = [roomField.item.text.trim()]
 
-                let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
+        py.callClientCoro(userId, "room_join", args, roomId => {
+            joinButton.loading = false
+            errorMessage.text  = ""
+            pageLoader.showRoom(userId, roomId)
+            mainPane.roomList.startCorrectItemSearch()
 
-                if (type === "ValueError")
-                    txt = qsTr("Unrecognized alias, room ID or URL")
+        }, (type, args) => {
+            joinButton.loading = false
 
-                if (type === "MatrixNotFound")
-                    txt = qsTr("Room not found")
+            let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
 
-                if (type === "MatrixForbidden")
-                    txt = qsTr("You do not have permission to join this room")
+            if (type === "ValueError")
+                txt = qsTr("Unrecognized alias, room ID or URL")
 
-                errorMessage.text = txt
-            })
-        },
+            if (type === "MatrixNotFound")
+                txt = qsTr("Room not found")
 
-        cancel: button => {
-            roomField.item.text = ""
-            errorMessage.text   = ""
-            pageLoader.showPrevious()
+            if (type === "MatrixForbidden")
+                txt = qsTr("You do not have permission to join this room")
+
+            errorMessage.text = txt
+        })
+    }
+
+    function cancel() {
+        roomField.item.reset()
+        errorMessage.reset()
+
+        pageLoader.showPrevious()
+    }
+
+
+    footer: ButtonLayout {
+        ApplyButton {
+            text: qsTr("Join")
+            icon.name: "room-join"
+            enabled: Boolean(roomField.item.text.trim())
+            onClicked: join()
         }
-    })
 
+        CancelButton {
+            onClicked: cancel()
+        }
+    }
 
-    readonly property string userId: addChatPage.userId
+    Keys.onEscapePressed: cancel()
 
 
     CurrentUserAvatar {
-        Layout.alignment: Qt.AlignCenter
-        Layout.preferredWidth: 128
-        Layout.preferredHeight: Layout.preferredWidth
+        userId: page.userId
+        account: page.account
     }
 
     HLabeledItem {

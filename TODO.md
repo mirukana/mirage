@@ -1,18 +1,26 @@
 # TODO
 
+- sessions page size
+- menu click-through padding to close it easily
+- clear listview checked on message clear
+- unregister popup/menu when destroyed without being closed
+- flickshortcuts
+- Account: wait until accountInfo available
+- avatar upload/change component
+- show scrollbars for a few secs if there's content to scroll on beginning
+- can leave room with a reason?
+- field/area focus line in popups weird
+- use new nio `restore_login()`
+
 ## Refactoring
-
-- Rewrite account settings using `HTabbedContainer`
-  - Use new default/reset controls system 
-  - Display name field text should be colored 
-
-- Drop the `HBox` `buttonModel`/`buttonCallbacks` `HBox` approach,
-  be more declarative
 
 - Reorder QML object declarations,
   conform to https://doc-snapshots.qt.io/qt5-dev/qml-codingconventions.html
 
 ## Issues
+
+- Bottom focus line for an `HTextArea` inside a `ScrollView` is invisible,
+  put the background on `ScrollView` instead?
 
 - Don't send typing notification when switching to a room where the composer 
   has preloaded text 
@@ -20,9 +28,6 @@
 - When calling `Backend.update_room_read_marker()` for a recent message,
   the marker will only be updated for accounts that have already received
   it (server lag) 
-
-- Popups can't be scrolled when not enough height to show all
-- `TextArea`s in Popups grow past window height instead of being scrollable
 
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
   laggy with hundreds of rooms in between

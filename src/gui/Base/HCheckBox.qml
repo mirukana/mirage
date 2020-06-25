@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.12
 CheckBox {
     id: box
     checked: defaultChecked
-    spacing: theme.spacing
+    spacing: contentItem.visible ? theme.spacing : 0
     padding: 0
 
     indicator: Rectangle {
@@ -33,21 +33,26 @@ CheckBox {
         HIcon {
             anchors.centerIn: parent
             dimension: parent.width - 2
-            svgName: "check-mark"
             colorize: theme.controls.checkBox.checkIconColorize
+            svgName:
+                box.checkState === Qt.PartiallyChecked ?
+                "check-mark-partial" :
+                "check-mark"
 
-            scale: box.checked ? 1 : 0
+            scale: box.checkState === Qt.Unchecked ? 0 : 1
 
             Behavior on scale {
                 HNumberAnimation {
                     overshoot: 4
                     easing.type: Easing.InOutBack
+                    factor: 0.5
                 }
             }
         }
     }
 
     contentItem: HColumnLayout {
+        visible: mainText.text || subtitleText.text
         opacity: box.enabled ? 1 : theme.disabledElementsOpacity
 
         HLabel {

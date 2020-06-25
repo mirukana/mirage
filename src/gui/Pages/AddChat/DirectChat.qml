@@ -2,77 +2,91 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: addChatBox
-    clickButtonOnEnter: "apply"
+HFlickableColumnPage {
+    id: page
 
-    onFocusChanged: userField.item.forceActiveFocus()
 
-    buttonModel: [
-        {
-            name: "apply",
-            text: qsTr("Start chat"),
-            iconName: "start-direct-chat",
-            enabled: Boolean(userField.item.text.trim())
-        },
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
-    ]
+    property string userId
+    readonly property QtObject account: ModelStore.get("accounts").find(userId)
 
-    buttonCallbacks: ({
-        apply: button => {
-            button.loading    = true
-            errorMessage.text = ""
 
-            const args = [userField.item.text.trim(), encryptCheckBox.checked]
+    function takeFocus() {
+        userField.item.forceActiveFocus()
+    }
 
-            py.callClientCoro(userId, "new_direct_chat", args, roomId => {
-                button.loading    = false
-                errorMessage.text = ""
-                pageLoader.showRoom(userId, roomId)
-                mainPane.roomList.startCorrectItemSearch()
+    function startChat() {
+        applyButton.loading = true
+        errorMessage.text   = ""
 
-            }, (type, args) => {
-                button.loading = false
+        const args = [userField.item.text.trim(), encryptCheckBox.checked]
 
-                let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
-
-                if (type === "InvalidUserInContext")
-                    txt = qsTr("Can't start chatting with yourself")
-
-                if (type === "InvalidUserId")
-                    txt = qsTr("Invalid user ID, expected format is " +
-                               "@username:homeserver")
-
-                if (type === "MatrixNotFound")
-                    txt = qsTr("User not found, please verify the entered ID")
-
-                if (type === "MatrixBadGateway")
-                    txt = qsTr(
-                        "Could not contact this user's server, " +
-                        "please verify the entered ID"
-                    )
-
-                errorMessage.text = txt
-            })
-        },
-
-        cancel: button => {
-            userField.item.text = ""
+        py.callClientCoro(userId, "new_direct_chat", args, roomId => {
+            applyButton.loading = false
             errorMessage.text   = ""
-            pageLoader.showPrevious()
+            pageLoader.showRoom(userId, roomId)
+            mainPane.roomList.startCorrectItemSearch()
+
+        }, (type, args) => {
+            applyButton.loading = false
+
+            let txt = qsTr("Unknown error - %1: %2").arg(type).arg(args)
+
+            if (type === "InvalidUserInContext")
+                txt = qsTr("Can't start chatting with yourself")
+
+            if (type === "InvalidUserId")
+                txt = qsTr("Invalid user ID, expected format is " +
+                           "@username:homeserver")
+
+            if (type === "MatrixNotFound")
+                txt = qsTr("User not found, please verify the entered ID")
+
+            if (type === "MatrixBadGateway")
+                txt = qsTr(
+                    "Could not contact this user's server, " +
+                    "please verify the entered ID"
+                )
+
+            errorMessage.text = txt
+        })
+    }
+
+    function cancel() {
+        userField.item.reset()
+        errorMessage.text = ""
+
+        pageLoader.showPrevious()
+    }
+
+
+    footer: ButtonLayout {
+        ApplyButton {
+            id: applyButton
+            text: qsTr("Start chat")
+            icon.name: "start-direct-chat"
+            enabled: Boolean(userField.item.text.trim())
+            onClicked: startChat()
         }
-    })
 
+        CancelButton {
+            onClicked: {
+                userField.item.text = ""
+                errorMessage.text   = ""
+                pageLoader.showPrevious()
+            }
+        }
+    }
 
-    readonly property string userId: addChatPage.userId
+    Keys.onEscapePressed: cancel()
 
 
     CurrentUserAvatar {
-        Layout.alignment: Qt.AlignCenter
-        Layout.preferredWidth: 128
-        Layout.preferredHeight: Layout.preferredWidth
+        userId: page.userId
+        account: page.account
     }
 
     HLabeledItem {

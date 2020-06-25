@@ -4,51 +4,10 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../Base/ButtonLayout"
 
-BoxPopup {
+HColumnPopup {
     id: popup
-    // fillAvailableHeight: true
-    summary.text: qsTr("Invite members to <i>%1</i>").arg(roomName)
-    summary.textFormat: Text.StyledText
-    okText: qsTr("Invite")
-    okEnabled: invitingAllowed && Boolean(inviteArea.text.trim())
-
-    onOpened: inviteArea.forceActiveFocus()
-
-    onInvitingAllowedChanged:
-        if (! invitingAllowed && inviteFuture) inviteFuture.cancel()
-
-    box.buttonCallbacks: ({
-        ok: button => {
-            button.loading = true
-
-            const inviteesLeft = inviteArea.text.trim().split(/\s+/).filter(
-                user => ! successfulInvites.includes(user)
-            )
-
-            inviteFuture = py.callClientCoro(
-                userId,
-                "room_mass_invite",
-                [roomId, ...inviteesLeft],
-
-                ([successes, errors]) => {
-                    if (errors.length < 1) {
-                        popup.close()
-                        return
-                    }
-
-                    successfulInvites = successes
-                    failedInvites     = errors
-                    button.loading    = false
-                }
-            )
-        },
-
-        cancel: button => {
-            if (inviteFuture) inviteFuture.cancel()
-            popup.close()
-        },
-    })
 
 
     property string userId
@@ -61,13 +20,68 @@ BoxPopup {
     property var failedInvites: []
 
 
+    function invite() {
+        inviteButton.loading = true
+
+        const inviteesLeft = inviteArea.text.trim().split(/\s+/).filter(
+            user => ! successfulInvites.includes(user)
+        )
+
+        inviteFuture = py.callClientCoro(
+            userId,
+            "room_mass_invite",
+            [roomId, ...inviteesLeft],
+
+            ([successes, errors]) => {
+                if (errors.length < 1) {
+                    popup.close()
+                    return
+                }
+
+                successfulInvites    = successes
+                failedInvites        = errors
+                inviteButton.loading = false
+            }
+        )
+    }
+
+
+    page.footer: ButtonLayout {
+        ApplyButton {
+            id: inviteButton
+            text: qsTr("Invite")
+            icon.name: "room-send-invite"
+            enabled: invitingAllowed && Boolean(inviteArea.text.trim())
+            onClicked: invite()
+        }
+
+        CancelButton {
+            id: cancelButton
+            onClicked: popup.close()
+        }
+    }
+
+    onOpened: inviteArea.forceActiveFocus()
+    onClosed: if (inviteFuture) inviteFuture.cancel()
+
+    onInvitingAllowedChanged:
+        if (! invitingAllowed && inviteFuture) inviteFuture.cancel()
+
+
+    SummaryLabel {
+        text: qsTr("Invite members to <i>%1</i>").arg(roomName)
+        textFormat: Text.StyledText
+    }
+
     HScrollView {
+        clip: true
+
         Layout.fillWidth: true
         Layout.fillHeight: true
 
         HTextArea {
             id: inviteArea
-            focusItemOnTab: box.firstButton
+            focusItemOnTab: inviteButton.enabled ? inviteButton : cancelButton
             placeholderText:
                 qsTr("User IDs (e.g. @bob:matrix.org @alice:localhost)")
         }

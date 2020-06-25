@@ -67,10 +67,7 @@ HTile {
                 roomId: chat.roomId,
                 targetUserId: model.id,
                 targetDisplayName: model.display_name,
-                operation:
-                    model.invited ?
-                    RemoveMemberPopup.Operation.Disinvite :
-                    RemoveMemberPopup.Operation.Kick,
+                operation: model.invited ? "disinvite" : "kick",
             })
 
             Component.onCompleted: py.callClientCoro(
@@ -94,7 +91,7 @@ HTile {
                 roomId: chat.roomId,
                 targetUserId: model.id,
                 targetDisplayName: model.display_name,
-                operation: RemoveMemberPopup.Operation.Ban,
+                operation: "ban",
             })
 
             Component.onCompleted: py.callClientCoro(

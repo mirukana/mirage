@@ -2,57 +2,69 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    id: addChatBox
-    clickButtonOnEnter: "apply"
+HFlickableColumnPage {
+    id: page
 
-    onFocusChanged: nameField.item.forceActiveFocus()
 
-    buttonModel: [
-        { name: "apply", text: qsTr("Create"), iconName: "room-create" },
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
-    ]
+    property string userId
+    readonly property QtObject account: ModelStore.get("accounts").find(userId)
 
-    buttonCallbacks: ({
-        apply: button => {
-            button.loading    = true
-            errorMessage.text = ""
 
-            const args = [
-                nameField.item.text,
-                topicArea.item.text,
-                publicCheckBox.checked,
-                encryptCheckBox.checked,
-                ! blockOtherServersCheckBox.checked,
-            ]
+    function takeFocus() { nameField.item.forceActiveFocus() }
 
-            py.callClientCoro(userId, "new_group_chat", args, roomId => {
-                button.loading = false
-                pageLoader.showRoom(userId, roomId)
-                mainPane.roomList.startCorrectItemSearch()
+    function create() {
+        applyButton.loading = true
+        errorMessage.text   = ""
 
-            }, (type, args) => {
-                button.loading = false
-                errorMessage.text =
-                    qsTr("Unknown error - %1: %2").arg(type).arg(args)
-            })
-        },
+        const args = [
+            nameField.item.text,
+            topicArea.item.text,
+            publicCheckBox.checked,
+            encryptCheckBox.checked,
+            ! blockOtherServersCheckBox.checked,
+        ]
 
-        cancel: button => {
-            nameField.item.text               = ""
-            topicArea.item.text               = ""
-            publicCheckBox.checked            = false
-            encryptCheckBox.checked           = false
-            blockOtherServersCheckBox.checked = false
+        py.callClientCoro(userId, "new_group_chat", args, roomId => {
+            applyButton.loading = false
+            pageLoader.showRoom(userId, roomId)
+            mainPane.roomList.startCorrectItemSearch()
 
-            pageLoader.showPrevious()
+        }, (type, args) => {
+            applyButton.loading = false
+            errorMessage.text   =
+                qsTr("Unknown error - %1: %2").arg(type).arg(args)
+        })
+    }
+
+    function cancel() {
+        nameField.item.reset()
+        topicArea.item.reset()
+        publicCheckBox.reset()
+        encryptCheckBox.reset()
+        blockOtherServersCheckBox.reset()
+
+        pageLoader.showPrevious()
+    }
+
+
+    footer: ButtonLayout {
+        ApplyButton {
+            id: applyButton
+            text: qsTr("Create")
+            icon.name: "room-create"
+            onClicked: create()
         }
-    })
 
+        CancelButton {
+            onClicked: cancel()
+        }
+    }
 
-    readonly property string userId: addChatPage.userId
+    Keys.onEscapePressed: cancel()
 
 
     HRoomAvatar {
@@ -69,6 +81,9 @@ HBox {
             z: 10
             opacity: nameField.item.text ? 0 : 1
             visible: opacity > 0
+
+            userId: page.userId
+            account: page.account
 
             Behavior on opacity { HNumberAnimation {} }
         }

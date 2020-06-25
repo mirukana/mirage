@@ -8,7 +8,7 @@ HQtObject {
 
 
     property Item container: parent
-    property bool active: true
+    property bool active: container.count > 1
 
 
     HShortcut {

@@ -57,9 +57,6 @@ HFlickableColumnPage {
     }
 
 
-    useVariableSpacing: false
-    column.spacing: theme.spacing * 1.5
-
     flickShortcuts.active:
         ! mainUI.debugConsole.visible && ! chat.composerHasFocus
 
@@ -81,6 +78,8 @@ HFlickableColumnPage {
             onClicked: cancel()
         }
     }
+
+    Keys.onEscapePressed: cancel()
 
 
     HRoomAvatar {

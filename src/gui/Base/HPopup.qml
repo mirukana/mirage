@@ -6,11 +6,14 @@ import CppUtils 0.1
 
 Popup {
     id: popup
-    anchors.centerIn: Overlay.overlay
     modal: true
     focus: true
     padding: 0
     margins: theme.spacing
+
+    // FIXME: Qt 5.15: `anchors.centerIn: Overlay.overlay` + transition broken
+    x: (parent.width - width) / 2
+    y: (parent.height - height) / 2
 
     enter: Transition {
         HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 4 }

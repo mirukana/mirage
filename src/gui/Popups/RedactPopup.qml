@@ -3,28 +3,21 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../Base/ButtonLayout"
 
-BoxPopup {
-    summary.text:
-        isLast ?
-        qsTr("Remove your last message?") :
+HFlickableColumnPopup {
+    id: popup
 
-        eventSenderAndIds.length > 1 ?
-        qsTr("Remove %1 messages?").arg(eventSenderAndIds.length) :
 
-        qsTr("Remove this message?")
+    property string preferUserId: ""
+    property string roomId: ""
 
-    details.color: theme.colors.warningText
-    details.text:
-        onlyOwnMessageWarning ?
-        qsTr("Only your messages can be removed") :
-        ""
+    property var eventSenderAndIds: []  // [[senderId, event.id], ...]
+    property bool onlyOwnMessageWarning: false
+    property bool isLast: false
 
-    okText: qsTr("Remove")
-    // box.focusButton: "ok"
 
-    onOpened: reasonField.item.forceActiveFocus()
-    onOk: {
+    function remove() {
         const idsForSender = {}  // {senderId: [event.id, ...]}
 
         for (const [senderId, eventClientId] of eventSenderAndIds) {
@@ -40,16 +33,44 @@ BoxPopup {
                 "room_mass_redact",
                 [roomId, reasonField.item.text, ...eventClientIds]
             )
+
+        popup.close()
     }
 
 
-    property string preferUserId: ""
-    property string roomId: ""
+    page.footer: ButtonLayout {
+        ApplyButton {
+            text: qsTr("Remove")
+            icon.name: "remove-message"
+            onClicked: remove()
+        }
 
-    property var eventSenderAndIds: []  // [[senderId, event.id], ...]
-    property bool onlyOwnMessageWarning: false
-    property bool isLast: false
+        CancelButton {
+            onClicked: popup.close()
+        }
+    }
 
+    onOpened: reasonField.item.forceActiveFocus()
+
+
+    SummaryLabel {
+        text:
+            isLast ?
+            qsTr("Remove your last message?") :
+
+            eventSenderAndIds.length > 1 ?
+            qsTr("Remove %1 messages?").arg(eventSenderAndIds.length) :
+
+            qsTr("Remove this message?")
+    }
+
+    DetailsLabel {
+        color: theme.colors.warningText
+        text:
+            onlyOwnMessageWarning ?
+            qsTr("Only your messages can be removed") :
+            ""
+    }
 
     HLabeledItem {
         id: reasonField
@@ -59,6 +80,7 @@ BoxPopup {
 
         HTextField {
             width: parent.width
+            onAccepted: popup.remove()
         }
     }
 }

@@ -69,9 +69,10 @@ colors:
     color halfDimText: hsluv(0, 0, intensity * 72)
     color dimText:     hsluv(0, 0, intensity * 60)
 
-    color warningText: hsluv(60, coloredTextSaturation, coloredTextIntensity)
-    color errorText:   hsluv(0, coloredTextSaturation, coloredTextIntensity)
-    color accentText:  hsluv(hue, coloredTextSaturation, coloredTextIntensity)
+    color positiveText: hsluv(155, coloredTextSaturation, coloredTextIntensity)
+    color warningText:  hsluv(60, coloredTextSaturation, coloredTextIntensity)
+    color errorText:    hsluv(0, coloredTextSaturation, coloredTextIntensity)
+    color accentText:   hsluv(hue, coloredTextSaturation, coloredTextIntensity)
 
     color link: hsluv(hue, coloredTextSaturation, coloredTextIntensity)
     color code: hsluv(hue + 10, coloredTextSaturation, coloredTextIntensity)

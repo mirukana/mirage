@@ -9,7 +9,7 @@ HColumnLayout {
 
     default property alias insideData: itemHolder.data
 
-    readonly property Item item: itemHolder.visibleChildren[0]
+    readonly property Item item: itemHolder.children[0]
     readonly property alias label: label
     readonly property alias errorLabel: errorLabel
     readonly property alias toolTip: toolTip

@@ -3,47 +3,64 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../Base/ButtonLayout"
 
-BoxPopup {
-    summary.textFormat: Text.StyledText
-    summary.text:
-        operation === RemoveMemberPopup.Operation.Disinvite ?
-        qsTr("Disinvite %1 from the room?").arg(coloredTarget) :
+HFlickableColumnPopup {
+    id: popup
 
-        operation === RemoveMemberPopup.Operation.Kick ?
-        qsTr("Kick %1 out of the room?").arg(coloredTarget) :
-
-        qsTr("Ban %1 from the room?").arg(coloredTarget)
-
-    okText:
-        operation === RemoveMemberPopup.Operation.Disinvite ?
-        qsTr("Disinvite") :
-
-        operation === RemoveMemberPopup.Operation.Kick ?
-        qsTr("Kick") :
-
-        qsTr("Ban")
-
-    onOpened: reasonField.item.forceActiveFocus()
-    onOk: py.callClientCoro(
-        userId,
-        operation === RemoveMemberPopup.Operation.Ban ?
-        "room_ban" : "room_kick",
-        [roomId, targetUserId, reasonField.item.text || null],
-    )
-
-
-    enum Operation { Disinvite, Kick, Ban }
 
     property string userId
     property string roomId
     property string targetUserId
     property string targetDisplayName
-    property int operation
+    property string operation  // "disinvite", "kick" or "ban"
 
     readonly property string coloredTarget:
         utils.coloredNameHtml(targetDisplayName, targetUserId)
 
+
+    function remove() {
+        py.callClientCoro(
+            userId,
+            operation === "ban" ?  "room_ban" : "room_kick",
+            [roomId, targetUserId, reasonField.item.text || null],
+        )
+
+        popup.close()
+    }
+
+
+    page.footer: ButtonLayout {
+        ApplyButton {
+            text:
+                operation === "disinvite" ? qsTr("Disinvite") :
+                operation === "kick" ? qsTr("Kick") :
+                qsTr("Ban")
+
+            icon.name: operation === "ban" ? "room-ban" : "room-kick"
+
+            onClicked: remove()
+        }
+
+        CancelButton {
+            onClicked: popup.close()
+        }
+    }
+
+    onOpened: reasonField.item.forceActiveFocus()
+
+
+    SummaryLabel {
+        textFormat: Text.StyledText
+        text:
+            operation === "disinvite" ?
+            qsTr("Disinvite %1 from the room?").arg(coloredTarget) :
+
+            operation === "kick" ?
+            qsTr("Kick %1 out of the room?").arg(coloredTarget) :
+
+            qsTr("Ban %1 from the room?").arg(coloredTarget)
+    }
 
     HLabeledItem {
         id: reasonField
@@ -53,6 +70,7 @@ BoxPopup {
 
         HTextField {
             width: parent.width
+            onAccepted: popup.remove()
         }
     }
 }

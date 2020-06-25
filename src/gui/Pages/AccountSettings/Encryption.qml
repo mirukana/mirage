@@ -3,41 +3,53 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "../../Base/ButtonLayout"
 
-HBox {
-    buttonModel: [
-        { name: "export", text: qsTr("Export"), iconName: "export-keys"},
-        { name: "import", text: qsTr("Import"), iconName: "import-keys"},
-    ]
+HFlickableColumnPage {
+    id: page
 
-    buttonCallbacks: ({
-        export: button => {
-            utils.makeObject(
+
+    property string userId
+
+
+    function takeFocus() { exportButton.forceActiveFocus() }
+
+
+    footer: ButtonLayout {
+        OtherButton {
+            id: exportButton
+            text: qsTr("Export")
+            icon.name: "export-keys"
+
+            onClicked: utils.makeObject(
                 "Dialogs/ExportKeys.qml",
-                accountSettings,
-                { userId: accountSettings.userId },
+                page,
+                { userId: page.userId },
                 obj => {
-                    button.loading = Qt.binding(() => obj.exporting)
+                    loading = Qt.binding(() => obj.exporting)
                     obj.dialog.open()
                 }
             )
-        },
-        import: button => {
-            utils.makeObject(
+        }
+
+        OtherButton {
+            text: qsTr("Import")
+            icon.name: "import-keys"
+
+            onClicked: utils.makeObject(
                 "Dialogs/ImportKeys.qml",
-                accountSettings,
-                { userId: accountSettings.userId },
+                page,
+                { userId: page.userId },
                 obj => { obj.dialog.open() }
             )
-        },
-    })
-
+        }
+    }
 
     HLabel {
         wrapMode: Text.Wrap
         text: qsTr(
             "The decryption keys for messages received in encrypted rooms " +
-            "<b>until present time</b> can be backed up " +
+            "<b>until present time</b> can be saved " +
             "to a passphrase-protected file.<br><br>" +
 
             "You can then import this file on any Matrix account or " +

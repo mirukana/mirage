@@ -2,61 +2,74 @@
 
 import QtQuick 2.12
 import ".."
+import "../Base/ButtonLayout"
 
-BoxPopup {
+HFlickableColumnPopup {
     id: popup
-    summary.text: qsTr("Backup your decryption keys before signing out?")
-    details.text: qsTr(
-        "Signing out will delete your device's information and the keys " +
-        "required to decrypt messages in encrypted rooms.\n\n" +
 
-        "You can export your keys to a passphrase-protected file " +
-        "before signing out.\n\n" +
 
-        "This will allow you to restore access to your messages when " +
-        "you sign in again, by importing this file in your account settings."
-    )
+    property string userId: ""
 
-    box.focusButton: "ok"
-    box.buttonModel: [
-        { name: "ok", text: qsTr("Export keys"), iconName: "export-keys" },
-        { name: "signout", text: qsTr("Sign out now"), iconName: "sign-out",
-          iconColor: theme.colors.middleBackground },
-        { name: "cancel", text: qsTr("Cancel"), iconName: "cancel" },
-    ]
 
-    box.buttonCallbacks: ({
-        ok: button => {
-            utils.makeObject(
+    page.footer: ButtonLayout {
+        ApplyButton {
+            id: exportButton
+            text: qsTr("Export keys")
+            icon.name: "export-keys"
+
+            onClicked: utils.makeObject(
                 "Dialogs/ExportKeys.qml",
                 window.mainUI,
                 { userId },
                 obj => {
-                    button.loading = Qt.binding(() => obj.exporting)
-                    obj.done.connect(() => {
-                        box.buttonCallbacks["signout"](button)
-                    })
+                    loading = Qt.binding(() => obj.exporting)
+                    obj.done.connect(signOutButton.clicked)
                     obj.dialog.open()
                 }
             )
-        },
+        }
 
-        signout: button => {
-            okClicked = true
-            popup.ok()
+        OtherButton {
+            id: signOutButton
+            text: qsTr("Sign out now")
+            icon.name: "sign-out"
+            icon.color: theme.colors.middleBackground
 
-            if (ModelStore.get("accounts").count < 2 ||
-                    window.uiState.pageProperties.userId === userId) {
-                window.mainUI.pageLoader.showPage("AddAccount/AddAccount")
+            onClicked: {
+                if (ModelStore.get("accounts").count < 2 ||
+                    window.uiState.pageProperties.userId === userId)
+                {
+                    window.mainUI.pageLoader.showPage("AddAccount/AddAccount")
+                }
+
+                py.callCoro("logout_client", [userId])
+                popup.close()
             }
+        }
 
-            py.callCoro("logout_client", [userId])
-            popup.close()
-        },
+        CancelButton {
+            onClicked: popup.close()
+        }
+    }
 
-        cancel: button => { okClicked = false; popup.cancel(); popup.close() },
-    })
+    onOpened: exportButton.forceActiveFocus()
 
 
-    property string userId: ""
+    SummaryLabel {
+        text: qsTr("Backup your decryption keys before signing out?")
+    }
+
+    DetailsLabel {
+        text: qsTr(
+            "Signing out will delete your device's information and the keys " +
+            "required to decrypt messages in encrypted rooms.\n\n" +
+
+            "You can export your keys to a passphrase-protected file " +
+            "before signing out.\n\n" +
+
+            "This will allow you to restore access to your messages when " +
+            "you sign in again, by importing this file in your account " +
+            "settings."
+        )
+    }
 }

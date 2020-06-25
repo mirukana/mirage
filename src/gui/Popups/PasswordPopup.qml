@@ -3,29 +3,22 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
+import "../Base/ButtonLayout"
 
-BoxPopup {
+HFlickableColumnPopup {
     id: popup
-    okEnabled: Boolean(passwordField.text)
-
-    onAboutToShow: {
-        okClicked         = false
-        acceptedPassword  = ""
-        passwordValid     = null
-        errorMessage.text = ""
-    }
-    onOpened: passwordField.forceActiveFocus()
-
-
-    signal cancelled()
 
 
     property bool validateWhileTyping: false
 
     property string acceptedPassword: ""
     property var passwordValid: null
+    property bool okClicked: false
 
-    property alias field: passwordField
+    readonly property alias summary: summary
+    readonly property alias validateButton: validateButton
+
+    signal cancelled()
 
 
     function verifyPassword(pass, callback) {
@@ -35,39 +28,58 @@ BoxPopup {
         callback(true)
     }
 
+    function validate() {
+        const password         = passwordField.text
+        okClicked              = true
+        validateButton.loading = true
+        errorMessage.text      = ""
 
-    box.buttonCallbacks: ({
-        ok: button => {
-            const password    = passwordField.text
-            okClicked         = true
-            button.loading    = true
-            errorMessage.text = ""
+        verifyPassword(password, result => {
+            if (result === true) {
+                passwordValid          = true
+                popup.acceptedPassword = password
+                popup.close()
+            } else if (result === false) {
+                passwordValid = false
+            } else {
+                errorMessage.text = result
+            }
 
-            verifyPassword(password, result => {
-                if (result === true) {
-                    passwordValid          = true
-                    popup.acceptedPassword = password
-                    popup.close()
-                } else if (result === false) {
-                    passwordValid = false
-                } else {
-                    errorMessage.text = result
-                }
+            validateButton.loading = false
+        })
+    }
 
-                button.loading = false
-            })
-        },
-        cancel: button => {
-            popup.close()
-            cancelled()
-        },
-    })
 
+    page.footer: ButtonLayout {
+        ApplyButton {
+            id: validateButton
+            text: qsTr("Validate")
+            enabled: Boolean(passwordField.text)
+            onClicked: validate()
+        }
+
+        CancelButton {
+            onClicked: {
+                popup.close()
+                cancelled()
+            }
+        }
+    }
+
+    onAboutToShow: {
+        okClicked         = false
+        acceptedPassword  = ""
+        passwordValid     = null
+        errorMessage.text = ""
+    }
+
+    onOpened: passwordField.forceActiveFocus()
+
+
+    SummaryLabel { id: summary }
 
     HRowLayout {
         spacing: theme.spacing
-
-        Layout.fillWidth: true
 
         HTextField {
             id: passwordField
@@ -77,6 +89,8 @@ BoxPopup {
 
             onTextChanged: passwordValid =
                 validateWhileTyping ? verifyPassword(text) : null
+
+            onAccepted: popup.validate()
 
             Layout.fillWidth: true
         }
@@ -91,7 +105,8 @@ BoxPopup {
             Layout.preferredWidth:
                 passwordValid === null ||
                 (validateWhileTyping && ! okClicked && ! passwordValid) ?
-                0 :implicitWidth
+                0 :
+                implicitWidth
 
             Behavior on Layout.preferredWidth { HNumberAnimation {} }
         }
