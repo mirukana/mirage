@@ -1,5 +1,7 @@
 # TODO
 
+- red ! on normal msg
+
 - delete devices (do that in key verification popup instead of blacklisting)
 - avatar upload/change component
 
@@ -13,8 +15,8 @@
 - use new nio `restore_login()`
 
 - verify all popups and box-pages work: enter/esc, tab focus, operations
-- write changelog
 - update requirements.txt and flatpak nio version
+- update readme features maybe
 
 ## Refactoring
 

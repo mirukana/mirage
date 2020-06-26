@@ -17,7 +17,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 
 ## Currently Implemented Features
 
-### Client
+### Interface
 
 - **Fluid interface** that adapts to any window size
 - Toggleable **compact mode**
@@ -26,12 +26,13 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - Versatile **theming system**, properties can refer to each other and have 
   any valid ECMAScript 7 expression as values
   - Comes by default with **dark** and **transparent themes**
+
+### Accounts
+
 - **Multiple accounts** in one client
-
-### Profile
-
 - Set your display name and profile picture
 - Import/export **E2E** key files
+- Inspect, rename and manually verify your sessions
 
 ### Rooms
 

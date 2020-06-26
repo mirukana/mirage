@@ -8,6 +8,83 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 0.5.2 (2020-06-26)
+
+### Added
+
+- **Sessions/device list**: you can now inspect, rename, manually verify and
+  blacklist your devices from the account settings page.
+  The interface is still work in progress, keyboard navigation and signing
+  out sessions will be added in a next version.
+
+- Re-add client-side unread/highlight room indicators.
+  If your account has push notifications disabled, which precise cross-client
+  counters depend on, the local indicators will be used as fallback.
+
+- Support the `MIRAGE_CACHE_DIR` environment variable to override where
+  files and thumbnails are downloaded
+
+- Themes:
+  - `colors.positiveText` property
+  - `mainPane.listView.room.unreadName` property
+  - In the `controls` section:
+    - `scrollBar` section
+    - `button.focusedBorder` and `button.focusedBorderWidth` properties
+    - `tab.focusedBorder` and `tab.focusedBorderWidth` properties
+    - `textArea.borderWidth`, `textArea.border`, `textArea.focusedBorder` and
+      `textArea.errorBorder` properties
+
+### Changed
+
+- Overhauled account settings to match the design of other tabbed pages.
+  The horizontal layout design has been removed due to complicated code and 
+  being impossible to extend without breaking it.
+
+- The display name field in account settings is now colored, 
+  preview your new display name's color as you type
+
+- For rooms without image avatars set, the room settings's avatar color now
+  responds to the name field as you type
+
+- Overhauled scrollbars:
+  - Now match the Mirage theme and much better visibility
+  - No more right margin for the timeline's bar
+  - Minimum height to prevent the bar from becoming impossible to grab
+
+- Use brighter text for room names of rooms that have unread messages
+
+- Buttons, tabs, text fields and areas now have animated bottom borders 
+  to represent keyboard focus instead of being highlighted like when hovered
+
+- Text fields and areas can now have rounded corners, following the theme
+
+- Tabbed pages (Sign In, Add Chat, etc) can now be swiped left and right
+
+- Popups can now be scrolled when their content is bigger than the
+  window's height
+
+- Replace most generic checkmark icons for apply buttons in popups
+
+- Pressing escape in forms will consistently trigger corresponding
+  cancel buttons
+
+### Fixed
+
+- Fix `Connections` deprecation warning on Qt 5.15
+
+- Skip invisible entries when navigating context menus with up/down arrows
+
+- Fix tab focus for unhandled error and invite to room popups
+
+- Fix guest access event saying that guest access has been allowed when it 
+  has actually been forbidden
+
+- Deselect any selected message before clearing a room's events, not doing so
+  made the gone messages impossible to deselect.
+
+- Properly center some previously offset popups
+
+
 ## 0.5.1 (2020-06-05)
 
 ### Added
