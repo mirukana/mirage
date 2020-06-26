@@ -1,29 +1,14 @@
 # TODO
 
-- red ! on normal msg
-
-- delete devices (do that in key verification popup instead of blacklisting)
-- avatar upload/change component
-
-- device list keyboard navigation
-- device IP geolocation
-- unregister popup/menu when destroyed without being closed
-- menu click-through padding to close it easily
-- show scrollbars for a few secs if there's content to scroll on beginning
-
-- can leave room with a reason?
-- use new nio `restore_login()`
-
-- verify all popups and box-pages work: enter/esc, tab focus, operations
-- update requirements.txt and flatpak nio version
-- update readme features maybe
-
 ## Refactoring
 
+- General change/upload avatar component for account and room settings
 - Reorder QML object declarations,
   conform to https://doc-snapshots.qt.io/qt5-dev/qml-codingconventions.html
 
 ## Issues
+
+- Need to unregister popups/menus when they are destroyed without being closed
 
 - Bottom focus line for an `HTextArea` inside a `ScrollView` is invisible,
   put the background on `ScrollView` instead?
@@ -62,6 +47,12 @@
   (no real solution possible?)
 
 ## Interface
+
+- Show scrollbars for a few seconds if there's content to scroll on when 
+  opening a page or popup
+- Device list keyboard navigation
+- Device IP geolocation
+- Can rooms but left with a reason?
 
 - When responding to a message, highlight that message in the timeline
 - Highlight timeline messages that mentions our user
@@ -173,7 +164,7 @@
 
 ## Backend
 
-- Saving the room settings
+- Use new nio `AsyncClient.restore_login()`
 
 - Better config file format
 
@@ -188,8 +179,9 @@
 - Live-reloading accounts.json
 
 - E2E
-  - Device verification
-  - Edit/delete own devices
+  - List and verify other users's devices
+  - SAS verification
+  - Delete devices (do that in key verification popup instead of blacklisting)
   - Request room keys from own other devices
   - Auto-trust accounts within the same client
   - Provide help when undecryptable messages occur, including:
