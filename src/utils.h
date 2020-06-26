@@ -22,7 +22,7 @@ public:
     Utils() {};
 
 public slots:
-    QString formattedBytes(qint64 bytes, int precision = 2) const {
+    QString formattedBytes(qint64 bytes, int precision = 2) {
         return this->appLocale.formattedDataSize(
             bytes, precision, QLocale::DataSizeTraditionalFormat
         );
