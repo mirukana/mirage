@@ -76,7 +76,8 @@ HColumnPage {
     HListView {
         id: deviceList
 
-        property var sectionItemCounts: getSectionItemCounts()
+        // Don't bind directly to getSectionItemCounts(), laggy with big list
+        property var sectionItemCounts: ({})
 
         clip: true
         model: ListModel {}
