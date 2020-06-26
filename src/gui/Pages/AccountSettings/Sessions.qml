@@ -8,11 +8,21 @@ import "../../PythonBridge"
 
 HColumnPage {
     id: page
+    contentHeight: Math.min(
+        window.height,
+        Math.max(
+            deviceList.contentHeight + deviceList.bottomMargin,
+            busyIndicatorLoader.height + theme.spacing * 2,
+        )
+    )
 
 
     property string userId
 
     property Future loadFuture: null
+
+    // property var pr: column.childrenRect.height
+    // onPrChanged: print("pr changed:", pr, deviceList.implicitHeight)
 
 
     function takeFocus() {} // XXX
@@ -79,6 +89,7 @@ HColumnPage {
         // Don't bind directly to getSectionItemCounts(), laggy with big list
         property var sectionItemCounts: ({})
 
+        bottomMargin: theme.spacing
         clip: true
         model: ListModel {}
         delegate: DeviceDelegate {
@@ -102,6 +113,7 @@ HColumnPage {
         Layout.fillHeight: true
 
         HLoader {
+            id: busyIndicatorLoader
             anchors.centerIn: parent
             width: 96 * theme.uiScale
             height: width

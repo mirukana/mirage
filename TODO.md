@@ -2,10 +2,10 @@
 
 - handle `{}` bad `DevicesResponse`
 - delete devices (do that in key verification popup instead of blacklisting)
-- sessions page size
 - flickshortcuts
 - avatar upload/change component
 
+- device list keyboard navigation
 - device IP geolocation
 - field/area focus line in popups weird
 - clear listview checked on message clear
