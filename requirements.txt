@@ -6,7 +6,7 @@ cairosvg        >= 2.4.2,  < 3
 filetype        >= 1.0.7,  < 2
 html_sanitizer  >= 1.9.1,  < 2
 lxml            >= 4.5.1,  < 5
-matrix-nio[e2e] >= 0.13.0, <0.14
+matrix-nio[e2e] >= 0.14.1, <0.15
 mistune         >= 0.8.4,  < 0.9
 pymediainfo     >= 4.2.1,  < 5
 
