@@ -57,8 +57,7 @@ HFlickableColumnPage {
     }
 
 
-    flickShortcuts.active:
-        ! mainUI.debugConsole.visible && ! chat.composerHasFocus
+    enableFlickShortcuts: ! chat.composerHasFocus
 
     background: Rectangle {
         color: theme.chat.roomPane.roomSettings.background

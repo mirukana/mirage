@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 import "../../Base/ButtonLayout"
 import "../../PythonBridge"
+import "../../ShortcutBundles"
 
 HColumnPage {
     id: page
@@ -18,6 +20,9 @@ HColumnPage {
 
 
     property string userId
+
+    property bool enableFlickShortcuts:
+        SwipeView ? SwipeView.isCurrentItem : true
 
     property Future loadFuture: null
 
@@ -111,6 +116,12 @@ HColumnPage {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        FlickShortcuts {
+            flickable: deviceList
+            active:
+                ! mainUI.debugConsole.visible && page.enableFlickShortcuts
+        }
 
         HLoader {
             id: busyIndicatorLoader

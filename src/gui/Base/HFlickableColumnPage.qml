@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import "../ShortcutBundles"
 
 HPage {
@@ -14,6 +15,9 @@ HPage {
     property alias column: column
     property alias flickable: flickable
     property alias flickShortcuts: flickShortcuts
+
+    property bool enableFlickShortcuts:
+        SwipeView ? SwipeView.isCurrentItem : true
 
 
     padding: 0
@@ -33,7 +37,7 @@ HPage {
 
         FlickShortcuts {
             id: flickShortcuts
-            active: ! mainUI.debugConsole.visible
+            active: ! mainUI.debugConsole.visible && enableFlickShortcuts
             flickable: flickable
         }
 

@@ -1,8 +1,6 @@
 # TODO
 
-- handle `{}` bad `DevicesResponse`
 - delete devices (do that in key verification popup instead of blacklisting)
-- flickshortcuts
 - avatar upload/change component
 
 - device list keyboard navigation
@@ -17,7 +15,7 @@
 - use new nio `restore_login()`
 
 - verify all popups and boxes work: enter/esc, tab focus, operations
-- update nio fork, requirements.txt and flatpak nio version
+- update requirements.txt and flatpak nio version
 
 ## Refactoring
 
