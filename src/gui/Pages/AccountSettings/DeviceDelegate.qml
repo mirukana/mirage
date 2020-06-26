@@ -7,12 +7,14 @@ import "../../Base/ButtonLayout"
 import "../../Base/HTile"
 
 HTile {
-    id: device
+    id: deviceTile
 
 
     property HListView view
+    property string userId
 
-    signal renameDeviceRequest(string name)
+    signal verified()
+    signal renameRequest(string name)
 
 
     backgroundColor: "transparent"
@@ -22,7 +24,7 @@ HTile {
     rightPadding: 0
 
     contentItem: ContentRow {
-        tile: device
+        tile: deviceTile
         spacing: 0
 
         HCheckBox {
@@ -42,13 +44,13 @@ HTile {
                 }
 
                 TitleRightInfoLabel {
-                    tile: device
+                    tile: deviceTile
                     text: utils.smartFormatDate(model.last_seen_date)
                 }
             }
 
             SubtitleLabel {
-                tile: device
+                tile: deviceTile
                 font.family: theme.fontFamily.mono
                 text:
                     model.last_seen_ip ?
@@ -86,7 +88,7 @@ HTile {
                     defaultText: model.display_name
                     maximumLength: 255
                     horizontalAlignment: Qt.AlignHCenter
-                    onAccepted: renameDeviceRequest(text)
+                    onAccepted: renameRequest(text)
 
                     Layout.fillWidth: true
                 }
@@ -94,7 +96,7 @@ HTile {
                 HButton {
                     icon.name: "apply"
                     icon.color: theme.colors.positiveBackground
-                    onClicked: renameDeviceRequest(nameField.text)
+                    onClicked: renameRequest(nameField.text)
 
                     Layout.fillHeight: true
                 }
@@ -133,12 +135,31 @@ HTile {
                 width: parent.width
 
                 ApplyButton {
-                    enabled: [
-                        "unset", "ignored", "blacklisted",
-                    ].includes(model.type)
-
-                    text: qsTr("Verify")
+                    enabled: model.type !== "no_keys"
                     icon.name: "device-verify"
+                    text:
+                        model.type === "current" ? qsTr("Get verified") :
+                        model.type === "verified" ? qsTr("Reverify") :
+                        qsTr("Verify")
+
+                    onClicked: {
+                        actionMenu.focusOnClosed = null
+
+                        utils.makePopup(
+                            "Popups/KeyVerificationPopup.qml",
+                            view,
+                            {
+                                focusOnClosed: nameField,
+                                userId: deviceTile.userId,
+                                deviceOwner: deviceTile.userId,
+                                deviceId: model.id,
+                                deviceName: model.display_name,
+                                ed25519Key: model.ed25519_key,
+                                deviceIsCurrent: model.type === "current",
+                                verifiedCallback: deviceTile.verified,
+                            },
+                        )
+                    }
                 }
 
                 CancelButton {

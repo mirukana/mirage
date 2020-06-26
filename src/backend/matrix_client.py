@@ -1325,6 +1325,13 @@ class MatrixClient(nio.AsyncClient):
             return False
 
 
+    async def verify_device_id(self, user_id: str, device_id: str) -> None:
+        """Mark a device as verified."""
+
+        self.verify_device(self.olm.device_store[user_id][device_id])
+
+
+
     # Functions to register/modify data into models
 
     async def update_account_unread_counts(self) -> None:

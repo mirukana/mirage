@@ -1,5 +1,6 @@
 # TODO
 
+- handle `{}` bad `DevicesResponse`
 - verify & delete devices
 - sessions page size
 - flickshortcuts

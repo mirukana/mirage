@@ -69,6 +69,7 @@ HColumnPage {
                 section in counts ? counts[section] += 1 : counts[section] = 1
             }
 
+            print( "rec")
             return counts
         }
 
@@ -77,7 +78,9 @@ HColumnPage {
         delegate: DeviceDelegate {
             width: deviceList.width
             view: deviceList
-            onRenameDeviceRequest: name => renameDevice(model.index, name)
+            userId: page.userId
+            onVerified: page.loadDevices()
+            onRenameRequest: name => renameDevice(model.index, name)
         }
 
         section.property: "type"
