@@ -285,9 +285,10 @@ class Backend:
         async def update(client: MatrixClient) -> None:
             room = self.models[client.user_id, "rooms"].get(room_id)
 
-            if room and room.unreads + room.highlights:
-                room.unreads    = 0
-                room.highlights = 0
+            if room and room.unreads or room.highlights or room.local_unreads:
+                room.unreads       = 0
+                room.highlights    = 0
+                room.local_unreads = False
                 await client.update_account_unread_counts()
                 await client.update_receipt_marker(room_id, event_id)
 

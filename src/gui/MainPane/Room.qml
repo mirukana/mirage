@@ -36,7 +36,10 @@ HTile {
 
                 TitleLabel {
                     text: model.display_name || qsTr("Empty room")
-                    color: theme.mainPane.listView.room.name
+                    color:
+                        model.local_unreads ?
+                        theme.mainPane.listView.room.unreadName :
+                        theme.mainPane.listView.room.name
                 }
 
                 MessageIndicator {
@@ -44,6 +47,7 @@ HTile {
                         theme.mainPane.listView.room.unreadIndicator
                     unreads: model.unreads
                     highlights: model.highlights
+                    localUnreads: model.local_unreads
                 }
 
                 HIcon {

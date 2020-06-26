@@ -333,6 +333,7 @@ mainPane:
 
             color background:    "transparent"
             color name:          colors.text
+            color unreadName:    colors.brightText
             color lastEventDate: colors.halfDimText
 
             color subtitle:      colors.dimText

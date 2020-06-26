@@ -358,7 +358,11 @@ Rectangle {
 
         running:
             ! eventList.updateMarkerFuture &&
-            (chat.roomInfo.unreads || chat.roomInfo.highlights) &&
+            (
+                chat.roomInfo.unreads ||
+                chat.roomInfo.highlights ||
+                chat.roomInfo.local_unreads
+            ) &&
             Qt.application.state === Qt.ApplicationActive &&
             (eventList.contentY + eventList.height) > -50
 

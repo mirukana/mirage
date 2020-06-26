@@ -41,6 +41,7 @@ class Account(ModelItem):
     first_sync_done:  bool     = False
     total_unread:     int      = 0
     total_highlights: int      = 0
+    local_unreads:    bool     = False
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
@@ -84,17 +85,18 @@ class Room(ModelItem):
 
     last_event_date: datetime = ZeroDate
 
-    unreads:    int = 0
-    highlights: int = 0
+    unreads:       int  = 0
+    highlights:    int  = 0
+    local_unreads: bool = False
 
     def __lt__(self, other: "Room") -> bool:
         """Sort by membership, highlights/unread events, last event date, name.
 
         Invited rooms are first, then joined rooms, then left rooms.
-        Within these categories, sort by last event date (room with recent
-        messages are first), then by display names, then account, but
-        keep rooms with highlights on top,
-        followed by rooms with unread events.
+        Within these categories, sort by unread highlighted messages, then
+        unread messages, then by whether the room hasn't been read locally,
+        then last event date (room with recent messages are first),
+        then by display names or ID.
         """
 
         # Left rooms may still have an inviter_id, so check left first.
@@ -104,6 +106,7 @@ class Room(ModelItem):
             other.inviter_id,
             bool(other.highlights),
             bool(other.unreads),
+            bool(other.local_unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
 
@@ -113,6 +116,7 @@ class Room(ModelItem):
             self.inviter_id,
             bool(self.highlights),
             bool(self.unreads),
+            bool(self.local_unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
         )
@@ -132,6 +136,7 @@ class AccountOrRoom(Account, Room):
             other.inviter_id,
             bool(other.highlights),
             bool(other.unreads),
+            bool(other.local_unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
 
@@ -143,6 +148,7 @@ class AccountOrRoom(Account, Room):
             self.inviter_id,
             bool(self.highlights),
             bool(self.unreads),
+            bool(self.local_unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
         )

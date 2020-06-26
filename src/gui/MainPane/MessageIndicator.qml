@@ -7,15 +7,18 @@ HLabel {
     text:
         unreads >= 1000000 ? Math.floor(unreads / 1000000) + "M" :
         unreads >= 1000 ? Math.floor(unreads / 1000) + "K" :
-        unreads
+        unreads ? unreads :
+        localUnreads ? "!"  :
+        ""
 
     font.pixelSize: theme.fontSize.small
+    font.bold: text === "!"
     verticalAlignment: Qt.AlignVCenter
     leftPadding: theme.spacing / 4
     rightPadding: leftPadding
 
-    scale: unreads === 0 ? 0 : 1
-    visible: unreads !== 0
+    scale: text ? 1 : 0
+    visible: text !== ""
 
     background: Rectangle {
         color:
@@ -32,6 +35,7 @@ HLabel {
     property QtObject indicatorTheme
     property int unreads: 0
     property int highlights: 0
+    property bool localUnreads: false
 
 
     Behavior on scale { HNumberAnimation {} }
