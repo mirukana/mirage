@@ -53,16 +53,19 @@ HColumnPage {
 
 
     footer: ButtonLayout {
-        visible: height >= 0
-        height: deviceList.selectedCount ? implicitHeight : 0
-
-        Behavior on height { HNumberAnimation {} }
+        OtherButton {
+            text: qsTr("Refresh")
+            icon.name: "device-refresh-list"
+            onClicked: loadDevices()
+        }
 
         OtherButton {
             text:
+                deviceList.selectedCount === 0 ?
+                qsTr("Sign out all") :
                 deviceList.selectedCount === 1 ?
-                qsTr("Sign out checked session") :
-                qsTr("Sign out %1 sessions").arg(deviceList.selectedCount)
+                qsTr("Sign out checked") :
+                qsTr("Sign out checked (%1)").arg(deviceList.selectedCount)
 
             icon.name: "device-delete-checked"
             icon.color: theme.colors.negativeBackground

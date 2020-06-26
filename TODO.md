@@ -1,22 +1,23 @@
 # TODO
 
 - handle `{}` bad `DevicesResponse`
-- verify & delete devices
+- delete devices (do that in key verification popup instead of blacklisting)
 - sessions page size
 - flickshortcuts
 - avatar upload/change component
 
-- show scrollbars for a few secs if there's content to scroll on beginning
-
+- device IP geolocation
 - field/area focus line in popups weird
 - clear listview checked on message clear
 - unregister popup/menu when destroyed without being closed
 - menu click-through padding to close it easily
+- show scrollbars for a few secs if there's content to scroll on beginning
 
 - can leave room with a reason?
 - use new nio `restore_login()`
 
 - verify all popups and boxes work: enter/esc, tab focus, operations
+- update nio fork, requirements.txt and flatpak nio version
 
 ## Refactoring
 
