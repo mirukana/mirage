@@ -31,7 +31,7 @@ HColumnPage {
 
     function loadDevices() {
         loadFuture = py.callClientCoro(userId, "devices_info", [], devices => {
-            deviceList.checked = {}
+            deviceList.uncheckAll()
             deviceList.model.clear()
 
             for (const device of devices)
