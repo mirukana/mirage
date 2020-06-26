@@ -16,6 +16,7 @@ HFlickableColumnPopup {
     property bool okClicked: false
 
     readonly property alias summary: summary
+    readonly property alias details: details
     readonly property alias validateButton: validateButton
 
     signal cancelled()
@@ -53,7 +54,7 @@ HFlickableColumnPopup {
     page.footer: ButtonLayout {
         ApplyButton {
             id: validateButton
-            text: qsTr("Validate")
+            text: qsTr("Confirm")
             enabled: Boolean(passwordField.text)
             onClicked: validate()
         }
@@ -78,6 +79,8 @@ HFlickableColumnPopup {
 
 
     SummaryLabel { id: summary }
+
+    DetailsLabel { id: details }
 
     HRowLayout {
         spacing: theme.spacing

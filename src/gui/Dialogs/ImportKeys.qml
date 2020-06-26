@@ -26,6 +26,7 @@ HFileDialogOpener {
             qsTr("This might take a while...") :
             qsTr("Passphrase used to protect this file:")
         validateButton.text: qsTr("Import")
+        validateButton.icon.name: "import-keys"
 
         onClosed: if (importFuture) importFuture.cancel()
 
