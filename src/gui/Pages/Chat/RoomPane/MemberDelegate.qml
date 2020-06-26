@@ -61,7 +61,6 @@ HTile {
             enabled: false
 
             popup: "Popups/RemoveMemberPopup.qml"
-            popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,
@@ -85,7 +84,6 @@ HTile {
             enabled: false
 
             popup: "Popups/RemoveMemberPopup.qml"
-            popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,

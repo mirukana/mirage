@@ -56,7 +56,6 @@ Rectangle {
         sequences: window.settings.keys.removeFocusedOrSelectedMessages
         onActivated: utils.makePopup(
             "Popups/RedactPopup.qml",
-            chat,
             {
                 preferUserId: chat.userId,
                 roomId: chat.roomId,
@@ -166,7 +165,6 @@ Rectangle {
         sequences: window.settings.keys.clearRoomMessages
         onActivated: utils.makePopup(
             "Popups/ClearMessagesPopup.qml",
-            mainUI,
             {
                 userId: window.uiState.pageProperties.userId,
                 roomId: window.uiState.pageProperties.roomId,

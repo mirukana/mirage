@@ -25,7 +25,6 @@ Banner {
         forget: button => {
             utils.makePopup(
                 "Popups/ForgetRoomPopup.qml",
-                mainUI,  // Must not be destroyed with chat
                 {
                     userId:   chat.userId,
                     roomId:   chat.roomId,

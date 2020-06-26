@@ -48,9 +48,9 @@ QtObject {
     }
 
 
-    function makePopup(urlComponent, parent=null, properties={}, callback=null,
+    function makePopup(urlComponent, properties={}, callback=null,
                        autoDestruct=true) {
-        makeObject(urlComponent, parent, properties, (popup) => {
+        makeObject(urlComponent, window, properties, (popup) => {
             popup.open()
             if (autoDestruct) popup.closed.connect(() => { popup.destroy() })
             if (callback)     callback(popup)
@@ -68,7 +68,6 @@ QtObject {
 
         utils.makePopup(
             "Popups/UnexpectedErrorPopup.qml",
-            window,
             { errorType: type, message, traceback },
         )
     }

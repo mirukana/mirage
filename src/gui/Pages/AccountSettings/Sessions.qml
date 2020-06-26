@@ -60,7 +60,6 @@ HColumnPage {
 
         utils.makePopup(
             "Popups/AuthentificationPopup.qml",
-            page,
             {
                 userId: page.userId,
                 deviceIds,

@@ -37,7 +37,6 @@ Item {
         sequences: window.settings.keys.leaveRoom
         onActivated: utils.makePopup(
             "Popups/LeaveRoomPopup.qml",
-            chat,
             {userId, roomId, roomName: roomInfo.display_name},
         )
     }
@@ -46,7 +45,6 @@ Item {
         sequences: window.settings.keys.forgetRoom
         onActivated: utils.makePopup(
             "Popups/ForgetRoomPopup.qml",
-            chat,
             {userId, roomId, roomName: roomInfo.display_name},
         )
     }

@@ -245,7 +245,6 @@ HColumnLayout {
             enabled: properties.eventSenderAndIds.length
 
             popup: "Popups/RedactPopup.qml"
-            popupParent: chat
             properties: ({
                 preferUserId: chat.userId,
                 roomId: chat.roomId,
@@ -279,7 +278,6 @@ HColumnLayout {
             text: qsTr("Clear messages")
 
             popup: "Popups/ClearMessagesPopup.qml"
-            popupParent: chat
             properties: ({
                 userId: chat.userId,
                 roomId: chat.roomId,

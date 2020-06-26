@@ -83,7 +83,6 @@ HColumnLayout {
 
                 onClicked: utils.makePopup(
                     "Popups/InviteToRoomPopup.qml",
-                    chat,
                     {
                         userId: chat.userId,
                         roomId: chat.roomId,

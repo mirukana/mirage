@@ -9,7 +9,6 @@ HMenuItem {
 
         utils.makePopup(
             popup,
-            popupParent,
             utils.objectUpdate(
                 { focusOnClosed: menu.previouslyFocused }, properties,
             ),
@@ -20,7 +19,6 @@ HMenuItem {
 
 
     property var popup  // url or HPopup Component
-    property QtObject popupParent: window
     property bool autoDestruct: true
     property var properties: ({})
 }
