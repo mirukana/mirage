@@ -25,7 +25,8 @@ HColumnPage {
             for (const device of devices)
                 deviceList.model.append(device)
 
-            loadFuture = null
+            loadFuture                   = null
+            deviceList.sectionItemCounts = getSectionItemCounts()
         })
     }
 
@@ -37,6 +38,17 @@ HColumnPage {
         py.callClientCoro(userId, "rename_device", [device.id, name], ok => {
             if (! ok) deviceList.model.remove(index)  // 404 happened
         })
+    }
+
+    function getSectionItemCounts() {
+        const counts = {}
+
+        for (let i = 0; i < deviceList.model.count; i++) {
+            const section = deviceList.model.get(i).type
+            section in counts ? counts[section] += 1 : counts[section] = 1
+        }
+
+        return counts
     }
 
 
@@ -61,17 +73,7 @@ HColumnPage {
     HListView {
         id: deviceList
 
-        readonly property var sectionItemCounts: {
-            const counts = {}
-
-            for (let i = 0; i < count; i++) {
-                const section = model.get(i).type
-                section in counts ? counts[section] += 1 : counts[section] = 1
-            }
-
-            print( "rec")
-            return counts
-        }
+        property var sectionItemCounts: getSectionItemCounts()
 
         clip: true
         model: ListModel {}

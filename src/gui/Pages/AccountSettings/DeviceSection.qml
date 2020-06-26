@@ -31,8 +31,8 @@ HRowLayout {
         tristate: true
 
         checkState:
-            sectionTotalCount === sectionCheckedCount ? Qt.Checked :
             ! sectionCheckedCount                     ? Qt.Unchecked :
+            sectionTotalCount === sectionCheckedCount ? Qt.Checked :
             Qt.PartiallyChecked
 
         nextCheckState:
