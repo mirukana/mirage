@@ -15,7 +15,7 @@ HListView {
 
         DelegateChoice {
             roleValue: "Account"
-            Account {
+            AccountDelegate {
                 width: roomList.width
                 leftPadding: theme.spacing
                 rightPadding: 0  // the right buttons have padding
@@ -38,7 +38,7 @@ HListView {
 
         DelegateChoice {
             roleValue: "Room"
-            Room {
+            RoomDelegate {
                 width: roomList.width
                 onLeftClicked: showItemAtIndex(model.index)
             }

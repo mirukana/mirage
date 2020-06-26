@@ -38,7 +38,7 @@ Rectangle {
 
         model: ModelStore.get("matching_accounts")
 
-        delegate: Account {
+        delegate: AccountDelegate {
             width: accountList.cellWidth
             height: accountList.cellHeight
             padded: false
