@@ -179,7 +179,10 @@ HFlickableColumnPage {
                            theme.colors.accentText : theme.colors.brightText
                     Behavior on color { HColorAnimation {} }
 
-                    font.pixelSize: theme.fontSize.small
+                    font.pixelSize: Math.max(
+                        theme.fontSize.big * avatar.width / 300,
+                        theme.fontSize.small,
+                    )
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Qt.AlignHCenter
 
