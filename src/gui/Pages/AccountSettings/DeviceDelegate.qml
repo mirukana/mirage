@@ -16,6 +16,7 @@ HTile {
     signal verified()
     signal blacklisted()
     signal renameRequest(string name)
+    signal deleteRequest()
 
 
     backgroundColor: "transparent"
@@ -89,7 +90,7 @@ HTile {
                     defaultText: model.display_name
                     maximumLength: 255
                     horizontalAlignment: Qt.AlignHCenter
-                    onAccepted: renameRequest(text)
+                    onAccepted: deviceTile.renameRequest(text)
 
                     Layout.fillWidth: true
                 }
@@ -97,7 +98,7 @@ HTile {
                 HButton {
                     icon.name: "apply"
                     icon.color: theme.colors.positiveBackground
-                    onClicked: renameRequest(nameField.text)
+                    onClicked: deviceTile.renameRequest(nameField.text)
 
                     Layout.fillHeight: true
                 }
@@ -167,6 +168,7 @@ HTile {
                 CancelButton {
                     text: qsTr("Sign out")
                     icon.name: "device-delete"
+                    onClicked: deviceTile.deleteRequest()
                 }
             }
         }

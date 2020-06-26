@@ -26,11 +26,8 @@ HColumnPage {
 
     property Future loadFuture: null
 
-    // property var pr: column.childrenRect.height
-    // onPrChanged: print("pr changed:", pr, deviceList.implicitHeight)
 
-
-    function takeFocus() {} // XXX
+    function takeFocus() {} // TODO
 
     function loadDevices() {
         loadFuture = py.callClientCoro(userId, "devices_info", [], devices => {
@@ -55,6 +52,22 @@ HColumnPage {
         })
     }
 
+    function deleteDevices(...indice) {
+        const deviceIds = []
+
+        for (const i of indice.sort())
+            deviceIds.push(deviceList.model.get(i).id)
+
+        utils.makePopup(
+            "Popups/AuthentificationPopup.qml",
+            page,
+            {
+                userId: page.userId,
+                deviceIds,
+            },
+        )
+    }
+
     function getSectionItemCounts() {
         const counts = {}
 
@@ -71,10 +84,11 @@ HColumnPage {
         OtherButton {
             text: qsTr("Refresh")
             icon.name: "device-refresh-list"
-            onClicked: loadDevices()
+            onClicked: page.loadDevices()
         }
 
         OtherButton {
+            enabled: deviceList.model.count > 0
             text:
                 deviceList.selectedCount === 0 ?
                 qsTr("Sign out all") :
@@ -84,6 +98,10 @@ HColumnPage {
 
             icon.name: "device-delete-checked"
             icon.color: theme.colors.negativeBackground
+            onClicked:
+                deviceList.selectedCount ?
+                page.deleteDevices(...deviceList.checkedIndice) :
+                page.deleteDevices(...utils.range(1, deviceList.count - 1))
         }
     }
 
@@ -103,7 +121,8 @@ HColumnPage {
             userId: page.userId
             onVerified: page.loadDevices()
             onBlacklisted: page.loadDevices()
-            onRenameRequest: name => renameDevice(model.index, name)
+            onRenameRequest: name => page.renameDevice(model.index, name)
+            onDeleteRequest: page.deleteDevices(model.index)
         }
 
         section.property: "type"
