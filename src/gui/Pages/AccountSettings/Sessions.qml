@@ -80,6 +80,7 @@ HColumnPage {
             view: deviceList
             userId: page.userId
             onVerified: page.loadDevices()
+            onBlacklisted: page.loadDevices()
             onRenameRequest: name => renameDevice(model.index, name)
         }
 

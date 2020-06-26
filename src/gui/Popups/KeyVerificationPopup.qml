@@ -16,6 +16,7 @@ HFlickableColumnPopup {
     property string ed25519Key
     property bool deviceIsCurrent: false
     property var verifiedCallback: null
+    property var blacklistedCallback: null
 
 
     page.footer: ButtonLayout {
@@ -43,8 +44,17 @@ HFlickableColumnPopup {
             text: qsTr("They differ")
             icon.name: "device-blacklisted"
             onClicked: {
-                // XXX
-                popup.close()
+                loading = true
+
+                py.callClientCoro(
+                    userId,
+                    "blacklist_device_id",
+                    [deviceOwner, deviceId],
+                    () => {
+                        if (blacklistedCallback) blacklistedCallback()
+                        popup.close()
+                    }
+                )
             }
         }
 

@@ -1331,6 +1331,11 @@ class MatrixClient(nio.AsyncClient):
         self.verify_device(self.olm.device_store[user_id][device_id])
 
 
+    async def blacklist_device_id(self, user_id: str, device_id: str) -> None:
+        """Mark a device as blacklisted."""
+
+        self.blacklist_device(self.olm.device_store[user_id][device_id])
+
 
     # Functions to register/modify data into models
 

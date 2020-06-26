@@ -14,6 +14,7 @@ HTile {
     property string userId
 
     signal verified()
+    signal blacklisted()
     signal renameRequest(string name)
 
 
@@ -157,6 +158,7 @@ HTile {
                                 ed25519Key: model.ed25519_key,
                                 deviceIsCurrent: model.type === "current",
                                 verifiedCallback: deviceTile.verified,
+                                blacklistedCallback: deviceTile.blacklisted,
                             },
                         )
                     }
