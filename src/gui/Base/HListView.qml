@@ -63,18 +63,21 @@ ListView {
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
     property var checked: ({})
+    property var checkedIndice: new Set()
     property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checked).length
 
 
     function check(...indices) {
         for (const i of indices) {
-            const model = listView.model.get(i)
+            const model       = listView.model.get(i)
             checked[model.id] = model
+            checkedIndice.add(i)
         }
 
         lastCheckedDelegateIndex = indices.slice(-1)[0]
         checkedChanged()
+        checkedIndiceChanged()
     }
 
     function checkFromLastToHere(here) {
@@ -86,29 +89,34 @@ ListView {
         for (const i of indices) {
             const model = listView.model.get(i)
             delete checked[model.id]
+            checkedIndice.delete(i)
         }
 
         checkedChanged()
+        checkedIndiceChanged()
     }
 
     function toggleCheck(...indices) {
-        const checkedIndices = []
+        const checkedNow = []
 
         for (const i of indices) {
             const model = listView.model.get(i)
 
             if (model.id in checked) {
                 delete checked[model.id]
+                checkedIndice.delete(i)
             } else {
-                checked[model.id] = model
-                checkedIndices.push(i)
+                checked[model.id]       = model
+                checkedNow.push(i)
+                checkedIndice.add(i)
             }
         }
 
-        if (checkedIndices.length > 0)
-            lastCheckedDelegateIndex = checkedIndices.slice(-1)[0]
+        if (checkedNow.length > 0)
+            lastCheckedDelegateIndex = checkedNow.slice(-1)[0]
 
         checkedChanged()
+        checkedIndiceChanged()
     }
 
     function getSortedChecked() {
