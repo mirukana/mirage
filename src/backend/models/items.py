@@ -42,6 +42,7 @@ class Account(ModelItem):
     total_unread:     int      = 0
     total_highlights: int      = 0
     local_unreads:    bool     = False
+    local_highlights: bool     = False
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
@@ -85,9 +86,10 @@ class Room(ModelItem):
 
     last_event_date: datetime = ZeroDate
 
-    unreads:       int  = 0
-    highlights:    int  = 0
-    local_unreads: bool = False
+    unreads:          int  = 0
+    highlights:       int  = 0
+    local_unreads:    bool = False
+    local_highlights: bool = False
 
     def __lt__(self, other: "Room") -> bool:
         """Sort by membership, highlights/unread events, last event date, name.
@@ -105,6 +107,7 @@ class Room(ModelItem):
             self.left,
             other.inviter_id,
             bool(other.highlights),
+            bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
@@ -115,6 +118,7 @@ class Room(ModelItem):
             other.left,
             self.inviter_id,
             bool(self.highlights),
+            bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,
@@ -135,6 +139,7 @@ class AccountOrRoom(Account, Room):
             self.left,
             other.inviter_id,
             bool(other.highlights),
+            bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
@@ -147,6 +152,7 @@ class AccountOrRoom(Account, Room):
             other.left,
             self.inviter_id,
             bool(self.highlights),
+            bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,

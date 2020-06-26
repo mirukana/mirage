@@ -22,7 +22,7 @@ HLabel {
 
     background: Rectangle {
         color:
-            highlights ?
+            highlights || (! unreads && localUnreads && localHighlights) ?
             indicatorTheme.mentionBackground :
             indicatorTheme.background
 
@@ -36,6 +36,7 @@ HLabel {
     property int unreads: 0
     property int highlights: 0
     property bool localUnreads: false
+    property bool localHighlights: false
 
 
     Behavior on scale { HNumberAnimation {} }

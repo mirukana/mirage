@@ -48,6 +48,7 @@ HTile {
                     unreads: model.unreads
                     highlights: model.highlights
                     localUnreads: model.local_unreads
+                    localHighlights: model.local_highlights
                 }
 
                 HIcon {

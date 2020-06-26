@@ -1342,9 +1342,10 @@ class MatrixClient(nio.AsyncClient):
     async def update_account_unread_counts(self) -> None:
         """Recalculate total unread notifications/highlights for our account"""
 
-        local_unreads = False
-        unreads       = 0
-        highlights    = 0
+        unreads          = 0
+        highlights       = 0
+        local_unreads    = False
+        local_highlights = False
 
         for room in self.models[self.user_id, "rooms"].values():
             unreads    += room.unreads
@@ -1353,10 +1354,14 @@ class MatrixClient(nio.AsyncClient):
             if room.local_unreads:
                 local_unreads = True
 
+            if room.local_highlights:
+                local_highlights = True
+
         account                  = self.models["accounts"][self.user_id]
         account.total_unread     = unreads
         account.total_highlights = highlights
         account.local_unreads    = local_unreads
+        account.local_highlights = local_highlights
 
 
     async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
@@ -1405,11 +1410,13 @@ class MatrixClient(nio.AsyncClient):
             last_event_date              = datetime.fromtimestamp(0)
             typing_members               = []
             local_unreads                = False
+            local_highlights             = False
             update_account_unread_counts = True
         else:
             last_event_date              = registered.last_event_date
             typing_members               = registered.typing_members
             local_unreads                = registered.local_unreads
+            local_highlights             = registered.local_highlights
             update_account_unread_counts = (
                 registered.unreads != room.unread_notifications or
                 registered.highlights != room.unread_highlights
@@ -1452,9 +1459,10 @@ class MatrixClient(nio.AsyncClient):
 
             last_event_date = last_event_date,
 
-            unreads       = room.unread_notifications,
-            highlights    = room.unread_highlights,
-            local_unreads = local_unreads,
+            unreads          = room.unread_notifications,
+            highlights       = room.unread_highlights,
+            local_unreads    = local_unreads,
+            local_highlights = local_highlights,
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item
@@ -1631,5 +1639,8 @@ class MatrixClient(nio.AsyncClient):
 
         room_item = self.models[self.user_id, "rooms"][room.room_id]
         room_item.local_unreads = True
+
+        if mentions_us:
+            room_item.local_highlights = True
 
         await self.update_account_unread_counts()
