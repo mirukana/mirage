@@ -96,6 +96,11 @@ ListView {
         checkedIndiceChanged()
     }
 
+    function uncheckAll() {
+        checked       = {}
+        checkedIndice = new Set()
+    }
+
     function toggleCheck(...indices) {
         const checkedNow = []
 

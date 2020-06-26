@@ -170,6 +170,7 @@ Rectangle {
             {
                 userId: window.uiState.pageProperties.userId,
                 roomId: window.uiState.pageProperties.roomId,
+                preClearCallback: eventList.uncheckAll,
             }
         )
     }

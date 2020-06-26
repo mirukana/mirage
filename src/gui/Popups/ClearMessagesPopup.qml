@@ -9,6 +9,7 @@ HFlickableColumnPopup {
 
     property string userId: ""
     property string roomId: ""
+    property var preClearCallback: null
 
 
     page.footer: ButtonLayout {
@@ -17,6 +18,7 @@ HFlickableColumnPopup {
             text: qsTr("Clear")
             icon.name: "clear-messages"
             onClicked: {
+                if (preClearCallback) preClearCallback()
                 py.callClientCoro(userId, "clear_events", [roomId])
                 popup.close()
             }

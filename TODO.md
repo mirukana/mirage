@@ -6,7 +6,6 @@
 - device list keyboard navigation
 - device IP geolocation
 - field/area focus line in popups weird
-- clear listview checked on message clear
 - unregister popup/menu when destroyed without being closed
 - menu click-through padding to close it easily
 - show scrollbars for a few secs if there's content to scroll on beginning

@@ -280,7 +280,11 @@ HColumnLayout {
 
             popup: "Popups/ClearMessagesPopup.qml"
             popupParent: chat
-            properties: ({userId: chat.userId, roomId: chat.roomId})
+            properties: ({
+                userId: chat.userId,
+                roomId: chat.roomId,
+                preClearCallback: eventList.uncheckAll,
+            })
         }
     }
 }
