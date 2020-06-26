@@ -92,6 +92,7 @@ HFlickableColumnPage {
         }
     }
 
+    onKeyboardAccept: page.signIn()
     onKeyboardCancel: page.cancel()
 
 

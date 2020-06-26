@@ -64,6 +64,7 @@ HFlickableColumnPage {
         }
     }
 
+    onKeyboardAccept: create()
     onKeyboardCancel: cancel()
 
 

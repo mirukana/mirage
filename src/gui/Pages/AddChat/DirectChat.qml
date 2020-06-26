@@ -81,6 +81,7 @@ HFlickableColumnPage {
         }
     }
 
+    onKeyboardAccept: startChat()
     onKeyboardCancel: cancel()
 
 

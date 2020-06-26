@@ -58,6 +58,7 @@ HFlickableColumnPage {
 
     footer: ButtonLayout {
         ApplyButton {
+            id: joinButton
             text: qsTr("Join")
             icon.name: "room-join"
             enabled: Boolean(roomField.item.text.trim())
@@ -69,6 +70,7 @@ HFlickableColumnPage {
         }
     }
 
+    onKeyboardAccept: join()
     onKeyboardCancel: cancel()
 
 
