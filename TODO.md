@@ -5,7 +5,6 @@
 
 - device list keyboard navigation
 - device IP geolocation
-- field/area focus line in popups weird
 - unregister popup/menu when destroyed without being closed
 - menu click-through padding to close it easily
 - show scrollbars for a few secs if there's content to scroll on beginning
@@ -13,7 +12,8 @@
 - can leave room with a reason?
 - use new nio `restore_login()`
 
-- verify all popups and boxes work: enter/esc, tab focus, operations
+- verify all popups and box-pages work: enter/esc, tab focus, operations
+- write changelog
 - update requirements.txt and flatpak nio version
 
 ## Refactoring
