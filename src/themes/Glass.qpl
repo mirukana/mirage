@@ -96,7 +96,7 @@ icons:
 // Generic UI controls
 
 controls:
-    scrollbar:
+    scrollBar:
         int width: theme.spacing
 
         color track: colors.strongBackground

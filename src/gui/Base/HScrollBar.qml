@@ -10,22 +10,22 @@ ScrollBar {
     padding: 0
 
     background: Rectangle {
-        color: theme.controls.scrollbar.track
+        color: theme.controls.scrollBar.track
     }
 
     contentItem: Item {
-        implicitWidth: theme.controls.scrollbar.width
+        implicitWidth: theme.controls.scrollBar.width
 
         Rectangle {
             anchors.fill: parent
-            anchors.leftMargin: theme.controls.scrollbar.sliderPadding
+            anchors.leftMargin: theme.controls.scrollBar.sliderPadding
             anchors.rightMargin: anchors.leftMargin
 
-            radius: theme.controls.scrollbar.sliderRadius
+            radius: theme.controls.scrollBar.sliderRadius
             color:
-                scrollBar.pressed ? theme.controls.scrollbar.pressedSlider :
-                sliderHover.hovered ? theme.controls.scrollbar.hoveredSlider :
-                theme.controls.scrollbar.slider
+                scrollBar.pressed ? theme.controls.scrollBar.pressedSlider :
+                sliderHover.hovered ? theme.controls.scrollBar.hoveredSlider :
+                theme.controls.scrollBar.slider
 
             Behavior on color { HColorAnimation {} }
 
