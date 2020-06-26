@@ -14,7 +14,7 @@ Item {
         id: clipArea
         anchors.bottom: parent.bottom
         width: parent.width
-        height: 0
+        height: 1
         clip: true
 
         Rectangle {

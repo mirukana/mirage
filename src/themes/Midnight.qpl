@@ -128,7 +128,7 @@ controls:
         color background:       colors.strongBackground
         color text:             colors.text
         color focusedBorder:    colors.accentElement
-        int focusedBorderWidth: 1
+        int focusedBorderWidth: 2
 
         color hoveredOverlay: hsluv(0, 0, 50, 0.2)
         color pressedOverlay: hsluv(0, 0, 50, 0.5)
