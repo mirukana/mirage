@@ -15,7 +15,8 @@ Describe your issue in details, provide error logs or screenshots if possible.
 
 - OS or distribution (e.g. Arch Linux, macOS 10.15, Windows 7...)
 - Architecture (e.g. x86 64bit)
-- How did you install Mirage? (e.g. manual, AppImage, Flatpak...)
+- For Linux users: your desktop environment or window manager (e.g. GNOME 3.34 Wayland, i3 4.17, etc)
+- How did you install Mirage? (e.g. manual build, distribution repository, AppImage, Flatpak...)
 - For manual installations: your Qt version
 - For manual installations: your Python version
 
