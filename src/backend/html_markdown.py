@@ -12,6 +12,8 @@ import mistune
 from html_sanitizer.sanitizer import Sanitizer
 from lxml.html import HtmlElement, etree  # nosec
 
+import nio
+
 from .svg_colors import SVG_COLORS
 
 
@@ -111,7 +113,7 @@ class HTMLProcessor:
 
     block_tags = {
         "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
-        "p", "ul", "ol", "li", "hr", "br",
+        "p", "ul", "ol", "li", "hr", "br", "img",
         "table", "thead", "tbody", "tr", "th", "td", "pre",
         "mx-reply",
     }
@@ -283,7 +285,6 @@ class HTMLProcessor:
         )
 
 
-
     def sanitize_settings(
         self, inline: bool = False, outgoing: bool = False, room_id: str = "",
     ) -> dict:
@@ -303,6 +304,9 @@ class HTMLProcessor:
             "ol":   {"start"},
             "hr":   {"width"},
             "span": {"data-mx-color"},
+            "img":  {
+                "data-mx-emote", "src", "alt", "title", "width", "height",
+            },
         }}
 
         username_link_regexes = []
@@ -316,9 +320,9 @@ class HTMLProcessor:
         return {
             "tags": inline_tags if inline else all_tags,
             "attributes": inlines_attributes if inline else attributes,
-            "empty": {} if inline else {"hr", "br"},
+            "empty": {} if inline else {"hr", "br", "img"},
             "separate": {"a"} if inline else {
-                "a", "p", "li", "table", "tr", "th", "td", "br", "hr",
+                "a", "p", "li", "table", "tr", "th", "td", "br", "hr", "img",
             },
             "whitespace": {},
             "keep_typographic_whitespace": True,
@@ -388,7 +392,28 @@ class HTMLProcessor:
     def _img_to_a(el: HtmlElement) -> HtmlElement:
         """Linkify images by wrapping `<img>` tags in `<a>`."""
 
-        if el.tag == "img":
+        if el.tag != "img":
+            return el
+
+        src      = el.attrib.get("src")
+        width    = el.attrib.get("width")
+        height   = el.attrib.get("height")
+        is_emote = "data-mx-emote" in el.attrib
+
+        if src.startswith("mxc://"):
+            el.attrib["src"] = nio.Api.mxc_to_http(src)
+
+        if is_emote and not width and not height:
+            el.attrib["width"]  = 32
+            el.attrib["height"] = 32
+
+        elif is_emote and width and not height:
+            el.attrib["height"] = width
+
+        elif is_emote and height and not width:
+            el.attrib["width"] = height
+
+        elif not is_emote and (not width or not height):
             el.tag            = "a"
             el.attrib["href"] = el.attrib.pop("src", "")
             el.text           = el.attrib.pop("alt", None) or el.attrib["href"]

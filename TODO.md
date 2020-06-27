@@ -1,5 +1,8 @@
 # TODO
 
+- issue templates
+- ctrl-tab highlight
+
 ## Refactoring
 
 - General change/upload avatar component for account and room settings
