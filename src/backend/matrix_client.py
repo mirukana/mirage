@@ -420,7 +420,7 @@ class MatrixClient(nio.AsyncClient):
 
             to_html = REPLY_FALLBACK.format(
                 room_id  = room_id,
-                event_id = reply_to_event_id,
+                event_id = to.event_id,
                 user_id  = to.sender_id,
                 content  =
                     getattr(to.source, "formatted_body", "") or
@@ -434,7 +434,7 @@ class MatrixClient(nio.AsyncClient):
             content["formatted_body"] = HTML.filter(to_html, outgoing=True)
 
             content["m.relates_to"] = {
-                "m.in_reply_to": { "event_id": reply_to_event_id },
+                "m.in_reply_to": { "event_id": to.event_id },
             }
 
         # Can't use the standard Matrix transaction IDs; they're only visible
