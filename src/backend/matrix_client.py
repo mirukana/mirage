@@ -1412,6 +1412,11 @@ class MatrixClient(nio.AsyncClient):
             local_unreads                = False
             local_highlights             = False
             update_account_unread_counts = True
+            unverified_devices           = (
+                False
+                if isinstance(room, nio.MatrixInvitedRoom) else
+                self.room_contains_unverified(room.room_id)
+            )
         else:
             last_event_date              = registered.last_event_date
             typing_members               = registered.typing_members
@@ -1421,6 +1426,7 @@ class MatrixClient(nio.AsyncClient):
                 registered.unreads != room.unread_notifications or
                 registered.highlights != room.unread_highlights
             )
+            unverified_devices = registered.unverified_devices
 
         room_item = Room(
             id             = room.room_id,
@@ -1442,9 +1448,10 @@ class MatrixClient(nio.AsyncClient):
 
             typing_members = typing_members,
 
-            encrypted       = room.encrypted,
-            invite_required = room.join_rule == "invite",
-            guests_allowed  = room.guest_access == "can_join",
+            encrypted          = room.encrypted,
+            unverified_devices = unverified_devices,
+            invite_required    = room.join_rule == "invite",
+            guests_allowed     = room.guest_access == "can_join",
 
             can_invite           = levels.can_user_invite(self.user),
             can_kick             = levels.can_user_kick(self.user),

@@ -123,6 +123,36 @@ Rectangle {
         }
 
         HButton {
+            id: encryptionStatusButton
+            padded: false
+            visible: Layout.preferredWidth > 0
+            backgroundColor: "transparent"
+
+            icon.name:
+                chat.roomInfo.unverified_devices ?
+                "device-unset" :
+                "device-verified"
+
+            icon.color:
+                chat.roomInfo.unverified_devices ?
+                theme.colors.warningText :
+                theme.colors.positiveText
+
+            toolTip.text:
+                chat.roomInfo.unverified_devices ?
+                qsTr("Some members in this encrypted room have " +
+                     "unverified devices") :
+                qsTr("All members in this encrypted room are verified")
+
+            onClicked: toolTip.instantShow()
+
+            Layout.preferredWidth: chat.roomInfo.encrypted ? avatar.width : 0
+            Layout.fillHeight: true
+
+            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        }
+
+        HButton {
             id: goToRoomPaneButton
             padded: false
             visible: goToMainPaneButton.visible

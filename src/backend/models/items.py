@@ -68,10 +68,11 @@ class Room(ModelItem):
 
     typing_members: List[str] = field(default_factory=list)
 
-    federated:       bool = True
-    encrypted:       bool = False
-    invite_required: bool = True
-    guests_allowed:  bool = True
+    federated:          bool = True
+    encrypted:          bool = False
+    unverified_devices: bool = False
+    invite_required:    bool = True
+    guests_allowed:     bool = True
 
     can_invite:           bool = False
     can_kick:             bool = False
