@@ -105,6 +105,25 @@ class NioCallbacks:
             account.first_sync_done = True
 
 
+    async def onKeysQueryResponse(self, resp: nio.KeysQueryResponse) -> None:
+        refresh_rooms = {}
+
+        for user_id in resp.changed:
+            for room in self.client.rooms.values():
+                if user_id in room.users:
+                    refresh_rooms[room.room_id] = room
+
+        for room_id, room in refresh_rooms.items():
+            room_item = self.models[self.user_id, "rooms"].get(room_id)
+
+            if room_item:
+                room_item.unverified_devices = \
+                    self.client.room_contains_unverified(room_id)
+            else:
+                await self.client.register_nio_room(room)
+
+
+
     # Room events, invite events and misc events callbacks
 
     async def onRoomMessageText(

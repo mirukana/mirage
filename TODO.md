@@ -1,7 +1,6 @@
 # TODO
 
 - issue templates
-- ctrl-tab highlight
 
 ## Refactoring
 
@@ -11,6 +10,7 @@
 
 ## Issues
 
+- Signing out leaves the account's rooms in the list
 - Need to unregister popups/menus when they are destroyed without being closed
 
 - Bottom focus line for an `HTextArea` inside a `ScrollView` is invisible,
