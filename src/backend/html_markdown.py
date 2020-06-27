@@ -120,13 +120,13 @@ class HTMLProcessor:
     user_id_localpart = r"[\x21-\x39\x3D-\x7E]+?"
 
     user_id_regex = re.compile(
-        rf"(?P<body>@{user_id_localpart}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        rf"(?P<body>@{user_id_localpart}:(?P<host>[a-zA-Z\d.:-]*[a-zA-Z\d]))",
     )
     room_id_regex = re.compile(
-        rf"(?P<body>!{opaque_id}:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        rf"(?P<body>!{opaque_id}:(?P<host>[a-zA-Z\d.:-]*[a-zA-Z\d]))",
     )
     room_alias_regex = re.compile(
-        r"(?=^|\W)(?P<body>#\S+?:(?P<host>[a-zA-Z\d.-:]*[a-zA-Z\d]))",
+        r"(?=^|\W)(?P<body>#\S+?:(?P<host>[a-zA-Z\d.:-]*[a-zA-Z\d]))",
     )
 
     link_regexes = [re.compile(r, re.IGNORECASE)
@@ -136,7 +136,7 @@ class HTMLProcessor:
          r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
 
         # mailto: and tel:
-        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.-:]*[a-z\d]))",
+        r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.:-]*[a-z\d]))",
         r"tel:(?P<body>[0-9+-]+)(?P<host>)",
 
         # magnet:
