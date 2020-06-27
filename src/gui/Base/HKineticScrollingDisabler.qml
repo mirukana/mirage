@@ -56,7 +56,7 @@ MouseArea {
     Binding {
         target: flickable
         property: "maximumFlickVelocity"
-        value: mouseArea.enabled ? 0 : 4000.0
+        value: mouseArea.enabled ? 0 : window.settings.kineticScrollingMaxSpeed
     }
 
     Binding {
