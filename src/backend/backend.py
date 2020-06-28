@@ -135,6 +135,11 @@ class Backend:
             await client.close()
             raise
 
+        # Check if the user is already present on mirage
+        if client.user_id in self.clients.keys():
+            await client.logout()
+            return client.user_id
+
         if order is None and not self.models["accounts"]:
             order = 0
         elif order is None:
