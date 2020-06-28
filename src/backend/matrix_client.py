@@ -177,6 +177,7 @@ class MatrixClient(nio.AsyncClient):
         self.profile_task:       Optional[asyncio.Future] = None
         self.server_config_task: Optional[asyncio.Future] = None
         self.sync_task:          Optional[asyncio.Future] = None
+        self.start_task:         Optional[asyncio.Future] = None
 
         self.upload_monitors:    Dict[UUID, nio.TransferMonitor] = {}
         self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
@@ -236,7 +237,7 @@ class MatrixClient(nio.AsyncClient):
         await super().login(
             password, device_name or self.default_device_name(),
         )
-        asyncio.ensure_future(self._start())
+        self.start_task = asyncio.ensure_future(self._start())
 
 
     async def resume(self, user_id: str, token: str, device_id: str) -> None:
@@ -245,13 +246,18 @@ class MatrixClient(nio.AsyncClient):
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
-        asyncio.ensure_future(self._start())
+        self.start_task = asyncio.ensure_future(self._start())
 
 
     async def logout(self) -> None:
         """Logout from the server. This will delete the device."""
 
-        tasks = (self.profile_task, self.sync_task, self.server_config_task)
+        tasks = (
+            self.profile_task,
+            self.sync_task,
+            self.server_config_task,
+            self.start_task,
+        )
 
         for task in tasks:
             if task:
