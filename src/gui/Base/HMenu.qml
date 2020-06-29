@@ -41,6 +41,7 @@ Menu {
         delete window.visibleMenus[uuid]
         window.visibleMenusChanged()
     }
+    Component.onDestruction: closed()
 
 
     property var previouslyFocused: null
