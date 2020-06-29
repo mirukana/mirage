@@ -198,8 +198,20 @@ class Backend:
         """Log a `MatrixClient` out and unregister it from our models."""
 
         client = self.clients.pop(user_id, None)
+
         if client:
             self.models["accounts"].pop(user_id, None)
+            self.models["matching_accounts"].pop(user_id, None)
+            self.models[user_id, "uploads"].clear()
+
+            for room_id in self.models[user_id, "rooms"]:
+                self.models["all_rooms"].pop(room_id, None)
+                self.models[user_id, room_id, "members"].clear()
+                self.models[user_id, room_id, "events"].clear()
+                self.models[user_id, room_id, "filtered_members"].clear()
+
+            self.models[user_id, "rooms"].clear()
+
             await client.logout()
 
         await self.saved_accounts.delete(user_id)

@@ -10,7 +10,8 @@
 
 ## Issues
 
-- Signing out leaves the account's rooms in the list
+- Replying to one of our own message that's currently only a local echo
+  results in a reply to an empty ID
 - Need to unregister popups/menus when they are destroyed without being closed
 
 - Bottom focus line for an `HTextArea` inside a `ScrollView` is invisible,
