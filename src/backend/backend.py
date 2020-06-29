@@ -136,7 +136,7 @@ class Backend:
             raise
 
         # Check if the user is already present on mirage
-        if client.user_id in self.clients.keys():
+        if client.user_id in self.clients:
             await client.logout()
             return client.user_id
 
