@@ -185,7 +185,6 @@
 - E2E
   - List and verify other users's devices
   - SAS verification
-  - Delete devices (do that in key verification popup instead of blacklisting)
   - Request room keys from own other devices
   - Auto-trust accounts within the same client
   - Provide help when undecryptable messages occur, including:
