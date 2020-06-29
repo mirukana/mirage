@@ -24,40 +24,26 @@ HTile {
             shiftMembershipIconPosition: ! roomPane.collapsed
             invited: model.invited
             compact: member.compact
+            presence: model.presence
         }
 
         HColumnLayout {
-            HRowLayout {
-                spacing: room.spacing
+            TitleLabel {
+                text: model.display_name || model.id
+                color:
+                    member.hovered ?
+                    utils.nameColor(
+                        model.display_name || model.id.substring(1)
+                    ) :
+                    theme.chat.roomPane.listView.member.name
 
-                TitleLabel {
-                    text: model.display_name || model.id
-                    color:
-                        member.hovered ?
-                        utils.nameColor(
-                            model.display_name || model.id.substring(1)
-                        ) :
-                        theme.chat.roomPane.listView.member.name
-
-                    Behavior on color { HColorAnimation {} }
-                }
-
-                TitleRightInfoLabel {
-                    tile: room
-                    // color: theme.mainPane.listView.member.lastActiveAgo
-                    text:
-                        model.last_active_ago === -1 ?
-                        "" :
-                        utils.formatRelativeTime(model.last_active_ago)
-                }
+                Behavior on color { HColorAnimation {} }
             }
 
             SubtitleLabel {
                 tile: member
                 color: theme.chat.roomPane.listView.member.subtitle
-                text:
-                    model.status_message.trim() ||
-                    (model.display_name ? model.id : "")
+                text: model.status_message.trim() || model.id
             }
         }
     }
