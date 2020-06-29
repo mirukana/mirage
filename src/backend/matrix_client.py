@@ -34,8 +34,8 @@ from nio.crypto import async_generator_from_data
 from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
-    MatrixError, MatrixNotFound, MatrixTooLarge, UneededThumbnail,
-    UserFromOtherServerDisallowed,
+    MatrixError, MatrixNotFound, MatrixTooLarge, MatrixUnauthorized,
+    UneededThumbnail, UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
@@ -1345,6 +1345,23 @@ class MatrixClient(nio.AsyncClient):
         """Mark a device as blacklisted."""
 
         self.blacklist_device(self.olm.device_store[user_id][device_id])
+
+
+    async def delete_devices_with_password(
+        self, device_ids: List[str], password: str,
+    ) -> None:
+        """Delete devices, authentifying using the account's password."""
+
+        auth = {
+            "type":     "m.login.password",
+            "user":     self.user_id,
+            "password": password,
+        }
+
+        resp = await super().delete_devices(device_ids, auth)
+
+        if isinstance(resp, nio.DeleteDevicesAuthResponse):
+            raise MatrixUnauthorized()
 
 
     # Functions to register/modify data into models

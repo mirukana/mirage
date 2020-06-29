@@ -53,16 +53,32 @@ HColumnPage {
     }
 
     function deleteDevices(...indice) {
-        const deviceIds = []
+        if (indice.length === 1 && indice[0] === 0) {
+            utils.makePopup("Popups/SignOutPopup.qml", { userId: page.userId })
+            return
+        }
 
-        for (const i of indice.sort())
+        const deviceIds     = []
+        let deleteOwnDevice = false
+
+        for (const i of indice.sort()) {
+            i === 0 ?
+            deleteOwnDevice = true :
             deviceIds.push(deviceList.model.get(i).id)
+        }
 
         utils.makePopup(
-            "Popups/AuthentificationPopup.qml",
+            "Popups/DeleteDevicesPopup.qml",
             {
                 userId: page.userId,
                 deviceIds,
+                deletedCallback: () => {
+                    deleteOwnDevice ?
+                    utils.makePopup(
+                        "Popups/SignOutPopup.qml", { userId: page.userId },
+                    ) :
+                    page.loadDevices()
+                },
             },
         )
     }

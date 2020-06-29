@@ -32,7 +32,7 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - **Multiple accounts** in one client
 - Set your display name and profile picture
 - Import/export **E2E** key files
-- Inspect, rename and manually verify your sessions
+- Inspect, rename, manually verify and sign out one or multiple sessions
 
 ### Rooms
 

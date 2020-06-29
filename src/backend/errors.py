@@ -34,6 +34,12 @@ class MatrixError(Exception):
 
 
 @dataclass
+class MatrixUnauthorized(MatrixError):
+    http_code: int = 401
+    m_code:    str = "M_UNAUTHORIZED"
+
+
+@dataclass
 class MatrixForbidden(MatrixError):
     http_code: int = 403
     m_code:    str = "M_FORBIDDEN"
