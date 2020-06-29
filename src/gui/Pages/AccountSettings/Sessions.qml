@@ -107,9 +107,7 @@ HColumnPage {
             text:
                 deviceList.selectedCount === 0 ?
                 qsTr("Sign out all") :
-                deviceList.selectedCount === 1 ?
-                qsTr("Sign out checked") :
-                qsTr("Sign out checked (%1)").arg(deviceList.selectedCount)
+                qsTr("Sign out checked")
 
             icon.name: "device-delete-checked"
             icon.color: theme.colors.negativeBackground
