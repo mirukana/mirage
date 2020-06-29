@@ -43,6 +43,7 @@ Popup {
         delete window.visiblePopups[uuid]
         window.visibleMenusChanged()
     }
+    Component.onDestruction: closed()
 
 
     property var previouslyFocused: null
