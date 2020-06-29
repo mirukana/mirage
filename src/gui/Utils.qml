@@ -99,6 +99,17 @@ QtObject {
     }
 
 
+    function chunk(array, chunkSize) {
+        const chunks = []
+
+        for (let i = 0; i < array.length; i += chunkSize) {
+            chunks.push(array.slice(i, i + chunkSize))
+        }
+
+        return chunks
+    }
+
+
     function isEmptyObject(obj) {
         return Object.entries(obj).length === 0 && obj.constructor === Object
     }
