@@ -25,6 +25,9 @@ HTile {
             radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
 
+            // XXX
+            presence: model.first_sync_done ? "online" : ""
+
             Layout.alignment: Qt.AlignCenter
 
             HLoader {

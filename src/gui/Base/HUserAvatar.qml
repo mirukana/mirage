@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Shapes 1.15
 
 HAvatar {
     name: displayName || userId.substring(1)  // no leading @
@@ -9,6 +10,7 @@ HAvatar {
 
     property string userId
     property string displayName
+    property string presence: ""
     property int powerLevel: 0
     property bool shiftMembershipIconPosition: true
     property bool invited: false
@@ -51,4 +53,31 @@ HAvatar {
         }
     }
 
+    HLoader {
+        active: presence
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.bottomMargin: -diameter / 2
+        anchors.rightMargin: -diameter / 2
+        z: 100
+
+        property bool small: false
+        property int diameter: small ? 8 : 13
+
+        sourceComponent: Rectangle {
+            width: diameter
+            height: diameter
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            radius: diameter / 2
+
+            // TODO: Let it be thes for now
+            color:
+                presence === "online" ?
+                "green" :
+                "gray"
+            border.color: "black"
+            border.width: diameter / 10
+        }
+    }
 }
