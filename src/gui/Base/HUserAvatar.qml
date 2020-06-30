@@ -59,10 +59,11 @@ HAvatar {
         anchors.right: parent.right
         anchors.bottomMargin: -diameter / 2
         anchors.rightMargin: -diameter / 2
+        opacity: theme.controls.presence.opacity
         z: 100
 
-        property bool small: false
-        property int diameter: small ? 8 : 13
+        property bool small: window.settings.compactMode
+        property int diameter: small ? 10 : 15
 
         sourceComponent: Rectangle {
             width: diameter
@@ -71,13 +72,24 @@ HAvatar {
             anchors.right: parent.right
             radius: diameter / 2
 
-            // TODO: Let it be thes for now
             color:
                 presence === "online" ?
-                "green" :
-                "gray"
-            border.color: "black"
+                theme.controls.presence.online :
+
+                presence === "unavailable" ?
+                theme.controls.presence.unavailable :
+
+                theme.controls.presence.offline
+
+            border.color: theme.controls.presence.border
             border.width: diameter / 10
+
+            HoverHandler { id: presenceHover }
+
+            HToolTip {
+                visible: presenceHover.hovered
+                text: presence.replace(/^\w/, c => c.toUpperCase())
+            }
         }
     }
 }

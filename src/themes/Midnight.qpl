@@ -273,6 +273,13 @@ controls:
         int dimSaturation: colors.dimColoredTextSaturation
         int dimLightness:  colors.dimColoredTextIntensity
 
+    presence:
+        color online:      hsluv(125, 100, 80, 1)
+        color unavailable: hsluv(0, 100, 80, 1)
+        color offline:     hsluv(0, 0, 45, 1)
+        color border:      "black"
+        real opacity:      1.0
+
 
 // Specific interface parts
 
