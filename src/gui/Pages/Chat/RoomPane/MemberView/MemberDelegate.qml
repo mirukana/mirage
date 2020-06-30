@@ -28,16 +28,28 @@ HTile {
         }
 
         HColumnLayout {
-            TitleLabel {
-                text: model.display_name || model.id
-                color:
-                    member.hovered ?
-                    utils.nameColor(
-                        model.display_name || model.id.substring(1)
-                    ) :
-                    theme.chat.roomPane.listView.member.name
+            HRowLayout {
+                TitleLabel {
+                    text: model.display_name || model.id
+                    color:
+                        member.hovered ?
+                        utils.nameColor(
+                            model.display_name || model.id.substring(1)
+                        ) :
+                        theme.chat.roomPane.listView.member.name
 
-                Behavior on color { HColorAnimation {} }
+                    Behavior on color { HColorAnimation {} }
+                }
+
+                TitleRightInfoLabel {
+                    tile: member
+                    text:
+                        model.presence === "offline" &&
+                            model.last_active_ago !== -1 ?
+                        "offline for " +
+                            utils.formatRelativeTime(model.last_active_ago) :
+                        ""
+                }
             }
 
             SubtitleLabel {
