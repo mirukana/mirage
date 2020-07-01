@@ -6,7 +6,7 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, DefaultDict, Dict, List, Optional
 
 from appdirs import AppDirs
 
@@ -22,6 +22,9 @@ from .models.items import Account
 from .models.model import Model
 from .models.model_store import ModelStore
 from .user_files import Accounts, History, Theme, UISettings, UIState
+
+if TYPE_CHECKING:
+    from .models.items import Presence
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -108,6 +111,8 @@ class Backend:
         )
 
         self.media_cache: MediaCache = MediaCache(self, cache_dir)
+
+        self.presences: Dict[str, "Presence"] = {}
 
 
     def __repr__(self) -> str:

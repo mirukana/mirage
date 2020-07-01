@@ -29,10 +29,26 @@ class TypeSpecifier(AutoStrEnum):
     MembershipChange = auto()
 
 
-class Presence(AutoStrEnum):
-    Offline     = auto()  # can mean offline, invisible or unknwon
-    Unavailable = auto()
-    Online      = auto()
+@dataclass
+class Presence():
+    class State(AutoStrEnum):
+        offline     = auto()  # can mean offline, invisible or unknwon
+        unavailable = auto()
+        online      = auto()
+
+        def __lt__(self, other: "Presence.State") -> bool:
+            order = [self.online, self.unavailable, self.offline]
+
+            return (
+                order.index(self)  # type: ignore
+            ) < (
+                order.index(other) # type: ignore
+            )
+
+    status_msg:       str      = ""
+    presence:         State    = State.offline
+    last_active_ago:  int      = -1
+    currently_active: bool     = False
 
 
 @dataclass
@@ -169,7 +185,7 @@ class AccountOrRoom(Account, Room):
 
 
 @dataclass
-class Member(ModelItem):
+class Member(Presence, ModelItem):
     """A member in a matrix room."""
 
     id:              str      = field()
@@ -183,22 +199,22 @@ class Member(ModelItem):
     last_read_event: str      = ""
     last_read_at:    datetime = ZeroDate
 
-    last_active_ago:  int      = -1
-    currently_active: bool     = False
-    presence:         Presence = Presence.Offline
-    status_message:   str      = ""
-
-
     def __lt__(self, other: "Member") -> bool:
-        """Sort by power level, then by display name/user ID."""
+        """Sort by presence, power level, then by display name/user ID."""
 
         name       = self.display_name or self.id[1:]
         other_name = other.display_name or other.id[1:]
 
         return (
-            self.invited, other.power_level, name.lower(),
+            self.presence,
+            self.invited,
+            other.power_level,
+            name.lower(),
         ) < (
-            other.invited, self.power_level, other_name.lower(),
+            other.presence,
+            other.invited,
+            self.power_level,
+            other_name.lower(),
         )
 
 

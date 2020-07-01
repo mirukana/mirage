@@ -54,7 +54,7 @@ HAvatar {
     }
 
     HLoader {
-        active: presence
+        active: presence && presence !== "offline"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin: -diameter / 2

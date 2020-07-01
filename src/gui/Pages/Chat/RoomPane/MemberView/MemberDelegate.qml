@@ -46,8 +46,10 @@ HTile {
                     text:
                         model.presence === "offline" &&
                             model.last_active_ago !== -1 ?
-                        "offline for " +
-                            utils.formatRelativeTime(model.last_active_ago) :
+                        "for " +
+                        utils.formatRelativeTime(
+                            model.last_active_ago
+                        ) :
                         ""
                 }
             }
@@ -55,7 +57,7 @@ HTile {
             SubtitleLabel {
                 tile: member
                 color: theme.chat.roomPane.listView.member.subtitle
-                text: model.status_message.trim() || model.id
+                text: model.status_msg.trim() || model.id
             }
         }
     }

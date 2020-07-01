@@ -113,8 +113,6 @@ class MatrixClient(nio.AsyncClient):
     }
 
     low_limit_filter: ClassVar[Dict[str, Any]] = {
-        "presence": {"limit": 1},
-
         "room": {
             "ephemeral": {"limit": 1},
             "timeline":  {
@@ -1565,7 +1563,8 @@ class MatrixClient(nio.AsyncClient):
 
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
         """Register/update a room member into our models."""
-        member = room.users[user_id]
+        member   = room.users[user_id]
+        presence = self.backend.presences.get(user_id, Presence())
 
         self.models[self.user_id, room.room_id, "members"][user_id] = Member(
             id           = user_id,
@@ -1576,12 +1575,10 @@ class MatrixClient(nio.AsyncClient):
             power_level  = member.power_level,
             invited      = member.invited,
 
-            last_active_ago  = -1 if member.last_active_ago is None else
-                                  member.last_active_ago,
-
-            currently_active = member.currently_active or False,
-            presence         = member.presence or Presence.Offline,
-            status_message   = member.status_msg or "",
+            presence         = presence.presence,
+            last_active_ago  = presence.last_active_ago,
+            status_msg       = presence.status_msg,
+            currently_active = presence.currently_active,
         )
 
         if member.display_name:
