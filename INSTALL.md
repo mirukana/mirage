@@ -59,7 +59,7 @@ To then install and run the downloaded `.flatpak` file:
     flatpak remote-add --user --if-not-exists \
         flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    flatpak install --user flathub org.kde.Platform//5.12
+    flatpak install --user flathub org.kde.Platform//5.14
     flatpak install --user mirage-*.flatpak
 
     flatpak run io.github.mirukana.mirage
