@@ -303,7 +303,7 @@ class Backend:
             room  = self.models[client.user_id, "rooms"].get(room_id)
             local = room.local_unreads or room.local_highlights
 
-            if room and room.unreads or room.highlights or local:
+            if room and (room.unreads or room.highlights or local):
                 room.unreads          = 0
                 room.highlights       = 0
                 room.local_unreads    = False
