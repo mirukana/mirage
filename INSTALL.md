@@ -150,16 +150,15 @@ yay -Syu qt5-base qt5-declarative qt5-quickcontrols2 qt5-svg \
 
 #### Fedora 30+ / dnf
 
-[PyOtherSide](#installing-pyotherside-manually) and 
-[libolm](#installing-libolm-manually) must be manually installed.
-
 ```sh
 sudo dnf groupinstall 'Development Tools'
-sudo dnf install qt5-devel qt5-qtbase qt5-qtdeclarative qt5-qtquickcontrols2 \
-                 qt5-qtsvg qt5-qtgraphicaleffects qt5-qtimageformats \
-                 python3-devel python3-pip \
+sudo dnf install qt5-devel qt5-qtbase-devel qt5-qtdeclarative-devel \
+                 qt5-qtquickcontrols2-devel qt5-qtsvg-devel \
+                 qt5-qtgraphicaleffects qt5-qtimageformats \
+                 python3-devel python3-pip pyotherside \
                  git cmake \
-                 libjpeg-turbo-devel zlib-devel libtiff-devel libwebp-devel	\
+                 libolm-devel \
+                 libjpeg-turbo-devel zlib-devel libtiff-devel libwebp-devel \
                  openjpeg2-devel libmediainfo-devel
 
 sudo ln -s /usr/bin/qmake-qt5 /usr/bin/qmake
