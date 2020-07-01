@@ -17,8 +17,8 @@ TextArea {
 
     property var focusItemOnTab: null
     property var disabledText: null
-    property string defaultText: ""
-    readonly property bool changed: text !== defaultText
+    property var defaultText: null  // XXX test me
+    readonly property bool changed: text !== (defaultText || "")
 
     property alias backgroundColor: textAreaBackground.color
     property color borderColor: theme.controls.textArea.border
@@ -28,11 +28,11 @@ TextArea {
     property string previousDefaultText: ""  // private
 
 
-    function reset() { clear(); text = Qt.binding(() => defaultText) }
+    function reset() { clear(); text = Qt.binding(() => defaultText || "") }
     function insertAtCursor(text) { insert(cursorPosition, text) }
 
 
-    text: defaultText
+    text: defaultText || ""
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
     leftPadding: theme.spacing
@@ -77,9 +77,10 @@ TextArea {
 
     onTextChanged: window.saveState(this)
 
-    onActiveFocusChanged: text = text  // Break binding
+    onActiveFocusChanged:
+        if (defaultText !== null) text = text  // Break binding
 
-    onDefaultTextChanged: {
+    onDefaultTextChanged: if (defaultText !== null) {
         if (text === previousDefaultText)
             text = Qt.binding(() => defaultText)
 
