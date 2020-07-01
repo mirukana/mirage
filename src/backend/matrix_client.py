@@ -353,10 +353,12 @@ class MatrixClient(nio.AsyncClient):
 
         resp = await self.backend.get_profile(self.user_id, use_cache=False)
 
-        account                 = self.models["accounts"][self.user_id]
-        account.profile_updated = datetime.now()
-        account.display_name    = resp.displayname or ""
-        account.avatar_url      = resp.avatar_url or ""
+        account = self.models["accounts"][self.user_id]
+        account.set_fields(
+            profile_updated = datetime.now(),
+            display_name    = resp.displayname or "",
+            avatar_url      = resp.avatar_url or "",
+        )
 
 
     async def get_server_config(self) -> int:
@@ -528,8 +530,10 @@ class MatrixClient(nio.AsyncClient):
             upload_item.uploaded  = transferred
 
         def on_speed_changed(speed: float) -> None:
-            upload_item.speed     = speed
-            upload_item.time_left = monitor.remaining_time or timedelta(0)
+            upload_item.set_fields(
+                speed     = speed,
+                time_left = monitor.remaining_time or timedelta(0),
+            )
 
         monitor.on_transferred   = on_transferred
         monitor.on_speed_changed = on_speed_changed
@@ -548,9 +552,11 @@ class MatrixClient(nio.AsyncClient):
                 raise nio.TransferCancelledError()
 
         except (MatrixError, OSError) as err:
-            upload_item.status     = UploadStatus.Error
-            upload_item.error      = type(err)
-            upload_item.error_args = err.args
+            upload_item.set_fields(
+                status     = UploadStatus.Error,
+                error      = type(err),
+                error_args = err.args,
+            )
 
             # Wait for cancellation from UI, see parent send_file() method
             while True:
@@ -605,9 +611,11 @@ class MatrixClient(nio.AsyncClient):
                 thumb_ext  = "png" if thumb_info.mime == "image/png" else "jpg"
                 thumb_name = f"{path.stem}_thumbnail.{thumb_ext}"
 
-                upload_item.status     = UploadStatus.Uploading
-                upload_item.filepath   = Path(thumb_name)
-                upload_item.total_size = len(thumb_data)
+                upload_item.set_fields(
+                    status     = UploadStatus.Uploading,
+                    filepath   = Path(thumb_name),
+                    total_size = len(thumb_data),
+                )
 
                 try:
                     upload_item.total_size = thumb_info.size
@@ -1384,11 +1392,13 @@ class MatrixClient(nio.AsyncClient):
             if room.local_highlights:
                 local_highlights = True
 
-        account                  = self.models["accounts"][self.user_id]
-        account.total_unread     = unreads
-        account.total_highlights = highlights
-        account.local_unreads    = local_unreads
-        account.local_highlights = local_highlights
+        account = self.models["accounts"][self.user_id]
+        account.set_fields(
+            total_unread     = unreads,
+            total_highlights = highlights,
+            local_unreads    = local_unreads,
+            local_highlights = local_highlights,
+        )
 
 
     async def event_is_past(self, ev: Union[nio.Event, Event]) -> bool:
@@ -1552,13 +1562,11 @@ class MatrixClient(nio.AsyncClient):
 
         if not ev.sender_name and not ev.sender_avatar:
             sender_name, sender_avatar, _ = await get_profile(ev.sender_id)
-            ev.sender_name                = sender_name
-            ev.sender_avatar              = sender_avatar
+            ev.set_fields(sender_name=sender_name, sender_avatar=sender_avatar)
 
         if ev.target_id and not ev.target_name and not ev.target_avatar:
             target_name, target_avatar, _ = await get_profile(ev.target_id)
-            ev.target_name                = target_name
-            ev.target_avatar              = target_avatar
+            ev.set_fields(target_name=target_name, target_avatar=target_avatar)
 
         if ev.redacter_id and not ev.redacter_name:
             redacter_name, _, _ = await get_profile(ev.target_id)

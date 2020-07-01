@@ -388,9 +388,11 @@ class NioCallbacks:
                 account = self.models["accounts"][self.user_id]
 
                 if account.profile_updated < ev_date:
-                    account.profile_updated = ev_date
-                    account.display_name    = now.get("displayname") or ""
-                    account.avatar_url      = now.get("avatar_url") or ""
+                    account.set_fields(
+                        profile_updated = ev_date,
+                        display_name    = now.get("displayname") or "",
+                        avatar_url      = now.get("avatar_url") or "",
+                    )
 
             if self.client.backend.ui_settings["hideProfileChangeEvents"]:
                 return None
@@ -568,6 +570,8 @@ class NioCallbacks:
             member = model.get(receipt.user_id)
 
             if member:
-                member.last_read_event = receipt.event_id
-                timestamp              = receipt.timestamp / 1000
-                member.last_read_at    = datetime.fromtimestamp(timestamp)
+                timestamp = receipt.timestamp / 1000
+                member.set_fields(
+                    last_read_event = receipt.event_id,
+                    last_read_at    = datetime.fromtimestamp(timestamp),
+                )
