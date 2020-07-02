@@ -6,7 +6,7 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, DefaultDict, Dict, List, Optional
+from typing import Any, DefaultDict, Dict, List, Optional
 
 from appdirs import AppDirs
 

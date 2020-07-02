@@ -592,10 +592,21 @@ class NioCallbacks:
     # Presence event callbacks
 
     async def onPresenceEvent(self, ev: nio.PresenceEvent) -> None:
-        self.client.backend.presences[ev.user_id] = Presence(
-            status_msg       = ev.status_msg or "",
-            presence         = Presence.State(ev.presence) if ev.presence
-                               else Presence.State.offline,
-            last_active_ago  = ev.last_active_ago or -1,
-            currently_active = ev.currently_active,
-        )
+        presence = self.client.backend.presences.get(ev.user_id, Presence())
+
+        presence.status_msg       = ev.status_msg or ""
+        presence.presence         = Presence.State(ev.presence) if ev.presence\
+                                    else Presence.State.offline
+        presence.last_active_ago  = ev.last_active_ago or -1
+        presence.currently_active = ev.currently_active or False
+
+        for room_id in self.models[self.user_id, "rooms"]:
+            member = self.models[self.user_id, room_id, "members"].get(
+                ev.user_id,
+            )
+
+            if member:
+                presence.members[room_id, ev.user_id] = member
+
+        presence.update_members()
+        self.client.backend.presences[ev.user_id] = presence

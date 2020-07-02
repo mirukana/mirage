@@ -182,8 +182,9 @@ class Accounts(JSONDataFile):
         the corresponding `MatrixClient` in `backend.clients`.
         """
 
-        client = self.backend.clients[user_id]
-        saved  = await self.read()
+        client   = self.backend.clients[user_id]
+        saved    = await self.read()
+        presence = self.backend.models["accounts"][user_id].presence.value
 
         await self.write({
             **saved,
@@ -192,7 +193,7 @@ class Accounts(JSONDataFile):
                 "token":      client.access_token,
                 "device_id":  client.device_id,
                 "enabled":    True,
-                "presence":   client._presence or "online",
+                "presence":   presence or "online",
                 "order":      max([
                     account.get("order", i)
                     for i, account in enumerate(saved.values())

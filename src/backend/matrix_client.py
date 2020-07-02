@@ -253,7 +253,7 @@ class MatrixClient(nio.AsyncClient):
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
-        await self.set_presence(presence)
+        asyncio.ensure_future(self.set_presence(presence))
         self.start_task = asyncio.ensure_future(self._start())
 
 
@@ -1581,10 +1581,9 @@ class MatrixClient(nio.AsyncClient):
 
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
         """Register/update a room member into our models."""
-        member   = room.users[user_id]
-        presence = self.backend.presences.get(user_id, Presence())
-
-        self.models[self.user_id, room.room_id, "members"][user_id] = Member(
+        member      = room.users[user_id]
+        presence    = self.backend.presences.get(user_id, Presence())
+        member_item = Member(
             id           = user_id,
             display_name = room.user_name(user_id)  # disambiguated
                            if member.display_name else "",
@@ -1592,12 +1591,15 @@ class MatrixClient(nio.AsyncClient):
             typing       = user_id in room.typing_users,
             power_level  = member.power_level,
             invited      = member.invited,
-
-            presence         = presence.presence,
-            last_active_ago  = presence.last_active_ago,
-            status_msg       = presence.status_msg,
-            currently_active = presence.currently_active,
         )
+
+        if user_id in self.backend.presences:
+            presence.members[room.room_id, user_id] = member_item
+
+        presence.update_members()
+
+        self.models[self.user_id, room.room_id, "members"][user_id] = \
+            member_item
 
         if member.display_name:
             HTML.rooms_user_id_names[room.room_id][user_id] = \

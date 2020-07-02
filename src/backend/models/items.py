@@ -51,11 +51,19 @@ class Presence():
                 order.index(other) # type: ignore
             )
 
-    last_active_ago:  int      = -1
-    status_msg:       str      = ""
     presence:         State    = State.offline
     currently_active: bool     = False
+    last_active_ago:  int      = -1
+    status_msg:       str      = ""
 
+    members: Dict[Tuple[str, str], "Member"] = field(default_factory=dict)
+
+    def update_members(self):
+        for member in self.members.values():
+            member.presence         = self.presence
+            member.status_msg       = self.status_msg
+            member.last_active_ago  = self.last_active_ago
+            member.currently_active = self.currently_active
 
 @dataclass
 class Account(ModelItem):
