@@ -18,13 +18,10 @@ from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
 from .models.filters import FieldSubstringFilter
-from .models.items import Account
+from .models.items import Account, Presence
 from .models.model import Model
 from .models.model_store import ModelStore
 from .user_files import Accounts, History, Theme, UISettings, UIState
-
-if TYPE_CHECKING:
-    from .models.items import Presence
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -112,7 +109,7 @@ class Backend:
 
         self.media_cache: MediaCache = MediaCache(self, cache_dir)
 
-        self.presences: Dict[str, "Presence"] = {}
+        self.presences: Dict[str, Presence] = {}
 
 
     def __repr__(self) -> str:
@@ -154,7 +151,12 @@ class Backend:
             ) + 1
 
         self.clients[client.user_id]            = client
-        self.models["accounts"][client.user_id] = Account(client.user_id,order)
+        self.models["accounts"][client.user_id] = Account(
+            client.user_id,
+            order,
+            presence = Presence.State.online,
+        )
+
         return client.user_id
 
 
@@ -165,6 +167,7 @@ class Backend:
         device_id:  str,
         homeserver: str = "https://matrix.org",
         order:      int = -1,
+        presence:   str = "online",
     ) -> None:
         """Create and register a `MatrixClient` with known account details."""
 
@@ -176,7 +179,7 @@ class Backend:
         self.clients[user_id]            = client
         self.models["accounts"][user_id] = Account(user_id, order)
 
-        await client.resume(user_id=user_id, token=token, device_id=device_id)
+        await client.resume(user_id, token, device_id, presence)
 
 
     async def load_saved_accounts(self) -> List[str]:
@@ -189,6 +192,7 @@ class Backend:
                 device_id  = info["device_id"],
                 homeserver = info["homeserver"],
                 order      = info.get("order", -1),
+                presence   = info.get("presence", "online"),
             )
             return user_id
 

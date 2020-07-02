@@ -25,8 +25,7 @@ HTile {
             radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
 
-            // XXX
-            presence: model.first_sync_done ? "online" : ""
+            presence: model.presence
 
             Layout.alignment: Qt.AlignCenter
 
@@ -136,7 +135,11 @@ HTile {
         }
     }
 
-    contextMenu: AccountContextMenu { userId: model.id }
+    contextMenu: AccountContextMenu {
+        userId:        model.id
+        presence:      model.presence
+        firstSyncDone: model.first_sync_done
+    }
 
 
     property bool enableKeybinds: false

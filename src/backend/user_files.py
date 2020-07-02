@@ -192,6 +192,7 @@ class Accounts(JSONDataFile):
                 "token":      client.access_token,
                 "device_id":  client.device_id,
                 "enabled":    True,
+                "presence":   client._presence or "online",
                 "order":      max([
                     account.get("order", i)
                     for i, account in enumerate(saved.values())
