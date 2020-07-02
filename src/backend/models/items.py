@@ -35,9 +35,15 @@ class Presence():
         offline     = auto()  # can mean offline, invisible or unknwon
         unavailable = auto()
         online      = auto()
+        invisible   = auto()
 
         def __lt__(self, other: "Presence.State") -> bool:
-            order = [self.online, self.unavailable, self.offline]
+            order = [
+                self.online,
+                self.unavailable,
+                self.invisible,
+                self.offline,
+            ]
 
             return (
                 order.index(self)  # type: ignore
@@ -45,9 +51,9 @@ class Presence():
                 order.index(other) # type: ignore
             )
 
+    last_active_ago:  int      = -1
     status_msg:       str      = ""
     presence:         State    = State.offline
-    last_active_ago:  int      = -1
     currently_active: bool     = False
 
 
@@ -66,6 +72,8 @@ class Account(ModelItem):
     total_highlights: int      = 0
     local_unreads:    bool     = False
     local_highlights: bool     = False
+
+    presence: Presence.State = Presence.State.offline
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
