@@ -56,14 +56,23 @@ class Presence():
     last_active_ago:  int      = -1
     status_msg:       str      = ""
 
-    members: Dict[Tuple[str, str], "Member"] = field(default_factory=dict)
+    members: Dict[Tuple[str, str], Union["Member", "Account"]] = \
+        field(default_factory=dict)
 
     def update_members(self):
         for member in self.members.values():
+            if (
+                member.presence == self.State.invisible
+            ) and (
+                self.presence   == self.State.offline
+            ):
+                continue
+
             member.presence         = self.presence
             member.status_msg       = self.status_msg
             member.last_active_ago  = self.last_active_ago
             member.currently_active = self.currently_active
+
 
 @dataclass
 class Account(ModelItem):
@@ -81,7 +90,10 @@ class Account(ModelItem):
     local_unreads:    bool     = False
     local_highlights: bool     = False
 
-    presence: Presence.State = Presence.State.offline
+    presence:         Presence.State   = Presence.State.offline
+    currently_active: bool             = False
+    last_active_ago:  int              = -1
+    status_msg:       str              = ""
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
