@@ -609,4 +609,8 @@ class NioCallbacks:
                 presence.members[room_id, ev.user_id] = member
 
         presence.update_members()
+
+        if ev.user_id in self.models["accounts"]:
+            await self.client.backend.saved_accounts.add(ev.user_id)
+
         self.client.backend.presences[ev.user_id] = presence

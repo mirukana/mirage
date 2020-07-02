@@ -150,12 +150,13 @@ class Backend:
                 for i, account in enumerate(self.models["accounts"].values())
             ) + 1
 
+        account = Account(client.user_id, order)
+
         self.clients[client.user_id]            = client
-        self.models["accounts"][client.user_id] = Account(
-            client.user_id,
-            order,
-            presence = Presence.State.online,
-        )
+        self.models["accounts"][client.user_id] = account
+
+        presence = self.presences.setdefault(client.user_id, Presence())
+        presence.members["account", client.user_id] = account
 
         return client.user_id
 
@@ -167,7 +168,7 @@ class Backend:
         device_id:  str,
         homeserver: str = "https://matrix.org",
         order:      int = -1,
-        presence:   str = "online",
+        state:      str = "online",
     ) -> None:
         """Create and register a `MatrixClient` with known account details."""
 
@@ -176,10 +177,15 @@ class Backend:
             user=user_id, homeserver=homeserver, device_id=device_id,
         )
 
-        self.clients[user_id]            = client
-        self.models["accounts"][user_id] = Account(user_id, order)
+        account = Account(user_id, order)
 
-        await client.resume(user_id, token, device_id, presence)
+        self.clients[user_id]            = client
+        self.models["accounts"][user_id] = account
+
+        presence = self.presences.setdefault(user_id, Presence())
+        presence.members["account", user_id] = account
+
+        await client.resume(user_id, token, device_id, state)
 
 
     async def load_saved_accounts(self) -> List[str]:
@@ -192,7 +198,7 @@ class Backend:
                 device_id  = info["device_id"],
                 homeserver = info["homeserver"],
                 order      = info.get("order", -1),
-                presence   = info.get("presence", "online"),
+                state      = info.get("presence", "online"),
             )
             return user_id
 

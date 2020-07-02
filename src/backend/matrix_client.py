@@ -246,14 +246,14 @@ class MatrixClient(nio.AsyncClient):
         user_id:   str,
         token:     str,
         device_id: str,
-        presence:  str = "online",
+        state:     str = "online",
     ) -> None:
         """Login to the server using an existing access token."""
 
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
-        asyncio.ensure_future(self.set_presence(presence))
+        await self.set_presence(state)
         self.start_task = asyncio.ensure_future(self._start())
 
 
@@ -1222,9 +1222,10 @@ class MatrixClient(nio.AsyncClient):
 
         await super().set_presence("offline" if presence == "invisible"
                                              else presence)
-        self.models["accounts"][self.user].presence = Presence.State(presence)
 
-        await self.backend.saved_accounts.add(self.user)
+        if presence == "invisible":
+            self.models["accounts"][self.user_id].presence = \
+                Presence.State.invisible
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
