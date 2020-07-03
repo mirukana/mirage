@@ -216,7 +216,7 @@ Rectangle {
                 width: Math.min(parent.width, implicitWidth)
                 anchors.centerIn: parent
 
-                loading: true
+                loading: parent.visible
                 text: qsTr("Loading previous messages...")
                 enableRadius: true
                 iconItem.small: true
