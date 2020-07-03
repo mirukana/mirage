@@ -253,6 +253,7 @@ class MatrixClient(nio.AsyncClient):
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
+        # Need to await, else presence will flash on other clients
         await self.set_presence(state)
         self.start_task = asyncio.ensure_future(self._start())
 
@@ -1223,6 +1224,8 @@ class MatrixClient(nio.AsyncClient):
         await super().set_presence("offline" if presence == "invisible"
                                              else presence)
 
+        # Assign invisible on model in here, because server will tell us we are
+        # offline
         if presence == "invisible":
             self.models["accounts"][self.user_id].presence = \
                 Presence.State.invisible
@@ -1594,10 +1597,12 @@ class MatrixClient(nio.AsyncClient):
             invited      = member.invited,
         )
 
+        # Associate presence with member, if it exists
         if user_id in self.backend.presences:
             presence.members[room.room_id, user_id] = member_item
 
-        presence.update_members()
+            # And then update presence fields
+            presence.update_members()
 
         self.models[self.user_id, room.room_id, "members"][user_id] = \
             member_item

@@ -61,6 +61,10 @@ class Presence():
 
     def update_members(self):
         for member in self.members.values():
+            # Do not update if member is changing to invisible
+            # Because when setting invisible presence will give us presence
+            # event telling us we are offline, we do not want to set member
+            # presence to offline.
             if (
                 member.presence == self.State.invisible
             ) and (
@@ -90,6 +94,9 @@ class Account(ModelItem):
     local_unreads:    bool     = False
     local_highlights: bool     = False
 
+    # For some reason, Account cannot inherit Presence, because QML keeps
+    # complaining type error on unknown file
+    presence_support: bool             = False
     presence:         Presence.State   = Presence.State.offline
     currently_active: bool             = False
     last_active_ago:  int              = -1

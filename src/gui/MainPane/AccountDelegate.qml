@@ -137,7 +137,9 @@ HTile {
 
     contextMenu: AccountContextMenu {
         userId:        model.id
-        presence:      model.presence
+        presence:      model.presence_support ? model.presence : null
+
+        // Gray out buttons before first sync
         firstSyncDone: model.first_sync_done
     }
 

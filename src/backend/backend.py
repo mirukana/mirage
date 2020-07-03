@@ -155,6 +155,7 @@ class Backend:
         self.clients[client.user_id]            = client
         self.models["accounts"][client.user_id] = account
 
+        # Get or create presence for account
         presence = self.presences.setdefault(client.user_id, Presence())
         presence.members["account", client.user_id] = account
 
@@ -182,6 +183,7 @@ class Backend:
         self.clients[user_id]            = client
         self.models["accounts"][user_id] = account
 
+        # Get or create presence for account
         presence = self.presences.setdefault(user_id, Presence())
         presence.members["account", user_id] = account
 
