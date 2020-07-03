@@ -2,19 +2,106 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 import Clipboard 0.1
 import "../Base"
 
 HMenu {
+    id: accountMenu
+
     property string userId
     property string presence
+    property string statusMsg
     property bool   firstSyncDone
 
 
-    function setPresence(presence) {
-        py.callClientCoro(userId, "set_presence", [presence])
+    function setPresence(presence, statusMsg = null) {
+        py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
+
+    HMenuItem {
+        enabled: presence !== "online" && firstSyncDone
+        icon.name: "presence"
+        icon.color: theme.controls.presence.online
+        text: qsTr("Online")
+        onTriggered: setPresence("online")
+    }
+
+    HMenuItem {
+        visible: presence
+        enabled: presence !== "unavailable" && firstSyncDone
+        icon.name: "presence-busy"
+        icon.color: theme.controls.presence.unavailable
+        text: qsTr("Unavailable")
+        onTriggered: setPresence("unavailable")
+    }
+
+    HMenuItem {
+        enabled: presence !== "offline" && firstSyncDone
+        icon.name: "presence"
+        icon.color: theme.controls.presence.offline
+        text: qsTr("Offline")
+        onTriggered: setPresence("offline")
+    }
+
+    HMenuItem {
+        visible: presence
+        enabled: presence !== "invisible" && firstSyncDone
+        icon.name: "presence-invisible"
+        icon.color: theme.controls.presence.offline
+        text: qsTr("Invisible")
+        onTriggered: setPresence("invisible")
+    }
+
+    HMenuSeparator { }
+
+    HLabeledItem {
+        id: statusMsgLabel
+        visible: presence
+        enabled: firstSyncDone
+        width: parent.width
+        height: visible ? implicitHeight : 0
+        label.text: qsTr("Status message:")
+        label.horizontalAlignment: Qt.AlignHCenter
+
+        HRowLayout {
+            width: parent.width
+
+            HTextField {
+                id: statusText
+                maximumLength: 255
+                horizontalAlignment: Qt.AlignHCenter
+                onAccepted: {
+                    setPresence(presence, statusText.text)
+                    accountMenu.close()
+                }
+
+                defaultText: statusMsg
+                placeholderText: qsTr("Beautiful day!")
+
+                Layout.fillWidth: true
+            }
+
+            HButton {
+                id: button
+
+                icon.name: "apply"
+                icon.color: theme.colors.positiveBackground
+                onClicked: {
+                    setPresence(presence, statusText.text)
+                    accountMenu.close()
+                }
+
+                Layout.fillHeight: true
+            }
+        }
+    }
+
+    HMenuSeparator {
+        visible: statusMsgLabel.visible
+        height: visible ? implicitHeight : 0
+    }
 
     HMenuItem {
         icon.name: "account-settings"
@@ -43,41 +130,5 @@ HMenu {
 
         popup: "Popups/SignOutPopup.qml"
         properties: { "userId": userId }
-    }
-
-    HMenuSeparator { }
-
-    HMenuItem {
-        enabled: presence !== "online" && firstSyncDone
-        icon.name: "user-presence"
-        icon.color: theme.controls.presence.online
-        text: qsTr("Online")
-        onTriggered: setPresence("online")
-    }
-
-    HMenuItem {
-        visible: presence
-        enabled: presence !== "unavailable" && firstSyncDone
-        icon.name: "user-presence"
-        icon.color: theme.controls.presence.unavailable
-        text: qsTr("Unavailable")
-        onTriggered: setPresence("unavailable")
-    }
-
-    HMenuItem {
-        visible: presence
-        enabled: presence !== "invisible" && firstSyncDone
-        icon.name: "user-presence"
-        icon.color: theme.controls.presence.offline
-        text: qsTr("Invisible")
-        onTriggered: setPresence("invisible")
-    }
-
-    HMenuItem {
-        enabled: presence !== "offline" && firstSyncDone
-        icon.name: "user-presence"
-        icon.color: theme.controls.presence.offline
-        text: qsTr("Offline")
-        onTriggered: setPresence("offline")
     }
 }

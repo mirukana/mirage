@@ -65,19 +65,29 @@ HTile {
 
         }
 
-        TitleLabel {
-            id: title
-            text: model.display_name || model.id
-            color:
-                hovered ?
-                utils.nameColor(
-                    model.display_name || model.id.substring(1),
-                ) :
-                theme.mainPane.listView.account.name
+        HColumnLayout {
+            TitleLabel {
+                id: title
+                text: model.display_name || model.id
+                color:
+                    hovered ?
+                    utils.nameColor(
+                        model.display_name || model.id.substring(1),
+                    ) :
+                    theme.mainPane.listView.account.name
 
-            Behavior on color { HColorAnimation {} }
+                Behavior on color { HColorAnimation {} }
 
-            Layout.leftMargin: theme.spacing
+                Layout.leftMargin: theme.spacing
+            }
+
+            SubtitleLabel {
+                tile:    account
+                text:    model.status_msg
+                visible: model.status_msg
+
+                Layout.leftMargin: theme.spacing
+            }
         }
 
         HButton {
@@ -138,6 +148,7 @@ HTile {
     contextMenu: AccountContextMenu {
         userId:        model.id
         presence:      model.presence_support ? model.presence : null
+        statusMsg:     model.status_msg
 
         // Gray out buttons before first sync
         firstSyncDone: model.first_sync_done
