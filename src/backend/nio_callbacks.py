@@ -133,7 +133,6 @@ class NioCallbacks:
         DevicesUpdated(self.user_id)
 
 
-
     # Room events, invite events and misc events callbacks
 
     async def onRoomMessageText(
@@ -600,6 +599,7 @@ class NioCallbacks:
         presence.last_active_ago  = ev.last_active_ago or -1
         presence.currently_active = ev.currently_active or False
 
+        # Add all existing members related to this presence
         for room_id in self.models[self.user_id, "rooms"]:
             member = self.models[self.user_id, room_id, "members"].get(
                 ev.user_id,
@@ -608,9 +608,15 @@ class NioCallbacks:
             if member:
                 presence.members[room_id, ev.user_id] = member
 
+        # Update members and accounts
         presence.update_members()
 
+        # Check if presence event is ours
         if ev.user_id in self.models["accounts"]:
+            # Servers that send presence events support presence
+            self.models["accounts"][ev.user_id].presence_support = True
+
+            # Save the presence for the next resume
             await self.client.backend.saved_accounts.add(ev.user_id)
 
         self.client.backend.presences[ev.user_id] = presence

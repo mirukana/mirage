@@ -56,6 +56,7 @@ HMenu {
     }
 
     HMenuItem {
+        visible: presence
         enabled: presence !== "unavailable" && firstSyncDone
         icon.name: "user-presence"
         icon.color: theme.controls.presence.unavailable
@@ -64,6 +65,7 @@ HMenu {
     }
 
     HMenuItem {
+        visible: presence
         enabled: presence !== "invisible" && firstSyncDone
         icon.name: "user-presence"
         icon.color: theme.controls.presence.offline
