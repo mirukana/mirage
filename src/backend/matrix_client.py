@@ -253,9 +253,12 @@ class MatrixClient(nio.AsyncClient):
         response = nio.LoginResponse(user_id, device_id, token)
         await self.receive_response(response)
 
-        # Need to await, else presence will flash on other clients
-        await self.set_presence(state)
+        self._presence = "offline" if state == "invisible" else state
         self.start_task = asyncio.ensure_future(self._start())
+
+        if state == "invisible":
+            self.models["accounts"][self.user_id].presence = \
+                Presence.State.invisible
 
 
     async def logout(self) -> None:
@@ -1218,11 +1221,19 @@ class MatrixClient(nio.AsyncClient):
         await self.set_avatar(mxc)
 
 
-    async def set_presence(self, presence: str) -> None:
+    async def set_presence(
+        self, presence: str, status_msg: str = None,
+    ) -> None:
         """Set presence state for this account."""
 
-        await super().set_presence("offline" if presence == "invisible"
-                                             else presence)
+        status_msg = status_msg or (
+            self.models["accounts"][self.user_id].status_msg
+        )
+
+        await super().set_presence(
+            "offline" if presence == "invisible" else presence,
+            status_msg,
+        )
 
         # Assign invisible on model in here, because server will tell us we are
         # offline

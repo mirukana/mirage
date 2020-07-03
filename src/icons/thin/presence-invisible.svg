@@ -1,0 +1,13 @@
+<svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path stroke="#303C42" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" id="XMLID_1348_" d="m2.5,22.984425c1.19,0 1.19,-0.955166 2.38,-0.955166s1.19,0.955166 2.38,0.955166c1.188,0 1.188,-0.955166 2.376,-0.955166s1.188,0.955166 2.375,0.955166s1.187,-0.955166 2.375,-0.955166c1.186,0 1.186,0.955166 2.372,0.955166c1.184,0 1.184,-0.955166 2.369,-0.955166c1.187,0 1.187,0.955166 2.374,0.955166l-0.638,-4.266728c-0.241,-1.61041 -0.362,-3.236103 -0.362,-4.862751l0,-4.441523c0,-4.324038 -3.416,-8.09981 -7.934,-8.379673c-4.952,-0.306608 -9.067,3.438598 -9.067,8.10172l0,4.720432c0,1.626648 -0.121,3.252341 -0.362,4.862751l-0.638,4.265772z"/>
+  <ellipse stroke-width="2" fill="none" stroke="#303C42" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" ry="1.5" rx="0.5" id="XMLID_1349_" cy="9" cx="9"/>
+  <ellipse stroke-width="2" fill="none" stroke="#303C42" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" ry="1.5" rx="0.5" id="XMLID_1350_" cy="9" cx="15"/>
+ </g>
+</svg>

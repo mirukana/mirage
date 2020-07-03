@@ -274,9 +274,9 @@ controls:
         int dimLightness:  colors.dimColoredTextIntensity
 
     presence:
-        color online:      hsluv(125, 100, 80, 1)
-        color unavailable: hsluv(0, 100, 80, 1)
-        color offline:     hsluv(0, 0, 45, 1)
+        color online:      colors.positiveText
+        color unavailable: hsluv(0, 90, 35, 1)
+        color offline:     hsluv(0, 0, 30, 1)
         color border:      "black"
         real opacity:      1.0
 
