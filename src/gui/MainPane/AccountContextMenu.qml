@@ -14,6 +14,8 @@ HMenu {
     property string statusMsg
     property bool   firstSyncDone
 
+    onOpened: statusText.forceActiveFocus()
+
 
     function setPresence(presence, statusMsg = null) {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
@@ -21,7 +23,7 @@ HMenu {
 
 
     HMenuItem {
-        enabled: presence !== "online" && firstSyncDone
+        enabled: firstSyncDone
         icon.name: "presence"
         icon.color: theme.controls.presence.online
         text: qsTr("Online")
@@ -30,7 +32,7 @@ HMenu {
 
     HMenuItem {
         visible: presence
-        enabled: presence !== "unavailable" && firstSyncDone
+        enabled: firstSyncDone
         icon.name: "presence-busy"
         icon.color: theme.controls.presence.unavailable
         text: qsTr("Unavailable")
@@ -38,8 +40,8 @@ HMenu {
     }
 
     HMenuItem {
-        enabled: presence !== "offline" && firstSyncDone
-        icon.name: "presence"
+        enabled: firstSyncDone
+        icon.name: "presence-offline"
         icon.color: theme.controls.presence.offline
         text: qsTr("Offline")
         onTriggered: setPresence("offline")
@@ -47,7 +49,7 @@ HMenu {
 
     HMenuItem {
         visible: presence
-        enabled: presence !== "invisible" && firstSyncDone
+        enabled: firstSyncDone
         icon.name: "presence-invisible"
         icon.color: theme.controls.presence.offline
         text: qsTr("Invisible")
@@ -78,7 +80,6 @@ HMenu {
                 }
 
                 defaultText: statusMsg
-                placeholderText: qsTr("Beautiful day!")
 
                 Layout.fillWidth: true
             }
