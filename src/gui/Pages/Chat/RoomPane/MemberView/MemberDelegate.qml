@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import Clipboard 0.1
+import "../../../.."
 import "../../../../Base"
 import "../../../../Base/HTile"
 import "../../../../Popups"
@@ -57,7 +58,20 @@ HTile {
             SubtitleLabel {
                 tile: member
                 color: theme.chat.roomPane.listView.member.subtitle
-                text: model.status_msg.trim() || model.id
+                text: utils.escapeHtml(model.status_msg.trim()) || model.id
+            }
+
+            HoverHandler { id: nameHover }
+
+            HToolTip {
+                visible: nameHover.hovered
+                text:
+                    model.id +
+                    (
+                        model.status_msg.trim() ?
+                        " - " + model.status_msg.trim() :
+                        ""
+                    )
             }
         }
     }

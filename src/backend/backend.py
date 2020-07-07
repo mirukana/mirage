@@ -317,7 +317,8 @@ class Backend:
         """
 
         async def update(client: MatrixClient) -> None:
-            room = self.models[client.user_id, "rooms"].get(room_id)
+            room    = self.models[client.user_id, "rooms"].get(room_id)
+            account = self.models["accounts"][client.user_id]
 
             if room:
                 room.set_fields(
@@ -327,7 +328,10 @@ class Backend:
                     local_highlights = False,
                 )
                 await client.update_account_unread_counts()
-                await client.update_receipt_marker(room_id, event_id)
+
+                # Only update server markers if the account is not invisible
+                if account.presence != Presence.State.invisible:
+                    await client.update_receipt_marker(room_id, event_id)
 
         await asyncio.gather(*[update(c) for c in self.clients.values()])
 
