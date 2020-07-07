@@ -66,8 +66,9 @@ HTile {
         }
 
         HColumnLayout {
+            id: title
+
             TitleLabel {
-                id: title
                 text: model.display_name || model.id
                 color:
                     hovered ?
@@ -82,11 +83,21 @@ HTile {
             }
 
             SubtitleLabel {
+                id:      statusMsg
                 tile:    account
-                text:    model.status_msg
-                visible: model.status_msg
+                text:    utils.escapeHtml(model.status_msg.trim())
+                visible: model.status_msg.trim()
 
                 Layout.leftMargin: theme.spacing
+            }
+
+            HoverHandler { id: nameHover }
+
+            HToolTip {
+                visible: nameHover.hovered
+                text:
+                    model.id +
+                    (statusMsg.text ? " - " + model.status_msg.trim() : "")
             }
         }
 

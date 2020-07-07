@@ -1064,6 +1064,17 @@ class MatrixClient(nio.AsyncClient):
         ])
 
 
+    async def room_typing(
+        self, room_id: str, typing_state: bool = True, timeout: int = 5000,
+    ):
+        """Set typing notice to the server."""
+
+        # Do not send typing notice if the user is invisible
+        if self.models["accounts"][self.user_id].presence != \
+                Presence.State.invisible:
+            await super().room_typing(room_id, typing_state, timeout)
+
+
     async def get_redacted_event_content(
         self,
         nio_type: Type[nio.Event],
@@ -1222,11 +1233,11 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_presence(
-        self, presence: str, status_msg: str = None,
+        self, presence: str, status_msg: Optional[str] = None,
     ) -> None:
         """Set presence state for this account."""
 
-        status_msg = status_msg or (
+        status_msg = status_msg if status_msg is not None else (
             self.models["accounts"][self.user_id].status_msg
         )
 
