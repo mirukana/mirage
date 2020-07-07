@@ -20,9 +20,8 @@ HRowLayout {
             if (! link.match(/^https?:\/\/matrix.to\/#\/@.+/)) continue
 
             lines.push(
-                `.mention[data-mention='${name}'] { color: ` +
-                utils.nameColor(name) +
-                "}"
+                `.mention[data-mention='${utils.escapeHtml(name)}'] ` +
+                `{ color: ${utils.nameColor(name)} }`
             )
         }
 
@@ -47,6 +46,8 @@ HRowLayout {
 
     readonly property string hoveredLink: contentLabel.hoveredLink
     readonly property bool hoveredSelectable: contentHover.hovered
+
+    readonly property alias contentLabel: contentLabel
 
     readonly property int xOffset:
         onRight ?
