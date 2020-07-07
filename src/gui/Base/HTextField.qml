@@ -68,8 +68,9 @@ TextField {
 
     // Prevent leaking arrow presses to parent elements when the carret is at
     // the beginning or end of the text
-    Keys.onLeftPressed: event.accepted = cursorPosition === 0
-    Keys.onRightPressed: event.accepted = cursorPosition === length
+    Keys.onLeftPressed: event.accepted = cursorPosition === 0 && ! selectedText
+    Keys.onRightPressed:
+        event.accepted = cursorPosition === length && ! selectedText
 
 
     property string saveName: ""
