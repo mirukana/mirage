@@ -45,12 +45,9 @@ HTile {
                 TitleRightInfoLabel {
                     tile: member
                     text:
-                        (model.presence !== "online") &&
-                            model.last_active_ago !== -1 ?
-                        "for " +
-                        utils.formatRelativeTime(
-                            model.last_active_ago
-                        ) :
+                        model.presence !== "online" &&
+                        model.last_active_ago !== -1 ?
+                        utils.formatRelativeTime(model.last_active_ago) :
                         ""
                 }
             }
