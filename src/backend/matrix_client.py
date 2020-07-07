@@ -1069,7 +1069,7 @@ class MatrixClient(nio.AsyncClient):
                   f"%1's {kind} was removed by %2"
 
         if reason:
-            content = f"{content}, reason: {reason}"
+            content = f"{content}, reason: {html.escape(reason)}"
 
         return content
 

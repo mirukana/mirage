@@ -4,6 +4,7 @@ import json
 import logging as log
 from dataclasses import dataclass, field
 from datetime import datetime
+from html import escape
 from typing import TYPE_CHECKING, Optional, Tuple
 from urllib.parse import quote
 
@@ -159,7 +160,7 @@ class NioCallbacks:
     async def onRoomMessageUnknown(
         self, room: nio.MatrixRoom, ev: nio.RoomMessageUnknown,
     ) -> None:
-        co = f"%1 sent an unsupported <b>{ev.msgtype}</b> message"
+        co = f"%1 sent an unsupported <b>{escape(ev.msgtype)}</b> message"
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -333,7 +334,9 @@ class NioCallbacks:
             if self.client.backend.ui_settings["hideMembershipEvents"]:
                 return None
 
-            reason = f", reason: {now['reason']}" if now.get("reason") else ""
+            reason = escape(
+                f", reason: {now['reason']}" if now.get("reason") else "",
+            )
 
             if membership == "join":
                 return (
@@ -378,8 +381,8 @@ class NioCallbacks:
 
         if prev and now.get("displayname") != prev.get("displayname"):
             changed.append('display name from "{}" to "{}"'.format(
-                prev.get("displayname") or ev.state_key,
-                now.get("displayname") or ev.state_key,
+                escape(prev.get("displayname") or ev.state_key),
+                escape(now.get("displayname") or ev.state_key),
             ))
 
         if changed:
@@ -435,7 +438,7 @@ class NioCallbacks:
     ) -> None:
         if ev.canonical_alias:
             url  = f"https://matrix.to/#/{quote(ev.canonical_alias)}"
-            link = f"<a href='{url}'>{ev.canonical_alias}</a>"
+            link = f"<a href='{url}'>{escape(ev.canonical_alias)}</a>"
             co   = f"%1 set the room's main address to {link}"
         else:
             co = "%1 removed the room's main address"
@@ -447,7 +450,7 @@ class NioCallbacks:
         self, room: nio.MatrixRoom, ev: nio.RoomNameEvent,
     ) -> None:
         if ev.name:
-            co = f"%1 changed the room's name to \"{ev.name}\""
+            co = f"%1 changed the room's name to \"{escape(ev.name)}\""
         else:
             co = "%1 removed the room's name"
 
@@ -498,7 +501,7 @@ class NioCallbacks:
     async def onBadEvent(
         self, room: nio.MatrixRoom, ev: nio.BadEvent,
     ) -> None:
-        co = f"%1 sent a malformed <b>{ev.type}</b> event"
+        co = f"%1 sent a malformed <b>{escape(ev.type)}</b> event"
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -516,7 +519,7 @@ class NioCallbacks:
             await self.client.register_nio_room(room)
             return
 
-        co = f"%1 sent an unsupported <b>{ev.type}</b> event"
+        co = f"%1 sent an unsupported <b>{escape(ev.type)}</b> event"
         await self.client.register_nio_event(room, ev, content=co)
 
 
@@ -524,8 +527,8 @@ class NioCallbacks:
         self, room: nio.MatrixRoom, ev: nio.UnknownEncryptedEvent,
     ) -> None:
         co = (
-            f"%1 sent an <b>{ev.type}</b> event encrypted with "
-            f"unsupported <b>{ev.algorithm}</b> algorithm"
+            f"%1 sent an <b>{escape(ev.type)}</b> event encrypted with "
+            f"unsupported <b>{escape(ev.algorithm)}</b> algorithm"
         )
         await self.client.register_nio_event(room, ev, content=co)
 
