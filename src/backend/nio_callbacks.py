@@ -12,6 +12,7 @@ import nio
 
 from .html_markdown import HTML_PROCESSOR
 from .models.items import TypeSpecifier
+from .pyotherside_events import DevicesUpdated
 from .utils import classes_defined_in, plain2html
 
 if TYPE_CHECKING:
@@ -122,6 +123,8 @@ class NioCallbacks:
                     self.client.room_contains_unverified(room_id)
             else:
                 await self.client.register_nio_room(room)
+
+        DevicesUpdated(self.user_id)
 
 
 

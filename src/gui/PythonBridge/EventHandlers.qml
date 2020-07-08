@@ -5,6 +5,9 @@ import ".."
 import "../.."
 
 QtObject {
+    signal deviceUpdateSignal(string forAccount)
+
+
     function onExitRequested(exitCode) {
         Qt.exit(exitCode)
     }
@@ -81,5 +84,10 @@ QtObject {
     function onModelCleared(syncId) {
         // print("clear", syncId)
         ModelStore.get(syncId).clear()
+    }
+
+
+    function onDevicesUpdated(forAccount) {
+        deviceUpdateSignal(forAccount)
     }
 }
