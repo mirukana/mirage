@@ -90,3 +90,10 @@ class ModelItemDeleted(ModelEvent):
 @dataclass
 class ModelCleared(ModelEvent):
     """Indicate that a `Backend` `Model` was cleared."""
+
+
+@dataclass
+class DevicesUpdated(PyOtherSideEvent):
+    """Indicate changes in devices for us or users we share a room with."""
+
+    our_user_id: str = field()

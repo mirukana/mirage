@@ -132,4 +132,13 @@ HListView {
     Component.onCompleted: loadDevices()
 
     Keys.onEscapePressed: stackView.pop()
+
+
+    Connections {
+        target: py.eventHandlers
+
+        function onDeviceUpdateSignal(forAccount) {
+            if (forAccount === profile.userId) profile.loadDevices()
+        }
+    }
 }

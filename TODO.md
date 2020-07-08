@@ -1,6 +1,5 @@
 # TODO
 
-- reload devices when needed
 - get devices for members with no shared E2E room?
 - keyboard controls
 - remove useless Base imports in Base components
