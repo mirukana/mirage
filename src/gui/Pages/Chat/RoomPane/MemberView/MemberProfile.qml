@@ -34,6 +34,8 @@ HListView {
         deviceOwner: member.id
         deviceOwnerDisplayName: member.display_name
         stackView: profile.stackView
+
+        onTrustSet: trust => profile.loadDevices()
     }
 
     section.property: "type"
