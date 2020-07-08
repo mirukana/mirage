@@ -2,33 +2,45 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
-import "../../.."
-import "../../../Base"
+import "../../../.."
+import "../../../../Base"
 
 HColumnLayout {
     readonly property alias keybindFocusItem: filterField
     readonly property var modelSyncId:
         [chat.userId, chat.roomId, "filtered_members"]
 
-    HListView {
-        id: memberList
-        clip: true
+    HStackView {
+        id: stackView
 
-        model: ModelStore.get(modelSyncId)
+        background: Rectangle {
+            color: theme.chat.roomPane.listView.background
+        }
 
-        delegate: MemberDelegate {
-            id: member
-            width: memberList.width
+        initialItem: HListView {
+            id: memberList
+            clip: true
+
+            model: ModelStore.get(modelSyncId)
+
+            delegate: MemberDelegate {
+                id: member
+                width: memberList.width
+
+                onLeftClicked: stackView.push(
+                    "MemberProfile.qml",
+                    {
+                        userId: chat.userId,
+                        roomId: chat.roomId,
+                        member: model,
+                        stackView: stackView,
+                    },
+                )
+            }
         }
 
         Layout.fillWidth: true
         Layout.fillHeight: true
-
-        Rectangle {
-            anchors.fill: parent
-            z: -100
-            color: theme.chat.roomPane.listView.background
-        }
     }
 
     Rectangle {
@@ -58,8 +70,10 @@ HColumnLayout {
                 // declared normally
                 Component.onCompleted: placeholderText = qsTr("Filter members")
 
-                onTextChanged:
+                onTextChanged: {
+                    stackView.pop(stackView.initialItem)
                     py.callCoro("set_substring_filter", [modelSyncId, text])
+                }
 
                 Keys.onEscapePressed: {
                     roomPane.toggleFocus()

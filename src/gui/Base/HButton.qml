@@ -8,9 +8,10 @@ Button {
     id: button
     enabled: ! button.loading
     spacing: theme.spacing
-    topPadding: padded ? spacing / (circle ? 1.75 : 2) : 0
+    topPadding:
+        padded ? spacing * (circle ? (iconItem.small ? 1.5 : 1.8) : 0.5) : 0
     bottomPadding: topPadding
-    leftPadding: padded ? spacing / (circle ? 1.5 : 1) : 0
+    leftPadding: padded ? spacing : 0
     rightPadding: leftPadding
 
     icon.color: theme.icons.colorize
@@ -31,7 +32,7 @@ Button {
     background: HButtonBackground {
         button: button
         buttonTheme: theme.controls.button
-        radius: circle ? height : enableRadius ? theme.radius : 0
+        radius: circle ? height / 2 : enableRadius ? theme.radius : 0
         color: backgroundColor
     }
 

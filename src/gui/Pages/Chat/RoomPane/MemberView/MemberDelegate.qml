@@ -2,9 +2,9 @@
 
 import QtQuick 2.12
 import Clipboard 0.1
-import "../../../Base"
-import "../../../Base/HTile"
-import "../../../Popups"
+import "../../../../Base"
+import "../../../../Base/HTile"
+import "../../../../Popups"
 
 HTile {
     id: member
