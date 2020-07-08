@@ -7,6 +7,7 @@ PythonBridge {
     Component.onCompleted: {
         for (var func in eventHandlers) {
             if (! eventHandlers.hasOwnProperty(func)) continue
+            if (! func.startsWith("on")) continue
             setHandler(func.replace(/^on/, ""), eventHandlers[func])
         }
 
