@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import "../../../Base"
 import "../../.."
+import "MemberView"
 
 MultiviewPane {
     id: roomPane

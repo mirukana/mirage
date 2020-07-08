@@ -1,6 +1,11 @@
 # TODO
 
-- issue templates
+- trust/blacklist buttons
+- reload devices when needed
+- get devices for members with no shared E2E room?
+- keyboard controls
+- remove useless Base imports in Base components
+- HTile enter trigger leftClicked()
 
 ## Refactoring
 

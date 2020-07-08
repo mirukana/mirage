@@ -1286,10 +1286,10 @@ class MatrixClient(nio.AsyncClient):
             if device_id == self.device_id:
                 return "current"
 
-            if device_id not in self.olm.device_store[self.user_id]:
+            if device_id not in self.device_store[self.user_id]:
                 return "no_keys"
 
-            trust = self.olm.device_store[self.user_id][device_id].trust_state
+            trust = self.device_store[self.user_id][device_id].trust_state
             return trust.name
 
         def get_ed25519(device_id: str) -> str:
@@ -1297,8 +1297,8 @@ class MatrixClient(nio.AsyncClient):
 
             if device_id == self.device_id:
                 key = self.olm.account.identity_keys["ed25519"]
-            elif device_id in self.olm.device_store[self.user_id]:
-                key = self.olm.device_store[self.user_id][device_id].ed25519
+            elif device_id in self.device_store[self.user_id]:
+                key = self.device_store[self.user_id][device_id].ed25519
 
             return " ".join(textwrap.wrap(key, 4))
 
@@ -1333,6 +1333,32 @@ class MatrixClient(nio.AsyncClient):
         )
 
 
+    async def member_devices(self, user_id: str) -> List[Dict[str, Any]]:
+        """Get list of E2E-aware devices for a user we share a room with."""
+
+        devices = [
+            # types: "verified", "blacklisted", "ignored" or "unset"
+            {
+                "id":           device.id,
+                "display_name": device.display_name or "",
+                "type":         device.trust_state.name,
+                "ed25519_key":  device.ed25519,
+            }
+            for device in self.device_store.active_user_devices(user_id)
+        ]
+
+        types_order = {
+            "unset": 0, "verified": 1, "ignored": 2, "blacklisted": 3,
+        }
+
+        # Sort by type, then by display name, then by ID
+        return sorted(
+            devices,
+            key = lambda d:
+                (types_order[d["type"]], d["display_name"], d["id"]),
+        )
+
+
     async def rename_device(self, device_id: str, name: str) -> bool:
         """Rename one of our device, return `False` if it doesn't exist."""
 
@@ -1346,13 +1372,13 @@ class MatrixClient(nio.AsyncClient):
     async def verify_device_id(self, user_id: str, device_id: str) -> None:
         """Mark a device as verified."""
 
-        self.verify_device(self.olm.device_store[user_id][device_id])
+        self.verify_device(self.device_store[user_id][device_id])
 
 
     async def blacklist_device_id(self, user_id: str, device_id: str) -> None:
         """Mark a device as blacklisted."""
 
-        self.blacklist_device(self.olm.device_store[user_id][device_id])
+        self.blacklist_device(self.device_store[user_id][device_id])
 
 
     async def delete_devices_with_password(
