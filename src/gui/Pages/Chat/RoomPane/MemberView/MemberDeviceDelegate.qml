@@ -15,7 +15,7 @@ HTile {
     property string deviceOwnerDisplayName
     property HStackView stackView
 
-    signal trustChanged()
+    signal trustSet(bool trust)
 
 
     backgroundColor: "transparent"
@@ -49,16 +49,19 @@ HTile {
         }
     }
 
-    onClicked: stackView.push(
-        "DeviceVerification.qml",
-        {
-            userId: deviceTile.userId,
-            deviceOwner: deviceTile.deviceOwner,
-            deviceOwnerDisplayName: deviceTile.deviceOwnerDisplayName,
-            deviceId: model.id,
-            deviceName: model.display_name,
-            ed25519Key: model.ed25519_key,
-            stackView: deviceTile.stackView
-        },
-    )
+    onClicked: {
+        const item = stackView.push(
+            "DeviceVerification.qml",
+            {
+                userId: deviceTile.userId,
+                deviceOwner: deviceTile.deviceOwner,
+                deviceOwnerDisplayName: deviceTile.deviceOwnerDisplayName,
+                deviceId: model.id,
+                deviceName: model.display_name,
+                ed25519Key: model.ed25519_key,
+                stackView: deviceTile.stackView
+            },
+        )
+        item.trustSet.connect(deviceTile.trustSet)
+    }
 }

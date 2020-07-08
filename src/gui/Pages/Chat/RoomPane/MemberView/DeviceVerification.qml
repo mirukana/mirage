@@ -17,6 +17,8 @@ HFlickableColumnPage {
     property string ed25519Key
     property HStackView stackView
 
+    signal trustSet(bool trust)
+
 
     footer: ButtonLayout {
         ApplyButton {
@@ -31,6 +33,7 @@ HFlickableColumnPage {
                     [deviceOwner, deviceId],
                     () => {
                         loading = false
+                        page.trustSet(true)
                         stackView.pop()
                     }
                 )
@@ -49,6 +52,7 @@ HFlickableColumnPage {
                     [deviceOwner, deviceId],
                     () => {
                         loading = false
+                        page.trustSet(false)
                         stackView.pop()
                     }
                 )
