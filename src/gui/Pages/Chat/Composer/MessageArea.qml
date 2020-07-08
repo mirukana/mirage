@@ -103,7 +103,7 @@ HTextArea {
 
     // TODO: make this more declarative
     onTextChanged: {
-        if (utils.isEmptyObject(usableAliases)) {
+        if (! text || utils.isEmptyObject(usableAliases)) {
             writingUserId = Qt.binding(() => chat.userId)
             toSend        = text
             setTyping(Boolean(text))
