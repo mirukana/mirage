@@ -31,7 +31,7 @@ HFlickableColumnPage {
                     [deviceOwner, deviceId],
                     () => {
                         loading = false
-                        page.verified()
+                        stackView.pop()
                     }
                 )
             }
@@ -49,7 +49,7 @@ HFlickableColumnPage {
                     [deviceOwner, deviceId],
                     () => {
                         loading = false
-                        page.blacklisted()
+                        stackView.pop()
                     }
                 )
             }
