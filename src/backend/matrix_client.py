@@ -323,6 +323,8 @@ class MatrixClient(nio.AsyncClient):
                 self.no_unknown_events_filter["room"]["timeline"]["not_types"],
             )
 
+        await self.auto_verify_all_other_accounts()
+
         while True:
             try:
                 self.sync_task = asyncio.ensure_future(self.sync_forever(
@@ -1379,6 +1381,32 @@ class MatrixClient(nio.AsyncClient):
         """Mark a device as blacklisted."""
 
         self.blacklist_device(self.device_store[user_id][device_id])
+
+
+    async def auto_verify_all_other_accounts(self) -> None:
+        """Automatically verify/blacklist our other accounts's devices."""
+
+        for client in self.backend.clients.values():
+            await self.auto_verify_account(client)
+
+
+    async def auto_verify_account(self, client: "MatrixClient") -> None:
+        """Automatically verify/blacklist one of our accounts's devices."""
+
+        if client.user_id == self.user_id:
+            return
+
+        for device in self.device_store.active_user_devices(client.user_id):
+            if device.device_id != client.device_id:
+                continue
+
+            if device.verified or device.blacklisted:
+                continue
+
+            if device.ed25519 == client.olm.account.identity_keys["ed25519"]:
+                self.verify_device(device)
+            else:
+                self.blacklist_device(device)
 
 
     async def delete_devices_with_password(
