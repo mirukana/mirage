@@ -2,7 +2,6 @@
 
 - fix highlight when logging in to new account
 - warn about no E2E room shared if no devices
-- keyboard controls
 - Make HTile enter key trigger leftClicked()
 
 ## Refactoring
