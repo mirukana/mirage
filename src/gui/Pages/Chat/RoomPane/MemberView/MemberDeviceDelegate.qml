@@ -53,7 +53,6 @@ HTile {
         const item = stackView.push(
             "DeviceVerification.qml",
             {
-                userId: deviceTile.userId,
                 deviceOwner: deviceTile.deviceOwner,
                 deviceOwnerDisplayName: deviceTile.deviceOwnerDisplayName,
                 deviceId: model.id,

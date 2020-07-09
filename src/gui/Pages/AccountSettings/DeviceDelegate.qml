@@ -151,7 +151,6 @@ HTile {
                             "Popups/KeyVerificationPopup.qml",
                             {
                                 focusOnClosed: nameField,
-                                userId: deviceTile.userId,
                                 deviceOwner: deviceTile.userId,
                                 deviceId: model.id,
                                 deviceName: model.display_name,
