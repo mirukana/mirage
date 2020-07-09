@@ -1,9 +1,8 @@
 # TODO
 
-- highlight when logging in to new account
+- fix highlight when logging in to new account
 - warn about no E2E room shared if no devices
 - keyboard controls
-- remove useless Base imports in Base components
 - HTile enter trigger leftClicked()
 - HMenuItem: use onTriggered, not onClicked
 
