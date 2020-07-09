@@ -21,38 +21,6 @@ HMenu {
     }
 
 
-    HMenuItem {
-        icon.name: "presence"
-        icon.color: theme.controls.presence.online
-        text: qsTr("Online")
-        onTriggered: setPresence("online")
-    }
-
-    HMenuItem {
-        enabled: presence
-        icon.name: "presence-busy"
-        icon.color: theme.controls.presence.unavailable
-        text: qsTr("Unavailable")
-        onTriggered: setPresence("unavailable")
-    }
-
-    HMenuItem {
-        icon.name: "presence-offline"
-        icon.color: theme.controls.presence.offline
-        text: qsTr("Offline")
-        onTriggered: setPresence("offline")
-    }
-
-    HMenuItem {
-        enabled: presence
-        icon.name: "presence-invisible"
-        icon.color: theme.controls.presence.offline
-        text: qsTr("Invisible")
-        onTriggered: setPresence("invisible")
-    }
-
-    HMenuSeparator { }
-
     HLabeledItem {
         id: statusMsgLabel
         enabled: presence && presence !== "offline"
@@ -93,6 +61,38 @@ HMenu {
                 Layout.fillHeight: true
             }
         }
+    }
+
+    HMenuSeparator { }
+
+    HMenuItem {
+        icon.name: "presence"
+        icon.color: theme.controls.presence.online
+        text: qsTr("Online")
+        onTriggered: setPresence("online")
+    }
+
+    HMenuItem {
+        enabled: presence
+        icon.name: "presence-busy"
+        icon.color: theme.controls.presence.unavailable
+        text: qsTr("Unavailable")
+        onTriggered: setPresence("unavailable")
+    }
+
+    HMenuItem {
+        enabled: presence
+        icon.name: "presence-invisible"
+        icon.color: theme.controls.presence.offline
+        text: qsTr("Invisible")
+        onTriggered: setPresence("invisible")
+    }
+
+    HMenuItem {
+        icon.name: "presence-offline"
+        icon.color: theme.controls.presence.offline
+        text: qsTr("Offline")
+        onTriggered: setPresence("offline")
     }
 
     HMenuSeparator {

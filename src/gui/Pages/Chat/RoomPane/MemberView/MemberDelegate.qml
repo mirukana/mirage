@@ -44,11 +44,25 @@ HTile {
 
                 TitleRightInfoLabel {
                     tile: member
-                    text:
-                        model.presence !== "online" &&
-                        model.last_active_ago !== -1 ?
-                        utils.formatRelativeTime(model.last_active_ago) :
-                        ""
+                    visible: presenceTimer.running
+
+                    Timer {
+                        id: presenceTimer
+                        running:
+                            ! model.currently_active &&
+                            model.last_active_at > new Date(1)
+                        repeat: true
+                        interval:
+                            new Date() - model.last_active_at < 60000 ?
+                            10000 :
+                            60000
+                        triggeredOnStart: true
+                        onTriggered: parent.text = Qt.binding(() =>
+                            utils.formatRelativeTime(
+                                new Date() - model.last_active_at
+                            )
+                        )
+                    }
                 }
             }
 

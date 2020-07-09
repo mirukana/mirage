@@ -3,7 +3,7 @@
 import json
 import logging as log
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from html import escape
 from typing import TYPE_CHECKING, Optional, Tuple
 from urllib.parse import quote
@@ -596,7 +596,9 @@ class NioCallbacks:
         presence.status_msg       = ev.status_msg or ""
         presence.presence         = Presence.State(ev.presence) if ev.presence\
                                     else Presence.State.offline
-        presence.last_active_ago  = ev.last_active_ago or -1
+        presence.last_active_at   = (
+            datetime.now() - timedelta(milliseconds=ev.last_active_ago)
+        ) if ev.last_active_ago else datetime.fromtimestamp(0)
         presence.currently_active = ev.currently_active or False
 
         # Add all existing members related to this presence
@@ -614,9 +616,16 @@ class NioCallbacks:
         # Check if presence event is ours
         if (
             ev.user_id in self.models["accounts"] and
-            presence.presence != Presence.State.offline
+            not (
+                presence.presence == Presence.State.offline and
+                self.models["accounts"][ev.user_id].presence !=
+                Presence.State.echo_invisible
+            )
         ):
             account = self.models["accounts"][ev.user_id]
+
+            # Do not fight back presence
+            self.client.backend.clients[ev.user_id]._presence = ev.presence
 
             # Servers that send presence events support presence
             account.presence_support = True
@@ -624,7 +633,9 @@ class NioCallbacks:
             # Save the presence for the next resume
             await self.client.backend.saved_accounts.update(
                 user_id  = ev.user_id,
-                presence = presence.presence.value,
+                presence = presence.presence.value if (
+                    account.presence != Presence.State.echo_invisible
+                ) else "invisible",
             )
 
             presence.update_account()
