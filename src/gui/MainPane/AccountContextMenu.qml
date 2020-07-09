@@ -12,18 +12,16 @@ HMenu {
     property string userId
     property string presence
     property string statusMsg
-    property bool   firstSyncDone
 
     onOpened: statusText.forceActiveFocus()
 
 
-    function setPresence(presence, statusMsg = null) {
+    function setPresence(presence, statusMsg = undefined) {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
 
     HMenuItem {
-        enabled: firstSyncDone
         icon.name: "presence"
         icon.color: theme.controls.presence.online
         text: qsTr("Online")
@@ -31,8 +29,7 @@ HMenu {
     }
 
     HMenuItem {
-        visible: presence
-        enabled: firstSyncDone
+        enabled: presence
         icon.name: "presence-busy"
         icon.color: theme.controls.presence.unavailable
         text: qsTr("Unavailable")
@@ -40,7 +37,6 @@ HMenu {
     }
 
     HMenuItem {
-        enabled: firstSyncDone
         icon.name: "presence-offline"
         icon.color: theme.controls.presence.offline
         text: qsTr("Offline")
@@ -48,8 +44,7 @@ HMenu {
     }
 
     HMenuItem {
-        visible: presence
-        enabled: firstSyncDone
+        enabled: presence
         icon.name: "presence-invisible"
         icon.color: theme.controls.presence.offline
         text: qsTr("Invisible")
@@ -60,8 +55,7 @@ HMenu {
 
     HLabeledItem {
         id: statusMsgLabel
-        visible: presence
-        enabled: firstSyncDone
+        enabled: presence && presence !== "offline"
         width: parent.width
         height: visible ? implicitHeight : 0
         label.text: qsTr("Status message:")
@@ -80,12 +74,14 @@ HMenu {
                 }
 
                 defaultText: statusMsg
+                placeholderText: ! presence ? "Unsupported server" : ""
 
                 Layout.fillWidth: true
             }
 
             HButton {
                 id: button
+                visible: presence
 
                 icon.name: "apply"
                 icon.color: theme.colors.positiveBackground

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import QtQuick.Shapes 1.15
+import QtQuick.Shapes 1.12
 
 HAvatar {
     name: displayName || userId.substring(1)  // no leading @

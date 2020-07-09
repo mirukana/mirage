@@ -132,7 +132,7 @@ class Backend:
         )
 
         try:
-            await client.login(password)
+            await client.login(password, order=order)
         except MatrixError:
             await client.close()
             raise
@@ -142,22 +142,7 @@ class Backend:
             await client.logout()
             return client.user_id
 
-        if order is None and not self.models["accounts"]:
-            order = 0
-        elif order is None:
-            order = max(
-                account.order
-                for i, account in enumerate(self.models["accounts"].values())
-            ) + 1
-
-        account = Account(client.user_id, order)
-
-        self.clients[client.user_id]            = client
-        self.models["accounts"][client.user_id] = account
-
-        # Get or create presence for account
-        presence = self.presences.setdefault(client.user_id, Presence())
-        presence.members["account", client.user_id] = account
+        self.clients[client.user_id] = client
 
         return client.user_id
 
@@ -168,7 +153,6 @@ class Backend:
         token:      str,
         device_id:  str,
         homeserver: str = "https://matrix.org",
-        order:      int = -1,
         state:      str = "online",
     ) -> None:
         """Create and register a `MatrixClient` with known account details."""
@@ -178,14 +162,7 @@ class Backend:
             user=user_id, homeserver=homeserver, device_id=device_id,
         )
 
-        account = Account(user_id, order)
-
-        self.clients[user_id]            = client
-        self.models["accounts"][user_id] = account
-
-        # Get or create presence for account
-        presence = self.presences.setdefault(user_id, Presence())
-        presence.members["account", user_id] = account
+        self.clients[user_id] = client
 
         await client.resume(user_id, token, device_id, state)
 
@@ -194,14 +171,19 @@ class Backend:
         """Call `resume_client` for all saved accounts in user config."""
 
         async def resume(user_id: str, info: Dict[str, Any]) -> str:
+            # Get or create account model
+            self.models["accounts"].setdefault(
+                user_id, Account(user_id, info.get("order", -1)),
+            )
+
             await self.resume_client(
                 user_id    = user_id,
                 token      = info["token"],
                 device_id  = info["device_id"],
                 homeserver = info["homeserver"],
-                order      = info.get("order", -1),
                 state      = info.get("presence", "online"),
             )
+
             return user_id
 
         return await asyncio.gather(*(

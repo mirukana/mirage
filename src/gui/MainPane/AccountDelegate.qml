@@ -13,7 +13,12 @@ HTile {
         tile: account
         spacing: 0
         opacity:
-            collapsed ? theme.mainPane.listView.account.collapsedOpacity : 1
+            collapsed ?
+            theme.mainPane.listView.account.collapsedOpacity :
+
+            model.presence == "offline" ?
+            theme.mainPane.listView.offlineOpacity :
+            1
 
         Behavior on opacity { HNumberAnimation {} }
 
@@ -25,14 +30,14 @@ HTile {
             radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
 
-            presence: model.presence
+            presence: model.presence_support ? model.presence : ""
 
             Layout.alignment: Qt.AlignCenter
 
             HLoader {
                 anchors.fill: parent
                 z: 9998
-                opacity: model.first_sync_done ? 0 : 1
+                opacity: model.connecting ? 1 : 0
                 active: opacity > 0
 
                 sourceComponent: Rectangle {
@@ -157,12 +162,12 @@ HTile {
     }
 
     contextMenu: AccountContextMenu {
-        userId:        model.id
-        presence:      model.presence_support ? model.presence : null
-        statusMsg:     model.status_msg
-
-        // Gray out buttons before first sync
-        firstSyncDone: model.first_sync_done
+        userId:    model.id
+        presence:
+            model.presence_support || model.presence === "offline" ?
+            model.presence :
+            null
+        statusMsg: model.status_msg
     }
 
 

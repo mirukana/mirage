@@ -184,7 +184,7 @@ class Accounts(JSONDataFile):
 
         client   = self.backend.clients[user_id]
         saved    = await self.read()
-        presence = self.backend.models["accounts"][user_id].presence.value
+        account  = self.backend.models["accounts"][user_id]
 
         await self.write({
             **saved,
@@ -193,13 +193,33 @@ class Accounts(JSONDataFile):
                 "token":      client.access_token,
                 "device_id":  client.device_id,
                 "enabled":    True,
-                "presence":   presence or "online",
-                "order":      max([
+                "presence":   account.presence.value,
+
+                # Can account.order converge with any other saved value?
+                "order":      account.order if account.order >= 0 else max([
                     account.get("order", i)
                     for i, account in enumerate(saved.values())
                 ] or [-1]) + 1,
             },
         })
+
+
+    async def update(
+        self,
+        user_id:  str,
+        enabled:  Optional[str] = None,
+        presence: Optional[str] = None,
+        order:    Optional[int] = None,
+    ) -> None:
+        """Update existing account in the config and write to disk."""
+
+        saved = await self.read()
+
+        saved[user_id]["enabled"]  = enabled  or saved[user_id]["enabled"]
+        saved[user_id]["presence"] = presence or saved[user_id]["presence"]
+        saved[user_id]["order"]    = order    or saved[user_id]["order"]
+
+        await self.write({**saved})
 
 
     async def delete(self, user_id: str) -> None:
