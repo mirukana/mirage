@@ -11,7 +11,7 @@ HMenu {
     HMenuItem {
         icon.name: "account-settings"
         text: qsTr("Account settings")
-        onClicked: pageLoader.showPage(
+        onTriggered: pageLoader.showPage(
             "AccountSettings/AccountSettings", { "userId": userId },
         )
     }
@@ -19,7 +19,7 @@ HMenu {
     HMenuItem {
         icon.name: "menu-add-chat"
         text: qsTr("Add new chat")
-        onClicked: pageLoader.showPage("AddChat/AddChat", {userId: userId})
+        onTriggered: pageLoader.showPage("AddChat/AddChat", {userId: userId})
     }
 
     HMenuItem {
