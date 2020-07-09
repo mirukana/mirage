@@ -37,6 +37,12 @@ HColumnLayout {
                     },
                 )
             }
+
+            Keys.onEnterPressed: Keys.onReturnPressed(event)
+            Keys.onReturnPressed: {
+                currentItem.leftClicked()
+                currentItem.clicked()
+            }
         }
 
         Layout.fillWidth: true
@@ -74,6 +80,9 @@ HColumnLayout {
                     stackView.pop(stackView.initialItem)
                     py.callCoro("set_substring_filter", [modelSyncId, text])
                 }
+
+                Keys.forwardTo: [stackView.currentItem]
+                Keys.priority: Keys.AfterItem
 
                 Keys.onEscapePressed: {
                     roomPane.toggleFocus()

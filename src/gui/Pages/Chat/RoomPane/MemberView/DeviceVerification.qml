@@ -16,7 +16,15 @@ HFlickableColumnPage {
     property string ed25519Key
     property HStackView stackView
 
+    property Item previouslyFocused: null
+
     signal trustSet(bool trust)
+
+
+    function close() {
+        if (previouslyFocused) previouslyFocused.forceActiveFocus()
+        stackView.pop()
+    }
 
 
     footer: ButtonLayout {
@@ -32,7 +40,7 @@ HFlickableColumnPage {
                     () => {
                         loading = false
                         page.trustSet(true)
-                        stackView.pop()
+                        page.close()
                     }
                 )
             }
@@ -50,7 +58,7 @@ HFlickableColumnPage {
                     () => {
                         loading = false
                         page.trustSet(false)
-                        stackView.pop()
+                        page.close()
                     }
                 )
             }
@@ -58,12 +66,15 @@ HFlickableColumnPage {
 
         CancelButton {
             id: cancelButton
-            onClicked: stackView.pop()
-            Component.onCompleted: forceActiveFocus()
+            onClicked: page.close()
+            Component.onCompleted: {
+                page.previouslyFocused = window.activeFocusItem
+                forceActiveFocus()
+            }
         }
     }
 
-    onKeyboardCancel: stackView.pop()
+    onKeyboardCancel: page.close()
 
 
     HRowLayout {
@@ -72,7 +83,7 @@ HFlickableColumnPage {
             circle: true
             icon.name: "close-view"
             iconItem.small: true
-            onClicked: page.stackView.pop()
+            onClicked: page.close()
 
             Layout.rightMargin: theme.spacing
         }

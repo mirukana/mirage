@@ -133,6 +133,11 @@ HListView {
 
     Component.onCompleted: loadDevices()
 
+    Keys.onEnterPressed: Keys.onReturnPressed(event)
+    Keys.onReturnPressed: {
+        currentItem.leftClicked()
+        currentItem.clicked()
+    }
     Keys.onEscapePressed: stackView.pop()
 
 
