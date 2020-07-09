@@ -57,6 +57,10 @@ MultiviewPane {
     }
 
 
+    readonly property QtObject accountModel:
+        ModelStore.get("accounts").find(chat.roomInfo.for_account)
+
+
     function toggleFocus() {
         if (roomPane.activeFocus) {
             if (roomPane.collapse) roomPane.close()
@@ -78,7 +82,9 @@ MultiviewPane {
     }
 
     MemberView {}
-    SettingsView {}
+    SettingsView {
+        enabled: accountModel.presence !== "offline"
+    }
 
     HShortcut {
         sequences: window.settings.keys.toggleFocusRoomPane

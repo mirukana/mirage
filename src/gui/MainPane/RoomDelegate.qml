@@ -15,7 +15,13 @@ HTile {
 
     contentItem: ContentRow {
         tile: room
-        opacity: model.left ? theme.mainPane.listView.room.leftRoomOpacity : 1
+        opacity:
+            accountModel.presence === "offline" ?
+            theme.mainPane.listView.offlineOpacity :
+
+            model.left ?
+            theme.mainPane.listView.room.leftRoomOpacity :
+            1
 
         Behavior on opacity { HNumberAnimation {} }
 
@@ -178,6 +184,10 @@ HTile {
 
     readonly property ListModel eventModel:
         ModelStore.get(model.for_account, model.id, "events")
+
+    // TODO: binding loop
+    readonly property QtObject accountModel:
+        ModelStore.get("accounts").find(model.for_account)
 
     readonly property QtObject lastEvent:
         eventModel.count > 0 ? eventModel.get(0) : null

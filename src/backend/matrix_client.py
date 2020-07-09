@@ -40,7 +40,7 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    Event, Member, Presence, Room, Upload, UploadStatus, ZeroDate,
+    Account, Event, Member, Presence, Room, Upload, UploadStatus, ZeroDate,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -231,14 +231,36 @@ class MatrixClient(nio.AsyncClient):
         return f"{__display_name__} on {os_name} {os_ver}".rstrip()
 
 
-    async def login(self, password: str, device_name: str = "") -> None:
+    async def login(
+        self, password: str,
+        device_name: str = "",
+        order: Optional[int] = None,
+    ) -> None:
         """Login to the server using the account's password."""
 
         await super().login(
             password, device_name or self.default_device_name(),
         )
 
-        self.start_task = asyncio.ensure_future(self._start())
+        if order is None and not self.models["accounts"]:
+            order = 0
+        elif order is None:
+            order = max(
+                account.order
+                for i, account in enumerate(self.models["accounts"].values())
+            ) + 1
+
+        # Get or create account model
+        # We need to create account model in here, because _start() needs it
+        account = self.models["accounts"].setdefault(
+            self.user_id, Account(self.user_id, order),
+        )
+
+        # TODO: set presence on login
+        self._presence     = "online"
+        account.presence   = Presence.State.online
+        account.connecting = True
+        self.start_task    = asyncio.ensure_future(self._start())
 
 
     async def resume(
@@ -251,32 +273,21 @@ class MatrixClient(nio.AsyncClient):
         """Login to the server using an existing access token."""
 
         response = nio.LoginResponse(user_id, device_id, token)
+        account  = self.models["accounts"][user_id]
         await self.receive_response(response)
 
         self._presence = "offline" if state == "invisible" else state
-        self.start_task = asyncio.ensure_future(self._start())
+        account.presence = Presence.State(state)
 
-        if state == "invisible":
-            self.models["accounts"][self.user_id].presence = \
-                Presence.State.invisible
+        if state != "offline":
+            account.connecting = True
+            self.start_task = asyncio.ensure_future(self._start())
 
 
     async def logout(self) -> None:
         """Logout from the server. This will delete the device."""
 
-        tasks = (
-            self.profile_task,
-            self.sync_task,
-            self.server_config_task,
-            self.start_task,
-        )
-
-        for task in tasks:
-            if task:
-                task.cancel()
-                with suppress(asyncio.CancelledError):
-                    await task
-
+        await self._stop()
         await super().logout()
         await self.close()
 
@@ -300,8 +311,6 @@ class MatrixClient(nio.AsyncClient):
             if future.cancelled():  # Account logged out
                 return
 
-            account = self.models["accounts"][self.user_id]
-
             try:
                 account.max_upload_size = future.result()
             except Exception:
@@ -315,6 +324,13 @@ class MatrixClient(nio.AsyncClient):
                 self.server_config_task.add_done_callback(
                     on_server_config_response,
                 )
+
+        account = self.models["accounts"][self.user_id]
+
+        # Get or create presence for account
+        presence = self.backend.presences.setdefault(self.user_id, Presence())
+        presence.account = account
+        presence.presence = Presence.State(self._presence)
 
         self.profile_task = asyncio.ensure_future(self.update_own_profile())
 
@@ -360,6 +376,31 @@ class MatrixClient(nio.AsyncClient):
                     LoopException(str(err), err, trace)
 
             await asyncio.sleep(5)
+
+
+    async def _stop(self) -> None:
+        """Stop client tasks. Will prevent client to receive further events."""
+
+        tasks = (
+            self.profile_task,
+            self.sync_task,
+            self.server_config_task,
+            self.start_task,
+        )
+
+        for task in tasks:
+            if task:
+                task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await task
+
+        self.first_sync_done.clear()
+
+        # Remove account model from presence update
+        presence = self.backend.presences.get(self.user_id, None)
+
+        if presence:
+            presence.members.pop(("account", self.user_id), None)
 
 
     async def update_own_profile(self) -> None:
@@ -478,6 +519,12 @@ class MatrixClient(nio.AsyncClient):
             mentions = mentions,
         )
 
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
+            await asyncio.sleep(0.2)
+
         await self._send_message(room_id, content, tx_id)
 
 
@@ -502,6 +549,12 @@ class MatrixClient(nio.AsyncClient):
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
         """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
+
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
+            await asyncio.sleep(0.2)
 
         item_uuid = uuid4()
 
@@ -1070,8 +1123,10 @@ class MatrixClient(nio.AsyncClient):
         """Set typing notice to the server."""
 
         # Do not send typing notice if the user is invisible
-        if self.models["accounts"][self.user_id].presence != \
-                Presence.State.invisible:
+        if (
+            self.models["accounts"][self.user_id].presence not in
+            [Presence.State.invisible, Presence.State.offline]
+        ):
             await super().room_typing(room_id, typing_state, timeout)
 
 
@@ -1237,20 +1292,45 @@ class MatrixClient(nio.AsyncClient):
     ) -> None:
         """Set presence state for this account."""
 
+        account    = self.models["accounts"][self.user_id]
         status_msg = status_msg if status_msg is not None else (
             self.models["accounts"][self.user_id].status_msg
+        )
+
+        if presence == "offline":
+            # Do not do anything if account is offline and setting to offline
+            if account.presence == Presence.State.offline:
+                return
+
+            await self._stop()
+
+            # Uppdate manually since we may not receive the presence event back
+            # in time
+            account.presence         = Presence.State.offline
+            account.currently_active = False
+        elif (
+            presence != "offline" and
+            account.presence == Presence.State.offline
+        ):
+            account.connecting = True
+            self.start_task = asyncio.ensure_future(self._start())
+
+        # Assign invisible on model in here, because server will tell us we are
+        # offline
+        if presence == "invisible":
+            account.presence = Presence.State.invisible
+
+        if not account.presence_support:
+            account.presence = Presence.State(presence)
+
+        await self.backend.saved_accounts.update(
+            self.user_id, presence=presence,
         )
 
         await super().set_presence(
             "offline" if presence == "invisible" else presence,
             status_msg,
         )
-
-        # Assign invisible on model in here, because server will tell us we are
-        # offline
-        if presence == "invisible":
-            self.models["accounts"][self.user_id].presence = \
-                Presence.State.invisible
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:

@@ -56,26 +56,32 @@ class Presence():
     last_active_ago:  int      = -1
     status_msg:       str      = ""
 
-    members: Dict[Tuple[str, str], Union["Member", "Account"]] = \
-        field(default_factory=dict)
+    members: Dict[Tuple[str, str], "Member"] = field(default_factory=dict)
+    account: Optional["Account"]             = None
 
-    def update_members(self):
+    def update_members(self) -> None:
         for member in self.members.values():
-            # Do not update if member is changing to invisible
-            # Because when setting invisible presence will give us presence
-            # event telling us we are offline, we do not want to set member
-            # presence to offline.
-            if (
-                member.presence == self.State.invisible
-            ) and (
-                self.presence   == self.State.offline
-            ):
-                continue
-
             member.presence         = self.presence
             member.status_msg       = self.status_msg
             member.last_active_ago  = self.last_active_ago
             member.currently_active = self.currently_active
+
+    def update_account(self) -> None:
+        # Do not update if account is changing to invisible.
+        # When setting presence to invisible, the server will give us a
+        # presence event telling us we are offline, but we do not want to set
+        # account presence to offline.
+        if (
+            not self.account or
+            self.account.presence == self.State.invisible and
+            self.presence         == self.State.offline
+        ):
+            return
+
+        self.account.presence         = self.presence
+        self.account.status_msg       = self.status_msg
+        self.account.last_active_ago  = self.last_active_ago
+        self.account.currently_active = self.currently_active
 
 
 @dataclass
@@ -88,7 +94,7 @@ class Account(ModelItem):
     avatar_url:       str      = ""
     max_upload_size:  int      = 0
     profile_updated:  datetime = ZeroDate
-    first_sync_done:  bool     = False
+    connecting:       bool     = False
     total_unread:     int      = 0
     total_highlights: int      = 0
     local_unreads:    bool     = False
@@ -96,11 +102,11 @@ class Account(ModelItem):
 
     # For some reason, Account cannot inherit Presence, because QML keeps
     # complaining type error on unknown file
-    presence_support: bool             = False
-    presence:         Presence.State   = Presence.State.offline
-    currently_active: bool             = False
-    last_active_ago:  int              = -1
-    status_msg:       str              = ""
+    presence_support: bool           = False
+    presence:         Presence.State = Presence.State.offline
+    currently_active: bool           = False
+    last_active_ago:  int            = -1
+    status_msg:       str            = ""
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
@@ -220,7 +226,7 @@ class AccountOrRoom(Account, Room):
 
 
 @dataclass
-class Member(Presence, ModelItem):
+class Member(ModelItem):
     """A member in a matrix room."""
 
     id:              str      = field()
@@ -233,6 +239,11 @@ class Member(Presence, ModelItem):
 
     last_read_event: str      = ""
     last_read_at:    datetime = ZeroDate
+
+    presence:         Presence.State = Presence.State.offline
+    currently_active: bool           = False
+    last_active_ago:  int            = -1
+    status_msg:       str            = ""
 
     def __lt__(self, other: "Member") -> bool:
         """Sort by presence, power level, then by display name/user ID."""

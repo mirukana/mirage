@@ -106,7 +106,7 @@ class NioCallbacks:
             self.client.first_sync_date = datetime.now()
 
             account = self.models["accounts"][self.user_id]
-            account.first_sync_done = True
+            account.connecting = False
 
 
     async def onKeysQueryResponse(self, resp: nio.KeysQueryResponse) -> None:
@@ -612,11 +612,21 @@ class NioCallbacks:
         presence.update_members()
 
         # Check if presence event is ours
-        if ev.user_id in self.models["accounts"]:
+        if (
+            ev.user_id in self.models["accounts"] and
+            presence.presence != Presence.State.offline
+        ):
+            account = self.models["accounts"][ev.user_id]
+
             # Servers that send presence events support presence
-            self.models["accounts"][ev.user_id].presence_support = True
+            account.presence_support = True
 
             # Save the presence for the next resume
-            await self.client.backend.saved_accounts.add(ev.user_id)
+            await self.client.backend.saved_accounts.update(
+                user_id  = ev.user_id,
+                presence = presence.presence.value,
+            )
+
+            presence.update_account()
 
         self.client.backend.presences[ev.user_id] = presence

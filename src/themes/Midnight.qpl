@@ -325,7 +325,8 @@ mainPane:
                 color mentionBackground: colors.alertBackground
 
     listView:
-        color background: colors.mediumBackground
+        color background:    colors.mediumBackground
+        real offlineOpacity: 0.5
 
         account:
             real collapsedOpacity:     0.3
