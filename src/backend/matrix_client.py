@@ -400,7 +400,7 @@ class MatrixClient(nio.AsyncClient):
         presence = self.backend.presences.get(self.user_id, None)
 
         if presence:
-            presence.members.pop(("account", self.user_id), None)
+            presence.account = None
 
 
     async def update_own_profile(self) -> None:
@@ -1315,10 +1315,11 @@ class MatrixClient(nio.AsyncClient):
             account.connecting = True
             self.start_task = asyncio.ensure_future(self._start())
 
-        # Assign invisible on model in here, because server will tell us we are
-        # offline
-        if presence == "invisible":
-            account.presence = Presence.State.invisible
+        if (
+            presence != "offline" and
+            Presence.State(presence) != account.presence
+        ):
+            account.presence = Presence.State("echo_" + presence)
 
         if not account.presence_support:
             account.presence = Presence.State(presence)

@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import UUID
 
 import lxml  # nosec
-
 import nio
 
 from ..utils import AutoStrEnum, auto
@@ -18,7 +17,6 @@ from .model_item import ModelItem
 
 ZeroDate              = datetime.fromtimestamp(0)
 OptionalExceptionType = Union[Type[None], Type[Exception]]
-
 
 
 class TypeSpecifier(AutoStrEnum):
@@ -37,6 +35,10 @@ class Presence():
         online      = auto()
         invisible   = auto()
 
+        echo_unavailable = auto()
+        echo_online      = auto()
+        echo_invisible   = auto()
+
         def __lt__(self, other: "Presence.State") -> bool:
             order = [
                 self.online,
@@ -53,7 +55,7 @@ class Presence():
 
     presence:         State    = State.offline
     currently_active: bool     = False
-    last_active_ago:  int      = -1
+    last_active_at:   datetime = ZeroDate
     status_msg:       str      = ""
 
     members: Dict[Tuple[str, str], "Member"] = field(default_factory=dict)
@@ -63,7 +65,7 @@ class Presence():
         for member in self.members.values():
             member.presence         = self.presence
             member.status_msg       = self.status_msg
-            member.last_active_ago  = self.last_active_ago
+            member.last_active_at   = self.last_active_at
             member.currently_active = self.currently_active
 
     def update_account(self) -> None:
@@ -73,14 +75,16 @@ class Presence():
         # account presence to offline.
         if (
             not self.account or
-            self.account.presence == self.State.invisible and
-            self.presence         == self.State.offline
+            self.presence         == self.State.offline and
+            self.account.presence != self.State.echo_invisible
         ):
             return
 
-        self.account.presence         = self.presence
+        self.account.presence         = self.presence if (
+            self.account.presence != self.State.echo_invisible
+        ) else self.State.invisible
         self.account.status_msg       = self.status_msg
-        self.account.last_active_ago  = self.last_active_ago
+        self.account.last_active_at   = self.last_active_at
         self.account.currently_active = self.currently_active
 
 
@@ -105,7 +109,7 @@ class Account(ModelItem):
     presence_support: bool           = False
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
-    last_active_ago:  int            = -1
+    last_active_at:   datetime       = ZeroDate
     status_msg:       str            = ""
 
     def __lt__(self, other: "Account") -> bool:
@@ -242,7 +246,7 @@ class Member(ModelItem):
 
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
-    last_active_ago:  int            = -1
+    last_active_at:   datetime       = ZeroDate
     status_msg:       str            = ""
 
     def __lt__(self, other: "Member") -> bool:
@@ -252,14 +256,14 @@ class Member(ModelItem):
         other_name = other.display_name or other.id[1:]
 
         return (
-            self.presence,
             self.invited,
             other.power_level,
+            self.presence,
             name.lower(),
         ) < (
-            other.presence,
             other.invited,
             self.power_level,
+            other.presence,
             other_name.lower(),
         )
 

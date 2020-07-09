@@ -71,18 +71,22 @@ HAvatar {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             radius: diameter / 2
+            opacity: presence.includes("echo") ? 0.4 : 1
 
             color:
-                presence === "online" ?
+                presence.includes("online") ?
                 theme.controls.presence.online :
 
-                presence === "unavailable" ?
+                presence.includes("unavailable") ?
                 theme.controls.presence.unavailable :
 
                 theme.controls.presence.offline
 
             border.color: theme.controls.presence.border
             border.width: diameter / 10
+
+            Behavior on color   { HColorAnimation {} }
+            Behavior on opacity { HNumberAnimation {} }
 
             HoverHandler { id: presenceHover }
 
