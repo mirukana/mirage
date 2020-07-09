@@ -1,6 +1,7 @@
 # TODO
 
-- get devices for members with no shared E2E room?
+- highlight when logging in to new account
+- warn about no E2E room shared if no devices
 - keyboard controls
 - remove useless Base imports in Base components
 - HTile enter trigger leftClicked()
@@ -186,10 +187,8 @@
 - Live-reloading accounts.json
 
 - E2E
-  - List and verify other users's devices
   - SAS verification
   - Request room keys from own other devices
-  - Auto-trust accounts within the same client
   - Provide help when undecryptable messages occur, including:
     - Trigger `nio.AsyncClient.request_room_key`
     - Option to export-logout-login-import to fix one-time key problems

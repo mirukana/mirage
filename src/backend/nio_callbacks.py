@@ -109,11 +109,15 @@ class NioCallbacks:
 
     async def onKeysQueryResponse(self, resp: nio.KeysQueryResponse) -> None:
         refresh_rooms = {}
+        clients       = self.client.backend.clients
 
         for user_id in resp.changed:
             for room in self.client.rooms.values():
                 if user_id in room.users:
                     refresh_rooms[room.room_id] = room
+
+            if user_id != self.user_id and user_id in clients:
+                await self.client.auto_verify_account(clients[user_id])
 
         for room_id, room in refresh_rooms.items():
             room_item = self.models[self.user_id, "rooms"].get(room_id)
