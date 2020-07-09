@@ -59,7 +59,7 @@ ListView {
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
 
 
-    property alias cursorShape: mouseArea.cursorShape
+    property alias cursorShape: cursorShapeArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
     property var checked: ({})
@@ -131,8 +131,13 @@ ListView {
     }
 
 
+    MouseArea {
+        id: cursorShapeArea
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+    }
+
     HKineticScrollingDisabler {
-        id: mouseArea
         width: enabled ? parent.width : 0
         height: enabled ? parent.height : 0
     }
