@@ -1371,18 +1371,6 @@ class MatrixClient(nio.AsyncClient):
             return False
 
 
-    async def verify_device_id(self, user_id: str, device_id: str) -> None:
-        """Mark a device as verified."""
-
-        self.verify_device(self.device_store[user_id][device_id])
-
-
-    async def blacklist_device_id(self, user_id: str, device_id: str) -> None:
-        """Mark a device as blacklisted."""
-
-        self.blacklist_device(self.device_store[user_id][device_id])
-
-
     async def auto_verify_all_other_accounts(self) -> None:
         """Automatically verify/blacklist our other accounts's devices."""
 

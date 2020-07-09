@@ -9,7 +9,6 @@ HFlickableColumnPopup {
     id: popup
 
 
-    property string userId
     property string deviceOwner
     property string deviceId
     property string deviceName
@@ -27,10 +26,9 @@ HFlickableColumnPopup {
             onClicked: {
                 loading = true
 
-                py.callClientCoro(
-                    userId,
-                    "verify_device_id",
-                    [deviceOwner, deviceId],
+                py.callCoro(
+                    "verify_device",
+                    [deviceOwner, deviceId, ed25519Key.replace(/ /g, "")],
                     () => {
                         if (verifiedCallback) verifiedCallback()
                         popup.close()
@@ -46,10 +44,9 @@ HFlickableColumnPopup {
             onClicked: {
                 loading = true
 
-                py.callClientCoro(
-                    userId,
-                    "blacklist_device_id",
-                    [deviceOwner, deviceId],
+                py.callCoro(
+                    "blacklist_device",
+                    [deviceOwner, deviceId, ed25519Key.replace(/ /g, "")],
                     () => {
                         if (blacklistedCallback) blacklistedCallback()
                         popup.close()

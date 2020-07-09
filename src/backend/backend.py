@@ -360,3 +360,34 @@ class Backend:
         This should only be called from QML.
         """
         self.models["all_rooms"].set_account_collapse(user_id, collapse)
+
+
+    async def verify_device(
+        self, user_id: str, device_id: str, ed25519_key: str,
+    ) -> None:
+        """Mark a device as verified on all our accounts."""
+
+        for client in self.clients.values():
+            try:
+                device = client.device_store[user_id][device_id]
+            except KeyError:
+                continue
+
+            if device.ed25519 == ed25519_key:
+                client.verify_device(device)
+
+
+    async def blacklist_device(
+        self, user_id: str, device_id: str, ed25519_key: str,
+    ) -> None:
+        """Mark a device as blacklisted on all our accounts."""
+
+        for client in self.clients.values():
+            try:
+                # This won't include the client's current device, as expected
+                device = client.device_store[user_id][device_id]
+            except KeyError:
+                continue
+
+            if device.ed25519 == ed25519_key:
+                client.blacklist_device(device)

@@ -9,7 +9,6 @@ HFlickableColumnPage {
     id: page
 
 
-    property string userId
     property string deviceOwner
     property string deviceOwnerDisplayName
     property string deviceId
@@ -27,10 +26,9 @@ HFlickableColumnPage {
             onClicked: {
                 loading = true
 
-                py.callClientCoro(
-                    userId,
-                    "verify_device_id",
-                    [deviceOwner, deviceId],
+                py.callCoro(
+                    "verify_device",
+                    [deviceOwner, deviceId, ed25519Key.replace(/ /g, "")],
                     () => {
                         loading = false
                         page.trustSet(true)
@@ -46,10 +44,9 @@ HFlickableColumnPage {
             onClicked: {
                 loading = true
 
-                py.callClientCoro(
-                    userId,
-                    "blacklist_device_id",
-                    [deviceOwner, deviceId],
+                py.callCoro(
+                    "blacklist_device",
+                    [deviceOwner, deviceId, ed25519Key.replace(/ /g, "")],
                     () => {
                         loading = false
                         page.trustSet(false)
