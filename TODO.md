@@ -3,8 +3,7 @@
 - fix highlight when logging in to new account
 - warn about no E2E room shared if no devices
 - keyboard controls
-- HTile enter trigger leftClicked()
-- HMenuItem: use onTriggered, not onClicked
+- Make HTile enter key trigger leftClicked()
 
 ## Refactoring
 
