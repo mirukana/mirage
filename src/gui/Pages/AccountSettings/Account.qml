@@ -115,9 +115,11 @@ HFlickableColumnPage {
                 (
                     (! avatar.mxc && ! avatar.changed) ||
                     avatar.hovered ||
-                    ! ready
+                    ! ready ||
+                    account.presence === "offline"
                 ) ?
-                1 : 0
+                1 :
+                0
 
             color: utils.hsluv(
                 0, 0, 0, (! avatar.mxc && overlayHover.hovered) ? 0.8 : 0.7,
@@ -130,7 +132,7 @@ HFlickableColumnPage {
 
             MouseArea {
                 anchors.fill: parent
-                enabled: ready
+                enabled: ready && account.presence !== "offline"
                 acceptedButtons: Qt.NoButton
                 cursorShape:
                     overlayHover.hovered ?
@@ -154,7 +156,7 @@ HFlickableColumnPage {
                 anchors.centerIn: parent
                 spacing: currentSpacing
                 width: parent.width
-                opacity: ready ? 1 : 0
+                opacity: ready && account.presence !== "offline" ? 1 : 0
                 visible: opacity > 0
 
                 Behavior on opacity { HNumberAnimation {} }
@@ -219,7 +221,7 @@ HFlickableColumnPage {
 
         HTextField {
             width: parent.width
-            enabled: ready
+            enabled: ready && account.presence !== "offline"
             defaultText: ready ? account.display_name : ""
             maximumLength: 255
 

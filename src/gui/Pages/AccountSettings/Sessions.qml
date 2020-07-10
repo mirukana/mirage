@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
 import "../../Base/ButtonLayout"
 import "../../PythonBridge"
@@ -10,6 +11,7 @@ import "../../ShortcutBundles"
 
 HColumnPage {
     id: page
+    enabled: ModelStore.get("accounts").find(userId).presence !== "offline"
     contentHeight: Math.min(
         window.height,
         Math.max(
@@ -40,7 +42,8 @@ HColumnPage {
             loadFuture                   = null
             deviceList.sectionItemCounts = getSectionItemCounts()
 
-            if (! deviceList.currentItem) deviceList.currentIndex = 0
+            if (page.enabled && ! deviceList.currentItem)
+                deviceList.currentIndex = 0
         })
     }
 
