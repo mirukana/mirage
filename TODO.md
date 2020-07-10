@@ -1,6 +1,6 @@
 # TODO
 
-- event menu key right click
+- focus first item in menu if opened by kb
 - composer menu?
 - fix members not synced bug
 - fix local unread counters order

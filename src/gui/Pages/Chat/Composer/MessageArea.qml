@@ -175,6 +175,11 @@ HTextArea {
 
     Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
+    Keys.onMenuPressed: ev => {
+        if (eventList && eventList.currentItem)
+            eventList.currentItem.openContextMenu()
+    }
+
     Keys.onTabPressed: ev => {
         ev.accepted = true
         textArea.insertAtCursor(indent)

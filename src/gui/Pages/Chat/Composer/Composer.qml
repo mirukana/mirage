@@ -41,7 +41,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            MessageArea { id: messageArea}
+            MessageArea { id: messageArea }
         }
 
         UploadButton {
