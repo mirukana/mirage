@@ -46,8 +46,8 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Keys.onUpPressed: roomList.decrementCurrentIndex()
-            Keys.onDownPressed: roomList.incrementCurrentIndex()
+            Keys.forwardTo: [roomList]
+            Keys.priority: Keys.AfterItem
 
             Keys.onEnterPressed: Keys.onReturnPressed(event)
             Keys.onReturnPressed: {
