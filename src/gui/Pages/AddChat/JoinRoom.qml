@@ -8,6 +8,7 @@ import "../../Base/ButtonLayout"
 
 HFlickableColumnPage {
     id: page
+    enabled: account.presence !== "offline"
 
 
     property string userId
