@@ -92,10 +92,12 @@ HTile {
         }
 
         HMenuItemPopupSpawner {
+            property bool permissionToKick: false
+
             icon.name: "room-kick"
             icon.color: theme.colors.negativeBackground
             text: model.invited ? qsTr("Disinvite") : qsTr("Kick")
-            enabled: false
+            enabled: chat.userInfo.presence !== "offline" && permissionToKick
 
             popup: "Popups/RemoveMemberPopup.qml"
             properties: ({
@@ -110,15 +112,17 @@ HTile {
                 chat.userId,
                 "can_kick",
                 [chat.roomId, model.id],
-                can => { enabled = can },
+                can => { permissionToKick = can },
             )
         }
 
         HMenuItemPopupSpawner {
+            property bool permissionToBan: false
+
             icon.name: "room-ban"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Ban")
-            enabled: false
+            enabled: chat.userInfo.presence !== "offline" && permissionToBan
 
             popup: "Popups/RemoveMemberPopup.qml"
             properties: ({
@@ -133,7 +137,7 @@ HTile {
                 chat.userId,
                 "can_ban",
                 [chat.roomId, model.id],
-                can => { enabled = can },
+                can => { permissionToBan = can },
             )
         }
     }
