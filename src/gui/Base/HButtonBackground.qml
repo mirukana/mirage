@@ -11,7 +11,7 @@ Rectangle {
 
     color: buttonTheme.background
     opacity:
-        loading ? theme.loadingElementsOpacity :
+        button.loading ? theme.loadingElementsOpacity :
         enabled ? 1 :
         theme.disabledElementsOpacity
 

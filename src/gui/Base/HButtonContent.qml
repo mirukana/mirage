@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.12
 HRowLayout {
     id: buttonContent
     spacing: button.spacing
-    opacity: loading ? theme.loadingElementsOpacity :
+    opacity: button.loading ? theme.loadingElementsOpacity :
              enabled ? 1 : theme.disabledElementsOpacity
 
 
