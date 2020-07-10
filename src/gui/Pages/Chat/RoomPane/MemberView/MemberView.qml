@@ -84,11 +84,22 @@ HColumnLayout {
                     py.callCoro("set_substring_filter", [modelSyncId, text])
                 }
 
-                onFocusChanged: if (
-                    focus &&
-                    stackView.depth === 1 &&
-                    stackView.currentItem.currentIndex === -1
-                ) stackView.currentItem.currentIndex = 0
+                onActiveFocusChanged: {
+                    if (
+                        activeFocus &&
+                        stackView.depth === 1 &&
+                        stackView.currentItem.currentIndex === -1
+                    ) {
+                        stackView.currentItem.currentIndex = 0
+                    } else if (
+                        ! activeFocus &&
+                        stackView.depth === 1 &&
+                        stackView.currentItem.currentIndex === 0
+                    ) {
+                        stackView.currentItem.currentIndex = -1
+                    }
+                }
+
 
                 Keys.forwardTo: [stackView.currentItem]
                 Keys.priority: Keys.AfterItem
