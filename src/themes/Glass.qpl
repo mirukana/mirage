@@ -273,6 +273,7 @@ controls:
         color offline:     hsluv(0, 0, 30, 1)
         color border:      "black"
         real opacity:      1.0
+        real radius:       6.0 * uiScale
 
 
 // Specific interface parts

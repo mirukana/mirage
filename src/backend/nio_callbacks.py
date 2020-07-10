@@ -593,13 +593,14 @@ class NioCallbacks:
     async def onPresenceEvent(self, ev: nio.PresenceEvent) -> None:
         presence = self.client.backend.presences.get(ev.user_id, Presence())
 
+        presence.currently_active = ev.currently_active or False
         presence.status_msg       = ev.status_msg or ""
-        presence.presence         = Presence.State(ev.presence) if ev.presence\
-                                    else Presence.State.offline
         presence.last_active_at   = (
             datetime.now() - timedelta(milliseconds=ev.last_active_ago)
         ) if ev.last_active_ago else datetime.fromtimestamp(0)
-        presence.currently_active = ev.currently_active or False
+
+        presence.presence = Presence.State(ev.presence) if ev.presence\
+                                    else Presence.State.offline
 
         # Add all existing members related to this presence
         for room_id in self.models[self.user_id, "rooms"]:
@@ -608,7 +609,7 @@ class NioCallbacks:
             )
 
             if member:
-                presence.members[room_id, ev.user_id] = member
+                presence.members[room_id] = member
 
         # Update members and accounts
         presence.update_members()
@@ -624,7 +625,7 @@ class NioCallbacks:
         ):
             account = self.models["accounts"][ev.user_id]
 
-            # Do not fight back presence
+            # Do not fight back presence from other clients
             self.client.backend.clients[ev.user_id]._presence = ev.presence
 
             # Servers that send presence events support presence

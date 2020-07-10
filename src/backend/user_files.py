@@ -194,12 +194,7 @@ class Accounts(JSONDataFile):
                 "device_id":  client.device_id,
                 "enabled":    True,
                 "presence":   account.presence.value,
-
-                # Can account.order converge with any other saved value?
-                "order":      account.order if account.order >= 0 else max([
-                    account.get("order", i)
-                    for i, account in enumerate(saved.values())
-                ] or [-1]) + 1,
+                "order":      account.order,
             },
         })
 

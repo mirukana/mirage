@@ -185,7 +185,7 @@ HTile {
     readonly property ListModel eventModel:
         ModelStore.get(model.for_account, model.id, "events")
 
-    // TODO: binding loop
+    // FIXME: binding loop
     readonly property QtObject accountModel:
         ModelStore.get("accounts").find(model.for_account)
 

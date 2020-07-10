@@ -17,6 +17,11 @@ from .model_item import ModelItem
 
 ZeroDate              = datetime.fromtimestamp(0)
 OptionalExceptionType = Union[Type[None], Type[Exception]]
+PresenceOrder: Dict[str, int] = {
+    "online":      0,
+    "unavailable": 1,
+    "offline":     2,
+}
 
 
 class TypeSpecifier(AutoStrEnum):
@@ -28,7 +33,38 @@ class TypeSpecifier(AutoStrEnum):
 
 
 @dataclass
-class Presence():
+class Presence:
+    """Represents a single matrix user presence fields.
+
+    It is stored in `Backend.presences`, indexed by user ID. It must only be
+    instiated when receiving a `PresenceEvent` or registering an `Account`
+    model.
+
+    When receiving a `PresenceEvent`, we get or create a `Presence` object in
+    `Backend.presences` for the targeted user. If the user is registered in any
+    room, add its `Member` object to `members`. And finally update every
+    `Member` presence fields inside `members`.
+
+    When a room member is registered, we try to find a `Presence` in
+    `Backend.presences` for that user ID. If found, add the member to
+    `members`.
+
+    When an Account model is registered, we create a `Presence` in
+    `Backend.presences` for account ID wether the server supports or not
+    presence (we cannot really know at this point). And assign that `Account`
+    to `Account` field.
+
+    Attributes:
+        members: A `{room_id: Member}` dict for storing room members related to
+            this `Presence`. As each room has its own `Member`s objects, we
+            have to keep track of their presence fields. `Member`s are indexed
+            by room ID.
+
+        account: `Account` related to this `Presence` (if any). Should only be
+            assigned when client starts (`MatrixClient._start()`) and
+            unassigned when client stops (`MatrixClient._start()`).
+    """
+
     class State(AutoStrEnum):
         offline     = auto()  # can mean offline, invisible or unknwon
         unavailable = auto()
@@ -40,28 +76,24 @@ class Presence():
         echo_invisible   = auto()
 
         def __lt__(self, other: "Presence.State") -> bool:
-            order = [
-                self.online,
-                self.unavailable,
-                self.invisible,
-                self.offline,
-            ]
+            return PresenceOrder[self.value] < PresenceOrder[other.value]
 
-            return (
-                order.index(self)  # type: ignore
-            ) < (
-                order.index(other) # type: ignore
-            )
 
     presence:         State    = State.offline
     currently_active: bool     = False
     last_active_at:   datetime = ZeroDate
     status_msg:       str      = ""
 
-    members: Dict[Tuple[str, str], "Member"] = field(default_factory=dict)
-    account: Optional["Account"]             = None
+    members: Dict[str, "Member"] = field(default_factory=dict)
+    account: Optional["Account"] = None
 
     def update_members(self) -> None:
+        """Update presence fields of every `M̀ember` in `members`.
+
+        Currently it is only called when receiving a `PresenceEvent` and when
+        registering room members.
+        """
+
         for member in self.members.values():
             member.presence         = self.presence
             member.status_msg       = self.status_msg
@@ -69,6 +101,8 @@ class Presence():
             member.currently_active = self.currently_active
 
     def update_account(self) -> None:
+        """Update presence fields of `Account` related to this `Presence`."""
+
         # Do not update if account is changing to invisible.
         # When setting presence to invisible, the server will give us a
         # presence event telling us we are offline, but we do not want to set

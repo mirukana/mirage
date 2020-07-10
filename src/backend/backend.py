@@ -82,6 +82,9 @@ class Backend:
             we managed. Every client is logged to one matrix account.
 
         media_cache: A matrix media cache for downloaded files.
+
+        presences: A `{user_id: Presence}` dict for storing presence info about
+            matrix users registered on Mirage.
     """
 
     def __init__(self) -> None:

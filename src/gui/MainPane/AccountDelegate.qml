@@ -163,11 +163,11 @@ HTile {
 
     contextMenu: AccountContextMenu {
         userId:    model.id
+        statusMsg: model.status_msg
         presence:
             model.presence_support || model.presence === "offline" ?
             model.presence :
             null
-        statusMsg: model.status_msg
     }
 
 
