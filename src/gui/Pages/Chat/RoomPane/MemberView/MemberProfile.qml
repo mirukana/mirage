@@ -149,6 +149,7 @@ HListView {
             text: member.status_msg.trim()
             visible: text !== ""
             horizontalAlignment: lineCount > 1 ? Qt.AlignLeft : Qt.AlignHCenter
+            color: theme.colors.halfDimText
 
             Layout.fillWidth: true
             Layout.bottomMargin: theme.spacing
