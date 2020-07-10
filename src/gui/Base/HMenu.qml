@@ -26,6 +26,20 @@ Menu {
         color: theme.controls.menu.background
         border.color: theme.controls.menu.border
         border.width: theme.controls.menu.borderWidth
+
+        Item {
+            // Workaround for this: when opening the menu at cursor position,
+            // cursor will be in the menu's border instead of first menu item,
+            // forcing the user to move the mouse for the click to do anything.
+            width: parent.width
+            height: parent.border.width
+
+            TapHandler {
+                gesturePolicy: TapHandler.ReleaseWithinBounds
+                onTapped: if (menu.itemAt(0) && menu.itemAt(0).clicked)
+                    menu.itemAt(0).clicked()
+            }
+        }
     }
 
     onAboutToShow: {
