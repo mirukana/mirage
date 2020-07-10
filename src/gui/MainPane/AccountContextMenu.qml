@@ -16,7 +16,7 @@ HMenu {
     onOpened: statusText.forceActiveFocus()
 
 
-    function setPresence(presence, statusMsg = undefined) {
+    function setPresence(presence, statusMsg=undefined) {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
@@ -42,7 +42,7 @@ HMenu {
                 }
 
                 defaultText: statusMsg
-                placeholderText: ! presence ? "Unsupported server" : ""
+                placeholderText: presence ? "" : "Unsupported server"
 
                 Layout.fillWidth: true
             }
@@ -66,7 +66,7 @@ HMenu {
     HMenuSeparator { }
 
     HMenuItem {
-        icon.name: "presence"
+        icon.name: "presence-online"
         icon.color: theme.controls.presence.online
         text: qsTr("Online")
         onTriggered: setPresence("online")

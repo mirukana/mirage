@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import QtQuick.Shapes 1.12
 
 HAvatar {
     name: displayName || userId.substring(1)  // no leading @
@@ -62,8 +61,10 @@ HAvatar {
         opacity: theme.controls.presence.opacity
         z: 100
 
-        property bool small: window.settings.compactMode
-        property int diameter: small ? 10 : 15
+        property int diameter:
+            window.settings.compactMode ?
+            theme.controls.presence.radius * 2 :
+            theme.controls.presence.radius * 2.5
 
         sourceComponent: Rectangle {
             width: diameter
@@ -83,7 +84,7 @@ HAvatar {
                 theme.controls.presence.offline
 
             border.color: theme.controls.presence.border
-            border.width: diameter / 10
+            border.width: Math.ceil(diameter / 10)
 
             Behavior on color   { HColorAnimation {} }
             Behavior on opacity { HNumberAnimation {} }
@@ -91,8 +92,8 @@ HAvatar {
             HoverHandler { id: presenceHover }
 
             HToolTip {
-                visible: presenceHover.hovered
-                text: presence.replace(/^\w/, c => c.toUpperCase())
+                visible: presenceHover.hovered && ! presence.includes("echo")
+                text: qsTr(presence.replace(/^\w/, c => c.toUpperCase()))
             }
         }
     }

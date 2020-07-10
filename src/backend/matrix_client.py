@@ -232,9 +232,10 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def login(
-        self, password: str,
-        device_name: str = "",
-        order: Optional[int] = None,
+        self,
+        password:    str,
+        device_name: str           = "",
+        order:       Optional[int] = None,
     ) -> None:
         """Login to the server using the account's password."""
 
@@ -242,12 +243,14 @@ class MatrixClient(nio.AsyncClient):
             password, device_name or self.default_device_name(),
         )
 
-        if order is None and not self.models["accounts"]:
+        saved = await self.backend.saved_accounts.read()
+
+        if order is None and not saved.values():
             order = 0
         elif order is None:
             order = max(
-                account.order
-                for i, account in enumerate(self.models["accounts"].values())
+                account.get("order", i)
+                for i, account in enumerate(saved.values())
             ) + 1
 
         # Get or create account model
@@ -519,10 +522,8 @@ class MatrixClient(nio.AsyncClient):
             mentions = mentions,
         )
 
-        while (
-            self.models["accounts"][self.user_id].presence ==
-            Presence.State.offline
-        ):
+        presence = self.models["accounts"][self.user_id].presence
+        while presence == Presence.State.offline:
             await asyncio.sleep(0.2)
 
         await self._send_message(room_id, content, tx_id)
@@ -550,10 +551,8 @@ class MatrixClient(nio.AsyncClient):
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
         """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
 
-        while (
-            self.models["accounts"][self.user_id].presence ==
-            Presence.State.offline
-        ):
+        presence = self.models["accounts"][self.user_id].presence
+        while presence == Presence.State.offline:
             await asyncio.sleep(0.2)
 
         item_uuid = uuid4()
@@ -1123,10 +1122,8 @@ class MatrixClient(nio.AsyncClient):
         """Set typing notice to the server."""
 
         # Do not send typing notice if the user is invisible
-        if (
-            self.models["accounts"][self.user_id].presence not in
-            [Presence.State.invisible, Presence.State.offline]
-        ):
+        presence = self.models["accounts"][self.user_id].presence
+        if presence not in [Presence.State.invisible, Presence.State.offline]:
             await super().room_typing(room_id, typing_state, timeout)
 
 
@@ -1304,20 +1301,20 @@ class MatrixClient(nio.AsyncClient):
 
             await self._stop()
 
-            # Uppdate manually since we may not receive the presence event back
+            # Update manually since we may not receive the presence event back
             # in time
             account.presence         = Presence.State.offline
             account.currently_active = False
         elif (
-            presence != "offline" and
-            account.presence == Presence.State.offline
+            account.presence == Presence.State.offline and
+            presence         != "offline"
         ):
             account.connecting = True
-            self.start_task = asyncio.ensure_future(self._start())
+            self.start_task    = asyncio.ensure_future(self._start())
 
         if (
-            presence != "offline" and
-            Presence.State(presence) != account.presence
+            Presence.State(presence) != account.presence and
+            presence                 != "offline"
         ):
             account.presence = Presence.State("echo_" + presence)
 
@@ -1689,7 +1686,7 @@ class MatrixClient(nio.AsyncClient):
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
         """Register/update a room member into our models."""
         member      = room.users[user_id]
-        presence    = self.backend.presences.get(user_id, Presence())
+        presence    = self.backend.presences.get(user_id, None)
         member_item = Member(
             id           = user_id,
             display_name = room.user_name(user_id)  # disambiguated
@@ -1701,8 +1698,8 @@ class MatrixClient(nio.AsyncClient):
         )
 
         # Associate presence with member, if it exists
-        if user_id in self.backend.presences:
-            presence.members[room.room_id, user_id] = member_item
+        if presence:
+            presence.members[room.room_id] = member_item
 
             # And then update presence fields
             presence.update_members()
