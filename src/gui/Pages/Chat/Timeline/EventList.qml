@@ -212,12 +212,24 @@ Rectangle {
             Behavior on opacity { HNumberAnimation {} }
 
             HButton {
+                readonly property bool offline:
+                    chat.userInfo.presence === "offline"
+
                 id: button
                 width: Math.min(parent.width, implicitWidth)
                 anchors.centerIn: parent
 
-                loading: parent.visible
-                text: qsTr("Loading previous messages...")
+                loading: parent.visible && ! offline
+                icon.name: offline ? "feature-unavailable-offline" : ""
+                icon.color:
+                    offline ?
+                    theme.colors.negativeBackground :
+                    theme.icons.colorize
+                text:
+                    offline ?
+                    qsTr("Cannot load history offline") :
+                    qsTr("Loading previous messages...")
+
                 enableRadius: true
                 iconItem.small: true
             }
