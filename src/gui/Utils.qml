@@ -328,26 +328,47 @@ QtObject {
     }
 
 
-    function formatRelativeTime(milliseconds) {
+    function formatRelativeTime(milliseconds, shortForm=true) {
         const seconds = Math.floor(milliseconds / 1000)
+
+        if (shortForm) {
+            return (
+                seconds < 60 ?
+                qsTr("%1s").arg(seconds) :
+
+                seconds < 60 * 60 ?
+                qsTr("%1mn").arg(Math.floor(seconds / 60)) :
+
+                seconds < 60 * 60 * 24 ?
+                qsTr("%1h").arg(Math.floor(seconds / 60 / 60)) :
+
+                seconds < 60 * 60 * 24 * 30 ?
+                qsTr("%1d").arg(Math.floor(seconds / 60 / 60 / 24)) :
+
+                seconds < 60 * 60 * 24 * 30 * 12 ?
+                qsTr("%1mo").arg(Math.floor(seconds / 60 / 60 / 24 / 30)) :
+
+                qsTr("%1y").arg(Math.floor(seconds / 60 / 60 / 24 / 30 / 12))
+            )
+        }
 
         return (
             seconds < 60 ?
-            qsTr("%1s").arg(seconds) :
+            qsTr("%1 seconds").arg(seconds) :
 
             seconds < 60 * 60 ?
-            qsTr("%1mn").arg(Math.floor(seconds / 60)) :
+            qsTr("%1 minutes").arg(Math.floor(seconds / 60)) :
 
             seconds < 60 * 60 * 24 ?
-            qsTr("%1h").arg(Math.floor(seconds / 60 / 60)) :
+            qsTr("%1 hours").arg(Math.floor(seconds / 60 / 60)) :
 
             seconds < 60 * 60 * 24 * 30 ?
-            qsTr("%1d").arg(Math.floor(seconds / 60 / 60 / 24)) :
+            qsTr("%1 days").arg(Math.floor(seconds / 60 / 60 / 24)) :
 
             seconds < 60 * 60 * 24 * 30 * 12 ?
-            qsTr("%1mo").arg(Math.floor(seconds / 60 / 60 / 24 / 30)) :
+            qsTr("%1 months").arg(Math.floor(seconds / 60 / 60 / 24 / 30)) :
 
-            qsTr("%1y").arg(Math.floor(seconds / 60 / 60 / 24 / 30 / 12))
+            qsTr("%1 years").arg(Math.floor(seconds / 60 / 60 / 24 / 30 / 12))
         )
     }
 

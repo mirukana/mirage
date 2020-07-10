@@ -67,18 +67,86 @@ HListView {
                 iconItem.small: true
                 onClicked: profile.stackView.pop()
             }
+        }
 
+        HColumnLayout {  // no spacing between these children
+            HLabel {
+                wrapMode: HLabel.Wrap
+                horizontalAlignment: Qt.AlignHCenter
+                color: utils.nameColor(member.display_name || member.id)
+                text: member.display_name.trim() || member.id
+
+                Layout.fillWidth: true
+            }
+
+            HLabel {
+                wrapMode: HLabel.Wrap
+                horizontalAlignment: Qt.AlignHCenter
+                color: theme.colors.dimText
+                text: member.id
+                visible: member.display_name.trim() !== ""
+
+                Layout.fillWidth: true
+            }
+        }
+
+        HColumnLayout {
+            HLabel {
+                wrapMode: HLabel.Wrap
+                horizontalAlignment: Qt.AlignHCenter
+
+                text:
+                    member.presence === "online" ? qsTr("Online") :
+                    member.presence === "unavailable" ? qsTr("Unavailable") :
+                    member.presence === "invisible" ? qsTr("Invisible") :
+                    qsTr("Offline / Unknown")
+
+                color:
+                    member.presence === "online" ?
+                    theme.colors.positiveText :
+
+                    member.presence === "unavailable" ?
+                    theme.colors.warningText :
+
+                    theme.colors.halfDimText
+
+                Layout.fillWidth: true
+            }
+
+            HLabel {
+                wrapMode: HLabel.Wrap
+                horizontalAlignment: Qt.AlignHCenter
+                visible: ! member.currently_active && text !== ""
+                color: theme.colors.dimText
+
+                Timer {
+                    repeat: true
+                    triggeredOnStart: true
+
+                    running:
+                        ! member.currently_active &&
+                        member.last_active_at > new Date(1)
+
+                    interval:
+                        new Date() - member.last_active_at < 60000 ?
+                        1000 :
+                        60000
+
+                    onTriggered: parent.text = Qt.binding(() =>
+                        qsTr("Last seen %1 ago").arg(utils.formatRelativeTime(
+                            new Date() - member.last_active_at, false,
+                        ))
+                    )
+                }
+
+                Layout.fillWidth: true
+            }
         }
 
         HLabel {
-            textFormat: HLabel.StyledText
             wrapMode: HLabel.Wrap
-            horizontalAlignment: Qt.AlignHCenter
-            text:
-                utils.coloredNameHtml(member.display_name, member.user_id) +
-                (member.display_name.trim() ?
-                 `<br><font color="${theme.colors.dimText}">${member.id}</font>` :
-                 "")
+            text: member.status_msg.trim()
+            visible: text !== ""
 
             Layout.fillWidth: true
             Layout.bottomMargin: theme.spacing

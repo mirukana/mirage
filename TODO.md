@@ -1,5 +1,9 @@
 # TODO
 
+- profile max avatar width
+- retrieve last seen time for offline members on hover/in profile
+- auto-away after a configurable idle time 
+- status based on process detection
 - retry if media not found
 - fix members not synced bug
 - fix local unread counters order
