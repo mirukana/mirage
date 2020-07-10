@@ -33,6 +33,8 @@ HListView {
                 onLeftClicked: showItemAtIndex(model.index)
                 onCollapsedChanged:
                     if (wantedUserId === model.id) startCorrectItemSearch()
+
+                onWentToAccountPage: roomList.currentIndex = model.index
             }
         }
 

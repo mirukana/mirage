@@ -13,12 +13,16 @@ HMenu {
     property string presence
     property string statusMsg
 
-    onOpened: statusText.forceActiveFocus()
+    
+    signal wentToAccountPage()
 
 
     function setPresence(presence, statusMsg=undefined) {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
+
+
+    onOpened: statusText.forceActiveFocus()
 
 
     HLabeledItem {
@@ -103,15 +107,21 @@ HMenu {
     HMenuItem {
         icon.name: "account-settings"
         text: qsTr("Account settings")
-        onTriggered: pageLoader.showPage(
-            "AccountSettings/AccountSettings", { "userId": userId },
-        )
+        onTriggered: {
+            pageLoader.showPage(
+                "AccountSettings/AccountSettings", { "userId": userId },
+            )
+            wentToAccountPage()
+        }
     }
 
     HMenuItem {
         icon.name: "menu-add-chat"
         text: qsTr("Add new chat")
-        onTriggered: pageLoader.showPage("AddChat/AddChat", {userId: userId})
+        onTriggered: {
+            pageLoader.showPage("AddChat/AddChat", {userId: userId})
+            wentToAccountPage()
+        }
     }
 
     HMenuItem {

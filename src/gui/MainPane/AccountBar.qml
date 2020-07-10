@@ -6,7 +6,6 @@ import ".."
 import "../Base"
 import "../Base/HTile"
 
-
 Rectangle {
     implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
     color: theme.mainPane.accountBar.background
@@ -50,6 +49,8 @@ Rectangle {
             expand.visible: false
 
             onLeftClicked: roomList.goToAccount(model.id)
+            onWentToAccountPage:
+                roomList.currentIndex = roomList.accountIndice[model.id]
         }
 
         highlight: Item {

@@ -72,6 +72,13 @@ HTile {
 
         HColumnLayout {
             id: title
+            text: model.display_name || model.id
+            color:
+                hovered ?
+                utils.nameColor(
+                    model.display_name || model.id.substring(1),
+                ) :
+                theme.mainPane.listView.account.name
 
             TitleLabel {
                 text: model.display_name || model.id
@@ -112,9 +119,10 @@ HTile {
             icon.name: "add-chat"
             backgroundColor: "transparent"
             toolTip.text: qsTr("Add new chat")
-            onClicked: pageLoader.showPage(
-                "AddChat/AddChat", {userId: model.id},
-            )
+            onClicked: {
+                pageLoader.showPage("AddChat/AddChat", {userId: model.id})
+                account.wentToAccountPage()
+            }
 
             leftPadding: theme.spacing
             rightPadding: theme.spacing / 1.75
@@ -168,6 +176,7 @@ HTile {
             model.presence_support || model.presence === "offline" ?
             model.presence :
             null
+        onWentToAccountPage: account.wentToAccountPage()
     }
 
 
@@ -183,6 +192,8 @@ HTile {
     readonly property alias title: title
     readonly property alias addChat: addChat
     readonly property alias expand: expand
+
+    signal wentToAccountPage()
 
 
     function setCollapse(collapse) {
