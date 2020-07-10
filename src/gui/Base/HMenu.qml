@@ -27,17 +27,19 @@ Menu {
         border.color: theme.controls.menu.border
         border.width: theme.controls.menu.borderWidth
 
-        Item {
-            // Workaround for this: when opening the menu at cursor position,
-            // cursor will be in the menu's border instead of first menu item,
-            // forcing the user to move the mouse for the click to do anything.
-            width: parent.width
-            height: parent.border.width
+        // Workaround for this: when opening menu at mouse position,
+        // cursor will be in menu's border which doesn't handle clicks
+        TapHandler {
+            gesturePolicy: TapHandler.ReleaseWithinBounds
+            onTapped: eventPoint => {
+                const pos    = eventPoint.position
+                const border = parent.border.width
 
-            TapHandler {
-                gesturePolicy: TapHandler.ReleaseWithinBounds
-                onTapped: if (menu.itemAt(0) && menu.itemAt(0).clicked)
-                    menu.itemAt(0).clicked()
+                if (pos.x <= border || pos.x >= parent.width - border)
+                    menu.close()
+
+                if (pos.y <= border || pos.y >= parent.height - border)
+                    menu.close()
             }
         }
     }
