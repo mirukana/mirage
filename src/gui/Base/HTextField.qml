@@ -66,6 +66,8 @@ TextField {
         event.modifiers & Qt.MetaModifier
     ) event.accepted = true
 
+    Keys.onMenuPressed: contextMenu.spawn(false)
+
     // Prevent leaking arrow presses to parent elements when the carret is at
     // the beginning or end of the text
     Keys.onLeftPressed: event.accepted = cursorPosition === 0 && ! selectedText
@@ -143,4 +145,17 @@ TextField {
 
         Behavior on opacity { HNumberAnimation {} }
     }
+
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+        onTapped: contextMenu.spawn()
+    }
+
+    TapHandler {
+        acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
+        onLongPressed: contextMenu.spawn()
+    }
+
+    HTextContextMenu { id: contextMenu }
 }
