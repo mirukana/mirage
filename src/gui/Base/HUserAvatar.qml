@@ -84,7 +84,7 @@ HAvatar {
                 theme.controls.presence.offline
 
             border.color: theme.controls.presence.border
-            border.width: Math.ceil(diameter / 10)
+            border.width: theme.controls.presence.borderWidth
 
             Behavior on color   { HColorAnimation {} }
             Behavior on opacity { HNumberAnimation {} }
