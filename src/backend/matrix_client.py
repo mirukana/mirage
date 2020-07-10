@@ -1190,6 +1190,12 @@ class MatrixClient(nio.AsyncClient):
 
                 event.event_type = nio.RedactedEvent
 
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
+            await asyncio.sleep(0.2)
+
         return await asyncio.gather(*tasks)
 
 
