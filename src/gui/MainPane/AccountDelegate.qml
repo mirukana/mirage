@@ -72,13 +72,6 @@ HTile {
 
         HColumnLayout {
             id: title
-            text: model.display_name || model.id
-            color:
-                hovered ?
-                utils.nameColor(
-                    model.display_name || model.id.substring(1),
-                ) :
-                theme.mainPane.listView.account.name
 
             TitleLabel {
                 text: model.display_name || model.id
