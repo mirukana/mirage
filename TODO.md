@@ -1,5 +1,7 @@
 # TODO
 
+- event menu key right click
+- composer menu?
 - fix members not synced bug
 - fix local unread counters order
 - fix highlight when logging in to new account

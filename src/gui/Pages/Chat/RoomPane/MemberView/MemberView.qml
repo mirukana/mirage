@@ -84,10 +84,19 @@ HColumnLayout {
                     py.callCoro("set_substring_filter", [modelSyncId, text])
                 }
 
+                onFocusChanged: if (
+                    focus &&
+                    stackView.depth === 1 &&
+                    stackView.currentItem.currentIndex === -1
+                ) stackView.currentItem.currentIndex = 0
+
                 Keys.forwardTo: [stackView.currentItem]
                 Keys.priority: Keys.AfterItem
 
                 Keys.onEscapePressed: {
+                    if (stackView.depth === 1)
+                        stackView.currentItem.currentIndex = -1
+
                     roomPane.toggleFocus()
                     if (window.settings.clearMemberFilterOnEscape) text = ""
                 }
