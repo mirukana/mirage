@@ -1,6 +1,5 @@
 # TODO
 
-- presence keybinds
 - retry if media not found
 - fix members not synced bug
 - fix local unread counters order

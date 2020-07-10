@@ -199,6 +199,11 @@ HTile {
         setCollapse(! collapsed)
     }
 
+    function togglePresence(presence) {
+        if (model.presence === presence) presence = "online"
+        py.callClientCoro(model.id, "set_presence", [presence])
+    }
+
 
     HShortcut {
         enabled: enableKeybinds
@@ -216,5 +221,23 @@ HTile {
         enabled: enableKeybinds
         sequences: window.settings.keys.openPresenceMenu
         onActivated: account.doRightClick(false)
+    }
+
+    HShortcut {
+        enabled: enableKeybinds
+        sequences: window.settings.keys.togglePresenceUnavailable
+        onActivated: account.togglePresence("unavailable")
+    }
+
+    HShortcut {
+        enabled: enableKeybinds
+        sequences: window.settings.keys.togglePresenceInvisible
+        onActivated: account.togglePresence("invisible")
+    }
+
+    HShortcut {
+        enabled: enableKeybinds
+        sequences: window.settings.keys.togglePresenceOffline
+        onActivated: account.togglePresence("offline")
     }
 }

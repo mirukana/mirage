@@ -299,7 +299,11 @@ class UISettings(JSONDataFile):
                 "toggleFocusMainPane":   ["Alt+F"],
                 "clearRoomFilter":       ["Alt+Shift+F"],
                 "toggleCollapseAccount": ["Alt+O"],
-                "openPresenceMenu":      ["Alt+P"],
+
+                "openPresenceMenu":          ["Alt+P"],
+                "togglePresenceUnavailable": ["Alt+Ctrl+U", "Alt+Ctrl+A"],
+                "togglePresenceInvisible":   ["Alt+Ctrl+I"],
+                "togglePresenceOffline":     ["Alt+Ctrl+O"],
 
                 "goToLastPage":              ["Ctrl+Tab"],
                 "goToPreviousAccount":       ["Alt+Shift+N"],
