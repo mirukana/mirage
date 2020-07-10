@@ -29,8 +29,7 @@ HTile {
             mxc: model.avatar_url
             radius: theme.mainPane.listView.account.avatarRadius
             compact: account.compact
-
-            presence: model.presence_support ? model.presence : ""
+            presence: model.presence
 
             Layout.alignment: Qt.AlignCenter
 
@@ -163,7 +162,7 @@ HTile {
     }
 
     contextMenu: AccountContextMenu {
-        userId:    model.id
+        userId: model.id
         statusMsg: model.status_msg
         presence:
             model.presence_support || model.presence === "offline" ?
