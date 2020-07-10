@@ -39,7 +39,11 @@ PasswordPopup {
         qsTr("Enter your account's password to continue:")
 
 
-    validateButton.text: qsTr("Sign out")
+    validateButton.text:
+        deviceIds.length > 1 ?
+        qsTr("Sign out %1 devices").arg(deviceIds.length) :
+        qsTr("Sign out %1 device").arg(deviceIds.length)
+
     validateButton.icon.name: "sign-out"
 
     onClosed: {
