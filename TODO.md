@@ -1,5 +1,6 @@
 # TODO
 
+- retry if media not found
 - fix members not synced bug
 - fix local unread counters order
 - warn about no E2E room shared if no devices

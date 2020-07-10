@@ -551,10 +551,6 @@ class MatrixClient(nio.AsyncClient):
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
         """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
 
-        presence = self.models["accounts"][self.user_id].presence
-        while presence == Presence.State.offline:
-            await asyncio.sleep(0.2)
-
         item_uuid = uuid4()
 
         try:
@@ -603,6 +599,12 @@ class MatrixClient(nio.AsyncClient):
 
         monitor.on_transferred   = on_transferred
         monitor.on_speed_changed = on_speed_changed
+
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
+            await asyncio.sleep(0.2)
 
         try:
             url, mime, crypt_dict = await self.upload(
