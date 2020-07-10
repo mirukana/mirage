@@ -51,7 +51,6 @@ Menu {
     onOpened: {
         window.visibleMenus[uuid] = this
         window.visibleMenusChanged()
-        menu.currentIndex = 0
     }
     onClosed: {
         if (focusOnClosed) focusOnClosed.forceActiveFocus()
