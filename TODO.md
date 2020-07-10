@@ -1,6 +1,6 @@
 # TODO
 
-- profile max avatar width
+- account can't see another's status message once it goes offline
 - retrieve last seen time for offline members on hover/in profile
 - auto-away after a configurable idle time 
 - status based on process detection

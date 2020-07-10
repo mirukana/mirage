@@ -55,6 +55,7 @@ HListView {
 
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
+            Layout.maximumWidth: 256 * theme.uiScale
             Layout.preferredHeight: width
             Layout.topMargin: theme.spacing
 
