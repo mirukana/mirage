@@ -115,7 +115,7 @@ HTile {
     contextMenu: HMenu {
         HMenuItemPopupSpawner {
             visible: joined
-            enabled: model.can_invite
+            enabled: model.can_invite && accountModel.presence !== "offline"
             icon.name: "room-send-invite"
             text: qsTr("Invite members")
 
@@ -142,6 +142,7 @@ HTile {
                 model.inviter_name, model.inviter_id
             ))
             label.textFormat: Text.StyledText
+            enabled: accountModel.presence !== "offline"
 
             onTriggered: py.callClientCoro(
                 model.for_account, "join", [model.id]
@@ -153,6 +154,7 @@ HTile {
             icon.name: invited ? "invite-decline" : "room-leave"
             icon.color: theme.colors.negativeBackground
             text: invited ? qsTr("Decline invite") : qsTr("Leave")
+            enabled: accountModel.presence !== "offline"
 
             popup: "Popups/LeaveRoomPopup.qml"
             properties: ({
@@ -166,6 +168,7 @@ HTile {
             icon.name: "room-forget"
             icon.color: theme.colors.negativeBackground
             text: qsTr("Forget")
+            enabled: accountModel.presence !== "offline"
 
             popup: "Popups/ForgetRoomPopup.qml"
             autoDestruct: false
