@@ -34,35 +34,35 @@ class TypeSpecifier(AutoStrEnum):
 
 @dataclass
 class Presence:
-    """Represents a single matrix user presence fields.
+    """Represents a single matrix user's presence fields.
 
-    It is stored in `Backend.presences`, indexed by user ID. It must only be
-    instiated when receiving a `PresenceEvent` or registering an `Account`
-    model.
+    These objects are stored in `Backend.presences`, indexed by user ID.
+    It must only be instanced when receiving a `PresenceEvent` or
+    registering an `Account` model item.
 
     When receiving a `PresenceEvent`, we get or create a `Presence` object in
     `Backend.presences` for the targeted user. If the user is registered in any
-    room, add its `Member` object to `members`. And finally update every
+    room, add its `Member` model item to `members`. Finally, update every
     `Member` presence fields inside `members`.
 
     When a room member is registered, we try to find a `Presence` in
-    `Backend.presences` for that user ID. If found, add the member to
-    `members`.
+    `Backend.presences` for that user ID. If found, the `Member` item is added
+    to `members`.
 
     When an Account model is registered, we create a `Presence` in
-    `Backend.presences` for account ID wether the server supports or not
-    presence (we cannot really know at this point). And assign that `Account`
-    to `Account` field.
+    `Backend.presences` for the accountu's user ID whether the server supports
+    presence or not (we cannot know yet at this point),
+    and assign that `Account` to the `Presence.account` field.
 
-    Attributes:
+    Special attributes:
         members: A `{room_id: Member}` dict for storing room members related to
             this `Presence`. As each room has its own `Member`s objects, we
             have to keep track of their presence fields. `Member`s are indexed
             by room ID.
 
-        account: `Account` related to this `Presence` (if any). Should only be
+        account: `Account` related to this `Presence`, if any. Should be
             assigned when client starts (`MatrixClient._start()`) and
-            unassigned when client stops (`MatrixClient._start()`).
+            cleared when client stops (`MatrixClient._start()`).
     """
 
     class State(AutoStrEnum):
