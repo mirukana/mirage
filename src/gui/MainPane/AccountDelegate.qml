@@ -35,7 +35,7 @@ HTile {
 
             HLoader {
                 anchors.fill: parent
-                z: 9998
+                z: 100
                 opacity: model.connecting ? 1 : 0
                 active: opacity > 0
 
@@ -57,7 +57,7 @@ HTile {
                 id: totalMessageIndicator
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                z: 9999
+                z: 200
 
                 indicatorTheme:
                     theme.mainPane.accountBar.account.unreadIndicator

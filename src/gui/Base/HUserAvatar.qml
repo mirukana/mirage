@@ -59,7 +59,7 @@ HAvatar {
         anchors.bottomMargin: -diameter / 2
         anchors.rightMargin: -diameter / 2
         opacity: theme.controls.presence.opacity
-        z: 100
+        z: 300
 
         property int diameter:
             window.settings.compactMode ?
