@@ -522,8 +522,10 @@ class MatrixClient(nio.AsyncClient):
             mentions = mentions,
         )
 
-        presence = self.models["accounts"][self.user_id].presence
-        while presence == Presence.State.offline:
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
             await asyncio.sleep(0.2)
 
         await self._send_message(room_id, content, tx_id)
