@@ -24,7 +24,10 @@ Rectangle {
             icon.name: "add-account"
             toolTip.text: qsTr("Add another account")
             backgroundColor: theme.mainPane.bottomBar.settingsButtonBackground
-            onClicked: pageLoader.showPage("AddAccount/AddAccount")
+            onClicked: {
+                pageLoader.showPage("AddAccount/AddAccount")
+                roomList.startCorrectItemSearch()
+            }
 
             Layout.fillHeight: true
 
