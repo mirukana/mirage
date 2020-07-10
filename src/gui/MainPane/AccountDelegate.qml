@@ -211,4 +211,10 @@ HTile {
         sequences: window.settings.keys.toggleCollapseAccount
         onActivated: toggleCollapse()
     }
+
+    HShortcut {
+        enabled: enableKeybinds
+        sequences: window.settings.keys.openPresenceMenu
+        onActivated: account.doRightClick(false)
+    }
 }

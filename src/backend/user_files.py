@@ -298,7 +298,8 @@ class UISettings(JSONDataFile):
                 "addNewChat":            ["Alt+C"],
                 "toggleFocusMainPane":   ["Alt+F"],
                 "clearRoomFilter":       ["Alt+Shift+F"],
-                "toggleCollapseAccount": [ "Alt+O"],
+                "toggleCollapseAccount": ["Alt+O"],
+                "openPresenceMenu":      ["Alt+P"],
 
                 "goToLastPage":              ["Ctrl+Tab"],
                 "goToPreviousAccount":       ["Alt+Shift+N"],
