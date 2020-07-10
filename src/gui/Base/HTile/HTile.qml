@@ -11,6 +11,7 @@ HButton {
     Keys.onEnterPressed: leftClicked()
     Keys.onReturnPressed: leftClicked()
     Keys.onSpacePressed: leftClicked()
+    Keys.onMenuPressed: doRightClick(false)
 
 
     signal leftClicked()
@@ -21,8 +22,20 @@ HButton {
     property bool compact: window.settings.compactMode
     property real contentOpacity: 1
 
-    property alias contextMenu: contextMenuLoader.sourceComponent
-    readonly property alias contextMenuLoader: contextMenuLoader
+    property Component contextMenu: null
+
+
+    function openMenu(atCursor=true) {
+        if (! contextMenu) return
+        const menu = contextMenu.createObject(tile)
+        menu.closed.connect(() => menu.destroy())
+        atCursor ? menu.popup() : menu.popup(tile.width / 2, tile.height / 2)
+    }
+
+    function doRightClick(menuAtCursor=true) {
+        rightClicked()
+        openMenu(menuAtCursor)
+    }
 
 
     Behavior on topPadding { HNumberAnimation {} }
@@ -37,30 +50,11 @@ HButton {
     TapHandler {
         acceptedButtons: Qt.RightButton
         acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-        onTapped: {
-            rightClicked()
-            if (contextMenu) contextMenuLoader.active = true
-        }
+        onTapped: doRightClick()
     }
 
     TapHandler {
         acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
-        onLongPressed: {
-            rightClicked()
-            if (contextMenu) contextMenuLoader.active = true
-        }
-    }
-
-    Connections {
-        enabled: contextMenuLoader.status === Loader.Ready
-        target: contextMenuLoader.item
-
-        function onClosed() { contextMenuLoader.active = false }
-    }
-
-    HLoader {
-        id: contextMenuLoader
-        active: false
-        onLoaded: item.popup()
+        onLongPressed: doRightClick()
     }
 }

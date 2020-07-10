@@ -65,7 +65,7 @@ HTile {
             icon.name: "device-action-menu"
             toolTip.text: qsTr("Rename, verify or sign out")
             backgroundColor: "transparent"
-            onClicked: contextMenuLoader.active = true
+            onClicked: deviceTile.openMenu()
 
             Layout.fillHeight: true
         }
