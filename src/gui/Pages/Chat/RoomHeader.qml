@@ -135,8 +135,8 @@ Rectangle {
 
             icon.color:
                 chat.roomInfo.unverified_devices ?
-                theme.colors.warningText :
-                theme.colors.positiveText
+                theme.colors.middleBackground :
+                theme.colors.positiveBackground
 
             toolTip.text:
                 chat.roomInfo.unverified_devices ?
