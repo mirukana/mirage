@@ -13,7 +13,7 @@ HMenu {
     property string presence
     property string statusMsg
 
-    
+
     signal wentToAccountPage()
 
 
@@ -32,6 +32,8 @@ HMenu {
         height: visible ? implicitHeight : 0
         label.text: qsTr("Status message:")
         label.horizontalAlignment: Qt.AlignHCenter
+
+        Keys.onDownPressed: onlineButton.forceActiveFocus()
 
         HRowLayout {
             width: parent.width
@@ -70,10 +72,13 @@ HMenu {
     HMenuSeparator { }
 
     HMenuItem {
+        id: onlineButton
         icon.name: "presence-online"
         icon.color: theme.controls.presence.online
         text: qsTr("Online")
         onTriggered: setPresence("online")
+
+        Keys.onUpPressed: statusText.forceActiveFocus()
     }
 
     HMenuItem {
