@@ -15,9 +15,11 @@ import nio
 from ..utils import AutoStrEnum, auto
 from .model_item import ModelItem
 
-ZeroDate              = datetime.fromtimestamp(0)
 OptionalExceptionType = Union[Type[None], Type[Exception]]
-PresenceOrder: Dict[str, int] = {
+
+ZERO_DATE = datetime.fromtimestamp(0)
+
+PRESENCE_ORDER: Dict[str, int] = {
     "online":      0,
     "unavailable": 1,
     "offline":     2,
@@ -76,12 +78,12 @@ class Presence:
         echo_invisible   = auto()
 
         def __lt__(self, other: "Presence.State") -> bool:
-            return PresenceOrder[self.value] < PresenceOrder[other.value]
+            return PRESENCE_ORDER[self.value] < PRESENCE_ORDER[other.value]
 
 
     presence:         State    = State.offline
     currently_active: bool     = False
-    last_active_at:   datetime = ZeroDate
+    last_active_at:   datetime = ZERO_DATE
     status_msg:       str      = ""
 
     members: Dict[str, "Member"] = field(default_factory=dict)
@@ -131,7 +133,7 @@ class Account(ModelItem):
     display_name:     str      = ""
     avatar_url:       str      = ""
     max_upload_size:  int      = 0
-    profile_updated:  datetime = ZeroDate
+    profile_updated:  datetime = ZERO_DATE
     connecting:       bool     = False
     total_unread:     int      = 0
     total_highlights: int      = 0
@@ -143,7 +145,7 @@ class Account(ModelItem):
     presence_support: bool           = False
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
-    last_active_at:   datetime       = ZeroDate
+    last_active_at:   datetime       = ZERO_DATE
     status_msg:       str            = ""
 
     def __lt__(self, other: "Account") -> bool:
@@ -187,7 +189,7 @@ class Room(ModelItem):
     can_set_join_rules:   bool = False
     can_set_guest_access: bool = False
 
-    last_event_date: datetime = ZeroDate
+    last_event_date: datetime = ZERO_DATE
 
     unreads:          int  = 0
     highlights:       int  = 0
@@ -273,14 +275,14 @@ class Member(ModelItem):
     typing:          bool     = False
     power_level:     int      = 0
     invited:         bool     = False
-    profile_updated: datetime = ZeroDate
+    profile_updated: datetime = ZERO_DATE
 
     last_read_event: str      = ""
-    last_read_at:    datetime = ZeroDate
+    last_read_at:    datetime = ZERO_DATE
 
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
-    last_active_at:   datetime       = ZeroDate
+    last_active_at:   datetime       = ZERO_DATE
     status_msg:       str            = ""
 
     def __lt__(self, other: "Member") -> bool:

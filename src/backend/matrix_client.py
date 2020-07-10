@@ -40,7 +40,7 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    Account, Event, Member, Presence, Room, Upload, UploadStatus, ZeroDate,
+    Account, Event, Member, Presence, Room, Upload, UploadStatus, ZERO_DATE,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -1397,7 +1397,7 @@ class MatrixClient(nio.AsyncClient):
             model.clear()
 
         self.models[self.user_id, "rooms"][room_id].last_event_date = \
-            ZeroDate
+            ZERO_DATE
 
 
     async def devices_info(self) -> List[Dict[str, Any]]:
@@ -1431,7 +1431,7 @@ class MatrixClient(nio.AsyncClient):
                 "id":                device.id,
                 "display_name":      device.display_name or "",
                 "last_seen_ip":      (device.last_seen_ip or "").strip(" -"),
-                "last_seen_date":    device.last_seen_date or ZeroDate,
+                "last_seen_date":    device.last_seen_date or ZERO_DATE,
                 "last_seen_country": "",
                 "type":              get_type(device.id),
                 "ed25519_key":       get_ed25519(device.id),
