@@ -55,6 +55,10 @@ Rectangle {
                 if (window.settings.clearRoomFilterOnEnter) text = ""
             }
 
+            Keys.onMenuPressed:
+                if (roomList.currentItem)
+                    roomList.currentItem.doRightClick(false)
+
             Keys.onEscapePressed: {
                 mainPane.toggleFocus()
                 if (window.settings.clearRoomFilterOnEscape) text = ""

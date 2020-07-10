@@ -43,6 +43,9 @@ HColumnLayout {
                 currentItem.leftClicked()
                 currentItem.clicked()
             }
+
+            Keys.onMenuPressed:
+                if (currentItem) currentItem.doRightClick(false)
         }
 
         Layout.fillWidth: true
