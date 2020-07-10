@@ -68,6 +68,7 @@ HMenu {
     HMenuItem {
         icon.name: "select-all-text"
         text: qsTr("Select all")
+        enabled: control.length > 0
         onTriggered: control.selectAll()
     }
 }
