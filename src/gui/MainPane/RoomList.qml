@@ -79,7 +79,8 @@ HListView {
     property string filter: ""
 
     readonly property bool currentShouldBeAccount:
-        window.uiState.page === "Pages/AccountSettings/AccountSettings.qml"
+        window.uiState.page === "Pages/AccountSettings/AccountSettings.qml" ||
+        window.uiState.page === "Pages/AddChat/AddChat.qml"
     readonly property bool currentShouldBeRoom:
         window.uiState.page === "Pages/Chat/Chat.qml"
     readonly property string wantedUserId:
