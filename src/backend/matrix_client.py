@@ -424,6 +424,15 @@ class MatrixClient(nio.AsyncClient):
         return (await self.content_repository_config()).upload_size
 
 
+    async def pause_while_offline(self) -> None:
+        """Block until our account is online."""
+        while (
+            self.models["accounts"][self.user_id].presence ==
+            Presence.State.offline
+        ):
+            await asyncio.sleep(0.2)
+
+
     async def can_kick(self, room_id: str, target_user_id: str) -> bool:
         """Return whether we can kick a certain user in a room."""
 
@@ -522,12 +531,7 @@ class MatrixClient(nio.AsyncClient):
             mentions = mentions,
         )
 
-        while (
-            self.models["accounts"][self.user_id].presence ==
-            Presence.State.offline
-        ):
-            await asyncio.sleep(0.2)
-
+        await self.pause_while_offline()
         await self._send_message(room_id, content, tx_id)
 
 
@@ -602,11 +606,7 @@ class MatrixClient(nio.AsyncClient):
         monitor.on_transferred   = on_transferred
         monitor.on_speed_changed = on_speed_changed
 
-        while (
-            self.models["accounts"][self.user_id].presence ==
-            Presence.State.offline
-        ):
-            await asyncio.sleep(0.2)
+        await self.pause_while_offline()
 
         try:
             url, mime, crypt_dict = await self.upload(
@@ -1190,12 +1190,7 @@ class MatrixClient(nio.AsyncClient):
 
                 event.event_type = nio.RedactedEvent
 
-        while (
-            self.models["accounts"][self.user_id].presence ==
-            Presence.State.offline
-        ):
-            await asyncio.sleep(0.2)
-
+        await self.pause_while_offline()
         return await asyncio.gather(*tasks)
 
 
