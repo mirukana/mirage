@@ -148,6 +148,7 @@ HListView {
             wrapMode: HLabel.Wrap
             text: member.status_msg.trim()
             visible: text !== ""
+            horizontalAlignment: lineCount > 1 ? Qt.AlignLeft : Qt.AlignHCenter
 
             Layout.fillWidth: true
             Layout.bottomMargin: theme.spacing
