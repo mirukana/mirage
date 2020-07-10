@@ -337,6 +337,9 @@ class UISettings(JSONDataFile):
                 "forgetRoom":                  ["Alt+Shift+Escape"],
 
                 "toggleFocusRoomPane": ["Alt+R"],
+
+                "refreshDevices":             ["Alt+R", "F5"],
+                "signOutCheckedOrAllDevices": ["Alt+S", "Delete"],
             },
         }
 

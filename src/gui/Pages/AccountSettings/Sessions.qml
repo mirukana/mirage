@@ -39,6 +39,8 @@ HColumnPage {
 
             loadFuture                   = null
             deviceList.sectionItemCounts = getSectionItemCounts()
+
+            if (! deviceList.currentItem) deviceList.currentIndex = 0
         })
     }
 
@@ -97,12 +99,14 @@ HColumnPage {
 
     footer: ButtonLayout {
         OtherButton {
+            id: refreshButton
             text: qsTr("Refresh")
             icon.name: "device-refresh-list"
             onClicked: page.loadDevices()
         }
 
         OtherButton {
+            id: signOutCheckedButton
             enabled: deviceList.model.count > 0
             text:
                 deviceList.selectedCount === 0 ?
@@ -117,6 +121,8 @@ HColumnPage {
                 page.deleteDevices(...utils.range(1, deviceList.count - 1))
         }
     }
+
+    Keys.forwardTo: [deviceList]
 
 
     HListView {
@@ -148,6 +154,22 @@ HColumnPage {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        Keys.onEscapePressed: uncheckAll()
+        Keys.onSpacePressed: if (currentItem) toggleCheck(currentIndex)
+        Keys.onEnterPressed: if (currentItem) currentItem.openMenu(false)
+        Keys.onReturnPressed: Keys.onEnterPressed(event)
+        Keys.onMenuPressed: Keys.onEnterPressed(event)
+
+        HShortcut {
+            sequences: window.settings.keys.refreshDevices
+            onActivated: refreshButton.clicked()
+        }
+
+        HShortcut {
+            sequences: window.settings.keys.signOutCheckedOrAllDevices
+            onActivated: signOutCheckedButton.clicked()
+        }
 
         FlickShortcuts {
             flickable: deviceList

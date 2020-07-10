@@ -1,6 +1,5 @@
 # TODO
 
-- composer menu?
 - fix members not synced bug
 - fix local unread counters order
 - fix highlight when logging in to new account
@@ -57,7 +56,6 @@
 
 - Show scrollbars for a few seconds if there's content to scroll on when 
   opening a page or popup
-- Device list keyboard navigation
 - Device IP geolocation
 - Can rooms but left with a reason?
 
