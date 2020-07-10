@@ -260,10 +260,10 @@ class MatrixClient(nio.AsyncClient):
         )
 
         # TODO: set presence on login
-        self._presence     = "online"
-        account.presence   = Presence.State.online
-        account.connecting = True
-        self.start_task    = asyncio.ensure_future(self._start())
+        self._presence: str = "online"
+        account.presence    = Presence.State.online
+        account.connecting  = True
+        self.start_task     = asyncio.ensure_future(self._start())
 
 
     async def resume(
