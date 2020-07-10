@@ -1,8 +1,9 @@
 # TODO
 
+- fix members not synced bug
+- fix local unread counters order
 - fix highlight when logging in to new account
 - warn about no E2E room shared if no devices
-- Make HTile enter key trigger leftClicked()
 
 ## Refactoring
 

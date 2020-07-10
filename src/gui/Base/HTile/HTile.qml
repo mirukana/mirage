@@ -8,6 +8,10 @@ HButton {
     topPadding: padded ? spacing / (compact ? 4 : 2) : 0
     bottomPadding: topPadding
 
+    Keys.onEnterPressed: leftClicked()
+    Keys.onReturnPressed: leftClicked()
+    Keys.onSpacePressed: leftClicked()
+
 
     signal leftClicked()
     signal rightClicked()
