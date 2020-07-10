@@ -120,7 +120,9 @@ HColumnLayout {
                 icon.name: "room-send-invite"
                 backgroundColor:
                     theme.chat.roomPane.bottomBar.inviteButton.background
-                enabled: chat.roomInfo.can_invite
+                enabled:
+                    chat.userInfo.presence !== "offline" &&
+                    chat.roomInfo.can_invite
 
                 toolTip.text:
                     enabled ?
@@ -142,7 +144,8 @@ HColumnLayout {
 
                 HShortcut {
                     sequences: window.settings.keys.inviteToRoom
-                    onActivated: inviteButton.clicked()
+                    onActivated:
+                        if (inviteButton.enabled) inviteButton.clicked()
                 }
             }
         }
