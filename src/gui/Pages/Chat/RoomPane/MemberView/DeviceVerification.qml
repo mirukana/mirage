@@ -67,10 +67,6 @@ HFlickableColumnPage {
         CancelButton {
             id: cancelButton
             onClicked: page.close()
-            Component.onCompleted: {
-                page.previouslyFocused = window.activeFocusItem
-                forceActiveFocus()
-            }
         }
     }
 
@@ -131,6 +127,11 @@ HFlickableColumnPage {
             formatInfo(qsTr("Session ID: "), page.deviceId) +
             formatInfo(qsTr("Session key: "), "<b>"+page.ed25519Key+"</b>")
         )
+
+        Component.onCompleted: {
+            page.previouslyFocused = window.activeFocusItem
+            forceActiveFocus()
+        }
 
         Layout.fillWidth: true
     }
