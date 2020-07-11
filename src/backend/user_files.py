@@ -210,9 +210,14 @@ class Accounts(JSONDataFile):
 
         saved = await self.read()
 
-        saved[user_id]["enabled"]  = enabled  or saved[user_id]["enabled"]
-        saved[user_id]["presence"] = presence or saved[user_id]["presence"]
-        saved[user_id]["order"]    = order    or saved[user_id]["order"]
+        if enabled is not None:
+            saved[user_id]["enabled"] = enabled
+
+        if presence is not None:
+            saved[user_id]["presence"] = presence
+
+        if order is not None:
+            saved[user_id]["order"] = order
 
         await self.write({**saved})
 

@@ -1,11 +1,11 @@
 # TODO
 
+- save and restore status in accounts.json
 - mark accounts as offline when closing mirage
 - document new x11 dependnecy (auto-idle)
 - auto-idle for Windows and OSX 
 - open context menus centered on touch screens 
 - retrieve last seen time for offline members on hover/in profile
-- auto-away after a configurable idle time 
 - status based on process detection
 - retry if media not found
 - fix members not synced bug
