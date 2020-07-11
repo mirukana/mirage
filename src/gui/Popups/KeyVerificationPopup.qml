@@ -70,25 +70,24 @@ HFlickableColumnPopup {
         text: qsTr("Do these info match on your other session?")
     }
 
-    HSelectableLabel {
+    HTextArea {
         function formatInfo(info, value) {
             return (
-                `<li style="line-height: 110%">` +
+                `<p style="line-height: 115%">` +
                 info +
                 `<span style="font-family: ${theme.fontFamily.mono}">` +
-                value +
-                `</span></li><br style="line-height: 25%">`
+                "&nbsp;" + value +
+                `</span></p>`
             )
         }
 
-        wrapMode: Text.Wrap
+        readOnly: true
+        wrapMode: HSelectableLabel.Wrap
         textFormat: Qt.RichText
         text: (
-            "<ul>" +
-            formatInfo(qsTr("Session name: "), popup.deviceName) +
-            formatInfo(qsTr("Session ID: "), popup.deviceId) +
-            formatInfo(qsTr("Session key: "), "<b>"+popup.ed25519Key+"</b>") +
-            "</ul>"
+            formatInfo(qsTr("Session name:"), popup.deviceName) +
+            formatInfo(qsTr("Session ID:"), popup.deviceId) +
+            formatInfo(qsTr("Session key:"), "<b>"+ popup.ed25519Key+"</b>")
         )
 
         Layout.fillWidth: true
