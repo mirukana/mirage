@@ -28,6 +28,8 @@ Timer {
         for (let i = 0; i < accounts.count; i++) {
             const account = accounts.get(i)
 
+            if (! account.presence_support) continue
+
             if (beUnavailable && account.presence === "online") {
                 setPresence(account.id, "unavailable")
                 accountsSet.add(account.id)
