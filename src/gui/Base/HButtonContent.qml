@@ -26,6 +26,8 @@ HRowLayout {
 
         Layout.preferredWidth:
             button.loading ? busyIndicatorLoader.width : icon.width
+        Layout.preferredHeight:
+            button.loading ? busyIndicatorLoader.height : icon.height
 
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignCenter
