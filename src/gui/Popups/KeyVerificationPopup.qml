@@ -66,8 +66,13 @@ HFlickableColumnPopup {
         }
     }
 
+    onOpened: infoArea.forceActiveFocus()
+
     SummaryLabel {
-        text: qsTr("Do these info match on your other session?")
+        text:
+            deviceIsCurrent ?
+            qsTr("Your session's info:") :
+            qsTr("Do these info match on your other session?")
     }
 
     HTextArea {
@@ -81,6 +86,7 @@ HFlickableColumnPopup {
             )
         }
 
+        id: infoArea
         readOnly: true
         wrapMode: HSelectableLabel.Wrap
         textFormat: Qt.RichText
@@ -97,10 +103,12 @@ HFlickableColumnPopup {
         text:
             deviceIsCurrent ?
             qsTr(
-                "Compare with the info in the account settings of the " +
-                "session that wants to verify this one, and " +
-                "indicate to that other session whether they match. " +
-                "If they differ, your account's security may be compromised."
+                "To be verified by one of your other session, compare these " +
+                "info with the ones shown on that session.\n\n" +
+
+                "To be verified by another user, send them these info. " +
+                "If you already know them, use a trusted contact method, " +
+                "such as email or a phone call."
             ) :
             qsTr(
                 "Compare with the info in your other session's account " +
@@ -108,6 +116,4 @@ HFlickableColumnPopup {
                 "If they differ, your account's security may be compromised."
             )
     }
-
-    onOpened: cancelButton.forceActiveFocus()
 }
