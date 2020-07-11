@@ -206,9 +206,12 @@ class Accounts(JSONDataFile):
         presence: Optional[str] = None,
         order:    Optional[int] = None,
     ) -> None:
-        """Update existing account in the config and write to disk."""
+        """Update an account if found in the config file and write to disk."""
 
         saved = await self.read()
+
+        if user_id not in saved:
+            return
 
         if enabled is not None:
             saved[user_id]["enabled"] = enabled
