@@ -1730,8 +1730,11 @@ class MatrixClient(nio.AsyncClient):
         self.models[self.user_id, room.room_id, "members"].pop(user_id, None)
         HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
-        self.models[self.user_id, "rooms"][room.room_id].unverified_devices = \
-            self.room_contains_unverified(room.room_id)
+        room_item = self.models[self.user_id, "rooms"].get(room.room_id)
+
+        if room_item:
+            room_item.unverified_devices = \
+                self.room_contains_unverified(room.room_id)
 
 
     async def get_event_profiles(self, room_id: str, event_id: str) -> None:
