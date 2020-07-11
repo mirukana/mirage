@@ -143,6 +143,7 @@ class Account(ModelItem):
     # For some reason, Account cannot inherit Presence, because QML keeps
     # complaining type error on unknown file
     presence_support: bool           = False
+    save_presence:    bool           = True
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
     last_active_at:   datetime       = ZERO_DATE

@@ -1290,7 +1290,10 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def set_presence(
-        self, presence: str, status_msg: Optional[str] = None,
+        self,
+        presence:   str,
+        status_msg: Optional[str] = None,
+        save:       bool          = True,
     ) -> None:
         """Set presence state for this account."""
 
@@ -1326,9 +1329,13 @@ class MatrixClient(nio.AsyncClient):
         if not account.presence_support:
             account.presence = Presence.State(presence)
 
-        await self.backend.saved_accounts.update(
-            self.user_id, presence=presence,
-        )
+        if save:
+            account.save_presence = True
+            await self.backend.saved_accounts.update(
+                self.user_id, presence=presence,
+            )
+        else:
+            account.save_presence = False
 
         await super().set_presence(
             "offline" if presence == "invisible" else presence,

@@ -33,6 +33,7 @@ Item {
     readonly property alias pageLoader: pageLoader
     readonly property alias pressAnimation: pressAnimation
     readonly property alias fontMetrics: fontMetrics
+    readonly property alias idleManager: idleManager
 
 
     function reloadSettings() {
@@ -94,6 +95,10 @@ Item {
         id: debugConsole
         target: mainUI
         visible: false
+    }
+
+    IdleManager {
+        id: idleManager
     }
 
     LinearGradient {

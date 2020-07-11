@@ -16,6 +16,10 @@ HEADERS   += src/utils.h src/clipboard.h submodules/hsluv-c/src/hsluv.h
 SOURCES   += src/main.cpp submodules/hsluv-c/src/hsluv.c
 TARGET     = mirage
 
+unix:!macx {
+    LIBS += -lX11 -lXss
+}
+
 
 # Custom CONFIG options
 

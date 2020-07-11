@@ -248,6 +248,7 @@ class UISettings(JSONDataFile):
             "alertOnMentionForMsec": -1,
             "alertOnMessageForMsec": 0,
             "alwaysCenterRoomHeader": False,
+            "beUnavailableAfterSecondsIdle": 60 * 10,
             "compactMode": False,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,

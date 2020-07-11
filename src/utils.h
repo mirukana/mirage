@@ -11,12 +11,15 @@
 #include <QObject>
 #include <QUuid>
 
+#ifdef Q_OS_UNIX
+#include <X11/extensions/scrnsaver.h>
+#endif
+
 #include "../submodules/hsluv-c/src/hsluv.h"
 
 
 class Utils : public QObject {
-
-Q_OBJECT
+    Q_OBJECT
 
 public:
     Utils() {};
@@ -42,6 +45,29 @@ public slots:
             qMax(0.0, qMin(1.0, blue)),
             qMax(0.0, qMin(1.0, alpha))
         );
+    }
+
+    int idleMilliseconds() const {
+        #ifdef Q_OS_DARWIN
+        return -1;
+
+        #elif defined(Q_OS_UNIX)
+        Display *display = XOpenDisplay(NULL);
+        if (! display) return -1;
+
+        XScreenSaverInfo *info = XScreenSaverAllocInfo();
+        XScreenSaverQueryInfo(display, DefaultRootWindow(display), info);
+        const int idle = info->idle;
+
+        XCloseDisplay(display);
+        return idle;
+
+        #elif defined(Q_OS_WINDOWS)
+        return -1;
+
+        #else
+        return -1;
+        #endif
     }
 
 private:

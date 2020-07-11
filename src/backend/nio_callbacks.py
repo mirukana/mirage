@@ -632,12 +632,13 @@ class NioCallbacks:
             account.presence_support = True
 
             # Save the presence for the next resume
-            await self.client.backend.saved_accounts.update(
-                user_id  = ev.user_id,
-                presence = presence.presence.value if (
-                    account.presence != Presence.State.echo_invisible
-                ) else "invisible",
-            )
+            if account.save_presence:
+                await self.client.backend.saved_accounts.update(
+                    user_id  = ev.user_id,
+                    presence = presence.presence.value if (
+                        account.presence != Presence.State.echo_invisible
+                    ) else "invisible",
+                )
 
             presence.update_account()
 
