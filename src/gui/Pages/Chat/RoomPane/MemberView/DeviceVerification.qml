@@ -140,8 +140,8 @@ HFlickableColumnPage {
         wrapMode: HLabel.Wrap
         text:
             qsTr(
-                "If you already know this user, exchange these info by using" +
-                " a trusted contact method, such as email or a phone call."
+                "If you already know this user, compare the info you see us" +
+                "ing a trusted contact method, such as email or a phone call."
             )
 
         Layout.fillWidth: true
