@@ -5,19 +5,19 @@ import QtQuick.Layouts 1.12
 import ".."
 
 HGridLayout {
-    readonly property int summedImplicitWidth: {
-        const widths = []
+    readonly property real summedImplicitWidth: {
+        let sum = 0
 
         for (let i = 0; i < visibleChildren.length; i++) {
             const item = visibleChildren[i]
-            if (item) widths.push(item.width > 0 ? item.implicitWidth : 0)
+            if (item) sum += item.width > 0 ? item.implicitWidth : 0
         }
 
-        return utils.sum(widths)
+        return sum
     }
 
     flow:
         width >= summedImplicitWidth ?
-        GridLayout.LeftToRight :
-        GridLayout.TopToBottom
+        HGridLayout.LeftToRight :
+        HGridLayout.TopToBottom
 }
