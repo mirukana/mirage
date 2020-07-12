@@ -79,7 +79,7 @@ Rectangle {
             HoverHandler { id: nameHover }
         }
 
-        HRichLabel {
+        HLabel {
             id: topicLabel
             text: chat.roomInfo.topic
             textFormat: Text.StyledText
@@ -103,6 +103,13 @@ Rectangle {
             Layout.fillHeight: true
 
             HoverHandler { id: topicHover }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape:
+                    parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
         }
 
         HToolTip {

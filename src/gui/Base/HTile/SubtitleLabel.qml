@@ -4,7 +4,9 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import ".."
 
-HRichLabel {
+HLabel {
+    property HTile tile
+
     textFormat: Text.StyledText
     font.pixelSize: theme.fontSize.small
     verticalAlignment: Qt.AlignVCenter
@@ -16,9 +18,12 @@ HRichLabel {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-
-    property HTile tile
-
-
     Behavior on Layout.maximumHeight { HNumberAnimation {} }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        cursorShape:
+            parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+    }
 }

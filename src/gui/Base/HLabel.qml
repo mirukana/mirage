@@ -13,4 +13,6 @@ Label {
     linkColor: theme.colors.link
 
     maximumLineCount: elide === Label.ElideNone ? Number.MAX_VALUE : 1
+
+    onLinkActivated: Qt.openUrlExternally(link)
 }

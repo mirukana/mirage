@@ -16,7 +16,6 @@ TextEdit {
     activeFocusOnPress: false
     focus: false
     selectByMouse: true
-
     onLinkActivated: if (enableLinkActivation) Qt.openUrlExternally(link)
 
 
