@@ -17,8 +17,7 @@
 ## Refactoring
 
 - General change/upload avatar component for account and room settings
-- Reorder QML object declarations,
-  conform to https://doc-snapshots.qt.io/qt5-dev/qml-codingconventions.html
+- Refactor EventList.qml
 
 ## Issues
 

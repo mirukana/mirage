@@ -150,54 +150,29 @@ HListView {
             color: theme.colors.halfDimText
 
             Layout.fillWidth: true
-            Layout.bottomMargin: theme.spacing
         }
 
-        // TODO
-        // HColumnLayout {
-        //     spacing: theme.spacing / 2
+        HColumnLayout {
+            spacing: theme.spacing / 2
 
-        //     HLabel {
-        //         text: qsTr("Power level:")
-        //         wrapMode: HLabel.Wrap
-        //         horizontalAlignment: Qt.AlignHCenter
+            Layout.preferredWidth: parent.width
+            Layout.bottomMargin: theme.spacing
 
-        //         Layout.fillWidth: true
-        //     }
+            HLabel {
+                text: qsTr("Power level:")
+                wrapMode: HLabel.Wrap
+                horizontalAlignment: Qt.AlignHCenter
 
-        //     HRowLayout {
-        //         spacing: theme.spacing
+                Layout.fillWidth: true
+            }
 
-        //         HSpacer {}
+            PowerLevelControl {
+                defaultLevel: member.power_level
+                rowSpacing: parent.spacing
 
-        //         Row {
-        //             HButton {
-        //                 text: qsTr("Default")
-        //                 checked: levelBox.value >= 0 && levelBox.value < 50
-        //                 onClicked: levelBox.value = 0
-        //             }
-        //             HButton {
-        //                 text: qsTr("Moderator")
-        //                 checked: levelBox.value >= 50 && levelBox.value < 100
-        //                 onClicked: levelBox.value = 50
-        //             }
-        //             HButton {
-        //                 text: qsTr("Admin")
-        //                 checked: levelBox.value === 100
-        //                 onClicked: levelBox.value = 100
-        //             }
-        //         }
-
-        //         HSpinBox {
-        //             id: levelBox
-        //             from: -999
-        //             to: 100
-        //             defaultValue: member.power_level
-        //         }
-
-        //         HSpacer {}
-        //     }
-        // }
+                Layout.preferredWidth: parent.width
+            }
+        }
     }
 
     Component.onCompleted: loadDevices()
