@@ -196,6 +196,8 @@ Rectangle {
         property string delegateWithSelectedText: ""
         property string selectedText: ""
 
+        property alias cursorShape: cursorShapeArea.cursorShape
+
         readonly property var redactableCheckedEvents:
             getSortedChecked().filter(ev => eventList.canRedact(ev))
 
@@ -360,6 +362,12 @@ Rectangle {
         // When an invited room becomes joined, we should now be able to
         // fetch past events.
         onInviterChanged: canLoad = true
+
+        MouseArea {
+            id: cursorShapeArea
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+        }
     }
 
     Timer {

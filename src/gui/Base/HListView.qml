@@ -6,7 +6,6 @@ import QtQuick.Controls 2.12
 ListView {
     id: listView
 
-    property alias cursorShape: cursorShapeArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
     property var checked: ({})
@@ -129,12 +128,6 @@ ListView {
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
-
-    MouseArea {
-        id: cursorShapeArea
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-    }
 
     HKineticScrollingDisabler {
         width: enabled ? parent.width : 0
