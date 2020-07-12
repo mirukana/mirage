@@ -21,6 +21,7 @@ Button {
     property bool circle: false
     property bool padded: true
     property bool enableRadius: false
+    property bool uncheckable: true
 
     property HToolTip toolTip: HToolTip {
         id: toolTip
@@ -70,5 +71,10 @@ Button {
     Binding on enabled {
         when: disableWhileLoading && button.loading
         value: false
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        enabled: ! parent.uncheckable && parent.checked
     }
 }
