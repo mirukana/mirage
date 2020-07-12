@@ -191,6 +191,9 @@ class MatrixClient(nio.AsyncClient):
         self.loaded_once_rooms:    Set[str]       = set()  # {room_id}
         self.cleared_events_rooms: Set[str]       = set()  # {room_id}
 
+        # {room_id: <m.room.power_levels event content dict>}
+        self.power_levels_content: Dict[str, Dict[str, Any]] = {}
+
         self.nio_callbacks = NioCallbacks(self)
 
 
@@ -1118,6 +1121,20 @@ class MatrixClient(nio.AsyncClient):
         await asyncio.gather(*[
             self.room_put_state_builder(room_id, b) for b in builders
         ])
+
+
+    async def room_set_member_power(
+        self, room_id: str, user_id: str, level: int,
+    ) -> None:
+        """Set a room member's power level."""
+
+        while room_id not in self.power_levels_content:
+            await asyncio.sleep(0.2)
+
+        content = deepcopy(self.power_levels_content[room_id])
+        content.setdefault("users", {})[user_id] = level
+
+        await self.room_put_state(room_id, "m.room.power_levels", content)
 
 
     async def room_typing(

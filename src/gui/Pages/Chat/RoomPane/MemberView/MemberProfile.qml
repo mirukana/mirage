@@ -4,21 +4,27 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../../.."
 import "../../../../Base"
+import "../../../../Base/Buttons"
+import "../../../../PythonBridge"
 
 HListView {
-    id: profile
+    id: root
 
     property string userId
     property string roomId
     property QtObject member  // RoomMember model item
     property HStackView stackView
 
+    property bool powerLevelFieldFocused: false
+
+    property Future setPowerFuture: null
+
     function loadDevices() {
          py.callClientCoro(userId, "member_devices", [member.id], devices => {
-            profile.model.clear()
+            root.model.clear()
 
             for (const device of devices)
-                profile.model.append(device)
+                root.model.append(device)
         })
     }
 
@@ -27,23 +33,23 @@ HListView {
     bottomMargin: theme.spacing
     model: ListModel {}
     delegate: MemberDeviceDelegate {
-        width: profile.width
-        userId: profile.userId
+        width: root.width
+        userId: root.userId
         deviceOwner: member.id
         deviceOwnerDisplayName: member.display_name
-        stackView: profile.stackView
+        stackView: root.stackView
 
-        onTrustSet: trust => profile.loadDevices()
+        onTrustSet: trust => root.loadDevices()
     }
 
     section.property: "type"
     section.delegate: MemberDeviceSection {
-        width: profile.width
+        width: root.width
     }
 
     header: HColumnLayout {
         x: theme.spacing
-        width: profile.width - x * 2
+        width: root.width - x * 2
         spacing: theme.spacing * 1.5
 
         HUserAvatar {
@@ -64,7 +70,7 @@ HListView {
                 circle: true
                 icon.name: "close-view"
                 iconItem.small: true
-                onClicked: profile.stackView.pop()
+                onClicked: root.stackView.pop()
             }
         }
 
@@ -153,25 +159,78 @@ HListView {
         }
 
         HLabeledItem {
-            id: powerLevelItem
+            id: powerLevel
             label.text: qsTr("Power level:")
             label.horizontalAlignment: Qt.AlignHCenter
 
             Layout.preferredWidth: parent.width
-            Layout.bottomMargin: theme.spacing
 
             PowerLevelControl {
                 width: parent.width
                 defaultLevel: member.power_level
-                rowSpacing: powerLevelItem.spacing
+                rowSpacing: powerLevel.spacing
+                onAccepted: applyButton.clicked()
+                onFieldFocusedChanged:
+                    root.powerLevelFieldFocused = fieldFocused
             }
+        }
+
+        AutoDirectionLayout {
+            visible: scale > 0
+            id: buttonsLayout
+            scale: powerLevel.item.changed ? 1 : 0
+            rowSpacing: powerLevel.spacing
+
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: implicitHeight * scale
+            Layout.topMargin: -theme.spacing
+
+            Behavior on scale { HNumberAnimation {} }
+
+            HSpacer {}
+
+            ApplyButton {
+                id: applyButton
+                loading: setPowerFuture !== null
+                onClicked: {
+                    setPowerFuture = py.callClientCoro(
+                        userId,
+                        "room_set_member_power",
+                        [roomId, member.id, powerLevel.item.level],
+                        () => { setPowerFuture = null }
+                    )
+                }
+
+                Layout.fillWidth: false
+                Layout.alignment: Qt.AlignCenter
+            }
+
+            CancelButton {
+                onClicked: {
+                    setPowerFuture.cancel()
+                    setPowerFuture = null
+                    powerLevel.item.reset()
+                }
+
+                Layout.fillWidth: false
+                Layout.alignment: Qt.AlignCenter
+            }
+
+            HSpacer {}
+        }
+
+        Item {
+            // This item is just to have some spacing at the bottom of header
+            visible: root.count > 0
+            Layout.fillWidth: true
         }
     }
 
     Component.onCompleted: loadDevices()
+    Component.onDestruction: if (setPowerFuture) setPowerFuture.cancel()
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)
-    Keys.onReturnPressed: {
+    Keys.onReturnPressed: if (! powerLevelFieldFocused && currentItem) {
         currentItem.leftClicked()
         currentItem.clicked()
     }
@@ -181,7 +240,7 @@ HListView {
         target: py.eventHandlers
 
         function onDeviceUpdateSignal(forAccount) {
-            if (forAccount === profile.userId) profile.loadDevices()
+            if (forAccount === root.userId) root.loadDevices()
         }
     }
 }

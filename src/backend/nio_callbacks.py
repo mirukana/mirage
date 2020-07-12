@@ -313,6 +313,8 @@ class NioCallbacks:
     async def onPowerLevelsEvent(
         self, room: nio.MatrixRoom, ev: nio.PowerLevelsEvent,
     ) -> None:
+        self.client.power_levels_content[room.room_id] = ev.source["content"]
+
         co = "%1 changed the room's permissions"  # TODO: improve
         await self.client.register_nio_event(room, ev, content=co)
 

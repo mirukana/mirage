@@ -10,6 +10,9 @@ AutoDirectionLayout {
 
     readonly property alias changed: field.changed
     readonly property int level: Math.min(100, parseInt(field.text || "0", 10))
+    readonly property alias fieldFocused: field.activeFocus
+
+    signal accepted()
 
     function reset() { field.reset() }
 
@@ -28,6 +31,7 @@ AutoDirectionLayout {
         maximumLength: control.level < 0 ? 16 : 3
         defaultText: String(control.defaultLevel)
 
+        onAccepted: control.accepted()
         onActiveFocusChanged:
             if (! activeFocus && parseInt(text || "0", 10) > 100)
                 text = 100
