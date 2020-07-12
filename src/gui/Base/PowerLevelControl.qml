@@ -6,8 +6,9 @@ import QtQuick.Layouts 1.12
 AutoDirectionLayout {
     id: control
 
-    property alias defaultLevel: field.defaultText
+    property int defaultLevel: 0
 
+    readonly property alias changed: field.changed
     readonly property int level: Math.min(100, parseInt(field.text || "0", 10))
 
     function reset() { field.reset() }
@@ -25,6 +26,7 @@ AutoDirectionLayout {
         validator: IntValidator { top: 100 }
         inputMethodHints: Qt.ImhFormattedNumbersOnly
         maximumLength: control.level < 0 ? 16 : 3
+        defaultText: String(control.defaultLevel)
 
         onActiveFocusChanged:
             if (! activeFocus && parseInt(text || "0", 10) > 100)
