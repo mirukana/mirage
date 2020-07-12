@@ -51,8 +51,8 @@ AutoDirectionLayout {
         HButton {
             height: parent.height
             icon.name: "user-power-default"
-            toolTip.text: qsTr("Default")
-            checked: control.level >= 0 && control.level < 50
+            toolTip.text: qsTr("Limited")
+            checked: control.level < 50
             uncheckable: false
             onClicked: field.text = 0
         }

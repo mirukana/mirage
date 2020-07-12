@@ -1,5 +1,9 @@
 # TODO
 
+- warn about setting level of someone to 100
+- gray out if no permission to change
+- improve event text
+
 - save and restore status in accounts.json
 - mark accounts as offline when closing mirage
 - document new x11 dependnecy (auto-idle)

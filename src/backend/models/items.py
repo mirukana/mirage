@@ -179,6 +179,7 @@ class Room(ModelItem):
     invite_required:    bool = True
     guests_allowed:     bool = True
 
+    default_power_level:  int  = 0
     can_invite:           bool = False
     can_kick:             bool = False
     can_redact_all:       bool = False
