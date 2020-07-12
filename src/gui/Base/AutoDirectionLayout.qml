@@ -9,7 +9,9 @@ HGridLayout {
 
         for (let i = 0; i < visibleChildren.length; i++) {
             const item = visibleChildren[i]
-            if (item) sum += item.width > 0 ? item.implicitWidth : 0
+
+            if (item)
+                sum += (item.width > 0 ? item.implicitWidth : 0) +columnSpacing
         }
 
         return sum
