@@ -5,7 +5,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 import "../../Dialogs"
 
 HFlickableColumnPage {
@@ -64,7 +64,7 @@ HFlickableColumnPage {
     }
 
 
-    footer: ButtonLayout {
+    footer: AutoDirectionLayout {
         ApplyButton {
             id: saveButton
 

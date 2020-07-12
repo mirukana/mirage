@@ -4,7 +4,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../Base/ButtonLayout"
+import "../Base/Buttons"
 
 HColumnPopup {
     id: popup
@@ -15,8 +15,8 @@ HColumnPopup {
     property string traceback: ""
 
 
-    page.footer: ButtonLayout {
-        ApplyButton {
+    page.footer: AutoDirectionLayout {
+        PositiveButton {
             text: qsTr("Report")
             icon.name: "report-error"
             enabled: false  // TODO

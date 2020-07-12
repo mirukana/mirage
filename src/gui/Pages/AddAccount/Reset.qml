@@ -3,13 +3,13 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 
 HFlickableColumnPage {
     function takeFocus() { resetButton.forceActiveFocus() }
 
 
-    footer: ButtonLayout {
+    footer: AutoDirectionLayout {
         ApplyButton {
             id: resetButton
             text: qsTr("Reset password from Riot")

@@ -4,7 +4,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../../Base"
-import "../../../Base/ButtonLayout"
+import "../../../Base/Buttons"
 
 HFlickableColumnPage {
     id: settingsView
@@ -63,7 +63,7 @@ HFlickableColumnPage {
         color: theme.chat.roomPane.roomSettings.background
     }
 
-    footer: ButtonLayout {
+    footer: AutoDirectionLayout {
         ApplyButton {
             enabled: anyChange
             loading: saveFuture !== null

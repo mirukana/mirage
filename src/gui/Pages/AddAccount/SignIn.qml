@@ -3,7 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 
 HFlickableColumnPage {
     id: page
@@ -77,7 +77,7 @@ HFlickableColumnPage {
     }
 
 
-    footer: ButtonLayout {
+    footer: AutoDirectionLayout {
         ApplyButton {
             enabled: page.canSignIn
             text: qsTr("Sign in")

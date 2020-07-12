@@ -2,7 +2,7 @@
 
 import QtQuick 2.12
 import "../Base"
-import "../Base/ButtonLayout"
+import "../Base/Buttons"
 import "../PythonBridge"
 
 PasswordPopup {

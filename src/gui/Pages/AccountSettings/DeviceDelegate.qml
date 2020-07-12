@@ -3,7 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 import "../../Base/HTile"
 
 HTile {
@@ -133,10 +133,10 @@ HTile {
             label.text: qsTr("Actions:")
             label.horizontalAlignment: Qt.AlignHCenter
 
-            ButtonLayout {
+            AutoDirectionLayout {
                 width: parent.width
 
-                ApplyButton {
+                PositiveButton {
                     enabled: model.type !== "no_keys"
                     icon.name: "device-verify"
                     text:
@@ -163,7 +163,7 @@ HTile {
                     }
                 }
 
-                CancelButton {
+                NegativeButton {
                     text: qsTr("Sign out")
                     icon.name: "device-delete"
                     onClicked: deviceTile.deleteRequest()

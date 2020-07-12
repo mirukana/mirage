@@ -3,7 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
-import "../Base/ButtonLayout"
+import "../Base/Buttons"
 
 HFlickableColumnPopup {
     id: popup
@@ -18,8 +18,8 @@ HFlickableColumnPopup {
     property var blacklistedCallback: null
 
 
-    page.footer: ButtonLayout {
-        ApplyButton {
+    page.footer: AutoDirectionLayout {
+        PositiveButton {
             visible: ! deviceIsCurrent
             text: qsTr("They match")
             icon.name: "device-verified"
@@ -37,7 +37,7 @@ HFlickableColumnPopup {
             }
         }
 
-        CancelButton {
+        NegativeButton {
             visible: ! popup.deviceIsCurrent
             text: qsTr("They differ")
             icon.name: "device-blacklisted"

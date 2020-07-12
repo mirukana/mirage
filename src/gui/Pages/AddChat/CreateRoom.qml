@@ -4,7 +4,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 
 HFlickableColumnPage {
     id: page
@@ -52,7 +52,7 @@ HFlickableColumnPage {
     }
 
 
-    footer: ButtonLayout {
+    footer: AutoDirectionLayout {
         ApplyButton {
             id: applyButton
             text: qsTr("Create")

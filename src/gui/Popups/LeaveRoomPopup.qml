@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import "../Base/ButtonLayout"
+import "../Base"
+import "../Base/Buttons"
 
 HFlickableColumnPopup {
     id: popup
@@ -13,7 +14,7 @@ HFlickableColumnPopup {
     property var leftCallback: null
 
 
-    page.footer: ButtonLayout {
+    page.footer: AutoDirectionLayout {
         ApplyButton {
             id: leaveButton
             icon.name: "room-leave"

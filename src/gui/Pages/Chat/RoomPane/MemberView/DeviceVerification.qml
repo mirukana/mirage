@@ -3,7 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../../../Base"
-import "../../../../Base/ButtonLayout"
+import "../../../../Base/Buttons"
 
 HFlickableColumnPage {
     id: page
@@ -27,8 +27,8 @@ HFlickableColumnPage {
     }
 
 
-    footer: ButtonLayout {
-        ApplyButton {
+    footer: AutoDirectionLayout {
+        PositiveButton {
             text: qsTr("They're the same")
             icon.name: "device-verified"
             onClicked: {
@@ -46,7 +46,7 @@ HFlickableColumnPage {
             }
         }
 
-        CancelButton {
+        NegativeButton {
             text: qsTr("They differ")
             icon.name: "device-blacklisted"
             onClicked: {

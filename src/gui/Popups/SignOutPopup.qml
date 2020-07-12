@@ -2,7 +2,8 @@
 
 import QtQuick 2.12
 import ".."
-import "../Base/ButtonLayout"
+import "../Base"
+import "../Base/Buttons"
 
 HFlickableColumnPopup {
     id: popup
@@ -11,8 +12,8 @@ HFlickableColumnPopup {
     property string userId: ""
 
 
-    page.footer: ButtonLayout {
-        ApplyButton {
+    page.footer: AutoDirectionLayout {
+        PositiveButton {
             id: exportButton
             text: qsTr("Export keys")
             icon.name: "export-keys"
@@ -29,11 +30,10 @@ HFlickableColumnPopup {
             )
         }
 
-        OtherButton {
+        MiddleButton {
             id: signOutButton
             text: qsTr("Sign out now")
             icon.name: "sign-out"
-            icon.color: theme.colors.middleBackground
 
             onClicked: {
                 if (ModelStore.get("accounts").count < 2 ||

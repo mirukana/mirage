@@ -5,7 +5,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 import "../../PythonBridge"
 import "../../ShortcutBundles"
 
@@ -100,15 +100,15 @@ HColumnPage {
     }
 
 
-    footer: ButtonLayout {
-        OtherButton {
+    footer: AutoDirectionLayout {
+        GroupButton {
             id: refreshButton
             text: qsTr("Refresh")
             icon.name: "device-refresh-list"
             onClicked: page.loadDevices()
         }
 
-        OtherButton {
+        NegativeButton {
             id: signOutCheckedButton
             enabled: deviceList.model.count > 0
             text:
@@ -117,7 +117,6 @@ HColumnPage {
                 qsTr("Sign out checked")
 
             icon.name: "device-delete-checked"
-            icon.color: theme.colors.negativeBackground
             onClicked:
                 deviceList.selectedCount ?
                 page.deleteDevices(...deviceList.checkedIndice) :

@@ -3,7 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
-import "../../Base/ButtonLayout"
+import "../../Base/Buttons"
 
 HFlickableColumnPage {
     id: page
@@ -15,8 +15,8 @@ HFlickableColumnPage {
     function takeFocus() { exportButton.forceActiveFocus() }
 
 
-    footer: ButtonLayout {
-        OtherButton {
+    footer: AutoDirectionLayout {
+        GroupButton {
             id: exportButton
             text: qsTr("Export")
             icon.name: "export-keys"
@@ -32,7 +32,7 @@ HFlickableColumnPage {
             )
         }
 
-        OtherButton {
+        GroupButton {
             text: qsTr("Import")
             icon.name: "import-keys"
 
