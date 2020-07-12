@@ -8,6 +8,15 @@ import "../../../Base/HTile"
 
 HTile {
     id: file
+
+    property EventMediaLoader loader
+
+    readonly property bool cryptDict:
+        JSON.parse(loader.singleMediaInfo.media_crypt_dict)
+
+    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
+
+
     width: Math.min(
         eventDelegate.width,
         eventContent.maxMessageWidth,
@@ -54,15 +63,6 @@ HTile {
             loader.downloadedPath.replace(/^file:\/\//, "") || loader.mediaUrl
         ]
     }
-
-
-    property EventMediaLoader loader
-
-    readonly property bool cryptDict:
-        JSON.parse(loader.singleMediaInfo.media_crypt_dict)
-
-    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
-
 
     Binding on backgroundColor {
         value: theme.chat.message.checkedBackground

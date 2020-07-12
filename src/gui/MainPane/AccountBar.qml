@@ -7,13 +7,12 @@ import "../Base"
 import "../Base/HTile"
 
 Rectangle {
-    implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
-    color: theme.mainPane.accountBar.background
-
-
     property RoomList roomList
     readonly property alias accountList: accountList
 
+
+    implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
+    color: theme.mainPane.accountBar.background
 
     Behavior on implicitHeight { HNumberAnimation {} }
 

@@ -15,6 +15,7 @@ HGridLayout {
         return sum
     }
 
+
     flow:
         width >= summedImplicitWidth ?
         HGridLayout.LeftToRight :

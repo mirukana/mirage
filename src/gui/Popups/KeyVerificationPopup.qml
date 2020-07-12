@@ -8,7 +8,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string deviceOwner
     property string deviceId
     property string deviceName
@@ -76,6 +75,8 @@ HFlickableColumnPopup {
     }
 
     HTextArea {
+        id: infoArea
+
         function formatInfo(info, value) {
             return (
                 `<p style="line-height: 115%">` +
@@ -86,7 +87,6 @@ HFlickableColumnPopup {
             )
         }
 
-        id: infoArea
         readOnly: true
         wrapMode: HSelectableLabel.Wrap
         textFormat: Qt.RichText

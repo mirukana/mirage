@@ -11,11 +11,9 @@ import "../../Dialogs"
 HFlickableColumnPage {
     id: page
 
-
     property string userId
     readonly property QtObject account: ModelStore.get("accounts").find(userId)
     readonly property bool ready: account && account.profile_updated >= new Date(1)
-
 
     function takeFocus() {
         nameField.item.forceActiveFocus()
@@ -90,11 +88,11 @@ HFlickableColumnPage {
     onKeyboardCancel: cancel()
     onKeyboardAccept: applyChanges()
 
-
     HUserAvatar {
+        id: avatar
+
         property bool changed: Boolean(sourceOverride)
 
-        id: avatar
         userId: page.userId
         displayName: nameField.item.text
         mxc: account ? account.avatar_url : ""
@@ -231,6 +229,8 @@ HFlickableColumnPage {
     }
 
     HLabeledItem {
+        id: aliasField
+
         readonly property var aliases: window.settings.writeAliases
         readonly property string currentAlias: aliases[userId] || ""
 
@@ -242,9 +242,6 @@ HFlickableColumnPage {
 
             return ""
         }
-
-
-        id: aliasField
 
         label.text: qsTr("Composer alias:")
 

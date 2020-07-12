@@ -8,10 +8,6 @@ import "../../../Base"
 
 HColumnLayout {
     id: eventDelegate
-    width: eventList.width - eventList.leftMargin - eventList.rightMargin
-
-    ListView.onRemove: eventList.uncheck(model.id)
-
 
     enum Media { Page, File, Image, Video, Audio }
 
@@ -62,18 +58,6 @@ HColumnLayout {
 
     readonly property alias eventContent: eventContent
 
-    // Needed because of eventList's MouseArea which steals the
-    // HSelectableLabel's MouseArea hover events
-    onCursorShapeChanged: eventList.cursorShape = cursorShape
-
-    Component.onCompleted: if (model.fetch_profile) py.callClientCoro(
-        chat.userId, "get_event_profiles", [chat.roomId, model.id],
-    )
-
-    Component.onDestruction:
-        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
-
-
     function json() {
         let event    = ModelStore.get(chat.userId, chat.roomId, "events")
                                  .get(model.index)
@@ -92,6 +76,21 @@ HColumnLayout {
         eventList.toggleCheck(model.index)
     }
 
+
+    width: eventList.width - eventList.leftMargin - eventList.rightMargin
+
+    // Needed because of eventList's MouseArea which steals the
+    // HSelectableLabel's MouseArea hover events
+    onCursorShapeChanged: eventList.cursorShape = cursorShape
+
+    Component.onCompleted: if (model.fetch_profile) py.callClientCoro(
+        chat.userId, "get_event_profiles", [chat.roomId, model.id],
+    )
+
+    Component.onDestruction:
+        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
+
+    ListView.onRemove: eventList.uncheck(model.id)
 
     Item {
         Layout.fillWidth: true
@@ -240,6 +239,16 @@ HColumnLayout {
         }
 
         HMenuItemPopupSpawner {
+            readonly property var events: {
+                eventList.selectedCount ?
+                eventList.redactableCheckedEvents :
+
+                eventList.canRedact(currentModel) ?
+                [model] :
+
+                []
+            }
+
             icon.name: "remove-message"
             text: qsTr("Remove")
             enabled: properties.eventSenderAndIds.length
@@ -254,16 +263,6 @@ HColumnLayout {
                     ! chat.roomInfo.can_redact_all &&
                     events.length < eventList.selectedCount
             })
-
-            readonly property var events: {
-                eventList.selectedCount ?
-                eventList.redactableCheckedEvents :
-
-                eventList.canRedact(currentModel) ?
-                [model] :
-
-                []
-            }
         }
 
         HMenuItem {

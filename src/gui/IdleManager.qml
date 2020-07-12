@@ -8,7 +8,6 @@ Timer {
     readonly property ListModel accounts: ModelStore.get("accounts")
     readonly property var accountsSet: new Set()
 
-
     function setPresence(userId, presence) {
         py.callClientCoro(userId, "set_presence", [presence, undefined, false])
     }

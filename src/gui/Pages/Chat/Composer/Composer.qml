@@ -8,7 +8,6 @@ Rectangle {
     property alias eventList: messageArea.eventList
     readonly property bool hasFocus: messageArea.activeFocus
 
-
     function takeFocus() { messageArea.forceActiveFocus() }
 
 
@@ -16,7 +15,6 @@ Rectangle {
         Math.max(theme.baseElementsHeight, messageArea.implicitHeight)
 
     color: theme.chat.composer.background
-
 
     HRowLayout {
         anchors.fill: parent

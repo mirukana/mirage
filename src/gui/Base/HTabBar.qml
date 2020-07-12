@@ -6,6 +6,7 @@ import "../ShortcutBundles"
 
 TabBar {
     id: tabBar
+
     spacing: 0
     position: TabBar.Header
 
@@ -17,7 +18,6 @@ TabBar {
             color: theme.controls.tab.bottomLine
         }
     }
-
 
     TabShortcuts {
         container: tabBar

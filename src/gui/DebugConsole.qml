@@ -8,37 +8,6 @@ import "ShortcutBundles"
 
 HDrawer {
     id: debugConsole
-    objectName: "debugConsole"
-    edge: Qt.TopEdge
-    x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
-    y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
-    width: horizontal ? calculatedSize : Math.min(window.width, 720)
-    height: vertical ? calculatedSize : Math.min(window.height, 720)
-    defaultSize: 400
-    z: 9999
-    position: 0
-
-    onTargetChanged: {
-        commandsView.model.insert(0, {
-            input: "t = " + String(target),
-            output: "",
-            error: false,
-        })
-    }
-
-    onVisibleChanged: {
-        if (visible) {
-            previouslyFocused = window.activeFocusItem
-            forceActiveFocus()
-        } else if (previouslyFocused) {
-            previouslyFocused.forceActiveFocus()
-        }
-    }
-
-    onHistoryEntryChanged:
-        inputField.text =
-            historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
-
 
     property Item previouslyFocused: null
 
@@ -74,7 +43,6 @@ HDrawer {
 
     readonly property alias commandsView: commandsView
 
-
     function toggle(targetItem=null, js="", addToHistory=false) {
         if (debugConsole.visible) {
             debugConsole.visible = false
@@ -89,7 +57,6 @@ HDrawer {
 
         if (js) debugConsole.runJS(js, addToHistory)
     }
-
 
     function runJS(input, addToHistory=true) {
         if (addToHistory && history.slice(-1)[0] !== input) {
@@ -134,6 +101,37 @@ HDrawer {
         commandsView.model.insert(0, { input, output, error })
     }
 
+
+    objectName: "debugConsole"
+    edge: Qt.TopEdge
+    x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2
+    y: vertical ? 0 : referenceSizeParent.height / 2 - height / 2
+    width: horizontal ? calculatedSize : Math.min(window.width, 720)
+    height: vertical ? calculatedSize : Math.min(window.height, 720)
+    defaultSize: 400
+    z: 9999
+    position: 0
+
+    onTargetChanged: {
+        commandsView.model.insert(0, {
+            input: "t = " + String(target),
+            output: "",
+            error: false,
+        })
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+            previouslyFocused = window.activeFocusItem
+            forceActiveFocus()
+        } else if (previouslyFocused) {
+            previouslyFocused.forceActiveFocus()
+        }
+    }
+
+    onHistoryEntryChanged:
+        inputField.text =
+            historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
 
     HShortcut {
         sequences: settings.keys.toggleDebugConsole

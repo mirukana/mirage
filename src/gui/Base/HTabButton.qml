@@ -6,27 +6,6 @@ import QtQuick.Layouts 1.12
 
 TabButton {
     id: button
-    spacing: theme.spacing
-    topPadding: spacing / 1.5
-    bottomPadding: topPadding
-    leftPadding: spacing
-    rightPadding: leftPadding
-
-    icon.color: theme.icons.colorize
-
-    implicitWidth: Math.max(
-        implicitBackgroundWidth + leftInset + rightInset,
-        // FIXME: why is *2 needed to not get ellided text in AddAccount page?
-        implicitContentWidth + leftPadding * 2 + rightPadding * 2,
-    )
-    implicitHeight: Math.max(
-        implicitBackgroundHeight + topInset + bottomInset,
-        implicitContentHeight + topPadding + bottomPadding,
-    )
-
-    // Prevent button from gaining focus and being highlighted on click
-    focusPolicy: Qt.TabFocus
-
 
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
@@ -47,6 +26,27 @@ TabButton {
         visible: text && hovered
     }
 
+
+    spacing: theme.spacing
+    topPadding: spacing / 1.5
+    bottomPadding: topPadding
+    leftPadding: spacing
+    rightPadding: leftPadding
+
+    icon.color: theme.icons.colorize
+
+    implicitWidth: Math.max(
+        implicitBackgroundWidth + leftInset + rightInset,
+        // FIXME: why is *2 needed to not get ellided text in AddAccount page?
+        implicitContentWidth + leftPadding * 2 + rightPadding * 2,
+    )
+    implicitHeight: Math.max(
+        implicitBackgroundHeight + topInset + bottomInset,
+        implicitContentHeight + topPadding + bottomPadding,
+    )
+
+    // Prevent button from gaining focus and being highlighted on click
+    focusPolicy: Qt.TabFocus
 
     background: HButtonBackground {
         button: button

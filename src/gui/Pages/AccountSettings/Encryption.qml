@@ -8,9 +8,7 @@ import "../../Base/Buttons"
 HFlickableColumnPage {
     id: page
 
-
     property string userId
-
 
     function takeFocus() { exportButton.forceActiveFocus() }
 

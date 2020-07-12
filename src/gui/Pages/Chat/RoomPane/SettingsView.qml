@@ -9,7 +9,6 @@ import "../../../Base/Buttons"
 HFlickableColumnPage {
     id: settingsView
 
-
     property var saveFuture: null
 
     readonly property bool anyChange:
@@ -18,7 +17,6 @@ HFlickableColumnPage {
         forbidGuestsCheckBox.changed
 
     readonly property Item keybindFocusItem: nameField.item
-
 
     function save() {
         if (saveFuture) saveFuture.cancel()
@@ -81,7 +79,6 @@ HFlickableColumnPage {
     onKeyboardAccept: save()
     onKeyboardCancel: cancel()
 
-
     HRoomAvatar {
         id: avatar
         roomId: chat.roomId
@@ -117,12 +114,12 @@ HFlickableColumnPage {
         Layout.fillWidth: true
 
         HScrollView {
+            readonly property alias area: topicAreaIn
+
             clip: true
             width: parent.width
             height:
                 Math.min(topicAreaIn.implicitHeight, settingsView.height / 2)
-
-            readonly property alias area: topicAreaIn
 
             HTextArea {
                 id: topicAreaIn

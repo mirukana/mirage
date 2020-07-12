@@ -5,6 +5,7 @@ import QtQuick.Controls 2.12
 
 ScrollBar {
     id: scrollBar
+
     minimumSize: (Math.min(height / 1.5, 48) * theme.uiScale) / height
     opacity: size < 1 && (active || hovered) ? 1 : 0
     padding: 0

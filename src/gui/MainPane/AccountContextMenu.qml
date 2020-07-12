@@ -13,9 +13,7 @@ HMenu {
     property string presence
     property string statusMsg
 
-
     signal wentToAccountPage()
-
 
     function setPresence(presence, statusMsg=undefined) {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
@@ -23,7 +21,6 @@ HMenu {
 
 
     onOpened: statusText.forceActiveFocus()
-
 
     HLabeledItem {
         id: statusMsgLabel

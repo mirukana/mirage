@@ -10,11 +10,10 @@ import "../../../PythonBridge"
 import "../../../ShortcutBundles"
 
 Rectangle {
-    color: theme.chat.eventList.background
-
-
     property alias eventList: eventList
 
+
+    color: theme.chat.eventList.background
 
     HShortcut {
         sequences: window.settings.keys.unfocusOrDeselectAllMessages
@@ -52,6 +51,27 @@ Rectangle {
     }
 
     HShortcut {
+        readonly property var events:
+            eventList.selectedCount ?
+            eventList.redactableCheckedEvents :
+
+            eventList.currentItem &&
+            eventList.canRedact(eventList.currentItem.currentModel) ?
+            [eventList.currentItem.currentModel] :
+
+            eventList.currentItem ?
+            [] :
+            null
+
+        function findLastRemovableDelegate() {
+            for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
+                const event = eventList.model.get(i)
+                if (eventList.canRedact(event) &&
+                    mainUI.accountIds.includes(event.sender_id)) return [event]
+            }
+            return []
+        }
+
         enabled: (events && events.length > 0) || events === null
         sequences: window.settings.keys.removeFocusedOrSelectedMessages
         onActivated: utils.makePopup(
@@ -73,27 +93,6 @@ Rectangle {
                     events.length < eventList.selectedCount
             }
         )
-
-        readonly property var events:
-            eventList.selectedCount ?
-            eventList.redactableCheckedEvents :
-
-            eventList.currentItem &&
-            eventList.canRedact(eventList.currentItem.currentModel) ?
-            [eventList.currentItem.currentModel] :
-
-            eventList.currentItem ?
-            [] :
-            null
-
-        function findLastRemovableDelegate() {
-            for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
-                const event = eventList.model.get(i)
-                if (eventList.canRedact(event) &&
-                    mainUI.accountIds.includes(event.sender_id)) return [event]
-            }
-            return []
-        }
     }
 
     HShortcut {
@@ -181,67 +180,6 @@ Rectangle {
 
     HListView {
         id: eventList
-        anchors.fill: parent
-        clip: true
-        keyNavigationWraps: false
-        leftMargin: theme.spacing
-        rightMargin: theme.spacing
-        topMargin: theme.spacing
-        bottomMargin: theme.spacing
-        verticalLayoutDirection: ListView.BottomToTop
-
-        // Keep x scroll pages cached, to limit images having to be
-        // reloaded from network.
-        cacheBuffer: Screen.desktopAvailableHeight * 2
-
-        model: ModelStore.get(chat.userId, chat.roomId, "events")
-        delegate: EventDelegate {}
-
-        highlight: Rectangle {
-            color: theme.chat.message.focusedHighlight
-            opacity: theme.chat.message.focusedHighlightOpacity
-        }
-
-        // Since the list is BottomToTop, this is actually a header
-        footer: Item {
-            width: eventList.width
-            height: (button.height + theme.spacing * 2) * opacity
-            opacity: eventList.loading ? 1 : 0
-            visible: opacity > 0
-
-            Behavior on opacity { HNumberAnimation {} }
-
-            HButton {
-                readonly property bool offline:
-                    chat.userInfo.presence === "offline"
-
-                id: button
-                width: Math.min(parent.width, implicitWidth)
-                anchors.centerIn: parent
-
-                loading: parent.visible && ! offline
-                icon.name: offline ? "feature-unavailable-offline" : ""
-                icon.color:
-                    offline ?
-                    theme.colors.negativeBackground :
-                    theme.icons.colorize
-                text:
-                    offline ?
-                    qsTr("Cannot load history offline") :
-                    qsTr("Loading previous messages...")
-
-                enableRadius: true
-                iconItem.small: true
-            }
-        }
-
-        onYPosChanged:
-            if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
-
-        // When an invited room becomes joined, we should now be able to
-        // fetch past events.
-        onInviterChanged: canLoad = true
-
 
         property string inviter: chat.roomInfo.inviter || ""
         property real yPos: visibleArea.yPosition
@@ -260,7 +198,6 @@ Rectangle {
 
         readonly property var redactableCheckedEvents:
             getSortedChecked().filter(ev => eventList.canRedact(ev))
-
 
         function copySelectedDelegates() {
             if (eventList.selectedText) {
@@ -362,6 +299,67 @@ Rectangle {
                 return
             }
         }
+
+        anchors.fill: parent
+        clip: true
+        keyNavigationWraps: false
+        leftMargin: theme.spacing
+        rightMargin: theme.spacing
+        topMargin: theme.spacing
+        bottomMargin: theme.spacing
+        verticalLayoutDirection: ListView.BottomToTop
+
+        // Keep x scroll pages cached, to limit images having to be
+        // reloaded from network.
+        cacheBuffer: Screen.desktopAvailableHeight * 2
+
+        model: ModelStore.get(chat.userId, chat.roomId, "events")
+        delegate: EventDelegate {}
+
+        highlight: Rectangle {
+            color: theme.chat.message.focusedHighlight
+            opacity: theme.chat.message.focusedHighlightOpacity
+        }
+
+        // Since the list is BottomToTop, this is actually a header
+        footer: Item {
+            width: eventList.width
+            height: (button.height + theme.spacing * 2) * opacity
+            opacity: eventList.loading ? 1 : 0
+            visible: opacity > 0
+
+            Behavior on opacity { HNumberAnimation {} }
+
+            HButton {
+                readonly property bool offline:
+                    chat.userInfo.presence === "offline"
+
+                id: button
+                width: Math.min(parent.width, implicitWidth)
+                anchors.centerIn: parent
+
+                loading: parent.visible && ! offline
+                icon.name: offline ? "feature-unavailable-offline" : ""
+                icon.color:
+                    offline ?
+                    theme.colors.negativeBackground :
+                    theme.icons.colorize
+                text:
+                    offline ?
+                    qsTr("Cannot load history offline") :
+                    qsTr("Loading previous messages...")
+
+                enableRadius: true
+                iconItem.small: true
+            }
+        }
+
+        onYPosChanged:
+            if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
+
+        // When an invited room becomes joined, we should now be able to
+        // fetch past events.
+        onInviterChanged: canLoad = true
     }
 
     Timer {

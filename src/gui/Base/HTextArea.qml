@@ -6,7 +6,6 @@ import QtQuick.Controls 2.12
 TextArea {
     id: textArea
 
-
     property string saveName: ""
     property var saveId: "ALL"
     property var saveProperties: ["text"]
@@ -26,7 +25,6 @@ TextArea {
     property color focusedBorderColor: theme.controls.textArea.focusedBorder
 
     property string previousDefaultText: ""  // private
-
 
     function reset() { clear(); text = Qt.binding(() => defaultText || "") }
     function insertAtCursor(text) { insert(cursorPosition, text) }

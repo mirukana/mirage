@@ -7,13 +7,11 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string userId: ""
     property string roomId: ""
     property string roomName: ""
 
     property bool canDestroy: false
-
 
     function forget() {
         py.callClientCoro(userId, "room_forget", [roomId], () => {
@@ -48,7 +46,6 @@ HFlickableColumnPopup {
 
     onOpened: forgetButton.forceActiveFocus()
     onClosed: if (canDestroy) Qt.callLater(popup.destroy)
-
 
     SummaryLabel {
         text: qsTr("Leave <i>%1</i> and lose the history?").arg(roomName)

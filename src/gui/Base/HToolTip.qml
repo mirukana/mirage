@@ -6,6 +6,23 @@ import QtQuick.Layouts 1.12
 
 ToolTip {
     id: toolTip
+
+    property bool instant: false
+
+    property alias label: label
+    property alias backgroundColor: background.color
+
+    readonly property bool hideNow: ! window.hovered
+
+
+    function instantShow() {
+        if (visible) return
+        instant = true
+        open()
+        instant = false
+    }
+
+
     delay: instant ? 0 : theme.controls.toolTip.delay
     padding: background.border.width
 
@@ -42,23 +59,6 @@ ToolTip {
     }
 
     onHideNowChanged: if (visible && hideNow) toolTip.hide()
-
-
-    property bool instant: false
-
-    property alias label: label
-    property alias backgroundColor: background.color
-
-    readonly property bool hideNow: ! window.hovered
-
-
-    function instantShow() {
-        if (visible) return
-        instant = true
-        open()
-        instant = false
-    }
-
 
     TapHandler {
         onTapped: toolTip.hide()

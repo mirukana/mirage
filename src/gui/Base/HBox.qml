@@ -12,7 +12,6 @@ HFlickableColumnPage {
         radius: theme.controls.box.radius
     }
 
-
     HNumberAnimation on scale {
         running: true
         from: 0

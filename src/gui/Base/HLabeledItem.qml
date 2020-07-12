@@ -4,9 +4,6 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
 HColumnLayout {
-    spacing: theme.spacing / 2
-
-
     default property alias insideData: itemHolder.data
 
     property bool loading: false
@@ -16,6 +13,8 @@ HColumnLayout {
     readonly property alias errorLabel: errorLabel
     readonly property alias toolTip: toolTip
 
+
+    spacing: theme.spacing / 2
 
     HRowLayout {
         spacing: theme.spacing

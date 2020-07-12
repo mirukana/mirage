@@ -4,14 +4,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 Page {
-    padding: currentSpacing < theme.spacing ? 0 : currentSpacing
-    background: null
-
-    Keys.onReturnPressed: keyboardAccept()
-    Keys.onEnterPressed: keyboardAccept()
-    Keys.onEscapePressed: keyboardCancel()
-
-
     property bool useVariableSpacing: true
 
     property int currentSpacing:
@@ -26,6 +18,13 @@ Page {
     signal keyboardAccept()
     signal keyboardCancel()
 
+
+    padding: currentSpacing < theme.spacing ? 0 : currentSpacing
+    background: null
+
+    Keys.onReturnPressed: keyboardAccept()
+    Keys.onEnterPressed: keyboardAccept()
+    Keys.onEscapePressed: keyboardCancel()
 
     Behavior on padding { HNumberAnimation {} }
 }

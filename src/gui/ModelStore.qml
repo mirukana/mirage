@@ -6,21 +6,16 @@ import "PythonBridge"
 
 QtObject {
     property QtObject privates: QtObject {
-        onEnsureModelExists:
-            py.callCoro("models.ensure_exists_from_qml", [modelId])
-
-        signal ensureModelExists(var modelId)
-
         readonly property var store: ({})
 
         readonly property PythonBridge py: PythonBridge {}
 
         readonly property Component model: Component {
             ListModel {
+                property var modelId
+
                 // Used by HFilterModel
                 signal fieldsChanged(int index, var changes)
-
-                property var modelId
 
                 function findIndex(id, default_=null) {
                     for (let i = 0; i < count; i++)
@@ -37,6 +32,11 @@ QtObject {
                 }
             }
         }
+
+        signal ensureModelExists(var modelId)
+
+        onEnsureModelExists:
+            py.callCoro("models.ensure_exists_from_qml", [modelId])
     }
 
 

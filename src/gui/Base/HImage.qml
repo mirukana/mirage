@@ -5,16 +5,6 @@ import QtGraphicalEffects 1.12
 
 Image {
     id: image
-    autoTransform: true
-    asynchronous: true
-    fillMode: Image.PreserveAspectFit
-
-    cache: ! (animate && animated) &&
-           (sourceSize.width + sourceSize.height) <= 512
-
-    layer.enabled: radius !== 0
-    layer.effect: OpacityMask { maskSource: roundMask }
-
 
     property bool circle: radius === circleRadius
     property bool broken: false
@@ -31,11 +21,24 @@ Image {
         Math.ceil(Math.max(image.width, image.height))
 
 
+    autoTransform: true
+    asynchronous: true
+    fillMode: Image.PreserveAspectFit
+
+    cache: ! (animate && animated) &&
+           (sourceSize.width + sourceSize.height) <= 512
+
+    layer.enabled: radius !== 0
+    layer.effect: OpacityMask { maskSource: roundMask }
+
     Component {
         id: animatedImageComponent
 
         AnimatedImage {
             id: animatedImage
+
+            property bool userPaused: ! window.settings.media.autoPlayGIF
+
             source: image.source
             autoTransform: image.autoTransform
             asynchronous: image.asynchronous
@@ -45,6 +48,14 @@ Image {
             smooth: image.smooth
             horizontalAlignment: image.horizontalAlignment
             verticalAlignment: image.verticalAlignment
+
+            // Online GIFs won't be able to loop if cache is set to false,
+            // but caching GIFs is expansive.
+            cache: ! Qt.resolvedUrl(source).startsWith("file://")
+            paused: ! visible || window.hidden || userPaused
+
+            layer.enabled: image.radius !== 0
+            layer.effect: OpacityMask { maskSource: roundMask }
 
             // Hack to make the non-animated image behind this one
             // basically invisible
@@ -63,16 +74,6 @@ Image {
                 property: "sourceSize.height"
                 value: 1
             }
-
-            // Online GIFs won't be able to loop if cache is set to false,
-            // but caching GIFs is expansive.
-            cache: ! Qt.resolvedUrl(source).startsWith("file://")
-            paused: ! visible || window.hidden || userPaused
-
-            layer.enabled: image.radius !== 0
-            layer.effect: OpacityMask { maskSource: roundMask }
-
-            property bool userPaused: ! window.settings.media.autoPlayGIF
 
             TapHandler {
                 enabled: image.enabledAnimatedPausing

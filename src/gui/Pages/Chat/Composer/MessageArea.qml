@@ -7,7 +7,6 @@ import "../../../Base"
 HTextArea {
     id: textArea
 
-
     property HListView eventList
 
     property string indent: "    "
@@ -49,7 +48,6 @@ HTextArea {
 
         return obj
     }
-
 
     function setTyping(typing) {
         py.callClientCoro(

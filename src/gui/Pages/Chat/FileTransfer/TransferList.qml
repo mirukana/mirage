@@ -5,13 +5,6 @@ import "../../.."
 import "../../../Base"
 
 Rectangle {
-    implicitWidth: 800
-    implicitHeight: firstDelegate ? firstDelegate.height : 0
-    color: theme.chat.fileTransfer.background
-    opacity: implicitHeight ? 1 : 0
-    clip: true
-
-
     property int delegateHeight: 0
 
     readonly property var firstDelegate:
@@ -19,6 +12,12 @@ Rectangle {
 
     readonly property alias transferCount: transferList.count
 
+
+    implicitWidth: 800
+    implicitHeight: firstDelegate ? firstDelegate.height : 0
+    color: theme.chat.fileTransfer.background
+    opacity: implicitHeight ? 1 : 0
+    clip: true
 
     Behavior on implicitHeight { HNumberAnimation {} }
 

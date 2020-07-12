@@ -19,7 +19,6 @@ HButton {
 
     onClicked: sendFilePicker.dialog.open()
 
-
     HShortcut {
         sequences: window.settings.keys.sendFileFromPathInClipboard
         onActivated: utils.sendFile(

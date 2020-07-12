@@ -9,10 +9,6 @@ import "RoomPane"
 Item {
     id: chat
 
-    onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
-    onReadyChanged: longLoading = false
-
-
     property string userId
     property string roomId
 
@@ -32,6 +28,9 @@ Item {
     readonly property bool composerHasFocus:
         Boolean(loader.item && loader.item.composer.hasFocus)
 
+
+    onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
+    onReadyChanged: longLoading = false
 
     HShortcut {
         sequences: window.settings.keys.leaveRoom

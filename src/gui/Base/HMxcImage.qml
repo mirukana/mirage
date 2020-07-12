@@ -5,15 +5,6 @@ import "../PythonBridge"
 
 HImage {
     id: image
-    inderterminateProgressBar: isMxc
-    source: sourceOverride || (show ? cachedPath : "")
-
-    onWidthChanged: Qt.callLater(update)
-    onHeightChanged: Qt.callLater(update)
-    onVisibleChanged: Qt.callLater(update)
-    onMxcChanged: Qt.callLater(update)
-    Component.onDestruction: if (getFuture) getFuture.cancel()
-
 
     property string mxc
     property string title
@@ -27,7 +18,6 @@ HImage {
     property Future getFuture: null
 
     readonly property bool isMxc: mxc.startsWith("mxc://")
-
 
     function update() {
         if (! py) return  // component was destroyed
@@ -64,4 +54,14 @@ HImage {
             },
         )
     }
+
+
+    inderterminateProgressBar: isMxc
+    source: sourceOverride || (show ? cachedPath : "")
+
+    onWidthChanged: Qt.callLater(update)
+    onHeightChanged: Qt.callLater(update)
+    onVisibleChanged: Qt.callLater(update)
+    onMxcChanged: Qt.callLater(update)
+    Component.onDestruction: if (getFuture) getFuture.cancel()
 }

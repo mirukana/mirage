@@ -5,29 +5,6 @@ import QtQuick.Controls 2.12
 
 Drawer {
     id: drawer
-    implicitWidth: horizontal ? calculatedSize : parent.width
-    implicitHeight: vertical ? calculatedSize : parent.height
-
-    // Prevents this: open a popup, make the window small enough for the
-    // drawer to collapse, then make it big again → popup is now behind drawer
-    z: -1
-
-    topPadding: 0
-    bottomPadding: 0
-    leftPadding: 0
-    rightPadding: 0
-
-    // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
-    // dragMargin: parent.width / 2
-
-    interactive: collapse
-    position: 1
-    visible: ! collapse
-    modal: false
-    closePolicy: Popup.NoAutoClose
-
-    background: Rectangle { id: bg; color: theme.colors.strongBackground }
-
 
     property string saveName: ""
     property var saveId: "ALL"
@@ -77,6 +54,29 @@ Drawer {
     readonly property bool vertical: ! horizontal
 
 
+    implicitWidth: horizontal ? calculatedSize : parent.width
+    implicitHeight: vertical ? calculatedSize : parent.height
+
+    // Prevents this: open a popup, make the window small enough for the
+    // drawer to collapse, then make it big again → popup is now behind drawer
+    z: -1
+
+    topPadding: 0
+    bottomPadding: 0
+    leftPadding: 0
+    rightPadding: 0
+
+    // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
+    // dragMargin: parent.width / 2
+
+    interactive: collapse
+    position: 1
+    visible: ! collapse
+    modal: false
+    closePolicy: Popup.NoAutoClose
+
+    background: Rectangle { id: bg; color: theme.colors.strongBackground }
+
     Behavior on width {
         enabled: horizontal && ! resizeMouseHandler.drag.active
         NumberAnimation { duration: 100 }
@@ -97,6 +97,12 @@ Drawer {
 
         MouseArea {
             id: resizeMouseHandler
+
+            function snapSize(num) {
+                return num < snapAt + snapZone && num  > snapAt - snapZone ?
+                       snapAt : num
+            }
+
             anchors.fill: parent
             enabled: ! drawer.collapse
             acceptedButtons: Qt.LeftButton
@@ -124,11 +130,6 @@ Drawer {
                 }
 
             onReleased: window.saveState(drawer)
-
-            function snapSize(num) {
-                return num < snapAt + snapZone && num  > snapAt - snapZone ?
-                       snapAt : num
-            }
         }
     }
 }

@@ -9,7 +9,6 @@ import "../Base/Buttons"
 HColumnPopup {
     id: popup
 
-
     property string errorType
     property string message: ""
     property string traceback: ""
@@ -30,7 +29,6 @@ HColumnPopup {
     }
 
     onOpened: cancelButton.forceActiveFocus()
-
 
     SummaryLabel {
         text: qsTr("Unexpected error occured: <i>%1</i>").arg(errorType)

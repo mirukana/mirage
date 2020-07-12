@@ -7,9 +7,6 @@ import "../../.."
 
 HRowLayout {
     id: eventContent
-    spacing: theme.chat.message.horizontalSpacing
-    layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
-
 
     readonly property var mentions: JSON.parse(model.mentions)
 
@@ -75,6 +72,9 @@ HRowLayout {
 
     readonly property alias selectedText: contentLabel.selectedText
 
+
+    spacing: theme.chat.message.horizontalSpacing
+    layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 
     Item {
         id: avatarWrapper
@@ -187,6 +187,9 @@ HRowLayout {
 
             PointHandler {
                 id: mousePointHandler
+
+                property bool checkedNow: false
+
                 acceptedButtons: Qt.LeftButton
                 acceptedModifiers: Qt.NoModifier
                 acceptedPointerTypes:
@@ -208,8 +211,6 @@ HRowLayout {
                         eventList.uncheck(model.index)
                     }
                 }
-
-                property bool checkedNow: false
             }
 
             PointHandler {

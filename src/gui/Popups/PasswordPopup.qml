@@ -8,7 +8,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property bool validateWhileTyping: false
 
     property string acceptedPassword: ""
@@ -20,7 +19,6 @@ HFlickableColumnPopup {
     readonly property alias validateButton: validateButton
 
     signal cancelled()
-
 
     function verifyPassword(pass, callback) {
         // Can be reimplemented when using this component.
@@ -76,7 +74,6 @@ HFlickableColumnPopup {
 
     onOpened: passwordField.forceActiveFocus()
     onKeyboardAccept: popup.validate()
-
 
     SummaryLabel { id: summary }
 

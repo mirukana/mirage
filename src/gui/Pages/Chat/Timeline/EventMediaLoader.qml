@@ -5,21 +5,6 @@ import "../../../Base"
 
 HLoader {
     id: loader
-    visible: Boolean(item)
-    x: eventContent.spacing
-
-    onTypeChanged: {
-        if (type === EventDelegate.Media.Image) {
-            var file = "EventImage.qml"
-
-        } else if (type !== EventDelegate.Media.Page) {
-            var file  = "EventFile.qml"
-
-        } else { return }
-
-        loader.setSource(file, {loader})
-    }
-
 
     property QtObject singleMediaInfo
     property string mediaUrl
@@ -87,7 +72,6 @@ HLoader {
 
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
 
-
     function download(callback) {
         if (! loader.mediaUrl.startsWith("mxc://")) {
             downloadedPath = loader.mediaUrl
@@ -108,5 +92,21 @@ HLoader {
             downloadedPath = path
             callback(path)
         })
+    }
+
+
+    visible: Boolean(item)
+    x: eventContent.spacing
+
+    onTypeChanged: {
+        if (type === EventDelegate.Media.Image) {
+            var file = "EventImage.qml"
+
+        } else if (type !== EventDelegate.Media.Page) {
+            var file  = "EventFile.qml"
+
+        } else { return }
+
+        loader.setSource(file, {loader})
     }
 }

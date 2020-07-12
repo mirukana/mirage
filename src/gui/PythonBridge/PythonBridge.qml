@@ -8,9 +8,7 @@ import "."
 Python {
     id: py
 
-
     readonly property var pendingCoroutines: Globals.pendingCoroutines
-
 
     function makeFuture(callback) {
         return Qt.createComponent("Future.qml").createObject(py, {bridge: py})

@@ -6,9 +6,8 @@ import QtQuick.Layouts 1.12
 
 HDrawer {
     id: pane
-    defaultSize: buttonRepeater.count * buttonWidth
-    minimumSize: buttonWidth
 
+    default property alias swipeViewData: swipeView.contentData
 
     property color buttonsBackgroundColor
 
@@ -18,8 +17,9 @@ HDrawer {
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
 
-    default property alias swipeViewData: swipeView.contentData
 
+    defaultSize: buttonRepeater.count * buttonWidth
+    minimumSize: buttonWidth
 
     HColumnLayout {
         anchors.fill: parent

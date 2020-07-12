@@ -6,6 +6,19 @@ import CppUtils 0.1
 
 Popup {
     id: popup
+
+    property var previouslyFocused: null
+    property Item focusOnClosed: previouslyFocused
+
+    readonly property int maximumPreferredWidth:
+        window.width - leftMargin - rightMargin - leftInset - rightInset
+
+    readonly property int maximumPreferredHeight:
+        window.height - topMargin - bottomMargin - topInset - bottomInset
+
+    readonly property string uuid: CppUtils.uuid()
+
+
     modal: true
     focus: true
     padding: 0
@@ -43,17 +56,6 @@ Popup {
         delete window.visiblePopups[uuid]
         window.visibleMenusChanged()
     }
+
     Component.onDestruction: closed()
-
-
-    property var previouslyFocused: null
-    property Item focusOnClosed: previouslyFocused
-
-    readonly property int maximumPreferredWidth:
-        window.width - leftMargin - rightMargin - leftInset - rightInset
-
-    readonly property int maximumPreferredHeight:
-        window.height - topMargin - bottomMargin - topInset - bottomInset
-
-    readonly property string uuid: CppUtils.uuid()
 }

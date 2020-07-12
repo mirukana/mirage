@@ -8,7 +8,6 @@ import "../../Base/Buttons"
 HFlickableColumnPage {
     id: page
 
-
     property var loginFuture: null
 
     property string signInWith: "username"
@@ -16,7 +15,6 @@ HFlickableColumnPage {
     readonly property bool canSignIn:
         serverField.item.text.trim() && idField.item.text.trim() &&
         passwordField.item.text && ! serverField.item.error
-
 
     function takeFocus() { idField.item.forceActiveFocus() }
 
@@ -94,7 +92,6 @@ HFlickableColumnPage {
 
     onKeyboardAccept: page.signIn()
     onKeyboardCancel: page.cancel()
-
 
     Timer {
         id: signInTimeout
@@ -190,11 +187,11 @@ HFlickableColumnPage {
         Layout.fillWidth: true
 
         HTextField {
+            readonly property string cleanText: text.toLowerCase().trim()
+
             width: parent.width
             text: "https://matrix.org"
             error: ! /.+:\/\/.+/.test(cleanText)
-
-            readonly property string cleanText: text.toLowerCase().trim()
         }
     }
 

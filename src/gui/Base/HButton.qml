@@ -6,6 +6,28 @@ import QtQuick.Layouts 1.12
 
 Button {
     id: button
+
+    readonly property alias iconItem: contentItem.icon
+    readonly property alias label: contentItem.label
+
+    property color backgroundColor: theme.controls.button.background
+    property color focusLineColor:
+        Qt.colorEqual(icon.color, theme.icons.colorize) ?
+        theme.controls.button.focusedBorder :
+        icon.color
+
+    property bool disableWhileLoading: true
+    property bool loading: false
+    property bool circle: false
+    property bool padded: true
+    property bool enableRadius: false
+
+    property HToolTip toolTip: HToolTip {
+        id: toolTip
+        visible: text && hovered
+    }
+
+
     enabled: ! button.loading
     spacing: theme.spacing
     topPadding: padded ? spacing * (circle ? 1 : 0.5) : 0
@@ -44,28 +66,6 @@ Button {
     Keys.onReturnPressed: if (enabled) clicked()
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     activeFocusOnTab: true
-
-
-    readonly property alias iconItem: contentItem.icon
-    readonly property alias label: contentItem.label
-
-    property color backgroundColor: theme.controls.button.background
-    property color focusLineColor:
-        Qt.colorEqual(icon.color, theme.icons.colorize) ?
-        theme.controls.button.focusedBorder :
-        icon.color
-
-    property bool disableWhileLoading: true
-    property bool loading: false
-    property bool circle: false
-    property bool padded: true
-    property bool enableRadius: false
-
-    property HToolTip toolTip: HToolTip {
-        id: toolTip
-        visible: text && hovered
-    }
-
 
     Binding on enabled {
         when: disableWhileLoading && button.loading

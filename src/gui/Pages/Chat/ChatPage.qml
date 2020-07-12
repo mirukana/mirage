@@ -10,12 +10,6 @@ import "Timeline"
 
 HColumnPage {
     id: chatPage
-    padding: 0
-    column.spacing: 0
-
-    onLoadEventListChanged: if (loadEventList) loadedOnce = true
-    Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()
-
 
     property bool loadedOnce: false
     property var loadMembersFuture: null
@@ -25,6 +19,12 @@ HColumnPage {
         mainUI.mainPane.collapse ?
         ! mainUI.mainPane.visible : ! pageLoader.appearAnimation.running
 
+
+    padding: 0
+    column.spacing: 0
+
+    onLoadEventListChanged: if (loadEventList) loadedOnce = true
+    Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()
 
     Timer {
         interval: 200

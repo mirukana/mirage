@@ -5,58 +5,6 @@ import QtQuick.Controls 2.12
 
 GridView {
     id: gridView
-    currentIndex: -1
-    keyNavigationWraps: true
-    highlightMoveDuration: theme.animationDuration
-
-    // Keep highlighted delegate at the center
-    highlightRangeMode: GridView.ApplyRange
-    preferredHighlightBegin: height / 2 - currentItemHeight / 2
-    preferredHighlightEnd: height / 2 + currentItemHeight / 2
-
-    maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
-
-
-    highlight: Rectangle {
-        color: theme.controls.gridView.highlight
-    }
-
-    ScrollBar.vertical: HScrollBar {
-        visible: gridView.interactive
-    }
-
-    // property bool debug: false
-
-    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
-    // #handling-interrupted-animations
-    add: Transition {
-        // ScriptAction { script: if (gridView.debug) print("add") }
-        HNumberAnimation { property: "opacity"; from: 0; to: 1 }
-        HNumberAnimation { property: "scale";   from: 0; to: 1 }
-    }
-
-    move: Transition {
-        // ScriptAction { script: if (gridView.debug) print("move") }
-        HNumberAnimation { property:   "opacity"; to: 1 }
-        HNumberAnimation { property:   "scale";   to: 1 }
-        HNumberAnimation { properties: "x,y" }
-    }
-
-    remove: Transition {
-        // ScriptAction { script: if (gridView.debug) print("remove") }
-        HNumberAnimation { property: "opacity"; to: 0 }
-        HNumberAnimation { property: "scale";   to: 0 }
-    }
-
-    displaced: Transition {
-        // ScriptAction { script: if (gridView.debug) print("displaced") }
-        HNumberAnimation { property:   "opacity"; to: 1 }
-        HNumberAnimation { property:   "scale";   to: 1 }
-        HNumberAnimation { properties: "x,y" }
-    }
-
-    onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
-
 
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
@@ -116,6 +64,58 @@ GridView {
         )
     }
 
+
+    currentIndex: -1
+    keyNavigationWraps: true
+    highlightMoveDuration: theme.animationDuration
+
+    // Keep highlighted delegate at the center
+    highlightRangeMode: GridView.ApplyRange
+    preferredHighlightBegin: height / 2 - currentItemHeight / 2
+    preferredHighlightEnd: height / 2 + currentItemHeight / 2
+
+    maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
+
+
+    highlight: Rectangle {
+        color: theme.controls.gridView.highlight
+    }
+
+    ScrollBar.vertical: HScrollBar {
+        visible: gridView.interactive
+    }
+
+    // property bool debug: false
+
+    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
+    // #handling-interrupted-animations
+    add: Transition {
+        // ScriptAction { script: if (gridView.debug) print("add") }
+        HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+        HNumberAnimation { property: "scale";   from: 0; to: 1 }
+    }
+
+    move: Transition {
+        // ScriptAction { script: if (gridView.debug) print("move") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
+    }
+
+    remove: Transition {
+        // ScriptAction { script: if (gridView.debug) print("remove") }
+        HNumberAnimation { property: "opacity"; to: 0 }
+        HNumberAnimation { property: "scale";   to: 0 }
+    }
+
+    displaced: Transition {
+        // ScriptAction { script: if (gridView.debug) print("displaced") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
+    }
+
+    onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
 
     HKineticScrollingDisabler {
         id: mouseArea

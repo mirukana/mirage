@@ -5,14 +5,14 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 Rectangle {
-    implicitHeight: label.text ? rowLayout.height : 0
-    opacity: implicitHeight ? 1 : 0
-
+    default property alias rowLayoutData: rowLayout.data
 
     readonly property alias icon: icon
     readonly property alias label: label
-    default property alias rowLayoutData: rowLayout.data
 
+
+    implicitHeight: label.text ? rowLayout.height : 0
+    opacity: implicitHeight ? 1 : 0
 
     Behavior on implicitHeight { HNumberAnimation {} }
 

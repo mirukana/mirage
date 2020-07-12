@@ -9,7 +9,6 @@ import "../Base/Buttons"
 HColumnPopup {
     id: popup
 
-
     property string userId
     property string roomId
     property string roomName
@@ -18,7 +17,6 @@ HColumnPopup {
     property var inviteFuture: null
     property var successfulInvites: []
     property var failedInvites: []
-
 
     function invite() {
         inviteButton.loading = true
@@ -67,7 +65,6 @@ HColumnPopup {
     onInvitingAllowedChanged:
         if (! invitingAllowed && inviteFuture) inviteFuture.cancel()
 
-
     SummaryLabel {
         text: qsTr("Invite members to <i>%1</i>").arg(roomName)
         textFormat: Text.StyledText
@@ -89,16 +86,6 @@ HColumnPopup {
 
     HLabel {
         id: errorMessage
-        visible: Layout.maximumHeight > 0
-        wrapMode: Text.Wrap
-        color: theme.colors.errorText
-        text:
-            invitingAllowed ?
-            allErrors :
-            qsTr("You do not have permission to invite members to this room")
-
-        Layout.maximumHeight: text ? implicitHeight : 0
-        Layout.fillWidth: true
 
         readonly property string allErrors: {
             // TODO: handle these: real user not found
@@ -141,6 +128,17 @@ HColumnPopup {
 
             return lines.join("\n\n")
         }
+
+        visible: Layout.maximumHeight > 0
+        wrapMode: Text.Wrap
+        color: theme.colors.errorText
+        text:
+            invitingAllowed ?
+            allErrors :
+            qsTr("You do not have permission to invite members to this room")
+
+        Layout.maximumHeight: text ? implicitHeight : 0
+        Layout.fillWidth: true
 
         Behavior on Layout.maximumHeight { HNumberAnimation {} }
     }

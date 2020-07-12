@@ -5,25 +5,14 @@ import ".."
 
 HButton {
     id: tile
-    topPadding: padded ? spacing / (compact ? 4 : 2) : 0
-    bottomPadding: topPadding
 
-    Keys.onEnterPressed: leftClicked()
-    Keys.onReturnPressed: leftClicked()
-    Keys.onSpacePressed: leftClicked()
-    Keys.onMenuPressed: doRightClick(false)
-
+    property bool compact: window.settings.compactMode
+    property real contentOpacity: 1
+    property Component contextMenu: null
 
     signal leftClicked()
     signal rightClicked()
     signal longPressed()
-
-
-    property bool compact: window.settings.compactMode
-    property real contentOpacity: 1
-
-    property Component contextMenu: null
-
 
     function openMenu(atCursor=true) {
         if (! contextMenu) return
@@ -36,6 +25,15 @@ HButton {
         rightClicked()
         openMenu(menuAtCursor)
     }
+
+
+    topPadding: padded ? spacing / (compact ? 4 : 2) : 0
+    bottomPadding: topPadding
+
+    Keys.onEnterPressed: leftClicked()
+    Keys.onReturnPressed: leftClicked()
+    Keys.onSpacePressed: leftClicked()
+    Keys.onMenuPressed: doRightClick(false)
 
 
     Behavior on topPadding { HNumberAnimation {} }

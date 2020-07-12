@@ -6,7 +6,6 @@ import "../Base"
 HQtObject {
     id: root
 
-
     property Item flickable: parent
     property bool active: true
 

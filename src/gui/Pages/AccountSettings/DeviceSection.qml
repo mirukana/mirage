@@ -15,6 +15,7 @@ HRowLayout {
     readonly property int sectionTotalCount:
         deviceList.sectionItemCounts[section] || 0
 
+
     HCheckBox {
         id: checkBox
         padding: theme.spacing

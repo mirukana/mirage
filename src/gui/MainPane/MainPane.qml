@@ -6,14 +6,10 @@ import "../Base"
 
 HDrawer {
     id: mainPane
-    saveName: "mainPane"
-    background: Rectangle { color: theme.mainPane.background }
-    minimumSize: theme.mainPane.minimumSize
 
     readonly property alias accountBar: accountBar
     readonly property alias roomList: roomList
     readonly property alias bottomBar: bottomBar
-
 
     function toggleFocus() {
         if (bottomBar.filterField.activeFocus) {
@@ -25,6 +21,10 @@ HDrawer {
         bottomBar.filterField.forceActiveFocus()
     }
 
+
+    saveName: "mainPane"
+    background: Rectangle { color: theme.mainPane.background }
+    minimumSize: theme.mainPane.minimumSize
 
     Behavior on opacity { HNumberAnimation {} }
 

@@ -7,7 +7,6 @@ import "../../Base"
 HPage {
     id: page
 
-
     property string userId
 
 

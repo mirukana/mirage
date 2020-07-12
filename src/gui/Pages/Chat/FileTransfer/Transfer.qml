@@ -8,7 +8,6 @@ import "../../../Base"
 HColumnLayout {
     id: transfer
 
-
     property bool cancelPending: false
 
     property int msLeft: model.time_left
@@ -17,7 +16,6 @@ HColumnLayout {
     readonly property int totalSize: model.total_size
     readonly property string status: model.status
     readonly property bool paused: model.paused
-
 
     function cancel() {
         cancelPending = true
@@ -51,6 +49,15 @@ HColumnLayout {
 
         HLabel {
             id: statusLabel
+
+            property bool expand: status === "Error"
+
+            readonly property string fileName:
+                model.filepath.split("/").slice(-1)[0]
+
+            readonly property string filePath:
+                model.filepath.replace(/^file:\/\//, "")
+
             elide: expand ? Text.ElideNone : Text.ElideRight
             wrapMode: expand ? Text.Wrap : Text.NoWrap
 
@@ -91,16 +98,6 @@ HColumnLayout {
             rightPadding: leftPadding
 
             Layout.fillWidth: true
-
-
-            property bool expand: status === "Error"
-
-            readonly property string fileName:
-                model.filepath.split("/").slice(-1)[0]
-
-            readonly property string filePath:
-                model.filepath.replace(/^file:\/\//, "")
-
 
             HoverHandler { id: statusLabelHover }
 

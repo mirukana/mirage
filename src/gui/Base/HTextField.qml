@@ -5,6 +5,33 @@ import QtQuick.Controls 2.12
 
 TextField {
     id: field
+
+    property string saveName: ""
+    property var saveId: "ALL"
+    property var saveProperties: ["text"]
+
+    property bool error: false
+
+    property alias radius: textFieldBackground.radius
+    property bool bordered: true
+
+    property color backgroundColor: theme.controls.textField.background
+    property color borderColor: theme.controls.textField.border
+    property color errorBorder: theme.controls.textField.errorBorder
+
+    property color focusedBackgroundColor:
+        theme.controls.textField.focusedBackground
+    property color focusedBorderColor: theme.controls.textField.focusedBorder
+
+    property var disabledText: null
+    property var defaultText: null
+    readonly property bool changed: text !== (defaultText || "")
+
+    property string previousDefaultText: ""  // private
+
+    function reset() { clear(); text = Qt.binding(() => defaultText || "")}
+
+
     text: defaultText || ""
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
@@ -73,33 +100,6 @@ TextField {
     Keys.onLeftPressed: event.accepted = cursorPosition === 0 && ! selectedText
     Keys.onRightPressed:
         event.accepted = cursorPosition === length && ! selectedText
-
-
-    property string saveName: ""
-    property var saveId: "ALL"
-    property var saveProperties: ["text"]
-
-    property bool error: false
-
-    property alias radius: textFieldBackground.radius
-    property bool bordered: true
-
-    property color backgroundColor: theme.controls.textField.background
-    property color borderColor: theme.controls.textField.border
-    property color errorBorder: theme.controls.textField.errorBorder
-
-    property color focusedBackgroundColor:
-        theme.controls.textField.focusedBackground
-    property color focusedBorderColor: theme.controls.textField.focusedBorder
-
-    property var disabledText: null
-    property var defaultText: null
-    readonly property bool changed: text !== (defaultText || "")
-
-    property string previousDefaultText: ""  // private
-
-
-    function reset() { clear(); text = Qt.binding(() => defaultText || "")}
 
 
     Binding on color {

@@ -3,10 +3,6 @@
 import QtQuick 2.12
 
 HAvatar {
-    name: displayName || userId.substring(1)  // no leading @
-    title: "user_" + userId + ".avatar"
-
-
     property string userId
     property string displayName
     property string presence: ""
@@ -17,6 +13,9 @@ HAvatar {
     readonly property bool admin: powerLevel >= 100
     readonly property bool moderator: powerLevel >= 50 && ! admin
 
+
+    name: displayName || userId.substring(1)  // no leading @
+    title: "user_" + userId + ".avatar"
 
     HLoader {
         active: admin || moderator || invited
@@ -53,6 +52,11 @@ HAvatar {
     }
 
     HLoader {
+        property int diameter:
+            window.settings.compactMode ?
+            theme.controls.presence.radius * 2 :
+            theme.controls.presence.radius * 2.5
+
         active: presence && presence !== "offline"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -60,11 +64,6 @@ HAvatar {
         anchors.rightMargin: -diameter / 2
         opacity: theme.controls.presence.opacity
         z: 300
-
-        property int diameter:
-            window.settings.compactMode ?
-            theme.controls.presence.radius * 2 :
-            theme.controls.presence.radius * 2.5
 
         sourceComponent: Rectangle {
             width: diameter

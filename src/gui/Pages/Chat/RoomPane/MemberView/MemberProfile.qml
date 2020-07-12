@@ -8,12 +8,10 @@ import "../../../../Base"
 HListView {
     id: profile
 
-
     property string userId
     property string roomId
     property QtObject member  // RoomMember model item
     property HStackView stackView
-
 
     function loadDevices() {
          py.callClientCoro(userId, "member_devices", [member.id], devices => {
@@ -210,7 +208,6 @@ HListView {
         currentItem.clicked()
     }
     Keys.onEscapePressed: stackView.pop()
-
 
     Connections {
         target: py.eventHandlers

@@ -15,7 +15,6 @@ Rectangle {
         enabled ? 1 :
         theme.disabledElementsOpacity
 
-
     Behavior on opacity { HNumberAnimation {} }
 
     Rectangle {

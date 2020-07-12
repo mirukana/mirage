@@ -5,6 +5,9 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 InfoBar {
+    property var typingMembers: []
+
+
     color: theme.chat.typingMembers.background
     icon.svgName: "typing"  // TODO: animate
     label.textFormat: Text.StyledText
@@ -17,7 +20,4 @@ InfoBar {
         return qsTr("%1 and %2 are typing...")
                .arg(tm.slice(0, -1).join(", ")).arg(tm.slice(-1)[0])
     }
-
-
-    property var typingMembers: []
 }

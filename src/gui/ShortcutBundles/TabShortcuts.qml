@@ -6,7 +6,6 @@ import "../Base"
 HQtObject {
     id: root
 
-
     property Item container: parent
     property bool active: container.count > 1
 

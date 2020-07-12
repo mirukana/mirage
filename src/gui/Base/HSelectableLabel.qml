@@ -5,6 +5,19 @@ import QtQuick.Controls 2.12
 
 TextEdit {
     id: label
+
+    property bool enableLinkActivation: true
+
+    function selectWordAt(position) {
+        label.cursorPosition = positionAt(position.x, position.y)
+        label.selectWord()
+    }
+
+    function selectAllText() {
+        label.selectAll()
+    }
+
+
     font.family: theme.fontFamily.sans
     font.pixelSize: theme.fontSize.normal
     color: theme.colors.text
@@ -17,20 +30,6 @@ TextEdit {
     focus: false
     selectByMouse: true
     onLinkActivated: if (enableLinkActivation) Qt.openUrlExternally(link)
-
-
-    property bool enableLinkActivation: true
-
-
-    function selectWordAt(position) {
-        label.cursorPosition = positionAt(position.x, position.y)
-        label.selectWord()
-    }
-
-    function selectAllText() {
-        label.selectAll()
-    }
-
 
     MouseArea {
         anchors.fill: label

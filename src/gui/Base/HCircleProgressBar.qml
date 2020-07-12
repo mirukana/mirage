@@ -5,14 +5,6 @@ import QtQuick.Shapes 1.12
 
 
 Item {
-    implicitWidth: 96 * (theme ? theme.uiScale : 1)
-    implicitHeight: implicitWidth
-
-    layer.enabled: true
-    layer.samples: 4
-    layer.smooth: true
-
-
     property real progress: 0  // 0-1
 
     readonly property alias baseCircle: baseCircle
@@ -20,13 +12,21 @@ Item {
     readonly property alias label: label
 
 
+    implicitWidth: 96 * (theme ? theme.uiScale : 1)
+    implicitHeight: implicitWidth
+
+    layer.enabled: true
+    layer.samples: 4
+    layer.smooth: true
+
     HLabel {
         id: label
+
+        property int progressNumber: Math.floor(progress * 100)
+
         anchors.centerIn: parent
         text: progressNumber + "%"
         font.pixelSize: theme ? theme.fontSize.big : 22
-
-        property int progressNumber: Math.floor(progress * 100)
 
         Behavior on progressNumber { HNumberAnimation { factor: 2 } }
     }

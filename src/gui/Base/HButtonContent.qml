@@ -6,10 +6,6 @@ import QtQuick.Layouts 1.12
 
 HRowLayout {
     id: buttonContent
-    spacing: button.spacing
-    opacity: button.loading ? theme.loadingElementsOpacity :
-             enabled ? 1 : theme.disabledElementsOpacity
-
 
     property var button
     property QtObject buttonTheme
@@ -18,8 +14,11 @@ HRowLayout {
     readonly property alias label: label
 
 
-    Behavior on opacity { HNumberAnimation {} }
+    spacing: button.spacing
+    opacity: button.loading ? theme.loadingElementsOpacity :
+             enabled ? 1 : theme.disabledElementsOpacity
 
+    Behavior on opacity { HNumberAnimation {} }
 
     Item {
         visible: button.icon.name || button.loading

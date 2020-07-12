@@ -4,6 +4,12 @@ import QtQuick 2.12
 import "."
 
 PythonBridge {
+    property bool ready: false
+    property bool startupAnyAccountsSaved: false
+
+    readonly property EventHandlers eventHandlers: EventHandlers {}
+
+
     Component.onCompleted: {
         for (var func in eventHandlers) {
             if (! eventHandlers.hasOwnProperty(func)) continue
@@ -25,10 +31,4 @@ PythonBridge {
             })
         })
     }
-
-
-    property bool ready: false
-    property bool startupAnyAccountsSaved: false
-
-    readonly property EventHandlers eventHandlers: EventHandlers {}
 }

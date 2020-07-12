@@ -7,7 +7,6 @@ HMenu {
 
     property bool hadPersistentSelection: false  // TODO: use a Qt 5.15 Binding
 
-
     function spawn(atMousePosition=true) {
         hadPersistentSelection      = control.persistentSelection
         control.persistentSelection = true
@@ -24,7 +23,6 @@ HMenu {
     onClosed: control.persistentSelection = hadPersistentSelection
     Component.onDestruction:
         control.persistentSelection = hadPersistentSelection
-
 
     HMenuItem {
         icon.name: "undo"

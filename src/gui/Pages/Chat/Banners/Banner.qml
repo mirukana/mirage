@@ -6,14 +6,16 @@ import "../../../Base"
 
 Rectangle {
     id: banner
-    implicitHeight: childrenRect.height
-    color: theme.controls.box.background
 
     property alias avatar: bannerAvatar
     property alias icon: bannerIcon
     property alias labelText: bannerLabel.text
     property alias buttonModel: bannerRepeater.model
     property var buttonCallbacks: []
+
+
+    implicitHeight: childrenRect.height
+    color: theme.controls.box.background
 
     HGridLayout {
         id: bannerGrid

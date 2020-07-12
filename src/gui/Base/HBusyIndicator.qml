@@ -9,7 +9,6 @@ HCircleProgressBar {
     baseCircle.strokeWidth: 2
     progressCircle.strokeWidth: 2
 
-
     HNumberAnimation on rotation {
         from: 0
         to: 360

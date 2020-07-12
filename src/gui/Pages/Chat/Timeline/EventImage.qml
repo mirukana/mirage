@@ -5,24 +5,6 @@ import "../../../Base"
 
 HMxcImage {
     id: image
-    width: fitSize.width
-    height: fitSize.height
-    horizontalAlignment: Image.AlignLeft
-    enabledAnimatedPausing: ! eventList.selectedCount
-
-    title: thumbnail ? loader.thumbnailTitle : loader.title
-    animated: loader.singleMediaInfo.media_mime === "image/gif" ||
-              utils.urlExtension(loader.mediaUrl).toLowerCase() === "gif"
-    thumbnail: ! animated && loader.thumbnailMxc
-    mxc: thumbnail ?
-         (loader.thumbnailMxc || loader.mediaUrl) :
-         (loader.mediaUrl || loader.thumbnailMxc)
-    cryptDict: JSON.parse(
-        thumbnail && loader.thumbnailMxc ?
-        loader.singleMediaInfo.thumbnail_crypt_dict :
-        loader.singleMediaInfo.media_crypt_dict
-    )
-
 
     property EventMediaLoader loader
 
@@ -61,7 +43,6 @@ HMxcImage {
         Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
     )
 
-
     function getOpenUrl(callback) {
         if (image.isEncrypted && loader.mediaUrl) {
             loader.download(callback)
@@ -81,6 +62,24 @@ HMxcImage {
         callback(toOpen)
     }
 
+
+    width: fitSize.width
+    height: fitSize.height
+    horizontalAlignment: Image.AlignLeft
+    enabledAnimatedPausing: ! eventList.selectedCount
+
+    title: thumbnail ? loader.thumbnailTitle : loader.title
+    animated: loader.singleMediaInfo.media_mime === "image/gif" ||
+              utils.urlExtension(loader.mediaUrl).toLowerCase() === "gif"
+    thumbnail: ! animated && loader.thumbnailMxc
+    mxc: thumbnail ?
+         (loader.thumbnailMxc || loader.mediaUrl) :
+         (loader.mediaUrl || loader.thumbnailMxc)
+    cryptDict: JSON.parse(
+        thumbnail && loader.thumbnailMxc ?
+        loader.singleMediaInfo.thumbnail_crypt_dict :
+        loader.singleMediaInfo.media_crypt_dict
+    )
 
     TapHandler {
         acceptedModifiers: Qt.NoModifier

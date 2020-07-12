@@ -9,6 +9,7 @@ import "../../../../Popups"
 
 HTile {
     id: member
+
     backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
         model.invited ? theme.chat.roomPane.listView.member.invitedOpacity : 1
@@ -141,7 +142,6 @@ HTile {
             )
         }
     }
-
 
     Behavior on contentOpacity { HNumberAnimation {} }
     Behavior on spacing { HNumberAnimation {} }

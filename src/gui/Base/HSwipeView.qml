@@ -7,21 +7,6 @@ import "../ShortcutBundles"
 SwipeView {
     id: swipeView
 
-    Component.onCompleted: if (! changed) {
-        setCurrentIndex(window.getState(this, "currentIndex", defaultIndex))
-        saveEnabled = true
-    }
-
-    onCurrentIndexChanged: {
-        if (saveEnabled) window.saveState(this)
-
-        if (currentIndex < previousIndex) lastMove = HSwipeView.Move.ToPrevious
-        if (currentIndex > previousIndex) lastMove = HSwipeView.Move.ToNext
-
-        previousIndex = currentIndex
-    }
-
-
     enum Move { ToPrevious, ToNext }
 
     property string saveName: ""
@@ -51,6 +36,20 @@ SwipeView {
         decrementCurrentIndex()
     }
 
+
+    Component.onCompleted: if (! changed) {
+        setCurrentIndex(window.getState(this, "currentIndex", defaultIndex))
+        saveEnabled = true
+    }
+
+    onCurrentIndexChanged: {
+        if (saveEnabled) window.saveState(this)
+
+        if (currentIndex < previousIndex) lastMove = HSwipeView.Move.ToPrevious
+        if (currentIndex > previousIndex) lastMove = HSwipeView.Move.ToNext
+
+        previousIndex = currentIndex
+    }
 
     TabShortcuts {
         container: swipeView

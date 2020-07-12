@@ -6,8 +6,8 @@ import "../Base"
 HPopup {
     id: popup
 
-
     default property alias pageData: page.columnData
+
     readonly property alias page: page
 
     signal keyboardAccept()

@@ -5,21 +5,6 @@ import QtQuick.Controls 2.12
 
 Rectangle {
     id: avatar
-    implicitWidth: implicitHeight
-    implicitHeight:
-        compact ?
-        theme.controls.avatar.compactSize :
-        theme.controls.avatar.size
-
-    radius: theme.controls.avatar.radius
-
-    color: avatarImage.visible ? "transparent" : utils.hsluv(
-       name ? utils.hueFrom(name) : 0,
-       name ? theme.controls.avatar.background.saturation : 0,
-       theme.controls.avatar.background.lightness,
-       theme.controls.avatar.background.opacity
-   )
-
 
     property bool compact: false
 
@@ -36,6 +21,21 @@ Rectangle {
     readonly property alias hovered: hoverHandler.hovered
     readonly property alias circleRadius: avatarImage.circleRadius
 
+
+    implicitWidth: implicitHeight
+    implicitHeight:
+        compact ?
+        theme.controls.avatar.compactSize :
+        theme.controls.avatar.size
+
+    radius: theme.controls.avatar.radius
+
+    color: avatarImage.visible ? "transparent" : utils.hsluv(
+       name ? utils.hueFrom(name) : 0,
+       name ? theme.controls.avatar.background.saturation : 0,
+       theme.controls.avatar.background.lightness,
+       theme.controls.avatar.background.opacity
+   )
 
     Behavior on color { HColorAnimation {} }
 
@@ -73,13 +73,6 @@ Rectangle {
 
         HToolTip {
             id: avatarToolTip
-            visible: ! avatarImage.broken &&
-                     avatarImage.status !== Image.Error &&
-                     avatarImage.width < dimension * 0.75 &&
-                     (toolTipSourceOverride || toolTipMxc) &&
-                     hoverHandler.hovered
-            delay: 1000
-            backgroundColor: theme.controls.avatar.hoveredImage.background
 
             readonly property int dimension: Math.min(
                 mainUI.width / 1.25,
@@ -87,6 +80,14 @@ Rectangle {
                 theme.controls.avatar.hoveredImage.size +
                 background.border.width * 2,
             )
+
+            visible: ! avatarImage.broken &&
+                     avatarImage.status !== Image.Error &&
+                     avatarImage.width < dimension * 0.75 &&
+                     (toolTipSourceOverride || toolTipMxc) &&
+                     hoverHandler.hovered
+            delay: 1000
+            backgroundColor: theme.controls.avatar.hoveredImage.background
 
             contentItem: HMxcImage {
                 id: avatarToolTipImage

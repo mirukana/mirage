@@ -8,12 +8,9 @@ import "../../Base/Buttons"
 
 HFlickableColumnPage {
     id: page
-    enabled: account && account.presence !== "offline"
-
 
     property string userId
     readonly property QtObject account: ModelStore.get("accounts").find(userId)
-
 
     function takeFocus() { nameField.item.forceActiveFocus() }
 
@@ -52,6 +49,8 @@ HFlickableColumnPage {
     }
 
 
+    enabled: account && account.presence !== "offline"
+
     footer: AutoDirectionLayout {
         ApplyButton {
             id: applyButton
@@ -67,7 +66,6 @@ HFlickableColumnPage {
 
     onKeyboardAccept: create()
     onKeyboardCancel: cancel()
-
 
     HRoomAvatar {
         id: avatar

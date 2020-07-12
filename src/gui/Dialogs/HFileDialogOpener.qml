@@ -5,13 +5,8 @@ import Qt.labs.platform 1.1
 
 Item {
     id: opener
-    anchors.fill: fill ? parent : undefined
 
-
-    signal filePicked(string file)
-    signal filesPicked(var files)
-    signal cancelled()
-
+    enum FileType { All, Images }
 
     property bool fill: true
 
@@ -24,9 +19,14 @@ Item {
     property string selectSubject:
         dialog.fileMode === FileDialog.SaveFile ? qsTr("file") : qsTr("open")
 
-    enum FileType { All, Images }
     property int fileType: HFileDialogOpener.FileType.All
 
+    signal filePicked(string file)
+    signal filesPicked(var files)
+    signal cancelled()
+
+
+    anchors.fill: fill ? parent : undefined
 
     TapHandler { enabled: opener.enabled && fill; onTapped: fileDialog.open() }
 

@@ -8,7 +8,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string userId: ""
 
 
@@ -53,7 +52,6 @@ HFlickableColumnPopup {
     }
 
     onOpened: exportButton.forceActiveFocus()
-
 
     SummaryLabel {
         text: qsTr("Backup your decryption keys before signing out?")

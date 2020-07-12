@@ -7,6 +7,7 @@ Item {
     property alias borderHeight: clipArea.height
     property alias color: borderRectangle.color
 
+
     implicitWidth: rectangle.width
     implicitHeight: rectangle.height
 

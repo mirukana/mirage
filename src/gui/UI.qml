@@ -10,10 +10,6 @@ import "MainPane"
 
 Item {
     id: mainUI
-    focus: true
-
-    Component.onCompleted: window.mainUI = mainUI
-
 
     property bool accountsPresent:
         ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved
@@ -35,11 +31,13 @@ Item {
     readonly property alias fontMetrics: fontMetrics
     readonly property alias idleManager: idleManager
 
-
     function reloadSettings() {
         py.loadSettings(() => { mainUI.pressAnimation.start() })
     }
 
+
+    focus: true
+    Component.onCompleted: window.mainUI = mainUI
 
     SequentialAnimation {
         id: pressAnimation

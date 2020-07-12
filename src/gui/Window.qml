@@ -7,14 +7,6 @@ import "PythonBridge"
 
 ApplicationWindow {
     id: window
-    flags: Qt.WA_TranslucentBackground
-    minimumWidth: theme ? theme.minimumSupportedWidth : 240
-    minimumHeight: theme ? theme.minimumSupportedHeight : 120
-    width: Math.min(screen.width, 1152)
-    height: Math.min(screen.height, 768)
-    visible: true
-    color: "transparent"
-
 
     // FIXME: Qt 5.13.1 bug, this randomly stops updating after the cursor
     // leaves the window until it's clicked again.
@@ -26,20 +18,10 @@ ApplicationWindow {
         window.visibility === window.Minimized ||
         window.visibility === window.Hidden
 
-    // NOTE: For JS object variables, the corresponding method to notify
-    // key/value changes must be called manually, e.g. settingsChanged().
-
     property var mainUI: null
-
     property var settings: ({})
-    onSettingsChanged: py.saveConfig("ui_settings", settings)
-
     property var uiState: ({})
-    onUiStateChanged: py.saveConfig("ui_state", uiState)
-
     property var history: ({})
-    onHistoryChanged: py.saveConfig("history", history)
-
     property var theme: null
 
     property var hideErrorTypes: new Set(["gaierror", "SSLError"])
@@ -76,6 +58,20 @@ ApplicationWindow {
         }
     }
 
+
+    flags: Qt.WA_TranslucentBackground
+    minimumWidth: theme ? theme.minimumSupportedWidth : 240
+    minimumHeight: theme ? theme.minimumSupportedHeight : 120
+    width: Math.min(screen.width, 1152)
+    height: Math.min(screen.height, 768)
+    visible: true
+    color: "transparent"
+
+    // NOTE: For JS object variables, the corresponding method to notify
+    // key/value changes must be called manually, e.g. settingsChanged().
+    onSettingsChanged: py.saveConfig("ui_settings", settings)
+    onUiStateChanged: py.saveConfig("ui_state", uiState)
+    onHistoryChanged: py.saveConfig("history", history)
 
     PythonRootBridge { id: py }
 

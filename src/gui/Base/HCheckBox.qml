@@ -6,6 +6,15 @@ import QtQuick.Layouts 1.12
 
 CheckBox {
     id: box
+
+    property alias mainText: mainText
+    property alias subtitle: subtitleText
+    property bool defaultChecked: false
+    readonly property bool changed: checked !== defaultChecked
+
+    function reset() { checked = defaultChecked }
+
+
     checked: defaultChecked
     spacing: contentItem.visible ? theme.spacing : 0
     padding: 0
@@ -82,16 +91,6 @@ CheckBox {
             Layout.fillWidth: true
         }
     }
-
-
-    property alias mainText: mainText
-    property alias subtitle: subtitleText
-    property bool defaultChecked: false
-    readonly property bool changed: checked !== defaultChecked
-
-
-    function reset() { checked = defaultChecked }
-
 
     Behavior on opacity { HNumberAnimation { factor: 2 } }
 }

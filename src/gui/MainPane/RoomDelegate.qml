@@ -9,6 +9,22 @@ import "../Base/HTile"
 
 HTile {
     id: room
+
+    readonly property bool joined: ! invited && ! parted
+    readonly property bool invited: model.inviter_id && ! parted
+    readonly property bool parted: model.left
+
+    readonly property ListModel eventModel:
+        ModelStore.get(model.for_account, model.id, "events")
+
+    // FIXME: binding loop
+    readonly property QtObject accountModel:
+        ModelStore.get("accounts").find(model.for_account)
+
+    readonly property QtObject lastEvent:
+        eventModel.count > 0 ? eventModel.get(0) : null
+
+
     backgroundColor: theme.mainPane.listView.room.background
     leftPadding: theme.spacing * 2
     rightPadding: theme.spacing
@@ -179,19 +195,4 @@ HTile {
             })
         }
     }
-
-
-    readonly property bool joined: ! invited && ! parted
-    readonly property bool invited: model.inviter_id && ! parted
-    readonly property bool parted: model.left
-
-    readonly property ListModel eventModel:
-        ModelStore.get(model.for_account, model.id, "events")
-
-    // FIXME: binding loop
-    readonly property QtObject accountModel:
-        ModelStore.get("accounts").find(model.for_account)
-
-    readonly property QtObject lastEvent:
-        eventModel.count > 0 ? eventModel.get(0) : null
 }

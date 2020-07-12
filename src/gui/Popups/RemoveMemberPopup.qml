@@ -8,7 +8,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string userId
     property string roomId
     property string targetUserId
@@ -49,7 +48,6 @@ HFlickableColumnPopup {
 
     onOpened: reasonField.item.forceActiveFocus()
     onKeyboardAccept: popup.remove()
-
 
     SummaryLabel {
         textFormat: Text.StyledText

@@ -11,15 +11,6 @@ import "../../ShortcutBundles"
 
 HColumnPage {
     id: page
-    enabled: ModelStore.get("accounts").find(userId).presence !== "offline"
-    contentHeight: Math.min(
-        window.height,
-        Math.max(
-            deviceList.contentHeight + deviceList.bottomMargin,
-            busyIndicatorLoader.height + theme.spacing * 2,
-        )
-    )
-
 
     property string userId
 
@@ -27,7 +18,6 @@ HColumnPage {
         SwipeView ? SwipeView.isCurrentItem : true
 
     property Future loadFuture: null
-
 
     function takeFocus() {} // TODO
 
@@ -100,6 +90,15 @@ HColumnPage {
     }
 
 
+    enabled: ModelStore.get("accounts").find(userId).presence !== "offline"
+    contentHeight: Math.min(
+        window.height,
+        Math.max(
+            deviceList.contentHeight + deviceList.bottomMargin,
+            busyIndicatorLoader.height + theme.spacing * 2,
+        )
+    )
+
     footer: AutoDirectionLayout {
         GroupButton {
             id: refreshButton
@@ -125,7 +124,6 @@ HColumnPage {
     }
 
     Keys.forwardTo: [deviceList]
-
 
     HListView {
         id: deviceList

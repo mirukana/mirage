@@ -5,16 +5,14 @@ import QtQuick 2.12
 QtObject {
     id: future
 
-
     property PythonBridge bridge
 
     readonly property QtObject privates: QtObject {
-        onPythonFutureChanged: if (cancelPending) future.cancel()
-
         property var pythonFuture: null
         property bool cancelPending: false
-    }
 
+        onPythonFutureChanged: if (cancelPending) future.cancel()
+    }
 
     function cancel() {
         if (! privates.pythonFuture) {

@@ -4,26 +4,11 @@ import QtQuick 2.12
 
 MouseArea {
     id: mouseArea
-    enabled: ! window.settings.enableKineticScrolling
-    propagateComposedEvents: true
-    acceptedButtons: Qt.NoButton
-
-
-    onWheel: {
-        // Make components below the stack notice the wheel event
-        wheel.accepted = false
-
-        const pos = getNewPosition(flickable, wheel)
-        flickable.flick(0, 0)
-        flickable.contentY = pos
-    }
-
 
     property Flickable flickable: parent
 
     // Used to get default flickDeceleration value
     readonly property Flickable dummy: Flickable {}
-
 
     function getNewPosition(flickable, wheel) {
         // wheel.pixelDelta will be available on high resolution trackpads.
@@ -52,6 +37,19 @@ MouseArea {
         )
     }
 
+
+    enabled: ! window.settings.enableKineticScrolling
+    propagateComposedEvents: true
+    acceptedButtons: Qt.NoButton
+
+    onWheel: {
+        // Make components below the stack notice the wheel event
+        wheel.accepted = false
+
+        const pos = getNewPosition(flickable, wheel)
+        flickable.flick(0, 0)
+        flickable.contentY = pos
+    }
 
     Binding {
         target: flickable

@@ -9,6 +9,7 @@ ProgressBar {
     property color backgroundColor: theme.controls.progressBar.background
     property color foregroundColor: theme.controls.progressBar.foreground
 
+
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: theme.controls.progressBar.height

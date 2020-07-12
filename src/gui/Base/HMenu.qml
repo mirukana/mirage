@@ -6,6 +6,17 @@ import CppUtils 0.1
 
 Menu {
     id: menu
+
+    property var previouslyFocused: null
+
+    // MenuItems that open popups (or other elements taking focus when opened)
+    // should set this to null. It will be reset to previouslyFocus when
+    // the Menu is closed and opened again.
+    property Item focusOnClosed: previouslyFocused
+
+    readonly property string uuid: CppUtils.uuid()
+
+
     modal: true
     dim: false
     padding: theme.controls.menu.borderWidth
@@ -48,24 +59,17 @@ Menu {
         previouslyFocused = window.activeFocusItem
         focusOnClosed     = Qt.binding(() => previouslyFocused)
     }
+
     onOpened: {
         window.visibleMenus[uuid] = this
         window.visibleMenusChanged()
     }
+
     onClosed: {
         if (focusOnClosed) focusOnClosed.forceActiveFocus()
         delete window.visibleMenus[uuid]
         window.visibleMenusChanged()
     }
+
     Component.onDestruction: closed()
-
-
-    property var previouslyFocused: null
-
-    // MenuItems that open popups (or other elements taking focus when opened)
-    // should set this to null. It will be reset to previouslyFocus when
-    // the Menu is closed and opened again.
-    property Item focusOnClosed: previouslyFocused
-
-    readonly property string uuid: CppUtils.uuid()
 }

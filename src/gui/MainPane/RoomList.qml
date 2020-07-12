@@ -8,83 +8,19 @@ import "../Base"
 
 HListView {
     id: roomList
-    model: ModelStore.get("all_rooms")
-
-    delegate: DelegateChooser {
-        role: "type"
-
-        DelegateChoice {
-            roleValue: "Account"
-            AccountDelegate {
-                width: roomList.width
-                leftPadding: theme.spacing
-                rightPadding: 0  // the right buttons have padding
-
-                filterActive: Boolean(filter)
-                enableKeybinds: Boolean(
-                    roomList.model.get(currentIndex) && (
-                        roomList.model.get(currentIndex).for_account ||
-                        roomList.model.get(currentIndex).id
-                    ) === model.id
-                )
-
-                totalMessageIndicator.visible: false
-
-                onLeftClicked: showItemAtIndex(model.index)
-                onCollapsedChanged:
-                    if (wantedUserId === model.id) startCorrectItemSearch()
-
-                onWentToAccountPage: roomList.currentIndex = model.index
-            }
-        }
-
-        DelegateChoice {
-            roleValue: "Room"
-            RoomDelegate {
-                width: roomList.width
-                onLeftClicked: showItemAtIndex(model.index)
-            }
-        }
-    }
-
-    onFilterChanged: {
-        py.callCoro("set_substring_filter", ["all_rooms", filter], () => {
-            if (filter) {
-                currentIndex = 1  // highlight the first matching room
-                return
-            }
-
-            const item = model.get(currentIndex)
-
-            if (
-                ! filter &&
-                item && (
-                    currentIndex === 1 || // required, related to the if above
-                    (
-                        currentShouldBeAccount &&
-                        wantedUserId !== item.id
-                    ) || (
-                        currentShouldBeRoom && (
-                            wantedUserId !== item.for_account ||
-                            wantedRoomId !== item.id
-                        )
-                     )
-                )
-            )
-                startCorrectItemSearch()
-        })
-    }
-
 
     property string filter: ""
 
     readonly property bool currentShouldBeAccount:
         window.uiState.page === "Pages/AccountSettings/AccountSettings.qml" ||
         window.uiState.page === "Pages/AddChat/AddChat.qml"
+
     readonly property bool currentShouldBeRoom:
         window.uiState.page === "Pages/Chat/Chat.qml"
+
     readonly property string wantedUserId:
         window.uiState.pageProperties.userId || ""
+
     readonly property string wantedRoomId:
         window.uiState.pageProperties.roomId || ""
 
@@ -98,7 +34,6 @@ HListView {
 
         return accounts
     }
-
 
     function goToAccount(userId) {
         accountIndice[userId] + 1 <= model.count -1 &&
@@ -199,6 +134,73 @@ HListView {
         return false
     }
 
+
+    model: ModelStore.get("all_rooms")
+
+    delegate: DelegateChooser {
+        role: "type"
+
+        DelegateChoice {
+            roleValue: "Account"
+            AccountDelegate {
+                width: roomList.width
+                leftPadding: theme.spacing
+                rightPadding: 0  // the right buttons have padding
+
+                filterActive: Boolean(filter)
+                enableKeybinds: Boolean(
+                    roomList.model.get(currentIndex) && (
+                        roomList.model.get(currentIndex).for_account ||
+                        roomList.model.get(currentIndex).id
+                    ) === model.id
+                )
+
+                totalMessageIndicator.visible: false
+
+                onLeftClicked: showItemAtIndex(model.index)
+                onCollapsedChanged:
+                    if (wantedUserId === model.id) startCorrectItemSearch()
+
+                onWentToAccountPage: roomList.currentIndex = model.index
+            }
+        }
+
+        DelegateChoice {
+            roleValue: "Room"
+            RoomDelegate {
+                width: roomList.width
+                onLeftClicked: showItemAtIndex(model.index)
+            }
+        }
+    }
+
+    onFilterChanged: {
+        py.callCoro("set_substring_filter", ["all_rooms", filter], () => {
+            if (filter) {
+                currentIndex = 1  // highlight the first matching room
+                return
+            }
+
+            const item = model.get(currentIndex)
+
+            if (
+                ! filter &&
+                item && (
+                    currentIndex === 1 || // required, related to the if above
+                    (
+                        currentShouldBeAccount &&
+                        wantedUserId !== item.id
+                    ) || (
+                        currentShouldBeRoom && (
+                            wantedUserId !== item.for_account ||
+                            wantedRoomId !== item.id
+                        )
+                     )
+                )
+            )
+                startCorrectItemSearch()
+        })
+    }
 
     Connections {
         target: pageLoader

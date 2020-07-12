@@ -6,12 +6,9 @@ import "../ShortcutBundles"
 
 HPage {
     id: page
-    implicitWidth: theme.controls.box.defaultWidth
-    contentHeight:
-        flickable.contentHeight + flickable.topMargin + flickable.bottomMargin
-
 
     default property alias columnData: column.data
+
     property alias column: column
     property alias flickable: flickable
     property alias flickShortcuts: flickShortcuts
@@ -20,8 +17,11 @@ HPage {
         SwipeView ? SwipeView.isCurrentItem : true
 
 
-    padding: 0
+    implicitWidth: theme.controls.box.defaultWidth
+    contentHeight:
+        flickable.contentHeight + flickable.topMargin + flickable.bottomMargin
 
+    padding: 0
 
     HFlickable {
         id: flickable

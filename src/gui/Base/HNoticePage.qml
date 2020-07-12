@@ -11,6 +11,7 @@ HRowLayout {
     property alias backgroundColor: noticeLabelBackground.color
     property alias radius: noticeLabelBackground.radius
 
+
     HLabel {
         id: noticeLabel
         horizontalAlignment: Text.AlignHCenter

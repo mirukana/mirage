@@ -5,15 +5,15 @@ import QtAV 1.7
 
 OSD {
     id: osd
+
+    property alias source: audioPlayer.source
+
+
     audioOnly: true
     media: audioPlayer
 
     implicitWidth: osd.width
     implicitHeight: osd.height
-
-
-    property alias source: audioPlayer.source
-
 
     MediaPlayer {
         id: audioPlayer

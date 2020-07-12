@@ -5,16 +5,15 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 Rectangle {
-    // Hide filter field overflowing for a sec on size changes
-    clip: true
-    implicitHeight: theme.baseElementsHeight
-    color: theme.mainPane.bottomBar.background
-
-
     property RoomList roomList
     readonly property alias addAccountButton: addAccountButton
     readonly property alias filterField: filterField
 
+
+    // Hide filter field overflowing for a sec on size changes
+    clip: true
+    implicitHeight: theme.baseElementsHeight
+    color: theme.mainPane.bottomBar.background
 
     HRowLayout {
         anchors.fill: parent

@@ -5,6 +5,7 @@ import "../../../Base"
 
 HLabel {
     id: bubble
+
     anchors.margins: theme.spacing / 4
 
     topPadding: theme.spacing / 2

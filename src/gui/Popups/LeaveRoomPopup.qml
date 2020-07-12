@@ -7,7 +7,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string userId: ""
     property string roomId: ""
     property string roomName: ""
@@ -32,7 +31,6 @@ HFlickableColumnPopup {
     }
 
     onOpened: leaveButton.forceActiveFocus()
-
 
     SummaryLabel {
         text: qsTr("Leave <i>%1</i>?").arg(roomName)

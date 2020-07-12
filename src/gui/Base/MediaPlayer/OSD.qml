@@ -7,20 +7,6 @@ import "../../Base"
 
 HColumnLayout {
     id: osd
-    visible: osdScaleTransform.yScale > 0
-
-    transform: Scale {
-        id: osdScaleTransform
-        yScale: audioOnly ||
-                osdHover.hovered ||
-                media.playbackState !== MediaPlayer.PlayingState ||
-                osd.showup ?
-                1 : 0
-        origin.y: osd.height
-
-        Behavior on yScale { HNumberAnimation {} }
-    }
-
 
     property QtObject media: parent  // QtAV.Video or QtAV.MediaPlayer
     property bool audioOnly: false
@@ -35,12 +21,6 @@ HColumnLayout {
         savedDuration ?
         Math.min(media.position, savedDuration) : media.position
 
-
-    onShowupChanged: if (showup) osdHideTimer.restart()
-    onDurationChanged: if (duration) savedDuration = duration
-    onAspectRatioChanged: if (aspectRatio) savedAspectRatio = aspectRatio
-
-
     function togglePlay() {
         media.playbackState === MediaPlayer.PlayingState ?
         media.pause() : media.play()
@@ -51,6 +31,24 @@ HColumnLayout {
         if (media.seekable) media.seek(pos * (savedDuration || boundPosition))
     }
 
+
+    visible: osdScaleTransform.yScale > 0
+
+    transform: Scale {
+        id: osdScaleTransform
+        yScale: audioOnly ||
+                osdHover.hovered ||
+                media.playbackState !== MediaPlayer.PlayingState ||
+                osd.showup ?
+                1 : 0
+        origin.y: osd.height
+
+        Behavior on yScale { HNumberAnimation {} }
+    }
+
+    onShowupChanged: if (showup) osdHideTimer.restart()
+    onDurationChanged: if (duration) savedDuration = duration
+    onAspectRatioChanged: if (aspectRatio) savedAspectRatio = aspectRatio
 
     HoverHandler { id: osdHover }
 
@@ -77,6 +75,13 @@ HColumnLayout {
 
         HToolTip {
             id: previewToolTip
+
+            readonly property int wantTimestamp:
+                visible ?
+                savedDuration *
+                (timeSlider.mouseArea.mouseX / timeSlider.mouseArea.width) :
+                -1
+
             x: timeSlider.mouseArea.mouseX - width / 2
             visible: ! audioOnly &&
 
@@ -87,20 +92,6 @@ HColumnLayout {
                      previewLabel.implicitHeight + previewLabel.padding &&
 
                      ! timeSlider.pressed && timeSlider.mouseArea.containsMouse
-
-            readonly property int wantTimestamp:
-                visible ?
-                savedDuration *
-                (timeSlider.mouseArea.mouseX / timeSlider.mouseArea.width) :
-                -1
-
-            Timer {
-                interval: 300
-                running: previewToolTip.visible
-                repeat: true
-                triggeredOnStart: true
-                onTriggered: preview.timestamp = previewToolTip.wantTimestamp
-            }
 
             contentItem: VideoPreview {
                 id: preview
@@ -129,11 +120,19 @@ HColumnLayout {
                     }
                 }
             }
-        }
 
-        Binding  on value {
-            value: boundPosition
-            when: ! timeSlider.pressed
+            Binding  on value {
+                value: boundPosition
+                when: ! timeSlider.pressed
+            }
+
+            Timer {
+                interval: 300
+                running: previewToolTip.visible
+                repeat: true
+                triggeredOnStart: true
+                onTriggered: preview.timestamp = previewToolTip.wantTimestamp
+            }
         }
     }
 

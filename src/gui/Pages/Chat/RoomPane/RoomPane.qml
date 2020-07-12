@@ -7,6 +7,22 @@ import "MemberView"
 
 MultiviewPane {
     id: roomPane
+
+    readonly property QtObject accountModel:
+        ModelStore.get("accounts").find(chat.roomInfo.for_account)
+
+    function toggleFocus() {
+        if (roomPane.activeFocus) {
+            if (roomPane.collapse) roomPane.close()
+            pageLoader.takeFocus()
+            return
+        }
+
+        roomPane.open()
+        swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+    }
+
+
     saveName: "roomPane"
     edge: Qt.RightEdge
 
@@ -55,23 +71,6 @@ MultiviewPane {
             HNumberAnimation {}
         }
     }
-
-
-    readonly property QtObject accountModel:
-        ModelStore.get("accounts").find(chat.roomInfo.for_account)
-
-
-    function toggleFocus() {
-        if (roomPane.activeFocus) {
-            if (roomPane.collapse) roomPane.close()
-            pageLoader.takeFocus()
-            return
-        }
-
-        roomPane.open()
-        swipeView.currentItem.keybindFocusItem.forceActiveFocus()
-    }
-
 
     Connections {
         target: swipeView

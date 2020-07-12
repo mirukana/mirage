@@ -8,14 +8,12 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string preferUserId: ""
     property string roomId: ""
 
     property var eventSenderAndIds: []  // [[senderId, event.id], ...]
     property bool onlyOwnMessageWarning: false
     property bool isLast: false
-
 
     function remove() {
         const idsForSender = {}  // {senderId: [event.id, ...]}
@@ -52,7 +50,6 @@ HFlickableColumnPopup {
 
     onOpened: reasonField.item.forceActiveFocus()
     onKeyboardAccept: popup.remove()
-
 
     SummaryLabel {
         text:

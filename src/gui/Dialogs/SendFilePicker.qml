@@ -4,6 +4,11 @@ import QtQuick 2.12
 import Qt.labs.platform 1.1
 
 HFileDialogOpener {
+    property string userId
+    property string roomId
+    property bool destroyWhenDone: false
+
+
     fill: false
     dialog.title: qsTr("Select a file to send")
     dialog.fileMode: FileDialog.OpenFiles
@@ -23,9 +28,4 @@ HFileDialogOpener {
     }
 
     onCancelled: if (destroyWhenDone) destroy()
-
-
-    property string userId
-    property string roomId
-    property bool destroyWhenDone: false
 }

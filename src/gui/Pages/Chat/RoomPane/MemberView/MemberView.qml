@@ -10,6 +10,7 @@ HColumnLayout {
     readonly property var modelSyncId:
         [chat.userId, chat.roomId, "filtered_members"]
 
+
     HStackView {
         id: stackView
 

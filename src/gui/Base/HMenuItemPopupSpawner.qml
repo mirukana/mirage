@@ -4,6 +4,11 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 HMenuItem {
+    property var popup  // url or HPopup Component
+    property bool autoDestruct: true
+    property var properties: ({})
+
+
     onTriggered: {
         menu.focusOnClosed = null
 
@@ -16,9 +21,4 @@ HMenuItem {
             autoDestruct,
         )
     }
-
-
-    property var popup  // url or HPopup Component
-    property bool autoDestruct: true
-    property var properties: ({})
 }

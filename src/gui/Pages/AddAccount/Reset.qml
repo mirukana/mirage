@@ -21,7 +21,6 @@ HFlickableColumnPage {
         }
     }
 
-
     HLabel {
         wrapMode: Text.Wrap
         horizontalAlignment: Qt.AlignHCenter

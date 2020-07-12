@@ -9,7 +9,6 @@ import "../../Base/HTile"
 HTile {
     id: deviceTile
 
-
     property HListView view
     property string userId
 

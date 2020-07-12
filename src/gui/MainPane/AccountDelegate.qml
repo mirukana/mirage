@@ -7,6 +7,39 @@ import "../Base/HTile"
 
 HTile {
     id: account
+
+    property bool enableKeybinds: false
+    property bool filterActive: false
+
+    readonly property bool collapsed:
+        (window.uiState.collapseAccounts[model.id] || false) &&
+        ! filterActive
+
+    readonly property alias avatar: title
+    readonly property alias totalMessageIndicator: totalMessageIndicator
+    readonly property alias title: title
+    readonly property alias addChat: addChat
+    readonly property alias expand: expand
+
+    signal wentToAccountPage()
+
+    function setCollapse(collapse) {
+        window.uiState.collapseAccounts[model.id] = collapse
+        window.uiStateChanged()
+
+        py.callCoro("set_account_collapse", [model.id, collapse])
+    }
+
+    function toggleCollapse() {
+        setCollapse(! collapsed)
+    }
+
+    function togglePresence(presence) {
+        if (model.presence === presence) presence = "online"
+        py.callClientCoro(model.id, "set_presence", [presence])
+    }
+
+
     backgroundColor: theme.mainPane.listView.account.background
 
     contentItem: ContentRow {
@@ -170,40 +203,6 @@ HTile {
             null
         onWentToAccountPage: account.wentToAccountPage()
     }
-
-
-    property bool enableKeybinds: false
-    property bool filterActive: false
-
-    readonly property bool collapsed:
-        (window.uiState.collapseAccounts[model.id] || false) &&
-        ! filterActive
-
-    readonly property alias avatar: title
-    readonly property alias totalMessageIndicator: totalMessageIndicator
-    readonly property alias title: title
-    readonly property alias addChat: addChat
-    readonly property alias expand: expand
-
-    signal wentToAccountPage()
-
-
-    function setCollapse(collapse) {
-        window.uiState.collapseAccounts[model.id] = collapse
-        window.uiStateChanged()
-
-        py.callCoro("set_account_collapse", [model.id, collapse])
-    }
-
-    function toggleCollapse() {
-        setCollapse(! collapsed)
-    }
-
-    function togglePresence(presence) {
-        if (model.presence === presence) presence = "online"
-        py.callClientCoro(model.id, "set_presence", [presence])
-    }
-
 
     HShortcut {
         enabled: enableKeybinds

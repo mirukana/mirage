@@ -5,10 +5,6 @@ import QtQuick.Controls 2.12
 
 Slider {
     id: slider
-    leftPadding: 0
-    rightPadding: leftPadding
-    topPadding: 0
-    bottomPadding: topPadding
 
     property bool enableRadius: true
     property bool fullHeight: false
@@ -17,6 +13,12 @@ Slider {
 
     property alias toolTip: toolTip
     property alias mouseArea: mouseArea
+
+
+    leftPadding: 0
+    rightPadding: leftPadding
+    topPadding: 0
+    bottomPadding: topPadding
 
     background: Rectangle {
         color: backgroundColor

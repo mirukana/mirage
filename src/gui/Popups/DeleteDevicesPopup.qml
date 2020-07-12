@@ -8,13 +8,11 @@ import "../PythonBridge"
 PasswordPopup {
     id: popup
 
-
     property string userId
     property var deviceIds  // array
     property var deletedCallback: null
 
     property Future deleteFuture: null
-
 
     function verifyPassword(pass, callback) {
         deleteFuture = py.callClientCoro(
@@ -34,6 +32,7 @@ PasswordPopup {
             },
         )
     }
+
 
     summary.text:
         qsTr("Enter your account's password to continue:")

@@ -8,7 +8,6 @@ import "../../../../Base/Buttons"
 HFlickableColumnPage {
     id: page
 
-
     property string deviceOwner
     property string deviceOwnerDisplayName
     property string deviceId
@@ -19,7 +18,6 @@ HFlickableColumnPage {
     property Item previouslyFocused: null
 
     signal trustSet(bool trust)
-
 
     function close() {
         if (previouslyFocused) previouslyFocused.forceActiveFocus()
@@ -71,7 +69,6 @@ HFlickableColumnPage {
     }
 
     onKeyboardCancel: page.close()
-
 
     HRowLayout {
         HButton {

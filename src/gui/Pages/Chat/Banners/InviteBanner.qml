@@ -8,6 +8,7 @@ Banner {
     property string inviterName: chat.roomInfo.inviter_name
     property string inviterAvatar: chat.roomInfo.inviter_avatar
 
+
     color: theme.chat.inviteBanner.background
 
     avatar.userId: inviterId

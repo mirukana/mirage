@@ -10,31 +10,6 @@ import "MainPane"
 
 HLoader {
     id: pageLoader
-    clip: appearAnimation.running
-
-    onLoaded: { takeFocus(); appearAnimation.start() }
-
-    Component.onCompleted: {
-        if (! py.startupAnyAccountsSaved) {
-            pageLoader.showPage(
-                "AddAccount/AddAccount", {"header.show": false},
-            )
-            return
-        }
-
-        const page  = window.uiState.page
-        const props = window.uiState.pageProperties
-
-        if (page === "Pages/Chat/Chat.qml") {
-            pageLoader.showRoom(props.userId, props.roomId)
-        } else {
-            pageLoader._show(page, props)
-        }
-    }
-
-
-    signal previousShown(string componentUrl, var properties)
-
 
     property bool isWide: width > theme.contentIsWideAbove
 
@@ -44,6 +19,7 @@ HLoader {
 
     readonly property alias appearAnimation: appearAnimation
 
+    signal previousShown(string componentUrl, var properties)
 
     function _show(componentUrl, properties={}) {
         history.unshift([componentUrl, properties])
@@ -89,6 +65,28 @@ HLoader {
         if (mainPane.collapse) mainPane.close()
     }
 
+
+    clip: appearAnimation.running
+
+    onLoaded: { takeFocus(); appearAnimation.start() }
+
+    Component.onCompleted: {
+        if (! py.startupAnyAccountsSaved) {
+            pageLoader.showPage(
+                "AddAccount/AddAccount", {"header.show": false},
+            )
+            return
+        }
+
+        const page  = window.uiState.page
+        const props = window.uiState.pageProperties
+
+        if (page === "Pages/Chat/Chat.qml") {
+            pageLoader.showRoom(props.userId, props.roomId)
+        } else {
+            pageLoader._show(page, props)
+        }
+    }
 
     HNumberAnimation {
         id: appearAnimation

@@ -7,7 +7,6 @@ import "../Base/Buttons"
 HFlickableColumnPopup {
     id: popup
 
-
     property string userId: ""
     property string roomId: ""
     property var preClearCallback: null

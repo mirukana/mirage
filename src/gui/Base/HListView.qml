@@ -5,59 +5,6 @@ import QtQuick.Controls 2.12
 
 ListView {
     id: listView
-    currentIndex: -1
-    keyNavigationWraps: true
-    highlightMoveDuration: theme.animationDuration
-    highlightResizeDuration: theme.animationDuration
-
-    // Keep highlighted delegate at the center
-    highlightRangeMode: ListView.ApplyRange
-    preferredHighlightBegin: height / 2 - currentItemHeight / 2
-    preferredHighlightEnd: height / 2 + currentItemHeight / 2
-
-    maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
-
-
-    highlight: Rectangle {
-        color: theme.controls.listView.highlight
-    }
-
-    ScrollBar.vertical: HScrollBar {
-        visible: listView.interactive
-    }
-
-    // property bool debug: false
-
-    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
-    // #handling-interrupted-animations
-    add: Transition {
-        // ScriptAction { script: if (listView.debug) print("add") }
-        HNumberAnimation { property: "opacity"; from: 0; to: 1 }
-        HNumberAnimation { property: "scale";   from: 0; to: 1 }
-    }
-
-    move: Transition {
-        // ScriptAction { script: if (listView.debug) print("move") }
-        HNumberAnimation { property:   "opacity"; to: 1 }
-        HNumberAnimation { property:   "scale";   to: 1 }
-        HNumberAnimation { properties: "x,y" }
-    }
-
-    remove: Transition {
-        // ScriptAction { script: if (listView.debug) print("remove") }
-        HNumberAnimation { property: "opacity"; to: 0 }
-        HNumberAnimation { property: "scale";   to: 0 }
-    }
-
-    displaced: Transition {
-        // ScriptAction { script: if (listView.debug) print("displaced") }
-        HNumberAnimation { property:   "opacity"; to: 1 }
-        HNumberAnimation { property:   "scale";   to: 1 }
-        HNumberAnimation { properties: "x,y" }
-    }
-
-    onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
-
 
     property alias cursorShape: cursorShapeArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
@@ -66,7 +13,6 @@ ListView {
     property var checkedIndice: new Set()
     property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checked).length
-
 
     function check(...indices) {
         for (const i of indices) {
@@ -130,6 +76,59 @@ ListView {
         )
     }
 
+
+    currentIndex: -1
+    keyNavigationWraps: true
+    highlightMoveDuration: theme.animationDuration
+    highlightResizeDuration: theme.animationDuration
+
+    // Keep highlighted delegate at the center
+    highlightRangeMode: ListView.ApplyRange
+    preferredHighlightBegin: height / 2 - currentItemHeight / 2
+    preferredHighlightEnd: height / 2 + currentItemHeight / 2
+
+    maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
+
+
+    highlight: Rectangle {
+        color: theme.controls.listView.highlight
+    }
+
+    ScrollBar.vertical: HScrollBar {
+        visible: listView.interactive
+    }
+
+    // property bool debug: false
+
+    // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
+    // #handling-interrupted-animations
+    add: Transition {
+        // ScriptAction { script: if (listView.debug) print("add") }
+        HNumberAnimation { property: "opacity"; from: 0; to: 1 }
+        HNumberAnimation { property: "scale";   from: 0; to: 1 }
+    }
+
+    move: Transition {
+        // ScriptAction { script: if (listView.debug) print("move") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
+    }
+
+    remove: Transition {
+        // ScriptAction { script: if (listView.debug) print("remove") }
+        HNumberAnimation { property: "opacity"; to: 0 }
+        HNumberAnimation { property: "scale";   to: 0 }
+    }
+
+    displaced: Transition {
+        // ScriptAction { script: if (listView.debug) print("displaced") }
+        HNumberAnimation { property:   "opacity"; to: 1 }
+        HNumberAnimation { property:   "scale";   to: 1 }
+        HNumberAnimation { properties: "x,y" }
+    }
+
+    onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
 
     MouseArea {
         id: cursorShapeArea

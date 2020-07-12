@@ -5,6 +5,13 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 InfoBar {
+    property string replyToEventId: ""
+    property string replyToUserId: ""
+    property string replyToDisplayName: ""
+
+    signal cancel()
+
+
     color: theme.chat.replyBar.background
     icon.svgName: "reply-to"
     label.textFormat: Text.StyledText
@@ -12,15 +19,6 @@ InfoBar {
         replyToEventId ?
         utils.coloredNameHtml(replyToDisplayName, replyToUserId) :
         ""
-
-
-    signal cancel()
-
-
-    property string replyToEventId: ""
-    property string replyToUserId: ""
-    property string replyToDisplayName: ""
-
 
     HButton {
         backgroundColor: "transparent"

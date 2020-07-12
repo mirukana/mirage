@@ -5,15 +5,14 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 Rectangle {
-    implicitHeight: theme.baseElementsHeight
-    color: theme.chat.roomHeader.background
-
-
     readonly property bool showPaneButtons: mainUI.mainPane.collapse
 
     readonly property bool center:
         showPaneButtons || window.settings.alwaysCenterRoomHeader
 
+
+    implicitHeight: theme.baseElementsHeight
+    color: theme.chat.roomHeader.background
 
     HRowLayout {
         id: row
@@ -113,16 +112,16 @@ Rectangle {
         }
 
         HToolTip {
-            visible: text && (nameHover.hovered || topicHover.hovered)
-            label.textFormat: Text.StyledText
-            text: name && topic ? (`${name}<br>${topic}`) : (name || topic)
-
             readonly property string name:
                 nameLabel.truncated ?
                 (`<b>${chat.roomInfo.display_name}</b>`) : ""
 
             readonly property string topic:
                 topicLabel.truncated ?  chat.roomInfo.topic : ""
+
+            visible: text && (nameHover.hovered || topicHover.hovered)
+            label.textFormat: Text.StyledText
+            text: name && topic ? (`${name}<br>${topic}`) : (name || topic)
         }
 
         HSpacer {
