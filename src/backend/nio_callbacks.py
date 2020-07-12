@@ -315,6 +315,15 @@ class NioCallbacks:
     ) -> None:
         self.client.power_levels_content[room.room_id] = ev.source["content"]
 
+        try:
+            previous_levels = ev.source["unsigned"]["prev_content"]["users"]
+        except KeyError:
+            previous_levels = {}
+
+        for user_id, level in ev.power_levels.users.items():
+            if user_id in room.users and level != previous_levels.get(user_id):
+                await self.client.add_member(room, user_id)
+
         co = "%1 changed the room's permissions"  # TODO: improve
         await self.client.register_nio_event(room, ev, content=co)
 
