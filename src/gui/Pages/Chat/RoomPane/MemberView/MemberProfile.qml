@@ -152,25 +152,18 @@ HListView {
             Layout.fillWidth: true
         }
 
-        HColumnLayout {
-            spacing: theme.spacing / 2
+        HLabeledItem {
+            id: powerLevelItem
+            label.text: qsTr("Power level:")
+            label.horizontalAlignment: Qt.AlignHCenter
 
             Layout.preferredWidth: parent.width
             Layout.bottomMargin: theme.spacing
 
-            HLabel {
-                text: qsTr("Power level:")
-                wrapMode: HLabel.Wrap
-                horizontalAlignment: Qt.AlignHCenter
-
-                Layout.fillWidth: true
-            }
-
             PowerLevelControl {
+                width: parent.width
                 defaultLevel: member.power_level
-                rowSpacing: parent.spacing
-
-                Layout.preferredWidth: parent.width
+                rowSpacing: powerLevelItem.spacing
             }
         }
     }
