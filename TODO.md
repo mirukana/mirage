@@ -1,6 +1,5 @@
 # TODO
 
-- fix device section headers when members pane is small
 - when promiting someone in room as admin, rank isn't updated in members list
 - save and restore status in accounts.json
 - mark accounts as offline when closing mirage

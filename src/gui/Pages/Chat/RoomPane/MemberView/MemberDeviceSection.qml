@@ -19,7 +19,7 @@ HRowLayout {
     }
 
     HLabel {
-        wrapMode: HLabel.Wrap
+        elide: HLabel.ElideRight
         verticalAlignment: Qt.AlignVCenter
 
         text:
