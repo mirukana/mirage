@@ -33,6 +33,11 @@ HColumnLayout {
                     {
                         userId: chat.userId,
                         roomId: chat.roomId,
+                        ownPowerLevel:
+                            Qt.binding(() => chat.roomInfo.own_power_level),
+                        canSetPowerLevels: Qt.binding(() =>
+                            chat.roomInfo.can_set_power_levels
+                        ),
                         member: model,
                         stackView: stackView,
                     },

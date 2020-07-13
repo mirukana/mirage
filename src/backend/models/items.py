@@ -180,6 +180,7 @@ class Room(ModelItem):
     guests_allowed:     bool = True
 
     default_power_level:  int  = 0
+    own_power_level:      int  = 0
     can_invite:           bool = False
     can_kick:             bool = False
     can_redact_all:       bool = False
@@ -190,6 +191,7 @@ class Room(ModelItem):
     can_set_encryption:   bool = False
     can_set_join_rules:   bool = False
     can_set_guest_access: bool = False
+    can_set_power_levels: bool = False
 
     last_event_date: datetime = ZERO_DATE
 

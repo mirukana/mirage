@@ -12,6 +12,8 @@ HListView {
 
     property string userId
     property string roomId
+    property int ownPowerLevel
+    property int canSetPowerLevels
     property QtObject member  // RoomMember model item
     property HStackView stackView
 
@@ -160,6 +162,10 @@ HListView {
 
         HLabeledItem {
             id: powerLevel
+            enabled:
+                root.canSetPowerLevels &&
+                root.ownPowerLevel > member.power_level
+
             label.text: qsTr("Power level:")
             label.horizontalAlignment: Qt.AlignHCenter
 
@@ -168,6 +174,7 @@ HListView {
             PowerLevelControl {
                 width: parent.width
                 defaultLevel: member.power_level
+                maximumLevel: root.ownPowerLevel
                 rowSpacing: powerLevel.spacing
                 onAccepted: applyButton.clicked()
                 onFieldFocusedChanged:
@@ -191,6 +198,7 @@ HListView {
 
             ApplyButton {
                 id: applyButton
+                enabled: ! powerLevel.item.fieldOverMaximum
                 loading: setPowerFuture !== null
                 onClicked: {
                     setPowerFuture = py.callClientCoro(
@@ -230,7 +238,7 @@ HListView {
     Component.onDestruction: if (setPowerFuture) setPowerFuture.cancel()
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)
-    Keys.onReturnPressed: if (! powerLevelFieldFocused && currentItem) {
+    Keys.onReturnPressed: if (! root.powerLevelFieldFocused && currentItem) {
         currentItem.leftClicked()
         currentItem.clicked()
     }

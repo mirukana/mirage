@@ -4,13 +4,20 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
 AutoDirectionLayout {
-    id: control
+    id: root
 
     property int defaultLevel: 0
+    property int maximumLevel: 100
 
     readonly property alias changed: field.changed
-    readonly property int level: Math.min(100, parseInt(field.text || "0", 10))
+
+    readonly property int level:
+        Math.min(maximumLevel, parseInt(field.text || "0", 10))
+
     readonly property alias fieldFocused: field.activeFocus
+
+    readonly property bool fieldOverMaximum:
+        parseInt(field.text || "0", 10) > maximumLevel
 
     signal accepted()
 
@@ -26,15 +33,15 @@ AutoDirectionLayout {
 
         radius: 0
         horizontalAlignment: Qt.AlignHCenter
-        validator: IntValidator { top: 100 }
+        validator: IntValidator { top: root.maximumLevel }
         inputMethodHints: Qt.ImhFormattedNumbersOnly
-        maximumLength: control.level < 0 ? 16 : 3
-        defaultText: String(control.defaultLevel)
+        maximumLength: root.level < 0 ? 16 : String(root.maximumLevel).length
+        defaultText: String(root.defaultLevel)
+        error: root.fieldOverMaximum
 
-        onAccepted: control.accepted()
+        onAccepted: root.accepted()
         onActiveFocusChanged:
-            if (! activeFocus && parseInt(text || "0", 10) > 100)
-                text = 100
+            if (! activeFocus && fieldOverMaximum) text = root.maximumLevel
 
         Layout.minimumWidth:
             mainUI.fontMetrics.boundingRect("-999").width +
@@ -52,7 +59,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-default"
             toolTip.text: qsTr("Limited")
-            checked: control.level < 50
+            checked: root.level < 50
             uncheckable: false
             onClicked: field.text = 0
         }
@@ -61,7 +68,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-50"
             toolTip.text: qsTr("Moderator")
-            checked: control.level >= 50 && control.level < 100
+            checked: root.level >= 50 && root.level < 100
             uncheckable: false
             onClicked: field.text = 50
         }
@@ -70,7 +77,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-100"
             toolTip.text: qsTr("Admin")
-            checked: control.level >= 100
+            checked: root.level >= 100
             uncheckable: false
             onClicked: field.text = 100
         }
