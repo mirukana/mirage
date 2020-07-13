@@ -164,7 +164,10 @@ HListView {
             id: powerLevel
             enabled:
                 root.canSetPowerLevels &&
-                root.ownPowerLevel > member.power_level
+                (
+                    root.ownPowerLevel > member.power_level ||
+                    root.ownPowerLevel === 100
+                )
 
             label.text: qsTr("Power level:")
             label.horizontalAlignment: Qt.AlignHCenter
