@@ -169,6 +169,35 @@ HListView {
             label.text: qsTr("Power level:")
             label.horizontalAlignment: Qt.AlignHCenter
 
+            errorLabel.horizontalAlignment: Qt.AlignHCenter
+            errorLabel.text:
+                ! item.changed ?
+                "" :
+
+                item.fieldOverMaximum && root.userId === member.id ?
+                qsTr("Can't set your own level higher") :
+
+                item.fieldOverMaximum ?
+                qsTr("Can't set level higher than your own") :
+
+                item.uncappedLevel === root.ownPowerLevel ?
+                qsTr("You won't be able to demote this user") :
+
+                item.uncappedLevel <
+                root.ownPowerLevel && root.userId === member.id ?
+                qsTr("You won't be able to regain power") :
+
+                ""
+
+            errorLabel.color:
+                item.uncappedLevel === root.ownPowerLevel ||
+                (
+                    item.uncappedLevel <
+                    root.ownPowerLevel && root.userId === member.id
+                ) ?
+                theme.colors.warningText :
+                theme.colors.errorText
+
             Layout.preferredWidth: parent.width
 
             PowerLevelControl {

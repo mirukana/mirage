@@ -11,9 +11,8 @@ AutoDirectionLayout {
 
     readonly property alias changed: field.changed
 
-    readonly property int level:
-        Math.min(maximumLevel, parseInt(field.text || "0", 10))
-
+    readonly property int uncappedLevel: parseInt(field.text || "0", 10)
+    readonly property int level: Math.min(maximumLevel, uncappedLevel)
     readonly property alias fieldFocused: field.activeFocus
 
     readonly property bool fieldOverMaximum:
@@ -35,7 +34,7 @@ AutoDirectionLayout {
         horizontalAlignment: Qt.AlignHCenter
         validator: IntValidator { top: root.maximumLevel }
         inputMethodHints: Qt.ImhFormattedNumbersOnly
-        maximumLength: root.level < 0 ? 16 : String(root.maximumLevel).length
+        maximumLength: root.level < 0 ? 16 : 3
         defaultText: String(root.defaultLevel)
         error: root.fieldOverMaximum
 
@@ -59,7 +58,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-default"
             toolTip.text: qsTr("Limited")
-            checked: root.level < 50
+            checked: root.uncappedLevel < 50
             uncheckable: false
             onClicked: field.text = 0
         }
@@ -68,7 +67,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-50"
             toolTip.text: qsTr("Moderator")
-            checked: root.level >= 50 && root.level < 100
+            checked: root.uncappedLevel >= 50 && root.uncappedLevel < 100
             uncheckable: false
             onClicked: field.text = 50
         }
@@ -77,7 +76,7 @@ AutoDirectionLayout {
             height: parent.height
             icon.name: "user-power-100"
             toolTip.text: qsTr("Admin")
-            checked: root.level >= 100
+            checked: root.uncappedLevel >= 100
             uncheckable: false
             onClicked: field.text = 100
         }

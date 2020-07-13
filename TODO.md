@@ -1,15 +1,12 @@
 # TODO
 
-- fix reply bar height
 - don't trust PowerLevelsEvent, may be old
+- fix button layout
+- improve power levels event text
+
+- fix reply bar height
 - joining new DM, not loading past events?
-- HLabeledItem disabled opacity
-- cancel setPowerLevel future on Cancel button click
-- enter to trigger apply button
-- destroy setPowerLevel future on Component.onDestruction
-- warn about setting level of someone to 100
-- gray out if no permission to change
-- improve event text
+- fix HLabeledItem disabled opacity
 
 - save and restore status in accounts.json
 - mark accounts as offline when closing mirage
