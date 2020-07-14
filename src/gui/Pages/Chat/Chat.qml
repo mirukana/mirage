@@ -74,7 +74,15 @@ Item {
 
     HLoader {
         id: loader
-        anchors.rightMargin: ready ? roomPane.visibleSize : 0
+        anchors.rightMargin:
+            ready &&
+            ! (
+                roomPane.requireDefaultSize &&
+                roomPane.minimumSize > roomPane.maximumSize
+            ) ?
+            roomPane.visibleSize :
+            0
+
         anchors.fill: parent
         visible:
             ready ? ! roomPane.hidden || anchors.rightMargin < width : true

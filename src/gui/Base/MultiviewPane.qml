@@ -14,12 +14,21 @@ HDrawer {
     property int buttonWidth:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
+    property bool requireDefaultSize: false
+
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
 
 
     defaultSize: buttonRepeater.count * buttonWidth
-    minimumSize: buttonWidth
+    minimumSize: requireDefaultSize ? defaultSize : buttonWidth
+
+    Behavior on minimumSize {
+        HNumberAnimation {
+            overshoot: requireDefaultSize ? 1 : 4
+            factor: 0.75
+        }
+    }
 
     HColumnLayout {
         anchors.fill: parent

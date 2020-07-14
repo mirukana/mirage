@@ -32,6 +32,9 @@ MultiviewPane {
     buttonWidth:
         buttonRepeater.count >= 1 ? buttonRepeater.itemAt(1).implicitWidth : 0
 
+    requireDefaultSize:
+        swipeView.currentIndex !== 0 || swipeView.currentItem.viewDepth > 1
+
     buttonsBackgroundColor: theme.chat.roomPane.topBar.background
     background: Rectangle { color: theme.chat.roomPane.background }
 

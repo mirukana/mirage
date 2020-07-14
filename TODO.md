@@ -92,7 +92,6 @@
 
 - Linkify URLs in topic text areas
 
-- Expand the room pane if it's currently too small to show room settings
 - Use a loader for items not in view for the `HTabContainer`'s `SwipeView`
 
 - Make "Cancel" buttons consistent, and able to cancel running Backend

@@ -10,6 +10,8 @@ HColumnLayout {
     readonly property var modelSyncId:
         [chat.userId, chat.roomId, "filtered_members"]
 
+    readonly property alias viewDepth: stackView.depth
+
 
     HStackView {
         id: stackView
