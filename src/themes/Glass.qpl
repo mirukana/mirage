@@ -440,6 +440,14 @@ chat:
             "h5 { font-size: " + fontSize.small + "px }" +
             "h6 { font-size: " + fontSize.smaller + "px }" +
 
+            "table { margin-top: " + theme.spacing + "px; " +
+            "        margin-bottom: " + theme.spacing + "px }" +
+
+            "td { padding-left: " + theme.spacing / 2 + "px; " +
+            "     padding-right: " + theme.spacing / 2 + "px; " +
+            "     padding-top: " + theme.spacing / 4 + "px; " +
+            "     padding-bottom: " + theme.spacing / 4 + "px } " +
+
             ".sender { margin-bottom: " + spacing / 2 + " }" +
             ".quote  { color: " + quote + " }" +
 
