@@ -5,7 +5,7 @@ import logging as log
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple, Union
 from urllib.parse import quote
 
 import nio
@@ -232,7 +232,7 @@ class NioCallbacks:
 
         if not (
             event and
-            (event.event_type is not nio.RedactedEvent or event.is_local_echo)
+            (event.etype is not nio.RedactedEvent or event.is_local_echo)
         ):
             await self.client.register_nio_room(room)
             return
@@ -321,21 +321,87 @@ class NioCallbacks:
     async def onPowerLevelsEvent(
         self, room: nio.MatrixRoom, ev: nio.PowerLevelsEvent,
     ) -> None:
+        levels = ev.power_levels
         stored = self.client.power_level_events.get(room.room_id)
 
         if not stored or ev.server_timestamp > stored.server_timestamp:
             self.client.power_level_events[room.room_id] = ev
 
         try:
-            previous_levels = ev.source["unsigned"]["prev_content"]["users"]
+            previous = ev.source["unsigned"]["prev_content"]
         except KeyError:
-            previous_levels = {}
+            previous = {}
 
-        for user_id, level in ev.power_levels.users.items():
-            if user_id in room.users and level != previous_levels.get(user_id):
+        users_previous  = previous.get("users", {})
+        events_previous = previous.get("events", {})
+
+        # Update room members who had their power level changed
+
+        for user_id, level in levels.users.items():
+            if user_id in room.users and level != users_previous.get(user_id):
                 await self.client.add_member(room, user_id)
 
-        co = "%1 changed the room's permissions"  # TODO: improve
+        # Event formatting
+
+        def lvl(level: int) -> str:
+            return (
+                f"Admin ({level})"     if level == 100  else
+                f"Moderator ({level})" if level >= 50 else
+                f"User ({level})"
+            )
+
+        changes       = []
+        event_changes = []
+        user_changes  = []
+
+        # Default levels changes
+
+        for default, level in ev.source["content"].items():
+            if default in ("users", "events"):
+                continue
+
+            old = previous.get(default, levels.defaults.users_default)
+
+            if level != old:
+                changes.append(f"{default} | {lvl(old)} | {lvl(level)}")
+
+        # Minimum level to send event changes
+
+        for ev_type, level in levels.events.items():
+            old = events_previous.get(
+                ev_type,
+
+                levels.defaults.state_default
+                if ev_type.startswith("m.room.") else
+                levels.defaults.events_default,
+            )
+
+            if level != old:
+                event_changes.append(f"{ev_type} | {lvl(old)} | {lvl(level)}")
+
+        # User level changes
+
+        for user_id, level in levels.users.items():
+            old = users_previous.get(user_id, levels.defaults.users_default)
+
+            if level != old:
+                user_changes.append(f"{user_id} | {lvl(old)} | {lvl(level)}")
+
+        # Gather and format changes
+
+        if changes or event_changes or user_changes:
+            co = HTML_PROCESSOR.from_markdown("\n".join([
+                "%1 changed the room's permissions:",
+                "",
+                "Change | Previous | Current ",
+                "--- | --- | ---",
+                *sorted(changes),
+                *sorted(event_changes),
+                *sorted(user_changes),
+            ]))
+        else:
+            co = "%1 didn't change the room's permissions"
+
         await self.client.register_nio_event(room, ev, content=co)
 
 

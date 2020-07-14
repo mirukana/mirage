@@ -1,7 +1,6 @@
 # TODO
 
 - fix button layout
-- improve power levels event text
 
 - fix reply bar height
 - joining new DM, not loading past events?
