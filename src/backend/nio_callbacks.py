@@ -362,7 +362,7 @@ class NioCallbacks:
 
             old = previous.get(default, levels.defaults.users_default)
 
-            if level != old:
+            if level != old or not previous:
                 changes.append(f"{default} | {lvl(old)} | {lvl(level)}")
 
         # Minimum level to send event changes
@@ -376,7 +376,7 @@ class NioCallbacks:
                 levels.defaults.events_default,
             )
 
-            if level != old:
+            if level != old or not previous:
                 event_changes.append(f"{ev_type} | {lvl(old)} | {lvl(level)}")
 
         # User level changes
@@ -384,7 +384,7 @@ class NioCallbacks:
         for user_id, level in levels.users.items():
             old = users_previous.get(user_id, levels.defaults.users_default)
 
-            if level != old:
+            if level != old or not previous:
                 user_changes.append(f"{user_id} | {lvl(old)} | {lvl(level)}")
 
         # Gather and format changes
