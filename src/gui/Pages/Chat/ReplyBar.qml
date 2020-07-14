@@ -24,6 +24,8 @@ InfoBar {
         backgroundColor: "transparent"
         icon.name: "reply-cancel"
         icon.color: theme.colors.negativeBackground
+        topPadding: 0
+        bottomPadding: 0
         onClicked: cancel()
 
         Layout.fillHeight: true

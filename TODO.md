@@ -1,9 +1,8 @@
 # TODO
 
-- fix button layout
+- fix power level control button layout when apply button is loading
 
-- fix reply bar height
-- joining new DM, not loading past events?
+- joining new DM, not loading past events the first time?
 - fix HLabeledItem disabled opacity
 
 - save and restore status in accounts.json

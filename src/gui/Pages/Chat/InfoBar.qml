@@ -31,6 +31,7 @@ Rectangle {
         HLabel {
             id: label
             elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
 
             Layout.fillWidth: true
             Layout.fillHeight: true
