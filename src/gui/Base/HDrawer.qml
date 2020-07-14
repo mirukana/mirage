@@ -88,12 +88,7 @@ Drawer {
         NumberAnimation { duration: 100 }
     }
 
-    Behavior on minimumSize {
-        HNumberAnimation {
-            overshoot: requireDefaultSize ? 1 : 4
-            factor: 0.75
-        }
-    }
+    Behavior on minimumSize { HNumberAnimation { factor: 0.75 } }
 
     Item {
         id: resizeArea
