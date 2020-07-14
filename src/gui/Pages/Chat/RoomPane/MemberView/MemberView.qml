@@ -65,11 +65,12 @@ HColumnLayout {
         color: theme.chat.roomPane.bottomBar.background
 
         Layout.fillWidth: true
-        Layout.minimumHeight: theme.baseElementsHeight
-        Layout.maximumHeight: Layout.minimumHeight
+        Layout.preferredHeight: childrenRect.height
 
         HRowLayout {
-            anchors.fill: parent
+            width: parent.width
+            layoutDirection:
+                expandButton.visible ? Qt.RightToLeft : Qt.LeftToRight
 
             HTextField {
                 id: filterField
@@ -82,7 +83,6 @@ HColumnLayout {
                 opacity: width >= 16 * theme.uiScale ? 1 : 0
 
                 Layout.fillWidth: true
-                Layout.fillHeight: true
 
                 // FIXME: fails to display sometimes for some reason if
                 // declared normally
@@ -124,37 +124,57 @@ HColumnLayout {
                 Behavior on opacity { HNumberAnimation {} }
             }
 
-            HButton {
-                id: inviteButton
-                icon.name: "room-send-invite"
-                backgroundColor:
-                    theme.chat.roomPane.bottomBar.inviteButton.background
-                enabled:
-                    chat.userInfo.presence !== "offline" &&
-                    chat.roomInfo.can_invite
+            HColumnLayout {
+                HButton {
+                    id: inviteButton
+                    icon.name: "room-send-invite"
+                    backgroundColor:
+                        theme.chat.roomPane.bottomBar.inviteButton.background
+                    enabled:
+                        chat.userInfo.presence !== "offline" &&
+                        chat.roomInfo.can_invite
 
-                toolTip.text:
-                    enabled ?
-                    qsTr("Invite members to this room") :
-                    qsTr("No permission to invite members to this room")
+                    toolTip.text:
+                        enabled ?
+                        qsTr("Invite members to this room") :
+                        qsTr("No permission to invite members to this room")
 
-                onClicked: utils.makePopup(
-                    "Popups/InviteToRoomPopup.qml",
-                    {
-                        userId: chat.userId,
-                        roomId: chat.roomId,
-                        roomName: chat.roomInfo.display_name,
-                        invitingAllowed:
-                            Qt.binding(() => inviteButton.enabled),
-                    },
-                )
+                    onClicked: utils.makePopup(
+                        "Popups/InviteToRoomPopup.qml",
+                        {
+                            userId: chat.userId,
+                            roomId: chat.roomId,
+                            roomName: chat.roomInfo.display_name,
+                            invitingAllowed:
+                                Qt.binding(() => inviteButton.enabled),
+                        },
+                    )
 
-                Layout.fillHeight: true
+                    Layout.preferredHeight: filterField.implicitHeight
 
-                HShortcut {
-                    sequences: window.settings.keys.inviteToRoom
-                    onActivated:
-                        if (inviteButton.enabled) inviteButton.clicked()
+                    HShortcut {
+                        sequences: window.settings.keys.inviteToRoom
+                        onActivated:
+                            if (inviteButton.enabled) inviteButton.clicked()
+                    }
+                }
+
+                HButton {
+                    id: expandButton
+                    icon.name: "room-pane-expand-search"
+                    backgroundColor: inviteButton.backgroundColor
+                    toolTip.text: qsTr("Expand search")
+                    visible: Layout.preferredHeight > 0
+
+                    // Will trigger roomPane.requireDefaultSize
+                    onClicked: filterField.forceActiveFocus()
+
+                    Layout.preferredHeight:
+                        filterField.width < 32 * theme.uiScale ?
+                        filterField.implicitHeight :
+                        0
+
+                    Behavior on Layout.preferredHeight { HNumberAnimation {} }
                 }
             }
         }
