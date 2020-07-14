@@ -267,6 +267,7 @@ class UISettings(JSONDataFile):
             "hideMembershipEvents": False,
             "hideUnknownEvents": True,
             "kineticScrollingMaxSpeed": 2500,
+            "kineticScrollingDeceleration": 1500,
             "markRoomReadMsecDelay": 200,
             "maxMessageCharactersPerLine": 65,
             "ownMessagesOnLeftAboveWidth": 895,

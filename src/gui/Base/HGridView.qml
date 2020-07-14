@@ -75,6 +75,7 @@ GridView {
     preferredHighlightEnd: height / 2 + currentItemHeight / 2
 
     maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
+    flickDeceleration: window.settings.kineticScrollingDeceleration
 
 
     highlight: Rectangle {

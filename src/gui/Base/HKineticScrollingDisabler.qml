@@ -7,9 +7,6 @@ MouseArea {
 
     property Flickable flickable: parent
 
-    // Used to get default flickDeceleration value
-    readonly property Flickable dummy: Flickable {}
-
     function getNewPosition(flickable, wheel) {
         // wheel.pixelDelta will be available on high resolution trackpads.
         // Otherwise use wheel.angleDelta, which is available from mouses and
@@ -60,6 +57,9 @@ MouseArea {
     Binding {
         target: flickable
         property: "flickDeceleration"
-        value: mouseArea.enabled ? 0 : dummy.flickDeceleration
+        value:
+            mouseArea.enabled ?
+            0 :
+            window.settings.kineticScrollingDeceleration
     }
 }
