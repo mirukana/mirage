@@ -134,9 +134,9 @@ Item {
         anchors.leftMargin:
             mainPane.requireDefaultSize &&
             mainPane.minimumSize > mainPane.maximumSize ?
-            theme.mainPane.minimumSize :
+            0 :
             mainPane.visibleSize
 
-        visible: ! mainPane.hidden || anchors.leftMargin < width
+        visible: mainPane.visibleSize < mainUI.width
     }
 }

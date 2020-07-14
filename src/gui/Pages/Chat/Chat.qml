@@ -75,20 +75,23 @@ Item {
     HLoader {
         id: loader
         anchors.rightMargin:
-            ready &&
+            ready && roomPane &&
             ! (
                 roomPane.requireDefaultSize &&
-                roomPane.minimumSize > roomPane.maximumSize
+                roomPane.minimumSize > roomPane.maximumSize &&
+                ! roomPane.collapse
             ) ?
             roomPane.visibleSize :
             0
 
         anchors.fill: parent
-        visible:
-            ready ? ! roomPane.hidden || anchors.rightMargin < width : true
+        visible: ! (ready && roomPane && roomPane.visibleSize >= chat.width)
+
         onLoaded: if (chat.focus) item.composer.takeFocus()
 
         source: ready ? "ChatPage.qml" : ""
+
+        Behavior on anchors.rightMargin { HNumberAnimation {} }
 
         HLoader {
             anchors.centerIn: parent
