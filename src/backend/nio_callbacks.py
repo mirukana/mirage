@@ -83,6 +83,14 @@ class NioCallbacks:
             if room_id not in self.client.past_tokens:
                 self.client.past_tokens[room_id] = info.timeline.prev_batch
 
+            for ev in info.state:
+                if isinstance(ev, nio.PowerLevelsEvent):
+                    stored = self.client.power_level_events.get(room_id)
+                    time   = ev.server_timestamp
+
+                    if not stored or time > stored.server_timestamp:
+                        self.client.power_level_events[room_id] = ev
+
         # TODO: way of knowing if a nio.MatrixRoom is left
         for room_id, info in resp.rooms.leave.items():
             # TODO: handle in nio, these are rooms that were left before
@@ -313,7 +321,10 @@ class NioCallbacks:
     async def onPowerLevelsEvent(
         self, room: nio.MatrixRoom, ev: nio.PowerLevelsEvent,
     ) -> None:
-        self.client.power_levels_content[room.room_id] = ev.source["content"]
+        stored = self.client.power_level_events.get(room.room_id)
+
+        if not stored or ev.server_timestamp > stored.server_timestamp:
+            self.client.power_level_events[room.room_id] = ev
 
         try:
             previous_levels = ev.source["unsigned"]["prev_content"]["users"]

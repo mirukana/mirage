@@ -1,6 +1,5 @@
 # TODO
 
-- don't trust PowerLevelsEvent, may be old
 - fix button layout
 - improve power levels event text
 
