@@ -8,7 +8,7 @@ Drawer {
 
     property string saveName: ""
     property var saveId: "ALL"
-    property var saveProperties: ["preferredSize"]
+    property var saveProperties: ["preferredSize", "forceCollapse"]
 
     //
 
@@ -27,6 +27,9 @@ Drawer {
     property int snapAt: defaultSize
     property int snapZone: theme.spacing * 2
 
+    property bool forceCollapse:
+        window.getState(this, "forceCollapse", false)
+
     //
 
     property Item referenceSizeParent: parent
@@ -36,7 +39,8 @@ Drawer {
         window.settings.collapseSidePanesUnderWindowWidth * theme.uiScale
 
     property int peekSizeWhileCollapsed:
-        horizontal ? referenceSizeParent.width : referenceSizeParent.height
+        (horizontal ? referenceSizeParent.width : referenceSizeParent.height) *
+        (forceCollapse && ! collapse ? 0.5 : 1)
 
     property int resizeAreaSize: theme.spacing / 2
 
@@ -44,12 +48,12 @@ Drawer {
         requireDefaultSize ? defaultSize : minimumSize
 
     readonly property int calculatedSizeNoRequiredMinimum:
-        collapse ?
+        collapse || forceCollapse ?
         peekSizeWhileCollapsed :
         Math.max(minimumSize, Math.min(preferredSize, maximumSize))
 
     readonly property int calculatedSize:
-        collapse ?
+        collapse || forceCollapse ?
         peekSizeWhileCollapsed :
         Math.max(calculatedMinimumSize, Math.min(preferredSize, maximumSize))
 
@@ -78,13 +82,15 @@ Drawer {
     // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
     // dragMargin: parent.width / 2
 
-    interactive: collapse
+    interactive: collapse || forceCollapse
     position: 1
-    visible: ! collapse
+    visible: ! collapse && ! forceCollapse
     modal: false
     closePolicy: Popup.NoAutoClose
 
     background: Rectangle { id: bg; color: theme.colors.strongBackground }
+
+    onForceCollapseChanged: window.saveState(this)
 
     Behavior on width {
         enabled: horizontal && ! resizeMouseHandler.drag.active

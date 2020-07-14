@@ -18,6 +18,7 @@ MultiviewPane {
             return
         }
 
+        roomPane.forceCollapse = false
         roomPane.open()
         swipeView.currentItem.keybindFocusItem.forceActiveFocus()
     }
@@ -67,8 +68,16 @@ MultiviewPane {
         enabled: ["back", "members", "settings"].includes(modelData)
 
         onClicked:
-            modelData === "back" ?    roomPane.toggleFocus() :
-            modelData === "members" ? swipeView.currentIndex = 0 :
+            modelData === "back" ?
+            roomPane.toggleFocus() :
+
+            (modelData === "members" && swipeView.currentIndex === 0) ||
+            (modelData === "settings" && swipeView.currentIndex === 1) ?
+            roomPane.forceCollapse = true :
+
+            modelData === "members" ?
+            swipeView.currentIndex = 0 :
+
             swipeView.currentIndex = 1
 
         Behavior on width {

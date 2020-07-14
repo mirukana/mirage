@@ -5,10 +5,15 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 Rectangle {
-    readonly property bool showPaneButtons: mainUI.mainPane.collapse
+    readonly property bool showLeftButton:
+        mainUI.mainPane.collapse || mainUI.mainPane.forceCollapse
+
+    readonly property bool showRightButton:
+        chat.roomPane &&
+        (chat.roomPane.collapse || chat.roomPane.forceCollapse)
 
     readonly property bool center:
-        showPaneButtons || window.settings.alwaysCenterRoomHeader
+        showLeftButton || window.settings.alwaysCenterRoomHeader
 
 
     implicitHeight: theme.baseElementsHeight
@@ -21,7 +26,7 @@ Rectangle {
 
         // The layout overflows somehow when focusing the room pane and
         // is visible behind it (with a transparent theme)
-        opacity: showPaneButtons && chat.roomPane.visible ? 0 : 1
+        opacity: showRightButton && chat.roomPane.visible ? 0 : 1
 
         Behavior on opacity { HNumberAnimation {} }
 
@@ -35,7 +40,7 @@ Rectangle {
 
             onClicked: mainUI.mainPane.toggleFocus()
 
-            Layout.preferredWidth: showPaneButtons ? avatar.width : 0
+            Layout.preferredWidth: showLeftButton ? avatar.width : 0
             Layout.fillHeight: true
 
             Behavior on Layout.preferredWidth { HNumberAnimation {} }
@@ -68,7 +73,9 @@ Rectangle {
             Layout.preferredWidth: Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing * (showPaneButtons ? 3 : 1) -
+                row.spacing +
+                (showLeftButton ? row.spacing : 0) +
+                (showRightButton ? row.spacing : 0) +
                 goToMainPaneButton.width -
                 avatar.width -
                 goToRoomPaneButton.width
@@ -92,7 +99,9 @@ Rectangle {
             Layout.preferredWidth: Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing * (showPaneButtons ? 3 : 1) -
+                row.spacing +
+                (showLeftButton ? row.spacing : 0) +
+                (showRightButton ? row.spacing : 0) +
                 goToMainPaneButton.width -
                 avatar.width -
                 nameLabel.width -
@@ -161,14 +170,14 @@ Rectangle {
         HButton {
             id: goToRoomPaneButton
             padded: false
-            visible: goToMainPaneButton.visible
+            visible: Layout.preferredWidth > 0
             backgroundColor: "transparent"
             icon.name: "go-to-room-pane"
             toolTip.text: qsTr("Go to room pane")
 
             onClicked: chat.roomPane.toggleFocus()
 
-            Layout.preferredWidth: goToMainPaneButton.Layout.preferredWidth
+            Layout.preferredWidth: showRightButton ? avatar.width : 0
             Layout.fillHeight: true
         }
     }
