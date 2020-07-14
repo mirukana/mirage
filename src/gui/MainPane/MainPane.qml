@@ -25,6 +25,7 @@ HDrawer {
     saveName: "mainPane"
     background: Rectangle { color: theme.mainPane.background }
     minimumSize: requireDefaultSize ? defaultSize : theme.mainPane.minimumSize
+    requireDefaultSize: bottomBar.filterField.activeFocus
 
     Behavior on opacity { HNumberAnimation {} }
 

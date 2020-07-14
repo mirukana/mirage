@@ -131,7 +131,12 @@ Item {
     PageLoader {
         id: pageLoader
         anchors.fill: parent
-        anchors.leftMargin: mainPane.visibleSize
+        anchors.leftMargin:
+            mainPane.requireDefaultSize &&
+            mainPane.minimumSize > mainPane.maximumSize ?
+            theme.mainPane.minimumSize :
+            mainPane.visibleSize
+
         visible: ! mainPane.hidden || anchors.leftMargin < width
     }
 }
