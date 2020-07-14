@@ -73,11 +73,12 @@ Rectangle {
             Layout.preferredWidth: Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing +
-                (showLeftButton ? row.spacing : 0) +
-                (showRightButton ? row.spacing : 0) +
+                row.spacing -
+                (showLeftButton ? row.spacing : 0) -
+                (showRightButton ? row.spacing : 0) -
                 goToMainPaneButton.width -
                 avatar.width -
+                encryptionStatusButton.width -
                 goToRoomPaneButton.width
             )
             Layout.fillHeight: true
@@ -99,12 +100,13 @@ Rectangle {
             Layout.preferredWidth: Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing +
-                (showLeftButton ? row.spacing : 0) +
-                (showRightButton ? row.spacing : 0) +
+                row.spacing -
+                (showLeftButton ? row.spacing : 0) -
+                (showRightButton ? row.spacing : 0) -
                 goToMainPaneButton.width -
                 avatar.width -
                 nameLabel.width -
+                encryptionStatusButton.width -
                 goToRoomPaneButton.width
             )
             Layout.fillWidth: ! center
@@ -131,10 +133,6 @@ Rectangle {
             visible: text && (nameHover.hovered || topicHover.hovered)
             label.textFormat: Text.StyledText
             text: name && topic ? (`${name}<br>${topic}`) : (name || topic)
-        }
-
-        HSpacer {
-            visible: center
         }
 
         HButton {
@@ -165,6 +163,10 @@ Rectangle {
             Layout.fillHeight: true
 
             Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        }
+
+        HSpacer {
+            visible: center
         }
 
         HButton {
