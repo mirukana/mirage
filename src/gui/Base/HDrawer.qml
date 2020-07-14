@@ -15,11 +15,12 @@ Drawer {
     property alias color: bg.color
 
     property int defaultSize: 300 * theme.uiScale
+    property bool requireDefaultSize: false
 
     property int preferredSize:
         window.getState(this, "preferredSize", defaultSize)
 
-    property int minimumSize: resizeAreaSize
+    property int minimumSize: requireDefaultSize ? defaultSize : resizeAreaSize
     property int maximumSize:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
@@ -85,6 +86,13 @@ Drawer {
     Behavior on height {
         enabled: vertical && ! resizeMouseHandler.drag.active
         NumberAnimation { duration: 100 }
+    }
+
+    Behavior on minimumSize {
+        HNumberAnimation {
+            overshoot: requireDefaultSize ? 1 : 4
+            factor: 0.75
+        }
     }
 
     Item {

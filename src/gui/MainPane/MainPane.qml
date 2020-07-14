@@ -24,7 +24,7 @@ HDrawer {
 
     saveName: "mainPane"
     background: Rectangle { color: theme.mainPane.background }
-    minimumSize: theme.mainPane.minimumSize
+    minimumSize: requireDefaultSize ? defaultSize : theme.mainPane.minimumSize
 
     Behavior on opacity { HNumberAnimation {} }
 
