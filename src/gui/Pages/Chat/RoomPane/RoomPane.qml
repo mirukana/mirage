@@ -103,4 +103,9 @@ MultiviewPane {
         sequences: window.settings.keys.toggleFocusRoomPane
         onActivated: roomPane.toggleFocus()
     }
+
+    HShortcut {
+        sequences: window.settings.keys.toggleHideRoomPane
+        onActivated: roomPane.forceCollapse = ! roomPane.forceCollapse
+    }
 }

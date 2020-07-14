@@ -286,10 +286,11 @@ class UISettings(JSONDataFile):
                 "toggleDebugConsole":  ["Alt+Shift+C", "F1"],
                 "reloadConfig":        ["Alt+Shift+R"],
 
-                "zoomIn":            ["Ctrl++"],
-                "zoomOut":           ["Ctrl+-"],
-                "zoomReset":         ["Ctrl+="],
-                "toggleCompactMode": ["Ctrl+Alt+C"],
+                "zoomIn":             ["Ctrl++"],
+                "zoomOut":            ["Ctrl+-"],
+                "zoomReset":          ["Ctrl+="],
+                "toggleCompactMode":  ["Ctrl+Alt+C"],
+                "toggleHideRoomPane": ["Ctrl+Alt+R"],
 
                 "scrollUp":       ["Alt+Up", "Alt+K"],
                 "scrollDown":     ["Alt+Down", "Alt+J"],
