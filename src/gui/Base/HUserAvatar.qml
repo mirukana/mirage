@@ -7,7 +7,7 @@ HAvatar {
     property string displayName
     property string presence: ""
     property int powerLevel: 0
-    property bool shiftMembershipIconPosition: true
+    property int shiftMembershipIconPositionBy: -8
     property bool invited: false
 
     readonly property bool admin: powerLevel >= 100
@@ -21,7 +21,7 @@ HAvatar {
         active: admin || moderator || invited
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.topMargin: shiftMembershipIconPosition ? -16 / 2 : 0
+        anchors.topMargin: shiftMembershipIconPositionBy
         anchors.leftMargin: anchors.topMargin
         z: 100
 

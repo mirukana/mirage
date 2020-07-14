@@ -23,10 +23,11 @@ HTile {
             displayName: model.display_name
             mxc: model.avatar_url
             powerLevel: model.power_level
-            shiftMembershipIconPosition: ! roomPane.collapsed
             invited: model.invited
             compact: member.compact
             presence: model.presence
+            shiftMembershipIconPositionBy:
+                roomPane.width >= width + 8 * 3 ? -8 : -4
         }
 
         HColumnLayout {
