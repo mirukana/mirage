@@ -20,7 +20,7 @@ Drawer {
     property int preferredSize:
         window.getState(this, "preferredSize", defaultSize)
 
-    property int minimumSize: requireDefaultSize ? defaultSize : resizeAreaSize
+    property int minimumSize: resizeAreaSize
     property int maximumSize:
         horizontal ? referenceSizeParent.width : referenceSizeParent.height
 
@@ -40,10 +40,13 @@ Drawer {
 
     property int resizeAreaSize: theme.spacing / 2
 
+    property int calculatedMinimumSize:
+        requireDefaultSize ? defaultSize : minimumSize
+
     readonly property int calculatedSize:
         collapse ?
         peekSizeWhileCollapsed :
-        Math.max(minimumSize, Math.min(preferredSize, maximumSize))
+        Math.max(calculatedMinimumSize, Math.min(preferredSize, maximumSize))
 
     //
 
@@ -88,7 +91,7 @@ Drawer {
         NumberAnimation { duration: 100 }
     }
 
-    Behavior on minimumSize { HNumberAnimation { factor: 0.75 } }
+    Behavior on calculatedMinimumSize { HNumberAnimation { factor: 0.75 } }
 
     Item {
         id: resizeArea

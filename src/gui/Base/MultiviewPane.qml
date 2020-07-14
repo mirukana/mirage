@@ -19,7 +19,7 @@ HDrawer {
 
 
     defaultSize: buttonRepeater.count * buttonWidth
-    minimumSize: requireDefaultSize ? defaultSize : buttonWidth
+    minimumSize: buttonWidth
 
     HColumnLayout {
         anchors.fill: parent
