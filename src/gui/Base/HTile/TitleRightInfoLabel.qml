@@ -12,6 +12,7 @@ HLabel {
     verticalAlignment: Qt.AlignVCenter
     color: theme.colors.halfDimText
     visible: Layout.maximumWidth > 0
+    opacity: Layout.maximumWidth > 0 ? 1 : 0
 
     Layout.fillHeight: true
     Layout.maximumWidth:
