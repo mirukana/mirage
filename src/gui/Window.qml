@@ -52,7 +52,8 @@ ApplicationWindow {
 
     function getState(obj, property, defaultValue=undefined) {
         try {
-            return uiState[obj.saveName][obj.saveId || "ALL"][property]
+            const props = uiState[obj.saveName][obj.saveId || "ALL"]
+            return property in props ? props[property] : defaultValue
         } catch(err) {
             return defaultValue
         }
