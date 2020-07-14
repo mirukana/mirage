@@ -134,7 +134,7 @@ Item {
         anchors.leftMargin:
             mainPane.requireDefaultSize &&
             mainPane.minimumSize > mainPane.maximumSize ?
-            0 :
+            mainPane.calculatedSizeNoRequiredMinimum :
             mainPane.visibleSize
 
         visible: mainPane.visibleSize < mainUI.width

@@ -75,14 +75,18 @@ Item {
     HLoader {
         id: loader
         anchors.rightMargin:
-            ready && roomPane &&
+            ! roomPane ?
+            0 :
+
+            ready &&
             ! (
                 roomPane.requireDefaultSize &&
                 roomPane.minimumSize > roomPane.maximumSize &&
                 ! roomPane.collapse
             ) ?
             roomPane.visibleSize :
-            0
+
+            roomPane.calculatedSizeNoRequiredMinimum
 
         anchors.fill: parent
         visible: ! (ready && roomPane && roomPane.visibleSize >= chat.width)

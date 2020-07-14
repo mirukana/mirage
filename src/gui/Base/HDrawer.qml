@@ -43,6 +43,11 @@ Drawer {
     property int calculatedMinimumSize:
         requireDefaultSize ? defaultSize : minimumSize
 
+    readonly property int calculatedSizeNoRequiredMinimum:
+        collapse ?
+        peekSizeWhileCollapsed :
+        Math.max(minimumSize, Math.min(preferredSize, maximumSize))
+
     readonly property int calculatedSize:
         collapse ?
         peekSizeWhileCollapsed :
