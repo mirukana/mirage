@@ -48,6 +48,7 @@ HTile {
                     id: lastActiveAt
                     tile: member
                     visible: presenceTimer.running
+                    hideUnderWidth: 120
                 }
             }
 

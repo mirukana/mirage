@@ -6,17 +6,18 @@ import ".."
 
 HLabel {
     property HTile tile
+    property int hideUnderWidth: 200
 
 
     font.pixelSize: theme.fontSize.small
     verticalAlignment: Qt.AlignVCenter
     color: theme.colors.halfDimText
-    visible: Layout.maximumWidth > 0
     opacity: Layout.maximumWidth > 0 ? 1 : 0
+    visible: opacity > 0
 
     Layout.fillHeight: true
     Layout.maximumWidth:
-        text && tile.width >= 200 * theme.uiScale ?
+        text && tile.width >= hideUnderWidth * theme.uiScale ?
         implicitWidth : 0
 
     Behavior on Layout.maximumWidth { HNumberAnimation {} }
