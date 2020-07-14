@@ -232,7 +232,7 @@ class NioCallbacks:
 
         if not (
             event and
-            (event.etype is not nio.RedactedEvent or event.is_local_echo)
+            (event.event_type is not nio.RedactedEvent or event.is_local_echo)
         ):
             await self.client.register_nio_room(room)
             return
