@@ -11,6 +11,7 @@ HColumnLayout {
         [chat.userId, chat.roomId, "filtered_members"]
 
     readonly property alias viewDepth: stackView.depth
+    readonly property alias filterField: filterField
 
 
     HStackView {
