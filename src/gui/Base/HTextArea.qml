@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import Clipboard 0.1
 
 TextArea {
     id: textArea
@@ -25,6 +26,10 @@ TextArea {
     property color focusedBorderColor: theme.controls.textArea.focusedBorder
 
     property string previousDefaultText: ""  // private
+
+    property bool enableCustomImagePaste: false
+
+    signal customImagePaste()
 
     function reset() { clear(); text = Qt.binding(() => defaultText || "") }
     function insertAtCursor(text) { insert(cursorPosition, text) }
@@ -85,11 +90,22 @@ TextArea {
         previousDefaultText = defaultText
     }
 
-    // Prevent alt/super+any key from typing text
-    Keys.onPressed: if (
-        event.modifiers & Qt.AltModifier ||
-        event.modifiers & Qt.MetaModifier
-    ) event.accepted = true
+    Keys.onPressed: ev => {
+        // Prevent alt/super+any key from typing text
+        if (
+            ev.modifiers & Qt.AltModifier ||
+            ev.modifiers & Qt.MetaModifier
+        ) ev.accepted = true
+
+        if (
+            ev.matches(StandardKey.Paste) &&
+            textArea.enableCustomImagePaste &&
+            Clipboard.hasImage
+        ) {
+            ev.accepted = true
+            textArea.customImagePaste()
+        }
+    }
 
     Keys.onMenuPressed: contextMenu.spawn(false)
 
@@ -159,5 +175,9 @@ TextArea {
         onLongPressed: contextMenu.spawn()
     }
 
-    HTextContextMenu { id: contextMenu }
+    HTextContextMenu {
+        id: contextMenu
+        enableCustomImagePaste: textArea.enableCustomImagePaste
+        onCustomImagePaste: print("foo") || textArea.customImagePaste()
+    }
 }

@@ -3,6 +3,7 @@
 // This file creates the application, registers custom objects for QML
 // and launches Window.qml (the root component).
 
+#include <QDataStream>  // must be first include to avoid clipboard.h errors
 #include <QApplication>
 #include <QQmlEngine>
 #include <QQmlContext>

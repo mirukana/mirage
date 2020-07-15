@@ -6,14 +6,22 @@
 #ifndef CLIPBOARD_H
 #define CLIPBOARD_H
 
-#include <QGuiApplication>
+#include <QBuffer>
+#include <QByteArray>
 #include <QClipboard>
+#include <QGuiApplication>
+#include <QIODevice>
+#include <QImage>
+#include <QMimeData>
 #include <QObject>
 
 
 class Clipboard : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QByteArray image READ image WRITE setImage NOTIFY imageChanged)
+    Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
+
     Q_PROPERTY(QString selection READ selection WRITE setSelection
                NOTIFY selectionChanged)
 
@@ -22,7 +30,7 @@ class Clipboard : public QObject {
 public:
     explicit Clipboard(QObject *parent = nullptr) : QObject(parent) {
         connect(this->clipboard, &QClipboard::dataChanged,
-                this, &Clipboard::textChanged);
+                this, &Clipboard::mainClipboardChanged);
 
         connect(this->clipboard, &QClipboard::selectionChanged,
                 this, &Clipboard::selectionChanged);
@@ -36,6 +44,23 @@ public:
 
     void setText(const QString &text) const {
         this->clipboard->setText(text, QClipboard::Clipboard);
+    }
+
+    QByteArray image() const {
+        QByteArray byteArray;
+        QBuffer buffer(&byteArray);
+        buffer.open(QIODevice::WriteOnly);
+        this->clipboard->image(QClipboard::Clipboard).save(&buffer, "PNG");
+        buffer.close();
+        return byteArray;
+    }
+
+    void setImage(const QByteArray &image) const {  // TODO
+        Q_UNUSED(image)
+    }
+
+    bool hasImage() const {
+        return this->clipboard->mimeData()->hasImage();
     }
 
     // X11 select-middle-click-paste clipboard
@@ -58,10 +83,17 @@ public:
 
 signals:
     void textChanged();
+    void imageChanged();
+    void hasImageChanged();
     void selectionChanged();
 
 private:
     QClipboard *clipboard = QGuiApplication::clipboard();
+
+    void mainClipboardChanged() {
+        this->hasImage() ? this->imageChanged() : this->textChanged();
+        this->hasImageChanged();
+    };
 };
 
 #endif

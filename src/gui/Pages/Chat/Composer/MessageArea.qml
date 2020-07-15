@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import Clipboard 0.1
 import "../../.."
 import "../../../Base"
 
@@ -93,6 +94,7 @@ HTextArea {
     enabled: chat.roomInfo.can_send_messages
     disabledText: qsTr("You do not have permission to post in this room")
     placeholderText: qsTr("Type a message...")
+    enableCustomImagePaste: true
 
     backgroundColor: "transparent"
     focusedBorderColor: "transparent"
@@ -158,6 +160,10 @@ HTextArea {
             textChangedSinceLostFocus = false
         }
     }
+
+    onCustomImagePaste: py.callClientCoro(
+        writingUserId, "send_clipboard_image", [chat.roomId, Clipboard.image],
+    )
 
     Keys.onEscapePressed: clearReplyTo()
 

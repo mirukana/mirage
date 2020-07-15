@@ -16,6 +16,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 from functools import partial
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import (
     TYPE_CHECKING, Any, ClassVar, Dict, List, NamedTuple, Optional, Set, Tuple,
     Type, Union,
@@ -23,6 +24,7 @@ from typing import (
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
+import aiofiles
 import cairosvg
 from PIL import Image as PILImage
 from pymediainfo import MediaInfo
@@ -40,7 +42,7 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    Account, Event, Member, Presence, Room, Upload, UploadStatus, ZERO_DATE,
+    ZERO_DATE, Account, Event, Member, Presence, Room, Upload, UploadStatus,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -555,6 +557,18 @@ class MatrixClient(nio.AsyncClient):
             uuid = UUID(uuid)
 
         self.upload_tasks[uuid].cancel()
+
+
+    async def send_clipboard_image(self, room_id: str, image: bytes) -> None:
+        """Send a clipboard image passed from QML as a `m.image` message."""
+
+        prefix = datetime.now().strftime("%Y%m%d-%H%M%S.")
+
+        with NamedTemporaryFile(prefix=prefix, suffix=".png") as temp:
+            async with aiofiles.open(temp.name, "wb") as file:
+                await file.write(image)
+
+            await self.send_file(room_id, temp.name)
 
 
     async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
