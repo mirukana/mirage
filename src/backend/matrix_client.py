@@ -1495,7 +1495,7 @@ class MatrixClient(nio.AsyncClient):
                 "id":           device.id,
                 "display_name": device.display_name or "",
                 "type":         device.trust_state.name,
-                "ed25519_key":  device.ed25519,
+                "ed25519_key":  " ".join(textwrap.wrap(device.ed25519, 4)),
             }
             for device in self.device_store.active_user_devices(user_id)
         ]
