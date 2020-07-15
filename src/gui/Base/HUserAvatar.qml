@@ -3,6 +3,8 @@
 import QtQuick 2.12
 
 HAvatar {
+    id: avatar
+
     property string userId
     property string displayName
     property string presence: ""
@@ -52,48 +54,13 @@ HAvatar {
     }
 
     HLoader {
-        property int diameter:
-            window.settings.compactMode ?
-            theme.controls.presence.radius * 2 :
-            theme.controls.presence.radius * 2.5
-
         active: presence && presence !== "offline"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.bottomMargin: -diameter / 2
-        anchors.rightMargin: -diameter / 2
-        opacity: theme.controls.presence.opacity
+        anchors.bottomMargin: item ? -item.width / 2 : 0
+        anchors.rightMargin: item ? -item.height / 2 : 0
         z: 300
 
-        sourceComponent: Rectangle {
-            width: diameter
-            height: diameter
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            radius: diameter / 2
-            opacity: presence.includes("echo") ? 0.4 : 1
-
-            color:
-                presence.includes("online") ?
-                theme.controls.presence.online :
-
-                presence.includes("unavailable") ?
-                theme.controls.presence.unavailable :
-
-                theme.controls.presence.offline
-
-            border.color: theme.controls.presence.border
-            border.width: theme.controls.presence.borderWidth
-
-            Behavior on color   { HColorAnimation {} }
-            Behavior on opacity { HNumberAnimation {} }
-
-            HoverHandler { id: presenceHover }
-
-            HToolTip {
-                visible: presenceHover.hovered && ! presence.includes("echo")
-                text: qsTr(presence.replace(/^\w/, c => c.toUpperCase()))
-            }
-        }
+        sourceComponent: PresenceOrb { presence: avatar.presence }
     }
 }

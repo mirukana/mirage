@@ -1,5 +1,6 @@
 # TODO
 
+- block power level change when offline
 - fix power level control button layout when apply button is loading
 
 - joining new DM, not loading past events the first time?
