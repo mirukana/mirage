@@ -166,7 +166,7 @@ HListView {
                 root.canSetPowerLevels &&
                 (
                     root.ownPowerLevel > member.power_level ||
-                    root.ownPowerLevel === 100
+                    (root.ownPowerLevel === 100 && member.id === userId)
                 )
 
             label.text: qsTr("Power level:")

@@ -1,5 +1,6 @@
 # TODO
 
+- idlemanager: what if setPresence call fails due to network?
 - block power level change when offline
 - fix power level control button layout when apply button is loading
 
