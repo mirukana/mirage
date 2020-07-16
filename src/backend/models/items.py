@@ -116,10 +116,12 @@ class Presence:
         ):
             return
 
-        self.account.presence         = self.presence if (
-            self.account.presence != self.State.echo_invisible
-        ) else self.State.invisible
-        self.account.status_msg       = self.status_msg
+        if self.account.presence == self.State.echo_invisible:
+            self.account.presence = self.State.invisible
+        else:
+            self.account.presence   = self.presence
+            self.account.status_msg = self.status_msg
+
         self.account.last_active_at   = self.last_active_at
         self.account.currently_active = self.currently_active
 

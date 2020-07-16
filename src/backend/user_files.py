@@ -194,6 +194,7 @@ class Accounts(JSONDataFile):
                 "device_id":  client.device_id,
                 "enabled":    True,
                 "presence":   account.presence.value,
+                "status_msg": account.status_msg,
                 "order":      account.order,
             },
         })
@@ -201,10 +202,11 @@ class Accounts(JSONDataFile):
 
     async def update(
         self,
-        user_id:  str,
-        enabled:  Optional[str] = None,
-        presence: Optional[str] = None,
-        order:    Optional[int] = None,
+        user_id:    str,
+        enabled:    Optional[str] = None,
+        presence:   Optional[str] = None,
+        order:      Optional[int] = None,
+        status_msg: Optional[str] = None,
     ) -> None:
         """Update an account if found in the config file and write to disk."""
 
@@ -221,6 +223,9 @@ class Accounts(JSONDataFile):
 
         if order is not None:
             saved[user_id]["order"] = order
+
+        if status_msg is not None:
+            saved[user_id]["status_msg"] = status_msg
 
         await self.write({**saved})
 

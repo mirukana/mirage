@@ -157,6 +157,7 @@ class Backend:
         device_id:  str,
         homeserver: str = "https://matrix.org",
         state:      str = "online",
+        status_msg: str = "",
     ) -> None:
         """Create and register a `MatrixClient` with known account details."""
 
@@ -167,7 +168,7 @@ class Backend:
 
         self.clients[user_id] = client
 
-        await client.resume(user_id, token, device_id, state)
+        await client.resume(user_id, token, device_id, state, status_msg)
 
 
     async def load_saved_accounts(self) -> List[str]:
@@ -185,6 +186,7 @@ class Backend:
                 device_id  = info["device_id"],
                 homeserver = info["homeserver"],
                 state      = info.get("presence", "online"),
+                status_msg = info.get("status_msg", ""),
             )
 
             return user_id

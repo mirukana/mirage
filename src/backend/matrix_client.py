@@ -276,10 +276,11 @@ class MatrixClient(nio.AsyncClient):
 
     async def resume(
         self,
-        user_id:   str,
-        token:     str,
-        device_id: str,
-        state:     str = "online",
+        user_id:    str,
+        token:      str,
+        device_id:  str,
+        state:      str = "online",
+        status_msg: str = "",
     ) -> None:
         """Login to the server using an existing access token."""
 
@@ -287,8 +288,9 @@ class MatrixClient(nio.AsyncClient):
         account  = self.models["accounts"][user_id]
         await self.receive_response(response)
 
-        self._presence = "offline" if state == "invisible" else state
-        account.presence = Presence.State(state)
+        self._presence     = "offline" if state == "invisible" else state
+        account.presence   = Presence.State(state)
+        account.status_msg = status_msg
 
         if state != "offline":
             account.connecting = True
@@ -392,6 +394,12 @@ class MatrixClient(nio.AsyncClient):
     async def _stop(self) -> None:
         """Stop client tasks. Will prevent client to receive further events."""
 
+        # Remove account model from presence update
+        presence = self.backend.presences.get(self.user_id, None)
+
+        if presence:
+            presence.account = None
+
         tasks = (
             self.profile_task,
             self.sync_task,
@@ -406,12 +414,6 @@ class MatrixClient(nio.AsyncClient):
                     await task
 
         self.first_sync_done.clear()
-
-        # Remove account model from presence update
-        presence = self.backend.presences.get(self.user_id, None)
-
-        if presence:
-            presence.account = None
 
 
     async def update_own_profile(self) -> None:
@@ -1345,6 +1347,7 @@ class MatrixClient(nio.AsyncClient):
         status_msg = status_msg if status_msg is not None else (
             self.models["accounts"][self.user_id].status_msg
         )
+        set_status_msg = True
 
         if presence == "offline":
             # Do not do anything if account is offline and setting to offline
@@ -1361,8 +1364,12 @@ class MatrixClient(nio.AsyncClient):
             account.presence == Presence.State.offline and
             presence         != "offline"
         ):
+            # In this case we will not run super().set_presence()
+            set_status_msg     = False
             account.connecting = True
             self.start_task    = asyncio.ensure_future(self._start())
+
+            self._presence = "offline" if presence == "invisible" else presence
 
         if (
             Presence.State(presence) != account.presence and
@@ -1376,15 +1383,18 @@ class MatrixClient(nio.AsyncClient):
         if save:
             account.save_presence = True
             await self.backend.saved_accounts.update(
-                self.user_id, presence=presence,
+                self.user_id, presence=presence, status_msg=status_msg,
             )
         else:
             account.save_presence = False
 
-        await super().set_presence(
-            "offline" if presence == "invisible" else presence,
-            status_msg,
-        )
+        if set_status_msg:
+            account.status_msg = status_msg
+
+            await super().set_presence(
+                "offline"  if presence == "invisible" else presence,
+                status_msg,
+            )
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:
