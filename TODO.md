@@ -1,24 +1,28 @@
 # TODO
 
-- power control focus
+- global presence control
+- power level control keyboard focus
 - idlemanager: what if setPresence call fails due to network?
-- block power level change when offline
+- disable member power level change control when offline
 - fix power level control button layout when apply button is loading
 
-- joining new DM, not loading past events the first time?
+- joining new DM → not loading past events the first time?
 - fix HLabeledItem disabled opacity
+  (visible for the topic area in room settings)
 
-- save and restore status in accounts.json
+- ~~save and restore status message in accounts.json~~
 - mark accounts as offline when closing mirage
-- document new x11 dependnecy (auto-idle)
-- auto-idle for Windows and OSX 
-- open context menus centered on touch screens 
-- retrieve last seen time for offline members on hover/in profile
-- status based on process detection
-- retry if media not found
+- document new libXScreenSaver-devel dependency (for auto-idle)
+- retrieve last seen time for offline members on hover/in profile/automatically
+- retry if media retrieval request ends up with a 404
 - fix members not synced bug
 - fix local unread counters order
-- warn about no E2E room shared if no devices
+- member profile: if no devices show up, warn about no E2E rooms shared or
+  no E2E-aware devices for that member
+
+- open context menus centered on touch screens 
+- auto-idle for Windows and OSX 
+- status based on process detection
 
 ## Refactoring
 

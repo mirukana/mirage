@@ -19,6 +19,7 @@
 
 #include "utils.h"
 #include "clipboard.h"
+#include "clipboard_image_provider.h"
 
 
 void loggingHandler(
@@ -124,6 +125,11 @@ int main(int argc, char *argv[]) {
 #else
     objectContext->setContextProperty("debugMode", false);
 #endif
+
+    // Register out custom image providers.
+    // QML will be able to request an image from them by setting an
+    // `Image`'s `source` to `image://<providerId>/<id>`
+    engine.addImageProvider("clipboard", new ClipboardImageProvider);
 
     // Register our custom non-visual QObject singletons,
     // that will be importable anywhere in QML. Example:

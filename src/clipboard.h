@@ -82,6 +82,7 @@ public:
     }
 
 signals:
+    void contentChanged();
     void textChanged();
     void imageChanged();
     void hasImageChanged();
@@ -91,6 +92,7 @@ private:
     QClipboard *clipboard = QGuiApplication::clipboard();
 
     void mainClipboardChanged() {
+        contentChanged();
         this->hasImage() ? this->imageChanged() : this->textChanged();
         this->hasImageChanged();
     };
