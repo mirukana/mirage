@@ -21,8 +21,14 @@ HButton {
 
     HShortcut {
         sequences: window.settings.keys.sendFileFromPathInClipboard
-        onActivated: utils.sendFile(
-            chat.userId, chat.roomId, Clipboard.text.trim(),
+        onActivated: utils.makePopup(
+            "Popups/ConfirmUploadPopup.qml",
+            {
+                userId: chat.userId,
+                roomId: chat.roomId,
+                roomName: chat.roomInfo.display_name,
+                filePath: Clipboard.text.trim(),
+            },
         )
     }
 

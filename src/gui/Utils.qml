@@ -191,6 +191,11 @@ QtObject {
     }
 
 
+    function htmlColorize(text, color) {
+        return `<font color="${color}">${text}</font>`
+    }
+
+
     function processedEventText(ev) {
         const type       = ev.event_type
         const unknownMsg = type === "RoomMessageUnknown"

@@ -1,5 +1,6 @@
 # TODO
 
+- power control focus
 - idlemanager: what if setPresence call fails due to network?
 - block power level change when offline
 - fix power level control button layout when apply button is loading
@@ -158,7 +159,6 @@
 
 - Add upload keybindings (close failed upload, pause, resume)
 - Handle errors when setting an avatar
-- Show confirmation box when picking file to upload or uploading from clipboard
 - Show proper progress ring for mxc thumbnails loading
 
 - Sentinel function to report local file paths for already downloaded media,
