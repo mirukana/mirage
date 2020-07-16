@@ -161,8 +161,13 @@ HTextArea {
         }
     }
 
-    onCustomImagePaste: py.callClientCoro(
-        writingUserId, "send_clipboard_image", [chat.roomId, Clipboard.image],
+    onCustomImagePaste: utils.makePopup(
+        "Popups/ConfirmClipboardUploadPopup.qml",
+        {
+            userId: chat.userId,
+            roomId: chat.roomId,
+            roomName: chat.roomInfo.display_name,
+        },
     )
 
     Keys.onEscapePressed: clearReplyTo()
