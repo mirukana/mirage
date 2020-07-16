@@ -1,3 +1,15 @@
+# Custom functions
+
+defineReplace(glob_filenames) {
+    for(pattern, ARGS) {
+        results *= $$files(src/$${pattern}, true)
+    }
+    return($$results)
+}
+
+
+# Base configuration
+
 # widgets: Make native file dialogs available to QML (must use QApplication)
 QT        = quick quickcontrols2 widgets
 DEFINES  += QT_DEPRECATED_WARNINGS
@@ -12,8 +24,8 @@ RCC_DIR     = $$BUILD_DIR/rcc
 QRC_FILE = $$BUILD_DIR/resources.qrc
 
 RESOURCES += $$QRC_FILE
-HEADERS   += src/utils.h src/clipboard.h submodules/hsluv-c/src/hsluv.h
-SOURCES   += src/main.cpp submodules/hsluv-c/src/hsluv.c
+HEADERS   += $$glob_filenames(*.h) submodules/hsluv-c/src/hsluv.h
+SOURCES   += $$glob_filenames(*.cpp) submodules/hsluv-c/src/hsluv.c
 TARGET     = mirage
 
 unix:!macx {
@@ -55,16 +67,6 @@ dev {
     executables.files = $$TARGET
 
     INSTALLS += executables
-}
-
-
-# Custom functions
-
-defineReplace(glob_filenames) {
-    for(pattern, ARGS) {
-        results *= $$files(src/$${pattern}, true)
-    }
-    return($$results)
 }
 
 
