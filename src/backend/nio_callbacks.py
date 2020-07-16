@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+import asyncio
 import json
 import logging as log
 from dataclasses import dataclass, field
@@ -742,6 +743,8 @@ class NioCallbacks:
         # Check if presence event is ours
         if (
             ev.user_id in self.models["accounts"] and
+            self.models["accounts"][ev.user_id].presence !=
+            Presence.State.offline and
             not (
                 presence.presence == Presence.State.offline and
                 self.models["accounts"][ev.user_id].presence !=
@@ -749,6 +752,20 @@ class NioCallbacks:
             )
         ):
             account = self.models["accounts"][ev.user_id]
+
+            # Set status_msg if none is set on the server and we have one
+            if (
+                not presence.status_msg                   and
+                account.status_msg                        and
+                ev.user_id in self.client.backend.clients and
+                account.presence != Presence.State.echo_invisible
+            ):
+                asyncio.ensure_future(
+                    self.client.backend.clients[ev.user_id].set_presence(
+                        presence.presence.value,
+                        account.status_msg,
+                    ),
+                )
 
             # Do not fight back presence from other clients
             self.client.backend.clients[ev.user_id]._presence = ev.presence
@@ -758,11 +775,17 @@ class NioCallbacks:
 
             # Save the presence for the next resume
             if account.save_presence:
+                status_msg = presence.status_msg
+                state      = presence.presence
+
+                if account.presence == Presence.State.echo_invisible:
+                    status_msg = account.status_msg
+                    state      = Presence.State.invisible
+
                 await self.client.backend.saved_accounts.update(
-                    user_id  = ev.user_id,
-                    presence = presence.presence.value if (
-                        account.presence != Presence.State.echo_invisible
-                    ) else "invisible",
+                    user_id    = ev.user_id,
+                    status_msg = status_msg,
+                    presence   = state.value,
                 )
 
             presence.update_account()
