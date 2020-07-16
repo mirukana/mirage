@@ -311,6 +311,7 @@ class Member(ModelItem):
 class UploadStatus(AutoStrEnum):
     """Enum describing the status of an upload operation."""
 
+    Preparing = auto()
     Uploading = auto()
     Caching   = auto()
     Error     = auto()
@@ -321,7 +322,7 @@ class Upload(ModelItem):
     """Represent a running or failed file upload operation."""
 
     id:       UUID = field()
-    filepath: Path = field()
+    filepath: Path = Path("-")
 
     total_size: int       = 0
     uploaded:   int       = 0
@@ -329,7 +330,7 @@ class Upload(ModelItem):
     time_left:  timedelta = timedelta(0)
     paused:     bool      = False
 
-    status:     UploadStatus          = UploadStatus.Uploading
+    status:     UploadStatus          = UploadStatus.Preparing
     error:      OptionalExceptionType = type(None)
     error_args: Tuple[Any, ...]       = ()
 

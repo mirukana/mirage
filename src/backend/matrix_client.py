@@ -18,8 +18,8 @@ from functools import partial
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import (
-    TYPE_CHECKING, Any, ClassVar, Dict, List, NamedTuple, Optional, Set, Tuple,
-    Type, Union,
+    TYPE_CHECKING, Any, Callable, ClassVar, Coroutine, Dict, List, NamedTuple,
+    Optional, Set, Tuple, Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -56,7 +56,10 @@ if sys.version_info >= (3, 7):
 else:
     current_task = asyncio.Task.current_task
 
-CryptDict = Dict[str, Any]
+CryptDict    = Dict[str, Any]
+PathCallable = Union[
+    str, Path, Callable[[], Coroutine[None, None, Union[str, Path]]],
+]
 
 REPLY_FALLBACK = (
 "<mx-reply>"
@@ -565,13 +568,20 @@ class MatrixClient(nio.AsyncClient):
         prefix = datetime.now().strftime("%Y%m%d-%H%M%S.")
 
         with NamedTemporaryFile(prefix=prefix, suffix=".png") as temp:
-            async with aiofiles.open(temp.name, "wb") as file:
-                await file.write(image)
 
-            await self.send_file(room_id, temp.name)
+            async def get_path() -> Path:
+                with io.BytesIO(image) as inp, io.BytesIO() as buffer:
+                    PILImage.open(inp).save(buffer, "PNG", optimize=True)
+
+                    async with aiofiles.open(temp.name, "wb") as file:
+                        await file.write(buffer.getvalue())
+
+                return Path(temp.name)
+
+            await self.send_file(room_id, get_path)
 
 
-    async def send_file(self, room_id: str, path: Union[Path, str]) -> None:
+    async def send_file(self, room_id: str, path: PathCallable) -> None:
         """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
 
         item_uuid = uuid4()
@@ -579,22 +589,26 @@ class MatrixClient(nio.AsyncClient):
         try:
             await self._send_file(item_uuid, room_id, path)
         except (nio.TransferCancelledError, asyncio.CancelledError):
-            log.info("Deleting item for cancelled upload %s", item_uuid)
-            del self.upload_monitors[item_uuid]
-            del self.upload_tasks[item_uuid]
-            del self.models[room_id, "uploads"][str(item_uuid)]
+            self.upload_monitors.pop(item_uuid, None)
+            self.upload_tasks.pop(item_uuid, None)
+            self.models[room_id, "uploads"].pop(str(item_uuid), None)
 
 
     async def _send_file(
-        self, item_uuid: UUID, room_id: str, path: Union[Path, str],
+        self, item_uuid: UUID, room_id: str, path: PathCallable,
     ) -> None:
         """Upload and monitor a file + thumbnail and send the built event."""
 
         # TODO: this function is way too complex, and most of it should be
         # refactored into nio.
 
+        self.upload_tasks[item_uuid]    = current_task()  # type: ignore
+
+        upload_item = Upload(item_uuid)
+        self.models[room_id, "uploads"][str(item_uuid)] = upload_item
+
         transaction_id = uuid4()
-        path           = Path(path)
+        path           = Path(await path() if callable(path) else path)
         encrypt        = room_id in self.encrypted_rooms
 
         try:
@@ -603,13 +617,12 @@ class MatrixClient(nio.AsyncClient):
             # This error will be caught again by the try block later below
             size = 0
 
-        monitor     = nio.TransferMonitor(size)
-        upload_item = Upload(item_uuid, path, total_size=size)
+        upload_item.set_fields(
+            status=UploadStatus.Uploading, filepath=path, total_size=size,
+        )
 
-        self.models[room_id, "uploads"][str(item_uuid)] = upload_item
-
+        monitor = nio.TransferMonitor(size)
         self.upload_monitors[item_uuid] = monitor
-        self.upload_tasks[item_uuid]    = current_task()  # type: ignore
 
         def on_transferred(transferred: int) -> None:
             upload_item.uploaded  = transferred

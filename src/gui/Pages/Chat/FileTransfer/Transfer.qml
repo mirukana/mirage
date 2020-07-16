@@ -65,6 +65,9 @@ HColumnLayout {
                 cancelPending ?
                 qsTr("Cancelling...") :
 
+                status === "Preparing" ?
+                qsTr("Preparing file...") :
+
                 status === "Uploading" ?
                 fileName :
 
