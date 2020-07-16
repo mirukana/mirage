@@ -15,6 +15,8 @@ HColumnPopup {
     property string roomName
 
 
+    contentWidthLimit: theme.controls.popup.defaultWidth * 1.25
+
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: uploadButton

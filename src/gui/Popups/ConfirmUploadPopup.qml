@@ -17,6 +17,8 @@ HColumnPopup {
     readonly property string fileName: filePath.split("/").slice(-1)[0]
 
 
+    contentWidthLimit: theme.controls.popup.defaultWidth * 1.25
+
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: uploadButton
