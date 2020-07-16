@@ -3,7 +3,6 @@
 - global presence control
 - power level control keyboard focus
 - idlemanager: what if setPresence call fails due to network?
-- disable member power level change control when offline
 - fix power level control button layout when apply button is loading
 
 - joining new DM → not loading past events the first time?
