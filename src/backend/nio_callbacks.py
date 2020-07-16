@@ -5,7 +5,7 @@ import logging as log
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
-from typing import TYPE_CHECKING, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 from urllib.parse import quote
 
 import nio
@@ -343,9 +343,9 @@ class NioCallbacks:
 
         # Event formatting
 
-        changes       = []
-        event_changes = []
-        user_changes  = []
+        changes:       List[Tuple[str, int, int]] = []
+        event_changes: List[Tuple[str, int, int]] = []
+        user_changes:  List[Tuple[str, int, int]] = []
 
         def lvl(level: int) -> str:
             return (
@@ -397,7 +397,7 @@ class NioCallbacks:
             )
 
             if level != old or not previous:
-                event_changes.append(f"{ev_type} | {lvl(old)} | {lvl(level)}")
+                event_changes.append((ev_type, old, level))
 
         # User level changes
 
@@ -405,26 +405,36 @@ class NioCallbacks:
             old = users_previous.get(user_id, levels.defaults.users_default)
 
             if level != old or not previous:
-                user_changes.append(f"{user_id} | {lvl(old)} | {lvl(level)}")
+                user_changes.append((user_id, old, level))
 
         # Gather and format changes
 
         if changes or event_changes or user_changes:
             changes.sort(key=lambda c: (c[2], c[0]))
-            changes_lines = [
-                f"{name} | {lvl(old)} | {lvl(now)}"
-                for name, old, now in changes
-            ]
+            event_changes.sort(key=lambda c: (c[2], c[0]))
+            user_changes.sort(key=lambda c: (c[2], c[0]))
 
-            co = HTML_PROCESSOR.from_markdown("\n".join([
-                "%1 changed the room's permissions",
-                "",
-                "Change | Previous | Current ",
-                "--- | --- | ---",
-                *changes_lines,
-                *sorted(event_changes),
-                *sorted(user_changes),
-            ]))
+            all_changes = changes + event_changes + user_changes
+
+            if len(all_changes) == 1:
+                co = HTML_PROCESSOR.from_markdown(
+                    "%%1 changed the level for **%s**: %s → %s " % (
+                        all_changes[0][0],
+                        lvl(all_changes[0][1]).lower(),
+                        lvl(all_changes[0][2]).lower(),
+                    ),
+                )
+            else:
+                co = HTML_PROCESSOR.from_markdown("\n".join([
+                    "%1 changed the room's permissions",
+                    "",
+                    "Change | Previous | Current ",
+                    "--- | --- | ---",
+                    *[
+                        f"{name} | {lvl(old)} | {lvl(now)}"
+                        for name, old, now in all_changes
+                    ],
+                ]))
         else:
             co = "%1 didn't change the room's permissions"
 
