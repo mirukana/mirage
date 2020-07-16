@@ -1376,6 +1376,8 @@ class MatrixClient(nio.AsyncClient):
             account.save_presence = False
 
         if set_status_msg:
+            account.status_msg = status_msg
+
             await super().set_presence(
                 "offline"  if presence == "invisible" else presence,
                 status_msg,
