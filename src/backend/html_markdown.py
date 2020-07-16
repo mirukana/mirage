@@ -395,7 +395,7 @@ class HTMLProcessor:
         if el.tag != "img":
             return el
 
-        src      = el.attrib.get("src")
+        src      = el.attrib.get("src", "")
         width    = el.attrib.get("width")
         height   = el.attrib.get("height")
         is_emote = "data-mx-emote" in el.attrib
