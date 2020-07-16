@@ -92,6 +92,11 @@ in this example [yay](https://github.com/Jguer/yay) for the release version:
 The equivalent `-dev` or `-devel` packages are needed, if your distro
 splits development headers into their own packages.
 
+To enable X11-specific features, **libX11** and **libXScrnSaver** / **libXss**
+are needed.
+The requirements can be disabled by adding `CONFIG+=no-x11` to the
+`qmake mirage.pro` command.
+
 For the Pillow Python package, these dependencies are recommended to support 
 all common image formats:
 
@@ -123,6 +128,7 @@ export CFLAGS="-march=native -O2 -pipe"
 
 ```sh
 sudo apk add qt5-qtquickcontrols2-dev qt5-qtsvg-dev qt5-qtimageformats \
+             libx11-dev libxscrnsaver-dev \
              python3-dev py3-setuptools \
              build-base git cmake \
              libjpeg-turbo-dev zlib-dev tiff-dev libwebp-dev openjpeg-dev \
@@ -141,6 +147,7 @@ Alternatively, you can just use `pacman` and
 ```sh
 yay -Syu qt5-base qt5-declarative qt5-quickcontrols2 qt5-svg \
          qt5-graphicaleffects qt5-imageformats \
+         libx11 libxss \
          python python-pip \
          python-pyotherside \
          libolm \
@@ -156,6 +163,7 @@ sudo dnf install qt5-devel qt5-qtbase-devel qt5-qtdeclarative-devel \
                  qt5-qtquickcontrols2-devel qt5-qtsvg-devel \
                  qt5-qtgraphicaleffects qt5-qtimageformats \
                  python3-devel python3-pip pyotherside \
+                 libX11-devel libXScrnSaver-devel \
                  git cmake \
                  libolm-devel \
                  libjpeg-turbo-devel zlib-devel libtiff-devel libwebp-devel \
@@ -174,6 +182,7 @@ if `emerge` says so.
 ```sh
 sudo emerge -av qtcore qtdeclarative qtquickcontrols2 \
                 qtsvg qtgraphicaleffects qtimageformats \
+                libX11 libXScrnSaver \
                 dev-python/pip pyotherside \
                 dev-vcs/git cmake \
                 libjpeg-turbo zlib tiff libwebp openjpeg libmediainfo
@@ -193,6 +202,7 @@ sudo apt install qt5-default qt5-qmake qt5-image-formats-plugins \
                  qml-module-qtquick-shapes \
                  qtdeclarative5-dev \
                  qtquickcontrols2-5-dev \
+                 libx11-dev libxss-dev \
                  python3-dev python3-pip \
                  qml-module:io-thp-pyotherside \
                  build-essential git cmake \
@@ -217,6 +227,7 @@ sudo apt install libolm-dev
 sudo xbps-install -Su qt5-devel qt5-declarative-devel \
                       qt5-quickcontrols2-devel \
                       qt5-svg-devel qt5-graphicaleffects qt5-imageformats \
+                      libx11-devel libXScrnSaver-devel \
                       python3-devel python3-pip \
                       olm-devel \
                       base-devel git cmake \
@@ -270,6 +281,9 @@ qmake mirage.pro
 make
 sudo make install
 ```
+
+To compile without the X11-specific dependencies and features,
+run `qmake mirage.pro CONFIG+=no-x11` instead of `qmake mirage.pro`.
 
 If everything went fine, run `mirage` to start.
 

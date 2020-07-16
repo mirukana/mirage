@@ -9,7 +9,6 @@
   (visible for the topic area in room settings)
 
 - mark accounts as offline when closing mirage
-- document new libXScreenSaver-devel dependency (for auto-idle)
 - retrieve last seen time for offline members on hover/in profile/automatically
 - retry if media retrieval request ends up with a 404
 - fix members not synced bug
