@@ -55,7 +55,7 @@ HColumnPopup {
         Layout.preferredHeight:
             status === Image.Ready ?
             width / (implicitWidth / implicitHeight) :
-            0
+            96 * theme.uiScale  // for spinner
 
         Behavior on Layout.preferredHeight { HNumberAnimation {} }
     }
