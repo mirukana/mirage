@@ -1,7 +1,6 @@
 # TODO
 
 - global presence control
-- power level control keyboard focus
 - idlemanager: what if setPresence call fails due to network?
 - fix power level control button layout when apply button is loading
 

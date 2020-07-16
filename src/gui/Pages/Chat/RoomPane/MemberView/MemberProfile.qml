@@ -208,9 +208,12 @@ HListView {
                 defaultLevel: member.power_level
                 maximumLevel: root.ownPowerLevel
                 rowSpacing: powerLevel.spacing
+
                 onAccepted: applyButton.clicked()
                 onFieldFocusedChanged:
                     root.powerLevelFieldFocused = fieldFocused
+                Component.onCompleted: forceActiveFocus()
+
             }
         }
 

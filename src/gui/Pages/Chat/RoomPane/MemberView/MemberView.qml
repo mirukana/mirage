@@ -96,12 +96,6 @@ HColumnLayout {
 
                 onActiveFocusChanged: {
                     if (
-                        activeFocus &&
-                        stackView.depth === 1 &&
-                        stackView.currentItem.currentIndex === -1
-                    ) {
-                        stackView.currentItem.currentIndex = 0
-                    } else if (
                         ! activeFocus &&
                         stackView.depth === 1 &&
                         stackView.currentItem.currentIndex === 0

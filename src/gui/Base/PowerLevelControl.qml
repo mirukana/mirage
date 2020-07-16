@@ -24,6 +24,7 @@ AutoDirectionLayout {
 
 
     rowSpacing: theme.spacing
+    onActiveFocusChanged: if (activeFocus) field.forceActiveFocus()
 
     HSpacer {}
 
