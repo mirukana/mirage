@@ -5,7 +5,7 @@ import logging as log
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
-from typing import TYPE_CHECKING, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, Optional, Tuple, Union
 from urllib.parse import quote
 
 import nio
@@ -343,6 +343,10 @@ class NioCallbacks:
 
         # Event formatting
 
+        changes       = []
+        event_changes = []
+        user_changes  = []
+
         def lvl(level: int) -> str:
             return (
                 f"Admin ({level})"     if level == 100  else
@@ -350,20 +354,36 @@ class NioCallbacks:
                 f"User ({level})"
             )
 
-        changes       = []
-        event_changes = []
-        user_changes  = []
+        def format_defaults_dict(
+            levels:   Dict[str, Union[int, dict]],
+            previous: Dict[str, Union[int, dict]],
+            prefix:   str             = "",
+        ) -> None:
+            for name, level in levels.items():
+                if not prefix and name in ("users", "events"):
+                    continue
 
-        # Default levels changes
+                if isinstance(level, dict):
+                    prev = previous.get(name, {})
 
-        for default, level in ev.source["content"].items():
-            if default in ("users", "events"):
-                continue
+                    if not isinstance(prev, dict):
+                        prev = {}
 
-            old = previous.get(default, levels.defaults.users_default)
+                    format_defaults_dict(level, prev, f"{prefix}{name}.")
+                    continue
 
-            if level != old or not previous:
-                changes.append(f"{default} | {lvl(old)} | {lvl(level)}")
+                default_0 = ("users_default", "events_default", "invite")
+                old       = previous.get(
+                    name, 0 if not prefix and name in default_0 else 50,
+                )
+
+                if not isinstance(old, int):
+                    old = 50
+
+                if level != old or not previous:
+                    changes.append((f"{prefix}{name}", old, level))
+
+        format_defaults_dict(ev.source["content"], previous)
 
         # Minimum level to send event changes
 
@@ -390,12 +410,18 @@ class NioCallbacks:
         # Gather and format changes
 
         if changes or event_changes or user_changes:
+            changes.sort(key=lambda c: (c[2], c[0]))
+            changes_lines = [
+                f"{name} | {lvl(old)} | {lvl(now)}"
+                for name, old, now in changes
+            ]
+
             co = HTML_PROCESSOR.from_markdown("\n".join([
-                "%1 changed the room's permissions:",
+                "%1 changed the room's permissions",
                 "",
                 "Change | Previous | Current ",
                 "--- | --- | ---",
-                *sorted(changes),
+                *changes_lines,
                 *sorted(event_changes),
                 *sorted(user_changes),
             ]))
