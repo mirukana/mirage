@@ -15,7 +15,6 @@ Image {
 
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
-    property bool inderterminateProgressBar: false
 
     readonly property int circleRadius:
         Math.ceil(Math.max(image.width, image.height))
@@ -104,15 +103,20 @@ Image {
 
     HLoader {
         id: progressBarLoader
+
+        readonly property alias progress: image.progress
+        readonly property Component determinate: HCircleProgressBar {
+            progress: image.progress
+        }
+
         anchors.centerIn: parent
         width: Math.min(parent.width, parent.height) * 0.5
         height: width
         active: image.status === Image.Loading
+        sourceComponent: HBusyIndicator {}
 
-        sourceComponent: HCircleProgressBar {
-            id: progressBar
-            progress: image.progress
-        }
+        onProgressChanged:
+            if (progress > 0 && progress < 1) sourceComponent = determinate
     }
 
     HIcon {

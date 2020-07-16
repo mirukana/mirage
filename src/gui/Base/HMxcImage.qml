@@ -56,8 +56,9 @@ HImage {
     }
 
 
-    inderterminateProgressBar: isMxc
     source: sourceOverride || (show ? cachedPath : "")
+    showProgressBar:
+        (isMxc && status === Image.Null) || status === Image.Loading
 
     onWidthChanged: Qt.callLater(update)
     onHeightChanged: Qt.callLater(update)
