@@ -13,6 +13,8 @@
 #include <QIODevice>
 #include <QImage>
 #include <QMimeData>
+#include <QMutex>
+#include <QMutexLocker>
 #include <QObject>
 
 
@@ -47,6 +49,8 @@ public:
     }
 
     QImage *qimage() {
+        QMutexLocker locker(&(this->imageRetrievalLock));
+
         if (this->cachedImage.isNull())
             this->cachedImage = this->clipboard->image();
 
@@ -99,7 +103,8 @@ signals:
 
 private:
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QImage cachedImage = QImage();
+    QImage cachedImage    = QImage();
+    QMutex imageRetrievalLock;
 
     void mainClipboardChanged() {
         this->contentChanged();
