@@ -36,11 +36,18 @@ unix:!macx {
 # Custom CONFIG options
 
 dev {
+    # Enable debugging and don't use the Qt Resource System to compile faster
     CONFIG    -= warn_off release
     CONFIG    += debug qml_debug declarative_debug
     RESOURCES -= $$QRC_FILE
 
     warning(make install cannot be used with the dev CONFIG option.)
+}
+
+no-x11 {
+    # Compile without X11-specific features (auto-away)
+    DEFINES += NO_X11
+    LIBS    -= -lX11 -lXss
 }
 
 

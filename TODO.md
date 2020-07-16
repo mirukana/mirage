@@ -8,7 +8,6 @@
 - fix HLabeledItem disabled opacity
   (visible for the topic area in room settings)
 
-- ~~save and restore status message in accounts.json~~
 - mark accounts as offline when closing mirage
 - document new libXScreenSaver-devel dependency (for auto-idle)
 - retrieve last seen time for offline members on hover/in profile/automatically

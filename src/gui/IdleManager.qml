@@ -14,8 +14,10 @@ Timer {
 
 
     interval: 1000
-    running: window.settings.beUnavailableAfterSecondsIdle > 0
     repeat: true
+    running:
+        window.settings.beUnavailableAfterSecondsIdle > 0 &&
+        CppUtils.idleMilliseconds() !== -1
 
     onTriggered: {
         let changes = false

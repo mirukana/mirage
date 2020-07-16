@@ -12,7 +12,10 @@
 #include <QUuid>
 
 #ifdef Q_OS_UNIX
-#include <X11/extensions/scrnsaver.h>
+    #ifndef NO_X11
+    #define USE_UNIX_AUTOAWAY
+    #include <X11/extensions/scrnsaver.h>
+    #endif
 #endif
 
 #include "../submodules/hsluv-c/src/hsluv.h"
@@ -51,7 +54,7 @@ public slots:
         #ifdef Q_OS_DARWIN
         return -1;
 
-        #elif defined(Q_OS_UNIX)
+        #elif defined(USE_UNIX_AUTOAWAY)
         Display *display = XOpenDisplay(NULL);
         if (! display) return -1;
 

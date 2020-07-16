@@ -12,6 +12,7 @@
 #include <QQuickStyle>
 #include <QFontDatabase>
 #include <QDateTime>
+#include <QDebug>
 
 #ifdef Q_OS_UNIX
 #include <unistd.h>
