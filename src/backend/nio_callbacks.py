@@ -423,6 +423,7 @@ class NioCallbacks:
                         lvl(all_changes[0][1]).lower(),
                         lvl(all_changes[0][2]).lower(),
                     ),
+                    inline = True,
                 )
             else:
                 co = HTML_PROCESSOR.from_markdown("\n".join([
