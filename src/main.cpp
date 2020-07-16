@@ -126,10 +126,12 @@ int main(int argc, char *argv[]) {
     objectContext->setContextProperty("debugMode", false);
 #endif
 
+    Clipboard *clipboard = new Clipboard();
+
     // Register out custom image providers.
     // QML will be able to request an image from them by setting an
     // `Image`'s `source` to `image://<providerId>/<id>`
-    engine.addImageProvider("clipboard", new ClipboardImageProvider);
+    engine.addImageProvider("clipboard",new ClipboardImageProvider(clipboard));
 
     // Register our custom non-visual QObject singletons,
     // that will be importable anywhere in QML. Example:
@@ -138,10 +140,10 @@ int main(int argc, char *argv[]) {
     //     Component.onCompleted: print(Clipboard.text)
     qmlRegisterSingletonType<Clipboard>(
         "Clipboard", 0, 1, "Clipboard",
-        [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        [clipboard](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
             Q_UNUSED(engine)
             Q_UNUSED(scriptEngine)
-            return new Clipboard();
+            return clipboard;
         }
     );
 

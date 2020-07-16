@@ -46,11 +46,20 @@ public:
         this->clipboard->setText(text, QClipboard::Clipboard);
     }
 
-    QByteArray image() const {
+    QImage *qimage() {
+        if (this->cachedImage.isNull())
+            this->cachedImage = this->clipboard->image();
+
+        return &(this->cachedImage);
+    }
+
+    QByteArray image() {
         QByteArray byteArray;
         QBuffer buffer(&byteArray);
         buffer.open(QIODevice::WriteOnly);
-        this->clipboard->image(QClipboard::Clipboard).save(&buffer, "PNG");
+        QImage *image = this->qimage();
+        // minimum compression, fastest to not freeze the UI
+        image->save(&buffer, "PNG", 100);
         buffer.close();
         return byteArray;
     }
@@ -90,9 +99,11 @@ signals:
 
 private:
     QClipboard *clipboard = QGuiApplication::clipboard();
+    QImage cachedImage = QImage();
 
     void mainClipboardChanged() {
-        contentChanged();
+        this->contentChanged();
+        this->cachedImage = QImage();
         this->hasImage() ? this->imageChanged() : this->textChanged();
         this->hasImageChanged();
     };

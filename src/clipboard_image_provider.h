@@ -3,36 +3,39 @@
 #ifndef CLIPBOARD_IMAGE_PROVIDER_H
 #define CLIPBOARD_IMAGE_PROVIDER_H
 
-#include <QClipboard>
 #include <QImage>
 #include <QQuickImageProvider>
 
+#include "clipboard.h"
+
 
 class ClipboardImageProvider : public QQuickImageProvider {
-
 public:
-    explicit ClipboardImageProvider()
-        : QQuickImageProvider(QQuickImageProvider::Image) {}
+    explicit ClipboardImageProvider(Clipboard *clipboard)
+        : QQuickImageProvider(QQuickImageProvider::Image)
+    {
+        this->clipboard = clipboard;
+    }
 
     QImage requestImage(
         const QString &id, QSize *size, const QSize &requestSize
     ) {
         Q_UNUSED(id);
 
-        QImage image = this->clipboard->image();
+        QImage *image = this->clipboard->qimage();
 
-        if (size) *size = image.size();
+        if (size) *size = image->size();
 
         if (requestSize.width() > 0 && requestSize.height() > 0)
-            image = image.scaled(
+            return image->scaled(
                 requestSize.width(), requestSize.height(), Qt::KeepAspectRatio
             );
 
-       return image;
+       return *image;
     }
 
 private:
-    QClipboard *clipboard = QGuiApplication::clipboard();
+    Clipboard *clipboard;
 };
 
 #endif
