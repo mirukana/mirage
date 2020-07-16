@@ -53,6 +53,7 @@ HColumnPopup {
 
         source: "image://clipboard/" + updateCounter
         fillMode: Image.PreserveAspectFit
+        sourceSize.width: popup.contentWidthLimit
 
         Layout.fillWidth: true
         Layout.fillHeight: true

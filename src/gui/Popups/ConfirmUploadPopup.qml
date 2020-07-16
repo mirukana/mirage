@@ -49,6 +49,7 @@ HColumnPopup {
         source: popup.filePath
         fillMode: Image.PreserveAspectFit
         visible: status !== Image.Error
+        sourceSize.width: popup.contentWidthLimit
 
         Layout.fillWidth: true
         Layout.fillHeight: true

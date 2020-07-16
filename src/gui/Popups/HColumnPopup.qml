@@ -8,6 +8,8 @@ HPopup {
 
     default property alias pageData: page.columnData
 
+    property int contentWidthLimit: theme.controls.popup.defaultWidth
+
     readonly property alias page: page
 
     signal keyboardAccept()
@@ -16,8 +18,7 @@ HPopup {
     HColumnPage {
         id: page
         implicitWidth: Math.min(
-            popup.maximumPreferredWidth,
-            theme.controls.popup.defaultWidth,
+            popup.maximumPreferredWidth, popup.contentWidthLimit,
         )
         implicitHeight: Math.min(
             popup.maximumPreferredHeight,
