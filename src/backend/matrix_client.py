@@ -318,8 +318,6 @@ class MatrixClient(nio.AsyncClient):
                 )
             except asyncio.TimeoutError:
                 log.warn("%s timed out", self.user_id)
-            else:
-                log.info("%s termined", self.user_id)
 
         await self.close()
 
