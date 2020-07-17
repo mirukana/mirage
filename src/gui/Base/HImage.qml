@@ -12,6 +12,8 @@ Image {
     property bool animated:
         utils.urlExtension(image.source).toLowerCase() === "gif"
 
+    property int animatedFillMode: AnimatedImage.PreserveAspectFit
+
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
 
@@ -40,7 +42,7 @@ Image {
             source: image.source
             autoTransform: image.autoTransform
             asynchronous: image.asynchronous
-            fillMode: image.fillMode
+            fillMode: image.animatedFillMode
 
             mirror: image.mirror
             mipmap: image.mipmap
@@ -58,6 +60,11 @@ Image {
 
             // Hack to make the non-animated image behind this one
             // basically invisible
+            Binding {
+                target: image
+                property: "fillMode"
+                value: Image.Pad
+            }
             Binding {
                 target: image
                 property: "sourceSize.width"

@@ -116,6 +116,7 @@ Item {
         id: image
         visible: Boolean(Qt.resolvedUrl(source))
         fillMode: Image.PreserveAspectCrop
+        animatedFillMode: AnimatedImage.PreserveAspectCrop
         source: theme.ui.image
         sourceSize.width: Screen.width
         sourceSize.height: Screen.height

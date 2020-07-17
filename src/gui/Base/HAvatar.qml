@@ -66,6 +66,7 @@ Rectangle {
         sourceSize.width: parent.width
         sourceSize.height: parent.height
         fillMode: Image.PreserveAspectCrop
+        animatedFillMode: AnimatedImage.PreserveAspectCrop
         animate: false
         radius: parent.radius
 
@@ -92,6 +93,7 @@ Rectangle {
             contentItem: HMxcImage {
                 id: avatarToolTipImage
                 fillMode: Image.PreserveAspectCrop
+                animatedFillMode: AnimatedImage.PreserveAspectCrop
                 mxc: avatarImage.mxc
                 title: avatarImage.title
 
