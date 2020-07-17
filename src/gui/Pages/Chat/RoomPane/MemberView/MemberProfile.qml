@@ -20,6 +20,7 @@ HListView {
     property bool powerLevelFieldFocused: false
 
     property Future setPowerFuture: null
+    property Future getPresenceFuture: null
 
     function loadDevices() {
          py.callClientCoro(userId, "member_devices", [member.id], devices => {
@@ -269,8 +270,21 @@ HListView {
         }
     }
 
-    Component.onCompleted: loadDevices()
-    Component.onDestruction: if (setPowerFuture) setPowerFuture.cancel()
+    Component.onCompleted: {
+        loadDevices()
+
+        if (member.presence === "offline" &&
+            member.last_active_at < new Date(1))
+        {
+            getPresenceFuture =
+                py.callClientCoro(userId, "get_offline_presence", [member.id])
+        }
+    }
+
+    Component.onDestruction: {
+        if (setPowerFuture) setPowerFuture.cancel()
+        if (getPresenceFuture) getPresenceFuture.cancel()
+    }
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)
     Keys.onReturnPressed: if (! root.powerLevelFieldFocused && currentItem) {

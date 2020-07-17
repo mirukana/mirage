@@ -114,6 +114,8 @@ class Backend:
 
         self.presences: Dict[str, Presence] = {}
 
+        self.concurrent_get_presence_limit = asyncio.BoundedSemaphore(8)
+
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(clients={self.clients!r})"

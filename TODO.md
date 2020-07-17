@@ -1,7 +1,6 @@
 # TODO
 
 - global presence control
-- retrieve last seen time for offline members on hover/in profile/automatically
 
 - fix HLabeledItem disabled opacity
   (visible for the topic area in room settings)

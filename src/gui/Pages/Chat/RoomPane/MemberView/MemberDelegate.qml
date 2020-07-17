@@ -6,9 +6,12 @@ import "../../../.."
 import "../../../../Base"
 import "../../../../Base/HTile"
 import "../../../../Popups"
+import "../../../../PythonBridge"
 
 HTile {
     id: member
+
+    property Future getPresenceFuture: null
 
     backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
@@ -144,6 +147,14 @@ HTile {
             )
         }
     }
+
+    Component.onCompleted:
+        if (model.presence === "offline" && model.last_active_at < new Date(1))
+            getPresenceFuture = py.callClientCoro(
+                chat.userId, "get_offline_presence", [model.id],
+            )
+
+    Component.onDestruction: if (getPresenceFuture) getPresenceFuture.cancel()
 
     Behavior on contentOpacity { HNumberAnimation {} }
     Behavior on spacing { HNumberAnimation {} }

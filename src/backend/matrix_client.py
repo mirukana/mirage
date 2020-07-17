@@ -1353,6 +1353,33 @@ class MatrixClient(nio.AsyncClient):
         await self.set_avatar(mxc)
 
 
+    async def get_offline_presence(self, user_id: str) -> None:
+        """Get a offline room member's presence and set it on model item.
+
+        This is called by QML when a member list delegate or profile that
+        is offline is displayed.
+        Since we don't get last seen times for offline in users in syncs,
+        we have to fetch those manually.
+        """
+
+        if self.backend.presences.get(user_id):
+            return
+
+        if not self.models["accounts"][self.user_id].presence_support:
+            return
+
+        async with self.backend.concurrent_get_presence_limit:
+            resp = await self.get_presence(user_id)
+
+        await self.nio_callbacks.onPresenceEvent(nio.PresenceEvent(
+            user_id          = resp.user_id,
+            presence         = resp.presence,
+            last_active_ago  = resp.last_active_ago,
+            currently_active = resp.currently_active,
+            status_msg       = resp.status_msg,
+        ))
+
+
     async def set_presence(
         self,
         presence:   str,
