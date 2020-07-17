@@ -4,7 +4,6 @@
 
 - fix members not synced bug
 - fix local unread counters order
-- fix power level control button layout when apply button is loading
 
 - publish room or alias control
 

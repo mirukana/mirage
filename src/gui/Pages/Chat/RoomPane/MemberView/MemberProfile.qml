@@ -219,11 +219,10 @@ HListView {
             }
         }
 
-        AutoDirectionLayout {
+        HRowLayout {
             visible: scale > 0
             id: buttonsLayout
             scale: powerLevel.item.changed ? 1 : 0
-            rowSpacing: powerLevel.spacing
 
             Layout.preferredWidth: parent.width
             Layout.preferredHeight: implicitHeight * scale
@@ -237,6 +236,7 @@ HListView {
                 id: applyButton
                 enabled: ! powerLevel.item.fieldOverMaximum
                 loading: setPowerFuture !== null
+                text: ""
                 onClicked: {
                     setPowerFuture = py.callClientCoro(
                         userId,
@@ -251,6 +251,7 @@ HListView {
             }
 
             CancelButton {
+                text: ""
                 onClicked: {
                     setPowerFuture.cancel()
                     setPowerFuture = null
