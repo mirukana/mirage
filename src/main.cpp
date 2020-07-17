@@ -12,7 +12,7 @@
 #include <QQuickStyle>
 #include <QFontDatabase>
 #include <QDateTime>
-#include <QDebug>
+#include <signal.h>
 
 #ifdef Q_OS_UNIX
 #include <unistd.h>
@@ -77,6 +77,11 @@ void loggingHandler(
 }
 
 
+void onExitSignal(int signum) {
+    QApplication::exit(128 + signum);
+}
+
+
 int main(int argc, char *argv[]) {
     qInstallMessageHandler(loggingHandler);
 
@@ -87,6 +92,15 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationVersion("0.5.2");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+
+    // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
+    signal(SIGINT, onExitSignal);
+    signal(SIGTERM, onExitSignal);
+    #ifdef Q_OS_UNIX
+    signal(SIGQUIT, onExitSignal);
+    signal(SIGHUP, onExitSignal);
+    #endif
+
 
     // Force the default universal QML style, notably prevents
     // KDE from hijacking base controls and messing up everything

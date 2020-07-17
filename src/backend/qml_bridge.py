@@ -14,15 +14,17 @@ class.
 """
 
 import asyncio
+import atexit
 import logging as log
 import os
-import pyotherside
 import signal
 import traceback
 from concurrent.futures import Future
 from operator import attrgetter
 from threading import Thread
 from typing import Coroutine, Sequence
+
+import pyotherside
 
 from .pyotherside_events import CoroutineDone, LoopException
 
