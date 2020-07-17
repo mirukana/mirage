@@ -32,10 +32,10 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 - **Multiple accounts** in one client
 - Set your display name and profile picture
 - Import/export **E2E** key files
-- Inspect, rename, manually verify and sign out one or multiple sessions
+- Inspect, rename, manually verify and sign out one or multiple **sessions**
 - Sessions for accounts within the same client automatically verify each others
-- Set your account's presence to online, unavailable, invisible or offline
-- Set custom status messages
+- Set your account's **presence** to online, unavailable, invisible or offline
+- Set custom **status messages**
 - Automatically set your status to unavailable after a period of inactivity
 
 ### Rooms
@@ -47,9 +47,9 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 
 - Unread message and highlight counters
 - Sending **read receipts** to mark rooms as read 
-- Inspect and manually verify other users's E2E sessions
-- See other users's presence, status message and last seen time
-- Typing notifications
+- Inspect and manually **verify** other users's **E2E sessions**
+- See other users's **presence, status message and last seen time**
+- **Typing notifications**
 
 ### Messages
 
