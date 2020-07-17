@@ -37,6 +37,10 @@ void loggingHandler(
     if (msg.contains("QML Binding: Not restoring previous value because"))
         return;
 
+    // Hide layout-related spam introduced in Qt 5.14
+    if (msg.contains("Qt Quick Layouts: Detected recursive rearrange."))
+        return;
+
     const char* level =
         type == QtDebugMsg ?    "~" :
         type == QtInfoMsg ?     "i" :
