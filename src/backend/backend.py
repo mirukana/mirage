@@ -101,10 +101,10 @@ class Backend:
 
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
-                DefaultDict(asyncio.Lock)  # {user_id: lock}
+            DefaultDict(asyncio.Lock)  # {user_id: lock}
 
         self.send_locks: DefaultDict[str, asyncio.Lock] = \
-                DefaultDict(asyncio.Lock)  # {room_id: lock}
+            DefaultDict(asyncio.Lock)  # {room_id: lock}
 
         cache_dir = Path(
             os.environ.get("MIRAGE_CACHE_DIR") or self.appdirs.user_cache_dir,
