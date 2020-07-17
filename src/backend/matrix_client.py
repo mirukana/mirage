@@ -305,6 +305,17 @@ class MatrixClient(nio.AsyncClient):
         await self.close()
 
 
+    async def terminate(self) -> None:
+        """Stop tasks, Set our presence offline and close HTTP connections."""
+
+        await self._stop()
+
+        if self._presence != "offline":
+            await self.set_presence("offline", save=False)
+
+        await self.close()
+        log.info("%s termined", self.user_id)
+
     @property
     def syncing(self) -> bool:
         """Return whether this client is currently syncing with the server."""

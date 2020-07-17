@@ -146,14 +146,10 @@ class QMLBridge:
             remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
 
-    def exit_mirage(self) -> None:
-        """Used to end some tasks before closing"""
-
+    def exit(self) -> None:
         try:
-            # Set accounts presence to offline
             asyncio.run_coroutine_threadsafe(
-                self.backend.logoff_all(),
-                self._loop,
+                self.backend.terminate_clients(), self._loop,
             ).result()
         except Exception as e:
             print(e)
@@ -179,4 +175,4 @@ except ValueError:
 
 BRIDGE = QMLBridge()
 
-pyotherside.atexit(BRIDGE.exit_mirage)
+pyotherside.atexit(BRIDGE.exit)

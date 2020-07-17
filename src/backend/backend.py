@@ -198,16 +198,6 @@ class Backend:
         ))
 
 
-    async def logoff_all(self) -> None:
-        """Stop syncing and end all clients registered."""
-
-        await asyncio.gather(*[
-            client.set_presence("offline", save=False)
-            for client in self.clients.values()
-            if  client._presence != "offline"
-        ])
-
-
     async def logout_client(self, user_id: str) -> None:
         """Log a `MatrixClient` out and unregister it from our models."""
 
@@ -229,6 +219,14 @@ class Backend:
             await client.logout()
 
         await self.saved_accounts.delete(user_id)
+
+
+    async def terminate_clients(self) -> None:
+        """Call every `MatrixClient`'s `terminate()` method."""
+
+        log.info("Setting clients offline...")
+        tasks = [client.terminate() for client in self.clients.values()]
+        await asyncio.gather(*tasks)
 
 
     async def get_client(self, user_id: str) -> MatrixClient:
