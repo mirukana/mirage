@@ -48,7 +48,11 @@ HColumnPopup {
     }
 
     HImage {
-        source: popup.filePath
+        source:
+            popup.filePath.startsWith("file://") ?
+            popup.filePath :
+            "file://" + popup.filePath
+
         visible: status !== Image.Error
         sourceSize.width: popup.contentWidthLimit
 
