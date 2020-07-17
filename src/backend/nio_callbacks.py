@@ -755,10 +755,11 @@ class NioCallbacks:
 
             # Set status_msg if none is set on the server and we have one
             if (
-                not presence.status_msg                   and
-                account.status_msg                        and
-                ev.user_id in self.client.backend.clients and
-                account.presence != Presence.State.echo_invisible
+                not presence.status_msg                           and
+                account.status_msg                                and
+                ev.user_id in self.client.backend.clients         and
+                account.presence != Presence.State.echo_invisible and
+                presence.presence == Presence.State.offline
             ):
                 asyncio.ensure_future(
                     self.client.backend.clients[ev.user_id].set_presence(
