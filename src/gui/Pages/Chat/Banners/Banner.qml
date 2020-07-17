@@ -55,7 +55,7 @@ Rectangle {
             HLabel {
                 id: bannerLabel
                 textFormat: Text.StyledText
-                wrapMode: Text.Wrap
+                wrapMode: HLabel.Wrap
 
                 Layout.fillWidth: true
                 Layout.leftMargin: bannerIcon.Layout.leftMargin

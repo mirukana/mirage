@@ -110,7 +110,7 @@ HFlickableColumnPage {
 
     HLabel {
         id: errorMessage
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         horizontalAlignment: Text.AlignHCenter
         color: theme.colors.errorText
 

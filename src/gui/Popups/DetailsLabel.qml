@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 HLabel {
-    wrapMode: Text.Wrap
+    wrapMode: HLabel.Wrap
     visible: Boolean(text)
 
     Layout.fillWidth: true

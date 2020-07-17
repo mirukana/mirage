@@ -44,7 +44,7 @@ HFlickableColumnPage {
     }
 
     HLabel {
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         text: qsTr(
             "The decryption keys for messages received in encrypted rooms " +
             "<b>until present time</b> can be saved " +

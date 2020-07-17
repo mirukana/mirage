@@ -15,7 +15,7 @@ HRowLayout {
     HLabel {
         id: noticeLabel
         horizontalAlignment: Text.AlignHCenter
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         padding: theme.spacing / 2
         leftPadding: theme.spacing
         rightPadding: leftPadding

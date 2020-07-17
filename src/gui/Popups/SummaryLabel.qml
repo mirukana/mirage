@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.12
 import "../Base"
 
 HLabel {
-    wrapMode: Text.Wrap
+    wrapMode: HLabel.Wrap
     font.bold: true
     visible: Boolean(text)
 

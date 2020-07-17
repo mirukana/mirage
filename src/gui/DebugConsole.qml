@@ -162,7 +162,7 @@ HDrawer {
 
                 HLabel {
                     text: "> " + model.input
-                    wrapMode: Text.Wrap
+                    wrapMode: HLabel.Wrap
                     color: theme.chat.message.quote
                     font.family: theme.fontFamily.mono
                     visible: Boolean(model.input)
@@ -172,7 +172,7 @@ HDrawer {
 
                 HLabel {
                     text: "" + model.output
-                    wrapMode: Text.Wrap
+                    wrapMode: HLabel.Wrap
                     color: model.error ?
                            theme.colors.errorText : theme.colors.text
                     font.family: theme.fontFamily.mono

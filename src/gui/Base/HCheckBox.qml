@@ -71,7 +71,7 @@ CheckBox {
 
             // Set a width on CheckBox for wrapping to work,
             // e.g. by using Layout.fillWidth
-            wrapMode: Text.Wrap
+            wrapMode: HLabel.Wrap
             leftPadding: box.indicator.width + box.spacing
             verticalAlignment: Text.AlignVCenter
 

@@ -59,7 +59,7 @@ HColumnLayout {
                 model.filepath.replace(/^file:\/\//, "")
 
             elide: expand ? Text.ElideNone : Text.ElideRight
-            wrapMode: expand ? Text.Wrap : Text.NoWrap
+            wrapMode: expand ? HLabel.Wrap : Text.NoWrap
 
             text:
                 cancelPending ?

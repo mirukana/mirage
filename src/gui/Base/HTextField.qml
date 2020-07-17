@@ -135,9 +135,9 @@ TextField {
         bottomPadding: parent.bottomPadding
 
         wrapMode:
-            parent.wrapMode === TextField.Wrap ? Text.Wrap :
-            parent.wrapMode === TextField.WordWrap ? Text.WordWrap :
-            parent.wrapMode === TextField.WrapAnywhere ? Text.WrapAnywhere :
+            parent.wrapMode === TextField.Wrap ? HLabel.Wrap :
+            parent.wrapMode === TextField.WordWrap ? HLabel.WordWrap :
+            parent.wrapMode === TextField.WrapAnywhere ? HLabel.WrapAnywhere :
             Text.NoWrap
 
         font.family: parent.font.family

@@ -38,7 +38,7 @@ ToolTip {
             id: label
             color: theme.controls.toolTip.text
             text: toolTip.text
-            wrapMode: Text.Wrap
+            wrapMode: HLabel.Wrap
 
             leftPadding: theme.spacing / 1.5
             rightPadding: leftPadding

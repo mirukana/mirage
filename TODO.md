@@ -8,7 +8,6 @@
 - fix local unread counters order
 - fix power level control button layout when apply button is loading
 
-- @room?
 - publish room or alias control
 
 - open context menus centered on touch screens 
@@ -66,6 +65,7 @@
 
 ## Interface
 
+- Colorize "@room" in messages
 - Show scrollbars for a few seconds if there's content to scroll on when 
   opening a page or popup
 - Device IP geolocation

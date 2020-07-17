@@ -130,7 +130,7 @@ HColumnPopup {
         }
 
         visible: Layout.maximumHeight > 0
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         color: theme.colors.errorText
         text:
             invitingAllowed ?

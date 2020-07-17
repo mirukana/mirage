@@ -22,7 +22,7 @@ HColumnLayout {
         HLabel {
             id: label
             opacity: item.opacity
-            wrapMode: Text.Wrap
+            wrapMode: HLabel.Wrap
 
             Layout.fillWidth: true
         }
@@ -77,7 +77,7 @@ HColumnLayout {
         id: errorLabel
         opacity: item.opacity
         visible: Layout.maximumHeight > 0
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         color: theme.colors.errorText
 
         Layout.maximumHeight: text ? implicitHeight : 0

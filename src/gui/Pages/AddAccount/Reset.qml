@@ -22,7 +22,7 @@ HFlickableColumnPage {
     }
 
     HLabel {
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         horizontalAlignment: Qt.AlignHCenter
         text: qsTr(
             "Not implemented yet\n\n" +

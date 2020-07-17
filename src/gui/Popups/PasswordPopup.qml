@@ -84,7 +84,7 @@ HFlickableColumnPopup {
 
         HTextField {
             id: passwordField
-            echoMode: TextInput.Password
+            echoMode: HTextField.Password
             focus: true
             error: passwordValid === false
 
@@ -113,7 +113,7 @@ HFlickableColumnPopup {
 
     HLabel {
         id: errorMessage
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         color: theme.colors.errorText
 
         visible: Layout.maximumHeight > 0

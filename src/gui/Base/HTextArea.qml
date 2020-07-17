@@ -153,9 +153,9 @@ TextArea {
         bottomPadding: parent.bottomPadding
 
         wrapMode:
-            parent.wrapMode === TextEdit.Wrap ? Text.Wrap :
-            parent.wrapMode === TextEdit.WordWrap ? Text.WordWrap :
-            parent.wrapMode === TextEdit.WrapAnywhere ? Text.WrapAnywhere :
+            parent.wrapMode === TextEdit.Wrap ? HLabel.Wrap :
+            parent.wrapMode === TextEdit.WordWrap ? HLabel.WordWrap :
+            parent.wrapMode === TextEdit.WrapAnywhere ? HLabel.WrapAnywhere :
             Text.NoWrap
 
         font.family: parent.font.family

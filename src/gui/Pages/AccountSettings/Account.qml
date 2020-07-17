@@ -183,7 +183,7 @@ HFlickableColumnPage {
                         theme.fontSize.big * avatar.width / 300,
                         theme.fontSize.small,
                     )
-                    wrapMode: Text.WordWrap
+                    wrapMode: HLabel.WordWrap
                     horizontalAlignment: Qt.AlignHCenter
 
                     Layout.fillWidth: true
@@ -204,7 +204,7 @@ HFlickableColumnPage {
         text: qsTr("User ID: %1")
               .arg(utils.coloredNameHtml(userId, userId, userId))
         textFormat: Text.StyledText
-        wrapMode: Text.Wrap
+        wrapMode: HLabel.Wrap
         lineHeight: 1.1
 
         Layout.fillWidth: true
