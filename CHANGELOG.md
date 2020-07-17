@@ -8,6 +8,186 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 0.6.0 (2020-07-17) 
+
+### Added
+
+- **Room member profiles**:
+  - Can be accessed by clicking on a user in the room's right pane, or focusing
+    the filter field and navigating with up/down/enter/escape
+
+  - Includes large avatar, display name, user ID, **presence** info,
+    **power level control** and **E2E sessions list**
+
+- **E2E Verification**:
+  - Sessions for room members can now be (manually) verified from
+    their profile
+
+  - Sessions for different accounts within the same client will automatically
+    verify each others based on session keys
+
+  - Verifying a session will automatically verify it for all connected accounts,
+    as long as the session keys are identical
+
+- **Presence**:
+  - Added presence (online, unavailable, invisible, offline) and status
+    message control to the accounts context menu in the room list
+
+  - Added `togglePresence{Unavailable,Invisible,Offline}` keybinds bound by 
+    default to `Ctrl+Alt+{A/U,I,O}`
+
+  - Added `openPresenceMenu` keybind to open the current account's context
+    menu, `Alt+P` by default
+
+  - The room member list is now sorted by power level, then presence, then name
+
+  - The room member list will display presence orbs and last seen time for
+    members if the server supports it. Last seen times for offline members
+    are also automatically retrieved as needed.
+
+  - Set logged in accounts offline when closing Mirage
+
+  - Linux/X11 specific: Add auto-away feature configurable by the
+    `beUnavailableAfterSecondsIdle` setting (default 600 for 10mn),
+    can be disabled by setting it to `-1`.  
+    **This requires the libX11 and libXScrnSaver/libXss developpment headers
+    installed, see INSTALL.md for more info**.  
+    The dependencies and support for this feature can be disabled at
+    compile-time.
+
+- **Session sign out**: you can now sign out your other sessions from the 
+  account settings. This currently only supports password authentification.
+
+- **Pasting images** via Ctrl+V or composer context menu, shows a preview of
+  the image before uploading
+
+- Added basic keyboard navigation for account settings session list:
+  - Up/down: highlight previous/next session
+  - Enter/Return/Menu: open highlighted session menu
+  - Space: check or uncheck highlighted sessions
+  - Escape: uncheck all sessions
+  - Alt+R/F5: refresh list
+  - Alt+S/Delete: sign out checked sessions, or all sessions if none checked
+
+- Add a verified devices indicator to encrypted room headers
+
+- Add experimental support for rendering of inline images and custom emotes in
+  messages
+
+- Add `kineticScrollingMaxSpeed` and `kineticScrollingDeceleration` settings
+
+- When highlighting accounts, rooms or members in lists 
+  (focus filter field and use up/down), the highlighted item's context menu
+  can now be accessed with the keyboard Menu key
+
+- Support for Menu key when keyboard-navigating messages in the timeline
+
+- Add context menus to text field and areas
+
+- Add a button to quickly expand the room pane when collapsed and focus
+  the filter field
+
+- Clicking on the current tab button for the room pane now fully hides it,
+  this can also be toggled with the new `toggleHideRoomPane` keybind 
+  (default Ctrl+Alt+R)
+
+- Themes:
+  - Add the `controls.presence` section
+  - Add `mainPane.listView.offlineOpacity` property
+  - Add CSS styling for `table` and `td` in the `chat.message.styleSheet`
+    property
+
+### Changed
+
+- When panes are smaller than their default width due to user resizing or
+  window size constraints, focusing certain elements will auto-expand them
+  until the focus is lost: filter fields, member profile and room settings
+
+- Reduced the default kinetic scrolling speed, which was hardcoded to an
+  aggressive `4000` before.
+  This can be restored with the `kineticScrollingMaxSpeed` setting.
+
+- Improve key verification popup texts and make the session details copiable
+
+- Power levels/room permission change events will now show a line of text or
+  table containing the details of what exactly changed 
+
+- Messages containing tables will no longer be width-limited
+
+- Using the `sendFileFromPathInClipboard` keybind (default Alt+Shift+S)
+  now shows a preview of the file if it's an image and asks for confirmation
+
+- Image messages now show spinners when loading the thumbnail
+
+- Clicking on a GIF message will now open it externally like other images
+  instead of pausing it. A dedicated play/pause button is now displayed in 
+  the corner.
+
+- Themes: 
+  - Update the `colors.positiveBackground`, `colors.middleBackground` and
+    `colors.negativeBackground` properties to be brighter and have full opacity
+
+  - Increase the opacity for the `menu.background` color (context menu), the
+    previous value made it very hard to read in certain situations
+
+### Removed
+
+- Themes: removed the `image` section and its `maxPauseIndicatorSize` property,
+  no longer used since the GIF changes
+
+### Fixed
+
+- Fix parsing user/room ID and room aliases containing dashes in messages
+
+- Fix responding to own messages sending an incorrect event ID to other clients
+
+- Fix plain text body of replies sent from Mirage
+
+- Fix high CPU usage due to the "Loading messages..." animation still being
+  rendered when invisible
+
+- When logging in to an already connected account, redirect to the account
+  settings page instead of overwriting it and losing the previous session
+
+- Fix signing out of an account leaving all its room in the room list
+
+- Fix all keybinds becoming disabled until next restart if a popup or menu
+  is destroyed instead of being properly closed 
+
+- Fix pressing left/right arrow to deselect text in fields and areas when the
+  cursor is positioned at the beginning/end 
+
+- Fix missing text for events involving display names that contain `< >`
+  characters and other dangerous characters interpreted by HTML
+
+- Fix sending a typing notice indicating we stopped typing when the composer
+  is cleared (e.g. when erasing all text or sending a message)
+
+- Fix hovering image messages not setting the pointing hand cursor
+
+- Opening a context menu and clicking at the exact spot where it was opened 
+  without having moved the cursor will now close the menu instead of doing
+  nothing
+
+- Highlight the correct room list item when adding a new account, going
+  to account settings or ctrl+tabbing to the "add new chat" page
+
+- Fix right room pane being shown as overlay sometimes in small window mode 
+
+- Fix avatar membership icon (crown/star) position when the room pane is small
+
+- Correctly handle SIGINT (ctrl+c in terminal), SIGTERM, SIGHUP and SIGQUIT
+  to exit Mirage
+
+- Fix opacity of topic area in room settings when disabled due to lack of 
+  permission
+
+- Fix GIF only having a cropped portion of their content rendered
+
+- Hide the "recursive layout" warnings spam in terminal that appeared
+  in Qt 5.14
+
+
 ## 0.5.2 (2020-06-26)
 
 ### Added
