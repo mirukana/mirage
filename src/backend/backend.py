@@ -198,6 +198,16 @@ class Backend:
         ))
 
 
+    async def logoff_all(self) -> None:
+        """Stop syncing and end all clients registered."""
+
+        await asyncio.gather(*[
+            client.set_presence("offline", save=False)
+            for client in self.clients.values()
+            if  client._presence != "offline"
+        ])
+
+
     async def logout_client(self, user_id: str) -> None:
         """Log a `MatrixClient` out and unregister it from our models."""
 
