@@ -41,6 +41,7 @@ Image {
             autoTransform: image.autoTransform
             asynchronous: image.asynchronous
             fillMode: image.fillMode
+
             mirror: image.mirror
             mipmap: image.mipmap
             smooth: image.smooth
@@ -57,11 +58,6 @@ Image {
 
             // Hack to make the non-animated image behind this one
             // basically invisible
-            Binding {
-                target: image
-                property: "fillMode"
-                value: Image.Pad
-            }
             Binding {
                 target: image
                 property: "sourceSize.width"
