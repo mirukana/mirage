@@ -45,6 +45,7 @@ install_apt_packages() {
         libglfw3-dev libgles2-mesa-dev libssl-dev \
         python3-dev python3-setuptools python3-pip libgdbm-dev libc6-dev \
         libsqlite3-dev libffi-dev openssl libreadline-dev \
+        libx11-dev libxss-dev \
         desktop-file-utils  # for appimage-lint.sh
 
     /usr/sbin/update-ccache-symlinks
