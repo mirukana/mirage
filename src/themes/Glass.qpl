@@ -150,7 +150,12 @@ controls:
         color checkedOverlay: controls.button.checkedOverlay
 
     menu:
-        color background: controls.button.background
+        color background: hsluv(
+            colors.hue,
+            colors.bgSaturation * 2,
+            colors.intensity,
+            Math.max(0.9, colors.opacity),
+        )
         color border:     "black"
         real borderWidth: 2
 
