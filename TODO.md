@@ -1,20 +1,16 @@
 # TODO
 
 - global presence control
-- idlemanager: what if setPresence call fails due to network?
-- fix power level control button layout when apply button is loading
+- retrieve last seen time for offline members on hover/in profile/automatically
 
-- joining new DM → not loading past events the first time?
 - fix HLabeledItem disabled opacity
   (visible for the topic area in room settings)
-
-- mark accounts as offline when closing mirage
-- retrieve last seen time for offline members on hover/in profile/automatically
-- retry if media retrieval request ends up with a 404
 - fix members not synced bug
 - fix local unread counters order
-- member profile: if no devices show up, warn about no E2E rooms shared or
-  no E2E-aware devices for that member
+- fix power level control button layout when apply button is loading
+
+- @room?
+- publish room or alias control
 
 - open context menus centered on touch screens 
 - auto-idle for Windows and OSX 
@@ -24,6 +20,9 @@
 
 - General change/upload avatar component for account and room settings
 - Refactor EventList.qml
+- Implement different delegate for different types of events in QML, instead
+  of having only one doing everything with untranslatable content texts
+  from Python
 
 ## Issues
 

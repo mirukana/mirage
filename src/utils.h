@@ -11,9 +11,9 @@
 #include <QObject>
 #include <QUuid>
 
-#ifdef Q_OS_UNIX
+#ifdef Q_OS_LINUX
     #ifndef NO_X11
-    #define USE_UNIX_AUTOAWAY
+    #define USE_LINUX_AUTOAWAY
     #include <X11/extensions/scrnsaver.h>
     #endif
 #endif
@@ -54,7 +54,7 @@ public slots:
         #ifdef Q_OS_DARWIN
         return -1;
 
-        #elif defined(USE_UNIX_AUTOAWAY)
+        #elif defined(USE_LINUX_AUTOAWAY)
         Display *display = XOpenDisplay(NULL);
         if (! display) return -1;
 

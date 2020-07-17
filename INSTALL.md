@@ -92,8 +92,8 @@ in this example [yay](https://github.com/Jguer/yay) for the release version:
 The equivalent `-dev` or `-devel` packages are needed, if your distro
 splits development headers into their own packages.
 
-To enable X11-specific features, **libX11** and **libXScrnSaver** / **libXss**
-are needed.
+To enable X11-specific features on Linux,
+**libX11** and **libXScrnSaver** / **libXss** are needed.
 The requirements can be disabled by adding `CONFIG+=no-x11` to the
 `qmake mirage.pro` command.
 
@@ -282,7 +282,7 @@ make
 sudo make install
 ```
 
-To compile without the X11-specific dependencies and features,
+To compile without the X11-specific dependencies and features on Linux,
 run `qmake mirage.pro CONFIG+=no-x11` instead of `qmake mirage.pro`.
 
 If everything went fine, run `mirage` to start.
