@@ -3,9 +3,12 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
-import Clipboard 0.1
 import "../Base"
 import "../Base/Buttons"
+//
+// Make sure to initialize the image provider by
+// importing this first:
+import Clipboard 0.1
 
 HColumnPopup {
     id: popup
