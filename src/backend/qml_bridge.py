@@ -16,6 +16,7 @@ class.
 import asyncio
 import logging as log
 import os
+import pyotherside
 import signal
 import traceback
 from concurrent.futures import Future
@@ -143,6 +144,19 @@ class QMLBridge:
             remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
 
+    def exit_mirage(self) -> None:
+        """Used to end some tasks before closing"""
+
+        try:
+            # Set accounts presence to offline
+            asyncio.run_coroutine_threadsafe(
+                self.backend.logoff_all(),
+                self._loop,
+            ).result()
+        except Exception as e:
+            print(e)
+
+
 # The AppImage AppRun script overwrites some environment path variables to
 # correctly work, and sets RESTORE_<name> equivalents with the original values.
 # If the app is launched from an AppImage, now restore the original values
@@ -162,3 +176,5 @@ except ValueError:
     pass
 
 BRIDGE = QMLBridge()
+
+pyotherside.atexit(BRIDGE.exit_mirage)
