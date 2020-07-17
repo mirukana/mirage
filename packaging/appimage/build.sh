@@ -45,6 +45,8 @@ install_apt_packages() {
         libglfw3-dev libgles2-mesa-dev libssl-dev \
         python3-dev python3-setuptools python3-pip libgdbm-dev libc6-dev \
         libsqlite3-dev libffi-dev openssl libreadline-dev \
+        libjpeg-turbo8-dev zlib1g-dev \
+        libtiff5-dev liblcms2-dev libwebp-dev  libopenjp2-7-dev \
         libx11-dev libxss-dev \
         desktop-file-utils  # for appimage-lint.sh
 
@@ -130,6 +132,8 @@ get_app_and_pip_dependencies() {
     fi
 
     cd mirage
+    pip3 uninstall Pillow --yes
+    pip3 install Pillow --no-binary :all:
     pip3 install --user -Ur requirements.txt
     pip3 install --user -U certifi
 }
