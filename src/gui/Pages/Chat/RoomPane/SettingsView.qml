@@ -110,7 +110,6 @@ HFlickableColumnPage {
     HLabeledItem {
         id: topicArea
         elementsOpacity: topicAreaIn.opacity
-                enabled: chat.roomInfo.can_set_topic
         label.text: qsTr("Topic:")
 
         Layout.fillWidth: true
@@ -127,6 +126,7 @@ HFlickableColumnPage {
                 id: topicAreaIn
                 placeholderText: qsTr("This room is about...")
                 defaultText: chat.roomInfo.plain_topic
+                enabled: chat.roomInfo.can_set_topic
 
                 focusItemOnTab:
                     encryptCheckBox.checked ?

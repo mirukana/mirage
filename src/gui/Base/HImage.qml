@@ -11,7 +11,6 @@ Image {
     property bool animate: true
     property bool animated:
         utils.urlExtension(image.source).toLowerCase() === "gif"
-    property bool enabledAnimatedPausing: true
 
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
@@ -74,24 +73,17 @@ Image {
                 value: 1
             }
 
-            TapHandler {
-                enabled: image.enabledAnimatedPausing
-                onTapped: parent.userPaused = ! parent.userPaused
-                gesturePolicy: TapHandler.ReleaseWithinBounds
-            }
+            HButton {
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: theme.spacing / 2
+                anchors.bottomMargin: theme.spacing / 2
 
-            HIcon {
-                anchors.centerIn: parent
-                svgName: "play-overlay"
-                colorize: "transparent"
-                dimension: Math.min(
-                    parent.width - theme.spacing * 2,
-                    parent.height - theme.spacing * 2,
-                    theme.controls.image.maxPauseIndicatorSize,
-                )
-                scale: parent.status === Image.Ready && parent.paused ? 1 : 0
-
-                Behavior on scale { HNumberAnimation { overshoot: 4 } }
+                enableRadius: true
+                icon.name: parent.userPaused ? "player-play" : "player-pause"
+                iconItem.small: true
+                visible: parent.width > width * 2 && parent.height > height * 2
+                onClicked: parent.userPaused = ! parent.userPaused
             }
         }
     }
