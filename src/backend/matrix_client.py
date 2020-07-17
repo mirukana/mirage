@@ -311,10 +311,17 @@ class MatrixClient(nio.AsyncClient):
         await self._stop()
 
         if self._presence != "offline":
-            await self.set_presence("offline", save=False)
+            try:
+                await asyncio.wait_for(
+                    self.set_presence("offline", save=False),
+                    timeout = 10,
+                )
+            except asyncio.TimeoutError:
+                log.warn("%s timed out", self.user_id)
+            else:
+                log.info("%s termined", self.user_id)
 
         await self.close()
-        log.info("%s termined", self.user_id)
 
     @property
     def syncing(self) -> bool:
