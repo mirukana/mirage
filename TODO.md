@@ -2,8 +2,6 @@
 
 - global presence control
 
-- fix HLabeledItem disabled opacity
-  (visible for the topic area in room settings)
 - fix members not synced bug
 - fix local unread counters order
 - fix power level control button layout when apply button is loading

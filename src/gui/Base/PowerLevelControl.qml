@@ -18,6 +18,8 @@ AutoDirectionLayout {
     readonly property bool fieldOverMaximum:
         parseInt(field.text || "0", 10) > maximumLevel
 
+    readonly property alias field: field
+
     signal accepted()
 
     function reset() { field.reset() }

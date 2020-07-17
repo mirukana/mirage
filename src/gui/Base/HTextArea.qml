@@ -56,6 +56,7 @@ TextArea {
         id: textAreaBackground
         radius: theme.radius
         color: theme.controls.textArea.background
+        opacity: textArea.opacity
 
         border.width: bordered ? theme.controls.textArea.borderWidth : 0
         border.color: borderColor

@@ -7,6 +7,7 @@ HColumnLayout {
     default property alias insideData: itemHolder.data
 
     property bool loading: false
+    property real elementsOpacity: item.opacity
 
     readonly property Item item: itemHolder.children[0]
     readonly property alias label: label
@@ -21,7 +22,7 @@ HColumnLayout {
 
         HLabel {
             id: label
-            opacity: item.opacity
+            opacity: elementsOpacity
             wrapMode: HLabel.Wrap
 
             Layout.fillWidth: true
@@ -29,7 +30,7 @@ HColumnLayout {
 
         HIcon {
             svgName: "field-tooltip-available"
-            opacity: item.opacity
+            opacity: elementsOpacity
             visible: toolTip.text
 
             Binding on colorize {
@@ -75,7 +76,7 @@ HColumnLayout {
 
     HLabel {
         id: errorLabel
-        opacity: item.opacity
+        opacity: elementsOpacity
         visible: Layout.maximumHeight > 0
         wrapMode: HLabel.Wrap
         color: theme.colors.errorText

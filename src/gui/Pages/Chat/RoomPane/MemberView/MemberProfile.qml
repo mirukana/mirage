@@ -163,6 +163,8 @@ HListView {
 
         HLabeledItem {
             id: powerLevel
+            elementsOpacity: item.field.opacity
+            Component.onCompleted: mainUI.debugConsole.toggle(this )
             enabled:
                 root.canSetPowerLevels &&
                 (
