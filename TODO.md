@@ -1,5 +1,7 @@
 # TODO
 
+- Avatar tooltip can get displayed in front of presence menu
+
 - global presence control
 
 - fix members not synced bug

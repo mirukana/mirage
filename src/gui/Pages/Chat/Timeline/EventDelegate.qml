@@ -94,8 +94,8 @@ HColumnLayout {
 
     Item {
         Layout.fillWidth: true
-        Layout.preferredHeight:
-            model.event_type === "RoomCreateEvent" ? 0 : separationSpacing
+        visible: model.event_type !== "RoomCreateEvent"
+        Layout.preferredHeight: separationSpacing
     }
 
     Daybreak {
@@ -103,13 +103,7 @@ HColumnLayout {
 
         Layout.fillWidth: true
         Layout.minimumWidth: parent.width
-    }
-
-    Item {
-        visible: dayBreak
-
-        Layout.fillWidth: true
-        Layout.preferredHeight: separationSpacing
+        Layout.bottomMargin: separationSpacing
     }
 
     EventContent {
