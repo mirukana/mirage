@@ -12,7 +12,8 @@ from urllib.parse import quote
 import nio
 
 from .html_markdown import HTML_PROCESSOR
-from .models.items import Presence, TypeSpecifier
+from .models.items import TypeSpecifier
+from .presence import Presence
 from .pyotherside_events import DevicesUpdated
 from .utils import classes_defined_in, plain2html
 

@@ -42,10 +42,11 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, Presence, Room, Upload, UploadStatus,
+    ZERO_DATE, Account, Event, Member, Room, Upload, UploadStatus,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
+from .presence import Presence
 from .pyotherside_events import AlertRequested, LoopException
 
 if TYPE_CHECKING:

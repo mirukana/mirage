@@ -18,9 +18,10 @@ from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
 from .models.filters import FieldSubstringFilter
-from .models.items import Account, Presence
+from .models.items import Account
 from .models.model import Model
 from .models.model_store import ModelStore
+from .presence import Presence
 from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
