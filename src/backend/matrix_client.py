@@ -288,9 +288,10 @@ class MatrixClient(nio.AsyncClient):
         account  = self.models["accounts"][user_id]
         await self.receive_response(response)
 
-        self._presence     = "offline" if state == "invisible" else state
-        account.presence   = Presence.State(state)
-        account.status_msg = status_msg
+        self._presence = "offline" if state == "invisible" else state
+        account.set_fields(
+            presence=Presence.State(state), status_msg=status_msg,
+        )
 
         if state != "offline":
             account.connecting = True
@@ -1401,8 +1402,10 @@ class MatrixClient(nio.AsyncClient):
 
             # Update manually since we may not receive the presence event back
             # in time
-            account.presence         = Presence.State.offline
-            account.currently_active = False
+            account.set_fields(
+                presence         = Presence.State.offline,
+                currently_active = False,
+            )
         elif (
             account.presence == Presence.State.offline and
             presence         != "offline"

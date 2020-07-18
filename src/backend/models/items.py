@@ -97,10 +97,12 @@ class Presence:
         """
 
         for member in self.members.values():
-            member.presence         = self.presence
-            member.status_msg       = self.status_msg
-            member.last_active_at   = self.last_active_at
-            member.currently_active = self.currently_active
+            member.set_fields(
+                presence         = self.presence,
+                status_msg       = self.status_msg,
+                last_active_at   = self.last_active_at,
+                currently_active = self.currently_active,
+            )
 
     def update_account(self) -> None:
         """Update presence fields of `Account` related to this `Presence`."""
@@ -116,14 +118,18 @@ class Presence:
         ):
             return
 
-        if self.account.presence == self.State.echo_invisible:
-            self.account.presence = self.State.invisible
-        else:
-            self.account.presence   = self.presence
-            self.account.status_msg = self.status_msg
+        fields: Dict[str, Any] = {}
 
-        self.account.last_active_at   = self.last_active_at
-        self.account.currently_active = self.currently_active
+        if self.account.presence == self.State.echo_invisible:
+            fields["presence"] = self.State.invisible
+        else:
+            fields["presence"]   = self.presence
+            fields["status_msg"] = self.status_msg
+
+        fields["last_active_at"]   = self.last_active_at
+        fields["currently_active"] = self.currently_active
+
+        self.account.set_fields(**fields)
 
 
 @dataclass
