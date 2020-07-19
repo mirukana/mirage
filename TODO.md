@@ -1,6 +1,14 @@
 # TODO
 
+- Image viewer: 
+    - open externally in context menu in timeline thumbnail
+    - fix: gif always closes?
+    - hflickable support kinetic scrolling disabler and speed/decel settings
+    - buttons 
+    - keyboard controls
+
 - Avatar tooltip can get displayed in front of presence menu
+- Use loading cursorShape
 
 - global presence control
 

@@ -62,6 +62,38 @@ HMxcImage {
         callback(toOpen)
     }
 
+    function openUrlExternally() {
+        getOpenUrl(Qt.openUrlExternally)
+    }
+
+    function openImageViewer() {
+        utils.makePopup(
+            "Popups/ImageViewerPopup.qml",
+            {
+                thumbnailTitle: loader.thumbnailTitle,
+                thumbnailMxc: loader.thumbnailMxc,
+                thumbnailPath: image.cachedPath,
+                thumbnailCryptDict:
+                    JSON.parse(loader.singleMediaInfo.thumbnail_crypt_dict),
+
+                fullTitle: loader.title,
+                // The thumbnail/cached path will be the full GIF
+                fullMxc: animated ? "" : loader.mediaUrl,
+                fullCryptDict:
+                    JSON.parse(loader.singleMediaInfo.media_crypt_dict),
+
+                overallSize: Qt.size(
+                    loader.singleMediaInfo.media_width ||
+                    loader.singleMediaInfo.thumbnail_width,
+
+                    loader.singleMediaInfo.media_height ||
+                    loader.singleMediaInfo.thumbnail_height,
+                )
+            },
+            obj => { obj.openExternallyRequested.connect(openUrlExternally) },
+        )
+    }
+
 
     width: fitSize.width
     height: fitSize.height
@@ -81,11 +113,20 @@ HMxcImage {
     )
 
     TapHandler {
+        acceptedButtons: Qt.LeftButton
         acceptedModifiers: Qt.NoModifier
         onTapped:
             eventList.selectedCount ?
-            eventDelegate.toggleChecked() : getOpenUrl(Qt.openUrlExternally)
+            eventDelegate.toggleChecked() :
+            openImageViewer()
 
+        gesturePolicy: TapHandler.ReleaseWithinBounds
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.MiddleButton
+        acceptedModifiers: Qt.NoModifier
+        onTapped: getOpenUrl(Qt.openUrlExternally)
         gesturePolicy: TapHandler.ReleaseWithinBounds
     }
 

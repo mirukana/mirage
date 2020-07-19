@@ -9,5 +9,6 @@ Flickable {
 
     ScrollBar.vertical: HScrollBar {
         visible: parent.interactive
+        z: 999
     }
 }

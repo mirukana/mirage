@@ -12,15 +12,16 @@ HImage {
     property bool thumbnail: true
     property var cryptDict: ({})
 
-    property bool show: false
     property string cachedPath: ""
+    property bool canUpdate: true
+    property bool show: ! canUpdate
 
     property Future getFuture: null
 
     readonly property bool isMxc: mxc.startsWith("mxc://")
 
     function update() {
-        if (! py) return  // component was destroyed
+        if (! py || ! canUpdate) return  // component was destroyed
 
         const w = sourceSize.width || width
         const h = sourceSize.height || height
