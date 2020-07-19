@@ -823,7 +823,8 @@ class MatrixClient(nio.AsyncClient):
             room_id,
             transaction_id,
             event_type,
-            inline_content   = content["body"],
+            inline_content = content["body"],
+
             media_url        = url,
             media_title      = path.name,
             media_width      = content["info"].get("w", 0),
@@ -831,7 +832,11 @@ class MatrixClient(nio.AsyncClient):
             media_duration   = content["info"].get("duration", 0),
             media_size       = content["info"]["size"],
             media_mime       = content["info"]["mimetype"],
-            thumbnail_url    = thumb_url,
+            media_crypt_dict = crypt_dict,
+
+            thumbnail_url        = thumb_url,
+            thumbnail_crypt_dict = thumb_crypt_dict,
+
             thumbnail_width  =
                 content["info"].get("thumbnail_info", {}).get("w", 0),
             thumbnail_height =
