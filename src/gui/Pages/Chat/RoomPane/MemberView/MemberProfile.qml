@@ -55,6 +55,11 @@ HListView {
         width: root.width - x * 2
         spacing: theme.spacing * 1.5
 
+        Component.onCompleted:
+            powerLevel.enabled ?
+            powerLevel.item.forceActiveFocus() :
+            root.currentIndex = 0
+
         HUserAvatar {
             userId: member.id
             displayName: member.display_name
@@ -214,8 +219,6 @@ HListView {
                 onAccepted: applyButton.clicked()
                 onFieldFocusedChanged:
                     root.powerLevelFieldFocused = fieldFocused
-                Component.onCompleted: forceActiveFocus()
-
             }
         }
 
