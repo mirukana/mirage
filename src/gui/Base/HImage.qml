@@ -105,7 +105,9 @@ Image {
         }
 
         anchors.centerIn: parent
-        width: Math.min(parent.width, parent.height) * 0.5
+        width: Math.min(
+            96 * theme.uiScale, Math.min(parent.width, parent.height) * 0.5,
+        )
         height: width
         active: image.status === Image.Loading
         sourceComponent: HBusyIndicator {}
