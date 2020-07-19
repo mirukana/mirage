@@ -627,9 +627,12 @@ class MatrixClient(nio.AsyncClient):
         upload_item = Upload(item_uuid)
         self.models[room_id, "uploads"][str(item_uuid)] = upload_item
 
-        transaction_id = uuid4()
-        path           = Path(await path() if callable(path) else path)
-        encrypt        = room_id in self.encrypted_rooms
+        transaction_id   = uuid4()
+        path             = Path(await path() if callable(path) else path)
+        encrypt          = room_id in self.encrypted_rooms
+
+        thumb_crypt_dict: Dict[str, Any] = {}
+        crypt_dict:       Dict[str, Any] = {}
 
         try:
             size = path.resolve().stat().st_size
