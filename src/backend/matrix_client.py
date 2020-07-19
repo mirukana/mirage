@@ -1326,7 +1326,9 @@ class MatrixClient(nio.AsyncClient):
     ) -> UploadReturn:
         """Upload a file to the matrix homeserver."""
 
-        if filesize > self.models["accounts"][self.user_id].max_upload_size:
+        max_size = self.models["accounts"][self.user_id].max_upload_size
+
+        if max_size and filesize > max_size:
             raise MatrixTooLarge()
 
         mime = mime or await utils.guess_mime(data_provider(0, 0))
