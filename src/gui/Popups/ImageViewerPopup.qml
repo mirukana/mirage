@@ -10,7 +10,7 @@ HPopup {
 
     property alias thumbnailTitle: thumbnail.title
     property alias thumbnailMxc: thumbnail.mxc
-    property alias thumbnailPath: thumbnail.cachedPath
+    property alias thumbnailPath: thumbnail.cachedPath  // optional
     property alias thumbnailCryptDict: thumbnail.cryptDict
     property alias fullTitle: full.title
     property alias fullMxc: full.mxc
@@ -101,8 +101,8 @@ HPopup {
                 Math.min(window.height, popup.overallSize.height)
 
             fillMode: HMxcImage.PreserveAspectFit
-            // Use only the cachedPath, don't waste time refetching thumb
-            canUpdate: false
+            // Use only cachedPath if set, don't waste time refetching thumb
+            canUpdate: ! cachedPath
 
             Behavior on width {
                 HNumberAnimation { overshoot: popup.alternateScaling? 2 : 3 }
