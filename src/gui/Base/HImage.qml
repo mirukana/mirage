@@ -109,7 +109,11 @@ Image {
             96 * theme.uiScale, Math.min(parent.width, parent.height) * 0.5,
         )
         height: width
-        active: image.status === Image.Loading
+        active:
+            image.visible &&
+            image.opacity > 0.01 &&
+            image.status === Image.Loading
+
         sourceComponent: HBusyIndicator {}
 
         onProgressChanged:
