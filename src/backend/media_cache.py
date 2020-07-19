@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, DefaultDict, Dict, Optional
 from urllib.parse import urlparse
+from .errors import MatrixError
 
 from PIL import Image as PILImage
 
@@ -133,8 +134,20 @@ class Media:
     async def create(self) -> Path:
         """Download and cache the media file to disk."""
 
-        async with CONCURRENT_DOWNLOADS_LIMIT:
-            data = await self._get_remote_data()
+        retries = 0
+
+        while True:
+            try:
+                async with CONCURRENT_DOWNLOADS_LIMIT:
+                    data = await self._get_remote_data()
+            except MatrixError as err:
+                if err.http_code != 404 and err.http_code < 500:
+                    raise
+            else:
+                break
+
+            await asyncio.sleep(min(30, 0.2 * (2 ** (min(1000, retries) - 1))))
+            retries += 1
 
         self.local_path.parent.mkdir(parents=True, exist_ok=True)
 
