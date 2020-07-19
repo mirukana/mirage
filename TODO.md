@@ -1,14 +1,17 @@
 # TODO
 
 - Image viewer: 
+    - support http urls
     - open externally in context menu in timeline thumbnail
     - fix: gif always closes?
     - hflickable support kinetic scrolling disabler and speed/decel settings
     - buttons 
     - keyboard controls
 
+- clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu
 - Use loading cursorShape
+- Increase keyboard page scroll speed
 
 - global presence control
 

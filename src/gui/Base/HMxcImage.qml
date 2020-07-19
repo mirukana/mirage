@@ -20,7 +20,7 @@ HImage {
 
     readonly property bool isMxc: mxc.startsWith("mxc://")
 
-    function update() {
+    function reload() {
         if (! py || ! canUpdate) return  // component was destroyed
 
         const w = sourceSize.width || width
@@ -46,7 +46,7 @@ HImage {
                 if (! image) return
                 if (image.cachedPath !== path) image.cachedPath = path
 
-                image.broken = false
+                image.broken = Qt.binding(() => image.status === Image.Error)
                 image.show   = image.visible
 
             }, (type, args, error, traceback) => {
@@ -61,9 +61,9 @@ HImage {
     showProgressBar:
         (isMxc && status === Image.Null) || status === Image.Loading
 
-    onWidthChanged: Qt.callLater(update)
-    onHeightChanged: Qt.callLater(update)
-    onVisibleChanged: Qt.callLater(update)
-    onMxcChanged: Qt.callLater(update)
+    onWidthChanged: Qt.callLater(reload)
+    onHeightChanged: Qt.callLater(reload)
+    onVisibleChanged: Qt.callLater(reload)
+    onMxcChanged: Qt.callLater(reload)
     Component.onDestruction: if (getFuture) getFuture.cancel()
 }

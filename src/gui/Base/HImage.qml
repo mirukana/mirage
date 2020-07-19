@@ -7,7 +7,7 @@ Image {
     id: image
 
     property bool circle: radius === circleRadius
-    property bool broken: false
+    property bool broken: image.status === Image.Error
     property bool animate: true
     property bool animated:
         utils.urlExtension(image.source).toLowerCase() === "gif"
@@ -19,6 +19,13 @@ Image {
 
     readonly property int circleRadius:
         Math.ceil(Math.max(image.width, image.height))
+
+    function reload() {
+        // Can be reimplemented in components inheriting HImage
+        const oldSource = source
+        source          = ""
+        source          = oldSource
+    }
 
 
     autoTransform: true
@@ -122,7 +129,7 @@ Image {
 
     HIcon {
         anchors.centerIn: parent
-        visible: broken || image.status === Image.Error
+        visible: image.broken
         svgName: "broken-image"
         colorize: theme.colors.negativeBackground
     }
@@ -131,5 +138,19 @@ Image {
         id: roundMask
         anchors.fill: parent
         visible: false
+    }
+
+    Timer {
+        property int retries: 0
+
+        running: image.broken
+        repeat: true
+        interval:
+            Math.min(60, 0.2 * Math.pow(2, Math.min(1000, retries) - 1)) * 1000
+
+        onTriggered: {
+            image.reload()
+            retries += 1
+        }
     }
 }

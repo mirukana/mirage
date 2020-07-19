@@ -83,7 +83,6 @@ Rectangle {
             )
 
             visible: ! avatarImage.broken &&
-                     avatarImage.status !== Image.Error &&
                      avatarImage.width < dimension * 0.75 &&
                      (toolTipSourceOverride || toolTipMxc) &&
                      hoverHandler.hovered
