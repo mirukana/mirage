@@ -343,7 +343,7 @@ class MatrixClient(nio.AsyncClient):
                 return
 
             try:
-                account.max_upload_size = future.result()
+                account.max_upload_size = future.result() or 0
             except Exception:
                 trace = traceback.format_exc().rstrip()
                 log.warn(
