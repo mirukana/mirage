@@ -20,6 +20,12 @@ Image {
     readonly property int circleRadius:
         Math.ceil(Math.max(image.width, image.height))
 
+    readonly property int animatedPaintedWidth:
+        animatedLoader.item ? animatedLoader.item.paintedWidth : 0
+
+    readonly property int animatedPaintedHeight:
+        animatedLoader.item ? animatedLoader.item.paintedHeight : 0
+
     function reload() {
         // Can be reimplemented in components inheriting HImage
         const oldSource = source
@@ -99,6 +105,7 @@ Image {
     }
 
     HLoader {
+        id: animatedLoader
         anchors.fill: parent
         sourceComponent: animate && animated ? animatedImageComponent : null
     }

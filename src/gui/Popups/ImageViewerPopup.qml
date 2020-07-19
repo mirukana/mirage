@@ -28,14 +28,14 @@ HPopup {
         overallSize.height == window.height
 
     readonly property int paintedWidth:
-        full.status === Image.Ready?
-        full.paintedWidth :
-        thumbnail.paintedWidth
+        full.status === Image.Ready ?
+        full.animatedPaintedWidth || full.paintedWidth :
+        thumbnail.animatedPaintedWidth || thumbnail.paintedWidth
 
     readonly property int paintedHeight:
         full.status === Image.Ready ?
-        full.paintedHeight :
-        thumbnail.paintedHeight
+        full.animatedPaintedHeight || full.paintedHeight :
+        thumbnail.animatedPaintedHeight || thumbnail.paintedHeight
 
     signal openExternallyRequested()
 
