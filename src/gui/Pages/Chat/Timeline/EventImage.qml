@@ -84,10 +84,14 @@ HMxcImage {
 
                 overallSize: Qt.size(
                     loader.singleMediaInfo.media_width ||
-                    loader.singleMediaInfo.thumbnail_width,
+                    loader.singleMediaInfo.thumbnail_width ||
+                    implicitWidth ||
+                    800,
 
                     loader.singleMediaInfo.media_height ||
-                    loader.singleMediaInfo.thumbnail_height,
+                    loader.singleMediaInfo.thumbnail_height ||
+                    implicitHeight ||
+                    600,
                 )
             },
             obj => { obj.openExternallyRequested.connect(openUrlExternally) },

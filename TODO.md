@@ -1,7 +1,6 @@
 # TODO
 
 - Image viewer: 
-    - support http urls
     - open externally in context menu in timeline thumbnail
     - fix: gif always closes?
     - hflickable support kinetic scrolling disabler and speed/decel settings
