@@ -16,7 +16,7 @@ HFlickableColumnPage {
         running: true
         from: 0
         to: 1
-        overshoot: 3
+        overshoot: 2
     }
 
     Behavior on implicitWidth { HNumberAnimation {} }

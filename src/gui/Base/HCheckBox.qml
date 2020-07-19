@@ -52,7 +52,7 @@ CheckBox {
 
             Behavior on scale {
                 HNumberAnimation {
-                    overshoot: 4
+                    overshoot: 3
                     easing.type: Easing.InOutBack
                     factor: 0.5
                 }

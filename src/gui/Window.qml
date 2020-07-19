@@ -94,6 +94,6 @@ ApplicationWindow {
         scale: py.ready ? 1 : 0.5
         source: py.ready ? (Qt.application.arguments[1] || "UI.qml") : ""
 
-        Behavior on scale { HNumberAnimation { overshoot: 5; factor: 1.2 } }
+        Behavior on scale { HNumberAnimation { overshoot: 3; factor: 1.2 } }
     }
 }

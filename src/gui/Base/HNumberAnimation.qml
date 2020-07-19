@@ -4,10 +4,17 @@ import QtQuick 2.12
 
 NumberAnimation {
     property real factor: 1.0
-    property real overshoot: 1.0
+    property real overshoot: 0.0
 
 
-    duration: theme.animationDuration * Math.max(overshoot / 1.7, 1.0) * factor
-    easing.type: overshoot > 1 ? Easing.OutBack : Easing.Linear
+    duration:
+        theme.animationDuration *
+        Math.max((1 + Math.abs(overshoot)) / 1.7, 1.0) * factor
+
+    easing.type:
+        overshoot > 0 ? Easing.OutBack :
+        overshoot < 0 ? Easing.InBack :
+        Easing.Linear
+
     easing.overshoot: overshoot
 }

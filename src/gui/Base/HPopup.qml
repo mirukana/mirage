@@ -29,7 +29,7 @@ Popup {
     y: (parent.height - height) / 2
 
     enter: Transition {
-        HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 4 }
+        HNumberAnimation { property: "scale"; from: 0; to: 1; overshoot: 3 }
     }
 
     exit: Transition {
