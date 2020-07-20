@@ -41,16 +41,18 @@ HPopup {
 
     function showFullScreen() {
         if (activedFullScreen) return
+
         window.showFullScreen()
         popup.activedFullScreen = true
-        popup.alternateScaling  = true
+        if (! imageLargerThanWindow) popup.alternateScaling = true
     }
 
     function exitFullScreen() {
         if (! activedFullScreen) return
+
         window.showNormal()
         popup.activedFullScreen = false
-        popup.alternateScaling  = false
+        if (! imageLargerThanWindow) popup.alternateScaling = false
     }
 
     function toggleFulLScreen() {
