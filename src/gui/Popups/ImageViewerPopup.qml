@@ -39,11 +39,30 @@ HPopup {
 
     signal openExternallyRequested()
 
+    function showFullScreen() {
+        if (activedFullScreen) return
+        window.showFullScreen()
+        popup.activedFullScreen = true
+        popup.alternateScaling  = true
+    }
+
+    function exitFullScreen() {
+        if (! activedFullScreen) return
+        window.showNormal()
+        popup.activedFullScreen = false
+        popup.alternateScaling  = false
+    }
+
+    function toggleFulLScreen() {
+        const isFull = window.visibility === Window.FullScreen
+        return isFull ? exitFullScreen() : showFullScreen()
+    }
+
 
     margins: 0
     background: null
 
-    onAboutToHide: if (activedFullScreen) window.showNormal()
+    onAboutToHide: exitFullScreen()
 
     HFlickable {
         id: flickable
@@ -157,17 +176,7 @@ HPopup {
                         popup.alternateScaling = ! popup.alternateScaling :
                         resetScaleAnimation.start()
                     }
-                    onDoubleTapped: {
-                        if (window.visibility === Window.FullScreen) {
-                            window.showNormal()
-                            popup.activedFullScreen = false
-                            popup.alternateScaling  = false
-                        } else {
-                            window.showFullScreen()
-                            popup.activedFullScreen = true
-                            popup.alternateScaling  = true
-                        }
-                    }
+                    onDoubleTapped: popup.toggleFulLScreen()
                 }
 
                 TapHandler {
