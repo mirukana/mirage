@@ -1,7 +1,8 @@
 # Mirage
 
 [![Latest release](https://img.shields.io/github/v/release/mirukana/mirage)](https://github.com/mirukana/mirage/releases)
-[![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org)](https://matrix.to/#/#mirage-client:matrix.org)
+[![Built with matrix-nio](https://img.shields.io/badge/built%20with-matrix--nio-brightgreen)](https://github.com/poljar/matrix-nio)
+[![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org?color=blueviolet)](https://matrix.to/#/#mirage-client:matrix.org)
 
 [Features](#currently-implemented-features) ⬥
 [Installation](INSTALL.md) ⬥
@@ -10,8 +11,7 @@
 
 A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
 client for encrypted and decentralized communication.  
-Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
-**currently in alpha**.
+Written in Qt/QML and Python, **currently in alpha**.
 
 ![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
 
@@ -19,10 +19,10 @@ Written in Qt/QML + Python with [nio](https://github.com/poljar/matrix-nio),
 
 ### Interface
 
-- **Fluid interface** that adapts to any window size
+- **Fluid, responsive interface** that adapts to any window size
 - Toggleable **compact mode**
-- Customizable **keyboard shortcuts** for (almost) everything, including
-  filtering/switching rooms, scrolling, sending files...
+- Customizable **keyboard shortcuts** for everything, including
+  switching rooms, navigating messages, sending/opening files...
 - Versatile **theming system**, properties can refer to each other and have 
   any valid ECMAScript 7 expression as values
   - Comes by default with **dark** and **transparent themes**
