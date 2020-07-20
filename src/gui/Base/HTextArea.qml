@@ -16,6 +16,7 @@ TextArea {
     property bool bordered: true
 
     property var focusItemOnTab: null
+    property bool menuKeySpawnsMenu: true
     property var disabledText: null
     property var defaultText: null  // XXX test me
     readonly property bool changed: text !== (defaultText || "")
@@ -108,7 +109,7 @@ TextArea {
         }
     }
 
-    Keys.onMenuPressed: contextMenu.spawn(false)
+    Keys.onMenuPressed: if (menuKeySpawnsMenu) contextMenu.spawn(false)
 
     // Prevent leaking arrow presses to parent elements when the carret is at
     // the beginning or end of the text

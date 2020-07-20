@@ -95,6 +95,8 @@ HTextArea {
     disabledText: qsTr("You do not have permission to post in this room")
     placeholderText: qsTr("Type a message...")
     enableCustomImagePaste: true
+    menuKeySpawnsMenu:
+        ! (eventList && (eventList.currentItem || eventList.selectedCount))
 
     backgroundColor: "transparent"
     focusedBorderColor: "transparent"
