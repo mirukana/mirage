@@ -9,8 +9,6 @@ import "../../../Base"
 HColumnLayout {
     id: eventDelegate
 
-    enum Media { Page, File, Image, Video, Audio }
-
     property var hoveredMediaTypeUrl: []
 
     property var fetchProfilesFuture: null
@@ -171,19 +169,19 @@ HColumnLayout {
             text:
                 contextMenu.media.length < 1 ? "" :
 
-                contextMenu.media[0] === EventDelegate.Media.Page ?
+                contextMenu.media[0] === Utils.Media.Page ?
                 qsTr("Copy page address") :
 
-                contextMenu.media[0] === EventDelegate.Media.File ?
+                contextMenu.media[0] === Utils.Media.File ?
                 qsTr("Copy file address") :
 
-                contextMenu.media[0] === EventDelegate.Media.Image ?
+                contextMenu.media[0] === Utils.Media.Image ?
                 qsTr("Copy image address") :
 
-                contextMenu.media[0] === EventDelegate.Media.Video ?
+                contextMenu.media[0] === Utils.Media.Video ?
                 qsTr("Copy video address") :
 
-                contextMenu.media[0] === EventDelegate.Media.Audio ?
+                contextMenu.media[0] === Utils.Media.Audio ?
                 qsTr("Copy audio address") :
 
                 qsTr("Copy media address")

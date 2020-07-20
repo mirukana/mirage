@@ -125,29 +125,43 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.openMessagesLinks
+        sequences: window.settings.keys.openMessagesLinks  // XXX: rename
         onActivated: {
-            let events = []
+            let indice = []
 
             if (eventList.selectedCount) {
-                events = eventList.getSortedChecked()
+                indice = eventList.checkedIndice
             } else if (eventList.currentIndex !== -1) {
-                events = [eventList.model.get(eventList.currentIndex)]
+                indice = [eventList.currentIndex]
             } else {
-                // Find most recent event containing links
+                // Find most recent event that's a media or contains links
                 for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
-                    const ev = eventList.model.get(i)
+                    const ev    = eventList.model.get(i)
+                    const links = JSON.parse(ev.links)
 
-                    if (JSON.parse(ev.links).length) {
-                        events = [ev]
+                    if (ev.media_url || ev.thumbnail_url || links.length) {
+                        indice = [i]
                         break
                     }
                 }
             }
 
-            for (const event of events) {
-                for (const link of JSON.parse(event.links))
-                    Qt.openUrlExternally(link)
+            for (const i of indice.sort().reverse()) {
+                const event = eventList.model.get(i)
+
+                if (event.media_url || event.thumbnail_url) {
+                    eventList.getMediaType(event) === Utils.Media.Image ?
+                    eventList.openImageViewer(event) :
+                    eventList.openMediaExternally(event)
+
+                    continue
+                }
+
+                for (const url of JSON.parse(event.links)) {
+                    utils.getLinkType(url) === Utils.Media.Image ?
+                    eventList.openImageViewer(event, url) :
+                    Qt.openUrlExternally(url)
+                }
             }
         }
     }
@@ -197,6 +211,8 @@ Rectangle {
         property string selectedText: ""
 
         property alias cursorShape: cursorShapeArea.cursorShape
+
+        readonly property var thumbnailCachedPaths: ({})  // {event.id: path}
 
         readonly property var redactableCheckedEvents:
             getSortedChecked().filter(ev => eventList.canRedact(ev))
@@ -300,6 +316,106 @@ Rectangle {
             } catch (err) {
                 return
             }
+        }
+
+        function getMediaType(event) {
+            if (event.event_type === "RoomAvatarEvent")
+                return Utils.Media.Image
+
+            const mainType   = event.media_mime.split("/")[0].toLowerCase()
+            const fileEvents = ["RoomMessageFile", "RoomEncryptedFile"]
+
+            return (
+                mainType === "image" ? Utils.Media.Image :
+                mainType === "video" ? Utils.Media.Video :
+                mainType === "audio" ? Utils.Media.Audio :
+                fileEvents.includes(event.event_type) ? Utils.Media.File :
+                null
+            )
+        }
+
+        function isAnimated(event) {
+            return (
+                event.media_mime === "image/gif" ||
+                utils.urlExtension(event.media_url).toLowerCase() === "gif"
+            )
+        }
+
+        function getThumbnailTitle(event) {
+            return event.media_title.replace(
+                /\.[^\.]+$/,
+                event.thumbnail_mime === "image/jpeg"    ? ".jpg" :
+                event.thumbnail_mime === "image/png"     ? ".png" :
+                event.thumbnail_mime === "image/gif"     ? ".gif" :
+                event.thumbnail_mime === "image/tiff"    ? ".tiff" :
+                event.thumbnail_mime === "image/svg+xml" ? ".svg" :
+                event.thumbnail_mime === "image/webp"    ? ".webp" :
+                event.thumbnail_mime === "image/bmp"     ? ".bmp" :
+                ".thumbnail"
+            ) || utils.urlFileName(event.media_url)
+        }
+
+        function openImageViewer(event, forLink="") {
+            // if forLink is empty, this must be a media event
+
+            const title =
+                event.media_title || utils.urlFileName(event.media_url)
+
+            // The thumbnail/cached path will be the full GIF
+            const fullMxc =
+                forLink || (isAnimated(event) ? "" : event.media_url)
+
+            utils.makePopup(
+                "Popups/ImageViewerPopup.qml",
+                {
+                    thumbnailTitle: getThumbnailTitle(event),
+                    thumbnailMxc: event.thumbnail_url,
+                    thumbnailPath: eventList.thumbnailCachedPaths[event.id],
+                    thumbnailCryptDict: JSON.parse(event.thumbnail_crypt_dict),
+
+                    fullTitle: title,
+                    fullMxc: fullMxc,
+                    fullCryptDict: JSON.parse(event.media_crypt_dict),
+
+                    overallSize: Qt.size(
+                        event.media_width ||
+                        event.thumbnail_width ||
+                        implicitWidth || // XXX
+                        800,
+
+                        event.media_height ||
+                        event.thumbnail_height ||
+                        implicitHeight || // XXX
+                        600,
+                    )
+                },
+                obj => {
+                    obj.openExternallyRequested.connect(() =>
+                        forLink ?
+                        Qt.openUrlExternally(forLink) :
+                        eventList.openMediaExternally(event)
+                    )
+                },
+            )
+        }
+
+        function getLocalOrDownloadMedia(event, callback) {
+            print("Downloading " + event.media_url + " ...")
+
+            const args = [
+                event.media_url,
+                event.media_title,
+                JSON.parse(event.media_crypt_dict),
+            ]
+
+            py.callCoro("media_cache.get_media", args, path => {
+                print("Done: " + path)
+                callback(path)
+            })
+        }
+
+        function openMediaExternally(event) {
+            eventList.getLocalOrDownloadMedia(event, Qt.openUrlExternally)
         }
 
         anchors.fill: parent

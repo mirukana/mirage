@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import "../../.."
 import "../../../Base"
 
 HMxcImage {
     id: image
 
     property EventMediaLoader loader
-
-    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 
     readonly property real maxHeight:
         eventList.height * theme.chat.message.thumbnailMaxHeightRatio
@@ -43,69 +42,13 @@ HMxcImage {
         Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
     )
 
-    function getOpenUrl(callback) {
-        if (image.isEncrypted && loader.mediaUrl) {
-            loader.download(callback)
-            return
-        }
-
-        if (image.isEncrypted) {
-            callback(image.cachedPath)
-            return
-        }
-
-        const toOpen = loader.mediaUrl || loader.thumbnailMxc
-        const isMxc  = toOpen.startsWith("mxc://")
-
-        isMxc ?
-        py.callClientCoro(chat.userId, "mxc_to_http", [toOpen], callback) :
-        callback(toOpen)
-    }
-
-    function openUrlExternally() {
-        getOpenUrl(Qt.openUrlExternally)
-    }
-
-    function openImageViewer() {
-        utils.makePopup(
-            "Popups/ImageViewerPopup.qml",
-            {
-                thumbnailTitle: loader.thumbnailTitle,
-                thumbnailMxc: loader.thumbnailMxc,
-                thumbnailPath: image.cachedPath,
-                thumbnailCryptDict:
-                    JSON.parse(loader.singleMediaInfo.thumbnail_crypt_dict),
-
-                fullTitle: loader.title,
-                // The thumbnail/cached path will be the full GIF
-                fullMxc: animated ? "" : loader.mediaUrl,
-                fullCryptDict:
-                    JSON.parse(loader.singleMediaInfo.media_crypt_dict),
-
-                overallSize: Qt.size(
-                    loader.singleMediaInfo.media_width ||
-                    loader.singleMediaInfo.thumbnail_width ||
-                    implicitWidth ||
-                    800,
-
-                    loader.singleMediaInfo.media_height ||
-                    loader.singleMediaInfo.thumbnail_height ||
-                    implicitHeight ||
-                    600,
-                )
-            },
-            obj => { obj.openExternallyRequested.connect(openUrlExternally) },
-        )
-    }
-
 
     width: fitSize.width
     height: fitSize.height
     horizontalAlignment: Image.AlignLeft
 
     title: thumbnail ? loader.thumbnailTitle : loader.title
-    animated: loader.singleMediaInfo.media_mime === "image/gif" ||
-              utils.urlExtension(loader.mediaUrl).toLowerCase() === "gif"
+    animated: eventList.isAnimated(loader.singleMediaInfo)
     thumbnail: ! animated && loader.thumbnailMxc
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :
@@ -116,30 +59,36 @@ HMxcImage {
         loader.singleMediaInfo.media_crypt_dict
     )
 
+    onCachedPathChanged:
+        eventList.thumbnailCachedPaths[loader.singleMediaInfo.id] = cachedPath
+
     TapHandler {
         acceptedButtons: Qt.LeftButton
         acceptedModifiers: Qt.NoModifier
+        gesturePolicy: TapHandler.ReleaseWithinBounds
         onTapped:
             eventList.selectedCount ?
             eventDelegate.toggleChecked() :
-            openImageViewer()
+            eventList.openImageViewer(singleMediaInfo)
 
-        gesturePolicy: TapHandler.ReleaseWithinBounds
     }
 
     TapHandler {
         acceptedButtons: Qt.MiddleButton
         acceptedModifiers: Qt.NoModifier
-        onTapped: getOpenUrl(Qt.openUrlExternally)
         gesturePolicy: TapHandler.ReleaseWithinBounds
+        onTapped: {
+            loader.isMedia ?
+            eventList.openMediaExternally(singleMediaInfo) :
+            Qt.openUrlExternally(loader.mediaUrl)
+        }
     }
 
     TapHandler {
         acceptedModifiers: Qt.ShiftModifier
+        gesturePolicy: TapHandler.ReleaseWithinBounds
         onTapped:
             eventList.checkFromLastToHere(singleMediaInfo.index)
-
-        gesturePolicy: TapHandler.ReleaseWithinBounds
     }
 
     HoverHandler {
@@ -151,8 +100,9 @@ HMxcImage {
             }
 
             eventDelegate.hoveredMediaTypeUrl = [
-                EventDelegate.Media.Image,
-                loader.downloadedPath.replace(/^file:\/\//, "") ||
+                Utils.Media.Image,
+                // XXX
+                // loader.downloadedPath.replace(/^file:\/\//, "") ||
                 loader.mediaUrl
             ]
         }

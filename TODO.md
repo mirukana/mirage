@@ -1,10 +1,15 @@
 # TODO
 
 - Image viewer: 
+    - fix gifs
+    - double click on img to open fullscreen
     - open externally in context menu in timeline thumbnail
     - hflickable support kinetic scrolling disabler and speed/decel settings
     - buttons 
     - keyboard controls
+    - prevent drag-scrolling timeline when image opened
+    - eventfile middle click
+    - right click in dark space of image viewer
 
 - clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu

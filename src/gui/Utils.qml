@@ -4,6 +4,23 @@ import QtQuick 2.12
 import CppUtils 0.1
 
 QtObject {
+    enum Media { Page, File, Image, Video, Audio }
+
+    readonly property var imageExtensions: [
+		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
+		"tiff", "webp", "svg",
+    ]
+
+    readonly property var videoExtensions: [
+        "3gp", "avi", "flv", "m4p", "m4v", "mkv", "mov", "mp4",
+		"mpeg", "mpg", "ogv", "qt", "vob", "webm", "wmv", "yuv",
+    ]
+
+    readonly property var audioExtensions: [
+        "pcm", "wav", "raw", "aiff", "flac", "m4a", "tta", "aac", "mp3",
+        "ogg", "oga", "opus",
+    ]
+
     function makeObject(urlComponent, parent=null, properties={},
                         callback=null) {
         let comp = urlComponent
@@ -453,6 +470,18 @@ QtObject {
 
     function urlExtension(url) {
         return urlFileName(url).split(".").slice(-1)[0]
+    }
+
+
+    function getLinkType(url) {
+        const ext = urlExtension(url).toLowerCase()
+
+        return (
+            imageExtensions.includes(ext) ? Utils.Media.Image :
+            videoExtensions.includes(ext) ? Utils.Media.Video :
+            audioExtensions.includes(ext) ? Utils.Media.Audio :
+            Utils.Media.Page
+        )
     }
 
 

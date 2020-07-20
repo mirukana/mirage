@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import CppUtils 0.1
+import "../../.."
 import "../../../Base"
 import "../../../Base/HTile"
 
@@ -10,11 +11,6 @@ HTile {
     id: file
 
     property EventMediaLoader loader
-
-    readonly property bool cryptDict:
-        JSON.parse(loader.singleMediaInfo.media_crypt_dict)
-
-    readonly property bool isEncrypted: ! utils.isEmptyObject(cryptDict)
 
 
     width: Math.min(
@@ -50,7 +46,12 @@ HTile {
     onRightClicked: eventDelegate.openContextMenu()
     onLeftClicked:
         eventList.selectedCount ?
-        eventDelegate.toggleChecked() : download(Qt.openUrlExternally)
+        eventDelegate.toggleChecked() :
+
+        loader.isMedia ?
+        eventList.openMediaExternally(singleMediaInfo) :
+
+        Qt.openUrlExternally(loader.mediaUrl)
 
     onHoveredChanged: {
         if (! hovered) {
@@ -59,8 +60,10 @@ HTile {
         }
 
         eventDelegate.hoveredMediaTypeUrl = [
-            EventDelegate.Media.File,
-            loader.downloadedPath.replace(/^file:\/\//, "") || loader.mediaUrl
+            Utils.Media.File,
+            // XXX
+            // loader.downloadedPath.replace(/^file:\/\//, "") ||
+            loader.mediaUrl
         ]
     }
 
