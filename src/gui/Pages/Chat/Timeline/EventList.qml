@@ -125,7 +125,7 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.openMessagesLinks  // XXX: rename
+        sequences: window.settings.keys.openMessagesLinksOrFiles
         onActivated: {
             let indice = []
 

@@ -365,7 +365,7 @@ class UISettings(JSONDataFile):
                 "removeFocusedOrSelectedMessages": ["Ctrl+R", "Alt+Del"],
                 "replyToFocusedOrLastMessage":     ["Ctrl+Q"],  # Q for Quote
                 "debugFocusedMessage":             ["Ctrl+Shift+D"],
-                "openMessagesLinks":               ["Ctrl+O"],
+                "openMessagesLinksOrFiles":        ["Ctrl+O"],
                 "clearRoomMessages":               ["Ctrl+L"],
 
                 "sendFile":                    ["Alt+S"],
