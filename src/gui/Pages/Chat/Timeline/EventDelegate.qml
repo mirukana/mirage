@@ -194,7 +194,8 @@ HColumnLayout {
             id: copyMedia
             icon.name: "copy-link"
             text:
-                contextMenu.media.length === 0 || isEncryptedMedia ?
+                contextMenu.media.length === 0 ||
+                contextMenu.isEncryptedMedia ?
                 "" :
 
                 contextMenu.media[0] === Utils.Media.File ?
