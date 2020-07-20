@@ -5,7 +5,6 @@
     - hflickable support kinetic scrolling disabler and speed/decel settings
     - buttons (include a working GIF play/pause)
     - keyboard controls
-    - prevent drag-scrolling timeline when image opened
 
 - clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu

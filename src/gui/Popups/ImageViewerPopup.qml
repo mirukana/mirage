@@ -68,7 +68,6 @@ HPopup {
 
     HFlickable {
         id: flickable
-        pressDelay: 30
         implicitWidth: window.width
         implicitHeight: window.height
         contentWidth:
