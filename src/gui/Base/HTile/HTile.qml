@@ -11,6 +11,7 @@ HButton {
     property Component contextMenu: null
 
     signal leftClicked()
+    signal middleClicked()
     signal rightClicked()
     signal longPressed()
 
@@ -43,6 +44,12 @@ HButton {
         acceptedButtons: Qt.LeftButton
         onTapped: leftClicked()
         onLongPressed: tile.longPressed()
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.MiddleButton
+        onTapped: middleClicked()
+        onLongPressed: tile.middleClicked()
     }
 
     TapHandler {
