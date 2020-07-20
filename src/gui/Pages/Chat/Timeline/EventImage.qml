@@ -62,6 +62,11 @@ HMxcImage {
     onCachedPathChanged:
         eventList.thumbnailCachedPaths[loader.singleMediaInfo.id] = cachedPath
 
+    Binding on pause {
+        value: true
+        when: Object.keys(window.visiblePopups).length > 0
+    }
+
     TapHandler {
         acceptedButtons: Qt.LeftButton
         acceptedModifiers: Qt.NoModifier
@@ -73,12 +78,7 @@ HMxcImage {
                 return
             }
 
-            const wasPaused = image.pause
-            image.pause     = true
-
-            eventList.openImageViewer(singleMediaInfo, "", popup => {
-                popup.closed.connect(() => image.pause = wasPaused)
-            })
+            eventList.openImageViewer(singleMediaInfo)
         }
     }
 
