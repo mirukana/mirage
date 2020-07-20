@@ -43,6 +43,7 @@ HTile {
         }
     }
 
+    onMiddleClicked: leftClicked()
     onRightClicked: eventDelegate.openContextMenu()
     onLeftClicked:
         eventList.selectedCount ?
