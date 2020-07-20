@@ -21,7 +21,7 @@ HRowLayout {
     Behavior on opacity { HNumberAnimation {} }
 
     Item {
-        visible: button.icon.name || button.loading
+        visible: Boolean(button.icon.name || button.loading)
 
         Layout.preferredWidth:
             button.loading ? busyIndicatorLoader.width : icon.width
