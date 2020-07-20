@@ -258,7 +258,8 @@ class Backend:
 
         while True:
             for client in self.clients.values():
-                if client.syncing:
+                if client.healthy:
+                    print( client, client.first_sync_done)
                     return client
 
             if failures and failures % 300 == 0:

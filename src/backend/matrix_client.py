@@ -189,8 +189,9 @@ class MatrixClient(nio.AsyncClient):
         self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
         self.send_message_tasks: Dict[UUID, asyncio.Task]        = {}
 
-        self.first_sync_done: asyncio.Event      = asyncio.Event()
-        self.first_sync_date: Optional[datetime] = None
+        self.first_sync_done: asyncio.Event       = asyncio.Event()
+        self.first_sync_date: Optional[datetime]  = None
+        self.last_sync_error: Optional[Exception] = None
 
         self.past_tokens:          Dict[str, str] = {}     # {room_id: token}
         self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
@@ -324,13 +325,15 @@ class MatrixClient(nio.AsyncClient):
         await self.close()
 
     @property
-    def syncing(self) -> bool:
-        """Return whether this client is currently syncing with the server."""
+    def healthy(self) -> bool:
+        """Return whether we're syncing and last sync was successful."""
 
-        if not self.sync_task:
+        task = self.sync_task
+
+        if not task or not self.first_sync_date or self.last_sync_error:
             return False
 
-        return not self.sync_task.done()
+        return not task.done()
 
 
     async def _start(self) -> None:
@@ -395,6 +398,8 @@ class MatrixClient(nio.AsyncClient):
                 await self.sync_task
                 break  # task cancelled
             except Exception as err:
+                self.last_sync_error = err
+
                 trace = traceback.format_exc().rstrip()
 
                 if isinstance(err, MatrixError) and err.http_code >= 500:
@@ -405,6 +410,8 @@ class MatrixClient(nio.AsyncClient):
                     )
                 else:
                     LoopException(str(err), err, trace)
+            else:
+                self.last_sync_error = None
 
             await asyncio.sleep(5)
 
