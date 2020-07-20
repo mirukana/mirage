@@ -17,6 +17,7 @@ Image {
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
     property bool pause: ! window.settings.media.autoPlayGIF
+    property real speed: 1
 
     readonly property int circleRadius:
         Math.ceil(Math.max(image.width, image.height))
@@ -66,6 +67,7 @@ Image {
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
             paused: ! visible || window.hidden || image.pause
+            speed: image.speed
 
             layer.enabled: image.radius !== 0
             layer.effect: OpacityMask { maskSource: roundMask }

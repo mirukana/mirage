@@ -1,9 +1,9 @@
 # TODO
 
 - Image viewer: 
+    - stop timeline gif on ctrl+o
     - open externally in context menu in timeline thumbnail
     - hflickable support kinetic scrolling disabler and speed/decel settings
-    - buttons (include a working GIF play/pause)
     - keyboard controls
 
 - clipboard preview doesn't update when copied image changes until second time

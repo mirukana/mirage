@@ -68,6 +68,9 @@ HFlickable {
 
             Math.min(window.height, viewer.overallSize.height)
 
+        pause: viewer.imagesPaused
+        speed: viewer.imagesSpeed
+        rotation: viewer.imagesRotation
         fillMode: HMxcImage.PreserveAspectFit
         title: viewer.thumbnailTitle
         mxc: viewer.thumbnailMxc
@@ -109,6 +112,9 @@ HFlickable {
             id: full
             anchors.fill: parent
             thumbnail: false
+            pause: viewer.imagesPaused
+            speed: viewer.imagesSpeed
+            rotation: viewer.imagesRotation
             fillMode: parent.fillMode
             title: viewer.fullTitle
             mxc: viewer.fullMxc
@@ -131,7 +137,7 @@ HFlickable {
                     viewer.alternateScaling = ! viewer.alternateScaling :
                     resetScaleAnimation.start()
                 }
-                onDoubleTapped: viewer.toggleFulLScreen()
+                onDoubleTapped: viewer.toggleFullScreen()
             }
         }
     }

@@ -19,8 +19,17 @@ HPopup {
 
     property bool alternateScaling: false
     property bool activedFullScreen: false
+    property bool imagesPaused: false
+    property real imagesRotation: 0
+    property real animatedRotationTarget: 0
+    property real imagesSpeed: 1
+    property var availableSpeeds: [16, 8, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5]
 
     readonly property alias canvas: canvas
+    readonly property alias buttons: buttons
+
+    readonly property bool isAnimated:
+        canvas.thumbnail.animated || canvas.full.animated
 
     readonly property bool imageLargerThanWindow:
         overallSize.width > window.width || overallSize.height > window.height
@@ -57,7 +66,7 @@ HPopup {
         if (! imageLargerThanWindow) popup.alternateScaling = false
     }
 
-    function toggleFulLScreen() {
+    function toggleFullScreen() {
         const isFull = window.visibility === Window.FullScreen
         return isFull ? exitFullScreen() : showFullScreen()
     }
@@ -68,6 +77,15 @@ HPopup {
 
     onAboutToHide: exitFullScreen()
 
+    HNumberAnimation {
+        target: popup
+        property: "imagesRotation"
+        from: popup.imagesRotation
+        to: popup.animatedRotationTarget
+        easing.type: Easing.OutCirc
+        onToChanged: restart()
+    }
+
     Item {
         implicitWidth: window.width
         implicitHeight: window.height
@@ -75,6 +93,14 @@ HPopup {
         ViewerCanvas {
             id: canvas
             anchors.fill: parent
+            viewer: popup
+        }
+
+        ViewerButtons {
+            id: buttons
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: Math.min(calculatedWidth, parent.width)
             viewer: popup
         }
     }
