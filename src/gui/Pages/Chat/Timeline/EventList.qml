@@ -355,7 +355,7 @@ Rectangle {
             ) || utils.urlFileName(event.media_url)
         }
 
-        function openImageViewer(event, forLink="") {
+        function openImageViewer(event, forLink="", callback=null) {
             // if forLink is empty, this must be a media event
 
             const title =
@@ -390,11 +390,13 @@ Rectangle {
                     )
                 },
                 obj => {
-                    obj.openExternallyRequested.connect(() =>
+                    obj.openExternallyRequested.connect(() => {
                         forLink ?
                         Qt.openUrlExternally(forLink) :
                         eventList.openMediaExternally(event)
-                    )
+                    })
+
+                    if (callback) callback(obj)
                 },
             )
         }

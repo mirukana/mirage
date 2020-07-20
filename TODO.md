@@ -2,7 +2,6 @@
 
 - Image viewer: 
     - fix gifs
-    - double click on EventImage to open fullscreen
     - open externally in context menu in timeline thumbnail
     - hflickable support kinetic scrolling disabler and speed/decel settings
     - buttons 

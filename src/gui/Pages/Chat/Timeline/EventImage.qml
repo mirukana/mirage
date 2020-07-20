@@ -66,11 +66,11 @@ HMxcImage {
         acceptedButtons: Qt.LeftButton
         acceptedModifiers: Qt.NoModifier
         gesturePolicy: TapHandler.ReleaseWithinBounds
+
         onTapped:
             eventList.selectedCount ?
             eventDelegate.toggleChecked() :
             eventList.openImageViewer(singleMediaInfo)
-
     }
 
     TapHandler {
