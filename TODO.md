@@ -8,7 +8,6 @@
     - buttons 
     - keyboard controls
     - prevent drag-scrolling timeline when image opened
-    - right click in dark space of image viewer
 
 - clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu

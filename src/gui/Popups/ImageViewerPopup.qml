@@ -58,6 +58,7 @@ HPopup {
         ScrollBar.vertical: null
 
         TapHandler {
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
             onTapped: popup.close()
             gesturePolicy: TapHandler.ReleaseWithinBounds
         }
