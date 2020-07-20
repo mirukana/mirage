@@ -366,7 +366,7 @@ Rectangle {
                 forLink || (isAnimated(event) ? "" : event.media_url)
 
             utils.makePopup(
-                "Popups/ImageViewerPopup.qml",
+                "Popups/ImageViewerPopup/ImageViewerPopup.qml",
                 {
                     thumbnailTitle: getThumbnailTitle(event),
                     thumbnailMxc: event.thumbnail_url,
