@@ -68,6 +68,7 @@ HFlickable {
 
             Math.min(window.height, viewer.overallSize.height)
 
+        showPauseButton: false
         pause: viewer.imagesPaused
         speed: viewer.imagesSpeed
         rotation: viewer.imagesRotation
@@ -112,6 +113,7 @@ HFlickable {
             id: full
             anchors.fill: parent
             thumbnail: false
+            showPauseButton: false
             pause: viewer.imagesPaused
             speed: viewer.imagesSpeed
             rotation: viewer.imagesRotation

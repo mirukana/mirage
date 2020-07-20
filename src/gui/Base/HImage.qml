@@ -16,6 +16,7 @@ Image {
 
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
+    property bool showPauseButton: true
     property bool pause: ! window.settings.media.autoPlayGIF
     property real speed: 1
 
@@ -99,7 +100,11 @@ Image {
                 enableRadius: true
                 icon.name: image.pause ? "player-play" : "player-pause"
                 iconItem.small: true
-                visible: parent.width > width * 2 && parent.height > height * 2
+                visible:
+                    image.showPauseButton &&
+                    parent.width > width * 2 &&
+                    parent.height > height * 2
+
                 onClicked: image.pause = ! image.pause
             }
         }
