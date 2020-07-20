@@ -49,12 +49,12 @@ Popup {
     onAboutToShow: previouslyFocused = window.activeFocusItem
     onOpened: {
         window.visiblePopups[uuid] = this
-        window.visibleMenusChanged()
+        window.visiblePopupsChanged()
     }
     onClosed: {
         if (focusOnClosed) focusOnClosed.forceActiveFocus()
         delete window.visiblePopups[uuid]
-        window.visibleMenusChanged()
+        window.visiblePopupsChanged()
     }
 
     Component.onDestruction: closed()
