@@ -47,13 +47,37 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
+    async def get_local_media(self, mxc: str, title: str) -> Optional[Path]:
+        """Return `Media.get_local()`'s result for QML."""
+
+        media = Media(self, mxc, title, None)
+
+        try:
+            return await media.get_local()
+        except FileNotFoundError:
+            return None
+
+
+    async def get_local_thumbnail(
+        self, mxc: str, title: str, width: int, height: int,
+    ) -> Optional[Path]:
+        """Return `Thumbnail.get_local()`'s result for QML."""
+
+        th = Thumbnail(self, mxc, title, None, (round(width), round(height)))
+
+        try:
+            return await th.get_local()
+        except FileNotFoundError:
+            return None
+
+
     async def get_media(
         self,
         mxc:        str,
         title:      str,
         crypt_dict: CryptDict = None,
     ) -> Path:
-        """Return a `Media` object. Method intended for QML convenience."""
+        """Return `Media.get()`'s result. Intended for QML."""
 
         return await Media(self, mxc, title, crypt_dict).get()
 
@@ -66,7 +90,7 @@ class MediaCache:
         height:     int,
         crypt_dict: CryptDict = None,
     ) -> Path:
-        """Return a `Thumbnail` object. Method intended for QML convenience."""
+        """Return `Thumbnail.get()`'s result. Intended for QML."""
 
         thumb = Thumbnail(
             # QML sometimes pass float sizes, which matrix API doesn't like.
@@ -116,13 +140,13 @@ class Media:
 
         async with ACCESS_LOCKS[self.mxc]:
             try:
-                return await self._get_local_existing_file()
+                return await self.get_local()
             except FileNotFoundError:
                 return await self.create()
 
 
-    async def _get_local_existing_file(self) -> Path:
-        """Return the cached file's path."""
+    async def get_local(self) -> Path:
+        """Return a cached local existing path for this media or raise."""
 
         if not self.local_path.exists():
             raise FileNotFoundError()
@@ -286,7 +310,7 @@ class Thumbnail(Media):
         return self.cache.thumbs_dir / parsed.netloc / size_dir / filename
 
 
-    async def _get_local_existing_file(self) -> Path:
+    async def get_local(self) -> Path:
         """Return an existing thumbnail path or raise `FileNotFoundError`.
 
         If we have a bigger size thumbnail downloaded than the `wanted_size`

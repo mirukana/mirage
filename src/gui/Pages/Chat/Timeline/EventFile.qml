@@ -60,12 +60,8 @@ HTile {
             return
         }
 
-        eventDelegate.hoveredMediaTypeUrl = [
-            Utils.Media.File,
-            // XXX
-            // loader.downloadedPath.replace(/^file:\/\//, "") ||
-            loader.mediaUrl
-        ]
+        eventDelegate.hoveredMediaTypeUrl =
+            [Utils.Media.File, loader.mediaUrl, loader.title]
     }
 
     Binding on backgroundColor {

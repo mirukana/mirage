@@ -27,6 +27,8 @@ HLoader {
         eventList.getMediaType(singleMediaInfo) :
         utils.getLinkType(mediaUrl)
 
+    readonly property string cachedLocalPath: ""
+
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
 
 

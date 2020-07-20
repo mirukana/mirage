@@ -13,6 +13,6 @@ AudioPlayer {
     HoverHandler {
         onHoveredChanged:
             eventDelegate.hoveredMediaTypeUrl =
-                hovered ? [Utils.Media.Audio, audio.source] : []
+                hovered ? [Utils.Media.Audio, audio.source, loader.title] : []
     }
 }

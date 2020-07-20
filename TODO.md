@@ -167,11 +167,6 @@
 
 - Add upload keybindings (close failed upload, pause, resume)
 - Handle errors when setting an avatar
-- Show proper progress ring for mxc thumbnails loading
-
-- Sentinel function to report local file paths for already downloaded media,
-  without having to click and try downloading first
-- EventFile "Save as..." context menu entry
 
 - Show a reason or HTTP error code for thumbnails that fail to load
 - Support `m.file` thumbnails

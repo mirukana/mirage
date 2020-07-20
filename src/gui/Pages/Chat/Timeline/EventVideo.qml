@@ -12,5 +12,5 @@ VideoPlayer {
 
     onHoveredChanged:
         eventDelegate.hoveredMediaTypeUrl =
-            hovered ? [Utils.Media.Video, video.source] : []
+            hovered ? [Utils.Media.Video, video.source, loader.title] : []
 }

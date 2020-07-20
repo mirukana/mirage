@@ -5,11 +5,12 @@ import QtQuick.Layouts 1.12
 import Clipboard 0.1
 import "../../.."
 import "../../../Base"
+import "../../../PythonBridge"
 
 HColumnLayout {
     id: eventDelegate
 
-    property var hoveredMediaTypeUrl: []
+    property var hoveredMediaTypeUrl: []  // [] or [mediaType, url, title]
 
     property var fetchProfilesFuture: null
 
@@ -41,7 +42,7 @@ HColumnLayout {
         combine
 
     readonly property int cursorShape:
-        eventContent.hoveredLink || hoveredMediaTypeUrl.length > 0 ?
+        eventContent.hoveredLink || hoveredMediaTypeUrl.length === 3 ?
         Qt.PointingHandCursor :
 
         eventContent.hoveredSelectable ? Qt.IBeamCursor :
@@ -140,8 +141,25 @@ HColumnLayout {
 
         property var media: []
         property string link: ""
+        property var localPath: null
+        property Future getLocalFuture: null
 
-        onClosed: { media = []; link = "" }
+        readonly property bool isEncryptedMedia:
+            Object.keys(JSON.parse(model.media_crypt_dict)).length > 0
+
+        onClosed: {
+            if (getLocalFuture) getLocalFuture.cancel()
+            media = []
+            link = ""
+        }
+
+        onOpened: if (media.length === 3 && media[1].startsWith("mxc://")) {
+            getLocalFuture = py.callCoro(
+                "media_cache.get_local_media",
+                [media[1], media[2]],
+                path => { localPath = path; getLocalFuture = null },
+            )
+        }
 
         HMenuItem {
             icon.name: "toggle-select-message"
@@ -164,13 +182,20 @@ HColumnLayout {
         }
 
         HMenuItem {
+            icon.name: "copy-local-path"
+            text: qsTr("Copy local path")
+            visible: Boolean(contextMenu.localPath)
+            onTriggered:
+                Clipboard.text =
+                    contextMenu.localPath.replace(/^file:\/\//, "")
+        }
+
+        HMenuItem {
             id: copyMedia
             icon.name: "copy-link"
             text:
-                contextMenu.media.length < 1 ? "" :
-
-                contextMenu.media[0] === Utils.Media.Page ?
-                qsTr("Copy page address") :
+                contextMenu.media.length === 0 || isEncryptedMedia ?
+                "" :
 
                 contextMenu.media[0] === Utils.Media.File ?
                 qsTr("Copy file address") :
@@ -181,17 +206,13 @@ HColumnLayout {
                 contextMenu.media[0] === Utils.Media.Video ?
                 qsTr("Copy video address") :
 
-                contextMenu.media[0] === Utils.Media.Audio ?
-                qsTr("Copy audio address") :
-
-                qsTr("Copy media address")
+                qsTr("Copy audio address")
 
             visible: Boolean(text)
             onTriggered: Clipboard.text = contextMenu.media[1]
         }
 
         HMenuItem {
-            id: copyLink
             icon.name: "copy-link"
             text: qsTr("Copy link address")
             visible: Boolean(contextMenu.link)
@@ -201,12 +222,8 @@ HColumnLayout {
         HMenuItem {
             icon.name: "copy-text"
             text:
-                eventList.selectedCount ?
-                qsTr("Copy selection") :
-
-                copyMedia.visible ?
-                qsTr("Copy filename") :
-
+                eventList.selectedCount ? qsTr("Copy selection") :
+                contextMenu.media.length > 0 ? qsTr("Copy filename") :
                 qsTr("Copy text")
 
             onTriggered: {
