@@ -24,6 +24,12 @@ HFlickable {
         gesturePolicy: TapHandler.ReleaseWithinBounds
     }
 
+    TapHandler {
+        acceptedButtons: Qt.MiddleButton
+        gesturePolicy: TapHandler.ReleaseWithinBounds
+        onTapped: viewer.openExternallyRequested()
+    }
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
@@ -126,18 +132,6 @@ HFlickable {
                     resetScaleAnimation.start()
                 }
                 onDoubleTapped: viewer.toggleFulLScreen()
-            }
-
-            TapHandler {
-                acceptedButtons: Qt.MiddleButton
-                gesturePolicy: TapHandler.ReleaseWithinBounds
-                onTapped: viewer.openExternallyRequested()
-            }
-
-            TapHandler {
-                acceptedButtons: Qt.RightButton
-                gesturePolicy: TapHandler.ReleaseWithinBounds
-                onTapped: viewer.close()
             }
         }
     }
