@@ -16,6 +16,7 @@ Image {
 
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
+    property bool pause: ! window.settings.media.autoPlayGIF
 
     readonly property int circleRadius:
         Math.ceil(Math.max(image.width, image.height))
@@ -50,8 +51,6 @@ Image {
         AnimatedImage {
             id: animatedImage
 
-            property bool userPaused: ! window.settings.media.autoPlayGIF
-
             source: image.source
             autoTransform: image.autoTransform
             asynchronous: image.asynchronous
@@ -66,7 +65,7 @@ Image {
             // Online GIFs won't be able to loop if cache is set to false,
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
-            paused: ! visible || window.hidden || userPaused
+            paused: ! visible || window.hidden || image.pause
 
             layer.enabled: image.radius !== 0
             layer.effect: OpacityMask { maskSource: roundMask }
@@ -96,10 +95,10 @@ Image {
                 anchors.bottomMargin: theme.spacing / 2
 
                 enableRadius: true
-                icon.name: parent.userPaused ? "player-play" : "player-pause"
+                icon.name: image.pause ? "player-play" : "player-pause"
                 iconItem.small: true
                 visible: parent.width > width * 2 && parent.height > height * 2
-                onClicked: parent.userPaused = ! parent.userPaused
+                onClicked: image.pause = ! image.pause
             }
         }
     }

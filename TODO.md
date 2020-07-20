@@ -1,10 +1,9 @@
 # TODO
 
 - Image viewer: 
-    - fix gifs
     - open externally in context menu in timeline thumbnail
     - hflickable support kinetic scrolling disabler and speed/decel settings
-    - buttons 
+    - buttons (include a working GIF play/pause)
     - keyboard controls
     - prevent drag-scrolling timeline when image opened
 

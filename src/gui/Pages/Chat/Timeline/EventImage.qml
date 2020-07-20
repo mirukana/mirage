@@ -67,10 +67,19 @@ HMxcImage {
         acceptedModifiers: Qt.NoModifier
         gesturePolicy: TapHandler.ReleaseWithinBounds
 
-        onTapped:
-            eventList.selectedCount ?
-            eventDelegate.toggleChecked() :
-            eventList.openImageViewer(singleMediaInfo)
+        onTapped: {
+            if (eventList.selectedCount) {
+                eventDelegate.toggleChecked()
+                return
+            }
+
+            const wasPaused = image.pause
+            image.pause     = true
+
+            eventList.openImageViewer(singleMediaInfo, "", popup => {
+                popup.closed.connect(() => image.pause = wasPaused)
+            })
+        }
     }
 
     TapHandler {
