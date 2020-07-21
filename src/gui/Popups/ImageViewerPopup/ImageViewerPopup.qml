@@ -29,6 +29,7 @@ HPopup {
     readonly property alias info: info
     readonly property alias canvas: canvas
     readonly property alias buttons: buttons
+    readonly property alias autoHideTimer: autoHideTimer
 
     readonly property bool isAnimated:
         canvas.thumbnail.animated || canvas.full.animated
@@ -49,6 +50,14 @@ HPopup {
         canvas.full.status === Image.Ready ?
         canvas.full.animatedPaintedHeight || canvas.full.paintedHeight :
         canvas.thumbnail.animatedPaintedHeight || canvas.thumbnail.paintedHeight
+
+    readonly property bool canAutoHide:
+        paintedHeight * canvas.thumbnail.scale >
+        height - info.implicitHeight - buttons.implicitHeight &&
+        ! infoHover.hovered &&
+        ! buttonsHover.hovered
+
+    readonly property bool autoHide: canAutoHide && ! autoHideTimer.running
 
     signal openExternallyRequested()
 
@@ -98,22 +107,51 @@ HPopup {
             viewer: popup
         }
 
+        HoverHandler {
+            readonly property point position: point.position
+
+            enabled: popup.canAutoHide
+            onPositionChanged:
+                if (Math.abs(point.velocity.x + point.velocity.y) >= 0.05)
+                    autoHideTimer.restart()
+        }
+
+        Timer {
+            id: autoHideTimer
+            interval: 3000
+        }
+
         ViewerInfo {
             id: info
             viewer: popup
             width: parent.width
-            y: parent.width < buttons.width * 4 ?  0 : parent.height - height
-            maxTitleWidth: y === 0 ? -1 : buttons.x - buttons.width / 2
+            y:
+                (parent.width < buttons.width * 4 || layout.vertical) &&
+                popup.autoHide ?
+                -height :
+
+                parent.width < buttons.width * 4  || layout.vertical ?
+                0 :
+
+                parent.height - (popup.autoHide ? 0 : height)
+
+            maxTitleWidth: y <= 0 ? -1 : buttons.x - buttons.width / 2
 
             Behavior on y { HNumberAnimation {} }
+
+            HoverHandler { id: infoHover }
         }
 
         ViewerButtons {
             id: buttons
-            anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: Math.min(calculatedWidth, parent.width)
+            y: parent.height - (popup.autoHide ? 0 : height)
             viewer: popup
+
+            Behavior on y { HNumberAnimation {} }
+
+            HoverHandler { id: buttonsHover }
         }
     }
 }

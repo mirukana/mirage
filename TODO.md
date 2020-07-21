@@ -1,7 +1,9 @@
 # TODO
 
 - Image viewer: 
-    - auto-hide buttons & header when needed
+    - fix: manual WM fullscreen > press f
+    - fix e in small window
+    - http not loading on click
     - hflickable: support kinetic scrolling disabler 
 
 - compress png in a thread

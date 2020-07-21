@@ -172,6 +172,7 @@ HFlickable {
             height: viewer.paintedHeight
 
             TapHandler {
+                acceptedPointerTypes: PointerDevice.GenericPointer
                 gesturePolicy: TapHandler.ReleaseWithinBounds
                 onTapped: {
                     thumbnail.scale === 1 ?
@@ -179,6 +180,12 @@ HFlickable {
                     resetScaleAnimation.start()
                 }
                 onDoubleTapped: viewer.toggleFullScreen()
+            }
+
+            TapHandler {
+                acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
+                gesturePolicy: TapHandler.ReleaseWithinBounds
+                onTapped: viewer.autoHideTimer.restart()
             }
         }
     }

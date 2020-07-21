@@ -11,7 +11,7 @@ HFlow {
     property HPopup viewer
 
     property color backgroundsColor:
-        viewer.info.y === viewer.height - viewer.info.height ?
+        viewer.info.y >= viewer.height - viewer.info.height ?
         "transparent" :
         theme.controls.button.background
 
