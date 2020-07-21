@@ -171,6 +171,26 @@ Rectangle {
     }
 
     HShortcut {
+        sequences: window.settings.keys.copyFilesLocalPath
+        onActivated: {
+            const paths  = []
+            const indice =
+                eventList.getFocusedOrSelectedOrLastMediaEvents(false)
+
+            for (const i of Array.from(indice).sort().reverse()) {
+                const event = eventList.model.get(i)
+
+                if (event.media_local_path)
+                    paths.push(
+                        event.media_local_path.replace(/^file:\/\//, ""),
+                    )
+            }
+
+            if (paths.length > 0) Clipboard.text = paths.join("\n")
+        }
+    }
+
+    HShortcut {
         active: eventList.currentItem
         sequences: window.settings.keys.debugFocusedMessage
         onActivated: mainUI.debugConsole.toggle(

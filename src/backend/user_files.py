@@ -367,6 +367,7 @@ class UISettings(JSONDataFile):
                 "debugFocusedMessage":                ["Ctrl+Shift+D"],
                 "openMessagesLinksOrFiles":           ["Ctrl+O"],
                 "openMessagesLinksOrFilesExternally": ["Ctrl+Shift+O"],
+                "copyFilesLocalPath":                 ["Ctrl+Shift+C"],
                 "clearRoomMessages":                  ["Ctrl+L"],
 
                 "sendFile":                    ["Alt+S"],
