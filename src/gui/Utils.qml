@@ -415,29 +415,37 @@ QtObject {
     }
 
 
-    function flickPages(flickable, pages) {
+    function flickPages(flickable, pages, horizontal=false, multiplier=8) {
         // Adapt velocity and deceleration for the number of pages to flick.
         // If this is a repeated flicking, flick faster than a single flick.
         if (! flickable.interactive) return
 
-        const futureVelocity  = -flickable.height * pages
-        const currentVelocity = -flickable.verticalVelocity
+        const futureVelocity  =
+            (horizontal ? -flickable.width : -flickable.height) * pages
+
+        const currentVelocity =
+            horizontal ?
+            -flickable.horizontalVelocity :
+            -flickable.verticalVelocity
+
         const goFaster        =
             (futureVelocity < 0 && currentVelocity < futureVelocity / 2) ||
             (futureVelocity > 0 && currentVelocity > futureVelocity / 2)
 
-        const normalDecel  = flickable.flickDeceleration
-        const fastMultiply = pages && 8 / (1 - Math.log10(Math.abs(pages)))
         const magicNumber  = 2.5
+        const normalDecel  = flickable.flickDeceleration
+        const fastMultiply =
+            pages && multiplier / (1 - Math.log10(Math.abs(pages)))
 
         flickable.flickDeceleration = Math.max(
             goFaster ? normalDecel : -Infinity,
             Math.abs(normalDecel * magicNumber * pages),
         )
 
-        flickable.flick(
-            0, futureVelocity * magicNumber * (goFaster ? fastMultiply : 1),
-        )
+        const flick =
+            futureVelocity * magicNumber * (goFaster ? fastMultiply : 1)
+
+        horizontal ? flickable.flick(flick, 0) : flickable.flick(0, flick)
 
         flickable.flickDeceleration = normalDecel
     }

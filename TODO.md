@@ -1,7 +1,8 @@
 # TODO
 
 - Image viewer: 
-    - open externally in context menu in timeline thumbnail
+    - fix width
+    - open externally in context menu in timeline thumbnail, also button
     - hflickable support kinetic scrolling disabler and speed/decel settings
     - keyboard controls
 

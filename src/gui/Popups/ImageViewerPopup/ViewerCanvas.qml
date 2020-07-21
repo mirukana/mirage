@@ -2,9 +2,13 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import ".."
+import "../.."
 import "../../Base"
 
 HFlickable {
+    id: flickable
+
     property HPopup viewer
 
     readonly property alias thumbnail: thumbnail
@@ -45,6 +49,41 @@ HFlickable {
                 0.1, Math.min(10, thumbnail.scale + add),
             )
         }
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.panLeft
+        onActivated: utils.flickPages(flickable, -0.2, true, 5)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.panRight
+        onActivated: utils.flickPages(flickable, 0.2, true, 5)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.panUp
+        onActivated: utils.flickPages(flickable, -0.2, false, 5)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.panDown
+        onActivated: utils.flickPages(flickable, 0.2, false, 5)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.zoomOut
+        onActivated: thumbnail.scale = Math.max(0.1, thumbnail.scale - 0.2)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.zoomIn
+        onActivated: thumbnail.scale = Math.min(10, thumbnail.scale + 0.2)
+    }
+
+    HPopupShortcut {
+        sequences: window.settings.keys.imageViewer.zoomReset
+        onActivated: resetScaleAnimation.start()
     }
 
     HMxcImage {

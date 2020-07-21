@@ -378,6 +378,30 @@ class UISettings(JSONDataFile):
 
                 "refreshDevices":             ["Alt+R", "F5"],
                 "signOutCheckedOrAllDevices": ["Alt+S", "Delete"],
+
+                "imageViewer": {
+                    "panLeft":  ["H", "Left", "Alt+H", "Alt+Left"],
+                    "panDown":  ["J", "Down", "Alt+J", "Alt+Down"],
+                    "panUp":    ["K", "Up", "Alt+K", "Alt+Up"],
+                    "panRight": ["L", "Right", "Alt+L", "Alt+Right"],
+
+                    "zoomOut":   ["Z", "-", "Ctrl+-"],
+                    "zoomIn":    ["Shift+Z", "+", "Ctrl++"],
+                    "zoomReset": ["Alt+Z", "=", "Ctrl+="],
+
+                    "rotateLeft":  ["R"],
+                    "rotateRight": ["Shift+R"],
+                    "rotateReset": ["Alt+R"],
+
+                    "previousSpeed": ["S"],
+                    "nextSpeed":     ["Shift+S"],
+                    "resetSpeed":    ["Alt+S"],
+
+                    "pause":      ["Space"],
+                    "expand":     ["E"],
+                    "fullScreen": ["F", "F11", "Alt+Return", "Alt+Enter"],
+                    "close":      ["X", "Q"],
+                },
             },
         }
 
