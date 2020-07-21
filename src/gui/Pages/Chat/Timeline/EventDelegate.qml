@@ -171,6 +171,13 @@ HColumnLayout {
         }
 
         HMenuItem {
+            icon.name: "open-externally"
+            text: qsTr("Open externally")
+            visible: Boolean(model.media_url)
+            onTriggered: eventList.openMediaExternally(model)
+        }
+
+        HMenuItem {
             icon.name: "copy-local-path"
             text: qsTr("Copy local path")
             visible: Boolean(model.media_local_path)
