@@ -78,7 +78,10 @@ HMxcImage {
                 return
             }
 
-            eventList.openImageViewer(singleMediaInfo)
+            eventList.openImageViewer(
+                singleMediaInfo,
+                loader.mediaUrl.startsWith("mxc://") ? "" : loader.mediaUrl,
+            )
         }
     }
 
