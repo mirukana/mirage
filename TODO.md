@@ -1,6 +1,7 @@
 # TODO
 
 - Image viewer: 
+    - room avatar change event: test open, open externally, copy url & path
     - open externally in context menu in timeline thumbnail, also button
     - hflickable: support kinetic scrolling disabler 
 

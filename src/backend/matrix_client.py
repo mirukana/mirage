@@ -838,6 +838,7 @@ class MatrixClient(nio.AsyncClient):
             inline_content = content["body"],
 
             media_url        = url,
+            media_http_url   = await self.mxc_to_http(url),
             media_title      = path.name,
             media_width      = content["info"].get("w", 0),
             media_height     = content["info"].get("h", 0),

@@ -209,6 +209,7 @@ class NioCallbacks:
             inline_content = ev.body,
 
             media_url        = ev.url,
+            media_http_url   = await self.client.mxc_to_http(ev.url),
             media_title      = ev.body,
             media_width      = info.get("w") or 0,
             media_height     = info.get("h") or 0,
@@ -615,8 +616,10 @@ class NioCallbacks:
         else:
             co = "%1 removed the room's picture"
 
+        http = await self.client.mxc_to_http(ev.avatar_url)
+
         await self.client.register_nio_event(
-            room, ev, content=co, media_url=ev.avatar_url,
+            room, ev, content=co, media_url=ev.avatar_url, media_http_url=http,
         )
 
 

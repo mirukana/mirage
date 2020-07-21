@@ -280,6 +280,7 @@ class Event(ModelItem):
     source:        Optional[nio.Event] = None
 
     media_url:        str              = ""
+    media_http_url:   str              = ""
     media_title:      str              = ""
     media_width:      int              = 0
     media_height:     int              = 0

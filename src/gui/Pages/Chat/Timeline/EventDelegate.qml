@@ -199,12 +199,7 @@ HColumnLayout {
                 qsTr("Copy audio address")
 
             visible: Boolean(text)
-            onTriggered: py.callClientCoro(
-                chat.userId,
-                "mxc_to_http",
-                [contextMenu.media[1]],
-                httpUrl => Clipboard.text = httpUrl,
-            )
+            onTriggered: Clipboard.text = model.media_http_url
         }
 
         HMenuItem {
