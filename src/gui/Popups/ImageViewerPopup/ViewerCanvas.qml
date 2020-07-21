@@ -108,6 +108,7 @@ HFlickable {
             Math.min(window.height, viewer.overallSize.height)
 
         showPauseButton: false
+        showProgressBar: false
         pause: viewer.imagesPaused
         speed: viewer.imagesSpeed
         rotation: viewer.imagesRotation
