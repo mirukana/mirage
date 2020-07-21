@@ -7,6 +7,8 @@ HGridLayout {
     readonly property real summedImplicitWidth:
         utils.sumChildrenImplicitWidths(visibleChildren, columnSpacing)
 
+    readonly property bool vertical: flow === HGridLayout.TopToBottom
+
 
     flow:
         width >= summedImplicitWidth ?

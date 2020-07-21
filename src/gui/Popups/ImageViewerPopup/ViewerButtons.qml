@@ -6,7 +6,14 @@ import ".."
 import "../../Base"
 
 HFlow {
+    id: root
+
     property HPopup viewer
+
+    property color backgroundsColor:
+        viewer.info.y === viewer.height - viewer.info.height ?
+        "transparent" :
+        theme.controls.button.background
 
     readonly property real calculatedWidth:
         utils.sumChildrenImplicitWidths(visibleChildren)
@@ -14,6 +21,7 @@ HFlow {
 
     HButton {
         id: pause
+        backgroundColor: root.backgroundsColor
         icon.name: viewer.imagesPaused ? "image-play" : "image-pause"
         toolTip.text: viewer.imagesPaused ? qsTr("Play") : qsTr("Pause")
         onClicked: viewer.imagesPaused = ! viewer.imagesPaused
@@ -26,6 +34,7 @@ HFlow {
     }
 
     HButton {
+        backgroundColor: root.backgroundsColor
         text: qsTr("%1x").arg(utils.round(viewer.imagesSpeed))
         label.font.pixelSize: theme.fontSize.big
         height: pause.height
@@ -58,6 +67,7 @@ HFlow {
 
     HButton {
         id: rotateLeft
+        backgroundColor: root.backgroundsColor
         icon.name: "image-rotate-left"
         toolTip.text: qsTr("Rotate left")
         autoRepeat: true
@@ -73,6 +83,7 @@ HFlow {
 
     HButton {
         id: rotateRight
+        backgroundColor: root.backgroundsColor
         icon.name: "image-rotate-right"
         toolTip.text: qsTr("Rotate right")
         autoRepeat: true
@@ -93,6 +104,7 @@ HFlow {
 
     HButton {
         id: expand
+        backgroundColor: root.backgroundsColor
         icon.name: "image-alt-scale-mode"
         toolTip.text:
             viewer.imageLargerThanWindow ?
@@ -110,6 +122,7 @@ HFlow {
 
     HButton {
         id: fullScreen
+        backgroundColor: root.backgroundsColor
         icon.name: "image-fullscreen"
         toolTip.text: qsTr("Fullscreen")
         checked: window.visibility === Window.FullScreen
@@ -124,6 +137,7 @@ HFlow {
 
     HButton {
         id: close  // always visible
+        backgroundColor: root.backgroundsColor
         icon.name: "image-close"
         toolTip.text: qsTr("Close")
         onClicked: viewer.close()

@@ -406,7 +406,8 @@ Rectangle {
             // if forLink is empty, this must be a media event
 
             const title =
-                event.media_title || utils.urlFileName(event.media_url)
+                event.media_title ||
+                utils.urlFileName(forLink || event.media_url)
 
             // The thumbnail/cached path will be the full GIF
             const fullMxc =
@@ -423,6 +424,7 @@ Rectangle {
                     fullTitle: title,
                     fullMxc: fullMxc,
                     fullCryptDict: JSON.parse(event.media_crypt_dict),
+                    fullFileSize: event.media_size,
 
                     overallSize: Qt.size(
                         event.media_width ||

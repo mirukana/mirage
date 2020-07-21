@@ -15,6 +15,7 @@ HPopup {
     property string fullTitle
     property string fullMxc
     property var fullCryptDict
+    property int fullFileSize
     property size overallSize
 
     property bool alternateScaling: false
@@ -25,6 +26,7 @@ HPopup {
     property real imagesSpeed: 1
     property var availableSpeeds: [16, 8, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5]
 
+    readonly property alias info: info
     readonly property alias canvas: canvas
     readonly property alias buttons: buttons
 
@@ -94,6 +96,16 @@ HPopup {
             id: canvas
             anchors.fill: parent
             viewer: popup
+        }
+
+        ViewerInfo {
+            id: info
+            viewer: popup
+            width: parent.width
+            y: parent.width < buttons.width * 4 ?  0 : parent.height - height
+            maxTitleWidth: y === 0 ? -1 : buttons.x - buttons.width / 2
+
+            Behavior on y { HNumberAnimation {} }
         }
 
         ViewerButtons {
