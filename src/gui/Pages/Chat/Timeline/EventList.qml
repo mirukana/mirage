@@ -232,8 +232,13 @@ Rectangle {
                 const source = JSON.parse(model.source)
 
                 Clipboard.text =
+                    model.media_http_url &&
+                    utils.isEmptyObject(JSON.parse(model.media_crypt_dict)) ?
+                    model.media_http_url :
+
                     "body" in source ?
                     source.body :
+
                     utils.stripHtmlTags(utils.processedEventText(model))
 
                 return
@@ -245,8 +250,13 @@ Rectangle {
                 const source = JSON.parse(model.source)
 
                 contents.push(
+                    model.media_http_url &&
+                    utils.isEmptyObject(JSON.parse(model.media_crypt_dict)) ?
+                    model.media_http_url :
+
                     "body" in source ?
                     source.body :
+
                     utils.stripHtmlTags(utils.processedEventText(model))
                 )
             }
