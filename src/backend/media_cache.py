@@ -47,30 +47,6 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def get_local_media(self, mxc: str, title: str) -> Optional[Path]:
-        """Return `Media.get_local()`'s result for QML."""
-
-        media = Media(self, mxc, title, None)
-
-        try:
-            return await media.get_local()
-        except FileNotFoundError:
-            return None
-
-
-    async def get_local_thumbnail(
-        self, mxc: str, title: str, width: int, height: int,
-    ) -> Optional[Path]:
-        """Return `Thumbnail.get_local()`'s result for QML."""
-
-        th = Thumbnail(self, mxc, title, None, (round(width), round(height)))
-
-        try:
-            return await th.get_local()
-        except FileNotFoundError:
-            return None
-
-
     async def get_media(
         self,
         mxc:        str,
@@ -165,6 +141,10 @@ class Media:
         async with atomic_write(self.local_path, binary=True) as (file, done):
             await file.write(data)
             done()
+
+        if type(self) is Media:
+            for event in self.cache.backend.mxc_events[self.mxc]:
+                event.media_local_path = self.local_path
 
         return self.local_path
 

@@ -18,7 +18,7 @@ from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
 from .models.filters import FieldSubstringFilter
-from .models.items import Account
+from .models.items import Account, Event
 from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
@@ -86,6 +86,9 @@ class Backend:
 
         presences: A `{user_id: Presence}` dict for storing presence info about
             matrix users registered on Mirage.
+
+        mxc_events: A dict storing media `Event` model items for any account
+            that have the same mxc URI
     """
 
     def __init__(self) -> None:
@@ -116,6 +119,8 @@ class Backend:
         self.presences: Dict[str, Presence] = {}
 
         self.concurrent_get_presence_limit = asyncio.BoundedSemaphore(8)
+
+        self.mxc_events: DefaultDict[str, List[Event]] = DefaultDict(list)
 
 
     def __repr__(self) -> str:

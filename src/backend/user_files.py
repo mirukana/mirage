@@ -357,16 +357,17 @@ class UISettings(JSONDataFile):
                     "10": f"{alt_or_cmd()}+0",
                 },
 
-                "unfocusOrDeselectAllMessages":    ["Ctrl+D"],
-                "focusPreviousMessage":            ["Ctrl+Up", "Ctrl+K"],
-                "focusNextMessage":                ["Ctrl+Down", "Ctrl+J"],
-                "toggleSelectMessage":             ["Ctrl+Space"],
-                "selectMessagesUntilHere":         ["Ctrl+Shift+Space"],
-                "removeFocusedOrSelectedMessages": ["Ctrl+R", "Alt+Del"],
-                "replyToFocusedOrLastMessage":     ["Ctrl+Q"],  # Q for Quote
-                "debugFocusedMessage":             ["Ctrl+Shift+D"],
-                "openMessagesLinksOrFiles":        ["Ctrl+O"],
-                "clearRoomMessages":               ["Ctrl+L"],
+                "unfocusOrDeselectAllMessages":       ["Ctrl+D"],
+                "focusPreviousMessage":               ["Ctrl+Up", "Ctrl+K"],
+                "focusNextMessage":                   ["Ctrl+Down", "Ctrl+J"],
+                "toggleSelectMessage":                ["Ctrl+Space"],
+                "selectMessagesUntilHere":            ["Ctrl+Shift+Space"],
+                "removeFocusedOrSelectedMessages":    ["Ctrl+R", "Alt+Del"],
+                "replyToFocusedOrLastMessage":        ["Ctrl+Q"],  # Q → Quote
+                "debugFocusedMessage":                ["Ctrl+Shift+D"],
+                "openMessagesLinksOrFiles":           ["Ctrl+O"],
+                "openMessagesLinksOrFilesExternally": ["Ctrl+Shift+O"],
+                "clearRoomMessages":                  ["Ctrl+L"],
 
                 "sendFile":                    ["Alt+S"],
                 "sendFileFromPathInClipboard": ["Alt+Shift+S"],

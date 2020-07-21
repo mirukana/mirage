@@ -141,24 +141,13 @@ HColumnLayout {
 
         property var media: []
         property string link: ""
-        property var localPath: null
-        property Future getLocalFuture: null
 
         readonly property bool isEncryptedMedia:
             Object.keys(JSON.parse(model.media_crypt_dict)).length > 0
 
         onClosed: {
-            if (getLocalFuture) getLocalFuture.cancel()
             media = []
             link = ""
-        }
-
-        onOpened: if (media.length === 3 && media[1].startsWith("mxc://")) {
-            getLocalFuture = py.callCoro(
-                "media_cache.get_local_media",
-                [media[1], media[2]],
-                path => { localPath = path; getLocalFuture = null },
-            )
         }
 
         HMenuItem {
@@ -184,10 +173,10 @@ HColumnLayout {
         HMenuItem {
             icon.name: "copy-local-path"
             text: qsTr("Copy local path")
-            visible: Boolean(contextMenu.localPath)
+            visible: Boolean(model.media_local_path)
             onTriggered:
                 Clipboard.text =
-                    contextMenu.localPath.replace(/^file:\/\//, "")
+                    model.media_local_path.replace(/^file:\/\//, "")
         }
 
         HMenuItem {

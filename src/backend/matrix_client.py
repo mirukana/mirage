@@ -693,7 +693,9 @@ class MatrixClient(nio.AsyncClient):
                 await asyncio.sleep(0.1)
 
         upload_item.status = UploadStatus.Caching
-        await Media.from_existing_file(self.backend.media_cache, url, path)
+        local_media        = await Media.from_existing_file(
+            self.backend.media_cache, url, path,
+        )
 
         kind = (mime or "").split("/")[0]
 
@@ -843,6 +845,7 @@ class MatrixClient(nio.AsyncClient):
             media_size       = content["info"]["size"],
             media_mime       = content["info"]["mimetype"],
             media_crypt_dict = crypt_dict,
+            media_local_path = await local_media.get_local(),
 
             thumbnail_url        = thumb_url,
             thumbnail_crypt_dict = thumb_crypt_dict,
@@ -1926,7 +1929,7 @@ class MatrixClient(nio.AsyncClient):
         event_id:               str            = "",
         override_fetch_profile: Optional[bool] = None,
         **fields,
-    ) -> None:
+    ) -> Event:
         """Register/update a `nio.Event` as a `models.items.Event` object."""
 
         await self.register_nio_room(room)
@@ -1988,7 +1991,7 @@ class MatrixClient(nio.AsyncClient):
         # Alerts
 
         if from_us or await self.event_is_past(ev):
-            return
+            return item
 
         mentions_us = HTML.user_id_link_in_html(item.content, self.user_id)
         AlertRequested(high_importance=mentions_us)
@@ -2000,3 +2003,4 @@ class MatrixClient(nio.AsyncClient):
             room_item.local_highlights = True
 
         await self.update_account_unread_counts()
+        return item

@@ -127,26 +127,10 @@ Rectangle {
     HShortcut {
         sequences: window.settings.keys.openMessagesLinksOrFiles
         onActivated: {
-            let indice = []
+            const indice =
+                eventList.getFocusedOrSelectedOrLastMediaEvents(true)
 
-            if (eventList.selectedCount) {
-                indice = eventList.checkedIndice
-            } else if (eventList.currentIndex !== -1) {
-                indice = [eventList.currentIndex]
-            } else {
-                // Find most recent event that's a media or contains links
-                for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
-                    const ev    = eventList.model.get(i)
-                    const links = JSON.parse(ev.links)
-
-                    if (ev.media_url || ev.thumbnail_url || links.length) {
-                        indice = [i]
-                        break
-                    }
-                }
-            }
-
-            for (const i of indice.sort().reverse()) {
+            for (const i of Array.from(indice).sort().reverse()) {
                 const event = eventList.model.get(i)
 
                 if (event.media_url || event.thumbnail_url) {
@@ -162,6 +146,26 @@ Rectangle {
                     eventList.openImageViewer(event, url) :
                     Qt.openUrlExternally(url)
                 }
+            }
+        }
+    }
+
+    HShortcut {
+        sequences: window.settings.keys.openMessagesLinksOrFilesExternally
+        onActivated: {
+            const indice =
+                eventList.getFocusedOrSelectedOrLastMediaEvents(true)
+
+            for (const i of Array.from(indice).sort().reverse()) {
+                const event = eventList.model.get(i)
+
+                if (event.media_url) {
+                    eventList.openMediaExternally(event)
+                    continue
+                }
+
+                for (const url of JSON.parse(event.links))
+                    Qt.openUrlExternally(url)
             }
         }
     }
@@ -318,6 +322,19 @@ Rectangle {
             }
         }
 
+        function getFocusedOrSelectedOrLastMediaEvents(acceptLinks=false) {
+            if (eventList.selectedCount) return eventList.checkedIndice
+            if (eventList.currentIndex !== -1) return [eventList.currentIndex]
+
+            // Find most recent event that's a media or contains links
+            for (let i = 0; i < eventList.model.count && i <= 1000; i++) {
+                const ev    = eventList.model.get(i)
+                const links = JSON.parse(ev.links)
+
+                if (ev.media_url || (acceptLinks && links.length)) return [i]
+            }
+        }
+
         function getMediaType(event) {
             if (event.event_type === "RoomAvatarEvent")
                 return Utils.Media.Image
@@ -402,6 +419,11 @@ Rectangle {
         }
 
         function getLocalOrDownloadMedia(event, callback) {
+            if (event.media_local_path) {
+                callback(event.media_local_path)
+                return
+            }
+
             print("Downloading " + event.media_url + " ...")
 
             const args = [

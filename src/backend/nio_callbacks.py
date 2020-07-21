@@ -6,12 +6,14 @@ import logging as log
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
+from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 from urllib.parse import quote
 
 import nio
 
 from .html_markdown import HTML_PROCESSOR
+from .media_cache import Media
 from .models.items import TypeSpecifier
 from .presence import Presence
 from .pyotherside_events import DevicesUpdated
@@ -190,7 +192,17 @@ class NioCallbacks:
         thumb_info       = info.get("thumbnail_info", {})
         thumb_crypt_dict = info.get("thumbnail_file", {})
 
-        await self.client.register_nio_event(
+        try:
+            media_local_path: Union[Path, str] = await Media(
+                cache      = self.client.backend.media_cache,
+                mxc        = ev.url,
+                title      = ev.body,
+                crypt_dict = media_crypt_dict,
+            ).get_local()
+        except FileNotFoundError:
+            media_local_path = ""
+
+        item = await self.client.register_nio_event(
             room,
             ev,
             content        = "",
@@ -204,6 +216,7 @@ class NioCallbacks:
             media_size       = info.get("size") or 0,
             media_mime       = info.get("mimetype") or "",
             media_crypt_dict = media_crypt_dict,
+            media_local_path = media_local_path,
 
             thumbnail_url =
                 info.get("thumbnail_url") or thumb_crypt_dict.get("url") or "",
@@ -213,6 +226,8 @@ class NioCallbacks:
             thumbnail_mime       = thumb_info.get("mimetype") or "",
             thumbnail_crypt_dict = thumb_crypt_dict,
         )
+
+        self.client.backend.mxc_events[ev.url].append(item)
 
 
     async def onRoomEncryptedMedia(

@@ -279,14 +279,15 @@ class Event(ModelItem):
     is_local_echo: bool                = False
     source:        Optional[nio.Event] = None
 
-    media_url:        str            = ""
-    media_title:      str            = ""
-    media_width:      int            = 0
-    media_height:     int            = 0
-    media_duration:   int            = 0
-    media_size:       int            = 0
-    media_mime:       str            = ""
-    media_crypt_dict: Dict[str, Any] = field(default_factory=dict)
+    media_url:        str              = ""
+    media_title:      str              = ""
+    media_width:      int              = 0
+    media_height:     int              = 0
+    media_duration:   int              = 0
+    media_size:       int              = 0
+    media_mime:       str              = ""
+    media_crypt_dict: Dict[str, Any]   = field(default_factory=dict)
+    media_local_path: Union[str, Path] = ""
 
     thumbnail_url:        str            = ""
     thumbnail_mime:       str            = ""
