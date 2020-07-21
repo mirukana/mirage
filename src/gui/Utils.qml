@@ -498,4 +498,17 @@ QtObject {
             userId, "send_file", [roomId, path], onSuccess, onError,
         )
     }
+
+    function sumChildrenImplicitWidths(visibleChildren, spacing=0) {
+        let sum = 0
+
+        for (let i = 0; i < visibleChildren.length; i++) {
+            const item = visibleChildren[i]
+
+            if (item)
+                sum += (item.width > 0 ? item.implicitWidth : 0) + spacing
+        }
+
+        return sum
+    }
 }

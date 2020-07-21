@@ -4,18 +4,8 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
 HGridLayout {
-    readonly property real summedImplicitWidth: {
-        let sum = 0
-
-        for (let i = 0; i < visibleChildren.length; i++) {
-            const item = visibleChildren[i]
-
-            if (item)
-                sum += (item.width > 0 ? item.implicitWidth : 0) +columnSpacing
-        }
-
-        return sum
-    }
+    readonly property real summedImplicitWidth:
+        utils.sumChildrenImplicitWidths(visibleChildren, columnSpacing)
 
 
     flow:
