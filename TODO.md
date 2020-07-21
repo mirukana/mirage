@@ -1,10 +1,8 @@
 # TODO
 
 - Image viewer: 
-    - fix width
     - open externally in context menu in timeline thumbnail, also button
-    - hflickable support kinetic scrolling disabler and speed/decel settings
-    - keyboard controls
+    - hflickable: support kinetic scrolling disabler 
 
 - clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu

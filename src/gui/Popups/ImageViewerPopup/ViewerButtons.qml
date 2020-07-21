@@ -9,7 +9,7 @@ HFlow {
     property HPopup viewer
 
     readonly property real calculatedWidth:
-        (close.implicitWidth * visibleChildren.length) + theme.spacing
+        utils.sumChildrenImplicitWidths(visibleChildren)
 
 
     HButton {
