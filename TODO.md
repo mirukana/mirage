@@ -1,10 +1,9 @@
 # TODO
 
 - Image viewer: 
-    - fix: manual WM fullscreen > press f
-    - fix e in small window
     - hflickable: support kinetic scrolling disabler 
 
+- don't send typing notif if no permission
 - compress png in a thread
 - ctrl+o: ignore mx-reply links
 - verify upload cancellation

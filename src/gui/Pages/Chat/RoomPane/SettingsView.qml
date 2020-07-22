@@ -103,7 +103,6 @@ HFlickableColumnPage {
             maximumLength: 255
             defaultText: chat.roomInfo.given_name
             enabled: chat.roomInfo.can_set_name
-            Component.onCompleted: forceActiveFocus()
         }
     }
 
