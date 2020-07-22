@@ -598,7 +598,7 @@ class MatrixClient(nio.AsyncClient):
 
             async def get_path() -> Path:
                 with io.BytesIO(image) as inp, io.BytesIO() as buffer:
-                    PILImage.open(inp).save(buffer, "PNG", optimize=True)
+                    PILImage.open(inp).save(buffer, "PNG")
 
                     async with aiofiles.open(temp.name, "wb") as file:
                         await file.write(buffer.getvalue())

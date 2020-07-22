@@ -2,6 +2,7 @@
 
 - Image viewer: 
     - hflickable: support kinetic scrolling disabler 
+    - settings
 
 - compress png in a thread
 - verify upload cancellation
