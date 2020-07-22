@@ -16,7 +16,7 @@ Rectangle {
 
 
     implicitHeight: Math.max(theme.baseElementsHeight, childrenRect.height)
-    color: utils.hsluv(0, 0, 0, 0.6)
+    color: utils.hsluv(0, 0, 0, 0.8)
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
