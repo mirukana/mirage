@@ -4,8 +4,6 @@
     - hflickable: support kinetic scrolling disabler 
     - settings
 
-- verify upload cancellation
-- clipboard preview doesn't update when copied image changes until second time
 - Avatar tooltip can get displayed in front of presence menu
 - Use loading cursorShape
 - Increase keyboard page scroll speed

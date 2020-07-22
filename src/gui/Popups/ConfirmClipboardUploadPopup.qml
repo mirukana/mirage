@@ -59,6 +59,11 @@ HColumnPopup {
         source: "image://clipboard/" + updateCounter
         sourceSize.width: popup.contentWidthLimit
 
+        onUpdateCounterChanged: {
+            source = "Need an invalid value to update properly, don't know why"
+            source = "image://clipboard/" + updateCounter
+        }
+
         Layout.fillWidth: true
         Layout.fillHeight: true
         Layout.preferredHeight:
