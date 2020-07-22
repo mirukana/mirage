@@ -42,6 +42,19 @@ HMxcImage {
         Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
     )
 
+    function openInternally() {
+        eventList.openImageViewer(
+            singleMediaInfo,
+            loader.mediaUrl.startsWith("mxc://") ? "" : loader.mediaUrl,
+        )
+    }
+
+    function openExternally() {
+        loader.isMedia ?
+        eventList.openMediaExternally(singleMediaInfo) :
+        Qt.openUrlExternally(loader.mediaUrl)
+    }
+
 
     width: fitSize.width
     height: fitSize.height
@@ -78,10 +91,9 @@ HMxcImage {
                 return
             }
 
-            eventList.openImageViewer(
-                singleMediaInfo,
-                loader.mediaUrl.startsWith("mxc://") ? "" : loader.mediaUrl,
-            )
+            window.settings.media.openExternallyOnClick ?
+            image.openExternally() :
+            image.openInternally()
         }
     }
 
@@ -89,11 +101,10 @@ HMxcImage {
         acceptedButtons: Qt.MiddleButton
         acceptedModifiers: Qt.NoModifier
         gesturePolicy: TapHandler.ReleaseWithinBounds
-        onTapped: {
-            loader.isMedia ?
-            eventList.openMediaExternally(singleMediaInfo) :
-            Qt.openUrlExternally(loader.mediaUrl)
-        }
+        onTapped:
+            window.settings.media.openExternallyOnClick ?
+            image.openInternally() :
+            image.openExternally()
     }
 
     TapHandler {

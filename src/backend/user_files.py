@@ -284,6 +284,7 @@ class UISettings(JSONDataFile):
                 "autoPlayGIF": True,
                 "autoHideOSDAfterMsec": 3000,
                 "defaultVolume": 100,
+                "openExternallyOnClick": False,
                 "startMuted": False,
             },
             "keys": {
