@@ -12,26 +12,51 @@ MouseArea {
         // Otherwise use wheel.angleDelta, which is available from mouses and
         // low resolution trackpads.
         // When higher pixelDelta, more scroll will be applied
-        const pixelDelta =
-            wheel.pixelDelta.y ||
-            wheel.angleDelta.y / 8 * Qt.styleHints.wheelScrollLines
+        const pixelDelta = {
+            x: wheel.pixelDelta.x ||
+               wheel.angleDelta.x / 8 * Qt.styleHints.wheelScrollLines,
+            y: wheel.pixelDelta.y ||
+               wheel.angleDelta.y / 8 * Qt.styleHints.wheelScrollLines,
+        }
 
         // Return current position if there was not any movement
-        if (flickable.contentHeight < flickable.height || !pixelDelta)
-            return flickable.contentY
+        if (
+            flickable.contentHeight < flickable.height ||
+            (! pixelDelta.x && ! pixelDelta.y)
+        )
+            return {x: flickable.contentX, y: flickable.contentY}
 
-        const maxScroll =
-            flickable.contentHeight +
-            flickable.originY       +
-            flickable.bottomMargin  -
-            flickable.height
-        const minScroll = flickable.topMargin + flickable.originY
+        // Rotate the direction if shift is pressed
+        if (wheel.modifiers === Qt.ShiftModifier)
+            [pixelDelta.x, pixelDelta.y] = [pixelDelta.y, pixelDelta.x]
+
+        const maxScroll = {
+            x: flickable.contentWidth +
+               flickable.originX      - // Why subtract?
+               flickable.rightMargin  -
+               flickable.width,
+            y: flickable.contentHeight +
+               flickable.originY       +
+               flickable.bottomMargin  -
+               flickable.height,
+        }
+
+        const minScroll = {
+            x: flickable.originX - flickable.leftMargin,
+            y: flickable.originY - flickable.topMargin,
+        }
 
         // Avoid overscrolling
-        return Math.max(
-            minScroll,
-            Math.min(maxScroll, flickable.contentY - pixelDelta)
-        )
+        return {
+            x: Math.max(
+                minScroll.x,
+                Math.min(maxScroll.x, flickable.contentX - pixelDelta.x)
+            ),
+            y: Math.max(
+                minScroll.y,
+                Math.min(maxScroll.y, flickable.contentY - pixelDelta.y)
+            ),
+        }
     }
 
 
@@ -43,9 +68,13 @@ MouseArea {
         // Make components below the stack notice the wheel event
         wheel.accepted = false
 
+        if (wheel.modifiers === Qt.ControlModifier)
+            return
+
         const pos = getNewPosition(flickable, wheel)
         flickable.flick(0, 0)
-        flickable.contentY = pos
+        flickable.contentX = pos.x
+        flickable.contentY = pos.y
     }
 
     Binding {
