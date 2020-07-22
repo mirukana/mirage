@@ -51,6 +51,8 @@ HTextArea {
     }
 
     function setTyping(typing) {
+        if (! textArea.enabled) return
+
         py.callClientCoro(
             writingUserId, "room_typing", [chat.roomId, typing, 5000],
         )
