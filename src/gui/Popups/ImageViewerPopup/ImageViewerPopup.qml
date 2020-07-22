@@ -118,7 +118,7 @@ HPopup {
 
         Timer {
             id: autoHideTimer
-            interval: 3000
+            interval: window.settings.media.autoHideOSDAfterMsec
         }
 
         ViewerInfo {
