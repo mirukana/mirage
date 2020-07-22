@@ -3,9 +3,6 @@
 - Image viewer: 
     - hflickable: support kinetic scrolling disabler 
 
-- Avatar tooltip can get displayed in front of presence menu
-- Use loading cursorShape
-
 - global presence control
 
 - fix members not synced bug

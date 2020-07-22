@@ -28,9 +28,9 @@ ApplicationWindow {
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
-    readonly property bool anyPopupOrMenu:
-        Object.keys(window.visibleMenus).length > 0 ||
-        Object.keys(window.visiblePopups).length > 0
+    readonly property bool anyMenu: Object.keys(visibleMenus).length > 0
+    readonly property bool anyPopup: Object.keys(visiblePopups).length > 0
+    readonly property bool anyPopupOrMenu: anyMenu || anyPopup
 
 
     function saveState(obj) {

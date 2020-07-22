@@ -82,10 +82,12 @@ Rectangle {
                 background.border.width * 2,
             )
 
-            visible: ! avatarImage.broken &&
-                     avatarImage.width < dimension * 0.75 &&
-                     (toolTipSourceOverride || toolTipMxc) &&
-                     hoverHandler.hovered
+            visible:
+                ! avatarImage.broken &&
+                ! window.anyMenu &&
+                avatarImage.width < dimension * 0.75 &&
+                (toolTipSourceOverride || toolTipMxc) &&
+                hoverHandler.hovered
             delay: 1000
             backgroundColor: theme.controls.avatar.hoveredImage.background
 
