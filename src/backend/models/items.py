@@ -305,10 +305,21 @@ class Event(ModelItem):
     def parse_links(text: str) -> List[str]:
         """Return list of URLs (`<a href=...>` tags) present in the text."""
 
+        ignore = []
+
+        if "<mx-reply>" in text:
+            parser = lxml.html.etree.HTMLParser()
+            tree   = lxml.etree.fromstring(text, parser)  # nosec
+            xpath  = "//mx-reply/blockquote/a[count(preceding-sibling::*)<=1]"
+            ignore = [lxml.etree.tostring(el) for el in tree.xpath(xpath)]
+
         if not text.strip():
             return []
 
-        return [link[2] for link in lxml.html.iterlinks(text)]
+        return [
+            url for el, attrib, url, pos in lxml.html.iterlinks(text)
+            if lxml.etree.tostring(el) not in ignore
+        ]
 
     def serialize_field(self, field: str) -> Any:
         if field == "source":
