@@ -30,12 +30,13 @@ Rectangle {
             id: title
             text: viewer.fullTitle
             elide: HLabel.ElideMiddle
-            topPadding: theme.spacing / 2
-            bottomPadding: topPadding
+            topPadding: layout.vertical ? theme.spacing / 2 : 0
+            verticalAlignment: HLabel.AlignVCenter
             horizontalAlignment:
                 layout.vertical ? HLabel.AlignHCenter : HLabel.AlignLeft
 
             Layout.fillWidth: maxTitleWidth < 0
+            Layout.fillHeight: true
             Layout.maximumWidth: maxTitleWidth
         }
 
@@ -53,8 +54,10 @@ Rectangle {
             topPadding: theme.spacing / 2
             bottomPadding: topPadding
             horizontalAlignment: HLabel.AlignHCenter
+            verticalAlignment: HLabel.AlignVCenter
 
             Layout.fillWidth: layout.vertical
+            Layout.fillHeight: true
         }
 
         HLabel {
@@ -62,11 +65,11 @@ Rectangle {
             visible: viewer.fullFileSize !== 0
             text: CppUtils.formattedBytes(viewer.fullFileSize)
             elide: HLabel.ElideRight
-            topPadding: theme.spacing / 2
-            bottomPadding: topPadding
             horizontalAlignment: HLabel.AlignHCenter
+            verticalAlignment: HLabel.AlignVCenter
 
             Layout.fillWidth: layout.vertical
+            Layout.fillHeight: true
         }
 
         HLoader {
@@ -78,9 +81,14 @@ Rectangle {
             Layout.bottomMargin: Layout.topMargin
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: active ? height : 0
-            Layout.preferredHeight: fileSize.implicitHeight - theme.spacing
+            Layout.preferredHeight: theme.baseElementsHeight - theme.spacing
 
             Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        }
+
+        Item {
+            visible: layout.vertical
+            height: theme.spacing / 2
         }
     }
 }
