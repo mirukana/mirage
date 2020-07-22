@@ -2,6 +2,7 @@
 
 """Various utilities that are used throughout the package."""
 
+import asyncio
 import collections
 import html
 import inspect
@@ -9,6 +10,7 @@ import io
 import json
 import sys
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
+from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime, timedelta
 from enum import Enum
 from enum import auto as autostr
@@ -24,6 +26,8 @@ import aiofiles
 import filetype
 from aiofiles.threadpool.binary import AsyncBufferedReader
 from aiofiles.threadpool.text import AsyncTextIOWrapper
+from PIL import Image as PILImage
+
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
 
@@ -34,7 +38,10 @@ else:
 
 AsyncOpenFile = Union[AsyncTextIOWrapper, AsyncBufferedReader]
 Size          = Tuple[int, int]
+BytesOrPIL    = Union[bytes, PILImage.Image]
 auto          = autostr
+
+COMPRESSION_POOL = ProcessPoolExecutor()
 
 
 class AutoStrEnum(Enum):
@@ -236,3 +243,24 @@ async def atomic_write(
             temp_path.replace(path)
         else:
             temp_path.unlink()
+
+
+def _compress(image: BytesOrPIL, fmt: str, optimize: bool) -> bytes:
+    if isinstance(image, bytes):
+        pil_image = PILImage.open(io.BytesIO(image))
+    else:
+        pil_image = image
+
+    with io.BytesIO() as buffer:
+        pil_image.save(buffer, fmt, optimize=optimize)
+        return buffer.getvalue()
+
+
+async def compress_image(
+    image: BytesOrPIL, fmt: str = "PNG", optimize: bool = True,
+) -> bytes:
+    """Compress image in a separate process, without blocking event loop."""
+
+    return await asyncio.get_event_loop().run_in_executor(
+        COMPRESSION_POOL, _compress, image, fmt, optimize,
+    )

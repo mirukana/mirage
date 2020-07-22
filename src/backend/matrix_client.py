@@ -597,11 +597,11 @@ class MatrixClient(nio.AsyncClient):
         with NamedTemporaryFile(prefix=prefix, suffix=".png") as temp:
 
             async def get_path() -> Path:
-                with io.BytesIO(image) as inp, io.BytesIO() as buffer:
-                    PILImage.open(inp).save(buffer, "PNG")
+                # optimize is too slow for large images
+                compressed = await utils.compress_image(image, optimize=False)
 
-                    async with aiofiles.open(temp.name, "wb") as file:
-                        await file.write(buffer.getvalue())
+                async with aiofiles.open(temp.name, "wb") as file:
+                    await file.write(compressed)
 
                 return Path(temp.name)
 
@@ -1308,16 +1308,15 @@ class MatrixClient(nio.AsyncClient):
         if not small:
             thumb.thumbnail((800, 600))
 
-        with io.BytesIO() as out:
-            if thumb.mode in png_modes:
-                thumb.save(out, "PNG", optimize=True)
-                mime = "image/png"
-            else:
-                thumb.convert("RGB").save(out, "JPEG", optimize=True)
-                mime = "image/jpeg"
+        if thumb.mode in png_modes:
+            thumb_data = await utils.compress_image(thumb)
+            mime       = "image/png"
+        else:
+            thumb      = thumb.convert("RGB")
+            thumb_data = await utils.compress_image(thumb, "JPEG")
+            mime       = "image/jpeg"
 
-            thumb_data = out.getvalue()
-            thumb_size = len(thumb_data)
+        thumb_size = len(thumb_data)
 
         if thumb_size >= len(data) and is_jpg_png and not is_svg:
             raise UneededThumbnail()
