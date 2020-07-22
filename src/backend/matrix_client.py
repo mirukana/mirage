@@ -36,8 +36,8 @@ from nio.crypto import async_generator_from_data
 from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
-    MatrixError, MatrixNotFound, MatrixTooLarge, MatrixUnauthorized,
-    UneededThumbnail, UserFromOtherServerDisallowed,
+    MatrixError, MatrixForbidden, MatrixNotFound, MatrixTooLarge,
+    MatrixUnauthorized, UneededThumbnail, UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
@@ -1389,8 +1389,11 @@ class MatrixClient(nio.AsyncClient):
         if not self.models["accounts"][self.user_id].presence_support:
             return
 
-        async with self.backend.concurrent_get_presence_limit:
-            resp = await self.get_presence(user_id)
+        try:
+            async with self.backend.concurrent_get_presence_limit:
+                resp = await self.get_presence(user_id)
+        except MatrixForbidden:
+            return
 
         await self.nio_callbacks.onPresenceEvent(nio.PresenceEvent(
             user_id          = resp.user_id,
