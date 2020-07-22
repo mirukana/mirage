@@ -4,6 +4,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 Flickable {
+    id: flickable
     maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
     flickDeceleration: window.settings.kineticScrollingDeceleration
 
@@ -11,4 +12,16 @@ Flickable {
         visible: parent.interactive
         z: 999
     }
+
+    Component.onCompleted: {
+        kineticScrollingDisabler = Qt.createComponent(
+            "HKineticScrollingDisabler.qml"
+        ).createObject(flickable, {
+            flickable: flickable,
+            width: enabled ? flickable.width : 0,
+            height: enabled ? flickable.height : 0,
+        })
+    }
+
+    property var kineticScrollingDisabler
 }
