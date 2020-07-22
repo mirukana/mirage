@@ -509,7 +509,9 @@ Rectangle {
                     chat.userInfo.presence === "offline"
 
                 id: button
-                width: Math.min(parent.width, implicitWidth)
+                width: Math.min(
+                    parent.width,implicitWidth + leftPadding + rightPadding,
+                )
                 anchors.centerIn: parent
 
                 loading: parent.visible && ! offline
