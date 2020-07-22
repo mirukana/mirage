@@ -6,7 +6,6 @@
 
 - Avatar tooltip can get displayed in front of presence menu
 - Use loading cursorShape
-- Increase keyboard page scroll speed
 
 - global presence control
 

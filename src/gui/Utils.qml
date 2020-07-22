@@ -432,10 +432,13 @@ QtObject {
             (futureVelocity < 0 && currentVelocity < futureVelocity / 2) ||
             (futureVelocity > 0 && currentVelocity > futureVelocity / 2)
 
-        const magicNumber  = 2.5
-        const normalDecel  = flickable.flickDeceleration
-        const fastMultiply =
+        const magicNumber    = 2.5
+        const normalDecel    = flickable.flickDeceleration
+        const normalMaxSpeed = flickable.maximumFlickVelocity
+        const fastMultiply   =
             pages && multiplier / (1 - Math.log10(Math.abs(pages)))
+
+        flickable.maximumFlickVelocity = 5000
 
         flickable.flickDeceleration = Math.max(
             goFaster ? normalDecel : -Infinity,
@@ -447,7 +450,8 @@ QtObject {
 
         horizontal ? flickable.flick(flick, 0) : flickable.flick(0, flick)
 
-        flickable.flickDeceleration = normalDecel
+        flickable.maximumFlickVelocity = normalMaxSpeed
+        flickable.flickDeceleration    = normalDecel
     }
 
 
