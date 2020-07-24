@@ -152,11 +152,13 @@ class MatrixClient(nio.AsyncClient):
     }
 
 
-    def __init__(self,
-                 backend,
-                 user:       str,
-                 homeserver: str           = "https://matrix.org",
-                 device_id:  Optional[str] = None) -> None:
+    def __init__(
+        self,
+         backend,
+         user:       str           = "",
+         homeserver: str           = "https://matrix.org",
+         device_id:  Optional[str] = None,
+    ) -> None:
 
         if not urlparse(homeserver).scheme:
             raise ValueError(

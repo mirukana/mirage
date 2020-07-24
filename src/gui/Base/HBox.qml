@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.12
 
 HFlickableColumnPage {
     implicitWidth: Math.min(parent.width, theme.controls.box.defaultWidth)
-    implicitHeight: Math.min(parent.height, flickable.contentHeight)
 
     background: Rectangle {
         color: theme.controls.box.background

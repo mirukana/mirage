@@ -18,6 +18,7 @@ HPage {
 
 
     implicitWidth: theme.controls.box.defaultWidth
+    implicitHeight: contentHeight + implicitHeaderHeight + implicitFooterHeight
     contentHeight:
         flickable.contentHeight + flickable.topMargin + flickable.bottomMargin
 

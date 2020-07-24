@@ -4,22 +4,48 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-HPage {
-    id: page
+HSwipeView {
+    id: swipeView
+    clip: true
+    interactive: currentIndex !== 0 || signIn.serverUrl
+    onCurrentItemChanged: if (currentIndex === 0) serverBrowser.takeFocus()
+    Component.onCompleted: serverBrowser.takeFocus()
 
-    HTabbedBox {
-        anchors.centerIn: parent
-        width: Math.min(implicitWidth, page.availableWidth)
-        height: Math.min(implicitHeight, page.availableHeight)
+    HPage {
+        id: serverPage
 
-        header: HTabBar {
-            HTabButton { text: qsTr("Sign in") }
-            HTabButton { text: qsTr("Register") }
-            HTabButton { text: qsTr("Reset") }
+        ServerBrowser {
+            id: serverBrowser
+            anchors.centerIn: parent
+            width: Math.min(implicitWidth, serverPage.availableWidth)
+            height: Math.min(implicitHeight, serverPage.availableHeight)
+            onAccepted: swipeView.currentIndex = 1
         }
+    }
 
-        SignIn {}
-        Register {}
-        Reset {}
+    HPage {
+        id: tabPage
+
+        HTabbedBox {
+            anchors.centerIn: parent
+            width: Math.min(implicitWidth, tabPage.availableWidth)
+            height: Math.min(implicitHeight, tabPage.availableHeight)
+
+            header: HTabBar {
+                HTabButton { text: qsTr("Sign in") }
+                HTabButton { text: qsTr("Register") }
+                HTabButton { text: qsTr("Reset") }
+            }
+
+            SignIn {
+                id: signIn
+                serverUrl: serverBrowser.acceptedUrl
+                displayUrl: serverBrowser.acceptedUserUrl
+                onExitRequested: swipeView.currentIndex = 0
+            }
+
+            Register {}
+            Reset {}
+        }
     }
 }

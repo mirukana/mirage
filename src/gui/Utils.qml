@@ -440,6 +440,7 @@ QtObject {
 
         flickable.maximumFlickVelocity = 5000
 
+
         flickable.flickDeceleration = Math.max(
             goFaster ? normalDecel : -Infinity,
             Math.abs(normalDecel * magicNumber * pages),

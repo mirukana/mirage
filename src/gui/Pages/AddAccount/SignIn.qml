@@ -8,33 +8,42 @@ import "../../Base/Buttons"
 HFlickableColumnPage {
     id: page
 
+    enum Security { Insecure, LocalHttp, Secure }
+
+    property string serverUrl
+    property string displayUrl: serverUrl
     property var loginFuture: null
 
-    property string signInWith: "username"
+    signal exitRequested()
 
-    readonly property bool canSignIn:
-        serverField.item.text.trim() && idField.item.text.trim() &&
-        passwordField.item.text && ! serverField.item.error
+    readonly property int security:
+        serverUrl.startsWith("https://") ?
+        SignIn.Security.Secure :
+
+        ["//localhost", "//127.0.0.1", "//:1"].includes(
+            serverUrl.split(":")[1],
+        ) ?
+        SignIn.Security.LocalHttp :
+
+        SignIn.Security.Insecure
 
     function takeFocus() { idField.item.forceActiveFocus() }
 
     function signIn() {
         if (page.loginFuture) page.loginFuture.cancel()
 
-        signInTimeout.restart()
-
         errorMessage.text = ""
 
         const args = [
             idField.item.text.trim(), passwordField.item.text,
-            undefined, serverField.item.text.trim(),
+            undefined, page.serverUrl,
         ]
 
         page.loginFuture = py.callCoro("login_client", args, userId => {
-            signInTimeout.stop()
             errorMessage.text = ""
             page.loginFuture  = null
 
+            print(rememberAccount.checked)
             py.callCoro(
                 rememberAccount.checked ?
                 "saved_accounts.add": "saved_accounts.delete",
@@ -48,7 +57,6 @@ HFlickableColumnPage {
 
         }, (type, args, error, traceback, uuid) => {
             page.loginFuture = null
-            signInTimeout.stop()
 
             let txt = qsTr(
                 "Invalid request, login type or unknown error: %1",
@@ -67,17 +75,23 @@ HFlickableColumnPage {
     }
 
     function cancel() {
-        if (! page.loginFuture) return
+        if (! page.loginFuture) {
+            page.exitRequested()
+            return
+        }
 
-        signInTimeout.stop()
         page.loginFuture.cancel()
         page.loginFuture = null
     }
 
 
+    flickable.topMargin: theme.spacing * 1.5
+    flickable.bottomMargin: flickable.topMargin
+
     footer: AutoDirectionLayout {
         ApplyButton {
-            enabled: page.canSignIn
+            id: applyButton
+            enabled: idField.item.text.trim() && passwordField.item.text
             text: qsTr("Sign in")
             icon.name: "sign-in"
             loading: page.loginFuture !== null
@@ -90,54 +104,39 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: page.signIn()
+    onKeyboardAccept: if (applyButton.enabled) page.signIn()
     onKeyboardCancel: page.cancel()
 
-    Timer {
-        id: signInTimeout
-        interval: 30 * 1000
-        onTriggered: {
-            errorMessage.text =
-                serverField.knownServerChosen ?
+    HButton {
+        icon.name: "sign-in-" + (
+            page.security === SignIn.Security.Insecure ? "insecure" :
+            page.security === SignIn.Security.LocalHttp ? "local-http" :
+            "secure"
+        )
 
-                qsTr("This server seems unavailable. Verify your inter" +
-                     "net connection or try again in a few minutes.") :
+        icon.color:
+            page.security === SignIn.Security.Insecure ?
+            theme.colors.negativeBackground :
 
-                 qsTr("This server seems unavailable. Verify the " +
-                      "entered URL, your internet connection or try " +
-                      "again in a few minutes.")
-        }
-    }
+            page.security === SignIn.Security.LocalHttp ?
+            theme.colors.middleBackground :
 
-    HRowLayout {
-        visible: false  // TODO
-        spacing: theme.spacing * 1.25
-        Layout.alignment: Qt.AlignHCenter
+            theme.colors.positiveBackground
 
-        Layout.topMargin: theme.spacing
-        Layout.bottomMargin: Layout.topMargin
+        text:
+            page.security === SignIn.Security.Insecure ?
+            page.serverUrl :
+            page.displayUrl.replace(/^(https?:\/\/)?(www\.)?/, "")
 
-        Repeater {
-            model: ["username", "email", "phone"]
+        onClicked: page.exitRequested()
 
-            HButton {
-                icon.name: modelData
-                circle: true
-                checked: page.signInWith === modelData
-                enabled: modelData === "username"
-                autoExclusive: true
-                onClicked: page.signInWith = modelData
-            }
-        }
+        Layout.alignment: Qt.AlignCenter
+        Layout.maximumWidth: parent.width
     }
 
     HLabeledItem {
         id: idField
-        label.text: qsTr(
-            page.signInWith === "email" ? "Email:" :
-            page.signInWith === "phone" ? "Phone:" :
-            "Username:"
-        )
+        label.text: qsTr("Username:")
 
         Layout.fillWidth: true
 
@@ -158,43 +157,6 @@ HFlickableColumnPage {
         }
     }
 
-    HLabeledItem {
-        id: serverField
-
-        // 2019-11-11 https://www.hello-matrix.net/public_servers.php
-        readonly property var knownServers: [
-            "https://matrix.org",
-            "https://chat.weho.st",
-            "https://tchncs.de",
-            "https://chat.privacytools.io",
-            "https://hackerspaces.be",
-            "https://matrix.allmende.io",
-            "https://feneas.org",
-            "https://junta.pl",
-            "https://perthchat.org",
-            "https://matrix.tedomum.net",
-            "https://converser.eu",
-            "https://ru-matrix.org",
-            "https://matrix.sibnsk.net",
-            "https://alternanet.fr",
-        ]
-
-        readonly property bool knownServerChosen:
-            knownServers.includes(item.cleanText)
-
-        label.text: qsTr("Homeserver:")
-
-        Layout.fillWidth: true
-
-        HTextField {
-            readonly property string cleanText: text.toLowerCase().trim()
-
-            width: parent.width
-            text: "https://matrix.org"
-            error: ! /.+:\/\/.+/.test(cleanText)
-        }
-    }
-
     HCheckBox {
         id: rememberAccount
         checked: true
@@ -206,7 +168,6 @@ HFlickableColumnPage {
 
         Layout.fillWidth: true
         Layout.topMargin: theme.spacing / 2
-        Layout.bottomMargin: Layout.topMargin
     }
 
     HLabel {

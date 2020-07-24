@@ -6,14 +6,14 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple
 
 from appdirs import AppDirs
 
 import nio
 
 from . import __app_name__
-from .errors import MatrixError
+from .errors import MatrixError, MatrixForbidden, MatrixNotFound
 from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
@@ -128,6 +128,30 @@ class Backend:
 
 
     # Clients management
+
+    async def server_info(self, homeserver: str) -> Tuple[str, List[str]]:
+        """Return server's real URL and supported login flows.
+
+        Retrieving the real URL uses the `.well-known` API.
+        Possible login methods include `m.login.password` or `m.login.sso`.
+        """
+
+        client = MatrixClient(self, homeserver=homeserver)
+
+        try:
+            homeserver = (await client.discovery_info()).homeserver_url
+        except (MatrixNotFound, MatrixForbidden):
+            # This is either already the real URL, or an invalid URL.
+            pass
+        else:
+            await client.close()
+            client = MatrixClient(self, homeserver=homeserver)
+
+        try:
+            return (homeserver, (await client.login_info()).flows)
+        finally:
+            await client.close()
+
 
     async def login_client(self,
         user:       str,

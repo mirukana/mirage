@@ -1,7 +1,11 @@
 # TODO
 
-- Image viewer: 
-    - hflickable: support kinetic scrolling disabler 
+- fallback page
+- SSO page
+- sever list
+- cursor shape in HBox/HTabbedBox pages over fields
+- login with account already added → infinite spinner in room list
+- verify onKeyboardAccept/Cancel things respect button enabled state
 
 - global presence control
 
