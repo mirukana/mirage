@@ -14,10 +14,8 @@ class.
 """
 
 import asyncio
-import atexit
 import logging as log
 import os
-import signal
 import traceback
 from concurrent.futures import Future
 from operator import attrgetter
@@ -164,14 +162,6 @@ for var in ("LD_LIBRARY_PATH", "PYTHONHOME", "PYTHONUSERBASE"):
     if f"RESTORE_{var}" in os.environ:
         os.environ[var] = os.environ[f"RESTORE_{var}"]
 
-
-# Make CTRL-C work again
-try:
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-except ValueError:
-    # FIXME - happens when we're imported from a thread,
-    # occurs in py3.8 but not 3.6?
-    pass
 
 BRIDGE = QMLBridge()
 
