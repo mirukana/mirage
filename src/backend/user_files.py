@@ -65,7 +65,10 @@ class DataFile:
 
 
     async def read(self):
-        """Return content of the existing file on disk, or default content."""
+        """Return future, existing or default content for the file on disk."""
+
+        if self._to_write is not None:
+            return self._to_write
 
         try:
             return self.path.read_text()
@@ -125,7 +128,7 @@ class JSONDataFile(DataFile):
 
 
     async def read(self) -> JsonData:
-        """Return content of the existing file on disk, or default content.
+        """Return future, existing or default content for the file on disk.
 
         If the file has missing keys, the missing data will be merged and
         written to disk before returning.
@@ -133,6 +136,9 @@ class JSONDataFile(DataFile):
         If `create_missing` is `True` and the file doesn't exist, it will be
         created.
         """
+
+        if self._to_write is not None:
+            return json.loads(self._to_write)
 
         try:
             data = json.loads(self.path.read_text())
