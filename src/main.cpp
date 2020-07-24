@@ -99,9 +99,7 @@ int main(int argc, char *argv[]) {
 
     // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
     signal(SIGINT, onExitSignal);
-    signal(SIGTERM, onExitSignal);
     #ifdef Q_OS_UNIX
-    signal(SIGQUIT, onExitSignal);
     signal(SIGHUP, onExitSignal);
     #endif
 
