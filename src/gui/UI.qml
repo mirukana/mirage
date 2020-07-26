@@ -10,6 +10,7 @@ import "MainPane"
 
 Item {
     id: mainUI
+    enabled: ! window.anyPopup
 
     property bool accountsPresent:
         ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved

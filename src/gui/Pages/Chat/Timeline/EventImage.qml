@@ -86,6 +86,7 @@ HMxcImage {
         gesturePolicy: TapHandler.ReleaseWithinBounds
 
         onTapped: {
+            print(loader.mediaUrl, loader.singleMediaInfo.media_http_url)
             if (eventList.selectedCount) {
                 eventDelegate.toggleChecked()
                 return

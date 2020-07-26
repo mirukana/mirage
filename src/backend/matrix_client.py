@@ -191,6 +191,7 @@ class MatrixClient(nio.AsyncClient):
         self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
         self.send_message_tasks: Dict[UUID, asyncio.Task]        = {}
 
+        self._presence:       str                 = ""
         self.first_sync_done: asyncio.Event       = asyncio.Event()
         self.first_sync_date: Optional[datetime]  = None
         self.last_sync_error: Optional[Exception] = None
@@ -212,6 +213,33 @@ class MatrixClient(nio.AsyncClient):
         )
 
 
+    @property
+    def healthy(self) -> bool:
+        """Return whether we're syncing and last sync was successful."""
+
+        task = self.sync_task
+
+        if not task or not self.first_sync_date or self.last_sync_error:
+            return False
+
+        return not task.done()
+
+
+    @property
+    def default_device_name(self) -> str:
+        """Device name to set at login if the user hasn't set a custom one."""
+
+        os_name = platform.system()
+
+        if not os_name:  # unknown OS
+            return __display_name__
+
+        # On Linux, the kernel version is returned, so for a one-time-set
+        # device name it would quickly be outdated.
+        os_ver  = platform.release() if os_name == "Windows" else ""
+        return f"{__display_name__} on {os_name} {os_ver}".rstrip()
+
+
     async def _send(self, *args, **kwargs) -> nio.Response:
         """Raise a `MatrixError` subclass for any `nio.ErrorResponse`.
 
@@ -228,54 +256,38 @@ class MatrixClient(nio.AsyncClient):
         return response
 
 
-    @staticmethod
-    def default_device_name() -> str:
-        """Device name to set at login if the user hasn't set a custom one."""
-
-        os_name = platform.system()
-
-        if not os_name:  # unknown OS
-            return __display_name__
-
-        # On Linux, the kernel version is returned, so for a one-time-set
-        # device name it would quickly be outdated.
-        os_ver  = platform.release() if os_name == "Windows" else ""
-        return f"{__display_name__} on {os_name} {os_ver}".rstrip()
-
-
     async def login(
-        self,
-        password:    str,
-        device_name: str           = "",
-        order:       Optional[int] = None,
+        self, password: Optional[str] = None, token: Optional[str] = None,
     ) -> None:
-        """Login to the server using the account's password."""
+        """Login to server using `m.login.password` or `m.login.token` flows.
 
-        await super().login(
-            password, device_name or self.default_device_name(),
-        )
+        Login can be done with the account's password (if the server supports
+        this flow) OR a token obtainable through various means.
 
-        saved = await self.backend.saved_accounts.read()
+        One of the way to obtain a token is to follow the `m.login.sso` flow
+        first, see `Backend.start_sso_auth()` & `Backend.continue_sso_auth()`.
+        """
 
-        if order is None and not saved.values():
-            order = 0
-        elif order is None:
+        await super().login(password, self.default_device_name, token)
+
+        order          = 0
+        saved_accounts = await self.backend.saved_accounts.read()
+
+        if saved_accounts:
             order = max(
                 account.get("order", i)
-                for i, account in enumerate(saved.values())
+                for i, account in enumerate(saved_accounts.values())
             ) + 1
 
-        # Get or create account model
-        # We need to create account model in here, because _start() needs it
-        account = self.models["accounts"].setdefault(
+        # We need to create account model item here, because _start() needs it
+        item = self.models["accounts"].setdefault(
             self.user_id, Account(self.user_id, order),
         )
 
-        # TODO: set presence on login
-        self._presence: str = "online"
-        account.presence    = Presence.State.online
-        account.connecting  = True
-        self.start_task     = asyncio.ensure_future(self._start())
+        # TODO: be abke to set presence before logging in
+        item.set_fields(presence=Presence.State.online, connecting=True)
+        self._presence  = "online"
+        self.start_task = asyncio.ensure_future(self._start())
 
 
     async def resume(
@@ -299,7 +311,7 @@ class MatrixClient(nio.AsyncClient):
 
         if state != "offline":
             account.connecting = True
-            self.start_task = asyncio.ensure_future(self._start())
+            self.start_task    = asyncio.ensure_future(self._start())
 
 
     async def logout(self) -> None:
@@ -325,17 +337,6 @@ class MatrixClient(nio.AsyncClient):
                 log.warn("%s timed out", self.user_id)
 
         await self.close()
-
-    @property
-    def healthy(self) -> bool:
-        """Return whether we're syncing and last sync was successful."""
-
-        task = self.sync_task
-
-        if not task or not self.first_sync_date or self.last_sync_error:
-            return False
-
-        return not task.done()
 
 
     async def _start(self) -> None:

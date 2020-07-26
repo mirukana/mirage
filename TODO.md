@@ -1,7 +1,5 @@
 # TODO
 
-- fallback page
-- SSO page
 - sever list
 - cursor shape in HBox/HTabbedBox pages over fields
 - login with account already added → infinite spinner in room list
@@ -208,10 +206,8 @@
     - `m.id.thirdparty`
     - `m.id.phone`
   - `m.login.recaptcha` (need browser, just use fallback?)
-  - `m.login.oauth2`
   - `m.login.email.identity`
   - `m.login.msisdn` (phone)
-  - `m.login.sso` + `m.login.token`
   - `m.login.dummy`
   - Web page fallback
 

@@ -7,8 +7,12 @@ import "../../Base"
 HSwipeView {
     id: swipeView
     clip: true
-    interactive: currentIndex !== 0 || signIn.serverUrl
-    onCurrentItemChanged: if (currentIndex === 0) serverBrowser.takeFocus()
+    interactive: serverBrowser.acceptedUrl
+    onCurrentItemChanged:
+        currentIndex === 0 ?
+        serverBrowser.takeFocus() :
+        signInLoader.takeFocus()
+
     Component.onCompleted: serverBrowser.takeFocus()
 
     HPage {
@@ -26,6 +30,8 @@ HSwipeView {
     HPage {
         id: tabPage
 
+        enabled: swipeView.currentItem === this
+
         HTabbedBox {
             anchors.centerIn: parent
             width: Math.min(implicitWidth, tabPage.availableWidth)
@@ -37,11 +43,32 @@ HSwipeView {
                 HTabButton { text: qsTr("Reset") }
             }
 
-            SignIn {
-                id: signIn
-                serverUrl: serverBrowser.acceptedUrl
-                displayUrl: serverBrowser.acceptedUserUrl
-                onExitRequested: swipeView.currentIndex = 0
+            HLoader {
+                id: signInLoader
+
+                readonly property Component signInPassword: SignInPassword {
+                    serverUrl: serverBrowser.acceptedUrl
+                    displayUrl: serverBrowser.acceptedUserUrl
+                    onExitRequested: swipeView.currentIndex = 0
+                }
+
+                readonly property Component signInSso: SignInSso {
+                    serverUrl: serverBrowser.acceptedUrl
+                    displayUrl: serverBrowser.acceptedUserUrl
+                    onExitRequested: swipeView.currentIndex = 0
+                }
+
+                function takeFocus() { if (item) item.takeFocus() }
+
+                sourceComponent:
+                    serverBrowser.loginFlows.includes("m.login.password") ?
+                    signInPassword :
+
+                    serverBrowser.loginFlows.includes("m.login.sso") &&
+                    serverBrowser.loginFlows.includes("m.login.token") ?
+                    signInSso :
+
+                    null
             }
 
             Register {}

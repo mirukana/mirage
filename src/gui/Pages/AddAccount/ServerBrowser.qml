@@ -11,7 +11,7 @@ HBox {
 
     property string acceptedUserUrl: ""
     property string acceptedUrl: ""
-    property var loginFlows: ["m.login.password"]
+    property var loginFlows: []
 
     property string saveName: "serverBrowser"
     property var saveProperties: ["acceptedUserUrl"]
@@ -30,8 +30,20 @@ HBox {
         connectFuture = py.callCoro("server_info", args, ([url, flows]) => {
             connectTimeout.stop()
             errorMessage.text = ""
+            connectFuture     = null
 
-            connectFuture   = null
+            if (! (
+                flows.includes("m.login.password") ||
+                (
+                    flows.includes("m.login.sso") &&
+                    flows.includes("m.login.token")
+                )
+            )) {
+                errorMessage.text =
+                    qsTr("No supported sign-in method for this homeserver.")
+                return
+            }
+
             acceptedUrl     = url
             acceptedUserUrl = args[0]
             loginFlows      = flows

@@ -22,6 +22,7 @@ from .models.items import Account, Event
 from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
+from .sso_server import SSOServer
 from .user_files import Accounts, History, Theme, UISettings, UIState
 
 # Logging configuration
@@ -103,6 +104,9 @@ class Backend:
 
         self.clients: Dict[str, MatrixClient] = {}
 
+        self._sso_server:      Optional[SSOServer]      = None
+        self._sso_server_task: Optional[asyncio.Future] = None
+
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
             DefaultDict(asyncio.Lock)  # {user_id: lock}
@@ -153,21 +157,57 @@ class Backend:
             await client.close()
 
 
-    async def login_client(self,
-        user:       str,
-        password:   str,
-        device_id:  Optional[str] = None,
-        homeserver: str           = "https://matrix.org",
-        order:      Optional[int] = None,
+    async def password_auth(
+        self, user: str, password: str, homeserver: str,
    ) -> str:
-        """Create and register a `MatrixClient`, login and return a user ID."""
+        """Create & register a `MatrixClient`, login using the password
+        and return the user ID we get.
+        """
 
-        client = MatrixClient(
-            self, user=user, homeserver=homeserver, device_id=device_id,
-        )
+        client = MatrixClient(self, user=user, homeserver=homeserver)
+        return await self._do_login(client, password=password)
+
+
+    async def start_sso_auth(self, homeserver: str) -> str:
+        """Start SSO server and return URL to open in the user's browser.
+
+        See the `sso_server.SSOServer` class documentation.
+        Once the returned URL has been opened in the user's browser
+        (done from QML), `MatrixClient.continue_sso_auth()` should be called.
+        """
+
+        server                = SSOServer(homeserver)
+        self._sso_server      = server
+        self._sso_server_task = asyncio.ensure_future(server.wait_for_token())
+        return server.url_to_open
+
+
+    async def continue_sso_auth(self) -> str:
+        """Wait for the started SSO server to get a token, then login.
+
+        `MatrixClient.start_sso_auth()` must be called first.
+        Creates and register a `MatrixClient` for logging in.
+        Returns the user ID we get from logging in.
+        """
+
+        if not self._sso_server or not self._sso_server_task:
+            raise RuntimeError("Must call Backend.start_sso_auth() first")
+
+        await self._sso_server_task
+        homeserver            = self._sso_server.for_homeserver
+        token                 = self._sso_server_task.result()
+        self._sso_server_task = None
+        self._sso_server      = None
+
+        client = MatrixClient(self, homeserver=homeserver)
+        return await self._do_login(client, token=token)
+
+
+    async def _do_login(self, client: MatrixClient, **login_kwargs) -> str:
+        """Create and register the `MatrixClient`, login and return user ID."""
 
         try:
-            await client.login(password, order=order)
+            await client.login(**login_kwargs)
         except MatrixError:
             await client.close()
             raise
@@ -178,7 +218,6 @@ class Backend:
             return client.user_id
 
         self.clients[client.user_id] = client
-
         return client.user_id
 
 
@@ -187,7 +226,7 @@ class Backend:
         user_id:    str,
         token:      str,
         device_id:  str,
-        homeserver: str = "https://matrix.org",
+        homeserver: str,
         state:      str = "online",
         status_msg: str = "",
     ) -> None:

@@ -12,66 +12,42 @@ HFlickableColumnPage {
 
     property string serverUrl
     property string displayUrl: serverUrl
-    property var loginFuture: null
 
-    signal exitRequested()
+    property var loginFuture: null
 
     readonly property int security:
         serverUrl.startsWith("https://") ?
-        SignIn.Security.Secure :
+        SignInBase.Security.Secure :
 
         ["//localhost", "//127.0.0.1", "//:1"].includes(
             serverUrl.split(":")[1],
         ) ?
-        SignIn.Security.LocalHttp :
+        SignInBase.Security.LocalHttp :
 
-        SignIn.Security.Insecure
+        SignInBase.Security.Insecure
 
-    function takeFocus() { idField.item.forceActiveFocus() }
+    default property alias innerData: inner.data
+    readonly property alias rememberAccount: rememberAccount
+    readonly property alias errorMessage: errorMessage
+    readonly property alias applyButton: applyButton
 
-    function signIn() {
-        if (page.loginFuture) page.loginFuture.cancel()
+    signal exitRequested()
 
+    function finishSignIn(receivedUserId) {
         errorMessage.text = ""
+        page.loginFuture  = null
 
-        const args = [
-            idField.item.text.trim(), passwordField.item.text,
-            undefined, page.serverUrl,
-        ]
+        py.callCoro(
+            rememberAccount.checked ?
+            "saved_accounts.add":
+            "saved_accounts.delete",
 
-        page.loginFuture = py.callCoro("login_client", args, userId => {
-            errorMessage.text = ""
-            page.loginFuture  = null
+            [receivedUserId]
+        )
 
-            print(rememberAccount.checked)
-            py.callCoro(
-                rememberAccount.checked ?
-                "saved_accounts.add": "saved_accounts.delete",
-
-                [userId]
-            )
-
-            pageLoader.showPage(
-                "AccountSettings/AccountSettings", {userId}
-            )
-
-        }, (type, args, error, traceback, uuid) => {
-            page.loginFuture = null
-
-            let txt = qsTr(
-                "Invalid request, login type or unknown error: %1",
-            ).arg(type)
-
-            type === "MatrixForbidden" ?
-            txt = qsTr("Invalid username or password") :
-
-            type === "MatrixUserDeactivated" ?
-            txt = qsTr("This account was deactivated") :
-
-            utils.showError(type, traceback, uuid)
-
-            errorMessage.text = txt
-        })
+        pageLoader.showPage(
+            "AccountSettings/AccountSettings", {userId: receivedUserId}
+        )
     }
 
     function cancel() {
@@ -91,12 +67,11 @@ HFlickableColumnPage {
     footer: AutoDirectionLayout {
         ApplyButton {
             id: applyButton
-            enabled: idField.item.text.trim() && passwordField.item.text
+
             text: qsTr("Sign in")
             icon.name: "sign-in"
             loading: page.loginFuture !== null
             disableWhileLoading: false
-            onClicked: page.signIn()
         }
 
         CancelButton {
@@ -104,27 +79,28 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: if (applyButton.enabled) page.signIn()
+    onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: page.cancel()
+    Component.onDestruction: if (loginFuture) loginFuture.cancel()
 
     HButton {
         icon.name: "sign-in-" + (
-            page.security === SignIn.Security.Insecure ? "insecure" :
-            page.security === SignIn.Security.LocalHttp ? "local-http" :
+            page.security === SignInBase.Security.Insecure ? "insecure" :
+            page.security === SignInBase.Security.LocalHttp ? "local-http" :
             "secure"
         )
 
         icon.color:
-            page.security === SignIn.Security.Insecure ?
+            page.security === SignInBase.Security.Insecure ?
             theme.colors.negativeBackground :
 
-            page.security === SignIn.Security.LocalHttp ?
+            page.security === SignInBase.Security.LocalHttp ?
             theme.colors.middleBackground :
 
             theme.colors.positiveBackground
 
         text:
-            page.security === SignIn.Security.Insecure ?
+            page.security === SignInBase.Security.Insecure ?
             page.serverUrl :
             page.displayUrl.replace(/^(https?:\/\/)?(www\.)?/, "")
 
@@ -134,27 +110,9 @@ HFlickableColumnPage {
         Layout.maximumWidth: parent.width
     }
 
-    HLabeledItem {
-        id: idField
-        label.text: qsTr("Username:")
-
-        Layout.fillWidth: true
-
-        HTextField {
-            width: parent.width
-        }
-    }
-
-    HLabeledItem {
-        id: passwordField
-        label.text: qsTr("Password:")
-
-        Layout.fillWidth: true
-
-        HTextField {
-            width: parent.width
-            echoMode: HTextField.Password
-        }
+    HColumnLayout {
+        id: inner
+        spacing: page.column.spacing
     }
 
     HCheckBox {
