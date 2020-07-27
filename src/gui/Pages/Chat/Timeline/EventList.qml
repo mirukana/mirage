@@ -475,6 +475,7 @@ Rectangle {
         }
 
         anchors.fill: parent
+        enabled: ! window.anyPopup
         clip: true
         keyNavigationWraps: false
         leftMargin: theme.spacing
