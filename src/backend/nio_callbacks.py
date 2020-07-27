@@ -556,7 +556,7 @@ class NioCallbacks:
                 "%1 changed their {}".format(" and ".join(changed)),
             )
 
-        log.warning("Unknown member event: %s", json.dumps(vars(ev), indent=4))
+        # log.warning("Unknown member ev.: %s", json.dumps(vars(ev), indent=4))
         return None
 
 
