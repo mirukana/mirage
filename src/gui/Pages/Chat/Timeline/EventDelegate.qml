@@ -82,9 +82,13 @@ HColumnLayout {
     // HSelectableLabel's MouseArea hover events
     onCursorShapeChanged: eventList.cursorShape = cursorShape
 
-    Component.onCompleted: if (model.fetch_profile) py.callClientCoro(
-        chat.userId, "get_event_profiles", [chat.roomId, model.id],
-    )
+    Component.onCompleted: if (model.fetch_profile)
+        fetchProfilesFuture = py.callClientCoro(
+            chat.userId,
+            "get_event_profiles",
+            [chat.roomId, model.id],
+            () => { fetchProfilesFuture = null }
+        )
 
     Component.onDestruction:
         if (fetchProfilesFuture) fetchProfilesFuture.cancel()
