@@ -233,8 +233,7 @@ class Backend:
         """Create and register a `MatrixClient` with known account details."""
 
         client = MatrixClient(
-            backend=self,
-            user=user_id, homeserver=homeserver, device_id=device_id,
+            self, user=user_id, homeserver=homeserver, device_id=device_id,
         )
 
         self.clients[user_id] = client

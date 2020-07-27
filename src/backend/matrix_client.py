@@ -292,19 +292,19 @@ class MatrixClient(nio.AsyncClient):
 
     async def resume(
         self,
-        user_id:    str,
-        token:      str,
-        device_id:  str,
-        state:      str = "online",
-        status_msg: str = "",
+        user_id:      str,
+        access_token: str,
+        device_id:    str,
+        state:        str = "online",
+        status_msg:   str = "",
     ) -> None:
-        """Login to the server using an existing access token."""
+        """Restore a previous login to the server with a saved access token."""
 
-        response = nio.LoginResponse(user_id, device_id, token)
-        account  = self.models["accounts"][user_id]
-        await self.receive_response(response)
+        self.restore_login(user_id, device_id, access_token)
 
+        account        = self.models["accounts"][user_id]
         self._presence = "offline" if state == "invisible" else state
+
         account.set_fields(
             presence=Presence.State(state), status_msg=status_msg,
         )

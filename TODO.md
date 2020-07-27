@@ -176,8 +176,6 @@
 
 ## Backend
 
-- Use new nio `AsyncClient.restore_login()`
-
 - Better config file format
 
 - Prevent starting multiple client instances, causes problems with E2E DB
