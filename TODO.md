@@ -7,7 +7,6 @@
 
 - global presence control
 
-- fix members not synced bug
 - fix local unread counters order
 
 - publish room or alias control
@@ -41,10 +40,6 @@
 
 - Jumping between accounts (clicking in account bar or alt+(Shift+)N) is
   laggy with hundreds of rooms in between
-- On startup, if a room's last event is a membership change,
-  it won't be visible in timeline no matter what the user config is
-- There are rooms without messages to show as last message subtitle after
-  initial sync
 
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
@@ -87,7 +82,6 @@
   - Set whether to publish this room in the server room directory
   - Set history visibility
   - Set aliases 
-  - Change members power level
   - Setup permissions 
   - Unban members
   - Set flair (which community this room belongs to)
@@ -137,7 +131,6 @@
 - `MainPane`:
   - Animate when logging out last account and sidepane turns invisible
 
-- Server selection
 - Implement Register/Reset pages
 
 - Theming
@@ -148,10 +141,9 @@
 
 - Settings page
 - Notifications
-- Opening files with keyboard
 - Better `<pre>` 
 
-- Replace the rubbish default filepicker on Linux
+- Replace the rubbish default Qt filepicker on Linux
 
 ## Media-related
 
