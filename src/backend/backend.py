@@ -204,7 +204,7 @@ class Backend:
 
 
     async def _do_login(self, client: MatrixClient, **login_kwargs) -> str:
-        """Create and register the `MatrixClient`, login and return user ID."""
+        """Login on a client. If successful, register it and return user ID."""
 
         try:
             await client.login(**login_kwargs)
