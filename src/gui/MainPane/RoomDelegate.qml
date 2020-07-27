@@ -11,6 +11,7 @@ import "../PythonBridge"
 HTile {
     id: room
 
+    property Future fetchProfilesFuture: null
     property Future loadEventsFuture: null
     property bool moreToLoad: true
 
@@ -200,17 +201,20 @@ HTile {
         }
     }
 
-    Component.onDestruction: if (loadEventsFuture) loadEventsFuture.cancel()
+    Component.onDestruction: {
+        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
+        if (loadEventsFuture) loadEventsFuture.cancel()
+    }
 
     Timer {
+        interval: 1000
+        triggeredOnStart: true
         running:
             ! accountModel.connecting &&
             accountModel.presence !== "offline" &&
             ! lastEvent &&
             moreToLoad
 
-        interval: 1000
-        triggeredOnStart: true
         onTriggered: if (! loadEventsFuture) {
             loadEventsFuture = py.callClientCoro(
                 model.for_account,
@@ -221,6 +225,28 @@ HTile {
                     loadEventsFuture = null
                     moreToLoad       = more
                 }
+            )
+        }
+    }
+
+    Timer {
+        // Ensure this event stays long enough for bothering to
+        // fetch the profile to be worth it
+        interval: 500
+        running:
+            ! accountModel.connecting &&
+            accountModel.presence !== "offline" &&
+            lastEvent &&
+            lastEvent.fetch_profile
+
+        onTriggered: {
+            if (fetchProfilesFuture) fetchProfilesFuture.cancel()
+
+            fetchProfilesFuture = py.callClientCoro(
+                model.for_account,
+                "get_event_profiles",
+                [model.id, lastEvent.id],
+                () => { if (room) fetchProfilesFuture = null },
             )
         }
     }
