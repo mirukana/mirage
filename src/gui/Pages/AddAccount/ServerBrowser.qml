@@ -45,7 +45,7 @@ HBox {
             }
 
             acceptedUrl     = url
-            acceptedUserUrl = args[0]
+            acceptedUserUrl = String(args[0])
             loginFlows      = flows
             accepted()
 
@@ -143,7 +143,8 @@ HBox {
         Layout.fillWidth: true
 
         HTextField {
-            readonly property string cleanText: text.toLowerCase().trim()
+            readonly property string cleanText:
+                text.toLowerCase().trim().replace(/\/+$/, "")
 
             width: parent.width
             error: ! /https?:\/\/.+/.test(cleanText)
