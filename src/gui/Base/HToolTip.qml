@@ -15,10 +15,10 @@ ToolTip {
     readonly property bool hideNow: ! window.hovered
 
 
-    function instantShow() {
+    function instantShow(timeout=-1) {
         if (visible) return
         instant = true
-        open()
+        timeout === -1 ? open() : show(text, timeout)
         instant = false
     }
 

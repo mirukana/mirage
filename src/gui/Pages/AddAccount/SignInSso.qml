@@ -8,14 +8,14 @@ import "../../Base/Buttons"
 SignInBase {
     id: page
 
-    function takeFocus() { urlField.forceActiveFocus() }
+    function takeFocus() { copyUrlButton.forceActiveFocus() }
 
     function startSignIn() {
         errorMessage.text = ""
 
         page.loginFuture = py.callCoro("start_sso_auth", [serverUrl], url => {
-            urlField.text           = url
-            urlField.cursorPosition = 0
+            urlArea.text           = url
+            urlArea.cursorPosition = 0
 
             Qt.openUrlExternally(url)
 
@@ -42,14 +42,37 @@ SignInBase {
         Layout.fillWidth: true
     }
 
-    HTextArea {
-        id: urlField
-        width: parent.width
-        readOnly: true
-        radius: 0
-        wrapMode: HTextArea.WrapAnywhere
+    HRowLayout {
+        HTextArea {
+            id: urlArea
+            width: parent.width
+            readOnly: true
+            radius: 0
+            wrapMode: HTextArea.WrapAnywhere
 
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        HButton {
+            id: copyUrlButton
+            icon.name: "copy-text"
+            iconItem.small: true
+
+            toolTip.text: qsTr("Copy")
+            toolTip.onClosed: toolTip.text = qsTr("Copy")
+            toolTip.label.wrapMode: HLabel.NoWrap
+
+            onClicked: {
+                urlArea.selectAll()
+                urlArea.copy()
+                urlArea.deselect()
+
+                toolTip.text = qsTr("Copied!")
+                toolTip.instantShow(2000)
+            }
+
+            Layout.fillHeight: true
+        }
     }
 }
