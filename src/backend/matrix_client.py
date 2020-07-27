@@ -130,12 +130,6 @@ class MatrixClient(nio.AsyncClient):
         },
     }
 
-    no_profile_events_filter: ClassVar[Dict[str, Any]] = {
-        "room": {
-            "timeline": {"not_types": ["m.room.member"]},
-        },
-    }
-
     no_unknown_events_filter: ClassVar[Dict[str, Any]] = {
         "room": {
             "timeline": {
@@ -380,8 +374,6 @@ class MatrixClient(nio.AsyncClient):
         utils.dict_update_recursive(filter1, self.low_limit_filter)
 
         cfg = self.backend.ui_settings
-        if cfg["hideProfileChangeEvents"] or cfg["hideMembershipEvents"]:
-            utils.dict_update_recursive(filter1, self.no_profile_events_filter)
 
         if cfg["hideUnknownEvents"]:
             filter1["room"]["timeline"]["not_types"].extend(
@@ -952,7 +944,11 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def load_past_events(self, room_id: str) -> bool:
-        """Ask the server for 100 previous events of the room.
+        """Ask the server for previous events of the room.
+
+        If it's the first time that the room is being loaded, 10 events
+        will be requested (to give the user something to read quickly), else
+        100 events will be requested.
 
         Events from before the client was started will be requested and
         registered into our models.
@@ -975,7 +971,7 @@ class MatrixClient(nio.AsyncClient):
         response = await self.room_messages(
             room_id        = room_id,
             start          = self.past_tokens[room_id],
-            limit          = 100 if room_id in self.loaded_once_rooms else 20,
+            limit          = 100 if room_id in self.loaded_once_rooms else 10,
             message_filter = self.lazy_load_filter,
         )
 

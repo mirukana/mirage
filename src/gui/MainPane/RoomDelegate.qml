@@ -6,9 +6,13 @@ import Clipboard 0.1
 import ".."
 import "../Base"
 import "../Base/HTile"
+import "../PythonBridge"
 
 HTile {
     id: room
+
+    property Future loadEventsFuture: null
+    property bool moreToLoad: true
 
     readonly property bool joined: ! invited && ! parted
     readonly property bool invited: model.inviter_id && ! parted
@@ -193,6 +197,31 @@ HTile {
                 roomId: model.id,
                 roomName: model.display_name,
             })
+        }
+    }
+
+    Component.onDestruction: if (loadEventsFuture) loadEventsFuture.cancel()
+
+    Timer {
+        running:
+            ! accountModel.connecting &&
+            accountModel.presence !== "offline" &&
+            ! lastEvent &&
+            moreToLoad
+
+        interval: 1000
+        triggeredOnStart: true
+        onTriggered: if (! loadEventsFuture) {
+            loadEventsFuture = py.callClientCoro(
+                model.for_account,
+                "load_past_events",
+                [model.id],
+                more => {
+                    if (! room) return  // delegate was destroyed
+                    loadEventsFuture = null
+                    moreToLoad       = more
+                }
+            )
         }
     }
 }
