@@ -44,16 +44,25 @@ _SUCCESS_HTML_PAGE = """<!DOCTYPE html>
 
 class _SSORequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
+        self.server: "SSOServer"
+
+        redirect = "%s/_matrix/client/r0/login/sso/redirect?redirectUrl=%s" % (
+            self.server.for_homeserver,
+            quote(self.server.url_to_open),
+        )
+
         parameters = parse_qs(urlparse(self.path).query)
 
         if "loginToken" in parameters:
-            self.server._token = parameters["loginToken"][0]  # type: ignore
-            self.send_response(200)
+            self.server._token = parameters["loginToken"][0]
+            self.send_response(200)  # OK
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write(_SUCCESS_HTML_PAGE.encode())
         else:
-            self.send_error(400, "missing loginToken parameter")
+            self.send_response(308)  # Permanent redirect, same method only
+            self.send_header("Location", redirect)
+            self.end_headers()
 
         self.close_connection = True
 
@@ -82,10 +91,7 @@ class SSOServer(HTTPServer):
     def url_to_open(self) -> str:
         """URL for the user to open in their browser, to do the SSO process."""
 
-        return "%s/_matrix/client/r0/login/sso/redirect?redirectUrl=%s" % (
-            self.for_homeserver,
-            quote(f"http://{self.server_address[0]}:{self.server_port}/"),
-        )
+        return f"http://{self.server_address[0]}:{self.server_port}"
 
 
     async def wait_for_token(self) -> str:
