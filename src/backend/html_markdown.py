@@ -119,7 +119,7 @@ class HTMLProcessor:
     }
 
     opaque_id         = r"[a-zA-Z\d._-]+?"
-    user_id_localpart = r"[\x21-\x39\x3D-\x7E]+?"
+    user_id_localpart = r"[\x21-\x39\x3B-\x7E]+?"
 
     user_id_regex = re.compile(
         rf"(?P<body>@{user_id_localpart}:(?P<host>[a-zA-Z\d.:-]*[a-zA-Z\d]))",
