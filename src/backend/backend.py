@@ -143,16 +143,13 @@ class Backend:
         client = MatrixClient(self, homeserver=homeserver)
 
         try:
-            homeserver = (await client.discovery_info()).homeserver_url
+            client.homeserver = (await client.discovery_info()).homeserver_url
         except (MatrixNotFound, MatrixForbidden):
             # This is either already the real URL, or an invalid URL.
             pass
-        else:
-            await client.close()
-            client = MatrixClient(self, homeserver=homeserver)
 
         try:
-            return (homeserver, (await client.login_info()).flows)
+            return (client.homeserver, (await client.login_info()).flows)
         finally:
             await client.close()
 
