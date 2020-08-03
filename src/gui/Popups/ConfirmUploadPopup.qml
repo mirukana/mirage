@@ -25,7 +25,9 @@ HColumnPopup {
             text: qsTr("Send")
             icon.name: "confirm-uploading-file"
             onClicked: {
-                utils.sendFile(popup.userId, popup.roomId, filePath)
+                py.callClientCoro(
+                    popup.userId, "send_file", [popup.roomId, filePath],
+                )
                 popup.close()
             }
         }

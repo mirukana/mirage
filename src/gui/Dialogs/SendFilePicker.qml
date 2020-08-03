@@ -17,10 +17,10 @@ HFileDialogOpener {
         for (const file of files) {
             const path = Qt.resolvedUrl(file).replace(/^file:/, "")
 
-            utils.sendFile(userId, roomId, path, () => {
+            py.callClientCoro(userId, "send_file", [roomId, path], () => {
                 if (destroyWhenDone) destroy()
-            },
-            (type, args, error, traceback) => {
+
+            }, (type, args, error, traceback) => {
                 console.error(`python:\n${traceback}`)
                 if (destroyWhenDone) destroy()
             })

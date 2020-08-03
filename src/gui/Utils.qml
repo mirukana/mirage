@@ -498,12 +498,6 @@ QtObject {
     }
 
 
-    function sendFile(userId, roomId, path, onSuccess, onError) {
-        py.callClientCoro(
-            userId, "send_file", [roomId, path], onSuccess, onError,
-        )
-    }
-
     function sumChildrenImplicitWidths(visibleChildren, spacing=0) {
         let sum = 0
 
