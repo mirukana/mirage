@@ -165,7 +165,7 @@ HTextArea {
         }
     }
 
-    onCustomImagePaste: utils.makePopup(
+    onCustomImagePaste: window.makePopup(
         "Popups/ConfirmClipboardUploadPopup.qml",
         {
             userId: chat.userId,

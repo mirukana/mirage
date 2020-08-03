@@ -57,6 +57,15 @@ ApplicationWindow {
         }
     }
 
+    function makePopup(
+        urlComponent, properties={}, callback=null, autoDestruct=true,
+    ) {
+        utils.makePopup(
+            urlComponent, window, properties, callback, autoDestruct,
+        )
+    }
+
+
 
     flags: Qt.WA_TranslucentBackground
     minimumWidth: theme ? theme.minimumSupportedWidth : 240

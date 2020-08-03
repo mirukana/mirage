@@ -146,7 +146,7 @@ HTile {
                     onClicked: {
                         actionMenu.focusOnClosed = null
 
-                        utils.makePopup(
+                        window.makePopup(
                             "Popups/KeyVerificationPopup.qml",
                             {
                                 focusOnClosed: nameField,

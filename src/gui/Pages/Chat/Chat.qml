@@ -35,7 +35,7 @@ Item {
     HShortcut {
         sequences: window.settings.keys.leaveRoom
         active: userInfo && userInfo.presence !== "offline"
-        onActivated: utils.makePopup(
+        onActivated: window.makePopup(
             "Popups/LeaveRoomPopup.qml",
             {userId, roomId, roomName: roomInfo.display_name},
         )
@@ -44,7 +44,7 @@ Item {
     HShortcut {
         sequences: window.settings.keys.forgetRoom
         active: userInfo && userInfo.presence !== "offline"
-        onActivated: utils.makePopup(
+        onActivated: window.makePopup(
             "Popups/ForgetRoomPopup.qml",
             {userId, roomId, roomName: roomInfo.display_name},
         )

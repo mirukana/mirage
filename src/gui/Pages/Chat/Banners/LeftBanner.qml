@@ -23,7 +23,7 @@ Banner {
 
     buttonCallbacks: ({
         forget: button => {
-            utils.makePopup(
+            window.makePopup(
                 "Popups/ForgetRoomPopup.qml",
                 {
                     userId:   chat.userId,
@@ -31,7 +31,7 @@ Banner {
                     roomName: chat.roomInfo.display_name,
                 },
                 obj => {
-                    obj.onOk.connect(() => { button.loading = true })
+                    obj.onOk.connect(() => { button.loading = true })  // FIXME
                 },
                 false,
             )

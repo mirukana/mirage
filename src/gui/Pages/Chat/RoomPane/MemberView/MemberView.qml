@@ -134,7 +134,7 @@ HColumnLayout {
                         qsTr("Invite members to this room") :
                         qsTr("No permission to invite members to this room")
 
-                    onClicked: utils.makePopup(
+                    onClicked: window.makePopup(
                         "Popups/InviteToRoomPopup.qml",
                         {
                             userId: chat.userId,

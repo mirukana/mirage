@@ -49,7 +49,7 @@ HColumnPage {
 
     function deleteDevices(...indice) {
         if (indice.length === 1 && indice[0] === 0) {
-            utils.makePopup("Popups/SignOutPopup.qml", { userId: page.userId })
+            window.makePopup("Popups/SignOutPopup.qml", {userId: page.userId})
             return
         }
 
@@ -62,14 +62,14 @@ HColumnPage {
             deviceIds.push(deviceList.model.get(i).id)
         }
 
-        utils.makePopup(
+        window.makePopup(
             "Popups/DeleteDevicesPopup.qml",
             {
                 userId: page.userId,
                 deviceIds,
                 deletedCallback: () => {
                     deleteOwnDevice ?
-                    utils.makePopup(
+                    window.makePopup(
                         "Popups/SignOutPopup.qml", { userId: page.userId },
                     ) :
                     page.loadDevices()

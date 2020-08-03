@@ -80,7 +80,7 @@ Python {
             return
         }
 
-        utils.makePopup(
+        window.makePopup(
             "Popups/UnexpectedErrorPopup.qml",
             { errorType: type, message, traceback },
         )

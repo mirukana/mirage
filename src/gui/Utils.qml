@@ -65,8 +65,8 @@ QtObject {
     }
 
 
-    function makePopup(urlComponent, properties={}, callback=null,
-                       autoDestruct=true, parent=window) {
+    function makePopup(urlComponent, parent, properties={}, callback=null,
+                       autoDestruct=true) {
         makeObject(urlComponent, parent, properties, (popup) => {
             popup.open()
             if (autoDestruct) popup.closed.connect(() => { popup.destroy() })

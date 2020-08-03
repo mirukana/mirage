@@ -74,7 +74,7 @@ Rectangle {
 
         enabled: (events && events.length > 0) || events === null
         sequences: window.settings.keys.removeFocusedOrSelectedMessages
-        onActivated: utils.makePopup(
+        onActivated: window.makePopup(
             "Popups/RedactPopup.qml",
             {
                 preferUserId: chat.userId,
@@ -200,7 +200,7 @@ Rectangle {
 
     HShortcut {
         sequences: window.settings.keys.clearRoomMessages
-        onActivated: utils.makePopup(
+        onActivated: window.makePopup(
             "Popups/ClearMessagesPopup.qml",
             {
                 userId: window.uiState.pageProperties.userId,
@@ -413,7 +413,7 @@ Rectangle {
             const fullMxc =
                 forLink || (isAnimated(event) ? "" : event.media_url)
 
-            utils.makePopup(
+            window.makePopup(
                 "Popups/ImageViewerPopup/ImageViewerPopup.qml",
                 {
                     thumbnailTitle: getThumbnailTitle(event),
