@@ -67,6 +67,7 @@ Python {
             window.uiState  = uiState
             window.history  = history
             window.theme    = Qt.createQmlObject(theme, window, "theme")
+            utils.theme     = window.theme
 
             if (callback) { callback(settings, uiState, theme) }
         })

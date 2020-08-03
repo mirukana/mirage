@@ -6,6 +6,8 @@ import CppUtils 0.1
 QtObject {
     enum Media { Page, File, Image, Video, Audio }
 
+    property QtObject theme: null
+
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
 		"tiff", "webp", "svg",
