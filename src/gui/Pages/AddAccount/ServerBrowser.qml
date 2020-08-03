@@ -61,7 +61,7 @@ HBox {
             type.startsWith("Matrix") ?
             text = qsTr("Error contacting server: %1").arg(type) :
 
-            utils.showError(type, traceback, uuid)
+            py.showError(type, traceback, uuid)
 
             errorMessage.text = text
         })

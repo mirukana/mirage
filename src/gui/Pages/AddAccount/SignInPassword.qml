@@ -33,7 +33,7 @@ SignInBase {
                 type === "MatrixUserDeactivated" ?
                 txt = qsTr("This account was deactivated") :
 
-                utils.showError(type, traceback, uuid)
+                py.showError(type, traceback, uuid)
 
                 page.errorMessage.text = txt
             },

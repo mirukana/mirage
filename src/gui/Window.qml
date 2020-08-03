@@ -24,8 +24,6 @@ ApplicationWindow {
     property var history: ({})
     property var theme: null
 
-    property var hideErrorTypes: new Set(["gaierror", "SSLError"])
-
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
     readonly property bool anyMenu: Object.keys(visibleMenus).length > 0

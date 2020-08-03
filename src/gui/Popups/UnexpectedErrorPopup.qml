@@ -5,6 +5,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../Base"
 import "../Base/Buttons"
+import "../PythonBridge" as PythonBridge
 
 HColumnPopup {
     id: popup
@@ -54,8 +55,8 @@ HColumnPopup {
         text: qsTr("Hide this type of error until restart")
         onCheckedChanged:
             checked ?
-            window.hideErrorTypes.add(errorType) :
-            window.hideErrorTypes.delete(errorType)
+            PythonBridge.Globals.hideErrorTypes.add(errorType) :
+            PythonBridge.Globals.hideErrorTypes.delete(errorType)
 
         Layout.fillWidth: true
     }

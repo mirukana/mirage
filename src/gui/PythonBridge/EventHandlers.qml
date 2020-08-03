@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import ".."
 import "../.."
+import ".."
 
 QtObject {
     signal deviceUpdateSignal(string forAccount)
@@ -37,7 +37,7 @@ QtObject {
 
             onError ?
             onError(type, args, error, traceback, uuid) :
-            utils.showError(type, traceback, "", uuid)
+            py.showError(type, traceback, "", uuid)
 
             return
         }
@@ -48,7 +48,7 @@ QtObject {
     function onLoopException(message, error, traceback) {
         // No need to log these here, the asyncio exception handler does it
         const type = py.getattr(py.getattr(error, "__class__"), "__name__")
-        utils.showError(type, traceback, message)
+        py.showError(type, traceback, message)
     }
 
     function onModelItemSet(syncId, indexThen, indexNow, changedFields){

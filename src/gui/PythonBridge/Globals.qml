@@ -5,4 +5,5 @@ import QtQuick 2.12
 
 QtObject {
     readonly property var pendingCoroutines: ({})
+    readonly property var hideErrorTypes: new Set(["gaierror", "SSLError"])
 }

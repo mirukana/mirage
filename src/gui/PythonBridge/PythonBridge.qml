@@ -71,4 +71,18 @@ Python {
             if (callback) { callback(settings, uiState, theme) }
         })
     }
+
+    function showError(type, traceback, sourceIndication="", message="") {
+        console.error(`python: ${sourceIndication}\n${traceback}`)
+
+        if (Globals.hideErrorTypes.has(type)) {
+            console.info("Not showing popup for ignored error type " + type)
+            return
+        }
+
+        utils.makePopup(
+            "Popups/UnexpectedErrorPopup.qml",
+            { errorType: type, message, traceback },
+        )
+    }
 }

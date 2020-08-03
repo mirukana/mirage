@@ -57,7 +57,7 @@ HFileDialogOpener {
                     )
                 )
 
-                if (unknown) utils.showError(type, traceback, uuid)
+                if (unknown) py.showError(type, traceback, uuid)
             })
         }
 
