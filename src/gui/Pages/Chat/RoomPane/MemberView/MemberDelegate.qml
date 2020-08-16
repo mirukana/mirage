@@ -35,6 +35,8 @@ HTile {
 
         HColumnLayout {
             HRowLayout {
+                spacing: theme.spacing
+
                 TitleLabel {
                     text: model.display_name || model.id
                     color:
@@ -51,7 +53,7 @@ HTile {
                     id: lastActiveAt
                     tile: member
                     visible: presenceTimer.running
-                    hideUnderWidth: 120
+                    hideUnderWidth: 130
                 }
             }
 
