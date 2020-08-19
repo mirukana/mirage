@@ -160,11 +160,6 @@ class MatrixClient(nio.AsyncClient):
          device_id:  Optional[str] = None,
     ) -> None:
 
-        if not urlparse(homeserver).scheme:
-            raise ValueError(
-                f"homeserver is missing scheme (e.g. https://): {homeserver}",
-            )
-
         store = Path(backend.appdirs.user_data_dir) / "encryption"
         store.mkdir(parents=True, exist_ok=True)
 
@@ -253,6 +248,9 @@ class MatrixClient(nio.AsyncClient):
         response = await super()._send(*args, **kwargs)
 
         if isinstance(response, nio.ErrorResponse):
+            for a in args:
+                if isinstance(a, str) and "cyberia" in a:
+                    import remote_pdb; remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
             raise MatrixError.from_nio(response)
 
         return response

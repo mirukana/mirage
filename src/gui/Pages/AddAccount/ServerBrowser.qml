@@ -64,6 +64,8 @@ HBox {
             accepted()
 
         }, (type, args, error, traceback, uuid) => {
+            console.error(traceback)
+
             connectTimeout.stop()
             connectFuture = null
 
@@ -73,7 +75,7 @@ HBox {
             text = qsTr("Invalid homeserver address") :
 
             type.startsWith("Matrix") ?
-            text = qsTr("Error contacting server: %1").arg(type) :
+            text = qsTr("Connection failed: %1(%2)").arg(type).arg(args) :
 
             py.showError(type, traceback, uuid)
 
@@ -130,11 +132,11 @@ HBox {
                 readonly property string cleanText:
                     text.toLowerCase().trim().replace(/\/+$/, "")
 
-                error: text && ! /https?:\/\/.+/.test(cleanText)
+                inputMethodHints: Qt.ImhUrlCharactersOnly
                 defaultText: window.getState(
                     box, "acceptedUserUrl", "",
                 )
-                placeholderText: "https://example.org"
+                placeholderText: "example.org"
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -202,7 +204,9 @@ HBox {
             width: serverList.width
             loadingIconStep: box.loadingIconStep
             onClicked: {
-                serverField.item.field.text = model.id
+                serverField.item.field.text =
+                    model.id.replace(/^https:\/\//, "")
+
                 serverField.item.apply.clicked()
             }
         }

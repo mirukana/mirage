@@ -2,7 +2,6 @@
 
 import asyncio
 import logging as log
-import math
 import os
 import re
 import sys
@@ -11,6 +10,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple
+from urllib.parse import urlparse
 
 import aiohttp
 from appdirs import AppDirs
@@ -148,16 +148,44 @@ class Backend:
         Possible login methods include `m.login.password` or `m.login.sso`.
         """
 
-        client = MatrixClient(self, homeserver=homeserver)
+        if not re.match(r"https?://", homeserver):
+            homeserver = f"http://{homeserver}"
+
+        client   = MatrixClient(self, homeserver=homeserver)
+        http_re  = re.compile("^http://")
+        is_local = urlparse(client.homeserver).netloc.split(":")[0] in (
+            "localhost", "127.0.0.1", "::1",
+        )
 
         try:
             client.homeserver = (await client.discovery_info()).homeserver_url
-        except (MatrixNotFound, MatrixForbidden):
+        except MatrixError:
             # This is either already the real URL, or an invalid URL.
             pass
 
         try:
-            return (client.homeserver, (await client.login_info()).flows)
+            try:
+                login_response = await client.login_info()
+            except (asyncio.TimeoutError, MatrixError):
+                # Maybe we still have a http URL and server only supports https
+                client.homeserver = http_re.sub("https://", client.homeserver)
+                login_response    = await client.login_info()
+
+            # If we still have a http URL and server redirected to https
+            if login_response.transport_response.real_url.scheme == "https":
+                client.homeserver = http_re.sub("https://", client.homeserver)
+
+            # If we still have a http URL and server accept both http and https
+            if http_re.match(client.homeserver) and not is_local:
+                original          = client.homeserver
+                client.homeserver = http_re.sub("https://", client.homeserver)
+
+                try:
+                    await asyncio.wait_for(client.login_info(), timeout=6)
+                except (asyncio.TimeoutError, MatrixError):
+                    client.homeserver = original
+
+            return (client.homeserver, login_response.flows)
         finally:
             await client.close()
 
