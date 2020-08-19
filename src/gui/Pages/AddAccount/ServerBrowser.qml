@@ -105,6 +105,7 @@ HBox {
 
         label.text: qsTr("Homeserver address:")
         label.topPadding: theme.spacing
+        label.bottomPadding: label.topPadding / 4
         label.leftPadding: label.topPadding
         label.rightPadding: label.topPadding
         errorLabel.leftPadding: label.topPadding
