@@ -26,6 +26,15 @@ SignInBase {
         })
     }
 
+    function cancel() {
+        if (loginFuture) {
+            page.loginFuture.cancel()
+            page.loginFuture = null
+        }
+
+        page.exitRequested()
+    }
+
 
     applyButton.text: qsTr("Waiting")
     applyButton.loading: true

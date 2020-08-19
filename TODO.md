@@ -1,7 +1,6 @@
 # TODO
 
 - server list sorting method / explain what the % number is (stability)
-- clicking cancel on SSO "waiting" box doesn't do anything the first time
 - spam alt+shift+a when starting app on server browser → segfault
 - remove items.Device
 - register tab for sso servers?
