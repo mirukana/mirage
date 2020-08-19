@@ -6,6 +6,7 @@ import "../.."
 import "../../Base"
 import "../../Base/Buttons"
 import "../../PythonBridge"
+import "../../ShortcutBundles"
 
 HBox {
     id: box
@@ -207,6 +208,11 @@ HBox {
                 box.loadingIconStep === "server-ping-medium" ? "good" :
                 "bad"
             )
+    }
+
+    FlickShortcuts {
+        flickable: serverList
+        active: ! mainUI.debugConsole.visible
     }
 
     HListView {
