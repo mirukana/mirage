@@ -51,6 +51,8 @@ Rectangle {
             Keys.forwardTo: [roomList]
             Keys.priority: Keys.AfterItem
 
+            Keys.onTabPressed: roomList.incrementCurrentIndex()
+            Keys.onBacktabPressed: roomList.decrementCurrentIndex()
             Keys.onEnterPressed: Keys.onReturnPressed(event)
             Keys.onReturnPressed: {
                 roomList.showItemAtIndex()

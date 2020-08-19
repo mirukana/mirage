@@ -48,6 +48,9 @@ HColumnLayout {
                 )
             }
 
+            Keys.onTabPressed: memberList.incrementCurrentIndex()
+            Keys.onBacktabPressed: memberList.decrementCurrentIndex()
+
             Keys.onEnterPressed: Keys.onReturnPressed(event)
             Keys.onReturnPressed: {
                 currentItem.leftClicked()
