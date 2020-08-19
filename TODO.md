@@ -2,7 +2,6 @@
 
 - server list sorting method / explain what the % number is (stability)
 - spam alt+shift+a when starting app on server browser → segfault
-- remove items.Device
 - register tab for sso servers?
 - cursor shape in HBox/HTabbedBox pages over fields
 - login with account already added → infinite spinner in room list

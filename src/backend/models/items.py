@@ -351,16 +351,3 @@ class Event(ModelItem):
             return json.dumps(source_dict)
 
         return super().serialize_field(field)
-
-
-@dataclass
-class Device(ModelItem):
-    """A matrix user's device. This class is currently unused."""
-
-    id:             str  = field()
-    ed25519_key:    str  = field()
-    trusted:        bool = False
-    blacklisted:    bool = False
-    display_name:   str  = ""
-    last_seen_ip:   str  = ""
-    last_seen_date: str  = ""
