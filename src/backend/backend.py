@@ -18,7 +18,7 @@ from appdirs import AppDirs
 import nio
 
 from . import __app_name__
-from .errors import MatrixError, MatrixForbidden, MatrixNotFound
+from .errors import MatrixError
 from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
@@ -618,6 +618,7 @@ class Backend:
         response = await session.get(api_list)
         data     = (await response.json())["staticlist"]
 
+        # Missing from the anchel.nl public list
         await self._add_homeserver_item(
             session        = session,
             homeserver_url = "https://matrix-client.matrix.org",
@@ -625,15 +626,6 @@ class Backend:
             site_url       = "https://matrix.org",
             country        = "Cloudflare",
             uptimerobot_id = 783115140,
-        )
-
-        await self._add_homeserver_item(
-            session        = session,
-            homeserver_url = "https://mozilla.modular.im",
-            name           = "mozilla.org",
-            site_url       = "https://mozilla.org",
-            country        = "United States",
-            uptimerobot_id = 784321494,
         )
 
         for server in data:
