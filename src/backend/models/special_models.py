@@ -121,7 +121,7 @@ class FilteredHomeservers(FieldSubstringFilter):
     """Filtered list of public Matrix homeservers."""
 
     def __init__(self) -> None:
-        super().__init__(sync_id="filtered_homeservers", fields=("id",))
+        super().__init__(sync_id="filtered_homeservers", fields=("id", "name"))
 
 
     def accept_source(self, source: Model) -> bool:
