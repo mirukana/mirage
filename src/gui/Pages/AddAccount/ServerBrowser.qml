@@ -132,9 +132,12 @@ HBox {
                 )
                 placeholderText: "example.org"
 
-                onTextEdited: py.callCoro(
+                onTextEdited: {
+                    py.callCoro(
                     "set_substring_filter", ["filtered_homeservers", text],
-                )
+                    )
+                    serverList.currentIndex = -1
+                }
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
