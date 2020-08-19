@@ -11,8 +11,12 @@ Rectangle {
     readonly property alias accountList: accountList
 
 
-    implicitHeight: accountList.count >= 2 ? accountList.contentHeight : 0
     color: theme.mainPane.accountBar.background
+    implicitHeight:
+        accountList.count >= 2 ?
+        accountList.contentHeight +
+        accountList.topMargin + accountList.bottomMargin :
+        0
 
     Behavior on implicitHeight { HNumberAnimation {} }
 
@@ -21,6 +25,8 @@ Rectangle {
         anchors.centerIn: parent
         width: Math.min(cellWidth * count, parent.width)
         height: parent.height
+        topMargin: theme.spacing / 2
+        bottomMargin: topMargin
 
         clip: true
         cellWidth: theme.controls.avatar.size + theme.spacing
