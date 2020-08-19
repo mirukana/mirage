@@ -158,7 +158,7 @@ HBox {
             HButton {
                 id: apply
                 enabled: field.cleanText && ! field.error
-                icon.name: "apply"
+                icon.name: "server-connect-to-address"
                 icon.color: theme.colors.positiveBackground
                 loading: box.connectFuture !== null
                 disableWhileLoading: false
