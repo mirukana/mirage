@@ -1,7 +1,6 @@
 # TODO
 
 - server list sorting method / explain what the % number is (stability)
-- server list: make it more obvious that it can be scrolled
 - clicking cancel on SSO "waiting" box doesn't do anything the first time
 - spam alt+shift+a when starting app on server browser → segfault
 - remove items.Device
@@ -68,7 +67,6 @@
 ## Interface
 
 - Colorize "@room" in messages
-- Show scrollbars for a few seconds if there's content to scroll on when 
   opening a page or popup
 - Device IP geolocation
 - Can rooms but left with a reason?
@@ -105,7 +103,6 @@
 - Make room invite/left banner buttons look better
 
 - Choose a better easing types for animations
-- Make HListView scrollbars more visible
 - In messages, remove the HTML lists excess left margin
 - Improve UI for very small window heights
 

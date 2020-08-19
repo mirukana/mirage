@@ -100,6 +100,7 @@ ListView {
     }
 
     ScrollBar.vertical: HScrollBar {
+        flickableMoving: listView.moving
         visible: listView.interactive
     }
 

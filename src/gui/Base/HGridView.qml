@@ -84,6 +84,7 @@ GridView {
 
     ScrollBar.vertical: HScrollBar {
         visible: gridView.interactive
+        flickableMoving: gridView.moving
     }
 
     // property bool debug: false

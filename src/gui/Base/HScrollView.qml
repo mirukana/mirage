@@ -11,6 +11,5 @@ ScrollView {
         x: scrollView.mirrored ? 0 : scrollView.width - width
         y: scrollView.topPadding
         height: scrollView.availableHeight
-        active: scrollView.ScrollBar.horizontal.active
     }
 }

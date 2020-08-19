@@ -11,6 +11,7 @@ Flickable {
     ScrollBar.vertical: HScrollBar {
         visible: parent.interactive
         z: 999
+        flickableMoving: flickable.moving
     }
 
     Component.onCompleted: {

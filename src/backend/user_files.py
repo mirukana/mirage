@@ -267,6 +267,7 @@ class UISettings(JSONDataFile):
             "alertOnMentionForMsec": -1,
             "alertOnMessageForMsec": 0,
             "alwaysCenterRoomHeader": False,
+            "autoHideScrollBarsAfterMsec": 2000,
             "beUnavailableAfterSecondsIdle": 60 * 10,
             "compactMode": False,
             "clearRoomFilterOnEnter": True,

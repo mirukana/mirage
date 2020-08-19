@@ -6,6 +6,8 @@ import QtQuick.Controls 2.12
 ScrollBar {
     id: scrollBar
 
+    property bool flickableMoving
+
     minimumSize: (Math.min(height / 1.5, 48) * theme.uiScale) / height
     opacity: size < 1 && (active || hovered) ? 1 : 0
     padding: 0
@@ -34,5 +36,18 @@ ScrollBar {
         }
     }
 
-    Behavior on opacity { HNumberAnimation {} }
+    onFlickableMovingChanged: if (flickableMoving) activeOverride.when = false
+
+    Behavior on opacity { HNumberAnimation { factor: 2 } }
+
+    Binding on active {
+        id: activeOverride
+        value: initialVisibilityTimer.running
+    }
+
+    Timer {
+        id: initialVisibilityTimer
+        interval: window.settings.autoHideScrollBarsAfterMsec
+        running: scrollBar.size < 1
+    }
 }

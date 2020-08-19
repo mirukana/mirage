@@ -128,9 +128,7 @@ HBox {
                     text.toLowerCase().trim().replace(/\/+$/, "")
 
                 inputMethodHints: Qt.ImhUrlCharactersOnly
-                defaultText: window.getState(
-                    box, "acceptedUserUrl", "",
-                )
+                defaultText: window.getState(box, "acceptedUserUrl", "")
                 placeholderText: "example.org"
 
                 onTextEdited: {
