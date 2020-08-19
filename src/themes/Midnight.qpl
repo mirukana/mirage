@@ -189,6 +189,8 @@ controls:
             colors.intensity * 1,
             colors.opacity / 1.5,
         )
+        color highlightBorder: colors.strongAccentElement
+        int highlightBorderThickness: 1
         color smallPaneHighlight: colors.accentBackground
 
     textField:

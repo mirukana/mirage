@@ -229,5 +229,11 @@ HBox {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        Rectangle {
+            z: -10
+            anchors.fill: parent
+            color: theme.colors.strongBackground
+        }
     }
 }

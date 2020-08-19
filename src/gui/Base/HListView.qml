@@ -91,6 +91,12 @@ ListView {
 
     highlight: Rectangle {
         color: theme.controls.listView.highlight
+
+        Rectangle {
+            width: theme.controls.listView.highlightBorderThickness
+            height: parent.height
+            color: theme.controls.listView.highlightBorder
+        }
     }
 
     ScrollBar.vertical: HScrollBar {
