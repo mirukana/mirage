@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 
-HSwipeView {
+SwipeView {
     id: swipeView
     clip: true
     interactive: serverBrowser.acceptedUrl
@@ -38,6 +39,7 @@ HSwipeView {
             height: Math.min(implicitHeight, tabPage.availableHeight)
 
             header: HTabBar {
+                shortcutsEnabled: visible && tabPage.enabled
                 visible:
                     signInLoader.sourceComponent !== signInLoader.signInSso
 

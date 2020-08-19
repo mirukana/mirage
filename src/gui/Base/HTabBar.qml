@@ -7,6 +7,8 @@ import "../ShortcutBundles"
 TabBar {
     id: tabBar
 
+    property alias shortcutsEnabled: tabShortcuts.active
+
     spacing: 0
     position: TabBar.Header
 
@@ -20,6 +22,7 @@ TabBar {
     }
 
     TabShortcuts {
+        id: tabShortcuts
         container: tabBar
     }
 }
