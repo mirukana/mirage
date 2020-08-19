@@ -397,8 +397,8 @@ QtObject {
     }
 
 
-    function round(floatNumber) {
-        return parseFloat(floatNumber.toFixed(2))
+    function round(floatNumber, decimalDigits=2) {
+        return parseFloat(floatNumber.toFixed(decimalDigits))
     }
 
 

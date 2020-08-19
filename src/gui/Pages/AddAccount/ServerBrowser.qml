@@ -2,12 +2,13 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../.."
 import "../../Base"
 import "../../Base/Buttons"
 import "../../PythonBridge"
 
 HBox {
-    id: page
+    id: box
 
     property string acceptedUserUrl: ""
     property string acceptedUrl: ""
@@ -15,22 +16,35 @@ HBox {
 
     property string saveName: "serverBrowser"
     property var saveProperties: ["acceptedUserUrl"]
+    property string loadingIconStep: "server-ping-bad"
+
     property Future connectFuture: null
+    property Future fetchServersFuture: null
 
     signal accepted()
 
-    function takeFocus() { serverField.item.forceActiveFocus() }
+    function takeFocus() { serverField.item.field.forceActiveFocus() }
+
+    function fetchServers() {
+        fetchServersFuture = py.callCoro("fetch_homeservers", [], () => {
+            fetchServersFuture = null
+        }, (type, args, error, traceback) => {
+            fetchServersFuture = null
+            // TODO
+            print( traceback)
+        })
+    }
 
     function connect() {
         if (connectFuture) connectFuture.cancel()
         connectTimeout.restart()
 
-        const args = [serverField.item.cleanText]
+        const args = [serverField.item.field.cleanText]
 
         connectFuture = py.callCoro("server_info", args, ([url, flows]) => {
             connectTimeout.stop()
-            errorMessage.text = ""
-            connectFuture     = null
+            serverField.errorLabel.text = ""
+            connectFuture               = null
 
             if (! (
                 flows.includes("m.login.password") ||
@@ -39,7 +53,7 @@ HBox {
                     flows.includes("m.login.token")
                 )
             )) {
-                errorMessage.text =
+                serverField.errorLabel.text =
                     qsTr("No supported sign-in method for this homeserver.")
                 return
             }
@@ -63,106 +77,137 @@ HBox {
 
             py.showError(type, traceback, uuid)
 
-            errorMessage.text = text
+            serverField.errorLabel.text = text
         })
     }
 
-    function cancel() {
-        if (page.connectFuture) return
 
-        connectTimeout.stop()
-        connectFuture.cancel()
-        connectFuture = null
+    padding: 0
+    implicitWidth: theme.controls.box.defaultWidth * 1.25
+    contentHeight: Math.min(
+        window.height,
+        Math.max(
+            serverList.contentHeight,
+            // busyIndicatorLoader.height + theme.spacing * 2,  TODO
+        )
+    )
+
+    header: HLabel {
+        text: qsTr(
+            "Choose a homeserver to create your account on, or the " +
+            "server on which you made an account to sign in to:"
+        )
+        wrapMode: HLabel.Wrap
+        padding: theme.spacing
     }
 
+    footer: HLabeledItem {
+        id: serverField
 
-    footer: AutoDirectionLayout {
-        ApplyButton {
-            id: applyButton
-            enabled: serverField.item.cleanText && ! serverField.item.error
-            text: qsTr("Connect")
-            icon.name: "server-connect"
-            loading: page.connectFuture !== null
-            disableWhileLoading: false
-            onClicked: page.connect()
-        }
+        readonly property bool knownServerChosen:
+            serverList.model.find(item.cleanText) !== null
 
-        CancelButton {
-            id: cancelButton
-            enabled: page.connectFuture !== null
-            onClicked: page.cancel()
+        label.text: qsTr("Homeserver address:")
+        label.topPadding: theme.spacing
+        label.leftPadding: label.topPadding
+        label.rightPadding: label.topPadding
+        errorLabel.leftPadding: label.topPadding
+        errorLabel.rightPadding: label.topPadding
+        errorLabel.bottomPadding: label.topPadding
+
+        Layout.fillWidth: true
+        Layout.margins: theme.spacing
+
+        HRowLayout {
+            readonly property alias field: field
+            readonly property alias apply: apply
+
+            width: parent.width
+
+            HTextField {
+                id: field
+
+                readonly property string cleanText:
+                    text.toLowerCase().trim().replace(/\/+$/, "")
+
+                error: text && ! /https?:\/\/.+/.test(cleanText)
+                defaultText: window.getState(
+                    box, "acceptedUserUrl", "",
+                )
+                placeholderText: "https://example.org"
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            HButton {
+                id: apply
+                enabled: field.cleanText && ! field.error
+                icon.name: "apply"
+                icon.color: theme.colors.positiveBackground
+                loading: box.connectFuture !== null
+                disableWhileLoading: false
+                onClicked: box.connect()
+
+                Layout.fillHeight: true
+            }
         }
     }
 
-    onKeyboardAccept: if (applyButton.enabled) page.connect()
-    onKeyboardCancel: if (cancelButton.enabled) page.cancel()
+    onKeyboardAccept: if (serverField.item.apply.enabled) box.connect()
     onAccepted: window.saveState(this)
 
     Timer {
         id: connectTimeout
         interval: 30 * 1000
         onTriggered: {
-            errorMessage.text =
+            serverField.errorLabel.text =
                 serverField.knownServerChosen ?
 
                 qsTr("This homeserver seems unavailable. Verify your inter" +
-                     "net connection or try again in a few minutes.") :
+                     "net connection or try again later.") :
 
                  qsTr("This homeserver seems unavailable. Verify the " +
                       "entered address, your internet connection or try " +
-                      "again in a few minutes.")
+                      "again later.")
         }
     }
 
-    HLabeledItem {
-        id: serverField
-
-        // 2019-11-11 https://www.hello-matrix.net/public_servers.php
-        readonly property var knownServers: [
-            "https://matrix.org",
-            "https://chat.weho.st",
-            "https://tchncs.de",
-            "https://chat.privacytools.io",
-            "https://hackerspaces.be",
-            "https://matrix.allmende.io",
-            "https://feneas.org",
-            "https://junta.pl",
-            "https://perthchat.org",
-            "https://matrix.tedomum.net",
-            "https://converser.eu",
-            "https://ru-matrix.org",
-            "https://matrix.sibnsk.net",
-            "https://alternanet.fr",
-        ]
-
-        readonly property bool knownServerChosen:
-            knownServers.includes(item.cleanText)
-
-        label.text: qsTr("Homeserver:")
-
-        Layout.fillWidth: true
-
-        HTextField {
-            readonly property string cleanText:
-                text.toLowerCase().trim().replace(/\/+$/, "")
-
-            width: parent.width
-            error: ! /https?:\/\/.+/.test(cleanText)
-            defaultText:
-                window.getState(page, "acceptedUserUrl", "https://matrix.org")
-        }
+    Timer {
+        interval: 1000
+        running: fetchServersFuture === null && serverList.count === 0
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: box.fetchServers()
     }
 
-    HLabel {
-        id: errorMessage
-        wrapMode: HLabel.Wrap
-        horizontalAlignment: Text.AlignHCenter
-        color: theme.colors.errorText
+    Timer {
+        interval: theme.animationDuration * 2
+        running: true
+        repeat: true
+        onTriggered:
+            box.loadingIconStep = "server-ping-" + (
+                box.loadingIconStep === "server-ping-bad" ? "medium" :
+                box.loadingIconStep === "server-ping-medium" ? "good" :
+                "bad"
+            )
+    }
 
-        visible: Layout.maximumHeight > 0
-        Layout.maximumHeight: text ? implicitHeight : 0
-        Behavior on Layout.maximumHeight { HNumberAnimation {} }
+    HListView {
+        id: serverList
+        clip: true
+        model: ModelStore.get("homeservers")
+
+        delegate: ServerDelegate {
+            width: serverList.width
+            loadingIconStep: box.loadingIconStep
+            onClicked: {
+                serverField.item.field.text = model.id
+                serverField.item.apply.clicked()
+            }
+        }
 
         Layout.fillWidth: true
+        Layout.fillHeight: true
     }
 }

@@ -1,5 +1,9 @@
 # TODO
 
+- clicking cancel on SSO "waiting" box doesn't do anything the first time
+- spam alt+shift+a when starting app on server browser → segfault
+- remove items.Device
+- register tab for sso servers?
 - sever list
 - cursor shape in HBox/HTabbedBox pages over fields
 - login with account already added → infinite spinner in room list

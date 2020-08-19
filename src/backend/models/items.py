@@ -30,6 +30,30 @@ class TypeSpecifier(AutoStrEnum):
     MembershipChange = auto()
 
 
+class PingStatus(AutoStrEnum):
+    """Enum for the status of a homeserver ping operation."""
+
+    Done    = auto()
+    Pinging = auto()
+    Failed  = auto()
+
+
+@dataclass
+class Homeserver(ModelItem):
+    """A homeserver we can connect to. The `id` field is the server's URL."""
+
+    id:        str        = field()
+    name:      str        = field()
+    site_url:  str        = field()
+    country:   str        = field()
+    ping:      int        = -1
+    status:    PingStatus = PingStatus.Pinging
+    stability: float      = -1
+
+    def __lt__(self, other: "Homeserver") -> bool:
+        return (self.name.lower(), self.id) < (other.name.lower(), other.id)
+
+
 @dataclass
 class Account(ModelItem):
     """A logged in matrix account."""

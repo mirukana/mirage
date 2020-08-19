@@ -3,8 +3,9 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 
-HFlickableColumnPage {
+HColumnPage {
     implicitWidth: Math.min(parent.width, theme.controls.box.defaultWidth)
+    padding: theme.spacing
 
     background: Rectangle {
         color: theme.controls.box.background
