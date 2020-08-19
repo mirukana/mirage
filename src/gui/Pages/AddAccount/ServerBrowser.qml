@@ -243,5 +243,18 @@ HBox {
             anchors.fill: parent
             color: theme.colors.strongBackground
         }
+
+        HLoader {
+            id: busyIndicatorLoader
+            anchors.centerIn: parent
+            width: 96 * theme.uiScale
+            height: width
+
+            source: "../../Base/HBusyIndicator.qml"
+            active: box.fetchServersFuture
+            opacity: active ? 1 : 0
+
+            Behavior on opacity { HNumberAnimation { factor: 2 } }
+        }
     }
 }
