@@ -191,7 +191,6 @@ controls:
         )
         color highlightBorder: colors.strongAccentElement
         int highlightBorderThickness: 1
-        color smallPaneHighlight: colors.accentBackground
 
     textField:
         color background:        colors.strongBackground

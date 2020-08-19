@@ -2,7 +2,6 @@
 
 - server list sorting method / explain what the % number is (stability)
 - server list: make it more obvious that it can be scrolled
-- server list: make current item highlight more visible
 - support (shift+)tab in filter fields
 - clicking cancel on SSO "waiting" box doesn't do anything the first time
 - spam alt+shift+a when starting app on server browser → segfault
