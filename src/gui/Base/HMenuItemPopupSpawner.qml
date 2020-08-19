@@ -14,10 +14,11 @@ HMenuItem {
 
         utils.makePopup(
             popup,
-            null,
+            window,
             utils.objectUpdate(
                 { focusOnClosed: menu.previouslyFocused }, properties,
             ),
+            null,
             autoDestruct,
         )
     }
