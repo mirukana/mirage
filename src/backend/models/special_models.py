@@ -115,3 +115,14 @@ class FilteredMembers(FieldSubstringFilter):
 
     def accept_source(self, source: Model) -> bool:
         return source.sync_id == (self.user_id, self.room_id, "members")
+
+
+class FilteredHomeservers(FieldSubstringFilter):
+    """Filtered list of public Matrix homeservers."""
+
+    def __init__(self) -> None:
+        super().__init__(sync_id="filtered_homeservers", fields=("id",))
+
+
+    def accept_source(self, source: Model) -> bool:
+        return source.sync_id == "homeservers"

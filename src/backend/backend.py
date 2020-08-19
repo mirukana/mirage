@@ -84,6 +84,8 @@ class Backend:
             - `("<user_id>", "<room_id>", "filtered_members")`:
               See `models.special_models.FilteredMembers` docstring
 
+            - `("filtered_homeservers")`:
+              See `models.special_models.FilteredHomeservers` docstring
 
         clients: A `{user_id: MatrixClient}` dict for the logged-in clients
             we managed. Every client is logged to one matrix account.

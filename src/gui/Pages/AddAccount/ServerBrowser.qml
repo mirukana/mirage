@@ -86,13 +86,7 @@ HBox {
 
     padding: 0
     implicitWidth: theme.controls.box.defaultWidth * 1.25
-    contentHeight: Math.min(
-        window.height,
-        Math.max(
-            serverList.contentHeight,
-            // busyIndicatorLoader.height + theme.spacing * 2,  TODO
-        )
-    )
+    contentHeight: window.height
 
     header: HLabel {
         text: qsTr(
@@ -138,8 +132,23 @@ HBox {
                 )
                 placeholderText: "example.org"
 
+                onTextEdited: py.callCoro(
+                    "set_substring_filter", ["filtered_homeservers", text],
+                )
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                Keys.onBacktabPressed: ev => Keys.onUpPressed(ev)
+                Keys.onTabPressed: ev => Keys.onDownPressed(ev)
+                Keys.onUpPressed: {
+                    serverList.decrementCurrentIndex()
+                    serverList.setFieldText(serverList.currentIndex)
+                }
+                Keys.onDownPressed: {
+                    serverList.incrementCurrentIndex()
+                    serverList.setFieldText(serverList.currentIndex)
+                }
             }
 
             HButton {
@@ -177,7 +186,10 @@ HBox {
 
     Timer {
         interval: 1000
-        running: fetchServersFuture === null && serverList.count === 0
+        running:
+            fetchServersFuture === null &&
+            ModelStore.get("homeservers").count === 0
+
         repeat: true
         triggeredOnStart: true
         onTriggered: box.fetchServers()
@@ -197,16 +209,20 @@ HBox {
 
     HListView {
         id: serverList
+
+        function setFieldText(fromItemIndex) {
+            serverField.item.field.text =
+                model.get(fromItemIndex).id.replace(/^https:\/\//, "")
+        }
+
         clip: true
-        model: ModelStore.get("homeservers")
+        model: ModelStore.get("filtered_homeservers")
 
         delegate: ServerDelegate {
             width: serverList.width
             loadingIconStep: box.loadingIconStep
             onClicked: {
-                serverField.item.field.text =
-                    model.id.replace(/^https:\/\//, "")
-
+                setFieldText(model.index)
                 serverField.item.apply.clicked()
             }
         }

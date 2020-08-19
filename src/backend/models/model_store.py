@@ -6,7 +6,9 @@ from typing import Dict
 
 from . import SyncId
 from .model import Model
-from .special_models import AllRooms, FilteredMembers, MatchingAccounts
+from .special_models import (
+    AllRooms, FilteredMembers, FilteredHomeservers, MatchingAccounts,
+)
 
 
 @dataclass(frozen=True)
@@ -36,6 +38,8 @@ class ModelStore(UserDict):
             model = AllRooms(self["accounts"])
         elif key == "matching_accounts":
             model = MatchingAccounts(self["all_rooms"])
+        elif key == "filtered_homeservers":
+            model = FilteredHomeservers()
         elif is_tuple and len(key) == 3 and key[2] == "filtered_members":
             model = FilteredMembers(user_id=key[0], room_id=key[1])
         else:
