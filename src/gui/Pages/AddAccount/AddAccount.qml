@@ -38,6 +38,9 @@ HSwipeView {
             height: Math.min(implicitHeight, tabPage.availableHeight)
 
             header: HTabBar {
+                visible:
+                    signInLoader.sourceComponent !== signInLoader.signInSso
+
                 HTabButton { text: qsTr("Sign in") }
                 HTabButton { text: qsTr("Register") }
                 HTabButton { text: qsTr("Reset") }

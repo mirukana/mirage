@@ -36,6 +36,7 @@ SignInBase {
     }
 
 
+    implicitWidth: theme.controls.box.defaultWidth * 1.25
     applyButton.text: qsTr("Waiting")
     applyButton.loading: true
     Component.onCompleted: page.startSignIn()
