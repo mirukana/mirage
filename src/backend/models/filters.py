@@ -112,13 +112,12 @@ class ModelFilter(ModelProxy):
                     callback()
 
 
-class FieldSubstringFilter(ModelFilter):
+class FieldStringFilter(ModelFilter):
     """Filter source models based on if their fields matches a string.
 
     This is used for filter fields in QML: the user enters some text and only
-    items with a certain field (typically `display_name`) that contain the
-    words of the text (can be partial, e.g. "red" matches "red" or "tired")
-    will be shown.
+    items with a certain field (typically `display_name`) that starts with the
+    entered text will be shown.
 
     Matching is done using "smart case": insensitive if the filter text is
     all lowercase, sensitive otherwise.
@@ -127,6 +126,8 @@ class FieldSubstringFilter(ModelFilter):
     def __init__(self, sync_id: SyncId, fields: Collection[str]) -> None:
         self.fields:  Collection[str] = fields
         self._filter: str             = ""
+
+        self.no_filter_accept_all_items: bool = True
 
         super().__init__(sync_id)
 
@@ -138,24 +139,48 @@ class FieldSubstringFilter(ModelFilter):
 
     @filter.setter
     def filter(self, value: str) -> None:
-        self._filter = value
-        self.refilter()
+        if value != self._filter:
+            self._filter = value
+            self.refilter()
 
 
     def accept_item(self, item: "ModelItem") -> bool:
         if not self.filter:
-            return True
+            return self.no_filter_accept_all_items
 
-        text       = " ".join((getattr(item, f) for f in self.fields))
-        filt       = self.filter
-        filt_lower = filt.lower()
+        fields    = {f: getattr(item, f) for f in self.fields}
+        filtr     = self.filter
+        lowercase = filtr.lower()
 
-        if filt_lower == filt:
-            # Consider case only if filter isn't all lowercase (smart case)
-            filt = filt_lower
-            text = text.lower()
+        if lowercase == filtr:
+            # Consider case only if filter isn't all lowercase
+            filtr        = lowercase
+            fields = {name: value.lower() for name, value in fields.items()}
 
-        for word in filt.split():
+        return self.match(fields, filtr)
+
+
+    def match(self, fields: Dict[str, str], filtr: str) -> bool:
+        for value in fields.values():
+            if value.startswith(filtr):
+                return True
+
+        return False
+
+
+class FieldSubstringFilter(FieldStringFilter):
+    """Fuzzy-like alternative to `FieldStringFilter`.
+
+    All words in the filter string must fully or partially match words in the
+    item field values, e.g. "red l" can match "red light",
+    "tired legs", "light red" (order of the filter words doesn't matter),
+    but not just "red" or "light" by themselves.
+    """
+
+    def match(self, fields: Dict[str, str], filtr: str) -> bool:
+        text = " ".join(fields.values())
+
+        for word in filtr.split():
             if word and word not in text:
                 return False
 

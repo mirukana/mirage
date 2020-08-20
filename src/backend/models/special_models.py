@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import asdict
-from typing import Set
+from typing import Dict, Set
 
-from .filters import FieldSubstringFilter, ModelFilter
+from .filters import FieldStringFilter, FieldSubstringFilter, ModelFilter
 from .items import Account, AccountOrRoom, Room
 from .model import Model
 from .model_item import ModelItem
@@ -115,6 +115,27 @@ class FilteredMembers(FieldSubstringFilter):
 
     def accept_source(self, source: Model) -> bool:
         return source.sync_id == (self.user_id, self.room_id, "members")
+
+
+class AutoCompletedMembers(FieldStringFilter):
+    """Filtered list of mentionable members for tab-completion."""
+
+    def __init__(self, user_id: str, room_id: str) -> None:
+        self.user_id = user_id
+        self.room_id = room_id
+        sync_id      = (user_id, room_id, "autocompleted_members")
+
+        super().__init__(sync_id=sync_id, fields=("display_name", "id"))
+        self.no_filter_accept_all_items = False
+
+
+    def accept_source(self, source: Model) -> bool:
+        return source.sync_id == (self.user_id, self.room_id, "members")
+
+
+    def match(self, fields: Dict[str, str], filtr: str) -> bool:
+        fields["id"] = fields["id"][1:]  # remove leading @
+        return super().match(fields, filtr)
 
 
 class FilteredHomeservers(FieldSubstringFilter):

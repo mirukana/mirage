@@ -6,9 +6,10 @@ import "../../.."
 import "../../../Base"
 
 HTextArea {
-    id: textArea
+    id: area
 
     property HListView eventList
+    property bool autoCompletionOpen
 
     property string indent: "    "
 
@@ -20,12 +21,12 @@ HTextArea {
         ModelStore.get("accounts").find(writingUserId)
 
     readonly property int cursorY:
-        textArea.text.substring(0, cursorPosition).split("\n").length - 1
+        area.text.substring(0, cursorPosition).split("\n").length - 1
 
     readonly property int cursorX:
         cursorPosition - lines.slice(0, cursorY).join("").length - cursorY
 
-    readonly property var lines: textArea.text.split("\n")
+    readonly property var lines: area.text.split("\n")
     readonly property string lineText: lines[cursorY] || ""
 
     readonly property string lineTextUntilCursor:
@@ -50,8 +51,13 @@ HTextArea {
         return obj
     }
 
+    signal autoCompletePrevious()
+    signal autoCompleteNext()
+    signal extraCharacterCloseAutoCompletion()
+    signal cancelAutoCompletion()
+
     function setTyping(typing) {
-        if (! textArea.enabled) return
+        if (! area.enabled) return
 
         py.callClientCoro(
             writingUserId, "room_typing", [chat.roomId, typing, 5000],
@@ -76,7 +82,7 @@ HTextArea {
         }
 
         const add = indent.repeat(indents)
-        textArea.insertAtCursor("\n" + add)
+        area.insertAtCursor("\n" + add)
     }
 
     function sendText() {
@@ -85,7 +91,7 @@ HTextArea {
         const args = [chat.roomId, toSend, chat.replyToEventId]
         py.callClientCoro(writingUserId, "send_text", args)
 
-        textArea.clear()
+        area.clear()
         clearReplyTo()
     }
 
@@ -174,9 +180,11 @@ HTextArea {
         },
     )
 
-    Keys.onEscapePressed: clearReplyTo()
+    Keys.onEscapePressed:
+        autoCompletionOpen ? cancelAutoCompletion() : clearReplyTo()
 
     Keys.onReturnPressed: ev => {
+        extraCharacterCloseAutoCompletion()
         ev.accepted = true
 
         ev.modifiers & Qt.ShiftModifier ||
@@ -189,18 +197,43 @@ HTextArea {
     Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
     Keys.onMenuPressed: ev => {
+        extraCharacterCloseAutoCompletion()
+
         if (eventList && eventList.currentItem)
             eventList.currentItem.openContextMenu()
     }
 
+    Keys.onBacktabPressed: ev => {
+        ev.accepted = true
+        autoCompletePrevious()
+    }
+
     Keys.onTabPressed: ev => {
         ev.accepted = true
-        textArea.insertAtCursor(indent)
+
+        if (text.slice(-1).trim()) {  // previous char isn't a space/tab
+            autoCompleteNext()
+            return
+        }
+
+        area.insertAtCursor(indent)
+    }
+
+    Keys.onUpPressed: ev => {
+        ev.accepted = autoCompletionOpen
+        if (autoCompletionOpen) autoCompletePrevious()
+    }
+
+    Keys.onDownPressed: ev => {
+        ev.accepted = autoCompletionOpen
+        if (autoCompletionOpen) autoCompleteNext()
     }
 
     Keys.onPressed: ev => {
+        if (ev.text) extraCharacterCloseAutoCompletion()
+
         if (ev.matches(StandardKey.Copy) &&
-            ! textArea.selectedText &&
+            ! area.selectedText &&
             eventList &&
             (eventList.selectedCount || eventList.currentIndex !== -1))
         {
@@ -212,10 +245,10 @@ HTextArea {
         // FIXME: buggy
         // if (ev.modifiers === Qt.NoModifier &&
         //     ev.key === Qt.Key_Backspace &&
-        //     ! textArea.selectedText)
+        //     ! area.selectedText)
         // {
         //     ev.accepted = true
-        //     textArea.remove(
+        //     area.remove(
         //         cursorPosition - deleteCharsOnBackspace,
         //         cursorPosition
         //     )

@@ -94,7 +94,7 @@ HColumnLayout {
 
                 onTextChanged: {
                     stackView.pop(stackView.initialItem)
-                    py.callCoro("set_substring_filter", [modelSyncId, text])
+                    py.callCoro("set_string_filter", [modelSyncId, text])
                 }
 
                 onActiveFocusChanged: {

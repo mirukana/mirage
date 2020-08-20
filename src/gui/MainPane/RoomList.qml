@@ -175,7 +175,7 @@ HListView {
     }
 
     onFilterChanged: {
-        py.callCoro("set_substring_filter", ["all_rooms", filter], () => {
+        py.callCoro("set_string_filter", ["all_rooms", filter], () => {
             if (filter) {
                 currentIndex = 1  // highlight the first matching room
                 return

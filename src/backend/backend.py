@@ -22,7 +22,7 @@ from .errors import MatrixError
 from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
-from .models.filters import FieldSubstringFilter
+from .models.filters import FieldStringFilter
 from .models.items import Account, Event, Homeserver, PingStatus
 from .models.model import Model
 from .models.model_store import ModelStore
@@ -458,8 +458,8 @@ class Backend:
         return (settings, ui_state, history, theme)
 
 
-    async def set_substring_filter(self, model_id: SyncId, value: str) -> None:
-        """Set a FieldSubstringFilter model's filter property.
+    async def set_string_filter(self, model_id: SyncId, value: str) -> None:
+        """Set a FieldStringFilter (or derived class) model's filter property.
 
         This should only be called from QML.
         """
@@ -469,8 +469,8 @@ class Backend:
 
         model = Model.proxies[model_id]
 
-        if not isinstance(model, FieldSubstringFilter):
-            raise TypeError("model_id must point to a FieldSubstringFilter")
+        if not isinstance(model, FieldStringFilter):
+            raise TypeError("model_id must point to a FieldStringFilter")
 
         model.filter = value
 

@@ -134,7 +134,7 @@ HBox {
 
                 onTextEdited: {
                     py.callCoro(
-                    "set_substring_filter", ["filtered_homeservers", text],
+                        "set_string_filter", ["filtered_homeservers", text],
                     )
                     serverList.currentIndex = -1
                 }
