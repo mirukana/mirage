@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
+import "AutoCompletion"
 import "Banners"
 import "Composer"
 import "FileTransfer"
@@ -91,6 +92,14 @@ HColumnPage {
         Behavior on Layout.preferredHeight { HNumberAnimation {} }
     }
 
+    UserAutoCompletion {
+        id: userCompletion
+        textArea: composer.messageArea
+
+        Layout.fillWidth: true
+        Layout.maximumHeight: chatPage.height / 4
+    }
+
     InviteBanner {
         id: inviteBanner
         visible: ! chat.roomInfo.left && inviterId
@@ -108,9 +117,9 @@ HColumnPage {
 
     Composer {
         id: composer
+        userCompletion: userCompletion
         eventList: loadEventList ? eventListLoader.item.eventList : null
-        visible:
-            ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
+        visible: ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
 
         Layout.fillWidth: true
         Layout.maximumHeight: parent.height / 2
