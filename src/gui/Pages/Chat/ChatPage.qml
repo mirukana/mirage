@@ -95,6 +95,7 @@ HColumnPage {
     UserAutoCompletion {
         id: userCompletion
         textArea: composer.messageArea
+        clip: true
 
         Layout.fillWidth: true
         Layout.maximumHeight: chatPage.height / 4
