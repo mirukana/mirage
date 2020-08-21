@@ -55,7 +55,7 @@ HTextArea {
 
     signal autoCompletePrevious()
     signal autoCompleteNext()
-    signal extraCharacterCloseAutoCompletion()
+    signal acceptAutoCompletion()
     signal cancelAutoCompletion()
 
     function setTyping(typing) {
@@ -189,7 +189,7 @@ HTextArea {
         autoCompletionOpen ? cancelAutoCompletion() : clearReplyTo()
 
     Keys.onReturnPressed: ev => {
-        if (autoCompletionOpen) extraCharacterCloseAutoCompletion()
+        if (autoCompletionOpen) acceptAutoCompletion()
         ev.accepted = true
 
         ev.modifiers & Qt.ShiftModifier ||
@@ -202,7 +202,7 @@ HTextArea {
     Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
     Keys.onMenuPressed: ev => {
-        if (autoCompletionOpen) extraCharacterCloseAutoCompletion()
+        if (autoCompletionOpen) acceptAutoCompletion()
 
         if (eventList && eventList.currentItem)
             eventList.currentItem.openContextMenu()
@@ -235,7 +235,7 @@ HTextArea {
     }
 
     Keys.onPressed: ev => {
-        if (ev.text && autoCompletionOpen) extraCharacterCloseAutoCompletion()
+        if (ev.text && autoCompletionOpen) acceptAutoCompletion()
 
         if (ev.matches(StandardKey.Copy) &&
             ! area.selectedText &&

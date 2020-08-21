@@ -7,7 +7,6 @@ import "../../../Base"
 import "../../../Base/HTile"
 
 // FIXME: a b -> a @p b → @p doesn't trigger completion
-// FIXME: close autocomplete when cursor moves away
 HListView {
     id: root
 
@@ -28,13 +27,18 @@ HListView {
         ) :
         ""
 
+    function getLastWordStart() {
+        const lastWordMatch = /(?:^|\s)[^\s]+$/.exec(textArea.text)
+        if (! lastWordMatch) return textArea.length
+
+        if (! (lastWordMatch.index === 0 && ! textArea.text[0].match(/\s/)))
+            return lastWordMatch.index + 1
+
+        return lastWordMatch.index
+    }
+
     function replaceLastWord(withText) {
-        let lastWordStart = /(?:^|\s)[^\s]+$/.exec(textArea.text).index
-
-        if (! (lastWordStart === 0 && ! textArea.text[0].match(/\s/)))
-            lastWordStart += 1
-
-        textArea.remove(lastWordStart, textArea.length)
+        textArea.remove(getLastWordStart(), textArea.length)
         textArea.insertAtCursor(withText)
     }
 
@@ -120,6 +124,11 @@ HListView {
 
     Connections {
         target: root.textArea
+
+        function onCursorPositionChanged() {
+            if (root.open && root.textArea.cursorPosition < getLastWordStart())
+                root.accept()
+        }
 
         function onTextChanged() {
             let changed = false

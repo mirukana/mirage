@@ -55,7 +55,7 @@ Rectangle {
                     onAutoCompletePrevious: userCompletion.previous()
                     onAutoCompleteNext: userCompletion.next()
                     onCancelAutoCompletion: userCompletion.cancel()
-                    onExtraCharacterCloseAutoCompletion:
+                    onAcceptAutoCompletion:
                         ! userCompletion.autoOpen ||
                         userCompletion.autoOpenCompleted ?
                         userCompletion.accept() :
