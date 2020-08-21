@@ -30,6 +30,7 @@ HColumnLayout {
             delegate: MemberDelegate {
                 id: member
                 width: memberList.width
+                colorName: hovered || memberList.currentIndex === model.index
 
                 onLeftClicked: stackView.push(
                     "MemberProfile.qml",

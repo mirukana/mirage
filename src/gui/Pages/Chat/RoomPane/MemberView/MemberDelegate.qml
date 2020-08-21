@@ -11,6 +11,7 @@ import "../../../../PythonBridge"
 HTile {
     id: member
 
+    property bool colorName: hovered
     property Future getPresenceFuture: null
 
     backgroundColor: theme.chat.roomPane.listView.member.background
@@ -40,7 +41,7 @@ HTile {
                 TitleLabel {
                     text: model.display_name || model.id
                     color:
-                        member.hovered ?
+                        member.colorName ?
                         utils.nameColor(
                             model.display_name || model.id.substring(1)
                         ) :

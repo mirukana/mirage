@@ -105,6 +105,7 @@ HListView {
 
     delegate: CompletableUserDelegate {
         width: root.width
+        colorName: hovered || root.currentIndex === model.index
         onClicked: {
             currentIndex = model.index
             root.open    = false
