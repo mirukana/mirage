@@ -93,9 +93,8 @@ HListView {
     implicitHeight: open && count ? Math.min(window.height, contentHeight) : 0
     model: ModelStore.get(chat.userId, chat.roomId, "autocompleted_members")
 
-    delegate: HTile {
+    delegate: CompletableUserDelegate {
         width: root.width
-        contentItem: HLabel { text: model.display_name + " (" + model.id + ")"}
         onClicked: {
             currentIndex = model.index
             root.open    = false
@@ -125,6 +124,12 @@ HListView {
 
     Behavior on opacity { HNumberAnimation {} }
     Behavior on implicitHeight { HNumberAnimation {} }
+
+    Rectangle {
+        anchors.fill: parent
+        z: -1
+        color: theme.chat.typingMembers.background
+    }
 
     Connections {
         target: root.textArea
