@@ -17,12 +17,17 @@ Flickable {
     Component.onCompleted: {
         kineticScrollingDisabler = Qt.createComponent(
             "HKineticScrollingDisabler.qml"
-        ).createObject(flickable, {
-            flickable: flickable,
-            width: enabled ? flickable.width : 0,
-            height: enabled ? flickable.height : 0,
-        })
+        ).createObject(flickable, {flickable})
+
+        kineticScrollingDisabler.width = Qt.binding(() =>
+            kineticScrollingDisabler.enabled ? flickable.width : 0
+        )
+        kineticScrollingDisabler.height = Qt.binding(() =>
+            kineticScrollingDisabler.enabled ? flickable.height : 0
+        )
     }
 
     property var kineticScrollingDisabler
+    property var pr: kineticScrollingDisabler.enabled
+    onPrChanged: print("pr changed:", pr)
 }
