@@ -507,6 +507,12 @@ chat:
     fileTransfer:
         color background: chat.typingMembers.background
 
+    userAutoCompletion:
+        color background:   chat.typingMembers.background
+        int avatarsRadius:  controls.avatar.radius
+        color displayNames: colors.text
+        color userIds:      colors.dimText
+
     composer:
         color background: colors.strongBackground
 

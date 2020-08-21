@@ -20,6 +20,7 @@ HTile {
             displayName: model.display_name
             mxc: model.avatar_url
             compact: root.compact
+            radius: theme.chat.userAutoCompletion.avatarsRadius
 
             implicitHeight:
                 compact ?
@@ -33,7 +34,7 @@ HTile {
                 (model.display_name || model.id) + (
                     model.display_name ?
                     "&nbsp;".repeat(2) + utils.htmlColorize(
-                        model.id, theme.chat.roomPane.listView.member.subtitle,
+                        model.id, theme.chat.userAutoCompletion.userIds,
                     ) :
                     ""
                 )
@@ -41,7 +42,7 @@ HTile {
             color:
                 root.colorName ?
                 utils.nameColor(model.display_name || model.id.substring(1)) :
-                theme.chat.roomPane.listView.member.name
+                theme.chat.userAutoCompletion.displayNames
 
             Behavior on color { HColorAnimation {} }
         }

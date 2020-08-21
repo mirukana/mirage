@@ -1,10 +1,9 @@
 # TODO
 
+- theme changelog
 - update nio requirement
-- improve auto completion delegate
 
 - refresh server list button
-- server list sorting method / explain what the % number is (stability)
 
 - global presence control
 

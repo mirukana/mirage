@@ -146,7 +146,7 @@ HListView {
     Rectangle {
         anchors.fill: parent
         z: -1
-        color: theme.chat.typingMembers.background
+        color: theme.chat.userAutoCompletion.background
     }
 
     Connections {
