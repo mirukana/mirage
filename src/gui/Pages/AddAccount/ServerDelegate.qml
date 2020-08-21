@@ -41,6 +41,16 @@ HTile {
             Layout.rightMargin: theme.spacing
 
             Behavior on colorize { HColorAnimation {} }
+
+            HoverHandler { id: iconHover }
+
+            HToolTip {
+                visible: iconHover.hovered
+                text:
+                    model.status === "Failed" ? qsTr("Connection failed") :
+                    model.status === "Pinging" ? qsTr("Contacting...") :
+                    qsTr("%1ms").arg(model.ping)
+            }
         }
 
         HColumnLayout {
