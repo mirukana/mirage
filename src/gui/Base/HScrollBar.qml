@@ -36,18 +36,19 @@ ScrollBar {
         }
     }
 
-    onFlickableMovingChanged: if (flickableMoving) activeOverride.when = false
+    // onFlickableMovingChanged: if (flickableMoving) activeOverride.when = false
 
-    Behavior on opacity { HNumberAnimation { factor: 2 } }
+    // Behavior on opacity { HNumberAnimation { factor: 2 } }
+    Behavior on opacity { HNumberAnimation {} }
 
-    Binding on active {
-        id: activeOverride
-        value: initialVisibilityTimer.running
-    }
+    // Binding on active {
+    //     id: activeOverride
+    //     value: initialVisibilityTimer.running
+    // }
 
-    Timer {
-        id: initialVisibilityTimer
-        interval: window.settings.autoHideScrollBarsAfterMsec
-        running: scrollBar.size < 1
-    }
+    // Timer {
+    //     id: initialVisibilityTimer
+    //     interval: window.settings.autoHideScrollBarsAfterMsec
+    //     running: scrollBar.size < 1
+    // }
 }
