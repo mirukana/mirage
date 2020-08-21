@@ -128,9 +128,11 @@ HListView {
         if (! originalWord) originalWord = textArea.getWordBehindCursor()
         if (autoOpen) autoOpenCompleted = true
 
-        const name = model.get(currentIndex).display_name
-        replaceCompletionOrCurrentWord(name)
-        replacementLength = name.length
+        const member      = model.get(currentIndex)
+        const replacement = member.display_name || member.id
+
+        replaceCompletionOrCurrentWord(replacement)
+        replacementLength = replacement.length
     }
 
     Behavior on opacity { HNumberAnimation {} }
@@ -150,11 +152,13 @@ HListView {
 
             const pos   = root.textArea.cursorPosition
             const start = root.wordToComplete.start
-            const end   =
-                currentIndex === -1 ?
-                root.wordToComplete.end + 1 :
-                root.wordToComplete.start +
-                model.get(currentIndex).display_name.length
+            let end     = root.wordToComplete.end + 1
+
+            if (currentIndex !== -1) {
+                const member = model.get(currentIndex)
+                const repl   = member.display_name || member.id
+                end          = root.wordToComplete.start + repl.length
+            }
 
             if (pos < start || pos > end) root.accept()
         }
