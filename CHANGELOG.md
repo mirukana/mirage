@@ -57,13 +57,13 @@ and this project adheres to
     enough displayed image)
 
   - Any mouse movement: reveal auto-hidden bars
-  - Double click on the image: toggle fullscreen
+  - Double click on the image: toggle full screen
   - Middle click anywhere: open externally
   - Right click anywhere: close the viewer, back to chat
   - Drag when displayed image is bigger than window to pan
   - Wheel to pan up/down, hold shift or alt to pan left/right
   - Ctrl+wheel to control zoom
-  - Buttons to control rotation, scale mode, fullscreen, GIF play/pause 
+  - Buttons to control rotation, scale mode, full screen, GIF play/pause 
     and GIF speed
 
   - New keyboard shortcuts are available for all these actions, 
@@ -91,7 +91,7 @@ and this project adheres to
 
   - Replace the confusing broken "Copy media address" entry with:
     - Copy media address: visible for non-encrypted media, always
-      copies the http URL
+      copies the HTTP URL
 
     - Copy local path: always visible for already downloaded media, even if
       they were downloaded before mirage was started
@@ -123,7 +123,8 @@ and this project adheres to
   `scrollPageUp`/`scrollPageDown` keybinds, now similar to how it was before
   Mirage 0.6.0
 
-- Don't catch SIGQUIT (Ctrl+\ in terminal) and SIGTERM signals, exit immediatly
+- Don't catch SIGQUIT (Ctrl+\ in terminal) and SIGTERM signals, 
+  exit immediately
 
 - Slightly increase the top/bottom padding to the multi-account bar in the 
   left pane
@@ -135,6 +136,8 @@ and this project adheres to
 - Themes: remove unused `controls.listView.smallPaneHighlight` property
 
 ### Fixed
+
+- Don't show account avatar tooltips when the context menu is open
 
 - Don't automatically focus member power level control when grayed out
 
@@ -168,7 +171,7 @@ and this project adheres to
 - Fix possible race condition corrupting user config files on write
 
 - Fix missing member events from initial syncs, also fixes some cases
-  of the "Members not synced" error occuring in encrypted rooms where members
+  of the "Members not synced" error occurring in encrypted rooms where members
   have recently joined or left.
 
 - Fetch missing member display name when displaying last messages in room pane 
