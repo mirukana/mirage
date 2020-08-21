@@ -173,6 +173,9 @@ HBox {
 
     onAccepted: window.saveState(this)
 
+    Component.onDestruction:
+        if (fetchServersFuture) fetchServersFuture.cancel()
+
     Timer {
         id: connectTimeout
         interval: 30 * 1000

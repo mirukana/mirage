@@ -1,8 +1,10 @@
 # TODO
 
+- keep scrollbars auto behavior?
+- improve auto completion delegate
+
 - refresh server list button
 - server list sorting method / explain what the % number is (stability)
-- spam alt+shift+a/going to room when starting app on server browser → segfault
 - login with account already added → infinite spinner in room list
 
 - global presence control
