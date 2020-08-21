@@ -28,6 +28,4 @@ Flickable {
     }
 
     property var kineticScrollingDisabler
-    property var pr: kineticScrollingDisabler.enabled
-    onPrChanged: print("pr changed:", pr)
 }
