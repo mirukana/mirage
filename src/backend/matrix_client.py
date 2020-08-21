@@ -509,11 +509,17 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def send_text(
-        self, room_id: str, text: str, reply_to_event_id: Optional[str] = None,
+        self,
+        room_id:               str,
+        text:                  str,
+        display_name_mentions: Optional[Dict[str, str]] = None,  # {name: id}
+        reply_to_event_id:     Optional[str]            = None,
     ) -> None:
         """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""
 
-        from_md = partial(HTML.from_markdown, room_id=room_id)
+        from_md = partial(
+            HTML.from_markdown, display_name_mentions=display_name_mentions,
+        )
 
         escape = False
         if text.startswith("//") or text.startswith(r"\/"):
@@ -909,9 +915,7 @@ class MatrixClient(nio.AsyncClient):
         content = event_fields.get("content", "").strip()
 
         if content and "inline_content" not in event_fields:
-            event_fields["inline_content"] = HTML.filter(
-                content, inline=True, room_id=room_id,
-            )
+            event_fields["inline_content"] = HTML.filter(content, inline=True)
 
         event = Event(
             id            = f"echo-{transaction_id}",
@@ -1797,8 +1801,7 @@ class MatrixClient(nio.AsyncClient):
             plain_topic    = room.topic or "",
             topic          = HTML.filter(
                 utils.plain2html(room.topic or ""),
-                inline  = True,
-                room_id = room.room_id,
+                inline = True,
             ),
             inviter_id     = inviter,
             inviter_name   = room.user_name(inviter) if inviter else "",
@@ -1869,16 +1872,11 @@ class MatrixClient(nio.AsyncClient):
         self.models[self.user_id, room.room_id, "members"][user_id] = \
             member_item
 
-        if member.display_name:
-            HTML.rooms_user_id_names[room.room_id][user_id] = \
-                member.display_name
-
 
     async def remove_member(self, room: nio.MatrixRoom, user_id: str) -> None:
         """Remove a room member from our models."""
 
         self.models[self.user_id, room.room_id, "members"].pop(user_id, None)
-        HTML.rooms_user_id_names[room.room_id].pop(user_id, None)
 
         room_item = self.models[self.user_id, "rooms"].get(room.room_id)
 
@@ -1972,9 +1970,7 @@ class MatrixClient(nio.AsyncClient):
         content = fields.get("content", "").strip()
 
         if content and "inline_content" not in fields:
-            fields["inline_content"] = HTML.filter(
-                content, inline=True, room_id=room.room_id,
-            )
+            fields["inline_content"] = HTML.filter(content, inline=True)
 
         # Create Event ModelItem
 

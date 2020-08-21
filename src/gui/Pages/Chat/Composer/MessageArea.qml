@@ -9,7 +9,9 @@ HTextArea {
     id: area
 
     property HListView eventList
-    property bool autoCompletionOpen
+
+    property bool autoCompletionOpen: false
+    property var usersCompleted: ({})
 
     property string indent: "    "
 
@@ -88,7 +90,10 @@ HTextArea {
     function sendText() {
         if (! toSend) return
 
-        const args = [chat.roomId, toSend, chat.replyToEventId]
+        // Need to copy usersCompleted because the completion UI closing will
+        // clear it before it reaches Python.
+        const mentions = Object.assign({}, usersCompleted)
+        const args     = [chat.roomId, toSend, mentions, chat.replyToEventId]
         py.callClientCoro(writingUserId, "send_text", args)
 
         area.clear()
@@ -184,7 +189,7 @@ HTextArea {
         autoCompletionOpen ? cancelAutoCompletion() : clearReplyTo()
 
     Keys.onReturnPressed: ev => {
-        extraCharacterCloseAutoCompletion()
+        if (autoCompletionOpen) extraCharacterCloseAutoCompletion()
         ev.accepted = true
 
         ev.modifiers & Qt.ShiftModifier ||
@@ -197,7 +202,7 @@ HTextArea {
     Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
     Keys.onMenuPressed: ev => {
-        extraCharacterCloseAutoCompletion()
+        if (autoCompletionOpen) extraCharacterCloseAutoCompletion()
 
         if (eventList && eventList.currentItem)
             eventList.currentItem.openContextMenu()
@@ -230,7 +235,7 @@ HTextArea {
     }
 
     Keys.onPressed: ev => {
-        if (ev.text) extraCharacterCloseAutoCompletion()
+        if (ev.text && autoCompletionOpen) extraCharacterCloseAutoCompletion()
 
         if (ev.matches(StandardKey.Copy) &&
             ! area.selectedText &&

@@ -3,7 +3,7 @@
 """HTML and Markdown processing tools."""
 
 import re
-from typing import DefaultDict, Dict, List, Tuple
+from typing import DefaultDict, Dict, List, Optional, Tuple
 from urllib.parse import unquote
 
 import html_sanitizer.sanitizer as sanitizer
@@ -174,9 +174,6 @@ class HTMLProcessor:
 
     extra_newlines_regex = re.compile(r"\n(\n*)")
 
-    # {room_id: {user_id: username}}
-    rooms_user_id_names: DefaultDict[str, Dict[str, str]] = DefaultDict(dict)
-
 
     def __init__(self) -> None:
         # The whitespace remover doesn't take <pre> into account
@@ -214,7 +211,7 @@ class HTMLProcessor:
 
 
     def user_id_link_in_html(self, html: str, user_id: str) -> bool:
-        """Return whether html contains a mention link for user_id."""
+        """Return whether html contains a mention link for `user_id`."""
 
         regex = re.compile(rf"https?://matrix.to/#/{user_id}", re.IGNORECASE)
 
@@ -227,10 +224,10 @@ class HTMLProcessor:
 
     def from_markdown(
         self,
-        text:     str,
-        inline:   bool = False,
-        outgoing: bool = False,
-        room_id:  str  = "",
+        text:                  str,
+        inline:                bool                     = False,
+        outgoing:              bool                     = False,
+        display_name_mentions: Optional[Dict[str, str]] = None,
     ) -> str:
         """Return filtered HTML from Markdown text."""
 
@@ -238,20 +235,22 @@ class HTMLProcessor:
             self._markdown_to_html(text),
             inline,
             outgoing,
-            room_id,
+            display_name_mentions,
         )
 
 
     def filter(
         self,
-        html:     str,
-        inline:   bool = False,
-        outgoing: bool = False,
-        room_id:  str  = "",
+        html:                  str,
+        inline:                bool                     = False,
+        outgoing:              bool                     = False,
+        display_name_mentions: Optional[Dict[str, str]] = None,
     ) -> str:
         """Filter and return HTML."""
 
-        sanit = Sanitizer(self.sanitize_settings(inline, outgoing, room_id))
+        mentions = display_name_mentions
+
+        sanit = Sanitizer(self.sanitize_settings(inline, outgoing, mentions))
         html  = sanit.sanitize(html).rstrip("\n")
 
         if not html.strip():
@@ -262,7 +261,7 @@ class HTMLProcessor:
         )
 
         for a_tag in tree.iterdescendants("a"):
-            self._mentions_to_matrix_to_links(a_tag, room_id, outgoing)
+            self._mentions_to_matrix_to_links(a_tag, mentions, outgoing)
 
             if not outgoing:
                 self._matrix_to_links_add_classes(a_tag)
@@ -286,7 +285,10 @@ class HTMLProcessor:
 
 
     def sanitize_settings(
-        self, inline: bool = False, outgoing: bool = False, room_id: str = "",
+        self,
+        inline:                bool                     = False,
+        outgoing:              bool                     = False,
+        display_name_mentions: Optional[Dict[str, str]] = None,
     ) -> dict:
         """Return an html_sanitizer configuration."""
 
@@ -309,13 +311,10 @@ class HTMLProcessor:
             },
         }}
 
-        username_link_regexes = []
-
-        if outgoing:
-            username_link_regexes = [re.compile(r) for r in [
-                rf"(?<!\w)(?P<body>{re.escape(username)})(?!\w)(?P<host>)"
-                for username in self.rooms_user_id_names[room_id].values()
-            ]]
+        username_link_regexes = [re.compile(r) for r in [
+            rf"(?<!\w)(?P<body>{re.escape(name)})(?!\w)(?P<host>)"
+            for name in (display_name_mentions or {})
+        ]]
 
         return {
             "tags": inline_tags if inline else all_tags,
@@ -472,11 +471,14 @@ class HTMLProcessor:
 
 
     def _mentions_to_matrix_to_links(
-        self, el: HtmlElement, room_id: str = "", outgoing: bool = False,
+        self,
+        el:                    HtmlElement,
+        display_name_mentions: Optional[Dict[str, str]] = None,
+        outgoing:              bool                     = False,
     ) -> HtmlElement:
-        """Turn user ID/names and room ID/aliases into matrix.to URL.
+        """Turn user ID, usernames and room ID/aliases into matrix.to URL.
 
-        After the HTML sanitizer autolinks these, the links's hrefs will be the
+        After the HTML sanitizer autolinks these, the links's hrefs are the
         link text, e.g. `<a href="@foo:bar.com">@foo:bar.com</a>`.
         We turn them into proper matrix.to URL in this function.
         """
@@ -493,11 +495,8 @@ class HTMLProcessor:
                 el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
                 return el
 
-        if not outgoing or room_id not in self.rooms_user_id_names:
-            return el
-
-        for user_id, username in self.rooms_user_id_names[room_id].items():
-            if unquote(el.attrib["href"]) == username:
+        for name, user_id in (display_name_mentions or {}).items():
+            if unquote(el.attrib["href"]) == name:
                 el.attrib["href"] = f"https://matrix.to/#/{user_id}"
                 return el
 
@@ -511,7 +510,6 @@ class HTMLProcessor:
 
         if not href or not el.text:
             return el
-
 
         # This must be first, or link will be mistaken by room ID/alias regex
         if self.link_is_message_id_regex.match(href):

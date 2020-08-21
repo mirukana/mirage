@@ -154,8 +154,6 @@ class NioCallbacks:
             ev.formatted_body
             if ev.format == "org.matrix.custom.html" else
             plain2html(ev.body),
-
-            room_id = room.room_id,
         )
 
         mention_list = HTML_PROCESSOR.mentions_in_html(co)
@@ -627,10 +625,8 @@ class NioCallbacks:
         self, room: nio.MatrixRoom, ev: nio.RoomTopicEvent,
     ) -> None:
         if ev.topic:
-            topic = HTML_PROCESSOR.filter(
-                plain2html(ev.topic), inline=True, room_id=room.room_id,
-            )
-            co = f"%1 changed the room's topic to \"{topic}\""
+            topic = HTML_PROCESSOR.filter(plain2html(ev.topic), inline=True)
+            co    = f"%1 changed the room's topic to \"{topic}\""
         else:
             co = "%1 removed the room's topic"
 

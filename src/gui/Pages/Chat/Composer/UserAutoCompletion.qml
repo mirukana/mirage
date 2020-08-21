@@ -6,14 +6,17 @@ import "../../.."
 import "../../../Base"
 import "../../../Base/HTile"
 
+// FIXME: a b -> a @p b → @p doesn't trigger completion
+// FIXME: close autocomplete when cursor moves away
 HListView {
-    id: listView
+    id: root
 
     property HTextArea textArea
     property bool open: false
 
     property string originalText: ""
     property bool autoOpenCompleted: false
+    property var usersCompleted: ({})  // {displayName: userId}
 
     readonly property bool autoOpen:
         autoOpenCompleted || textArea.text.match(/.*(^|\W)@[^\s]+$/)
@@ -26,11 +29,12 @@ HListView {
         ""
 
     function replaceLastWord(withText) {
-        const lastWordStart = /(?:^|\s)[^\s]+$/.exec(textArea.text).index
-        const isTextStart   =
-            lastWordStart === 0 && ! textArea.text[0].match(/\s/)
+        let lastWordStart = /(?:^|\s)[^\s]+$/.exec(textArea.text).index
 
-        textArea.remove(lastWordStart + (isTextStart ? 0 : 1), textArea.length)
+        if (! (lastWordStart === 0 && ! textArea.text[0].match(/\s/)))
+            lastWordStart += 1
+
+        textArea.remove(lastWordStart, textArea.length)
         textArea.insertAtCursor(withText)
     }
 
@@ -56,11 +60,22 @@ HListView {
         py.callCoro("set_string_filter", args, incrementCurrentIndex)
     }
 
+    function accept() {
+        if (currentIndex !== -1) {
+            const member = model.get(currentIndex)
+            usersCompleted[member.display_name] = member.id
+            usersCompletedChanged()
+        }
+
+        open = false
+    }
+
     function cancel() {
         if (originalText)
             replaceLastWord(originalText.split(/\s/).splice(-1)[0])
 
-        open = false
+        currentIndex = -1
+        open         = false
     }
 
 
@@ -70,11 +85,11 @@ HListView {
     model: ModelStore.get(chat.userId, chat.roomId, "autocompleted_members")
 
     delegate: HTile {
-        width: listView.width
+        width: root.width
         contentItem: HLabel { text: model.display_name + " (" + model.id + ")"}
         onClicked: {
-            currentIndex  = model.index
-            listView.open = false
+            currentIndex = model.index
+            root.open    = false
         }
     }
 
@@ -102,4 +117,21 @@ HListView {
 
     Behavior on opacity { HNumberAnimation {} }
     Behavior on implicitHeight { HNumberAnimation {} }
+
+    Connections {
+        target: root.textArea
+
+        function onTextChanged() {
+            let changed = false
+
+            for (const displayName of Object.keys(root.usersCompleted)) {
+                if (! root.textArea.text.includes(displayName)) {
+                    delete root.usersCompleted[displayName]
+                    changed = true
+                }
+            }
+
+            if (changed) root.usersCompletedChanged()
+        }
+    }
 }

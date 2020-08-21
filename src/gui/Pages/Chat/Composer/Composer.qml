@@ -50,6 +50,7 @@ Rectangle {
                 MessageArea {
                     id: messageArea
                     autoCompletionOpen: userCompletion.open
+                    usersCompleted: userCompletion.usersCompleted
 
                     onAutoCompletePrevious: userCompletion.previous()
                     onAutoCompleteNext: userCompletion.next()
@@ -57,7 +58,7 @@ Rectangle {
                     onExtraCharacterCloseAutoCompletion:
                         ! userCompletion.autoOpen ||
                         userCompletion.autoOpenCompleted ?
-                        userCompletion.open = false :
+                        userCompletion.accept() :
                         null
                 }
             }
