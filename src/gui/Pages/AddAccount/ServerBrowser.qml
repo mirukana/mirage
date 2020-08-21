@@ -232,7 +232,7 @@ HBox {
             width: serverList.width
             loadingIconStep: box.loadingIconStep
             onClicked: {
-                setFieldText(model.index)
+                serverList.setFieldText(model.index)
                 serverField.item.apply.clicked()
             }
         }
