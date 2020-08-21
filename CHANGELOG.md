@@ -128,6 +128,8 @@ and this project adheres to
 - Slightly increase the top/bottom padding to the multi-account bar in the 
   left pane
 
+- Dependencies: minimum nio version bumped to 0.15.0
+
 ### Removed
 
 - Themes: remove unused `controls.listView.smallPaneHighlight` property

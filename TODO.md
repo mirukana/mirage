@@ -1,7 +1,5 @@
 # TODO
 
-- update nio requirement
-
 - refresh server list button
 
 - global presence control
