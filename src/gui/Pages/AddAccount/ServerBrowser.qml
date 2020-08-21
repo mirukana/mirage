@@ -105,16 +105,13 @@ HBox {
             serverList.model.find(item.cleanText) !== null
 
         label.text: qsTr("Homeserver address:")
-        label.topPadding: theme.spacing
+        label.topPadding: theme.spacing / 2
         label.bottomPadding: label.topPadding / 4
-        label.leftPadding: label.topPadding
-        label.rightPadding: label.topPadding
-        errorLabel.leftPadding: label.topPadding
-        errorLabel.rightPadding: label.topPadding
-        errorLabel.bottomPadding: label.topPadding
-
-        Layout.fillWidth: true
-        Layout.margins: theme.spacing
+        label.leftPadding: theme.spacing
+        label.rightPadding: label.leftPadding
+        errorLabel.leftPadding: label.leftPadding
+        errorLabel.rightPadding: label.leftPadding
+        errorLabel.bottomPadding: label.leftPadding
 
         HRowLayout {
             readonly property alias field: field
