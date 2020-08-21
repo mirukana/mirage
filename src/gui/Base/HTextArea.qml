@@ -32,8 +32,22 @@ TextArea {
 
     signal customImagePaste()
 
-    function reset() { clear(); text = Qt.binding(() => defaultText || "") }
-    function insertAtCursor(text) { insert(cursorPosition, text) }
+    function reset() {
+        clear()
+        text = Qt.binding(() => defaultText || "")
+    }
+
+    function insertAtCursor(text) {
+        insert(cursorPosition, text)
+    }
+
+    function getWordAt(position) {
+        return utils.getWordAtPosition(text, position)
+    }
+
+    function getWordBehindCursor() {
+        return cursorPosition === 0 ? null : getWordAt(cursorPosition - 1)
+    }
 
 
     text: defaultText || ""

@@ -23,12 +23,12 @@ HTextArea {
         ModelStore.get("accounts").find(writingUserId)
 
     readonly property int cursorY:
-        area.text.substring(0, cursorPosition).split("\n").length - 1
+        text.substring(0, cursorPosition).split("\n").length - 1
 
     readonly property int cursorX:
         cursorPosition - lines.slice(0, cursorY).join("").length - cursorY
 
-    readonly property var lines: area.text.split("\n")
+    readonly property var lines: text.split("\n")
     readonly property string lineText: lines[cursorY] || ""
 
     readonly property string lineTextUntilCursor:
@@ -209,14 +209,17 @@ HTextArea {
     }
 
     Keys.onBacktabPressed: ev => {
-        ev.accepted = true
-        autoCompletePrevious()
+        // if previous char isn't a space/tab/newline
+        if (text.slice(cursorPosition - 1, cursorPosition).trim()) {
+            ev.accepted = true
+            autoCompletePrevious()
+        }
     }
 
     Keys.onTabPressed: ev => {
         ev.accepted = true
 
-        if (text.slice(-1).trim()) {  // previous char isn't a space/tab
+        if (text.slice(cursorPosition - 1, cursorPosition).trim()) {
             autoCompleteNext()
             return
         }

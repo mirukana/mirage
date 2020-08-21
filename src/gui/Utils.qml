@@ -497,4 +497,18 @@ QtObject {
 
         return sum
     }
+
+
+    function getWordAtPosition(text, position) {
+        // getWordAtPosition("foo bar", 1) → {word: "foo", start: 0, end: 2}
+        let seen = -1
+
+        for (var word of text.split(/(\s+)/)) {
+            var start = seen + 1
+            seen += word.length
+            if (seen >= position) return {word, start, end: seen}
+        }
+
+        return {word, start, end: seen}
+    }
 }

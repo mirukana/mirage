@@ -6,28 +6,31 @@ import "../../.."
 import "../../../Base"
 import "../../../Base/HTile"
 
-// FIXME: a b -> a @p b → @p doesn't trigger completion
 HListView {
     id: root
 
     property HTextArea textArea
     property bool open: false
 
-    property string originalText: ""
+    property var originalWord: null
     property bool autoOpenCompleted: false
     property var usersCompleted: ({})  // {displayName: userId}
 
-    readonly property bool autoOpen:
-        autoOpenCompleted || textArea.text.match(/.*(^|\W)@[^\s]+$/)
+    readonly property bool autoOpen: {
+        if (autoOpenCompleted) return true
+        const current = textArea.getWordBehindCursor()
+        return current ? /^@.+/.test(current.word) : false
+    }
 
-    readonly property string wordToComplete:
-        open ?
-        (originalText || textArea.text).split(/\s/).slice(-1)[0].replace(
-            autoOpen ? /^@/ : "", "",
-        ) :
+    readonly property var wordToComplete:
+        open ? originalWord || textArea.getWordBehindCursor() : null
+
+    readonly property string modelFilter:
+        autoOpen && wordToComplete ? wordToComplete.word.replace(/^@/, "") :
+        open && wordToComplete ? wordToComplete.word :
         ""
 
-    function getLastWordStart() {
+    function getCurrentWordStart() {
         const lastWordMatch = /(?:^|\s)[^\s]+$/.exec(textArea.text)
         if (! lastWordMatch) return textArea.length
 
@@ -37,9 +40,12 @@ HListView {
         return lastWordMatch.index
     }
 
-    function replaceLastWord(withText) {
-        textArea.remove(getLastWordStart(), textArea.length)
-        textArea.insertAtCursor(withText)
+    function replaceCurrentWord(withText) {
+        const current = textArea.getWordBehindCursor()
+        if (current) {
+            textArea.remove(current.start, current.end + 1)
+            textArea.insertAtCursor(withText)
+        }
     }
 
     function previous() {
@@ -49,7 +55,7 @@ HListView {
         }
 
         open = true
-        const args = [model.modelId, wordToComplete]
+        const args = [model.modelId, modelFilter]
         py.callCoro("set_string_filter", args, decrementCurrentIndex)
     }
 
@@ -60,7 +66,7 @@ HListView {
         }
 
         open = true
-        const args = [model.modelId, wordToComplete]
+        const args = [model.modelId, modelFilter]
         py.callCoro("set_string_filter", args, incrementCurrentIndex)
     }
 
@@ -75,8 +81,7 @@ HListView {
     }
 
     function cancel() {
-        if (originalText)
-            replaceLastWord(originalText.split(/\s/).splice(-1)[0])
+        if (originalWord) replaceCurrentWord(originalWord.word)
 
         currentIndex = -1
         open         = false
@@ -97,26 +102,25 @@ HListView {
         }
     }
 
-    onCountChanged: if (! count && open) open = false
     onAutoOpenChanged: open = autoOpen
     onOpenChanged: if (! open) {
-        originalText      = ""
+        originalWord      = null
         currentIndex      = -1
         autoOpenCompleted = false
         py.callCoro("set_string_filter", [model.modelId, ""])
     }
 
-    onWordToCompleteChanged: {
+    onModelFilterChanged: {
         if (! open) return
-        py.callCoro("set_string_filter", [model.modelId, wordToComplete])
+        py.callCoro("set_string_filter", [model.modelId, modelFilter])
     }
 
     onCurrentIndexChanged: {
         if (currentIndex === -1) return
-        if (! originalText) originalText = textArea.text
+        if (! originalWord) originalWord = textArea.getWordBehindCursor()
         if (autoOpen) autoOpenCompleted = true
 
-        replaceLastWord(model.get(currentIndex).display_name)
+        replaceCurrentWord(model.get(currentIndex).display_name)
     }
 
     Behavior on opacity { HNumberAnimation {} }
@@ -126,8 +130,17 @@ HListView {
         target: root.textArea
 
         function onCursorPositionChanged() {
-            if (root.open && root.textArea.cursorPosition < getLastWordStart())
-                root.accept()
+            if (! root.open) return
+
+            const pos   = root.textArea.cursorPosition
+            const start = root.wordToComplete.start
+            const end   =
+                currentIndex === -1 ?
+                root.wordToComplete.end + 1 :
+                root.wordToComplete.start +
+                model.get(currentIndex).display_name.length
+
+            if (pos < start || pos > end) root.accept()
         }
 
         function onTextChanged() {
