@@ -91,8 +91,8 @@ HBox {
 
     header: HLabel {
         text: qsTr(
-            "Choose a homeserver to create your account on, or the " +
-            "server on which you made an account to sign in to:"
+            "Choose a homeserver to create an account on, or the " +
+            "homeserver where you have an account to sign in to:"
         )
         wrapMode: HLabel.Wrap
         padding: theme.spacing
