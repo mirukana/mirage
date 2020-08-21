@@ -13,4 +13,4 @@ documentation in the following modules first:
 
 __app_name__     = "mirage"
 __display_name__ = "Mirage"
-__version__      = "0.6.0"
+__version__      = "0.6.1"
