@@ -95,7 +95,12 @@ HListView {
 
     visible: opacity > 0
     opacity: open && count ? 1 : 0
-    implicitHeight: open && count ? Math.min(window.height, contentHeight) : 0
+    bottomMargin: theme.spacing / 2
+    implicitHeight:
+        open && count ?
+        Math.min(window.height, contentHeight + topMargin + bottomMargin) :
+        0
+
     model: ModelStore.get(chat.userId, chat.roomId, "autocompleted_members")
 
     delegate: CompletableUserDelegate {
