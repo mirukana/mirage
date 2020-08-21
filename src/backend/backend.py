@@ -247,7 +247,6 @@ class Backend:
             await client.close()
             raise
 
-        # Check if the user is already present on mirage
         if client.user_id in self.clients:
             await client.logout()
             return client.user_id

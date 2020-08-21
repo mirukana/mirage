@@ -281,7 +281,7 @@ class MatrixClient(nio.AsyncClient):
             self.user_id, Account(self.user_id, order),
         )
 
-        # TODO: be abke to set presence before logging in
+        # TODO: be able to set presence before logging in
         item.set_fields(presence=Presence.State.online, connecting=True)
         self._presence  = "online"
         self.start_task = asyncio.ensure_future(self._start())

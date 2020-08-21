@@ -113,12 +113,12 @@ class NioCallbacks:
                 self.client.all_rooms[room_id], left=True,
             )
 
+        account            = self.models["accounts"][self.user_id]
+        account.connecting = False
+
         if not self.client.first_sync_done.is_set():
             self.client.first_sync_done.set()
             self.client.first_sync_date = datetime.now()
-
-            account = self.models["accounts"][self.user_id]
-            account.connecting = False
 
 
     async def onKeysQueryResponse(self, resp: nio.KeysQueryResponse) -> None:
