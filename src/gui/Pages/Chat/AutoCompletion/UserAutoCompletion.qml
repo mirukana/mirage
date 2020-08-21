@@ -13,6 +13,7 @@ HListView {
     property bool open: false
 
     property var originalWord: null
+    property int replacementLength: -1
     property bool autoOpenCompleted: false
     property var usersCompleted: ({})  // {displayName: userId}
 
@@ -24,6 +25,8 @@ HListView {
 
     readonly property var wordToComplete:
         open ? originalWord || textArea.getWordBehindCursor() : null
+    // property var pr: wordToComplete
+    // onPrChanged: print(JSON.stringify( pr, null, 4))
 
     readonly property string modelFilter:
         autoOpen && wordToComplete ? wordToComplete.word.replace(/^@/, "") :
@@ -40,12 +43,17 @@ HListView {
         return lastWordMatch.index
     }
 
-    function replaceCurrentWord(withText) {
+    function replaceCompletionOrCurrentWord(withText) {
         const current = textArea.getWordBehindCursor()
-        if (current) {
-            textArea.remove(current.start, current.end + 1)
-            textArea.insertAtCursor(withText)
-        }
+        if (! current) return
+
+        const start =
+            replacementLength === -1 ?
+            current.start :
+            current.end + 1 - replacementLength
+
+        textArea.remove(start, current.end + 1)
+        textArea.insertAtCursor(withText)
     }
 
     function previous() {
@@ -81,7 +89,7 @@ HListView {
     }
 
     function cancel() {
-        if (originalWord) replaceCurrentWord(originalWord.word)
+        if (originalWord) replaceCompletionOrCurrentWord(originalWord.word)
 
         currentIndex = -1
         open         = false
@@ -104,6 +112,7 @@ HListView {
     onAutoOpenChanged: open = autoOpen
     onOpenChanged: if (! open) {
         originalWord      = null
+        replacementLength = -1
         currentIndex      = -1
         autoOpenCompleted = false
         py.callCoro("set_string_filter", [model.modelId, ""])
@@ -119,7 +128,9 @@ HListView {
         if (! originalWord) originalWord = textArea.getWordBehindCursor()
         if (autoOpen) autoOpenCompleted = true
 
-        replaceCurrentWord(model.get(currentIndex).display_name)
+        const name = model.get(currentIndex).display_name
+        replaceCompletionOrCurrentWord(name)
+        replacementLength = name.length
     }
 
     Behavior on opacity { HNumberAnimation {} }
