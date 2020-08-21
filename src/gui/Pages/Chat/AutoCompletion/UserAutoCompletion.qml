@@ -13,7 +13,8 @@ HListView {
     property bool open: false
 
     property var originalWord: null
-    property int replacementLength: -1
+    property int replacementStart: -1
+    property int replacementEnd: -1
     property bool autoOpenCompleted: false
     property var usersCompleted: ({})  // {displayName: userId}
 
@@ -25,8 +26,6 @@ HListView {
 
     readonly property var wordToComplete:
         open ? originalWord || textArea.getWordBehindCursor() : null
-    // property var pr: wordToComplete
-    // onPrChanged: print(JSON.stringify( pr, null, 4))
 
     readonly property string modelFilter:
         autoOpen && wordToComplete ? wordToComplete.word.replace(/^@/, "") :
@@ -47,12 +46,10 @@ HListView {
         const current = textArea.getWordBehindCursor()
         if (! current) return
 
-        const start =
-            replacementLength === -1 ?
-            current.start :
-            current.end + 1 - replacementLength
+        replacementStart === -1 || replacementEnd === -1 ?
+        textArea.remove(current.start, current.end + 1) :
+        textArea.remove(replacementStart, replacementEnd)
 
-        textArea.remove(start, current.end + 1)
         textArea.insertAtCursor(withText)
     }
 
@@ -112,7 +109,8 @@ HListView {
     onAutoOpenChanged: open = autoOpen
     onOpenChanged: if (! open) {
         originalWord      = null
-        replacementLength = -1
+        replacementStart  = -1
+        replacementEnd    = -1
         currentIndex      = -1
         autoOpenCompleted = false
         py.callCoro("set_string_filter", [model.modelId, ""])
@@ -132,7 +130,8 @@ HListView {
         const replacement = member.display_name || member.id
 
         replaceCompletionOrCurrentWord(replacement)
-        replacementLength = replacement.length
+        replacementStart = textArea.cursorPosition - replacement.length
+        replacementEnd   = textArea.cursorPosition
     }
 
     Behavior on opacity { HNumberAnimation {} }
