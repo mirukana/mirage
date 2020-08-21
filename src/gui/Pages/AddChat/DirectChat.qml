@@ -81,7 +81,7 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: startChat()
+    onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: cancel()
 
     CurrentUserAvatar {

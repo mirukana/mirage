@@ -70,7 +70,7 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: join()
+    onKeyboardAccept: if (joinButton.enabled) joinButton.clicked()
     onKeyboardCancel: cancel()
 
     CurrentUserAvatar {

@@ -73,7 +73,7 @@ HFlickableColumnPopup {
     }
 
     onOpened: passwordField.forceActiveFocus()
-    onKeyboardAccept: popup.validate()
+    onKeyboardAccept: if (validateButton.enabled) validateButton.clicked()
 
     SummaryLabel { id: summary }
 

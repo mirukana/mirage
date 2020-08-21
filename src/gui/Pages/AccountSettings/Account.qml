@@ -85,8 +85,8 @@ HFlickableColumnPage {
         }
     }
 
+    onKeyboardAccept: if (saveButton.enabled) saveButton.clicked()
     onKeyboardCancel: cancel()
-    onKeyboardAccept: applyChanges()
 
     HUserAvatar {
         id: avatar

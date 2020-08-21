@@ -64,7 +64,7 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: create()
+    onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: cancel()
 
     HRoomAvatar {

@@ -168,7 +168,9 @@ HBox {
         }
     }
 
-    onKeyboardAccept: if (serverField.item.apply.enabled) box.connect()
+    onKeyboardAccept:
+        if (serverField.item.apply.enabled) serverField.item.apply.clicked()
+
     onAccepted: window.saveState(this)
 
     Timer {

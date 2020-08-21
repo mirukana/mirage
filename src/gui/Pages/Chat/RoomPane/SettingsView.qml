@@ -63,6 +63,7 @@ HFlickableColumnPage {
 
     footer: AutoDirectionLayout {
         ApplyButton {
+            id: applyButton
             enabled: anyChange
             loading: saveFuture !== null
             disableWhileLoading: false
@@ -76,7 +77,7 @@ HFlickableColumnPage {
         }
     }
 
-    onKeyboardAccept: save()
+    onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: cancel()
 
     HRoomAvatar {
