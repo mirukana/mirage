@@ -8,6 +8,183 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 0.6.1 (2020-08-21)
+
+### Added
+
+- **SSO authentication** support
+
+- **Homeserver browser**:
+  - To add a new account, you will be asked first to pick one of the 
+    listed public server 
+    (list data from [anchel.nl](https://publiclist.anchel.nl/))
+    or to manually enter a server address 
+
+  - Typing in the server address field will also filter the public server list, 
+    Up/Down or (Shift+)Tab and Enter can be used to navigate it by keyboard
+
+  - If the address doesn't have a `scheme://`, auto-detect whether the server
+    supports HTTPS or only HTTP
+
+  - Use the .well-known API if possible to resolve domains to the actual 
+    homeserver's URL, e.g. `matrix.org` resolves to 
+    `https://matrix-client.matrix.org`
+
+  - The server address field will remember the last homeserver that was
+    connected to
+
+- **Room members autocompletion**:
+  - Type `@` followed by one or more characters in the composer, 
+    or one or more characters and hit (Shift+)Tab to trigger username/user ID
+    autocompletion
+
+  - Only autocompleted names will be turned into mentions, unlike before
+    where any word in a sent message that happened to be someone's name would 
+    mention them
+
+- **Full image viewer** for matrix image messages and URL previews:
+  - Click on a thumbnail in the timeline to open the image viewer
+
+  - Middle click on a thumbnail (or use the option in the context menu)
+    to open the image externally
+
+  - Left click on the image (mouse only): expand to window size if the 
+    image's origin size is smaller than the window, 
+    else expand to original size
+
+  - Tap on the image (touch screen/pen only): reveal the info and button bars
+    when auto-hidden (bars will auto-hide only when they overlap with a big 
+    enough displayed image)
+
+  - Any mouse movement: reveal auto-hidden bars
+  - Double click on the image: toggle fullscreen
+  - Middle click anywhere: open externally
+  - Right click anywhere: close the viewer, back to chat
+  - Drag when displayed image is bigger than window to pan
+  - Wheel to pan up/down, hold shift or alt to pan left/right
+  - Ctrl+wheel to control zoom
+  - Buttons to control rotation, scale mode, fullscreen, GIF play/pause 
+    and GIF speed
+
+  - New keyboard shortcuts are available for all these actions, 
+    see `keys.imageViewer` in the config file (will be automatically updated 
+    when you start Mirage 0.6.1)
+
+- Add `media.openExternallyOnClick` setting to swap the new
+  click and middle click on thumbnails behavior 
+
+- Room and member filter fields now support (Shift+)Tab navigation, in addition
+  to Up/Down
+
+- Add a colored left border to the currently highlighted item in list views 
+  (e.g. room list, members list, etc) to improve visibility 
+
+- Themes:
+  - Add `controls.listView.highlightBorder` and
+    `controls.listView.highlightBorderThickness` properties (can be set to `0`)
+  - Add the `chat.userAutoCompletion` section
+
+### Changed
+
+- Messages context menu:
+  - Use a cleaner icon for the "Copy text" entry
+
+  - Replace the confusing broken "Copy media address" entry with:
+    - Copy media address: visible for non-encrypted media, always
+      copies the http URL
+
+    - Copy local path: always visible for already downloaded media, even if
+      they were downloaded before mirage was started
+
+- The `openMessagesLinks` keybind (default Ctrl+O) is renamed to
+  `openMessagesLinksOrFiles` and can now also open media message files
+
+- Using the `openMessagesLinksOrFiles` keybind on a reply will now ignore the
+  matrix.to links contained in the "In reply to XYZ" header
+
+- Pressing Ctrl+C to copy selected/highlighted non-encrypted media messages 
+  will copy their HTTP URL instead of the filename
+
+- Retry downloading image thumbnails if they fail with a 404 or 500+ server 
+  error (uploads sometimes take a few seconds to become available on the 
+  server)
+
+- Non-encrypted media messages are now always downloaded on click and opened
+  with a desktop application (or the image viewer), instead of
+  being opened in a browser
+
+- Compress thumbnails and clipboard images in a separate process, to avoid
+  blocking every other backend operation while the compression is running
+
+- Reduce the level of optimization applied to clipboard images, 
+  the previous setting was too slow for large PNG (10MB+)
+
+- Increase applied scrolling velocity when using the 
+  `scrollPageUp`/`scrollPageDown` keybinds, now similar to how it was before
+  Mirage 0.6.0
+
+- Don't catch SIGQUIT (Ctrl+\ in terminal) and SIGTERM signals, exit immediatly
+
+- Slightly increase the top/bottom padding to the multi-account bar in the 
+  left pane
+
+### Removed
+
+- Themes: remove unused `controls.listView.smallPaneHighlight` property
+
+### Fixed
+
+- Don't automatically focus member power level control when grayed out
+
+- Fix uploading files for servers not telling us their maximum allowed
+  file size
+
+- Fix message context menu "Copy text": when an event was highlighted with 
+  the keyboard, right clicking a message and clicking "Copy text" would always 
+  copy the message that was highlighted instead of the one the user aimed for.
+
+- Fix pressing menu key in chat opening both the composer's and the timeline's
+  context menus
+
+- Fix random chance of failure when fetching thumbnails or user profiles and
+  an account other than the current one is offline
+
+- Catch potential 403 errors when fetching presence for offline room members
+
+- Fix room right pane stealing focus from opened popup when resizing the window
+  from narrow/mobile mode to normal mode
+
+- Never try to send typing notifications in rooms where we don't have 
+  permission to talk
+
+- Fix clipboard upload preview popup not updating when the copied image changes
+
+- Fix some pages not respecting `enableKineticScrolling: false` setting
+
+- Fix truncated "Loading previous messag..." text in timeline
+
+- Fix possible race condition corrupting user config files on write
+
+- Fix missing member events from initial syncs, also fixes some cases
+  of the "Members not synced" error occuring in encrypted rooms where members
+  have recently joined or left.
+
+- Fetch missing member display name when displaying last messages in room pane 
+  for rooms that haven't had their members list fully loaded yet
+
+- Use uploaded sync filter IDs in sync requests instead of passing a long
+  JSON object in the URL every time, which caused problems on some servers with
+  a short URL length limit (e.g. halogen.city)
+
+- Fix autolinking user IDs that include `;` or `<` characters
+
+- Ignore enter keypresses in pages or popups when the accept button is grayed
+  out
+
+- Fix never-ending spinner in left pane when logging in to an account that was
+  already connected
+
+
 ## 0.6.0 (2020-07-17) 
 
 ### Added

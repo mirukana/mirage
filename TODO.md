@@ -1,6 +1,5 @@
 # TODO
 
-- theme changelog
 - update nio requirement
 
 - refresh server list button
