@@ -89,13 +89,43 @@ HBox {
     implicitWidth: theme.controls.box.defaultWidth * 1.25
     contentHeight: window.height
 
-    header: HLabel {
-        text: qsTr(
-            "Choose a homeserver to create an account on, or the " +
-            "homeserver where you have an account to sign in to:"
-        )
-        wrapMode: HLabel.Wrap
-        padding: theme.spacing
+    header: HColumnLayout {
+        HLabel {
+            text: qsTr(
+                "Choose a homeserver to create an account on, or the " +
+                "homeserver where you have an account to sign in to:"
+            )
+            wrapMode: HLabel.Wrap
+            padding: theme.spacing
+
+            Layout.fillWidth: true
+        }
+
+        HRowLayout {
+            Repeater {
+                model: [
+                    qsTr("Ping"),
+                    qsTr("Name & location"),
+                    qsTr("Stability"),
+                    qsTr("Site"),
+                ]
+
+                HLabel {
+                    text: modelData
+                    elide: HLabel.ElideRight
+                    topPadding: theme.spacing / 2
+                    bottomPadding: topPadding
+                    leftPadding: theme.spacing / (model.index === 0 ? 2 : 3)
+                    rightPadding: theme.spacing / (model.index === 3 ? 1.5 : 3)
+
+                    background: Rectangle {
+                        color: theme.controls.button.background
+                    }
+
+                    Layout.fillWidth: model.index === 1
+                }
+            }
+        }
     }
 
     footer: HLabeledItem {

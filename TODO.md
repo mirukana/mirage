@@ -1,6 +1,6 @@
 # TODO
 
-- keep scrollbars auto behavior?
+- update nio requirement
 - improve auto completion delegate
 
 - refresh server list button

@@ -73,7 +73,6 @@ HTile {
 
         HButton {
             icon.name: "server-visit-website"
-            toolTip.text: qsTr("Visit website")
             backgroundColor: "transparent"
             onClicked: Qt.openUrlExternally(model.site_url)
 
