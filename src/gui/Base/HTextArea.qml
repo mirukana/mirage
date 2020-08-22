@@ -20,6 +20,7 @@ TextArea {
     property var disabledText: null
     property var defaultText: null  // XXX test me
     readonly property bool changed: text !== (defaultText || "")
+    readonly property string displayText: text + preeditText
 
     property alias backgroundColor: textAreaBackground.color
     property color borderColor: theme.controls.textArea.border
@@ -42,7 +43,7 @@ TextArea {
     }
 
     function getWordAt(position) {
-        return utils.getWordAtPosition(text, position)
+        return utils.getWordAtPosition(displayText, position)
     }
 
     function getWordBehindCursor() {
