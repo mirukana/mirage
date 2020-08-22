@@ -11,12 +11,13 @@ import "../../ShortcutBundles"
 HBox {
     id: box
 
+    property bool knownHttps: window.getState(box, "knownHttps", false)
     property string acceptedUserUrl: ""
     property string acceptedUrl: ""
     property var loginFlows: []
 
     property string saveName: "serverBrowser"
-    property var saveProperties: ["acceptedUserUrl"]
+    property var saveProperties: ["acceptedUserUrl", "knownHttps"]
     property string loadingIconStep: "server-ping-bad"
 
     property Future connectFuture: null
@@ -41,7 +42,11 @@ HBox {
         if (connectFuture) connectFuture.cancel()
         connectTimeout.restart()
 
-        const args = [serverField.item.field.cleanText]
+        const typedUrl = serverField.item.field.cleanText
+        const args     = [typedUrl]
+
+        if (box.knownHttps)
+            args[0] = args[0].replace(/^(https?:\/\/)?/, "https://")
 
         connectFuture = py.callCoro("server_info", args, ([url, flows]) => {
             connectTimeout.stop()
@@ -61,7 +66,7 @@ HBox {
             }
 
             acceptedUrl     = url
-            acceptedUserUrl = String(args[0])
+            acceptedUserUrl = typedUrl
             loginFlows      = flows
             accepted()
 
@@ -164,6 +169,7 @@ HBox {
                     py.callCoro(
                         "set_string_filter", ["filtered_homeservers", text],
                     )
+                    knownHttps              = false
                     serverList.currentIndex = -1
                 }
 
@@ -252,8 +258,9 @@ HBox {
         id: serverList
 
         function setFieldText(fromItemIndex) {
-            serverField.item.field.text =
-                model.get(fromItemIndex).id.replace(/^https:\/\//, "")
+            const url                   = model.get(fromItemIndex).id
+            box.knownHttps              = /^https:\/\//.test(url)
+            serverField.item.field.text = url.replace(/^https:\/\//, "")
         }
 
         clip: true
