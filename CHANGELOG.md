@@ -73,6 +73,10 @@ and this project adheres to
 - Add `media.openExternallyOnClick` setting to swap the new
   click and middle click on thumbnails behavior 
 
+- Add `openMessagesLinksOrFilesExternally` keybind, by default Ctrl+Shift+O
+
+- Add `copyFilesLocalPath` keybind, by default Ctrl+Shift+C
+
 - Room and member filter fields now support (Shift+)Tab navigation, in addition
   to Up/Down
 
