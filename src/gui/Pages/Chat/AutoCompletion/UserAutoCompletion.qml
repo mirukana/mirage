@@ -159,12 +159,13 @@ HListView {
             const start = root.wordToComplete.start
             let end     = root.wordToComplete.end + 1
 
-            if (currentIndex !== -1) {
-                const member = model.get(currentIndex)
+            if (root.currentIndex !== -1) {
+                const member = root.model.get(root.currentIndex)
                 const repl   = member.display_name || member.id
                 end          = root.wordToComplete.start + repl.length
             }
 
+            if (pos === root.textArea.length) return
             if (pos < start || pos > end) root.accept()
         }
 
