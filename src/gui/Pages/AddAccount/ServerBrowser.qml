@@ -27,12 +27,13 @@ HBox {
     function takeFocus() { serverField.item.field.forceActiveFocus() }
 
     function fetchServers() {
+        if (fetchServersFuture) fetchServersFuture.cancel()
+
         fetchServersFuture = py.callCoro("fetch_homeservers", [], () => {
             fetchServersFuture = null
         }, (type, args, error, traceback) => {
             fetchServersFuture = null
-            // TODO
-            print( traceback)
+            print( traceback)  // TODO: display error graphically
         })
     }
 
@@ -283,7 +284,7 @@ HBox {
             height: width
 
             source: "../../Base/HBusyIndicator.qml"
-            active: box.fetchServersFuture
+            active: box.fetchServersFuture && ! serverList.count
             opacity: active ? 1 : 0
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }

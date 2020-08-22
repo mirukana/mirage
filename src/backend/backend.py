@@ -114,8 +114,6 @@ class Backend:
         self._sso_server:      Optional[SSOServer]      = None
         self._sso_server_task: Optional[asyncio.Future] = None
 
-        self._ping_tasks: Dict[str, asyncio.Future] = {}
-
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
             DefaultDict(asyncio.Lock)  # {user_id: lock}
@@ -565,6 +563,7 @@ class Backend:
         tmout    = aiohttp.ClientTimeout(total=20)
         session  = aiohttp.ClientSession(raise_for_status=True, timeout=tmout)
         response = await session.get(api_list)
+        coros    = []
 
         for server in (await response.json()):
             homeserver_url = server["homeserver"]
@@ -578,9 +577,6 @@ class Backend:
             if server["country"] == "USA":
                 server["country"] = "United States"
 
-            if homeserver_url in self._ping_tasks:
-                self._ping_tasks[homeserver_url].cancel()
-
             self.models["homeservers"][homeserver_url] = Homeserver(
                 id        = homeserver_url,
                 name      = server["name"],
@@ -590,6 +586,7 @@ class Backend:
                     self._get_homeserver_stability(server["monitor"]["logs"]),
             )
 
-            self._ping_tasks[homeserver_url] = asyncio.ensure_future(
-                self._ping_homeserver(session, homeserver_url),
-            )
+            coros.append(self._ping_homeserver(session, homeserver_url))
+
+        await asyncio.gather(*coros)
+        await session.close()
