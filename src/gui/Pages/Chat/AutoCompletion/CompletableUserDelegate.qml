@@ -25,7 +25,7 @@ HTile {
             implicitHeight:
                 compact ?
                 theme.controls.avatar.compactSize :
-                24 // XXX
+                theme.controls.avatar.size / 1.5
         }
 
         TitleLabel {
