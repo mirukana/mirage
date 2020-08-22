@@ -114,8 +114,7 @@ class Backend:
         self._sso_server:      Optional[SSOServer]      = None
         self._sso_server_task: Optional[asyncio.Future] = None
 
-        self._ping_tasks:      Dict[str, asyncio.Future] = {}
-        self._stability_tasks: Dict[str, asyncio.Future] = {}
+        self._ping_tasks: Dict[str, asyncio.Future] = {}
 
         self.profile_cache: Dict[str, nio.ProfileGetResponse] = {}
         self.get_profile_locks: DefaultDict[str, asyncio.Lock] = \
@@ -539,103 +538,58 @@ class Backend:
                 )
 
 
-    async def _get_homeserver_stability(
-        self,
-        session: aiohttp.ClientSession,
-        homeserver_url: str,
-        uptimerobot_id: int,
-    ) -> None:
-        api = "https://matrixservers.anchel.nl/api/getMonitor/wkMJmFGvo2?m={}"
-
-        response  = await session.get(api.format(uptimerobot_id))
-        logs      = (await response.json())["monitor"]["logs"]
+    def _get_homeserver_stability(self, logs: List[Dict[str, Any]]) -> float:
         stability = 100.0
 
         for period in logs:
-            started_at     = datetime.fromtimestamp(period["time"])
+            started_at     = datetime.fromtimestamp(period["datetime"])
             time_since_now = datetime.now() - started_at
 
-            if time_since_now.days > 30 or period["class"] != "danger":
+            if time_since_now.days > 30 or period["type"] != 1:  # 1 = downtime
                 continue
 
-            lasted_hours, lasted_mins = [
-                int(x.split()[0]) for x in period["duration"].split(", ")
-            ]
-            lasted_mins += lasted_hours * 60
+            lasted_minutes = period["duration"] / 60
+
             stability -= (
-                (lasted_mins * stability / 1000) /
+                (lasted_minutes * stability / 1000) /
                 max(1, time_since_now.days / 3)
             )
 
-        self.models["homeservers"][homeserver_url].stability = stability
-
-
-    async def _add_homeserver_item(
-        self,
-        session:        aiohttp.ClientSession,
-        homeserver_url: str,
-        uptimerobot_id: int,
-        **fields,
-    ) -> Homeserver:
-            """Add homeserver to our model & start info-gathering tasks."""
-
-            if not re.match(r"^https?://.+", homeserver_url):
-                homeserver_url = f"https://{homeserver_url}"
-
-            if fields.get("country") == "USA":
-                fields["country"] = "United States"
-
-            if homeserver_url in self._ping_tasks:
-                self._ping_tasks[homeserver_url].cancel()
-
-            if homeserver_url in self._stability_tasks:
-                self._stability_tasks[homeserver_url].cancel()
-
-            item = Homeserver(id=homeserver_url, **fields)
-            self.models["homeservers"][homeserver_url] = item
-
-            self._ping_tasks[homeserver_url] = asyncio.ensure_future(
-                self._ping_homeserver(session, homeserver_url),
-            )
-
-            self._stability_tasks[homeserver_url] = asyncio.ensure_future(
-                self._get_homeserver_stability(
-                    session, item.id, uptimerobot_id,
-                ),
-            )
-
-            return item
+        return stability
 
 
     async def fetch_homeservers(self) -> None:
         """Retrieve a list of public homeservers and add them to our model."""
 
-        api_list = "https://publiclist.anchel.nl/staticlist.json"
-
+        api_list = "https://publiclist.anchel.nl/publiclist.json"
         tmout    = aiohttp.ClientTimeout(total=20)
         session  = aiohttp.ClientSession(raise_for_status=True, timeout=tmout)
         response = await session.get(api_list)
-        data     = (await response.json())["staticlist"]
 
-        # Missing from the anchel.nl public list
-        await self._add_homeserver_item(
-            session        = session,
-            homeserver_url = "https://matrix-client.matrix.org",
-            name           = "matrix.org",
-            site_url       = "https://matrix.org",
-            country        = "Cloudflare",
-            uptimerobot_id = 783115140,
-        )
+        for server in (await response.json()):
+            homeserver_url = server["homeserver"]
 
-        for server in data:
-            if server["homeserver"].startswith("http://"):  # insecure server
+            if homeserver_url.startswith("http://"):  # insecure server
                 continue
 
-            await self._add_homeserver_item(
-                session        = session,
-                homeserver_url = server["homeserver"],
-                name           = server["name"],
-                site_url       = server["url"],
-                country        = server["country"],
-                uptimerobot_id = server["uptrid"],
+            if not re.match(r"^https?://.+", homeserver_url):
+                homeserver_url = f"https://{homeserver_url}"
+
+            if server["country"] == "USA":
+                server["country"] = "United States"
+
+            if homeserver_url in self._ping_tasks:
+                self._ping_tasks[homeserver_url].cancel()
+
+            self.models["homeservers"][homeserver_url] = Homeserver(
+                id        = homeserver_url,
+                name      = server["name"],
+                site_url  = server["url"],
+                country   = server["country"],
+                stability =
+                    self._get_homeserver_stability(server["monitor"]["logs"]),
+            )
+
+            self._ping_tasks[homeserver_url] = asyncio.ensure_future(
+                self._ping_homeserver(session, homeserver_url),
             )
