@@ -32,16 +32,6 @@ HListView {
         open && wordToComplete ? wordToComplete.word :
         ""
 
-    function getCurrentWordStart() {
-        const lastWordMatch = /(?:^|\s)[^\s]+$/.exec(textArea.text)
-        if (! lastWordMatch) return textArea.length
-
-        if (! (lastWordMatch.index === 0 && ! textArea.text[0].match(/\s/)))
-            return lastWordMatch.index + 1
-
-        return lastWordMatch.index
-    }
-
     function replaceCompletionOrCurrentWord(withText) {
         const current = textArea.getWordBehindCursor()
         if (! current) return
