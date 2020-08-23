@@ -431,10 +431,25 @@ class MatrixClient(nio.AsyncClient):
         self.first_sync_done.clear()
 
 
+    async def get_profile(
+        self, user_id: str, use_cache: bool = True,
+    ) -> nio.ProfileGetResponse:
+        """Cache and return the matrix profile of `user_id`."""
+
+        async with self.backend.get_profile_locks[user_id]:
+            if use_cache and user_id in self.backend.profile_cache:
+                return self.backend.profile_cache[user_id]
+
+            response = await super().get_profile(user_id)
+
+            self.backend.profile_cache[user_id] = response
+            return response
+
+
     async def update_own_profile(self) -> None:
         """Fetch our profile from server and Update our model `Account`."""
 
-        resp = await self.backend.get_profile(self.user_id, use_cache=False)
+        resp = await self.get_profile(self.user_id, use_cache=False)
 
         account = self.models["accounts"][self.user_id]
         account.set_fields(
@@ -1928,7 +1943,7 @@ class MatrixClient(nio.AsyncClient):
 
         If the member isn't found in the room (e.g. they left) and
         `can_fetch_from_network` is `True`, their
-        profile is retrieved using `MatrixClient.backend.get_profile()`.
+        profile is retrieved using `MatrixClient.get_profile()`.
         """
 
         try:
@@ -1940,7 +1955,7 @@ class MatrixClient(nio.AsyncClient):
                 return ("", "", True)
 
             try:
-                info = await self.backend.get_profile(user_id)
+                info = await self.get_profile(user_id)
                 return (info.displayname or "", info.avatar_url or "", False)
             except MatrixError:
                 return ("", "", False)
