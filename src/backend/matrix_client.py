@@ -1845,6 +1845,15 @@ class MatrixClient(nio.AsyncClient):
         self.models[self.user_id, "rooms"][room.room_id] = room_item
 
         if not registered or force_register_members:
+            model = self.models[self.user_id, room.room_id, "members"]
+
+            # The members we initially get from lazy sync may be outdated
+            # and contain members that already left.
+            # tuple() used to avoid "dict changed size during iteration".
+            for member_id in tuple(model):
+                if member_id not in room.users:
+                    await self.remove_member(room, member_id)
+
             for user_id in room.users:
                 await self.add_member(room, user_id)
 
