@@ -30,6 +30,8 @@ Written in Qt/QML and Python, **currently in alpha**.
 ### Accounts
 
 - **Multiple accounts** in one client
+- Built-in public homeservers list
+- **SSO** and password authentication
 - Set your display name and profile picture
 - Import/export **E2E** key files
 - Inspect, rename, manually verify and sign out one or multiple **sessions**
@@ -64,8 +66,10 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Send and receive normal or **E2E encrypted files**
 - Client-side Matrix & HTTP URL **image previews**, including animated GIF 
 - Upload images by pasting
+- Full-size image viewer 
 
 - User ID, display names, room ID and room aliases **mentions**
+- **Autocompletion** for usernames and user ID
 - Individual and mass **message removal**
 - Sending **rich replies**
 
