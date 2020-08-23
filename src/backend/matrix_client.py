@@ -512,7 +512,7 @@ class MatrixClient(nio.AsyncClient):
         self,
         room_id:               str,
         text:                  str,
-        display_name_mentions: Optional[Dict[str, str]] = None,  # {name: id}
+        display_name_mentions: Optional[Dict[str, str]] = None,  # {id: name}
         reply_to_event_id:     Optional[str]            = None,
     ) -> None:
         """Send a markdown `m.text` or `m.notice` (with `/me`) message ."""

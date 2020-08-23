@@ -312,8 +312,8 @@ class HTMLProcessor:
         }}
 
         username_link_regexes = [re.compile(r) for r in [
-            rf"(?<!\w)(?P<body>{re.escape(name)})(?!\w)(?P<host>)"
-            for name in (display_name_mentions or {})
+            rf"(?<!\w)(?P<body>{re.escape(name or user_id)})(?!\w)(?P<host>)"
+            for user_id, name in (display_name_mentions or {}).items()
         ]]
 
         return {
@@ -495,8 +495,8 @@ class HTMLProcessor:
                 el.attrib["href"] = f"https://matrix.to/#/{el.attrib['href']}"
                 return el
 
-        for name, user_id in (display_name_mentions or {}).items():
-            if unquote(el.attrib["href"]) == name:
+        for user_id, name in (display_name_mentions or {}).items():
+            if unquote(el.attrib["href"]) == (name or user_id):
                 el.attrib["href"] = f"https://matrix.to/#/{user_id}"
                 return el
 

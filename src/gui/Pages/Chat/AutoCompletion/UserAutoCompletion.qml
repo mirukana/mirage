@@ -16,7 +16,7 @@ HListView {
     property int replacementStart: -1
     property int replacementEnd: -1
     property bool autoOpenCompleted: false
-    property var usersCompleted: ({})  // {displayName: userId}
+    property var usersCompleted: ({})  // {userId: displayName}
 
     readonly property bool autoOpen: {
         if (autoOpenCompleted) return true
@@ -70,7 +70,7 @@ HListView {
     function accept() {
         if (currentIndex !== -1) {
             const member = model.get(currentIndex)
-            usersCompleted[member.display_name] = member.id
+            usersCompleted[member.id] = member.display_name
             usersCompletedChanged()
         }
 
@@ -165,9 +165,9 @@ HListView {
         function onTextChanged() {
             let changed = false
 
-            for (const displayName of Object.keys(root.usersCompleted)) {
-                if (! root.textArea.text.includes(displayName)) {
-                    delete root.usersCompleted[displayName]
+            for (const [id, name] of Object.entries(root.usersCompleted)) {
+                if (! root.textArea.text.includes(name)) {
+                    delete root.usersCompleted[id]
                     changed = true
                 }
             }
