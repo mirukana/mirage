@@ -8,14 +8,18 @@ import "../../Base"
 HPopup {
     id: popup
 
+    property string clientUserId
+
     property string thumbnailTitle
     property string thumbnailMxc
     property string thumbnailPath: ""
     property var thumbnailCryptDict
+
     property string fullTitle
     property string fullMxc
     property var fullCryptDict
     property int fullFileSize
+
     property size overallSize
 
     property bool alternateScaling: false

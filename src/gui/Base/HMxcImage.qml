@@ -6,6 +6,7 @@ import "../PythonBridge"
 HImage {
     id: image
 
+    property string clientUserId
     property string mxc
     property string title
     property string sourceOverride: ""
@@ -38,9 +39,10 @@ HImage {
         }
 
         const method = image.thumbnail ? "get_thumbnail" : "get_media"
-        const args   = image.thumbnail ?
-                       [image.mxc, image.title, w, h, cryptDict] :
-                       [image.mxc, image.title, cryptDict]
+        const args   =
+            image.thumbnail ?
+            [clientUserId, image.mxc, image.title, w, h, cryptDict] :
+            [clientUserId, image.mxc, image.title, cryptDict]
 
         getFuture = py.callCoro("media_cache." + method, args, path => {
                 if (! image) return

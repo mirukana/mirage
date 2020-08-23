@@ -25,6 +25,7 @@ Rectangle {
         HUserAvatar {
             id: avatar
             radius: 0
+            clientUserId: messageArea.writingUserId
             userId: messageArea.writingUserId
 
             mxc:

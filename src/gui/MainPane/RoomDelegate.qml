@@ -48,6 +48,7 @@ HTile {
 
         HRoomAvatar {
             id: avatar
+            clientUserId: model.for_account
             roomId: model.id
             displayName: model.display_name
             mxc: model.avatar_url

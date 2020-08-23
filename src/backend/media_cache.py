@@ -49,29 +49,31 @@ class MediaCache:
 
     async def get_media(
         self,
-        mxc:        str,
-        title:      str,
-        crypt_dict: CryptDict = None,
+        client_user_id: str,
+        mxc:            str,
+        title:          str,
+        crypt_dict:     CryptDict = None,
     ) -> Path:
         """Return `Media.get()`'s result. Intended for QML."""
 
-        return await Media(self, mxc, title, crypt_dict).get()
+        return await Media(self, client_user_id,  mxc, title, crypt_dict).get()
 
 
     async def get_thumbnail(
         self,
-        mxc:        str,
-        title:      str,
-        width:      int,
-        height:     int,
-        crypt_dict: CryptDict = None,
+        client_user_id: str,
+        mxc:            str,
+        title:          str,
+        width:          int,
+        height:         int,
+        crypt_dict:     CryptDict = None,
     ) -> Path:
         """Return `Thumbnail.get()`'s result. Intended for QML."""
 
-        thumb = Thumbnail(
-            # QML sometimes pass float sizes, which matrix API doesn't like.
-            self, mxc, title, crypt_dict, (round(width), round(height)),
-        )
+        # QML sometimes pass float sizes, which matrix API doesn't like.
+        size = (round(width), round(height))
+
+        thumb = Thumbnail(self, client_user_id, mxc, title, crypt_dict, size)
         return await thumb.get()
 
 
@@ -79,10 +81,11 @@ class MediaCache:
 class Media:
     """A matrix media file."""
 
-    cache:      "MediaCache" = field()
-    mxc:        str          = field()
-    title:      str          = field()
-    crypt_dict: CryptDict    = field(repr=False)
+    cache:          "MediaCache" = field()
+    client_user_id: str          = field()
+    mxc:            str          = field()
+    title:          str          = field()
+    crypt_dict:     CryptDict    = field(repr=False)
 
 
     def __post_init__(self) -> None:
@@ -154,7 +157,7 @@ class Media:
 
         parsed = urlparse(self.mxc)
 
-        resp = await self.cache.backend.download(
+        resp = await self.cache.backend.clients[self.client_user_id].download(
             server_name = parsed.netloc,
             media_id    = parsed.path.lstrip("/"),
         )
@@ -183,15 +186,18 @@ class Media:
     @classmethod
     async def from_existing_file(
         cls,
-        cache:     "MediaCache",
-        mxc:       str,
-        existing:  Path,
-        overwrite: bool = False,
+        cache:          "MediaCache",
+        client_user_id: str,
+        mxc:            str,
+        existing:       Path,
+        overwrite:      bool = False,
         **kwargs,
     ) -> "Media":
         """Copy an existing file to cache and return a `Media` for it."""
 
-        media = cls(cache, mxc, existing.name, {}, **kwargs)  # type: ignore
+        media = cls(
+            cache, client_user_id, mxc, existing.name, {}, **kwargs,
+        )  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
@@ -204,16 +210,19 @@ class Media:
     @classmethod
     async def from_bytes(
         cls,
-        cache:     "MediaCache",
-        mxc:       str,
-        filename:  str,
-        data:      bytes,
-        overwrite: bool = False,
+        cache:          "MediaCache",
+        client_user_id: str,
+        mxc:            str,
+        filename:       str,
+        data:           bytes,
+        overwrite:      bool = False,
         **kwargs,
     ) -> "Media":
         """Create a cached file from bytes data and return a `Media` for it."""
 
-        media = cls(cache, mxc, filename, {}, **kwargs)  # type: ignore
+        media = cls(
+            cache, client_user_id, mxc, filename, {}, **kwargs,
+        )  # type: ignore
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
@@ -230,11 +239,12 @@ class Media:
 class Thumbnail(Media):
     """The thumbnail of a matrix media, which is a media itself."""
 
-    cache:       "MediaCache" = field()
-    mxc:         str          = field()
-    title:       str          = field()
-    crypt_dict:  CryptDict    = field(repr=False)
-    wanted_size: Size         = field()
+    cache:          "MediaCache" = field()
+    client_user_id: str          = field()
+    mxc:            str          = field()
+    title:          str          = field()
+    crypt_dict:     CryptDict    = field(repr=False)
+    wanted_size:    Size         = field()
 
     server_size: Optional[Size] = field(init=False, repr=False, default=None)
 
@@ -322,16 +332,17 @@ class Thumbnail(Media):
         """Return the (decrypted) media file's content from the server."""
 
         parsed = urlparse(self.mxc)
+        client = self.cache.backend.clients[self.client_user_id]
 
         if self.crypt_dict:
             # Matrix makes encrypted thumbs only available through the download
             # end-point, not the thumbnail one
-            resp = await self.cache.backend.download(
+            resp = await client.download(
                 server_name = parsed.netloc,
                 media_id    = parsed.path.lstrip("/"),
             )
         else:
-            resp = await self.cache.backend.thumbnail(
+            resp = await client.thumbnail(
                 server_name = parsed.netloc,
                 media_id    = parsed.path.lstrip("/"),
                 width       = self.wanted_size[0],

@@ -192,10 +192,11 @@ class NioCallbacks:
 
         try:
             media_local_path: Union[Path, str] = await Media(
-                cache      = self.client.backend.media_cache,
-                mxc        = ev.url,
-                title      = ev.body,
-                crypt_dict = media_crypt_dict,
+                cache          = self.client.backend.media_cache,
+                client_user_id = self.user_id,
+                mxc            = ev.url,
+                title          = ev.body,
+                crypt_dict     = media_crypt_dict,
             ).get_local()
         except FileNotFoundError:
             media_local_path = ""

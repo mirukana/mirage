@@ -107,6 +107,7 @@ HFlickable {
 
             Math.min(window.height, viewer.overallSize.height)
 
+        clientUserId: viewer.clientUserId
         showPauseButton: false
         showProgressBar: false
         pause: viewer.imagesPaused
@@ -152,6 +153,7 @@ HFlickable {
         HMxcImage {
             id: full
             anchors.fill: parent
+            clientUserId: viewer.clientUserId
             thumbnail: false
             showPauseButton: false
             pause: viewer.imagesPaused

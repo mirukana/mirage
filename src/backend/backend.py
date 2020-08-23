@@ -349,46 +349,7 @@ class Backend:
             failures += 1
 
 
-    async def get_any_client(self) -> MatrixClient:
-        """Return any healthy syncing `MatrixClient` registered in model."""
-
-        failures = 0
-
-        while True:
-            for client in self.clients.values():
-                if client.healthy:
-                    return client
-
-            if failures and failures % 300 == 0:
-                log.warn(
-                    "No healthy client found after %ds, stack trace:\n%s",
-                    failures / 10, traceback.format_stack(),
-                )
-
-            await asyncio.sleep(0.1)
-            failures += 1
-
-
-    # Client functions that don't need authentification
-
-    async def thumbnail(
-        self, server_name: str, media_id: str, width: int, height: int,
-    ) -> nio.ThumbnailResponse:
-        """Return thumbnail for a matrix media."""
-
-        args   = (server_name, media_id, width, height)
-        client = await self.get_any_client()
-        return await client.thumbnail(*args)
-
-
-    async def download(
-        self, server_name: str, media_id: str,
-    ) -> nio.DownloadResponse:
-        """Return the content of a matrix media."""
-
-        client = await self.get_any_client()
-        return await client.download(server_name, media_id)
-
+    # Multi-client Matrix functions
 
     async def update_room_read_marker(
         self, room_id: str, event_id: str,
@@ -414,6 +375,37 @@ class Backend:
                     await client.update_receipt_marker(room_id, event_id)
 
         await asyncio.gather(*[update(c) for c in self.clients.values()])
+
+
+    async def verify_device(
+        self, user_id: str, device_id: str, ed25519_key: str,
+    ) -> None:
+        """Mark a device as verified on all our accounts."""
+
+        for client in self.clients.values():
+            try:
+                device = client.device_store[user_id][device_id]
+            except KeyError:
+                continue
+
+            if device.ed25519 == ed25519_key:
+                client.verify_device(device)
+
+
+    async def blacklist_device(
+        self, user_id: str, device_id: str, ed25519_key: str,
+    ) -> None:
+        """Mark a device as blacklisted on all our accounts."""
+
+        for client in self.clients.values():
+            try:
+                # This won't include the client's current device, as expected
+                device = client.device_store[user_id][device_id]
+            except KeyError:
+                continue
+
+            if device.ed25519 == ed25519_key:
+                client.blacklist_device(device)
 
 
     # General functions
@@ -461,37 +453,6 @@ class Backend:
         This should only be called from QML.
         """
         self.models["all_rooms"].set_account_collapse(user_id, collapse)
-
-
-    async def verify_device(
-        self, user_id: str, device_id: str, ed25519_key: str,
-    ) -> None:
-        """Mark a device as verified on all our accounts."""
-
-        for client in self.clients.values():
-            try:
-                device = client.device_store[user_id][device_id]
-            except KeyError:
-                continue
-
-            if device.ed25519 == ed25519_key:
-                client.verify_device(device)
-
-
-    async def blacklist_device(
-        self, user_id: str, device_id: str, ed25519_key: str,
-    ) -> None:
-        """Mark a device as blacklisted on all our accounts."""
-
-        for client in self.clients.values():
-            try:
-                # This won't include the client's current device, as expected
-                device = client.device_store[user_id][device_id]
-            except KeyError:
-                continue
-
-            if device.ed25519 == ed25519_key:
-                client.blacklist_device(device)
 
 
     async def _ping_homeserver(

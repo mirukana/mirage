@@ -69,6 +69,7 @@ HFlickableColumnPage {
 
     HRoomAvatar {
         id: avatar
+        clientUserId: page.userId
         roomId: ""
         displayName: nameField.item.text
 

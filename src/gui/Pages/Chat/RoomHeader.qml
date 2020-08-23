@@ -52,6 +52,7 @@ Rectangle {
 
         HRoomAvatar {
             id: avatar
+            clientUserId: chat.userId
             roomId: chat.roomId
             displayName: chat.roomInfo.display_name
             mxc: chat.roomInfo.avatar_url

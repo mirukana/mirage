@@ -9,6 +9,7 @@ Rectangle {
     property bool compact: false
 
     property string name
+    property alias clientUserId: avatarImage.clientUserId
     property alias mxc: avatarImage.mxc
     property alias title: avatarImage.title
 
@@ -60,11 +61,11 @@ Rectangle {
     HMxcImage {
         id: avatarImage
         anchors.fill: parent
-        showProgressBar: false
         visible: Boolean(sourceOverride || mxc)
         z: 2
         sourceSize.width: parent.width
         sourceSize.height: parent.height
+        showProgressBar: false
         fillMode: Image.PreserveAspectCrop
         animatedFillMode: AnimatedImage.PreserveAspectCrop
         animate: false
@@ -95,6 +96,7 @@ Rectangle {
                 id: avatarToolTipImage
                 fillMode: Image.PreserveAspectCrop
                 animatedFillMode: AnimatedImage.PreserveAspectCrop
+                clientUserId: avatarImage.clientUserId
                 mxc: avatarImage.mxc
                 title: avatarImage.title
 

@@ -60,6 +60,7 @@ HMxcImage {
     height: fitSize.height
     horizontalAlignment: Image.AlignLeft
 
+    clientUserId: chat.userId
     title: thumbnail ? loader.thumbnailTitle : loader.title
     animated: eventList.isAnimated(loader.singleMediaInfo)
     thumbnail: ! animated && loader.thumbnailMxc

@@ -94,6 +94,7 @@ HRowLayout {
 
         HUserAvatar {
             id: avatar
+            clientUserId: chat.userId
             userId: model.sender_id
             displayName: model.sender_name
             mxc: model.sender_avatar

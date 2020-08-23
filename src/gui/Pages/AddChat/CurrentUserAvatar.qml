@@ -8,7 +8,7 @@ HUserAvatar {
     property QtObject account
 
 
-    // userId: (set me)
+    clientUserId: userId
     displayName: account ? account.display_name : ""
     mxc: account ? account.avatar_url : ""
 

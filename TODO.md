@@ -1,5 +1,6 @@
 # TODO
 
+- composer state.json writingUserId problem?
 - refresh server list button
 
 - global presence control

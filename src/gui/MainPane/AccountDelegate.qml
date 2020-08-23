@@ -57,6 +57,7 @@ HTile {
 
         HUserAvatar {
             id: avatar
+            clientUserId: model.id
             userId: model.id
             displayName: model.display_name
             mxc: model.avatar_url

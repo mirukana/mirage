@@ -93,6 +93,7 @@ HFlickableColumnPage {
 
         property bool changed: Boolean(sourceOverride)
 
+        clientUserId: page.userId
         userId: page.userId
         displayName: nameField.item.text
         mxc: account ? account.avatar_url : ""

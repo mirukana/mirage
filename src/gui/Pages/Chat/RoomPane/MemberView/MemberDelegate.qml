@@ -23,6 +23,7 @@ HTile {
 
         HUserAvatar {
             id: avatar
+            clientUserId: chat.userId
             userId: model.id
             displayName: model.display_name
             mxc: model.avatar_url

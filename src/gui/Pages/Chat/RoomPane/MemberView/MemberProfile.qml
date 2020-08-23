@@ -61,6 +61,7 @@ HListView {
             root.currentIndex = 0
 
         HUserAvatar {
+            clientUserId: chat.userId
             userId: member.id
             displayName: member.display_name
             mxc: member.avatar_url

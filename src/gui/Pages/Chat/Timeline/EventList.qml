@@ -416,6 +416,7 @@ Rectangle {
             window.makePopup(
                 "Popups/ImageViewerPopup/ImageViewerPopup.qml",
                 {
+                    clientUserId: chat.userId,
                     thumbnailTitle: getThumbnailTitle(event),
                     thumbnailMxc: event.thumbnail_url,
                     thumbnailPath: eventList.thumbnailCachedPaths[event.id],
@@ -459,6 +460,7 @@ Rectangle {
             print("Downloading " + event.media_url + " ...")
 
             const args = [
+                chat.userId,
                 event.media_url,
                 event.media_title,
                 JSON.parse(event.media_crypt_dict),

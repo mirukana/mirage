@@ -211,18 +211,6 @@ class MatrixClient(nio.AsyncClient):
 
 
     @property
-    def healthy(self) -> bool:
-        """Return whether we're syncing and last sync was successful."""
-
-        task = self.sync_task
-
-        if not task or not self.first_sync_date or self.last_sync_error:
-            return False
-
-        return not task.done()
-
-
-    @property
     def default_device_name(self) -> str:
         """Device name to set at login if the user hasn't set a custom one."""
 
@@ -734,7 +722,7 @@ class MatrixClient(nio.AsyncClient):
 
         upload_item.status = UploadStatus.Caching
         local_media        = await Media.from_existing_file(
-            self.backend.media_cache, url, path,
+            self.backend.media_cache, self.user_id, url, path,
         )
 
         kind = (mime or "").split("/")[0]
@@ -816,6 +804,7 @@ class MatrixClient(nio.AsyncClient):
 
                     await Thumbnail.from_bytes(
                         self.backend.media_cache,
+                        self.user_id,
                         thumb_url,
                         path.name,
                         thumb_data,
