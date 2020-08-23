@@ -1,6 +1,5 @@
 # TODO
 
-- save usersCompleted in state.json
 - refresh server list button
 
 - global presence control

@@ -70,7 +70,7 @@ HListView {
     function accept() {
         if (currentIndex !== -1) {
             const member = model.get(currentIndex)
-            usersCompleted[member.id] = member.display_name
+            usersCompleted[member.id] = member.display_name.trim()
             usersCompletedChanged()
         }
 
@@ -126,7 +126,7 @@ HListView {
         if (autoOpen) autoOpenCompleted = true
 
         const member      = model.get(currentIndex)
-        const replacement = member.display_name || member.id
+        const replacement = member.display_name.trim() || member.id
 
         replaceCompletionOrCurrentWord(replacement)
         replacementStart = textArea.cursorPosition - replacement.length
@@ -154,7 +154,7 @@ HListView {
 
             if (root.currentIndex !== -1) {
                 const member = root.model.get(root.currentIndex)
-                const repl   = member.display_name || member.id
+                const repl   = member.display_name.trim() || member.id
                 end          = root.wordToComplete.start + repl.length
             }
 
