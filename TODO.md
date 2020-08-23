@@ -1,6 +1,6 @@
 # TODO
 
-- composer state.json writingUserId problem?
+- model not in list error in the onri test room
 - refresh server list button
 
 - global presence control

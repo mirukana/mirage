@@ -102,7 +102,7 @@ HTextArea {
 
 
     saveName: "composer"
-    saveId: [chat.roomId, writingUserId]
+    saveId: [chat.roomId, chat.userId]
 
     enabled: chat.roomInfo.can_send_messages
     disabledText: qsTr("You do not have permission to post in this room")
