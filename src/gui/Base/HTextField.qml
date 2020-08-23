@@ -87,6 +87,9 @@ TextField {
         previousDefaultText = defaultText
     }
 
+    onPressed: ev => { if (ev.button === Qt.RightButton) contextMenu.spawn() }
+    onPressAndHold: ev => contextMenu.spawn()
+
     // Prevent alt/super+any key from typing text
     Keys.onPressed: if (
         event.modifiers & Qt.AltModifier ||
@@ -144,17 +147,6 @@ TextField {
         font.pixelSize: parent.font.pixelSize
 
         Behavior on opacity { HNumberAnimation {} }
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.RightButton
-        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-        onTapped: contextMenu.spawn()
-    }
-
-    TapHandler {
-        acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
-        onLongPressed: contextMenu.spawn()
     }
 
     HTextContextMenu { id: contextMenu }
