@@ -99,8 +99,9 @@ HListView {
         width: root.width
         colorName: hovered || root.currentIndex === model.index
         onClicked: {
-            currentIndex = model.index
-            root.open    = false
+            root.currentIndex = model.index
+            root.accept()
+            root.open = false
         }
     }
 

@@ -1,5 +1,6 @@
 # TODO
 
+- save usersCompleted in state.json
 - refresh server list button
 
 - global presence control
@@ -60,9 +61,8 @@
 ## Interface
 
 - Colorize "@room" in messages
-  opening a page or popup
 - Device IP geolocation
-- Can rooms but left with a reason?
+- Can rooms be left with a reason?
 
 - When responding to a message, highlight that message in the timeline
 - Highlight timeline messages that mentions our user
@@ -168,7 +168,6 @@
 - Prevent starting multiple client instances, causes problems with E2E DB
 - Check if username exists on login screen
 - [Soft logouts](https://github.com/poljar/matrix-nio/commit/aba10)
-- Logout previous session when adding an account that's already connected
 
 - Cache and restore profiles, room events and client states
 
