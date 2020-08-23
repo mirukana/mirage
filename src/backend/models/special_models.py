@@ -125,8 +125,11 @@ class AutoCompletedMembers(FieldStringFilter):
         self.room_id = room_id
         sync_id      = (user_id, room_id, "autocompleted_members")
 
-        super().__init__(sync_id=sync_id, fields=("display_name", "id"))
-        self.no_filter_accept_all_items = False
+        super().__init__(
+            sync_id                    = sync_id,
+            fields                     = ("display_name", "id"),
+            no_filter_accept_all_items = False,
+        )
 
 
     def accept_source(self, source: Model) -> bool:

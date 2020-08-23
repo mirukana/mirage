@@ -123,11 +123,17 @@ class FieldStringFilter(ModelFilter):
     all lowercase, sensitive otherwise.
     """
 
-    def __init__(self, sync_id: SyncId, fields: Collection[str]) -> None:
-        self.fields:  Collection[str] = fields
-        self._filter: str             = ""
+    def __init__(
+        self,
+        sync_id:                    SyncId,
+        fields:                     Collection[str],
+        no_filter_accept_all_items: bool = True,
+    ) -> None:
 
-        self.no_filter_accept_all_items: bool = True
+        self.fields                     = fields
+        self.no_filter_accept_all_items = no_filter_accept_all_items
+        self._filter: str               = ""
+
 
         super().__init__(sync_id)
 
