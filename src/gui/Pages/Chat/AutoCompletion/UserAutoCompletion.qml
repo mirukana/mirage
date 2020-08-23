@@ -33,6 +33,8 @@ HListView {
         ""
 
     function replaceCompletionOrCurrentWord(withText) {
+        Qt.inputMethod.reset()
+
         const current = textArea.getWordBehindCursor()
         if (! current) return
 
