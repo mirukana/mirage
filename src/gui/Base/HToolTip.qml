@@ -12,8 +12,6 @@ ToolTip {
     property alias label: label
     property alias backgroundColor: background.color
 
-    readonly property bool hideNow: ! window.hovered
-
 
     function instantShow(timeout=-1) {
         if (visible) return
@@ -58,13 +56,17 @@ ToolTip {
         HNumberAnimation { property: "opacity"; to: 0.0 }
     }
 
-    onHideNowChanged: if (visible && hideNow) toolTip.hide()
-
     TapHandler {
         onTapped: toolTip.hide()
     }
 
     HoverHandler {
         onHoveredChanged: if (! hovered) toolTip.hide()
+    }
+
+    HoverHandler {
+        target: mainUI
+        enabled: toolTip.visible
+        onHoveredChanged: if (toolTip.visible && ! hovered) toolTip.hide()
     }
 }

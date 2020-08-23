@@ -10,7 +10,6 @@ ApplicationWindow {
 
     // FIXME: Qt 5.13.1 bug, this randomly stops updating after the cursor
     // leaves the window until it's clicked again.
-    readonly property alias hovered: windowHover.hovered
 
     readonly property bool hidden:
         Qt.application.state === Qt.ApplicationSuspended ||
@@ -84,8 +83,6 @@ ApplicationWindow {
     PythonRootBridge { id: py }
 
     Utils { id: utils }
-
-    HoverHandler { id: windowHover }
 
     HLoader {
         anchors.fill: parent
