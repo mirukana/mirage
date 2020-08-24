@@ -13,8 +13,11 @@ HColumnPopup {
     property string roomId
     property string roomName
     property string filePath
+    property string replyToEventId: ""
 
     readonly property string fileName: filePath.split("/").slice(-1)[0]
+
+    signal replied()
 
 
     contentWidthLimit: theme.controls.popup.defaultWidth * 1.25
@@ -25,9 +28,14 @@ HColumnPopup {
             text: qsTr("Send")
             icon.name: "confirm-uploading-file"
             onClicked: {
-                py.callClientCoro(
-                    popup.userId, "send_file", [popup.roomId, filePath],
-                )
+                const args = [
+                    popup.roomId,
+                    popup.filePath,
+                    popup.replyToEventId || undefined,
+                ]
+
+                py.callClientCoro(popup.userId, "send_file", args)
+                if (popup.replyToEventId) popup.replied()
                 popup.close()
             }
         }

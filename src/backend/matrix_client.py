@@ -617,7 +617,12 @@ class MatrixClient(nio.AsyncClient):
         self.upload_tasks[uuid].cancel()
 
 
-    async def send_clipboard_image(self, room_id: str, image: bytes) -> None:
+    async def send_clipboard_image(
+        self,
+        room_id:           str,
+        image:             bytes,
+        reply_to_event_id: Optional[str] = None,
+    ) -> None:
         """Send a clipboard image passed from QML as a `m.image` message."""
 
         prefix = datetime.now().strftime("%Y%m%d-%H%M%S.")
@@ -633,16 +638,28 @@ class MatrixClient(nio.AsyncClient):
 
                 return Path(temp.name)
 
-            await self.send_file(room_id, get_path)
+            await self.send_file(room_id, get_path, reply_to_event_id)
 
 
-    async def send_file(self, room_id: str, path: PathCallable) -> None:
-        """Send a `m.file`, `m.image`, `m.audio` or `m.video` message."""
+    async def send_file(
+        self,
+        room_id:           str,
+        path:              PathCallable,
+        reply_to_event_id: Optional[str] = None,
+    ) -> None:
+        """Send a `m.file`, `m.image`, `m.audio` or `m.video` message.
+
+        The Matrix client-server API states that media messages can't have a
+        reply attached.
+        Thus, if a `reply_to_event_id` is passed, we send a pseudo-reply as two
+        events: a `m.text` one with the reply but an empty body, then the
+        actual media.
+        """
 
         item_uuid = uuid4()
 
         try:
-            await self._send_file(item_uuid, room_id, path)
+            await self._send_file(item_uuid, room_id, path, reply_to_event_id)
         except (nio.TransferCancelledError, asyncio.CancelledError):
             self.upload_monitors.pop(item_uuid, None)
             self.upload_tasks.pop(item_uuid, None)
@@ -650,9 +667,13 @@ class MatrixClient(nio.AsyncClient):
 
 
     async def _send_file(
-        self, item_uuid: UUID, room_id: str, path: PathCallable,
+        self,
+        item_uuid:         UUID,
+        room_id:           str,
+        path:              PathCallable,
+        reply_to_event_id: Optional[str] = None,
     ) -> None:
-        """Upload and monitor a file + thumbnail and send the built event."""
+        """Upload and monitor a file + thumbnail and send the built event(s)"""
 
         # TODO: this function is way too complex, and most of it should be
         # refactored into nio.
@@ -859,6 +880,11 @@ class MatrixClient(nio.AsyncClient):
         del self.upload_monitors[item_uuid]
         del self.upload_tasks[item_uuid]
         del self.models[room_id, "uploads"][str(upload_item.id)]
+
+        if reply_to_event_id:
+            await self.send_text(
+                room_id=room_id, text="", reply_to_event_id=reply_to_event_id,
+            )
 
         await self._local_echo(
             room_id,

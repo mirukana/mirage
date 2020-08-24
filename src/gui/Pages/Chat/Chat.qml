@@ -28,6 +28,14 @@ Item {
     readonly property bool composerHasFocus:
         Boolean(loader.item && loader.item.composer.hasFocus)
 
+    function clearReplyTo() {
+        if (! replyToEventId) return
+
+        replyToEventId     = ""
+        replyToUserId      = ""
+        replyToDisplayName = ""
+    }
+
 
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
     onReadyChanged: longLoading = false

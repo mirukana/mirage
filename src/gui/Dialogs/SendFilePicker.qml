@@ -6,7 +6,10 @@ import Qt.labs.platform 1.1
 HFileDialogOpener {
     property string userId
     property string roomId
+    property string replyToEventId: ""
     property bool destroyWhenDone: false
+
+    signal replied()
 
 
     fill: false
@@ -16,14 +19,17 @@ HFileDialogOpener {
     onFilesPicked: {
         for (const file of files) {
             const path = Qt.resolvedUrl(file).replace(/^file:/, "")
+            const args = [roomId, path, replyToEventId || undefined]
 
-            py.callClientCoro(userId, "send_file", [roomId, path], () => {
+            py.callClientCoro(userId, "send_file", args, () => {
                 if (destroyWhenDone) destroy()
 
             }, (type, args, error, traceback) => {
                 console.error(`python:\n${traceback}`)
                 if (destroyWhenDone) destroy()
             })
+
+            if (replyToUserId) replied()
         }
     }
 

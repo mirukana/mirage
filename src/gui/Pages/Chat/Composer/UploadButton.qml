@@ -28,7 +28,9 @@ HButton {
                 roomId: chat.roomId,
                 roomName: chat.roomInfo.display_name,
                 filePath: Clipboard.text.trim(),
+                replyToEventId: chat.replyToEventId,
             },
+            popup => popup.replied.connect(chat.clearReplyTo),
         )
     }
 
@@ -36,6 +38,8 @@ HButton {
         id: sendFilePicker
         userId: chat.userId
         roomId: chat.roomId
+        replyToEventId: chat.replyToEventId
+        onReplied: chat.clearReplyTo()
 
         HShortcut {
             sequences: window.settings.keys.sendFile

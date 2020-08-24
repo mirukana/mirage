@@ -16,6 +16,9 @@ HColumnPopup {
     property string userId
     property string roomId
     property string roomName
+    property string replyToEventId: ""
+
+    signal replied()
 
 
     contentWidthLimit: theme.controls.popup.defaultWidth * 1.25
@@ -26,11 +29,14 @@ HColumnPopup {
             text: qsTr("Send")
             icon.name: "confirm-uploading-file"
             onClicked: {
-                py.callClientCoro(
-                    popup.userId,
-                    "send_clipboard_image",
-                    [popup.roomId, Clipboard.image],
-                )
+                const args = [
+                    popup.roomId,
+                    Clipboard.image,
+                    popup.replyToEventId || undefined,
+                ]
+
+                py.callClientCoro(popup.userId, "send_clipboard_image", args)
+                if (popup.replyToEventId) popup.replied()
                 popup.close()
             }
         }

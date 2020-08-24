@@ -98,14 +98,6 @@ HTextArea {
         py.callClientCoro(userId, "room_typing", [chat.roomId, typing])
     }
 
-    function clearReplyTo() {
-        if (! chat.replyToEventId) return
-
-        chat.replyToEventId     = ""
-        chat.replyToUserId      = ""
-        chat.replyToDisplayName = ""
-    }
-
     function addNewLine() {
         let indents = 0
         const parts = lineText.split(indent)
@@ -171,7 +163,9 @@ HTextArea {
             userId: chat.userId,
             roomId: chat.roomId,
             roomName: chat.roomInfo.display_name,
+            replyToEventId: chat.replyToEventId,
         },
+        popup => popup.replied.connect(chat.clearReplyTo),
     )
 
     Keys.onEscapePressed:
