@@ -120,7 +120,7 @@ HTextArea {
     }
 
     function sendText() {
-        if (! toSend) return
+        if (! toSend && ! chat.replyToEventId) return
 
         // Need to copy usersCompleted because the completion UI closing will
         // clear it before it reaches Python.
