@@ -15,12 +15,47 @@ HTextArea {
 
     property string indent: "    "
 
-    property string toSend: ""
+    property string userSetAsTyping: ""
     property bool textChangedSinceLostFocus: false
-    property string writingUserId: chat.userId
 
-    readonly property QtObject writingUserInfo:
-        ModelStore.get("accounts").find(writingUserId)
+    readonly property var usableAliases: {
+        const obj = {}
+
+        // Get accounts that are members of this room with permission to talk
+        for (const [id, alia] of Object.entries(window.settings.writeAliases)){
+            const room = ModelStore.get(id, "rooms").find(chat.roomId)
+            if (room &&
+                    ! room.inviter_id && ! room.left && room.can_send_messages)
+                obj[id] = alia
+        }
+
+        return obj
+    }
+
+    readonly property var candidateAliases: {
+        if (! text) return []
+
+        const candidates = []
+        const words      = text.split(" ")
+
+        for (const [userId, alias] of Object.entries(usableAliases))
+            if ((words.length === 1 && alias.startsWith(words[0])) ||
+                (words.length > 1 && words[0] == alias))
+
+                candidates.push({id: userId, text: alias})
+
+        return candidates
+    }
+
+    readonly property var usingAlias:
+        candidateAliases.length === 1 && text.includes(" ") ?
+        candidateAliases[0] :
+        null
+
+    readonly property string writerId: usingAlias ? usingAlias.id : chat.userId
+
+    readonly property string toSend:
+        usingAlias ? text.replace(usingAlias.text + " ", "") : text
 
     readonly property int cursorY:
         text.substring(0, cursorPosition).split("\n").length - 1
@@ -39,20 +74,6 @@ HTextArea {
     //     lineTextUntilCursor.match(/ {1,4}/g).slice(-1)[0].length :
     //     1
 
-    readonly property var usableAliases: {
-        const obj = {}
-
-        // Get accounts that are members of this room with permission to talk
-        for (const [id, alia] of Object.entries(window.settings.writeAliases)){
-            const room = ModelStore.get(id, "rooms").find(chat.roomId)
-            if (room &&
-                    ! room.inviter_id && ! room.left && room.can_send_messages)
-                obj[id] = alia
-        }
-
-        return obj
-    }
-
     signal autoCompletePrevious()
     signal autoCompleteNext()
     signal acceptAutoCompletion()
@@ -61,9 +82,18 @@ HTextArea {
     function setTyping(typing) {
         if (! area.enabled) return
 
-        py.callClientCoro(
-            writingUserId, "room_typing", [chat.roomId, typing, 5000],
-        )
+        if (typing && userSetAsTyping && userSetAsTyping !== writerId)
+            py.callClientCoro(
+                userSetAsTyping, "room_typing", [chat.roomId, false],
+            )
+
+        const userId = typing ? writerId : userSetAsTyping
+
+        userSetAsTyping = typing ? writerId : ""
+
+        if (! userId) return  // ! typing && ! userSetAsTyping
+
+        py.callClientCoro(userId, "room_typing", [chat.roomId, typing])
     }
 
     function clearReplyTo() {
@@ -94,7 +124,7 @@ HTextArea {
         // clear it before it reaches Python.
         const mentions = Object.assign({}, usersCompleted)
         const args     = [chat.roomId, toSend, mentions, chat.replyToEventId]
-        py.callClientCoro(writingUserId, "send_text", args)
+        py.callClientCoro(writerId, "send_text", args)
 
         area.clear()
         clearReplyTo()
@@ -116,56 +146,13 @@ HTextArea {
     tabStopDistance: 4 * 4  // 4 spaces
     focus: true
 
-    // TODO: make this more declarative
-    onTextChanged: {
-        if (! text || utils.isEmptyObject(usableAliases)) {
-            writingUserId = Qt.binding(() => chat.userId)
-            toSend        = text
-            setTyping(Boolean(text))
-            textChangedSinceLostFocus = true
-            return
-        }
+    onTextChanged: if (! text) setTyping(false)
 
-        let foundAlias = null
+    onToSendChanged: {
+        textChangedSinceLostFocus = true
 
-        for (const [user, writing_alias] of Object.entries(usableAliases)) {
-            if (text.startsWith(writing_alias + " ")) {
-                writingUserId = user
-                foundAlias = new RegExp("^" + writing_alias + " ")
-                break
-            }
-        }
-
-        if (foundAlias) {
-            toSend = text.replace(foundAlias, "")
-            setTyping(Boolean(text))
-            textChangedSinceLostFocus = true
-            return
-        }
-
-        writingUserId = Qt.binding(() => chat.userId)
-        toSend        = text
-
-        const vals = Object.values(usableAliases)
-
-        const longestAlias =
-            vals.reduce((a, b) => a.length > b.length ? a: b)
-
-        const textNotStartsWithAnyAlias =
-            ! vals.some(a => a.startsWith(text))
-
-        const textContainsCharNotInAnyAlias =
-            vals.every(a => text.split("").some(c => ! a.includes(c)))
-
-        // Only set typing when it's sure that the user will not use
-        // an alias and has written something
-        if (toSend &&
-            (text.length > longestAlias.length ||
-             textNotStartsWithAnyAlias ||
-             textContainsCharNotInAnyAlias))
-        {
-            setTyping(Boolean(text))
-            textChangedSinceLostFocus = true
+        if (toSend && (usingAlias || ! candidateAliases.length)) {
+            setTyping(true)
         }
     }
 

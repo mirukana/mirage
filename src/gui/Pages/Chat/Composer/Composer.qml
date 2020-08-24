@@ -2,6 +2,7 @@
 
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
+import "../../.."
 import "../../../Base"
 import "../AutoCompletion"
 
@@ -24,19 +25,15 @@ Rectangle {
 
         HUserAvatar {
             id: avatar
+
+            readonly property QtObject writerInfo:
+                ModelStore.get("accounts").find(clientUserId)
+
+            clientUserId: messageArea.writerId
+            userId: clientUserId
+            mxc: writerInfo ? writerInfo.avatar_url : ""
+            displayName: writerInfo ? writerInfo.display_name : ""
             radius: 0
-            clientUserId: messageArea.writingUserId
-            userId: messageArea.writingUserId
-
-            mxc:
-                messageArea.writingUserInfo ?
-                messageArea.writingUserInfo.avatar_url :
-                ""
-
-            displayName:
-                messageArea.writingUserInfo ?
-                messageArea.writingUserInfo.display_name :
-                ""
         }
 
         HScrollView {

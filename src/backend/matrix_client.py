@@ -1239,8 +1239,8 @@ class MatrixClient(nio.AsyncClient):
     ):
         """Set typing notice to the server."""
 
-        # Do not send typing notice if the user is invisible
         presence = self.models["accounts"][self.user_id].presence
+
         if presence not in [Presence.State.invisible, Presence.State.offline]:
             await super().room_typing(room_id, typing_state, timeout)
 

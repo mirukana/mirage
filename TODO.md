@@ -1,6 +1,6 @@
 # TODO
 
-- model not in list error in the onri test room
+- session list: prevent tab-focusing the delegates
 - refresh server list button
 
 - global presence control
