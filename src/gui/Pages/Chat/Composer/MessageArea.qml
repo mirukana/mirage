@@ -19,14 +19,16 @@ HTextArea {
     property bool textChangedSinceLostFocus: false
 
     readonly property var usableAliases: {
-        const obj = {}
+        const obj     = {}
+        const aliases = window.settings.writeAliases
 
         // Get accounts that are members of this room with permission to talk
-        for (const [id, alia] of Object.entries(window.settings.writeAliases)){
+        for (const [id, alias] of Object.entries(aliases)) {
             const room = ModelStore.get(id, "rooms").find(chat.roomId)
-            if (room &&
-                    ! room.inviter_id && ! room.left && room.can_send_messages)
-                obj[id] = alia
+
+            room && ! room.inviter_id && ! room.left && room.can_send_messages?
+            obj[id] = alias.trim().split(/\s/)[0] :
+            null
         }
 
         return obj

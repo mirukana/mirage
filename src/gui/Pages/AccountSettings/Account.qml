@@ -74,7 +74,7 @@ HFlickableColumnPage {
             enabled:
                 avatar.changed ||
                 nameField.item.changed ||
-                (aliasField.item.changed && ! aliasField.alreadyTakenBy)
+                (aliasField.item.changed && ! aliasField.item.error)
 
             onClicked: applyChanges()
         }
@@ -235,6 +235,8 @@ HFlickableColumnPage {
         readonly property var aliases: window.settings.writeAliases
         readonly property string currentAlias: aliases[userId] || ""
 
+        readonly property bool hasWhiteSpace: /\s/.test(item.text)
+
         readonly property string alreadyTakenBy: {
             if (! item.text) return ""
 
@@ -247,8 +249,8 @@ HFlickableColumnPage {
         label.text: qsTr("Composer alias:")
 
         errorLabel.text:
-            alreadyTakenBy ?
-            qsTr("Taken by %1").arg(alreadyTakenBy) :
+            hasWhiteSpace ? qsTr("Alias cannot include spaces") :
+            alreadyTakenBy ? qsTr("Taken by %1").arg(alreadyTakenBy) :
             ""
 
         toolTip.text: qsTr(
@@ -263,7 +265,7 @@ HFlickableColumnPage {
 
         HTextField {
             width: parent.width
-            error: aliasField.alreadyTakenBy !== ""
+            error: aliasField.hasWhiteSpace || aliasField.alreadyTakenBy
             defaultText: aliasField.currentAlias
             placeholderText: qsTr("e.g. %1").arg((
                 nameField.item.text ||
