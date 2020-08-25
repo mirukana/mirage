@@ -29,7 +29,7 @@ HColumnPage {
 
     Timer {
         interval: 200
-        running: true
+        running: ! chat.roomInfo.inviter_id && ! chat.roomInfo.left
         onTriggered: loadMembersFuture = py.callClientCoro(
             chat.userId,
             "load_all_room_members",

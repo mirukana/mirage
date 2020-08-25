@@ -23,6 +23,9 @@
 
 ## Issues
 
+- Show a proper error when accepting a room invite that has expired or
+  the room doesn't exist anymore (`MatrixNotFound`)
+
 - Replying to one of our own message that's currently only a local echo
   results in a reply to an empty ID
 
