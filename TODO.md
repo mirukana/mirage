@@ -17,6 +17,7 @@
 
 - General change/upload avatar component for account and room settings
 - Refactor EventList.qml
+- Refactor `InviteBanner`/`LeftBanner`
 - Implement different delegate for different types of events in QML, instead
   of having only one doing everything with untranslatable content texts
   from Python

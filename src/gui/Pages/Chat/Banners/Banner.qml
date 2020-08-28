@@ -76,12 +76,19 @@ Rectangle {
 
                     HButton {
                         id: button
+
+                        readonly property bool shouldFocus:
+                            banner.visible && model.index === 0
+
                         text: modelData.text
                         icon.name: modelData.iconName
                         icon.color: modelData.iconColor || theme.icons.colorize
                         onClicked: buttonCallbacks[modelData.name](button)
 
                         Layout.preferredHeight: theme.baseElementsHeight
+
+                        onShouldFocusChanged:
+                            if (shouldFocus) forceActiveFocus()
                     }
                 }
             }
