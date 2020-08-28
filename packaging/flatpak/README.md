@@ -20,6 +20,7 @@ If the download fails for some reason, run `flatpak repair` before retrying.
 To build, run from the root of the project:
 
 ```
+make clean
 flatpak-builder --repo=build/flatpak/repo --force-clean build/flatpak/build packaging/flatpak/mirage.flatpak.yaml
 ```
 
