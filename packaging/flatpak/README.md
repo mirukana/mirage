@@ -4,42 +4,34 @@
 
 To build the Flatpak package, you will need `flatpak`, `flatpak-builder`, and
 KDE 5.14 runtime with SDK. `flatpak-builder` is usually available from
-the same repository as `flatpak`.
-
-[Flatpak setup instructions](https://flatpak.org/setup/)
+the same repository as `flatpak`.  
+See the [Flatpak setup instructions](https://flatpak.org/setup/) 
+for your system.
 
 To install the runtimes (remove the `--user` flag and run as root if you 
 prefer system-wide installation):
 
-```
-flatpak install --user flathub org.kde.Platform//5.14 org.kde.Sdk//5.14
+```sh
+    flatpak install --user flathub org.kde.Platform//5.14 org.kde.Sdk//5.14
 ```
 
 If the download fails for some reason, run `flatpak repair` before retrying.
 
-To build, run from the root of the project:
+To build, create a bundle and install it, run from the root of the project:
 
-```
-make clean
-flatpak-builder --repo=build/flatpak/repo --force-clean build/flatpak/build packaging/flatpak/mirage.flatpak.yaml
-```
-
-To create bundle, run
-
-```
-flatpak build-bundle build/flatpak/repo build/mirage.flatpak io.github.mirukana.mirage
+```sh
+    make clean
+    flatpak-builder --repo=build/flatpak/repo --force-clean build/flatpak/build packaging/flatpak/mirage.flatpak.yaml
+    flatpak build-bundle build/flatpak/repo build/mirage.flatpak io.github.mirukana.mirage
+    flatpak install --user build/mirage.flatpak
 ```
 
-Then you can install it with
-```
-flatpak install --user build/mirage.flatpak
-```
+To run the installed bundle,
+either use your desktop environment or command line:
 
-To run, either use your desktop environment or command line:
+```sh
+    flatpak run io.github.mirukana.mirage
 ```
-flatpak run io.github.mirukana.mirage
-```
-
 
 ## Manifest
 
