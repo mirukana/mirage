@@ -8,6 +8,77 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 0.6.2 (2020-08-28)
+
+### Changed
+
+- When replying to a message, you can now press enter without entering any
+  text to send it directly (useful to "forward" a message).
+
+- Sending a file while replying to a message will create a pseudo-reply,
+  consisting of an "In reply to" text message with no body, followed by the
+  actual file event.
+  This is a workaround to the reply restrictions imposed by the Matrix spec.
+
+- **Composer aliases cannot contain whitespace anymore.**
+  This includes spaces, hard tabs or newline characters.
+  If an alias from your config still has whitespace, only the first word
+  will be taken into account (ignoring any leading or trailing space).
+
+- Faster server browser loading, now gathers all needed data with a
+  single request instead of one for each server
+
+- Auto-focus the "Join" button on invited room pages
+  ((Shift+)Tab can be used to navigate between buttons)
+
+- Auto-focus the "Forget" button on left room pages
+
+- Themes: modify *chat.message.styleSheet* to add some spacing between HTML 
+  list items, see
+  [48663ae](https://github.com/mirukana/mirage/commit/48663ae8465e90646855435b47b89c01395ae4d9)
+
+### Fixed
+
+- Fix @username autocompletion closing if there's more than one character
+  after the @
+
+- Consider the partial text from IME (input method editors) and touch screen 
+  autocompleting keyboards and for username autocompletion
+
+- Reset IME state upon autocompleting a username
+
+- Fix clicking on autocompletion list user not making the username a mention
+
+- Fix UI freezing when mentioning user lacking a display name
+
+- Fix mentioning users with blank display name (e.g. only spaces), mention
+  them by their user ID
+
+- Fix text fields/areas unable to be focused on touch screen
+
+- Fix random chance of profile retrieval requests failing if one of the logged
+  in account doesn't federate with other servers (e.g. localhost synapse)
+
+- Fix composer text saved to disk for the wrong account if that text begins
+  by an account alias
+
+- Servers can potentially return an outdated member list for rooms on initial 
+  sync, which is one of the possible cause of "Members not synced" error for 
+  encrypted rooms.  
+  When loading the full room list, discard members from the initial sync list
+  that are absent from the full list.
+  For those not using the AppImage or Flatpak, 
+  this fix requires **matrix-nio 0.15.1** or later to take effect.
+
+- When erasing an account alias inside the composer, send a 
+  "x isn't typing anymore" notification corresponding to that account 
+
+- Fix potential 403 error on chat pages for invited rooms.
+
+- Start loading room history immediately when the room join state changes,
+  e.g. when clicked "Join" for an invited room page.
+
+
 ## 0.6.1 (2020-08-21)
 
 ### Added
