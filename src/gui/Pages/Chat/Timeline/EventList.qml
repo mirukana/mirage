@@ -219,12 +219,9 @@ Rectangle {
     HListView {
         id: eventList
 
-        property string inviter: chat.roomInfo.inviter || ""
-        property real yPos: visibleArea.yPosition
-        property bool canLoad: true
-        property bool loading: false
-
         property Future updateMarkerFuture: null
+        property Future loadPastEventsFuture: null
+        property bool moreToLoad: true
 
         property bool ownEventsOnLeft:
             window.settings.ownMessagesOnLeftAboveWidth < 0 ?
@@ -235,6 +232,12 @@ Rectangle {
         property string selectedText: ""
 
         property alias cursorShape: cursorShapeArea.cursorShape
+
+        readonly property bool shouldLoadPastEvents:
+            ! chat.roomInfo.inviter_id &&
+            ! chat.roomInfo.left &&
+            moreToLoad &&
+            visibleArea.yPosition < 0.1
 
         readonly property var thumbnailCachedPaths: ({})  // {event.id: path}
 
@@ -321,35 +324,15 @@ Rectangle {
         }
 
         function loadPastEvents() {
-            // try/catch blocks to hide pyotherside error when the
-            // component is destroyed but func is still running
-
-            try {
-                eventList.canLoad = false
-                eventList.loading = true
-
-                py.callClientCoro(
-                    chat.userId,
-                    "load_past_events",
-                    [chat.roomId],
-                    moreToLoad => {
-                        try {
-                            eventList.canLoad = moreToLoad
-
-                            // Call yPosChanged() to run this func again
-                            // if the loaded messages aren't enough to fill
-                            // the screen.
-                            if (moreToLoad) yPosChanged()
-
-                            eventList.loading = false
-                        } catch (err) {
-                            return
-                        }
-                    }
-                )
-            } catch (err) {
-                return
-            }
+            loadPastEventsFuture = py.callClientCoro(
+                chat.userId,
+                "load_past_events",
+                [chat.roomId],
+                more => {
+                    moreToLoad           = more
+                    loadPastEventsFuture = null
+                }
+            )
         }
 
         function getFocusedOrSelectedOrLastMediaEvents(acceptLinks=false) {
@@ -502,7 +485,7 @@ Rectangle {
         footer: Item {
             width: eventList.width
             height: (button.height + theme.spacing * 2) * opacity
-            opacity: eventList.loading ? 1 : 0
+            opacity: eventList.loadPastEventsFuture ? 1 : 0
             visible: opacity > 0
 
             Behavior on opacity { HNumberAnimation {} }
@@ -533,12 +516,19 @@ Rectangle {
             }
         }
 
-        onYPosChanged:
-            if (canLoad && yPos < 0.1) Qt.callLater(loadPastEvents)
+        Timer {
+            interval: 200
+            running:
+                eventList.shouldLoadPastEvents &&
+                ! eventList.loadPastEventsFuture
+            triggeredOnStart: true
+            onTriggered: eventList.loadPastEvents()
 
-        // When an invited room becomes joined, we should now be able to
-        // fetch past events.
-        onInviterChanged: canLoad = true
+        }
+
+        Component.onDestruction: {
+            if (loadPastEventsFuture) loadPastEventsFuture.cancel()
+        }
 
         MouseArea {
             id: cursorShapeArea
