@@ -33,7 +33,7 @@ and this project adheres to
 
 - Auto-focus the "Forget" button on left room pages
 
-- Themes: modify *chat.message.styleSheet* to add some spacing between HTML 
+- Themes: modify `chat.message.styleSheet` to add some spacing between HTML 
   list items, see
   [48663ae](https://github.com/mirukana/mirage/commit/48663ae8465e90646855435b47b89c01395ae4d9)
 
@@ -43,7 +43,7 @@ and this project adheres to
   after the @
 
 - Consider the partial text from IME (input method editors) and touch screen 
-  autocompleting keyboards and for username autocompletion
+  autocompleting keyboards for username autocompletion
 
 - Reset IME state upon autocompleting a username
 
