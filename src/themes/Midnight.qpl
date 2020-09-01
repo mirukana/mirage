@@ -461,7 +461,7 @@ chat:
             "     padding-bottom: " + theme.spacing / 4 + "px } " +
 
             "li { margin-top: " + theme.spacing / 2 + "px; " +
-            "     margin-bottom: " + theme.spacing / 2 + "px; " +
+            "     margin-bottom: " + theme.spacing / 2 + "px; }" +
 
             ".sender { margin-bottom: " + spacing / 2 + " }" +
             ".quote  { color: " + quote + " }" +
