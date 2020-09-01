@@ -285,6 +285,8 @@ class UISettings(JSONDataFile):
             "ownMessagesOnLeftAboveWidth": 895,
             "theme": "Midnight.qpl",
             "writeAliases": {},
+            "zoom": 1.0,
+
             "media": {
                 "autoLoad": True,
                 "autoPlay": False,

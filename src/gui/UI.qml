@@ -64,17 +64,26 @@ Item {
 
     HShortcut {
         sequences: window.settings.keys.zoomIn
-        onActivated: theme.uiScale += 0.1
+        onActivated: {
+            window.settings.zoom += 0.1
+            window.settingsChanged()
+        }
     }
 
     HShortcut {
         sequences: window.settings.keys.zoomOut
-        onActivated: theme.uiScale = Math.max(0.1, theme.uiScale - 0.1)
+        onActivated: {
+            window.settings.zoom = Math.max(0.1, window.settings.zoom - 0.1)
+            window.settingsChanged()
+        }
     }
 
     HShortcut {
         sequences: window.settings.keys.zoomReset
-        onActivated: theme.uiScale = 1
+        onActivated: {
+            window.settings.zoom = 1
+            window.settingsChanged()
+        }
     }
 
     HShortcut {

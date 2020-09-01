@@ -2,7 +2,7 @@
 
 // Base variables
 
-real uiScale: 1.0
+real uiScale: window.settings.zoom
 
 int minimumSupportedWidth:  240 * uiScale
 int minimumSupportedHeight: 120 * uiScale

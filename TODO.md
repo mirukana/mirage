@@ -3,7 +3,6 @@
 - handle invalid access token
 - If an account is gone from the user's config, discard UI state last page
 - room A-Z sorting
-- move uiScale to settings.json
 - up/down doesn't work in the middle of a @word for which autocompletion isn't
   open because no matches
 - filter > enter > room list is always scrolled to top
