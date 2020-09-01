@@ -27,10 +27,10 @@ HRowLayout {
 
     readonly property string senderText:
         hideNameLine ? "" : (
-            `<${smallAvatar ? "span" : "div"} class='sender'>` +
+            `<${compact ? "span" : "div"} class='sender'>` +
             utils.coloredNameHtml(model.sender_name, model.sender_id) +
-            (smallAvatar ? ": " : "") +
-            (smallAvatar ? "</span>" : "</div>")
+            (compact ? ": " : "") +
+            (compact ? "</span>" : "</div>")
         )
     property string contentText: utils.processedEventText(model)
     readonly property string timeText: utils.formatTime(model.date, false)
@@ -78,19 +78,15 @@ HRowLayout {
 
     Item {
         id: avatarWrapper
-        opacity: collapseAvatar ? 0 : 1
-        visible: ! hideAvatar
+        visible: ! onRight
+        opacity: combine ? 0 : 1
 
-        Layout.minimumWidth:
-            smallAvatar ?
+        Layout.alignment: Qt.AlignTop
+        Layout.preferredHeight: combine ? 1 : Layout.preferredWidth
+        Layout.preferredWidth:
+            compact ?
             theme.chat.message.collapsedAvatarSize :
             theme.chat.message.avatarSize
-
-        Layout.minimumHeight: collapseAvatar ? 1 : Layout.minimumWidth
-
-        Layout.maximumWidth: Layout.minimumWidth
-        Layout.maximumHeight: Layout.minimumHeight
-        Layout.alignment: Qt.AlignTop
 
         HUserAvatar {
             id: avatar
@@ -99,8 +95,9 @@ HRowLayout {
             displayName: model.sender_name
             mxc: model.sender_avatar
             width: parent.width
-            height: collapseAvatar ? 1 : parent.Layout.minimumWidth
+            height: combine ? 1 : parent.Layout.preferredWidth
             radius: theme.chat.message.avatarRadius
+
         }
     }
 
@@ -138,7 +135,7 @@ HRowLayout {
 
                 // Sender name & message body
                 (
-                    smallAvatar && contentText.match(/^\s*<(p|h[1-6])>/) ?
+                    compact && contentText.match(/^\s*<(p|h[1-6])>/) ?
                     contentText.replace(
                         /(^\s*<(p|h[1-6])>)/, "$1" + senderText,
                     ) :
