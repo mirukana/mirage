@@ -32,7 +32,10 @@ Item {
     readonly property alias idleManager: idleManager
 
     function reloadSettings() {
-        py.loadSettings(() => { mainUI.pressAnimation.start() })
+        py.loadSettings(() => {
+            image.reload()
+            mainUI.pressAnimation.start()
+        })
     }
 
 

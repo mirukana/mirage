@@ -1,7 +1,8 @@
 # TODO
 
+- handle invalid access token
+- If an account is gone from the user's config, discard UI state last page
 - room A-Z sorting
-- force reload theme ui background
 - move uiScale to settings.json
 - up/down doesn't work in the middle of a @word for which autocompletion isn't
   open because no matches
@@ -53,9 +54,6 @@
 - Drag-scrolling in room pane a tiny bit activates the delegates
 
 - Catch server 5xx errors when sending message and retry 
-
-- Handle cases where a known account's access token is invalid
-- If an account is gone from the user's config, discard UI state last page
 
 - After forgetting a room, it comes back because of the "you left" event
 
