@@ -2,7 +2,6 @@
 
 - handle invalid access token
 - If an account is gone from the user's config, discard UI state last page
-- room A-Z sorting
 - filter > enter > room list is always scrolled to top
 - session list: prevent tab-focusing the delegates
 - refresh server list button

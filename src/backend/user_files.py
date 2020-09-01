@@ -280,6 +280,7 @@ class UISettings(JSONDataFile):
             "hideUnknownEvents": True,
             "kineticScrollingMaxSpeed": 2500,
             "kineticScrollingDeceleration": 1500,
+            "lexicalRoomSorting": False,
             "markRoomReadMsecDelay": 200,
             "maxMessageCharactersPerLine": 65,
             "ownMessagesOnLeftAboveWidth": 895,

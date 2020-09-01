@@ -130,6 +130,8 @@ class Room(ModelItem):
     local_unreads:    bool = False
     local_highlights: bool = False
 
+    lexical_sorting: bool = False
+
     def __lt__(self, other: "Room") -> bool:
         """Sort by membership, highlights/unread events, last event date, name.
 
@@ -139,6 +141,19 @@ class Room(ModelItem):
         then last event date (room with recent messages are first),
         then by display names or ID.
         """
+
+        if self.lexical_sorting:
+            return (
+                self.for_account,
+                self.left,
+                other.inviter_id,
+                (self.display_name or self.id).lower(),
+            ) < (
+                other.for_account,
+                other.left,
+                self.inviter_id,
+                (other.display_name or other.id).lower(),
+            )
 
         # Left rooms may still have an inviter_id, so check left first.
         return (
@@ -171,6 +186,23 @@ class AccountOrRoom(Account, Room):
     account_order: int                              = -1
 
     def __lt__(self, other: "AccountOrRoom") -> bool:  # type: ignore
+        if self.lexical_sorting:
+            return (
+                self.account_order,
+                self.id if self.type is Account else self.for_account,
+                other.type is Account,
+                self.left,
+                other.inviter_id,
+                (self.display_name or self.id).lower(),
+            ) < (
+                other.account_order,
+                other.id if other.type is Account else other.for_account,
+                self.type is Account,
+                other.left,
+                self.inviter_id,
+                (other.display_name or other.id).lower(),
+            )
+
         return (
             self.account_order,
             self.id if self.type is Account else self.for_account,

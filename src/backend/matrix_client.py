@@ -1866,6 +1866,8 @@ class MatrixClient(nio.AsyncClient):
             highlights       = room.unread_highlights,
             local_unreads    = local_unreads,
             local_highlights = local_highlights,
+
+            lexical_sorting = self.backend.ui_settings["lexicalRoomSorting"],
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item
