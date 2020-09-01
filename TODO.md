@@ -3,10 +3,7 @@
 - handle invalid access token
 - If an account is gone from the user's config, discard UI state last page
 - room A-Z sorting
-- up/down doesn't work in the middle of a @word for which autocompletion isn't
-  open because no matches
 - filter > enter > room list is always scrolled to top
-- change profile → post in room → message shows as old profile
 - session list: prevent tab-focusing the delegates
 - refresh server list button
 

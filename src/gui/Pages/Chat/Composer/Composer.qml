@@ -42,7 +42,7 @@ Rectangle {
 
             MessageArea {
                 id: messageArea
-                autoCompletionOpen: userCompletion.open
+                autoCompletionOpen: userCompletion.open && userCompletion.count
                 usersCompleted: userCompletion.usersCompleted
 
                 onAutoCompletePrevious: userCompletion.previous()
