@@ -3,6 +3,7 @@
 - handle invalid access token
 - If an account is gone from the user's config, discard UI state last page
 - filter > enter > room list is always scrolled to top
+- ctrl+j/k when scrolled up
 - session list: prevent tab-focusing the delegates
 - refresh server list button
 
@@ -292,3 +293,5 @@
 
 - Technology Preview: Support for running Qt Quick (2D) on top of 
   Direct3D, Metal and Vulkan
+
+- `ListView.reuseItems` property

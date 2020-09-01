@@ -26,15 +26,12 @@ Rectangle {
 
     HShortcut {
         sequences: window.settings.keys.focusPreviousMessage
-        onActivated: eventList.incrementCurrentIndex()
+        onActivated: eventList.focusPreviousMessage()
     }
 
     HShortcut {
         sequences: window.settings.keys.focusNextMessage
-        onActivated:
-            eventList.currentIndex === 0 ?
-            eventList.currentIndex = -1 :
-            eventList.decrementCurrentIndex()
+        onActivated: eventList.focusNextMessage()
     }
 
     HShortcut {
@@ -243,6 +240,29 @@ Rectangle {
 
         readonly property var redactableCheckedEvents:
             getSortedChecked().filter(ev => eventList.canRedact(ev))
+
+        function focusCenterMessage() {
+            const previous     = highlightRangeMode
+            highlightRangeMode = HListView.NoHighlightRange
+            currentIndex       = indexAt(0, contentY + height / 2)
+            highlightRangeMode = previous
+        }
+
+        function focusPreviousMessage() {
+            currentIndex === -1 && contentY < -height - bottomMargin * 2 ?
+            focusCenterMessage() :
+            incrementCurrentIndex()
+        }
+
+        function focusNextMessage() {
+            currentIndex === -1 && contentY <= -height - bottomMargin * 2 ?
+            focusCenterMessage() :
+
+            eventList.currentIndex === 0 ?
+            eventList.currentIndex = -1 :
+
+            decrementCurrentIndex()
+        }
 
         function copySelectedDelegates() {
             if (eventList.selectedText) {
