@@ -323,6 +323,14 @@ Rectangle {
             return item.date.getDate() !== itemAfter.date.getDate()
         }
 
+        function renderEventAsOneLine(event) {
+            return (
+                event.event_type !== "RoomMessageEmote" &&
+                ! event.event_type.startsWith("RoomMessage") &&
+                ! event.event_type.startsWith("RoomEncrypted")
+            )
+        }
+
         function loadPastEvents() {
             loadPastEventsFuture = py.callClientCoro(
                 chat.userId,

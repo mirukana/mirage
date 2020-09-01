@@ -25,19 +25,11 @@ HColumnLayout {
     readonly property bool isRedacted: model.event_type === "RedactedEvent"
     readonly property bool onRight: ! eventList.ownEventsOnLeft && isOwn
     readonly property bool combine: eventList.canCombine(previousModel, model)
+    readonly property bool asOneLine: eventList.renderEventAsOneLine(model)
     readonly property bool talkBreak:
         eventList.canTalkBreak(previousModel, model)
     readonly property bool dayBreak:
         eventList.canDayBreak(previousModel, model)
-
-    readonly property bool hideNameLine:
-        model.event_type === "RoomMessageEmote" ||
-        ! (
-            model.event_type.startsWith("RoomMessage") ||
-            model.event_type.startsWith("RoomEncrypted")
-        ) ||
-        onRight ||
-        combine
 
     readonly property int cursorShape:
         eventContent.hoveredLink || hoveredMediaTypeUrl.length === 3 ?

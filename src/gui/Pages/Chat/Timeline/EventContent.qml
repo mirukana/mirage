@@ -26,7 +26,7 @@ HRowLayout {
     }
 
     readonly property string senderText:
-        hideNameLine ? "" : (
+        asOneLine || onRight || combine ? "" : (
             `<${compact ? "span" : "div"} class='sender'>` +
             utils.coloredNameHtml(model.sender_name, model.sender_id) +
             (compact ? ": " : "") +
@@ -82,10 +82,23 @@ HRowLayout {
         opacity: combine ? 0 : 1
 
         Layout.alignment: Qt.AlignTop
-        Layout.preferredHeight: combine ? 1 : Layout.preferredWidth
+
         Layout.preferredWidth:
             compact ?
             theme.chat.message.collapsedAvatarSize :
+            theme.chat.message.avatarSize
+
+        Layout.preferredHeight:
+            combine ?
+            1 :
+
+            compact || (
+                asOneLine &&
+                nextModel &&
+                eventList.canCombine(model, nextModel)
+            ) ?
+            theme.chat.message.collapsedAvatarSize :
+
             theme.chat.message.avatarSize
 
         HUserAvatar {
@@ -97,7 +110,6 @@ HRowLayout {
             width: parent.width
             height: combine ? 1 : parent.Layout.preferredWidth
             radius: theme.chat.message.avatarRadius
-
         }
     }
 
