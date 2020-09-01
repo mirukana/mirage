@@ -453,7 +453,10 @@ class Theme(DataFile):
 
     @property
     def path(self) -> Path:
-        data_dir = Path(self.backend.appdirs.user_data_dir)
+        data_dir = Path(
+            os.environ.get("MIRAGE_DATA_DIR") or
+            self.backend.appdirs.user_data_dir,
+        )
         return data_dir / "themes" / self.filename
 
 
