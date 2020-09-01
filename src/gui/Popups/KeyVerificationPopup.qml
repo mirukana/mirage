@@ -89,7 +89,7 @@ HFlickableColumnPopup {
 
         readOnly: true
         wrapMode: HSelectableLabel.Wrap
-        textFormat: Qt.RichText
+        textFormat: HTextArea.RichText
         text: (
             formatInfo(qsTr("Session name:"), popup.deviceName) +
             formatInfo(qsTr("Session ID:"), popup.deviceId) +
