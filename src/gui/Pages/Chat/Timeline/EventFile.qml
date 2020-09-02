@@ -54,16 +54,6 @@ HTile {
 
         Qt.openUrlExternally(loader.mediaUrl)
 
-    onHoveredChanged: {
-        if (! hovered) {
-            eventDelegate.hoveredMediaTypeUrl = []
-            return
-        }
-
-        eventDelegate.hoveredMediaTypeUrl =
-            [Utils.Media.File, loader.mediaUrl, loader.title]
-    }
-
     Binding on backgroundColor {
         value: theme.chat.message.checkedBackground
         when: eventDelegate.checked

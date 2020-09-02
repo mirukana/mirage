@@ -41,8 +41,11 @@ HRowLayout {
 
     readonly property bool pureMedia: ! contentText && linksRepeater.count
 
-    readonly property string hoveredLink: contentLabel.hoveredLink
     readonly property bool hoveredSelectable: contentHover.hovered
+    readonly property string hoveredLink:
+        linksRepeater.lastHovered && linksRepeater.lastHovered.hovered ?
+        linksRepeater.lastHovered.mediaUrl :
+        contentLabel.hoveredLink
 
     readonly property alias contentLabel: contentLabel
 
@@ -295,6 +298,11 @@ HRowLayout {
 
         HRepeater {
             id: linksRepeater
+
+            property EventMediaLoader lastHovered: null
+            property var pr: lastHovered
+            onPrChanged: print("pr changed:", pr)
+
             model: {
                 const links = JSON.parse(eventDelegate.currentModel.links)
 
@@ -312,6 +320,8 @@ HRowLayout {
                 showLocalEcho: pureMedia ? localEchoText : ""
 
                 transform: Translate { x: xOffset }
+
+                onHoveredChanged: if (hovered) linksRepeater.lastHovered = this
 
                 Layout.bottomMargin: pureMedia ? 0 : contentLabel.bottomPadding
                 Layout.leftMargin: pureMedia ? 0 : eventContent.spacing

@@ -8,11 +8,7 @@ import "../../../Base"
 import "../../../Base/MediaPlayer"
 
 AudioPlayer {
-    id: audio
+    readonly property bool hovered: hover.hovered
 
-    HoverHandler {
-        onHoveredChanged:
-            eventDelegate.hoveredMediaTypeUrl =
-                hovered ? [Utils.Media.Audio, audio.source, loader.title] : []
-    }
+    HoverHandler { id: hover }
 }

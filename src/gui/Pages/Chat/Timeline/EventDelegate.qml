@@ -10,8 +10,6 @@ import "../../../PythonBridge"
 HColumnLayout {
     id: eventDelegate
 
-    property var hoveredMediaTypeUrl: []  // [] or [mediaType, url, title]
-
     property var fetchProfilesFuture: null
 
     // Remember timeline goes from newest message at index 0 to oldest
@@ -32,11 +30,8 @@ HColumnLayout {
         eventList.canDayBreak(previousModel, model)
 
     readonly property int cursorShape:
-        eventContent.hoveredLink || hoveredMediaTypeUrl.length === 3 ?
-        Qt.PointingHandCursor :
-
+        eventContent.hoveredLink ? Qt.PointingHandCursor :
         eventContent.hoveredSelectable ? Qt.IBeamCursor :
-
         Qt.ArrowCursor
 
     readonly property int separationSpacing:
@@ -57,10 +52,7 @@ HColumnLayout {
 
     function openContextMenu() {
         eventList.contextMenu.spawn(
-            model.index,
-            eventDelegate,
-            hoveredMediaTypeUrl,
-            eventContent.hoveredLink,
+            model.index, eventDelegate, eventContent.hoveredLink,
         )
     }
 

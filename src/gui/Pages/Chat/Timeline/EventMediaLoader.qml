@@ -28,8 +28,9 @@ HLoader {
         utils.getLinkType(mediaUrl)
 
     readonly property string cachedLocalPath: ""
-
     readonly property string thumbnailMxc: singleMediaInfo.thumbnail_url
+
+    readonly property bool hovered: item ? item.hovered : false
 
 
     visible: Boolean(item)

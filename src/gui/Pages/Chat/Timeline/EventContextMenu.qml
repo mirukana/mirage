@@ -13,7 +13,6 @@ HMenu {
     property HListView eventList
     property int eventIndex: 0
     property Item eventDelegate: null  // TODO: Qt 5.13: just use itemAtIndex()
-    property var hoveredMedia: []      // [Utils.Media.<Type>, url, title]
     property string hoveredLink: ""
 
     readonly property QtObject event: eventList.model.get(eventIndex)
@@ -21,19 +20,20 @@ HMenu {
     readonly property bool isEncryptedMedia:
         Object.keys(JSON.parse(event.media_crypt_dict)).length > 0
 
-    function spawn(eventIndex, eventDelegate, hoveredMedia=[], hoveredUrl="") {
+    readonly property var mediaType:   // Utils.Media.<Type> or null
+        event.media_http_url ? eventList.getMediaType(event) :
+        hoveredLink ? utils.getLinkType(hoveredLink) :
+        null
+
+    function spawn(eventIndex, eventDelegate, hoveredLink="") {
         menu.eventIndex    = eventIndex
         menu.eventDelegate = eventDelegate
-        menu.hoveredMedia  = hoveredMedia
-        menu.hoveredLink   = hoveredUrl
+        menu.hoveredLink   = hoveredLink
         menu.popup()
     }
 
 
-    onClosed: {
-        hoveredMedia = []
-        hoveredLink  = ""
-    }
+    onClosed: hoveredLink = ""
 
     HMenuItem {
         icon.name: "toggle-select-message"
@@ -74,38 +74,23 @@ HMenu {
     HMenuItem {
         id: copyMedia
         icon.name: "copy-link"
+        visible: menu.mediaType && ! menu.isEncryptedMedia
         text:
-            menu.hoveredMedia.length === 0 ||
-            menu.isEncryptedMedia ?
-            "" :
+            ! visible ?  "" :
+            menu.mediaType === Utils.Media.File ? qsTr("Copy file address") :
+            menu.mediaType === Utils.Media.Image ? qsTr("Copy image address") :
+            menu.mediaType === Utils.Media.Video ? qsTr("Copy video address") :
+            menu.mediaType === Utils.Media.Audio ? qsTr("Copy audio address") :
+            qsTr("Copy link address")
 
-            menu.hoveredMedia[0] === Utils.Media.File ?
-            qsTr("Copy file address") :
-
-            menu.hoveredMedia[0] === Utils.Media.Image ?
-            qsTr("Copy image address") :
-
-            menu.hoveredMedia[0] === Utils.Media.Video ?
-            qsTr("Copy video address") :
-
-            qsTr("Copy audio address")
-
-        visible: Boolean(text)
-        onTriggered: Clipboard.text = event.media_http_url  // FIXME
-    }
-
-    HMenuItem {
-        icon.name: "copy-link"
-        text: qsTr("Copy link address")
-        visible: Boolean(menu.hoveredLink)
-        onTriggered: Clipboard.text = menu.hoveredLink
+        onTriggered: Clipboard.text = event.media_http_url || menu.hoveredLink
     }
 
     HMenuItem {
         icon.name: "copy-text"
         text:
             eventList.selectedCount ? qsTr("Copy selection") :
-            menu.hoveredMedia.length > 0 ? qsTr("Copy filename") :
+            event.media_url ? qsTr("Copy filename") :
             qsTr("Copy text")
 
         onTriggered: {

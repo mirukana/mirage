@@ -42,6 +42,8 @@ HMxcImage {
         Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
     )
 
+    readonly property bool hovered: hover.hovered
+
     function openInternally() {
         eventList.openImageViewer(
             singleMediaInfo,
@@ -118,15 +120,6 @@ HMxcImage {
 
     HoverHandler {
         id: hover
-        onHoveredChanged: {
-            if (! hovered) {
-                eventDelegate.hoveredMediaTypeUrl = []
-                return
-            }
-
-            eventDelegate.hoveredMediaTypeUrl =
-                [Utils.Media.Image, loader.mediaUrl, loader.title]
-        }
     }
 
     EventImageTextBubble {

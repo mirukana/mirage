@@ -8,9 +8,7 @@ import "../../../Base"
 import "../../../Base/MediaPlayer"
 
 VideoPlayer {
-    id: video
+    readonly property bool hovered: hover.hovered
 
-    onHoveredChanged:
-        eventDelegate.hoveredMediaTypeUrl =
-            hovered ? [Utils.Media.Video, video.source, loader.title] : []
+    HoverHandler { id: hover }
 }
