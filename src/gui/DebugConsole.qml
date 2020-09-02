@@ -40,6 +40,7 @@ HDrawer {
     )
 
     property bool doUselessThing: false
+    property real baseGIFSpeed: 1.0
 
     readonly property alias commandsView: commandsView
 

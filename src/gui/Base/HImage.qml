@@ -74,7 +74,7 @@ Image {
             // Online GIFs won't be able to loop if cache is set to false,
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
-            speed: image.speed
+            speed: window.mainUI.debugConsole.baseGIFSpeed * image.speed
             paused:
                 ! visible || window.hidden || image.pause || image.forcePause
 
