@@ -19,6 +19,7 @@ HLoader {
 
     readonly property alias appearAnimation: appearAnimation
 
+    signal recycled()
     signal previousShown(string componentUrl, var properties)
 
     function showPage(componentUrl, properties={}) {
@@ -33,6 +34,8 @@ HLoader {
         if (recycle) {
             for (const [prop, value] of Object.entries(properties))
                 item[prop] = value
+
+            recycled()
         } else {
             pageLoader.setSource(componentUrl, properties)
             window.uiState.page = componentUrl
@@ -65,6 +68,7 @@ HLoader {
     clip: appearAnimation.running
 
     onLoaded: { takeFocus(); appearAnimation.start() }
+    onRecycled: appearAnimation.start()
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
