@@ -30,6 +30,12 @@ Image {
     readonly property int animatedPaintedHeight:
         animatedLoader.item ? animatedLoader.item.paintedHeight : 0
 
+    readonly property int animatedImplicitWidth:
+        animatedLoader.item ? animatedLoader.item.implicitWidth : 0
+
+    readonly property int animatedImplicitHeight:
+        animatedLoader.item ? animatedLoader.item.implicitHeight : 0
+
     function reload() {
         // Can be reimplemented in components inheriting HImage
         const oldSource = source

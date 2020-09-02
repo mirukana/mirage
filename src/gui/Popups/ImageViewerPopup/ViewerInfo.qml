@@ -46,9 +46,17 @@ Rectangle {
 
         HLabel {
             id: dimensions
-            text: qsTr("%1 x %2")
-                  .arg(viewer.canvas.full.implicitWidth)
-                  .arg(viewer.canvas.full.implicitHeight)
+            text:
+                qsTr("%1 x %2")
+                .arg(
+                    viewer.canvas.full.animatedImplicitWidth ||
+                    viewer.canvas.full.implicitWidth ||
+                    viewer.overallSize.width
+                ).arg(
+                    viewer.canvas.full.animatedImplicitHeight ||
+                    viewer.canvas.full.implicitHeight ||
+                    viewer.overallSize.height
+                )
 
             elide: HLabel.ElideRight
             topPadding: theme.spacing / 2
