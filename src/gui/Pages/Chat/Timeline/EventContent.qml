@@ -300,8 +300,6 @@ HRowLayout {
             id: linksRepeater
 
             property EventMediaLoader lastHovered: null
-            property var pr: lastHovered
-            onPrChanged: print("pr changed:", pr)
 
             model: {
                 const links = JSON.parse(eventDelegate.currentModel.links)

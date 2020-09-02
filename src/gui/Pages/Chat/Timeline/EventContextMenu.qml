@@ -95,7 +95,10 @@ HMenu {
 
         onTriggered: {
             if (! eventList.selectedCount){
-                Clipboard.text = JSON.parse(event.source).body
+                Clipboard.text =
+                    JSON.parse(event.source).body ||
+                    utils.stripHtmlTags(utils.processedEventText(event))
+
                 return
             }
 
