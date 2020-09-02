@@ -21,35 +21,29 @@ HLoader {
 
     signal previousShown(string componentUrl, var properties)
 
-    function _show(componentUrl, properties={}) {
+    function showPage(componentUrl, properties={}) {
         history.unshift([componentUrl, properties])
         if (history.length > historyLength) history.pop()
 
-        pageLoader.setSource(componentUrl, properties)
-    }
+        const recycle =
+            window.uiState.page === componentUrl &&
+            componentUrl === "Pages/Chat/Chat.qml" &&
+            item
 
-    function showPage(name, properties={}) {
-        const path = `Pages/${name}.qml`
-        _show(path, properties)
+        if (recycle) {
+            for (const [prop, value] of Object.entries(properties))
+                item[prop] = value
+        } else {
+            pageLoader.setSource(componentUrl, properties)
+            window.uiState.page = componentUrl
+        }
 
-        window.uiState.page           = path
         window.uiState.pageProperties = properties
         window.uiStateChanged()
     }
 
     function showRoom(userId, roomId) {
-        if (window.uiState.page === "Pages/Chat/Chat.qml" && item) {
-            // XXX: showPrevious
-            item.userId = userId
-            item.roomId = roomId
-            return
-        }
-
-        _show("Pages/Chat/Chat.qml", {userId, roomId})
-
-        window.uiState.page           = "Pages/Chat/Chat.qml"
-        window.uiState.pageProperties = {userId, roomId}
-        window.uiStateChanged()
+        showPage("Pages/Chat/Chat.qml", {userId, roomId})
     }
 
     function showPrevious(timesBack=1) {
@@ -57,12 +51,7 @@ HLoader {
         if (timesBack < 1) return false
 
         const [componentUrl, properties] = history[timesBack]
-
-        _show(componentUrl, properties)
-
-        window.uiState.page           = componentUrl
-        window.uiState.pageProperties = properties
-        window.uiStateChanged()
+        showPage(componentUrl, properties)
         previousShown(componentUrl, properties)
         return true
     }

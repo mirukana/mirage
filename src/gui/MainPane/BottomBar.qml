@@ -24,7 +24,7 @@ Rectangle {
             toolTip.text: qsTr("Add another account")
             backgroundColor: theme.mainPane.bottomBar.settingsButtonBackground
             onClicked: {
-                pageLoader.showPage("AddAccount/AddAccount")
+                pageLoader.showPage("Pages/AddAccount/AddAccount.qml")
                 roomList.startCorrectItemSearch()
             }
 

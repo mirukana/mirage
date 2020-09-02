@@ -38,7 +38,8 @@ HFlickableColumnPopup {
                 if (ModelStore.get("accounts").count < 2 ||
                     window.uiState.pageProperties.userId === userId)
                 {
-                    window.mainUI.pageLoader.showPage("AddAccount/AddAccount")
+                    const page = "Pages/AddAccount/AddAccount.qml"
+                    window.mainUI.pageLoader.showPage(page)
                 }
 
                 py.callCoro("logout_client", [userId])

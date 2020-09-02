@@ -20,7 +20,7 @@ HFlickableColumnPopup {
                 window.uiState.pageProperties.roomId === roomId)
             {
                 window.mainUI.pageLoader.showPrevious() ||
-                window.mainUI.pageLoader.showPage("Default")
+                window.mainUI.pageLoader.showPage("Pages/Default.qml")
 
                 Qt.callLater(popup.destroy)
             }

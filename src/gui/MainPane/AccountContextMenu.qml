@@ -111,7 +111,8 @@ HMenu {
         text: qsTr("Account settings")
         onTriggered: {
             pageLoader.showPage(
-                "AccountSettings/AccountSettings", { "userId": userId },
+                "Pages/AccountSettings/AccountSettings.qml",
+                { "userId": userId },
             )
             wentToAccountPage()
         }
@@ -121,7 +122,7 @@ HMenu {
         icon.name: "menu-add-chat"
         text: qsTr("Add new chat")
         onTriggered: {
-            pageLoader.showPage("AddChat/AddChat", {userId: userId})
+            pageLoader.showPage("Pages/AddChat/AddChat.qml", {userId: userId})
             wentToAccountPage()
         }
     }
