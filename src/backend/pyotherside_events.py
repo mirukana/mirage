@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence
 
 import pyotherside
 
@@ -83,8 +83,9 @@ class ModelItemSet(ModelEvent):
 class ModelItemDeleted(ModelEvent):
     """Indicate the removal of a `ModelItem` from a `Backend` `Model`."""
 
-    index: int = field()
-    count: int = 1
+    index: int           = field()
+    count: int           = 1
+    ids:   Sequence[Any] = ()
 
 
 @dataclass

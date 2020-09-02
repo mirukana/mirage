@@ -12,8 +12,8 @@ Item {
     property string userId
     property string roomId
 
-    property QtObject userInfo: null
-    property QtObject roomInfo: null
+    property QtObject userInfo: ModelStore.get("accounts").find(userId)
+    property QtObject roomInfo: ModelStore.get(userId, "rooms").find(roomId)
 
     property bool ready: Boolean(userInfo && roomInfo)
     property bool longLoading: false
@@ -56,22 +56,6 @@ Item {
             "Popups/ForgetRoomPopup.qml",
             {userId, roomId, roomName: roomInfo.display_name},
         )
-    }
-
-    Timer {
-        interval: 100
-        running: ! userInfo
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: userInfo = ModelStore.get("accounts").find(userId)
-    }
-
-    Timer {
-        interval: 100
-        running: ! roomInfo
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: roomInfo = ModelStore.get(userId, "rooms").find(roomId)
     }
 
     Timer {

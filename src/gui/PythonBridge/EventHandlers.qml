@@ -51,16 +51,19 @@ QtObject {
         py.showError(type, traceback, message)
     }
 
-    function onModelItemSet(syncId, indexThen, indexNow, changedFields){
+    function onModelItemSet(syncId, indexThen, indexNow, changedFields) {
+        const model = ModelStore.get(syncId)
+
         if (indexThen === undefined) {
             // print("insert", syncId, indexThen, indexNow,
                   // JSON.stringify(changedFields))
-            ModelStore.get(syncId).insert(indexNow, changedFields)
+            model.insert(indexNow, changedFields)
+            model.idToItems[changedFields.id] = model.get(indexNow)
+            model.idToItemsChanged()
 
         } else {
             // print("set", syncId, indexThen, indexNow,
                   // JSON.stringify(changedFields))
-            const model = ModelStore.get(syncId)
             model.set(indexThen, changedFields)
 
             if (indexThen !== indexNow) model.move(indexThen, indexNow, 1)
@@ -69,14 +72,22 @@ QtObject {
         }
     }
 
-    function onModelItemDeleted(syncId, index, count=1) {
-        // print("delete", syncId, index, count)
-        ModelStore.get(syncId).remove(index, count)
+    function onModelItemDeleted(syncId, index, count=1, ids=[]) {
+        // print("delete", syncId, index, count, ids)
+        const model = ModelStore.get(syncId)
+        model.remove(index, count)
+
+        for (let i = 0; i < ids.length; i++) {
+            delete model.idToItems[ids[i]]
+        }
+
+        if (ids.length) model.idToItemsChanged()
     }
 
     function onModelCleared(syncId) {
         // print("clear", syncId)
         ModelStore.get(syncId).clear()
+        model.idToItems = {}
     }
 
     function onDevicesUpdated(forAccount) {

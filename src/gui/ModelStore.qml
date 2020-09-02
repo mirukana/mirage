@@ -13,6 +13,7 @@ QtObject {
         readonly property Component model: Component {
             ListModel {
                 property var modelId
+                property var idToItems: ({})
 
                 // Used by HFilterModel
                 signal fieldsChanged(int index, var changes)
@@ -25,10 +26,7 @@ QtObject {
                 }
 
                 function find(id, default_=null) {
-                    for (let i = 0; i < count; i++)
-                        if (get(i).id === id) return get(i)
-
-                    return default_
+                    return idToItems[id] || default_
                 }
             }
         }

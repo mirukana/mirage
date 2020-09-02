@@ -44,7 +44,8 @@ class Model(MutableMapping):
 
         self.take_items_ownership: bool = True
 
-        self._active_batch_remove_indice: Optional[List[int]] = None
+        # [(index, item.id), ...]
+        self._active_batch_removed: Optional[List[Tuple[int, Any]]] = None
 
         if self.sync_id:
             self.instances[self.sync_id] = self
@@ -148,10 +149,10 @@ class Model(MutableMapping):
                     proxy.source_item_deleted(self, key)
 
             if self.sync_id:
-                if self._active_batch_remove_indice is None:
-                    ModelItemDeleted(self.sync_id, index)
+                if self._active_batch_removed is None:
+                    ModelItemDeleted(self.sync_id, index, 1, (item.id,))
                 else:
-                    self._active_batch_remove_indice.append(index)
+                    self._active_batch_removed.append((index, item.id))
 
 
     def __iter__(self) -> Iterator:
@@ -189,17 +190,21 @@ class Model(MutableMapping):
 
         with self.write_lock:
             try:
-                self._active_batch_remove_indice = []
+                self._active_batch_removed = []
                 yield None
             finally:
-                indice = self._active_batch_remove_indice
+                batch  = self._active_batch_removed
                 groups = [
-                    list(group) for item, group in itertools.groupby(indice)
+                    list(group) for item, group in
+                    itertools.groupby(batch, key=lambda x: x[0])
                 ]
 
-                for grp in groups:
+                for group in groups:
                     ModelItemDeleted(
-                        self.sync_id, index=grp[0], count=len(grp),
+                        self.sync_id,
+                        index = group[0][0],
+                        count = len(group),
+                        ids   = [item[1] for item in group],
                     )
 
-                self._active_batch_remove_indice = None
+                self._active_batch_removed = None
