@@ -65,6 +65,7 @@ HMxcImage {
     clientUserId: chat.userId
     title: thumbnail ? loader.thumbnailTitle : loader.title
     animated: eventList.isAnimated(loader.singleMediaInfo, loader.mediaUrl)
+    forcePause: Object.keys(window.visiblePopups).length > 0
     thumbnail: ! animated && loader.thumbnailMxc
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :
@@ -75,13 +76,9 @@ HMxcImage {
         loader.singleMediaInfo.media_crypt_dict
     )
 
+
     onCachedPathChanged:
         eventList.thumbnailCachedPaths[loader.singleMediaInfo.id] = cachedPath
-
-    Binding on pause {
-        value: true
-        when: Object.keys(window.visiblePopups).length > 0
-    }
 
     TapHandler {
         acceptedButtons: Qt.LeftButton

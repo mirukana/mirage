@@ -18,6 +18,7 @@ Image {
     property alias showProgressBar: progressBarLoader.active
     property bool showPauseButton: true
     property bool pause: ! window.settings.media.autoPlayGIF
+    property bool forcePause: false
     property real speed: 1
 
     readonly property int circleRadius:
@@ -67,8 +68,9 @@ Image {
             // Online GIFs won't be able to loop if cache is set to false,
             // but caching GIFs is expansive.
             cache: ! Qt.resolvedUrl(source).startsWith("file://")
-            paused: ! visible || window.hidden || image.pause
             speed: image.speed
+            paused:
+                ! visible || window.hidden || image.pause || image.forcePause
 
             layer.enabled: image.radius !== 0
             layer.effect: OpacityMask { maskSource: roundMask }
