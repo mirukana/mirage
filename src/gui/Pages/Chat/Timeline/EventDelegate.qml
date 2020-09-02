@@ -98,8 +98,6 @@ HColumnLayout {
         id: eventContent
 
         Layout.fillWidth: true
-
-        Behavior on x { HNumberAnimation {} }
     }
 
     TapHandler {
