@@ -56,9 +56,12 @@ HColumnLayout {
     }
 
     function openContextMenu() {
-        contextMenu.media = eventDelegate.hoveredMediaTypeUrl
-        contextMenu.link  = eventContent.hoveredLink
-        contextMenu.popup()
+        eventList.contextMenu.spawn(
+            model.index,
+            eventDelegate,
+            hoveredMediaTypeUrl,
+            eventContent.hoveredLink,
+        )
     }
 
     function toggleChecked() {
@@ -128,160 +131,5 @@ HColumnLayout {
     TapHandler {
         acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
         onLongPressed: openContextMenu()
-    }
-
-    HMenu {
-        id: contextMenu
-
-        property var media: []
-        property string link: ""
-
-        readonly property bool isEncryptedMedia:
-            Object.keys(JSON.parse(model.media_crypt_dict)).length > 0
-
-        onClosed: {
-            media = []
-            link = ""
-        }
-
-        HMenuItem {
-            icon.name: "toggle-select-message"
-            text: eventDelegate.checked ? qsTr("Deselect") : qsTr("Select")
-            onTriggered: eventDelegate.toggleChecked()
-        }
-
-        HMenuItem {
-            visible: eventList.selectedCount >= 2
-            icon.name: "deselect-all-messages"
-            text: qsTr("Deselect all")
-            onTriggered: eventList.checked = {}
-        }
-
-        HMenuItem {
-            visible: model.index !== 0
-            icon.name: "select-until-here"
-            text: qsTr("Select until here")
-            onTriggered: eventList.checkFromLastToHere(model.index)
-        }
-
-        HMenuItem {
-            icon.name: "open-externally"
-            text: qsTr("Open externally")
-            visible: Boolean(model.media_url)
-            onTriggered: eventList.openMediaExternally(model)
-        }
-
-        HMenuItem {
-            icon.name: "copy-local-path"
-            text: qsTr("Copy local path")
-            visible: Boolean(model.media_local_path)
-            onTriggered:
-                Clipboard.text =
-                    model.media_local_path.replace(/^file:\/\//, "")
-        }
-
-        HMenuItem {
-            id: copyMedia
-            icon.name: "copy-link"
-            text:
-                contextMenu.media.length === 0 ||
-                contextMenu.isEncryptedMedia ?
-                "" :
-
-                contextMenu.media[0] === Utils.Media.File ?
-                qsTr("Copy file address") :
-
-                contextMenu.media[0] === Utils.Media.Image ?
-                qsTr("Copy image address") :
-
-                contextMenu.media[0] === Utils.Media.Video ?
-                qsTr("Copy video address") :
-
-                qsTr("Copy audio address")
-
-            visible: Boolean(text)
-            onTriggered: Clipboard.text = model.media_http_url
-        }
-
-        HMenuItem {
-            icon.name: "copy-link"
-            text: qsTr("Copy link address")
-            visible: Boolean(contextMenu.link)
-            onTriggered: Clipboard.text = contextMenu.link
-        }
-
-        HMenuItem {
-            icon.name: "copy-text"
-            text:
-                eventList.selectedCount ? qsTr("Copy selection") :
-                contextMenu.media.length > 0 ? qsTr("Copy filename") :
-                qsTr("Copy text")
-
-            onTriggered: {
-                if (! eventList.selectedCount){
-                    Clipboard.text = JSON.parse(model.source).body
-                    return
-                }
-
-                eventList.copySelectedDelegates()
-            }
-        }
-
-        HMenuItem {
-            icon.name: "reply-to"
-            text: qsTr("Reply")
-
-            onTriggered: {
-                chat.replyToEventId     = model.id
-                chat.replyToUserId      = model.sender_id
-                chat.replyToDisplayName = model.sender_name
-            }
-        }
-
-        HMenuItemPopupSpawner {
-            readonly property var events: {
-                eventList.selectedCount ?
-                eventList.redactableCheckedEvents :
-
-                eventList.canRedact(currentModel) ?
-                [model] :
-
-                []
-            }
-
-            icon.name: "remove-message"
-            text: qsTr("Remove")
-            enabled: properties.eventSenderAndIds.length
-
-            popup: "Popups/RedactPopup.qml"
-            properties: ({
-                preferUserId: chat.userId,
-                roomId: chat.roomId,
-                eventSenderAndIds: events.map(ev => [ev.sender_id, ev.id]),
-
-                onlyOwnMessageWarning:
-                    ! chat.roomInfo.can_redact_all &&
-                    events.length < eventList.selectedCount
-            })
-        }
-
-        HMenuItem {
-            icon.name: "debug"
-            text: qsTr("Debug this event")
-            onTriggered:
-                mainUI.debugConsole.toggle(eventContent, "t.parent.json()")
-        }
-
-        HMenuItemPopupSpawner {
-            icon.name: "clear-messages"
-            text: qsTr("Clear messages")
-
-            popup: "Popups/ClearMessagesPopup.qml"
-            properties: ({
-                userId: chat.userId,
-                roomId: chat.roomId,
-                preClearCallback: eventList.uncheckAll,
-            })
-        }
     }
 }

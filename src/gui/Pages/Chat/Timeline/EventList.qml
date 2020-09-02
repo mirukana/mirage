@@ -10,7 +10,8 @@ import "../../../PythonBridge"
 import "../../../ShortcutBundles"
 
 Rectangle {
-    property alias eventList: eventList
+    readonly property alias eventList: eventList
+    readonly property alias contextMenu: contextMenu
 
 
     color: theme.chat.eventList.background
@@ -240,6 +241,8 @@ Rectangle {
 
         readonly property var redactableCheckedEvents:
             getSortedChecked().filter(ev => eventList.canRedact(ev))
+
+        readonly property alias contextMenu: contextMenu
 
         function focusCenterMessage() {
             const previous     = highlightRangeMode
@@ -487,6 +490,7 @@ Rectangle {
             eventList.getLocalOrDownloadMedia(event, Qt.openUrlExternally)
         }
 
+
         anchors.fill: parent
         enabled: ! window.anyPopup
         clip: true
@@ -562,6 +566,11 @@ Rectangle {
             id: cursorShapeArea
             anchors.fill: parent
             acceptedButtons: Qt.NoButton
+        }
+
+        EventContextMenu {
+            id: contextMenu
+            eventList: eventList
         }
     }
 
