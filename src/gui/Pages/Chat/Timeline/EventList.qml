@@ -395,10 +395,13 @@ Rectangle {
             )
         }
 
-        function isAnimated(event) {
+        function isAnimated(event, forLink="") {
+            const link = forLink || event.media_url
+            print(forLink, "-", link)
+
             return (
                 event.media_mime === "image/gif" ||
-                utils.urlExtension(event.media_url).toLowerCase() === "gif"
+                utils.urlExtension(link).toLowerCase() === "gif"
             )
         }
 
@@ -425,7 +428,7 @@ Rectangle {
 
             // The thumbnail/cached path will be the full GIF
             const fullMxc =
-                forLink || (isAnimated(event) ? "" : event.media_url)
+                forLink || (isAnimated(event, forLink) ? "" : event.media_url)
 
             window.makePopup(
                 "Popups/ImageViewerPopup/ImageViewerPopup.qml",

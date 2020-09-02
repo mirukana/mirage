@@ -64,7 +64,7 @@ HMxcImage {
 
     clientUserId: chat.userId
     title: thumbnail ? loader.thumbnailTitle : loader.title
-    animated: eventList.isAnimated(loader.singleMediaInfo)
+    animated: eventList.isAnimated(loader.singleMediaInfo, loader.mediaUrl)
     thumbnail: ! animated && loader.thumbnailMxc
     mxc: thumbnail ?
          (loader.thumbnailMxc || loader.mediaUrl) :
