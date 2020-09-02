@@ -397,7 +397,6 @@ Rectangle {
 
         function isAnimated(event, forLink="") {
             const link = forLink || event.media_url
-            print(forLink, "-", link)
 
             return (
                 event.media_mime === "image/gif" ||

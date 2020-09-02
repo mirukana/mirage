@@ -187,6 +187,6 @@ TextArea {
     HTextContextMenu {
         id: contextMenu
         enableCustomImagePaste: textArea.enableCustomImagePaste
-        onCustomImagePaste: print("foo") || textArea.customImagePaste()
+        onCustomImagePaste: textArea.customImagePaste()
     }
 }
