@@ -11,17 +11,17 @@ HMenu {
     id: menu
 
     property HListView eventList
-    property int eventIndex: 0
+    property int eventIndex: -1
     property Item eventDelegate: null  // TODO: Qt 5.13: just use itemAtIndex()
     property string hoveredLink: ""
 
-    readonly property QtObject event: eventList.model.get(eventIndex)
+    readonly property QtObject event: eventList.model.get(eventIndex) || null
 
     readonly property bool isEncryptedMedia:
-        Object.keys(JSON.parse(event.media_crypt_dict)).length > 0
+        event && Object.keys(JSON.parse(event.media_crypt_dict)).length > 0
 
     readonly property var mediaType:   // Utils.Media.<Type> or null
-        event.media_http_url ? eventList.getMediaType(event) :
+        event && event.media_http_url ? eventList.getMediaType(event) :
         hoveredLink ? utils.getLinkType(hoveredLink) :
         null
 
@@ -37,7 +37,11 @@ HMenu {
 
     HMenuItem {
         icon.name: "toggle-select-message"
-        text: event.id in eventList.checked ? qsTr("Deselect") : qsTr("Select")
+        text:
+            event && event.id in eventList.checked ?
+            qsTr("Deselect") :
+            qsTr("Select")
+
         onTriggered: eventList.toggleCheck(eventIndex)
     }
 
@@ -49,7 +53,7 @@ HMenu {
     }
 
     HMenuItem {
-        visible: eventIndex !== 0
+        visible: eventIndex > 0
         icon.name: "select-until-here"
         text: qsTr("Select until here")
         onTriggered: eventList.checkFromLastToHere(eventIndex)
@@ -58,14 +62,14 @@ HMenu {
     HMenuItem {
         icon.name: "open-externally"
         text: qsTr("Open externally")
-        visible: Boolean(event.media_url)
+        visible: Boolean(event && event.media_url)
         onTriggered: eventList.openMediaExternally(event)
     }
 
     HMenuItem {
         icon.name: "copy-local-path"
         text: qsTr("Copy local path")
-        visible: Boolean(event.media_local_path)
+        visible: Boolean(event && event.media_local_path)
         onTriggered:
             Clipboard.text =
                 event.media_local_path.replace(/^file:\/\//, "")
@@ -90,7 +94,7 @@ HMenu {
         icon.name: "copy-text"
         text:
             eventList.selectedCount ? qsTr("Copy selection") :
-            event.media_url ? qsTr("Copy filename") :
+            event && event.media_url ? qsTr("Copy filename") :
             qsTr("Copy text")
 
         onTriggered: {
@@ -122,7 +126,7 @@ HMenu {
             eventList.selectedCount ?
             eventList.redactableCheckedEvents :
 
-            eventList.canRedact(event) ?
+            event && eventList.canRedact(event) ?
             [event] :
 
             []
