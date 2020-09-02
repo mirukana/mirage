@@ -42,12 +42,12 @@ HColumnLayout {
 
     readonly property alias eventContent: eventContent
 
-    function json() {
-        let event    = ModelStore.get(chat.userId, chat.roomId, "events")
-                                 .get(model.index)
+
+    function dict() {
+        let event    = eventList.model.get(model.index)
         event        = JSON.parse(JSON.stringify(event))
         event.source = JSON.parse(event.source)
-        return JSON.stringify(event, null, 4)
+        return event
     }
 
     function openContextMenu() {

@@ -146,7 +146,7 @@ HMenu {
     HMenuItem {
         icon.name: "debug"
         text: qsTr("Debug")
-        onTriggered: mainUI.debugConsole.toggle(eventDelegate, "t.json()")
+        onTriggered: mainUI.debugConsole.toggle(eventDelegate, ".j t.dict()")
     }
 
     HMenuItemPopupSpawner {
