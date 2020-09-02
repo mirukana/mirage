@@ -22,6 +22,8 @@ Item {
     property string replyToUserId: ""
     property string replyToDisplayName: ""
 
+    readonly property string pageIdentity: userId + "/" + roomId
+
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
 

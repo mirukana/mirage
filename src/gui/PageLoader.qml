@@ -38,6 +38,13 @@ HLoader {
     }
 
     function showRoom(userId, roomId) {
+        if (window.uiState.page === "Pages/Chat/Chat.qml" && item) {
+            // XXX: showPrevious
+            item.userId = userId
+            item.roomId = roomId
+            return
+        }
+
         _show("Pages/Chat/Chat.qml", {userId, roomId})
 
         window.uiState.page           = "Pages/Chat/Chat.qml"

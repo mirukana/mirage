@@ -574,6 +574,11 @@ Rectangle {
             id: contextMenu
             eventList: eventList
         }
+
+        Connections {
+            target: chat
+            function onPageIdentityChanged() { eventList.moreToLoad = true }
+        }
     }
 
     Timer {

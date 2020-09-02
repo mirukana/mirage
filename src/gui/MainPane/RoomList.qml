@@ -224,7 +224,7 @@ HListView {
 
     Timer {
         id: showItemLimiter
-        interval: 200
+        interval: 100
         onTriggered: showItemAtIndex()
     }
 

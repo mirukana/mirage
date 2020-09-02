@@ -12,19 +12,22 @@ import "Timeline"
 HColumnPage {
     id: chatPage
 
-    property bool loadedOnce: false
     property var loadMembersFuture: null
 
+    readonly property alias roomHeader: roomHeader
+    readonly property alias eventList: eventList
+    readonly property alias typingMembers: typingMembers
+    readonly property alias reply: reply
+    readonly property alias transfers: transfers
+    readonly property alias userCompletion: userCompletion
+    readonly property alias inviteBanner: inviteBanner
+    readonly property alias leftBanner: leftBanner
     readonly property alias composer: composer
-    readonly property bool loadEventList:
-        mainUI.mainPane.collapse ?
-        ! mainUI.mainPane.visible : ! pageLoader.appearAnimation.running
 
 
     padding: 0
     column.spacing: 0
 
-    onLoadEventListChanged: if (loadEventList) loadedOnce = true
     Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()
 
     Timer {
@@ -39,38 +42,27 @@ HColumnPage {
     }
 
     RoomHeader {
+        id: roomHeader
+
         Layout.fillWidth: true
     }
 
-    HLoader {
-        id: eventListLoader
-        opacity: loadEventList ? 1 : 0
-        sourceComponent:
-            loadedOnce || loadEventList ? evListComponent : placeholder
+    EventList {
+        id: eventList
 
         Layout.fillWidth: true
         Layout.fillHeight: true
-
-        Behavior on opacity { HNumberAnimation {} }
-
-        Component {
-            id: placeholder
-            Item {}
-        }
-
-        Component {
-            id: evListComponent
-            EventList {}
-        }
     }
 
     TypingMembersBar {
+        id: typingMembers
         typingMembers: JSON.parse(chat.roomInfo.typing_members)
 
         Layout.fillWidth: true
     }
 
     ReplyBar {
+        id: reply
         replyToEventId: chat.replyToEventId
         replyToUserId: chat.replyToUserId
         replyToDisplayName: chat.replyToDisplayName
@@ -84,6 +76,8 @@ HColumnPage {
     }
 
     TransferList {
+        id: transfers
+
         Layout.fillWidth: true
         Layout.minimumHeight: implicitHeight
         Layout.preferredHeight: implicitHeight * transferCount
@@ -119,7 +113,7 @@ HColumnPage {
     Composer {
         id: composer
         userCompletion: userCompletion
-        eventList: loadEventList ? eventListLoader.item.eventList : null
+        eventList: eventList.eventList
         visible: ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
 
         Layout.fillWidth: true
