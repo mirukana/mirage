@@ -6,6 +6,8 @@ import QtQuick.Controls 2.12
 ListView {
     id: listView
 
+    property int defaultCurrentIndex: -1
+
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
     property var checked: ({})
@@ -76,7 +78,7 @@ ListView {
     }
 
 
-    currentIndex: -1
+    currentIndex: defaultCurrentIndex
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
     highlightResizeDuration: theme.animationDuration
@@ -135,6 +137,7 @@ ListView {
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
+    onModelChanged: currentIndex = defaultCurrentIndex
 
     HKineticScrollingDisabler {
         width: enabled ? parent.width : 0

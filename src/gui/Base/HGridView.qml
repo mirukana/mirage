@@ -6,6 +6,8 @@ import QtQuick.Controls 2.12
 GridView {
     id: gridView
 
+    property int defaultCurrentIndex: -1
+
     property alias cursorShape: mouseArea.cursorShape
     property int currentItemHeight: currentItem ? currentItem.height : 0
 
@@ -65,7 +67,7 @@ GridView {
     }
 
 
-    currentIndex: -1
+    currentIndex: defaultCurrentIndex
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
 
@@ -118,6 +120,7 @@ GridView {
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
+    onModelChanged: currentIndex = defaultCurrentIndex
 
     HKineticScrollingDisabler {
         id: mouseArea
