@@ -89,10 +89,7 @@ TextArea {
         previousDefaultText = previousDefaultText
 
         // Set it only on component creation to avoid binding loops
-        if (! text) {
-            text           = window.getState(this, "text", "")
-            cursorPosition = text.length
-        }
+        if (! text) insertAtCursor(window.getState(this, "text", ""))
     }
 
     onTextChanged: window.saveState(this)

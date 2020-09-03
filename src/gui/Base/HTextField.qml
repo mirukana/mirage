@@ -29,7 +29,14 @@ TextField {
 
     property string previousDefaultText: ""  // private
 
-    function reset() { clear(); text = Qt.binding(() => defaultText || "")}
+    function reset() {
+        clear()
+        text = Qt.binding(() => defaultText || "")
+    }
+
+    function insertAtCursor(text) {
+        insert(cursorPosition, text)
+    }
 
 
     text: defaultText || ""
@@ -69,10 +76,7 @@ TextField {
         previousDefaultText = previousDefaultText
 
         // Set it only on component creation to avoid binding loops
-        if (! text) {
-            text           = window.getState(this, "text", "")
-            cursorPosition = text.length
-        }
+        if (! text) insertAtCursor(window.getState(this, "text", ""))
     }
 
     onTextChanged: window.saveState(this)
