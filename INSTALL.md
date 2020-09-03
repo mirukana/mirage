@@ -23,7 +23,7 @@ but compiling on Windows and macOS should be possible with the right tools.
   - [Installing or updating Mirage](#installing-or-updating-mirage)
   - [Common issues](#common-issues)
     - [cffi version mismatch](#cffi-version-mismatch)
-    - [Component is not ready](#component-is-not-ready)
+    - [Type XYZ unavailable](#type-xyz-unavailable)
 
 
 ## Packages
@@ -299,23 +299,27 @@ related to `cffi`, try:
 pip3 install --user --upgrade --force-reinstall cffi
 ```
 
-#### Component is not ready
+#### Type XYZ unavailable
 
-If the application doesn't start when you run `mirage` and shows a 
-`QQmlComponent: Component is not ready` message in the terminal,
-a QML component failed to import due to either missing dependencies
-or a programming error.
+If the application exits without showing any window and you get a terminal
+message like this:
 
-If PyOtherSide is correctly installed, you should see a similar message:
+    file:///.../src/gui/Window.qml:83:5: Type PythonRootBridge unavailable
+
+then a QML component/type failed to import due to either a missing 
+dependency or a programming error.  
+If the type has `Python` in its name, ensure PyOtherSide is correctly
+installed. You should see a similar message:
 
     Got library name:  "/usr/lib/qt5/qml/io/thp/pyotherside/libpyothersideplugin.so"
 
-If not, verify the installed files and their permissions. 
 To ensure the correct permissions are set for the PyOtherSide plugin files:
 
-    sudo chmod -R 755 /usr/lib/qt5/qml/io
-    sudo chmod 644 /usr/lib/qt5/qml/io/thp/pyotherside/*
-    sudo chmod 755 /usr/lib/qt5/qml/io/thp/pyotherside/*.so
+```sh
+sudo chmod -R 755 /usr/lib/qt5/qml/io
+sudo chmod 644 /usr/lib/qt5/qml/io/thp/pyotherside/*
+sudo chmod 755 /usr/lib/qt5/qml/io/thp/pyotherside/*.so
+```
 
 Note that the Qt lib path might be `/usr/lib/qt/` instead of `/usr/lib/qt5/`,
 depending on the distro.
