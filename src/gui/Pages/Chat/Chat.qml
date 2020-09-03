@@ -39,6 +39,7 @@ Item {
     }
 
 
+    onPageIdentityChanged: if (roomPane) roomPane.appearAnimation.restart()
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
     onReadyChanged: longLoading = false
 
@@ -110,8 +111,22 @@ Item {
 
         sourceComponent: RoomPane {
             id: roomPane
+
+            readonly property alias appearAnimation: appearAnimation
+
             referenceSizeParent: chat
             maximumSize: chat.width - theme.minimumSupportedWidth * 1.5
+
+            HNumberAnimation {
+                id: appearAnimation
+                target: roomPane.contentTranslation
+                property: "x"
+                from: -chat.width + roomPane.width
+                to: 0
+                easing.type: Easing.OutCirc
+                factor: 2
+                running: true
+            }
         }
     }
 }

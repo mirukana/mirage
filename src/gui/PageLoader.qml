@@ -67,8 +67,8 @@ HLoader {
 
     clip: appearAnimation.running
 
-    onLoaded: { takeFocus(); appearAnimation.start() }
-    onRecycled: appearAnimation.start()
+    onLoaded: { takeFocus(); appearAnimation.restart() }
+    onRecycled: appearAnimation.restart()
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
@@ -92,10 +92,10 @@ HLoader {
         id: appearAnimation
         target: pageLoader.item
         property: "x"
-        from: -300
+        from: -pageLoader.width
         to: 0
-        easing.type: Easing.OutBack
-        duration: theme.animationDuration * 1.5
+        easing.type: Easing.OutCirc
+        factor: 2
     }
 
     HShortcut {

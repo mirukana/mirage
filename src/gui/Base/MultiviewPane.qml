@@ -14,6 +14,7 @@ HDrawer {
     property int buttonWidth:
         buttonRepeater.count > 0 ? buttonRepeater.itemAt(0).implicitWidth : 0
 
+    readonly property alias contentTranslation: contentTranslation
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
 
@@ -23,6 +24,7 @@ HDrawer {
 
     HColumnLayout {
         anchors.fill: parent
+        transform: Translate { id: contentTranslation }
 
         Rectangle {
             color: buttonsBackgroundColor
