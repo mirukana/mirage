@@ -38,6 +38,10 @@ TextArea {
         text = Qt.binding(() => defaultText || "")
     }
 
+    function loadState() {
+        if (! text) insertAtCursor(window.getState(this, "text", ""))
+    }
+
     function insertAtCursor(text) {
         insert(cursorPosition, text)
     }
@@ -87,9 +91,7 @@ TextArea {
     Component.onCompleted: {
         // Break binding
         previousDefaultText = previousDefaultText
-
-        // Set it only on component creation to avoid binding loops
-        if (! text) insertAtCursor(window.getState(this, "text", ""))
+        loadState()
     }
 
     onTextChanged: window.saveState(this)

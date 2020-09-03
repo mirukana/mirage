@@ -245,4 +245,13 @@ HTextArea {
         //     )
         // }
     }
+
+    Connections {
+        target: pageLoader
+
+        function onRecycled() {
+            area.reset()
+            area.loadState()
+        }
+    }
 }
