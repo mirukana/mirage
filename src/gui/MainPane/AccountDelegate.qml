@@ -146,7 +146,7 @@ HTile {
             backgroundColor: "transparent"
             toolTip.text: qsTr("Add new chat")
             onClicked: {
-                pageLoader.showPage(
+                pageLoader.show(
                     "Pages/AddChat/AddChat.qml", {userId: model.id},
                 )
                 account.wentToAccountPage()

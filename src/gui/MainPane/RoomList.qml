@@ -61,7 +61,7 @@ HListView {
         const item = model.get(index)
 
         item.type === "Account" ?
-        pageLoader.showPage(
+        pageLoader.show(
             "Pages/AccountSettings/AccountSettings.qml", { "userId": item.id },
         ) :
         pageLoader.showRoom(item.for_account, item.id)

@@ -39,7 +39,7 @@ HFlickableColumnPopup {
                     window.uiState.pageProperties.userId === userId)
                 {
                     const page = "Pages/AddAccount/AddAccount.qml"
-                    window.mainUI.pageLoader.showPage(page)
+                    window.mainUI.pageLoader.show(page)
                 }
 
                 py.callCoro("logout_client", [userId])

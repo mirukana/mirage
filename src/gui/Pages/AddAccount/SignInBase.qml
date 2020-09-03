@@ -45,7 +45,7 @@ HFlickableColumnPage {
             [receivedUserId]
         )
 
-        pageLoader.showPage(
+        pageLoader.show(
             "Pages/AccountSettings/AccountSettings.qml",
             {userId: receivedUserId},
         )

@@ -18,7 +18,7 @@ HLoader {
     signal recycled()
     signal previousShown(string componentUrl, var properties)
 
-    function showPage(componentUrl, properties={}) {
+    function show(componentUrl, properties={}) {
         history.unshift([componentUrl, properties])
         if (history.length > historyLength) history.pop()
 
@@ -42,7 +42,7 @@ HLoader {
     }
 
     function showRoom(userId, roomId) {
-        showPage("Pages/Chat/Chat.qml", {userId, roomId})
+        show("Pages/Chat/Chat.qml", {userId, roomId})
     }
 
     function showPrevious(timesBack=1) {
@@ -50,7 +50,7 @@ HLoader {
         if (timesBack < 1) return false
 
         const [componentUrl, properties] = history[timesBack]
-        showPage(componentUrl, properties)
+        show(componentUrl, properties)
         previousShown(componentUrl, properties)
         return true
     }
@@ -72,13 +72,11 @@ HLoader {
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
-            pageLoader.showPage(
-                "AddAccount/AddAccount", {"header.show": false},
-            )
+            pageLoader.show("AddAccount/AddAccount", {"header.show": false})
             return
         }
 
-        pageLoader.showPage(window.uiState.page, window.uiState.pageProperties)
+        pageLoader.show(window.uiState.page, window.uiState.pageProperties)
     }
 
     HNumberAnimation {
