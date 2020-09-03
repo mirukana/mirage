@@ -11,13 +11,9 @@ import "MainPane"
 HLoader {
     id: pageLoader
 
-    property bool isWide: width > theme.contentIsWideAbove
-
     // List of previously loaded [componentUrl, {properties}]
     property var history: []
     property int historyLength: 20
-
-    readonly property alias appearAnimation: appearAnimation
 
     signal recycled()
     signal previousShown(string componentUrl, var properties)
