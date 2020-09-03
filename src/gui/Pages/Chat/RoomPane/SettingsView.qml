@@ -80,6 +80,11 @@ HFlickableColumnPage {
     onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: cancel()
 
+    Connections {
+        target: pageLoader
+        function onAboutToRecycle() { cancel() }
+    }
+
     HRoomAvatar {
         id: avatar
         clientUserId: chat.userId

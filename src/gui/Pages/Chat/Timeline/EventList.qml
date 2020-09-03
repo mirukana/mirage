@@ -576,8 +576,8 @@ Rectangle {
         }
 
         Connections {
-            target: chat
-            function onPageIdentityChanged() { eventList.moreToLoad = true }
+            target: pageLoader
+            function onRecycled() { eventList.moreToLoad = true }
         }
     }
 

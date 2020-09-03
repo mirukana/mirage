@@ -90,11 +90,20 @@ MultiviewPane {
         target: swipeView
 
         function onCurrentItemChanged() {
-            swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+            roomPane.swipeView.currentItem.keybindFocusItem.forceActiveFocus()
+        }
+    }
+
+    Connections {
+        target: pageLoader
+
+        function onAboutToRecycle() {
+            roomPane.swipeView.currentIndex = 0
         }
     }
 
     MemberView {}
+
     SettingsView {
         enabled: accountModel.presence !== "offline"
     }

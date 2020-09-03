@@ -15,6 +15,7 @@ HLoader {
     property var history: []
     property int historyLength: 20
 
+    signal aboutToRecycle()
     signal recycled()
     signal previousShown(string componentUrl, var properties)
 
@@ -28,6 +29,8 @@ HLoader {
             item
 
         if (recycle) {
+            aboutToRecycle()
+
             for (const [prop, value] of Object.entries(properties))
                 item[prop] = value
 
@@ -55,20 +58,16 @@ HLoader {
         return true
     }
 
-    function closeMainPane() {
-        if (mainPane.collapse) mainPane.close()
-    }
-
     function takeFocus() {
         pageLoader.item.forceActiveFocus()
-        closeMainPane()
+        if (mainPane.collapse) mainPane.close()
     }
 
 
     clip: appearAnimation.running
 
     onLoaded: { takeFocus(); appearAnimation.restart() }
-    onRecycled: { closeMainPane(); appearAnimation.restart() }
+    onRecycled: { takeFocus(); appearAnimation.restart() }
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {

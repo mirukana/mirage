@@ -14,6 +14,15 @@ HColumnLayout {
     readonly property alias filterField: filterField
 
 
+    Connections {
+        target: pageLoader
+
+        function onAboutToRecycle() {
+            stackView.pop(stackView.initialItem)
+            filterField.reset()
+        }
+    }
+
     HStackView {
         id: stackView
 
@@ -79,8 +88,6 @@ HColumnLayout {
 
             HTextField {
                 id: filterField
-                saveName: "memberFilterField"
-                saveId: chat.roomId
 
                 backgroundColor:
                     theme.chat.roomPane.bottomBar.filterMembers.background

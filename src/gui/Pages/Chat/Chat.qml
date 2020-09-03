@@ -22,8 +22,6 @@ Item {
     property string replyToUserId: ""
     property string replyToDisplayName: ""
 
-    readonly property string pageIdentity: userId + "/" + roomId
-
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item
 
@@ -39,7 +37,6 @@ Item {
     }
 
 
-    onPageIdentityChanged: if (roomPane) roomPane.appearAnimation.restart()
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
     onReadyChanged: longLoading = false
 
@@ -126,6 +123,11 @@ Item {
                 easing.type: Easing.OutCirc
                 factor: 2
                 running: true
+            }
+
+            Connections {
+                target: pageLoader
+                function onRecycled() { roomPane.appearAnimation.restart() }
             }
         }
     }
