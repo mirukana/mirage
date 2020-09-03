@@ -82,14 +82,7 @@ HLoader {
             return
         }
 
-        const page  = window.uiState.page
-        const props = window.uiState.pageProperties
-
-        if (page === "Pages/Chat/Chat.qml") {
-            pageLoader.showRoom(props.userId, props.roomId)
-        } else {
-            pageLoader._show(page, props)
-        }
+        pageLoader.showPage(window.uiState.page, window.uiState.pageProperties)
     }
 
     HNumberAnimation {
