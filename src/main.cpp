@@ -181,6 +181,20 @@ int main(int argc, char *argv[]) {
         &engine,
         qrcPath.exists() ? "qrc:/src/gui/Window.qml" : "src/gui/Window.qml"
     );
+
+    if (component.isError()) {
+        for (QQmlError e : component.errors()) {
+            qFatal(
+                "%s:%d:%d: %s",
+                e.url().toString().toStdString().c_str(),
+                e.line(),
+                e.column(),
+                e.description().toStdString().c_str()
+            );
+        }
+        app.exit(EXIT_FAILURE);
+    }
+
     component.create(objectContext);
 
     // Finally, execute the app. Return its system exit code when it exits.
