@@ -59,16 +59,20 @@ HLoader {
         return true
     }
 
+    function closeMainPane() {
+        if (mainPane.collapse) mainPane.close()
+    }
+
     function takeFocus() {
         pageLoader.item.forceActiveFocus()
-        if (mainPane.collapse) mainPane.close()
+        closeMainPane()
     }
 
 
     clip: appearAnimation.running
 
     onLoaded: { takeFocus(); appearAnimation.restart() }
-    onRecycled: appearAnimation.restart()
+    onRecycled: { closeMainPane(); appearAnimation.restart() }
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
