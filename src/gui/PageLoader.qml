@@ -71,7 +71,7 @@ HLoader {
 
     Component.onCompleted: {
         if (! py.startupAnyAccountsSaved) {
-            pageLoader.show("AddAccount/AddAccount", {"header.show": false})
+            pageLoader.show("Pages/AddAccount/AddAccount.qml")
             return
         }
 
