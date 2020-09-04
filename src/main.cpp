@@ -12,6 +12,10 @@
 #include <QQuickStyle>
 #include <QFontDatabase>
 #include <QDateTime>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QLockFile>
 #include <signal.h>
 
 #ifdef Q_OS_UNIX
@@ -21,6 +25,9 @@
 #include "utils.h"
 #include "clipboard.h"
 #include "clipboard_image_provider.h"
+
+
+QLockFile *lockFile = nullptr;
 
 
 void loggingHandler(
@@ -86,6 +93,42 @@ void onExitSignal(int signum) {
 }
 
 
+bool setLockFile() {
+    QString customConfigDir(qEnvironmentVariable("MIRAGE_CONFIG_DIR"));
+    QDir configDir(
+        customConfigDir.isEmpty() ?
+        QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+        + "/" + QCoreApplication::applicationName() :
+        customConfigDir
+    );
+
+    if (! configDir.mkpath(".")) {
+        qFatal("Could not create config file.");
+        exit(EXIT_FAILURE);
+    }
+
+    lockFile = new QLockFile(configDir.absoluteFilePath(".lock"));
+    lockFile->tryLock(0);
+
+    switch (lockFile->error()) {
+        case QLockFile::NoError: {
+            return true;
+        }
+        case QLockFile::LockFailedError: {
+            qWarning("Opening already running Mirage instance.");
+            QFile showFile(configDir.absoluteFilePath(".show"));
+            showFile.open(QIODevice::WriteOnly);
+            showFile.close();
+            return false;
+        }
+        default: {
+            qFatal("Cannot create lock file: no permission or unknown error.");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
 int main(int argc, char *argv[]) {
     qInstallMessageHandler(loggingHandler);
 
@@ -95,6 +138,8 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationDisplayName("Mirage");
     QApplication::setApplicationVersion("0.6.2");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    if (! setLockFile()) return EXIT_SUCCESS;
     QApplication app(argc, argv);
 
     // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
@@ -197,6 +242,8 @@ int main(int argc, char *argv[]) {
 
     component.create(objectContext);
 
-    // Finally, execute the app. Return its system exit code when it exits.
-    return app.exec();
+    // Finally, execute the app. Return its exit code after clearing the lock.
+    int exit_code = app.exec();
+    delete lockFile;
+    return exit_code;
 }

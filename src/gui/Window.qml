@@ -109,10 +109,12 @@ ApplicationWindow {
         tooltip: qsTr("Mirage")
         icon.source: `../icons/${iconPack}/tray-icon.png`
 
+        onActivated: window.show()
+
         menu: Menu {
             MenuItem {
                 text: qsTr("Quit")
-                onTriggered: window.close()
+                onTriggered: window.hide()
             }
         }
     }
