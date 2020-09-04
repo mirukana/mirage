@@ -359,14 +359,6 @@ class NioCallbacks:
         users_previous  = previous.get("users", {})
         events_previous = previous.get("events", {})
 
-        # Update room members who had their power level changed
-
-        for user_id, level in levels.users.items():
-            if user_id in room.users and level != users_previous.get(user_id):
-                await self.client.add_member(room, user_id)
-
-        # Event formatting
-
         changes:       List[Tuple[str, int, int]] = []
         event_changes: List[Tuple[str, int, int]] = []
         user_changes:  List[Tuple[str, int, int]] = []
@@ -383,36 +375,46 @@ class NioCallbacks:
             previous: Dict[str, Union[int, dict]],
             prefix:   str             = "",
         ) -> None:
-            for name, level in levels.items():
+
+            default_0 = ("users_default", "events_default", "invite")
+
+            for name in set({**levels, **previous}):
                 if not prefix and name in ("users", "events"):
                     continue
 
-                if isinstance(level, dict):
-                    prev = previous.get(name, {})
-
-                    if not isinstance(prev, dict):
-                        prev = {}
-
-                    format_defaults_dict(level, prev, f"{prefix}{name}.")
-                    continue
-
-                default_0 = ("users_default", "events_default", "invite")
-                old       = previous.get(
+                old_level = previous.get(
+                    name, 0 if not prefix and name in default_0 else 50,
+                )
+                level = levels.get(
                     name, 0 if not prefix and name in default_0 else 50,
                 )
 
-                if not isinstance(old, int):
-                    old = 50
+                if isinstance(level, dict):
+                    if not isinstance(old_level, dict):
+                        old_level = {}
 
-                if level != old or not previous:
-                    changes.append((f"{prefix}{name}", old, level))
+                    format_defaults_dict(level, old_level, f"{prefix}{name}.")
+                    continue
+
+                if not isinstance(old_level, int):
+                    old_level = 50
+
+                if old_level != level or not previous:
+                    changes.append((f"{prefix}{name}", old_level, level))
 
         format_defaults_dict(ev.source["content"], previous)
 
         # Minimum level to send event changes
 
-        for ev_type, level in levels.events.items():
-            old = events_previous.get(
+        for ev_type in set({**levels.events, **events_previous}):
+            old_level = events_previous.get(
+                ev_type,
+
+                levels.defaults.state_default
+                if ev_type.startswith("m.room.") else
+                levels.defaults.events_default,
+            )
+            level = levels.events.get(
                 ev_type,
 
                 levels.defaults.state_default
@@ -420,16 +422,22 @@ class NioCallbacks:
                 levels.defaults.events_default,
             )
 
-            if level != old or not previous:
-                event_changes.append((ev_type, old, level))
+            if old_level != level or not previous:
+                event_changes.append((ev_type, old_level, level))
 
         # User level changes
 
-        for user_id, level in levels.users.items():
-            old = users_previous.get(user_id, levels.defaults.users_default)
+        for user_id in set({**levels.users, **users_previous}):
+            old_level = \
+                users_previous.get(user_id, levels.defaults.users_default)
 
-            if level != old or not previous:
-                user_changes.append((user_id, old, level))
+            level = levels.users.get(user_id, levels.defaults.users_default)
+
+            if old_level != level or not previous:
+                user_changes.append((user_id, old_level, level))
+
+                if user_id in room.users:
+                    await self.client.add_member(room, user_id)
 
         # Gather and format changes
 
