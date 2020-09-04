@@ -23,6 +23,7 @@ ApplicationWindow {
     property var uiState: ({})
     property var history: ({})
     property var theme: null
+    property bool closing: false
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
@@ -65,6 +66,11 @@ ApplicationWindow {
         )
     }
 
+    function drawAttention() {
+        window.show()
+        window.raise()
+        window.requestActivate()
+    }
 
 
     flags: Qt.WA_TranslucentBackground
@@ -80,6 +86,11 @@ ApplicationWindow {
     onSettingsChanged: py.saveConfig("ui_settings", settings)
     onUiStateChanged: py.saveConfig("ui_state", uiState)
     onHistoryChanged: py.saveConfig("history", history)
+
+    onClosing: {
+        close.accepted = ! settings.closeMinimizesToTray
+        onTriggered: if (settings.closeMinimizesToTray) hide()
+    }
 
     PythonRootBridge { id: py }
 
@@ -109,12 +120,25 @@ ApplicationWindow {
         tooltip: qsTr("Mirage")
         icon.source: `../icons/${iconPack}/tray-icon.png`
 
-        onActivated: window.show()
+        onActivated:
+            if (reason !== SystemTrayIcon.Context)
+                window.drawAttention()
+
 
         menu: Menu {
             MenuItem {
-                text: qsTr("Quit")
-                onTriggered: window.hide()
+                text: window.visible ? "Hide Mirage" : "Show Mirage"
+                onTriggered:
+                    window.visible ?
+                    window.hide() :
+                    window.drawAttention()
+            }
+
+            MenuItem {
+                text: qsTr("Quit Mirage")
+                onTriggered: {
+                    Qt.quit()
+                }
             }
         }
     }

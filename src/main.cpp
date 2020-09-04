@@ -180,6 +180,9 @@ int main(int argc, char *argv[]) {
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());
 
+    // For being able to use Qt.quit() in QML side
+    QObject::connect(&engine, &QQmlEngine::quit, &QApplication::quit);
+
     // Set the debugMode properties depending of if we're running in debug mode
     // or not (`qmake CONFIG+=dev ...`, default in live-reload.sh)
 #ifdef QT_DEBUG
