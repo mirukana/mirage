@@ -43,7 +43,8 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, Room, Upload, UploadStatus,
+    ZERO_DATE, Account, Event, Member, Room, TypeSpecifier, Upload,
+    UploadStatus,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -1337,11 +1338,20 @@ class MatrixClient(nio.AsyncClient):
 
                     event.is_local_echo = True
 
-                event.content = await self.get_redacted_event_content(
-                    event.event_type, self.user_id, event.sender_id, reason,
-                )
+                event.set_fields(
+                    content = await self.get_redacted_event_content(
+                        event.event_type, self.user_id, event.sender_id,reason,
+                    ),
 
-                event.event_type = nio.RedactedEvent
+                    event_type       = nio.RedactedEvent,
+                    mentions         = [],
+                    type_specifier   = TypeSpecifier.Unset,
+                    media_url        = "",
+                    media_http_url   = "",
+                    media_title      = "",
+                    media_local_path = "",
+                    thumbnail_url    = "",
+                )
 
         await self.pause_while_offline()
         return await asyncio.gather(*tasks)

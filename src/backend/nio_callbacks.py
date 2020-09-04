@@ -284,6 +284,13 @@ class NioCallbacks:
                 type(ev), ev.redacter, ev.sender, ev.reason,
             ),
 
+            mentions               = [],
+            type_specifier         = TypeSpecifier.Unset,
+            media_url              = "",
+            media_http_url         = "",
+            media_title            = "",
+            media_local_path       = "",
+            thumbnail_url          = "",
             redacter_id            = ev.redacter or "",
             redacter_name          = redacter_name,
             override_fetch_profile = True,
