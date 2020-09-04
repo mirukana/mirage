@@ -93,14 +93,9 @@ void onExitSignal(int signum) {
 }
 
 
-bool setLockFile() {
-    QString customConfigDir(qEnvironmentVariable("MIRAGE_CONFIG_DIR"));
-    QDir configDir(
-        customConfigDir.isEmpty() ?
-        QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
-        + "/" + QCoreApplication::applicationName() :
-        customConfigDir
-    );
+bool setLockFile(QString configPath) {
+
+    QDir configDir(configPath);
 
     if (! configDir.mkpath(".")) {
         qFatal("Could not create config file.");
@@ -139,7 +134,15 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationVersion("0.6.2");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    if (! setLockFile()) return EXIT_SUCCESS;
+    QString customConfigDir(qEnvironmentVariable("MIRAGE_CONFIG_DIR"));
+    QString configDir(
+        customConfigDir.isEmpty() ?
+        QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+        + "/" + QCoreApplication::applicationName() :
+        customConfigDir
+    );
+
+    if (! setLockFile(configDir)) return EXIT_SUCCESS;
     QApplication app(argc, argv);
 
     // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
@@ -243,7 +246,7 @@ int main(int argc, char *argv[]) {
         app.exit(EXIT_FAILURE);
     }
 
-    component.create(objectContext);
+    component.create(objectContext)->setProperty("configDir", configDir);
 
     // Finally, execute the app. Return its exit code after clearing the lock.
     int exit_code = app.exec();

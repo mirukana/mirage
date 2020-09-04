@@ -3,6 +3,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import Qt.labs.platform 1.1
+import Qt.labs.folderlistmodel 2.12
 import "Base"
 import "PythonBridge"
 
@@ -23,7 +24,7 @@ ApplicationWindow {
     property var uiState: ({})
     property var history: ({})
     property var theme: null
-    property bool closing: false
+    property string configDir
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
@@ -139,6 +140,23 @@ ApplicationWindow {
                 onTriggered: {
                     Qt.quit()
                 }
+            }
+        }
+    }
+
+    FolderListModel {
+        id: showUpWatcher
+        folder: window.configDir
+        showDirs: false
+        showHidden: true
+        nameFilters: [".show"]
+
+        onCountChanged: {
+            if (count) {
+                window.drawAttention()
+                py.importModule("os", () => {
+                    py.call("os.remove", [get(0, "filePath")])
+                })
             }
         }
     }
