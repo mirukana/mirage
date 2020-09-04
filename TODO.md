@@ -2,9 +2,7 @@
 
 - Fix right margin of own `<image url>\n<image url>` messages
 
-- If an account is gone from the user's config, discard UI state last page
 - filter > enter > room list is always scrolled to top
-- ctrl+j/k when scrolled up
 - session list: prevent tab-focusing the delegates
 - refresh server list button
 

@@ -9,7 +9,10 @@ HFlickableColumnPopup {
 
     property string userId
 
-    signal signBackInRequest()
+    function addAccount() {
+        window.mainUI.pageLoader.show("Pages/AddAccount/AddAccount.qml")
+    }
+
 
     page.footer: AutoDirectionLayout {
         ApplyButton {
@@ -17,8 +20,7 @@ HFlickableColumnPopup {
             text: qsTr("Sign back in")
             icon.name: "sign-back-in"
             onClicked: {
-                const page = "Pages/AddAccount/AddAccount.qml"
-                window.mainUI.pageLoader.show(page)
+                addAccount()
                 popup.close()
             }
         }
@@ -28,6 +30,8 @@ HFlickableColumnPopup {
             onClicked: popup.close()
         }
     }
+
+    onClosed: if (window.uiState.pageProperties.userId === userId) addAccount()
 
     SummaryLabel {
         text: qsTr("Signed out from %1").arg(coloredNameHtml("", userId))
