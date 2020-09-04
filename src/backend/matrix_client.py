@@ -1294,14 +1294,8 @@ class MatrixClient(nio.AsyncClient):
     ) -> str:
         """Get content to be displayed in place of a redacted event."""
 
-        kind = (
-            "message" if issubclass(nio_type, nio.RoomMessage) else
-            "media" if issubclass(nio_type, nio.RoomMessageMedia) else
-            "event"
-        )
-
-        content = f"%1 removed this {kind}" if redacter == sender else \
-                  f"%1's {kind} was removed by %2"
+        content = "%1 removed this message" if redacter == sender else \
+                  "%1's message was removed by %2"
 
         if reason:
             content = f"{content}, reason: {html.escape(reason)}"
