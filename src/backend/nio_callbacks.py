@@ -365,9 +365,10 @@ class NioCallbacks:
 
         def lvl(level: int) -> str:
             return (
-                f"Admin ({level})"     if level == 100  else
+                f"Admin ({level})"     if level == 100 else
                 f"Moderator ({level})" if level >= 50 else
-                f"User ({level})"
+                f"User ({level})"      if level >= 0 else
+                f"Muted ({level})"
             )
 
         def format_defaults_dict(
