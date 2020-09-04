@@ -72,7 +72,8 @@ HColumnLayout {
             chat.userId,
             "get_event_profiles",
             [chat.roomId, model.id],
-            () => { fetchProfilesFuture = null }
+            // The if avoids segfault if eventDelegate is already destroyed
+            () => { if (eventDelegate) fetchProfilesFuture = null }
         )
 
     Component.onDestruction:
