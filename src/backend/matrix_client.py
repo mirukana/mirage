@@ -1426,7 +1426,7 @@ class MatrixClient(nio.AsyncClient):
             filesize      = filesize,
         )
 
-        return UploadReturn(response.content_uri, mime, decryption_dict)
+        return UploadReturn(response.content_uri, mime, decryption_dict or {})
 
 
     async def set_avatar_from_file(self, path: Union[Path, str]) -> None:
