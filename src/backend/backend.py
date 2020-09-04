@@ -18,7 +18,7 @@ from appdirs import AppDirs
 import nio
 
 from . import __app_name__
-from .errors import MatrixError
+from .errors import MatrixError, MatrixInvalidAccessToken
 from .matrix_client import MatrixClient
 from .media_cache import MediaCache
 from .models import SyncId
@@ -305,6 +305,11 @@ class Backend:
         client = self.clients.pop(user_id, None)
 
         if client:
+            try:
+                await client.logout()
+            except MatrixInvalidAccessToken:
+                pass
+
             self.models["accounts"].pop(user_id, None)
             self.models["matching_accounts"].pop(user_id, None)
             self.models[user_id, "uploads"].clear()
@@ -316,8 +321,6 @@ class Backend:
                 self.models[user_id, room_id, "filtered_members"].clear()
 
             self.models[user_id, "rooms"].clear()
-
-            await client.logout()
 
         await self.saved_accounts.delete(user_id)
 

@@ -98,3 +98,10 @@ class DevicesUpdated(PyOtherSideEvent):
     """Indicate changes in devices for us or users we share a room with."""
 
     our_user_id: str = field()
+
+
+@dataclass
+class InvalidAccessToken(PyOtherSideEvent):
+    """Indicate one of our account's access token is invalid or revoked."""
+
+    user_id: str = field()

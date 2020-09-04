@@ -36,8 +36,9 @@ from nio.crypto import async_generator_from_data
 from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
-    MatrixError, MatrixForbidden, MatrixNotFound, MatrixTooLarge,
-    MatrixUnauthorized, UneededThumbnail, UserFromOtherServerDisallowed,
+    MatrixError, MatrixForbidden, MatrixInvalidAccessToken, MatrixNotFound,
+    MatrixTooLarge, MatrixUnauthorized, UneededThumbnail,
+    UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
@@ -47,7 +48,9 @@ from .models.items import (
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
 from .presence import Presence
-from .pyotherside_events import AlertRequested, LoopException
+from .pyotherside_events import (
+    AlertRequested, InvalidAccessToken, LoopException,
+)
 
 if TYPE_CHECKING:
     from .backend import Backend
@@ -201,6 +204,8 @@ class MatrixClient(nio.AsyncClient):
         # {room_id: event}
         self.power_level_events: Dict[str, nio.PowerLevelsEvent] = {}
 
+        self.invalid_disconnecting: bool = False
+
         self.nio_callbacks = NioCallbacks(self)
 
 
@@ -236,7 +241,15 @@ class MatrixClient(nio.AsyncClient):
         response = await super()._send(*args, **kwargs)
 
         if isinstance(response, nio.ErrorResponse):
-            raise MatrixError.from_nio(response)
+            try:
+                raise MatrixError.from_nio(response)
+            except MatrixInvalidAccessToken:
+                if not self.invalid_disconnecting:
+                    self.invalid_disconnecting = True
+                    InvalidAccessToken(self.user_id)
+                    await self.backend.logout_client(self.user_id)
+
+                raise
 
         return response
 

@@ -94,4 +94,8 @@ QtObject {
     function onDevicesUpdated(forAccount) {
         deviceUpdateSignal(forAccount)
     }
+
+    function onInvalidAccessToken(userId) {
+        window.makePopup("Popups/InvalidAccessTokenPopup.qml", {userId})
+    }
 }
