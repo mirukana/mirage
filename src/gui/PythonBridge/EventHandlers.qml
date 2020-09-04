@@ -86,7 +86,8 @@ QtObject {
 
     function onModelCleared(syncId) {
         // print("clear", syncId)
-        ModelStore.get(syncId).clear()
+        const model = ModelStore.get(syncId)
+        model.clear()
         model.idToItems = {}
     }
 
