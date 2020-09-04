@@ -490,7 +490,7 @@ class MatrixClient(nio.AsyncClient):
                 resp     = await self.upload_filter(**first)
                 first_id = resp.filter_id
 
-            self._sync_filter_ids = SyncFilterIds(others_id, first_id)
+            self._sync_filter_ids = SyncFilterIds(first_id, others_id)
             return self._sync_filter_ids
 
 
