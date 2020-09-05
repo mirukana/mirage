@@ -22,7 +22,7 @@ ApplicationWindow {
     property var uiState: ({})
     property var history: ({})
     property var theme: null
-    property string configDir
+    property string settingsFolder
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
@@ -114,6 +114,6 @@ ApplicationWindow {
 
     HTrayIcon {
         window: window
-        settingsFolder: configDir
+        settingsFolder: settingsFolder
     }
 }

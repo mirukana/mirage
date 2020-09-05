@@ -95,14 +95,14 @@ void onExitSignal(int signum) {
 
 bool setLockFile(QString configPath) {
 
-    QDir configDir(configPath);
+    QDir settingsFolder(configPath);
 
-    if (! configDir.mkpath(".")) {
+    if (! settingsFolder.mkpath(".")) {
         qFatal("Could not create config file.");
         exit(EXIT_FAILURE);
     }
 
-    lockFile = new QLockFile(configDir.absoluteFilePath(".lock"));
+    lockFile = new QLockFile(settingsFolder.absoluteFilePath(".lock"));
     lockFile->tryLock(0);
 
     switch (lockFile->error()) {
@@ -111,7 +111,7 @@ bool setLockFile(QString configPath) {
         }
         case QLockFile::LockFailedError: {
             qWarning("Opening already running Mirage instance.");
-            QFile showFile(configDir.absoluteFilePath(".show"));
+            QFile showFile(settingsFolder.absoluteFilePath(".show"));
             showFile.open(QIODevice::WriteOnly);
             showFile.close();
             return false;
@@ -135,14 +135,14 @@ int main(int argc, char *argv[]) {
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QString customConfigDir(qEnvironmentVariable("MIRAGE_CONFIG_DIR"));
-    QString configDir(
+    QString settingsFolder(
         customConfigDir.isEmpty() ?
         QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
         + "/" + QCoreApplication::applicationName() :
         customConfigDir
     );
 
-    if (! setLockFile(configDir)) return EXIT_SUCCESS;
+    if (! setLockFile(settingsFolder)) return EXIT_SUCCESS;
     QApplication app(argc, argv);
 
     // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
         app.exit(EXIT_FAILURE);
     }
 
-    component.create(objectContext)->setProperty("configDir", configDir);
+    component.create(objectContext)->setProperty("settingsFolder", settingsFolder);
 
     // Finally, execute the app. Return its exit code after clearing the lock.
     int exit_code = app.exec();
