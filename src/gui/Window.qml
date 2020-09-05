@@ -2,8 +2,6 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import Qt.labs.platform 1.1
-import Qt.labs.folderlistmodel 2.12
 import "Base"
 import "PythonBridge"
 
@@ -90,7 +88,7 @@ ApplicationWindow {
 
     onClosing: {
         close.accepted = ! settings.closeMinimizesToTray
-        onTriggered: if (settings.closeMinimizesToTray) hide()
+        if (settings.closeMinimizesToTray) hide()
     }
 
     PythonRootBridge { id: py }
@@ -114,50 +112,8 @@ ApplicationWindow {
         Behavior on scale { HNumberAnimation { overshoot: 3; factor: 1.2 } }
     }
 
-    SystemTrayIcon {
-        property string iconPack: theme ? theme.icons.preferredPack : "thin"
-
-        visible: true
-        tooltip: qsTr("Mirage")
-        icon.source: `../icons/${iconPack}/tray-icon.png`
-
-        onActivated:
-            if (reason !== SystemTrayIcon.Context)
-                window.drawAttention()
-
-
-        menu: Menu {
-            MenuItem {
-                text: window.visible ? "Hide Mirage" : "Show Mirage"
-                onTriggered:
-                    window.visible ?
-                    window.hide() :
-                    window.drawAttention()
-            }
-
-            MenuItem {
-                text: qsTr("Quit Mirage")
-                onTriggered: {
-                    Qt.quit()
-                }
-            }
-        }
-    }
-
-    FolderListModel {
-        id: showUpWatcher
-        folder: window.configDir
-        showDirs: false
-        showHidden: true
-        nameFilters: [".show"]
-
-        onCountChanged: {
-            if (count) {
-                window.drawAttention()
-                py.importModule("os", () => {
-                    py.call("os.remove", [get(0, "filePath")])
-                })
-            }
-        }
+    HTrayIcon {
+        window: window
+        settingsFolder: configDir
     }
 }
