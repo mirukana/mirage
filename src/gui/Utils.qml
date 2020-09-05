@@ -207,7 +207,7 @@ QtObject {
 
         if (type === "RoomMessageEmote")
             return ev.content.match(/^\s*<(p|h[1-6])>/) ?
-                   ev.content.replace(/(^\s*<(p|h[1-6])>)/, `$1 ${sender} `) :
+                   ev.content.replace(/(^\s*<(p|h[1-6])>)/, `$1${sender} `) :
                    sender + " " + ev.content
 
         if (type.startsWith("RoomMessage") && ! unknownMsg)

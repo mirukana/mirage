@@ -347,8 +347,7 @@ Rectangle {
         }
 
         function renderEventAsOneLine(event) {
-            return (
-                event.event_type !== "RoomMessageEmote" &&
+            return event.event_type === "RoomMessageEmote" || (
                 ! event.event_type.startsWith("RoomMessage") &&
                 ! event.event_type.startsWith("RoomEncrypted")
             )
