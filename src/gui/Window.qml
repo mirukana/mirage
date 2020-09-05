@@ -88,7 +88,7 @@ ApplicationWindow {
 
     onClosing: {
         close.accepted = ! settings.closeMinimizesToTray
-        if (settings.closeMinimizesToTray) hide()
+        settings.closeMinimizesToTray ? hide() : Qt.quit()
     }
 
     PythonRootBridge { id: py }
