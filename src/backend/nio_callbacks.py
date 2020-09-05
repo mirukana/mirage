@@ -730,20 +730,44 @@ class NioCallbacks:
     async def onReceiptEvent(
         self, room: nio.MatrixRoom, ev: nio.ReceiptEvent,
     ) -> None:
-        model = self.models[self.user_id, room.room_id, "members"]
+        member_model    = self.models[self.user_id, room.room_id, "members"]
+        event_model     = self.models[self.user_id, room.room_id, "events"]
+        unassigned_mems = self.client.unassigned_member_last_read_event
+        unassigned_evs  = self.client.unassigned_event_last_read_by
 
         for receipt in ev.receipts:
+            if receipt.user_id in self.client.backend.clients:
+                continue
+
             if receipt.receipt_type != "m.read":
                 continue
 
-            member = model.get(receipt.user_id)
+            echo_id    = self.client.event_to_echo_ids.get(receipt.event_id)
+            read_event = event_model.get(echo_id or receipt.event_id)
+            timestamp  = receipt.timestamp
 
-            if member:
-                timestamp = receipt.timestamp / 1000
-                member.set_fields(
-                    last_read_event = receipt.event_id,
-                    last_read_at    = datetime.fromtimestamp(timestamp),
-                )
+            if read_event:
+                read_event.last_read_by[receipt.user_id] = timestamp
+                read_event.notify_change("last_read_by")
+            else:
+                # We haven't received the read event from the server yet
+                unassigned_evs[receipt.event_id][receipt.user_id] = timestamp
+
+            if receipt.user_id not in member_model:
+                # We haven't loaded the member yet (lazy loading), or they left
+                unassigned_mems[room.room_id, receipt.user_id] = \
+                    echo_id or receipt.event_id
+                continue
+
+            member              = member_model[receipt.user_id]
+            previous_read_event = event_model.get(member.last_read_event)
+
+            if previous_read_event:
+                # Remove the read marker from the previous last read event
+                previous_read_event.last_read_by.pop(receipt.user_id, None)
+                previous_read_event.notify_change("last_read_by")
+
+            member.last_read_event = echo_id or receipt.event_id
 
 
     # Presence event callbacks

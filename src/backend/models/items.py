@@ -242,9 +242,7 @@ class Member(ModelItem):
     power_level:     int      = 0
     invited:         bool     = False
     profile_updated: datetime = ZERO_DATE
-
     last_read_event: str      = ""
-    last_read_at:    datetime = ZERO_DATE
 
     presence:         Presence.State = Presence.State.offline
     currently_active: bool           = False
@@ -331,6 +329,9 @@ class Event(ModelItem):
     target_avatar: str = ""
     redacter_id:   str = ""
     redacter_name: str = ""
+
+    # {user_id: server_timestamp} - QML can't parse dates from JSONified dicts
+    last_read_by:  Dict[str, int] = field(default_factory=dict)
 
     is_local_echo: bool                = False
     source:        Optional[nio.Event] = None

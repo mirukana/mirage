@@ -18,8 +18,8 @@ from functools import partial
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import (
-    TYPE_CHECKING, Any, Callable, ClassVar, Coroutine, Dict, List, NamedTuple,
-    Optional, Set, Tuple, Type, Union,
+    TYPE_CHECKING, Any, Callable, ClassVar, Coroutine, DefaultDict, Dict, List,
+    NamedTuple, Optional, Set, Tuple, Type, Union,
 )
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
@@ -201,6 +201,15 @@ class MatrixClient(nio.AsyncClient):
         self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
         self.loaded_once_rooms:    Set[str]       = set()  # {room_id}
         self.cleared_events_rooms: Set[str]       = set()  # {room_id}
+
+        self.event_to_echo_ids: Dict[str, str] = {}
+
+        # {(room_id, user_id): event_id}
+        self.unassigned_member_last_read_event: Dict[Tuple[str, str], str] = {}
+
+        # {event_id: {user_id: server_timestamp}}
+        self.unassigned_event_last_read_by: DefaultDict[str, Dict[str, int]] =\
+            DefaultDict(dict)
 
         # {room_id: event}
         self.power_level_events: Dict[str, nio.PowerLevelsEvent] = {}
@@ -1908,27 +1917,39 @@ class MatrixClient(nio.AsyncClient):
 
     async def add_member(self, room: nio.MatrixRoom, user_id: str) -> None:
         """Register/update a room member into our models."""
-        member      = room.users[user_id]
-        presence    = self.backend.presences.get(user_id, None)
+
+        room_id      = room.room_id
+        member_model = self.models[self.user_id, room_id, "members"]
+        member       = room.users[user_id]
+        presence     = self.backend.presences.get(user_id, None)
+
+        try:
+            registered = member_model[user_id]
+        except KeyError:
+            last_read_event = self.unassigned_member_last_read_event\
+                                  .pop((room_id, user_id), "")
+        else:
+            last_read_event = registered.last_read_event
+
         member_item = Member(
-            id           = user_id,
-            display_name = room.user_name(user_id)  # disambiguated
-                           if member.display_name else "",
-            avatar_url   = member.avatar_url or "",
-            typing       = user_id in room.typing_users,
-            power_level  = member.power_level,
-            invited      = member.invited,
+            id              = user_id,
+            display_name    = room.user_name(user_id)  # disambiguated
+                              if member.display_name else "",
+            avatar_url      = member.avatar_url or "",
+            typing          = user_id in room.typing_users,
+            power_level     = member.power_level,
+            invited         = member.invited,
+            last_read_event = last_read_event,
         )
 
         # Associate presence with member, if it exists
         if presence:
-            presence.members[room.room_id] = member_item
+            presence.members[room_id] = member_item
 
             # And then update presence fields
             presence.update_members()
 
-        self.models[self.user_id, room.room_id, "members"][user_id] = \
-            member_item
+        member_model[user_id] = member_item
 
 
     async def remove_member(self, room: nio.MatrixRoom, user_id: str) -> None:
@@ -2030,6 +2051,17 @@ class MatrixClient(nio.AsyncClient):
         if content and "inline_content" not in fields:
             fields["inline_content"] = HTML.filter(content, inline=True)
 
+        event_model = self.models[self.user_id, room.room_id, "events"]
+
+        try:
+            registered = event_model[event_id or ev.event_id]
+        except KeyError:
+            last_read_by = self.unassigned_event_last_read_by.pop(
+                event_id or ev.event_id, {},
+            )
+        else:
+            last_read_by = registered.last_read_by
+
         # Create Event ModelItem
 
         item = Event(
@@ -2045,11 +2077,13 @@ class MatrixClient(nio.AsyncClient):
             target_name   = target_name,
             target_avatar = target_avatar,
             links         = Event.parse_links(content),
+            last_read_by  = last_read_by,
 
             fetch_profile =
                 (must_fetch_sender or must_fetch_target)
                 if override_fetch_profile is None else
                 override_fetch_profile,
+
             **fields,
         )
 
@@ -2063,7 +2097,8 @@ class MatrixClient(nio.AsyncClient):
         from_us = ev.sender in self.backend.clients
 
         if from_us and tx_id and f"echo-{tx_id}" in model:
-            item.id = f"echo-{tx_id}"
+            item.id                             = f"echo-{tx_id}"
+            self.event_to_echo_ids[ev.event_id] = item.id
 
         model[item.id] = item
         await self.set_room_last_event(room.room_id, item)
