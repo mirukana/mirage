@@ -101,3 +101,18 @@ class ModelItem:
                 fields[name] = self.serialize_field(name)
 
         self._notify_parent_model(fields)
+
+
+    def notify_change(self, *fields: str) -> None:
+        """Manually notify the parent model that a field changed.
+
+        The model cannot automatically detect changes inside object
+        fields, such as list or dicts having their data modified.
+
+        Use this method to manually notify it that such fields were changed,
+        and avoid having to reassign the field itself.
+        """
+
+        self._notify_parent_model({
+            name: self.serialize_field(name) for name in fields
+        })
