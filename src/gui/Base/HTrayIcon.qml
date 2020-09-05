@@ -27,7 +27,7 @@ SystemTrayIcon {
 
 
     visible: true
-    tooltip: qsTr("Mirage")
+    tooltip: Qt.application.displayName
     icon.source: `../../icons/${iconPack}/tray-icon.png`
 
     onActivated:
@@ -37,7 +37,10 @@ SystemTrayIcon {
 
     menu: Menu {
         MenuItem {
-            text: window.visible ? "Hide Mirage" : "Show Mirage"
+            text:
+                window.visible ?
+                "Minimize to tray" :
+                qsTr("Open ") + Qt.application.displayName
             onTriggered:
                 window.visible ?
                 window.hide() :
@@ -45,7 +48,7 @@ SystemTrayIcon {
         }
 
         MenuItem {
-            text: qsTr("Quit Mirage")
+            text: qsTr("Quit ") + Qt.application.displayName
             onTriggered: Qt.quit()
         }
     }
