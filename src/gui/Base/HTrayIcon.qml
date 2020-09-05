@@ -17,7 +17,7 @@ SystemTrayIcon {
 
         onCountChanged: {
             if (count) {
-                window.drawAttention()
+                window.restoreFromTray()
                 py.importModule("os", () => {
                     py.call("os.remove", [get(0, "filePath")])
                 })
@@ -34,7 +34,7 @@ SystemTrayIcon {
         if (reason === SystemTrayIcon.MiddleClick)
             Qt.quit()
         else if (reason !== SystemTrayIcon.Context)
-            window.visible ? window.hide() : window.drawAttention()
+            window.visible ? window.hide() : window.restoreFromTray()
     }
 
     menu: Menu {
@@ -46,7 +46,7 @@ SystemTrayIcon {
             onTriggered:
                 window.visible ?
                 window.hide() :
-                window.drawAttention()
+                window.restoreFromTray()
         }
 
         MenuItem {

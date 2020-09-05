@@ -65,7 +65,7 @@ ApplicationWindow {
         )
     }
 
-    function drawAttention() {
+    function restoreFromTray() {
         window.show()
         window.raise()
         window.requestActivate()
