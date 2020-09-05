@@ -35,11 +35,9 @@ HLoader {
                 item[prop] = value
 
             recycled()
-            print("r")
         } else {
             pageLoader.setSource(componentUrl, properties)
             window.uiState.page = componentUrl
-            print("X")
         }
 
         window.uiState.pageProperties = properties
