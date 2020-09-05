@@ -30,10 +30,12 @@ SystemTrayIcon {
     tooltip: Qt.application.displayName
     icon.source: `../../icons/${iconPack}/tray-icon.png`
 
-    onActivated:
-        if (reason !== SystemTrayIcon.Context)
-            window.drawAttention()
-
+    onActivated: {
+        if (reason === SystemTrayIcon.MiddleClick)
+            Qt.quit()
+        else if (reason !== SystemTrayIcon.Context)
+            window.visible ? window.hide() : window.drawAttention()
+    }
 
     menu: Menu {
         MenuItem {
