@@ -114,6 +114,6 @@ ApplicationWindow {
 
     HTrayIcon {
         window: window
-        settingsFolder: settingsFolder
+        settingsFolder: window.settingsFolder
     }
 }
