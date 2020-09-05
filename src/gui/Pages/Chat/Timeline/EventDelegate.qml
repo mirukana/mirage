@@ -34,11 +34,14 @@ HColumnLayout {
         eventContent.hoveredSelectable ? Qt.IBeamCursor :
         Qt.ArrowCursor
 
-    readonly property int separationSpacing:
-        dayBreak  ? theme.spacing * 4 :
-        talkBreak ? theme.spacing * 6 :
-        combine   ? theme.spacing / (compact ? 4 : 2) :
-        theme.spacing * (compact ? 1 : 2)
+    readonly property int separationSpacing: theme.spacing * (
+        dayBreak  ? 4 :
+        talkBreak ? 6 :
+        combine && compact ? 0.25 :
+        combine ? 0.5 :
+        compact ? 1 :
+        2
+    )
 
     readonly property alias eventContent: eventContent
 
