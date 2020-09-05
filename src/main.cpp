@@ -98,7 +98,7 @@ bool setLockFile(QString configPath) {
     QDir settingsFolder(configPath);
 
     if (! settingsFolder.mkpath(".")) {
-        qFatal("Could not create config file.");
+        qFatal("Could not create config directory");
         exit(EXIT_FAILURE);
     }
 
@@ -106,20 +106,18 @@ bool setLockFile(QString configPath) {
     lockFile->tryLock(0);
 
     switch (lockFile->error()) {
-        case QLockFile::NoError: {
+        case QLockFile::NoError:
             return true;
-        }
         case QLockFile::LockFailedError: {
-            qWarning("Opening already running Mirage instance.");
+            qWarning("Opening already running instance");
             QFile showFile(settingsFolder.absoluteFilePath(".show"));
             showFile.open(QIODevice::WriteOnly);
             showFile.close();
             return false;
         }
-        default: {
-            qFatal("Cannot create lock file: no permission or unknown error.");
+        default:
+            qFatal("Cannot create lock file: no permission or unknown error");
             exit(EXIT_FAILURE);
-        }
     }
 }
 
@@ -138,7 +136,7 @@ int main(int argc, char *argv[]) {
     QString settingsFolder(
         customConfigDir.isEmpty() ?
         QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
-        + "/" + QCoreApplication::applicationName() :
+        + "/" + QApplication::applicationName() :
         customConfigDir
     );
 
@@ -183,7 +181,7 @@ int main(int argc, char *argv[]) {
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());
 
-    // For being able to use Qt.quit() in QML side
+    // To able to use Qt.quit() from QML side
     QObject::connect(&engine, &QQmlEngine::quit, &QApplication::quit);
 
     // Set the debugMode properties depending of if we're running in debug mode
