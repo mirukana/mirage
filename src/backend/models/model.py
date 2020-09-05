@@ -5,7 +5,7 @@ from bisect import bisect
 from contextlib import contextmanager
 from threading import RLock
 from typing import (
-    TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional,
+    TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional, Tuple,
 )
 
 from blist import blist
