@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 
     if (component.isError()) {
         for (QQmlError e : component.errors()) {
-            qFatal(
+            qCritical(
                 "%s:%d:%d: %s",
                 e.url().toString().toStdString().c_str(),
                 e.line(),
@@ -241,6 +241,7 @@ int main(int argc, char *argv[]) {
                 e.description().toStdString().c_str()
             );
         }
+        qFatal("One or more errors have occurred, exiting");
         app.exit(EXIT_FAILURE);
     }
 
