@@ -112,7 +112,7 @@ ApplicationWindow {
         Behavior on scale { HNumberAnimation { overshoot: 3; factor: 1.2 } }
     }
 
-    HTrayIcon {
+    TrayIcon {
         window: window
         settingsFolder: window.settingsFolder
     }

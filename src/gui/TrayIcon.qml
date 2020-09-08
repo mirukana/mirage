@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
+import QtQuick.Controls 2.12
 import Qt.labs.platform 1.1
 import Qt.labs.folderlistmodel 2.12
 
 SystemTrayIcon {
-    property string iconPack: theme ? theme.icons.preferredPack : "thin"
+    property ApplicationWindow window
     property alias settingsFolder: showUpWatcher.folder
 
-    property var window
+    property string iconPack: theme ? theme.icons.preferredPack : "thin"
 
     property FolderListModel showUpWatcher: FolderListModel {
         id: showUpWatcher
@@ -28,7 +29,7 @@ SystemTrayIcon {
 
     visible: true
     tooltip: Qt.application.displayName
-    icon.source: `../../icons/${iconPack}/tray-icon.png`
+    icon.source: `../icons/${iconPack}/tray-icon.png`
 
     onActivated: {
         if (reason === SystemTrayIcon.MiddleClick)
@@ -42,7 +43,7 @@ SystemTrayIcon {
             text:
                 window.visible ?
                 "Minimize to tray" :
-                qsTr("Open ") + Qt.application.displayName
+                qsTr("Open %1").arg(Qt.application.displayName)
             onTriggered:
                 window.visible ?
                 window.hide() :
@@ -50,7 +51,7 @@ SystemTrayIcon {
         }
 
         MenuItem {
-            text: qsTr("Quit ") + Qt.application.displayName
+            text: qsTr("Quit %1").arg(Qt.application.displayName)
             onTriggered: Qt.quit()
         }
     }
