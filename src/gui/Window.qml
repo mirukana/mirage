@@ -22,6 +22,7 @@ ApplicationWindow {
     property var uiState: ({})
     property var history: ({})
     property var theme: null
+    property string settingsFolder
 
     readonly property var visibleMenus: ({})
     readonly property var visiblePopups: ({})
@@ -64,6 +65,11 @@ ApplicationWindow {
         )
     }
 
+    function restoreFromTray() {
+        window.show()
+        window.raise()
+        window.requestActivate()
+    }
 
 
     flags: Qt.WA_TranslucentBackground
@@ -79,6 +85,11 @@ ApplicationWindow {
     onSettingsChanged: py.saveConfig("ui_settings", settings)
     onUiStateChanged: py.saveConfig("ui_state", uiState)
     onHistoryChanged: py.saveConfig("history", history)
+
+    onClosing: {
+        close.accepted = ! settings.closeMinimizesToTray
+        settings.closeMinimizesToTray ? hide() : Qt.quit()
+    }
 
     PythonRootBridge { id: py }
 
@@ -99,5 +110,10 @@ ApplicationWindow {
         source: py.ready ? (Qt.application.arguments[1] || "UI.qml") : ""
 
         Behavior on scale { HNumberAnimation { overshoot: 3; factor: 1.2 } }
+    }
+
+    TrayIcon {
+        window: window
+        settingsFolder: window.settingsFolder
     }
 }

@@ -12,6 +12,10 @@
 #include <QQuickStyle>
 #include <QFontDatabase>
 #include <QDateTime>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QLockFile>
 #include <signal.h>
 
 #ifdef Q_OS_UNIX
@@ -21,6 +25,9 @@
 #include "utils.h"
 #include "clipboard.h"
 #include "clipboard_image_provider.h"
+
+
+QLockFile *lockFile = nullptr;
 
 
 void loggingHandler(
@@ -86,6 +93,35 @@ void onExitSignal(int signum) {
 }
 
 
+bool setLockFile(QString configPath) {
+
+    QDir settingsFolder(configPath);
+
+    if (! settingsFolder.mkpath(".")) {
+        qFatal("Could not create config directory");
+        exit(EXIT_FAILURE);
+    }
+
+    lockFile = new QLockFile(settingsFolder.absoluteFilePath(".lock"));
+    lockFile->tryLock(0);
+
+    switch (lockFile->error()) {
+        case QLockFile::NoError:
+            return true;
+        case QLockFile::LockFailedError: {
+            qWarning("Opening already running instance");
+            QFile showFile(settingsFolder.absoluteFilePath(".show"));
+            showFile.open(QIODevice::WriteOnly);
+            showFile.close();
+            return false;
+        }
+        default:
+            qFatal("Cannot create lock file: no permission or unknown error");
+            exit(EXIT_FAILURE);
+    }
+}
+
+
 int main(int argc, char *argv[]) {
     qInstallMessageHandler(loggingHandler);
 
@@ -95,6 +131,16 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationDisplayName("Mirage");
     QApplication::setApplicationVersion("0.6.2");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QString customConfigDir(qEnvironmentVariable("MIRAGE_CONFIG_DIR"));
+    QString settingsFolder(
+        customConfigDir.isEmpty() ?
+        QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+        + "/" + QApplication::applicationName() :
+        customConfigDir
+    );
+
+    if (! setLockFile(settingsFolder)) return EXIT_SUCCESS;
     QApplication app(argc, argv);
 
     // Register handlers for quit signals, e.g. SIGINT/Ctrl-C in unix terminals
@@ -134,6 +180,9 @@ int main(int argc, char *argv[]) {
     // We will add it some properties that will be available globally in QML.
     QQmlEngine engine;
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());
+
+    // To able to use Qt.quit() from QML side
+    QObject::connect(&engine, &QQmlEngine::quit, &QApplication::quit);
 
     // Set the debugMode properties depending of if we're running in debug mode
     // or not (`qmake CONFIG+=dev ...`, default in live-reload.sh)
@@ -184,7 +233,7 @@ int main(int argc, char *argv[]) {
 
     if (component.isError()) {
         for (QQmlError e : component.errors()) {
-            qFatal(
+            qCritical(
                 "%s:%d:%d: %s",
                 e.url().toString().toStdString().c_str(),
                 e.line(),
@@ -192,11 +241,14 @@ int main(int argc, char *argv[]) {
                 e.description().toStdString().c_str()
             );
         }
+        qFatal("One or more errors have occurred, exiting");
         app.exit(EXIT_FAILURE);
     }
 
-    component.create(objectContext);
+    component.create(objectContext)->setProperty("settingsFolder", settingsFolder);
 
-    // Finally, execute the app. Return its system exit code when it exits.
-    return app.exec();
+    // Finally, execute the app. Return its exit code after clearing the lock.
+    int exit_code = app.exec();
+    delete lockFile;
+    return exit_code;
 }
