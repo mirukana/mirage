@@ -156,6 +156,8 @@ HColumnPage {
         Layout.fillHeight: true
 
         Keys.onEscapePressed: uncheckAll()
+        Keys.onTabPressed: incrementCurrentIndex()
+        Keys.onBacktabPressed: decrementCurrentIndex()
         Keys.onSpacePressed: if (currentItem) toggleCheck(currentIndex)
         Keys.onEnterPressed: if (currentItem) currentItem.openMenu(false)
         Keys.onReturnPressed: Keys.onEnterPressed(event)
