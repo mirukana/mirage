@@ -34,6 +34,12 @@ class MatrixError(Exception):
 
 
 @dataclass
+class MatrixUnrecognized(MatrixError):
+    http_code: int = 400
+    m_code:    str = "M_UNRECOGNIZED"
+
+
+@dataclass
 class MatrixInvalidAccessToken(MatrixError):
     http_code: int = 401
     m_code:    str = "M_UNKNOWN_TOKEN"

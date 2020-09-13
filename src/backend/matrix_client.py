@@ -37,7 +37,7 @@ from . import __app_name__, __display_name__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
     MatrixError, MatrixForbidden, MatrixInvalidAccessToken, MatrixNotFound,
-    MatrixTooLarge, MatrixUnauthorized, UneededThumbnail,
+    MatrixTooLarge, MatrixUnauthorized, MatrixUnrecognized, UneededThumbnail,
     UserFromOtherServerDisallowed,
 )
 from .html_markdown import HTML_PROCESSOR as HTML
@@ -1474,7 +1474,7 @@ class MatrixClient(nio.AsyncClient):
         try:
             async with self.backend.concurrent_get_presence_limit:
                 resp = await self.get_presence(user_id)
-        except MatrixForbidden:
+        except (MatrixForbidden, MatrixUnrecognized):
             return
 
         await self.nio_callbacks.onPresenceEvent(nio.PresenceEvent(
