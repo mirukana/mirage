@@ -9,18 +9,27 @@ import "RoomPane"
 Item {
     id: chat
 
-    property string userId
-    property string roomId
-
-    property QtObject userInfo: ModelStore.get("accounts").find(userId)
-    property QtObject roomInfo: ModelStore.get(userId, "rooms").find(roomId)
-
-    property bool ready: Boolean(userInfo && roomInfo)
-    property bool longLoading: false
+    // [userId, roomId] - Set this instead of changing the userId and roomId
+    // properties one by one, else QML has time to be in an invalid state
+    // between the two changes.
+    property var userRoomId
 
     property string replyToEventId: ""
     property string replyToUserId: ""
     property string replyToDisplayName: ""
+
+    property bool longLoading: false
+
+    readonly property string userId: userRoomId[0]
+    readonly property string roomId: userRoomId[1]
+
+    readonly property QtObject userInfo:
+        ModelStore.get("accounts").find(userRoomId[0])
+
+    readonly property QtObject roomInfo:
+        ModelStore.get(userRoomId[0], "rooms").find(userRoomId[1])
+
+    readonly property bool ready: Boolean(userInfo && roomInfo)
 
     readonly property alias loader: loader
     readonly property alias roomPane: roomPaneLoader.item

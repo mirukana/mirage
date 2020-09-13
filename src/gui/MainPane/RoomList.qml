@@ -19,10 +19,10 @@ HListView {
         window.uiState.page === "Pages/Chat/Chat.qml"
 
     readonly property string wantedUserId:
-        window.uiState.pageProperties.userId || ""
+        (window.uiState.pageProperties.userRoomId || [])[0] || ""
 
     readonly property string wantedRoomId:
-        window.uiState.pageProperties.roomId || ""
+        (window.uiState.pageProperties.userRoomId || [])[1] || ""
 
     readonly property var accountIndice: {
         const accounts = {}

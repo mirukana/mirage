@@ -31,7 +31,10 @@ HFlickableColumnPopup {
         }
     }
 
-    onClosed: if (window.uiState.pageProperties.userId === userId) addAccount()
+    onClosed: if (
+        window.uiState.pageProperties.userId === userId ||
+        (window.uiState.pageProperties.userRoomId || [])[0] === userId
+    ) addAccount()
 
     SummaryLabel {
         text: qsTr("Signed out from %1").arg(coloredNameHtml("", userId))

@@ -35,9 +35,13 @@ HFlickableColumnPopup {
             icon.name: "sign-out"
 
             onClicked: {
-                if (ModelStore.get("accounts").count < 2 ||
-                    window.uiState.pageProperties.userId === userId)
-                {
+                const showAdd =
+                    ModelStore.get("accounts").count < 2 ||
+                    window.uiState.pageProperties.userId === userId ||
+                    (window.uiState.pageProperties.userRoomId || [])[0] ===
+                        userId
+
+                if (showAdd) {
                     const page = "Pages/AddAccount/AddAccount.qml"
                     window.mainUI.pageLoader.show(page)
                 }

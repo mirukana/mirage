@@ -201,8 +201,8 @@ Rectangle {
         onActivated: window.makePopup(
             "Popups/ClearMessagesPopup.qml",
             {
-                userId: window.uiState.pageProperties.userId,
-                roomId: window.uiState.pageProperties.roomId,
+                userId: window.uiState.pageProperties.userRoomId[0],
+                roomId: window.uiState.pageProperties.userRoomId[1],
                 preClearCallback: eventList.uncheckAll,
             }
         )
@@ -506,7 +506,7 @@ Rectangle {
         // reloaded from network.
         cacheBuffer: Screen.desktopAvailableHeight * 2
 
-        model: ModelStore.get(chat.userId, chat.roomId, "events")
+        model: ModelStore.get(chat.userRoomId[0], chat.userRoomId[1], "events")
         delegate: EventDelegate {}
 
         highlight: Rectangle {

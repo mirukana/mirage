@@ -8,7 +8,7 @@ import "../../../../Base"
 HColumnLayout {
     readonly property alias keybindFocusItem: filterField
     readonly property var modelSyncId:
-        [chat.userId, chat.roomId, "filtered_members"]
+        [chat.userRoomId[0], chat.userRoomId[1], "filtered_members"]
 
     readonly property alias viewDepth: stackView.depth
     readonly property alias filterField: filterField

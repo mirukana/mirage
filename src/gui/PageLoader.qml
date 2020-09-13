@@ -45,7 +45,7 @@ HLoader {
     }
 
     function showRoom(userId, roomId) {
-        show("Pages/Chat/Chat.qml", {userId, roomId})
+        show("Pages/Chat/Chat.qml", {userRoomId: [userId, roomId]})
     }
 
     function showPrevious(timesBack=1) {

@@ -16,8 +16,8 @@ HFlickableColumnPopup {
     function forget() {
         py.callClientCoro(userId, "room_forget", [roomId], () => {
             if (window.uiState.page === "Pages/Chat/Chat.qml" &&
-                window.uiState.pageProperties.userId === userId &&
-                window.uiState.pageProperties.roomId === roomId)
+                window.uiState.pageProperties.userRoomId[0] === userId &&
+                window.uiState.pageProperties.userRoomId[1] === roomId)
             {
                 window.mainUI.pageLoader.showPrevious() ||
                 window.mainUI.pageLoader.show("Pages/Default.qml")
