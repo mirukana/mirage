@@ -15,6 +15,8 @@ HLoader {
     property var history: []
     property int historyLength: 20
 
+    readonly property alias appearAnimation: appearAnimation
+
     signal aboutToRecycle()
     signal recycled()
     signal previousShown(string componentUrl, var properties)

@@ -110,6 +110,8 @@ ListView {
 
     // https://doc.qt.io/qt-5/qml-qtquick-viewtransition.html
     // #handling-interrupted-animations
+    populate: add
+
     add: Transition {
         // ScriptAction { script: if (listView.debug) print("add") }
         HNumberAnimation { property: "opacity"; from: 0; to: 1 }

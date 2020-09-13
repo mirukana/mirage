@@ -34,8 +34,6 @@ HColumnLayout {
             id: memberList
             clip: true
 
-            model: ModelStore.get(modelSyncId)
-
             delegate: MemberDelegate {
                 id: member
                 width: memberList.width
@@ -69,6 +67,22 @@ HColumnLayout {
 
             Keys.onMenuPressed:
                 if (currentItem) currentItem.doRightClick(false)
+
+            Timer {
+                id: updateModelTimer
+                interval: pageLoader.appearAnimation.duration
+                running: true
+                onTriggered: memberList.model = ModelStore.get(modelSyncId)
+            }
+
+            Connections {
+                target: pageLoader
+
+                function onRecycled() {
+                    memberList.model = null
+                    updateModelTimer.restart()
+                }
+            }
         }
 
         Layout.fillWidth: true
@@ -102,6 +116,7 @@ HColumnLayout {
 
                 onTextChanged: {
                     stackView.pop(stackView.initialItem)
+                    if (! stackView.currentItem.model) return
                     py.callCoro("set_string_filter", [modelSyncId, text])
                 }
 
