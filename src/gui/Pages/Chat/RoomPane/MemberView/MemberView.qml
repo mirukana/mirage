@@ -52,6 +52,7 @@ HColumnLayout {
                         ),
                         member: model,
                         stackView: stackView,
+                        focusOnExit: filterField,
                     },
                 )
             }

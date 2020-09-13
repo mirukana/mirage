@@ -16,6 +16,7 @@ HListView {
     property int canSetPowerLevels
     property QtObject member  // RoomMember model item
     property HStackView stackView
+    property Item focusOnExit
 
     property bool powerLevelFieldFocused: false
 
@@ -29,6 +30,11 @@ HListView {
             for (const device of devices)
                 root.model.append(device)
         })
+    }
+
+    function exit() {
+        stackView.pop()
+        focusOnExit.forceActiveFocus()
     }
 
 
@@ -79,7 +85,7 @@ HListView {
                 circle: true
                 icon.name: "close-view"
                 iconItem.small: true
-                onClicked: root.stackView.pop()
+                onClicked: root.exit()
             }
         }
 
@@ -297,7 +303,7 @@ HListView {
         currentItem.leftClicked()
         currentItem.clicked()
     }
-    Keys.onEscapePressed: stackView.pop()
+    Keys.onEscapePressed: root.exit()
 
     Connections {
         target: py.eventHandlers
