@@ -734,6 +734,7 @@ class NioCallbacks:
         event_model     = self.models[self.user_id, room.room_id, "events"]
         unassigned_mems = self.client.unassigned_member_last_read_event
         unassigned_evs  = self.client.unassigned_event_last_read_by
+        recount_markers = []
 
         for receipt in ev.receipts:
             if receipt.user_id in self.client.backend.clients:
@@ -747,6 +748,7 @@ class NioCallbacks:
             timestamp  = receipt.timestamp
 
             if read_event:
+                recount_markers.append(read_event)
                 read_event.last_read_by[receipt.user_id] = timestamp
                 read_event.notify_change("last_read_by")
             else:
@@ -764,10 +766,14 @@ class NioCallbacks:
 
             if previous_read_event:
                 # Remove the read marker from the previous last read event
+                recount_markers.append(previous_read_event)
                 previous_read_event.last_read_by.pop(receipt.user_id, None)
                 previous_read_event.notify_change("last_read_by")
 
             member.last_read_event = echo_id or receipt.event_id
+
+        for ev in recount_markers:
+            ev.read_by_count = len(ev.last_read_by)
 
 
     # Presence event callbacks

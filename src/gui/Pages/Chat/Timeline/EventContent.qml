@@ -34,10 +34,14 @@ HRowLayout {
         )
     property string contentText: utils.processedEventText(model)
     readonly property string timeText: utils.formatTime(model.date, false)
-    readonly property string localEchoText:
-        model.is_local_echo ?
-        `&nbsp;<font size=${theme.fontSize.small}px>⏳</font>` :
-        ""
+
+    readonly property string readInfoText:
+        `<font size=${theme.fontSize.small}px ` +
+              `color=${theme.chat.message.date}>` + (
+            model.is_local_echo ? `&nbsp;⏳` :
+            model.read_by_count ? `&nbsp;⦿&nbsp;${model.read_by_count}` :
+            ""
+        ) + "</font>"
 
     readonly property bool pureMedia: ! contentText && linksRepeater.count
 
@@ -166,9 +170,7 @@ HRowLayout {
                 timeText +
                 "</font>" +
 
-                // Local echo icon
-                (model.is_local_echo ?
-                 `&nbsp;<font size=${theme.fontSize.small}px>⏳</font>` : "")
+                readInfoText
 
             transform: Translate { x: xOffset }
 
@@ -315,7 +317,7 @@ HRowLayout {
                 mediaUrl: modelData
                 showSender: pureMedia ? senderText : ""
                 showDate: pureMedia ? timeText : ""
-                showLocalEcho: pureMedia ? localEchoText : ""
+                showLocalEcho: pureMedia ? readInfoText : ""
 
                 transform: Translate { x: xOffset }
 

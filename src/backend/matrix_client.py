@@ -2078,6 +2078,7 @@ class MatrixClient(nio.AsyncClient):
             target_avatar = target_avatar,
             links         = Event.parse_links(content),
             last_read_by  = last_read_by,
+            read_by_count = len(last_read_by),
 
             fetch_profile =
                 (must_fetch_sender or must_fetch_target)

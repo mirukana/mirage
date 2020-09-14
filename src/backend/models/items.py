@@ -332,6 +332,7 @@ class Event(ModelItem):
 
     # {user_id: server_timestamp} - QML can't parse dates from JSONified dicts
     last_read_by:  Dict[str, int] = field(default_factory=dict)
+    read_by_count: int            = 0
 
     is_local_echo: bool                = False
     source:        Optional[nio.Event] = None
