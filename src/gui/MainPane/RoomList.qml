@@ -11,6 +11,8 @@ HListView {
 
     property string filter: ""
 
+    property bool keepListCentered: true
+
     readonly property bool currentShouldBeAccount:
         window.uiState.page === "Pages/AccountSettings/AccountSettings.qml" ||
         window.uiState.page === "Pages/AddChat/AddChat.qml"
@@ -54,7 +56,7 @@ HListView {
         showItemLimiter.restart()
     }
 
-    function showItemAtIndex(index=currentIndex) {
+    function showItemAtIndex(index=currentIndex, fromClick=false) {
         if (index === -1) index = 0
         index = Math.min(index, model.count - 1)
 
@@ -66,7 +68,13 @@ HListView {
         ) :
         pageLoader.showRoom(item.for_account, item.id)
 
+        if (fromClick && ! window.settings.centerRoomListOnClick)
+            keepListCentered = false
+
         currentIndex = index
+
+        if (fromClick && ! window.settings.centerRoomListOnClick)
+            keepListCentered = true
     }
 
     function showAccountRoomAtIndex(index) {
@@ -135,6 +143,9 @@ HListView {
     }
 
 
+    highlightRangeMode:
+        keepListCentered ? ListView.ApplyRange : ListView.NoHighlightRange
+
     model: ModelStore.get("all_rooms")
 
     delegate: DelegateChooser {
@@ -157,7 +168,7 @@ HListView {
 
                 totalMessageIndicator.visible: false
 
-                onLeftClicked: showItemAtIndex(model.index)
+                onLeftClicked: showItemAtIndex(model.index, true)
                 onCollapsedChanged:
                     if (wantedUserId === model.id) startCorrectItemSearch()
 
@@ -169,7 +180,7 @@ HListView {
             roleValue: "Room"
             RoomDelegate {
                 width: roomList.width
-                onLeftClicked: showItemAtIndex(model.index)
+                onLeftClicked: showItemAtIndex(model.index, true)
             }
         }
     }

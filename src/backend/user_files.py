@@ -269,6 +269,7 @@ class UISettings(JSONDataFile):
             "alwaysCenterRoomHeader": False,
             # "autoHideScrollBarsAfterMsec": 2000,
             "beUnavailableAfterSecondsIdle": 60 * 10,
+            "centerRoomListOnClick": False,
             "compactMode": False,
             "clearRoomFilterOnEnter": True,
             "clearRoomFilterOnEscape": True,
