@@ -413,8 +413,9 @@ chat:
         color ownBackground:     colors.mediumBackground
         color checkedBackground: colors.accentBackground
 
-        color body: colors.text
-        color date: colors.dimText
+        color body:        colors.text
+        color date:        colors.dimText
+        color serverState: colors.accentText
 
         color redactedBody: colors.dimText
 

@@ -35,9 +35,9 @@ HRowLayout {
     property string contentText: utils.processedEventText(model)
     readonly property string timeText: utils.formatTime(model.date, false)
 
-    readonly property string readInfoText:
+    readonly property string stateText:
         `<font size=${theme.fontSize.small}px ` +
-              `color=${theme.chat.message.date}>` + (
+              `color=${theme.chat.message.serverState}>` + (
             model.is_local_echo ? `&nbsp;⏳` :
             model.read_by_count ? `&nbsp;⦿&nbsp;${model.read_by_count}` :
             ""
@@ -170,7 +170,7 @@ HRowLayout {
                 timeText +
                 "</font>" +
 
-                readInfoText
+                stateText
 
             transform: Translate { x: xOffset }
 
@@ -317,7 +317,7 @@ HRowLayout {
                 mediaUrl: modelData
                 showSender: pureMedia ? senderText : ""
                 showDate: pureMedia ? timeText : ""
-                showLocalEcho: pureMedia ? readInfoText : ""
+                showLocalEcho: pureMedia ? stateText : ""
 
                 transform: Translate { x: xOffset }
 
