@@ -8,6 +8,108 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 0.6.3 (2020-09-15)
+
+### Added
+
+- Add a **system tray icon**.  
+  A left click will bring up the Mirage window, 
+  middle will quit the application and right will show a menu with these 
+  options.
+
+- Add a `closeMimizesToTray` setting to the config file, defaults to `false`.  
+  Controls whether closing the Mirage window will leave it running in the 
+  system tray, or fully quit the application.
+
+- Add a discrete **read marker indicator** to messages, shows how many people 
+  have this event as their last seen one in the room.  
+  A way to see who read the message and when will be added in the future.
+
+- Themes: add a `chat.message.serverState` property, controls the color of
+  the local echo hourglass and read marker indicator.
+
+- Add a `zoom` setting, defaults to `1.0`
+
+- Add a `lexicalRoomSorting` setting, to sort rooms by their name instead of
+  recent activity.  
+  A restart is needed to apply changes to this setting.
+
+### Changed
+
+- Restrict Mirage to a single instance per config folder, trying to launch a
+  new window will instead focus the existing one.  
+  The `MIRAGE_CONFIG_DIR` and `MIRAGE_DATA_DIR` environment variables can be
+  set to run different "profiles" in parallel.
+
+- Reduce the visible lag when opening a chat page, switching rooms should be 
+  a lot smoother
+
+- When using the `focusPreviousMessage` and `focusNextMessage` keybinds, if no
+  message is focused and the timeline has been scrolled up, 
+  focus the message in the center of the view instead of returning to the 
+  bottom of the timeline and focusing the last one.
+
+- Don't re-center the room list on clicks by default.  
+  This prevents the list from jumping around every time a room is selected.  
+  The previous behavior can be restored with the new `centerRoomListOnClick`
+  setting.
+
+- Show a better terminal error message than "Component is not ready" when the 
+  window creation fails, giving details on what went wrong in the code
+
+- If an account's access token is invalid (e.g. our session was signed out 
+  externally), say so with a popup and cleanly remove it from the UI, 
+  instead of spamming the user with errors.
+
+- Rename message context menu option "Debug this event" to just "Debug"
+
+- Unify up/down and (shift+)Tab navigation for the account Sessions page
+
+- Changes to the UI scale/zoom via keybinds are now persisted across restarts
+
+- Themes: `uiScale` is now bound to `window.settings.zoom`.  
+  This change is necessary to keep the zoom keybinds working.
+
+### Fixed
+
+- Midnight theme: fix missing `}` from change to the `chat.message.styleSheet` 
+  property introduced in 0.6.2, see
+  [2a0f6ae](https://github.com/mirukana/mirage/commit/2a0f6aead17d05fd35e8a944e5434781e9c08d50).
+
+- Fix multiple consecutive one-line events (/me emotes, "x joined", etc) 
+  not combining properly
+
+- Fix theme finder ignoring the `MIRAGE_DATA_DIR` environment variable
+
+- Fix theme background image not updating when reloading theme/settings
+
+- Fix up/down keys not working when the text cursor is in a word starting 
+  with `@`, but the word doesn't match any usernames to complete.
+
+- Fix context menu copy options for messages containing URL thumbnails
+
+- Fix context menu copy option for single non-message events
+
+- Fix GIF URL thumbnails not being animated in the timeline
+
+- Fix image viewer sizes shown as "0x0" for loading images and GIFs
+
+- Fix incorrect sync filter usage introduced in 0.6.1, which caused problems
+  like redaction events never arriving
+
+- Fix redacted media messages keeping their thumbnails
+
+- Fix terminal warnings when uploading to a non-encrypted room
+
+- Fix some cases of undetected power level changes, e.g. a muted user 
+  (level -1) going back to the default (level 0).
+
+- Don't show popup for `400 M_UNRECOGNIZED` errors that can occur when trying
+  to fetch an offline user's presence
+
+- Focus the filter field again when exiting a room member profile page
+
+
 ## 0.6.2 (2020-08-28)
 
 ### Changed
