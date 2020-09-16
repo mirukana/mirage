@@ -145,7 +145,7 @@ HListView {
     Connections {
         target: root.textArea
 
-        function onCursorPositionChanged() {
+        onCursorPositionChanged: {
             if (! root.open) return
 
             const pos   = root.textArea.cursorPosition
@@ -162,7 +162,7 @@ HListView {
             if (pos < start || pos > end) root.accept()
         }
 
-        function onTextChanged() {
+        onTextChanged: {
             let changed = false
 
             for (const [id, name] of Object.entries(root.usersCompleted)) {

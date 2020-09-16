@@ -15,6 +15,8 @@ and this project adheres to
 - Fix checkboxes in the room settings not having their default values updated
   after switching room
 
+- Fix various minor features broken on Qt 5.12 and the AppImage since v0.5.2
+
 
 ## 0.6.3 (2020-09-16)
 

@@ -42,8 +42,7 @@ Video {
 
     Connections {
         target: mainUI.fullScreenPopup
-
-        function onClosed() { fullScreen = false }
+        onClosed: fullScreen = false
     }
 
     TapHandler {

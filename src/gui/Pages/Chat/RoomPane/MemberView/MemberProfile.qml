@@ -307,8 +307,7 @@ HListView {
 
     Connections {
         target: py.eventHandlers
-
-        function onDeviceUpdateSignal(forAccount) {
+        onDeviceUpdateSignal: forAccount => {
             if (forAccount === root.userId) root.loadDevices()
         }
     }

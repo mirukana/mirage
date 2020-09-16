@@ -191,12 +191,8 @@ HRowLayout {
 
             Connections {
                 target: eventList
-
-                function onCheckedChanged() {
-                    contentLabel.deselect()
-                }
-
-                function onDelegateWithSelectedTextChanged() {
+                onCheckedChanged: contentLabel.deselect()
+                onDelegateWithSelectedTextChanged: {
                     if (eventList.delegateWithSelectedText !== model.id)
                         contentLabel.deselect()
                 }

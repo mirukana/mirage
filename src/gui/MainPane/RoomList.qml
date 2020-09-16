@@ -215,8 +215,7 @@ HListView {
 
     Connections {
         target: pageLoader
-
-        function onPreviousShown(componentUrl, properties) {
+        onPreviousShown: (componentUrl, properties)  => {
             if (setCorrectCurrentItem() === false) startCorrectItemSearch()
         }
     }

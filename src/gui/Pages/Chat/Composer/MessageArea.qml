@@ -248,8 +248,7 @@ HTextArea {
 
     Connections {
         target: pageLoader
-
-        function onRecycled() {
+        onRecycled: {
             area.reset()
             area.loadState()
         }

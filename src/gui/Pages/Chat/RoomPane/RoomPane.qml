@@ -88,18 +88,13 @@ MultiviewPane {
 
     Connections {
         target: swipeView
-
-        function onCurrentItemChanged() {
+        onCurrentItemChanged:
             roomPane.swipeView.currentItem.keybindFocusItem.forceActiveFocus()
-        }
     }
 
     Connections {
         target: pageLoader
-
-        function onAboutToRecycle() {
-            roomPane.swipeView.currentIndex = 0
-        }
+        onAboutToRecycle: roomPane.swipeView.currentIndex = 0
     }
 
     MemberView {}

@@ -40,8 +40,11 @@ void loggingHandler(
     Q_UNUSED(context)
 
     // Hide dumb warnings about thing we can't fix without breaking
-    // compatibilty with Qt < 5.14
+    // compatibilty with Qt < 5.14/5.15
     if (msg.contains("QML Binding: Not restoring previous value because"))
+        return;
+
+    if (msg.contains("QML Connections: Implicitly defined onFoo properties"))
         return;
 
     // Hide layout-related spam introduced in Qt 5.14

@@ -136,7 +136,7 @@ Item {
 
             Connections {
                 target: pageLoader
-                function onRecycled() { roomPane.appearAnimation.restart() }
+                onRecycled: roomPane.appearAnimation.restart()
             }
         }
     }

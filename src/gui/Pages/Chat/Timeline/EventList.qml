@@ -576,7 +576,7 @@ Rectangle {
 
         Connections {
             target: pageLoader
-            function onRecycled() { eventList.moreToLoad = true }
+            onRecycled: eventList.moreToLoad = true
         }
     }
 

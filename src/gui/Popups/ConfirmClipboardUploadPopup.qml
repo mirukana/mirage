@@ -81,10 +81,8 @@ HColumnPopup {
 
         Connections {
             target: Clipboard
-
-            function onContentChanged() {
+            onContentChanged:
                 Clipboard.hasImage ? image.updateCounter += 1 : popup.close()
-            }
         }
     }
 }

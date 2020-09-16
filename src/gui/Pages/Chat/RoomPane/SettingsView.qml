@@ -82,7 +82,7 @@ HFlickableColumnPage {
 
     Connections {
         target: pageLoader
-        function onAboutToRecycle() { cancel() }
+        onAboutToRecycle: cancel()
     }
 
     HRoomAvatar {

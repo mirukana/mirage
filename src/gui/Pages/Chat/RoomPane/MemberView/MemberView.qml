@@ -16,8 +16,7 @@ HColumnLayout {
 
     Connections {
         target: pageLoader
-
-        function onAboutToRecycle() {
+        onAboutToRecycle: {
             stackView.pop(stackView.initialItem)
             filterField.reset()
         }
@@ -78,8 +77,7 @@ HColumnLayout {
 
             Connections {
                 target: pageLoader
-
-                function onRecycled() {
+                onRecycled: {
                     memberList.model = null
                     updateModelTimer.restart()
                 }
