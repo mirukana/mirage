@@ -8,7 +8,15 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## 0.6.3 (2020-09-15)
+## 0.6.4 (2020-09-16)
+
+### Fixed
+
+- Fix checkboxes in the room settings not having their default values updated
+  after switching room
+
+
+## 0.6.3 (2020-09-16)
 
 ### Added
 
