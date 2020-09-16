@@ -6,7 +6,6 @@ import os
 import re
 import sys
 import time
-import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Set, Tuple, Union
@@ -337,7 +336,7 @@ class Backend:
         await asyncio.gather(*tasks)
 
 
-    async def get_client(self, user_id: str) -> MatrixClient:
+    async def get_client(self, user_id: str, _debug_info=None) -> MatrixClient:
         """Wait until a `MatrixClient` is registered in model and return it."""
 
         failures = 0
@@ -348,8 +347,8 @@ class Backend:
 
             if failures and failures % 100 == 0:  # every 10s except first time
                 log.warning(
-                    "Client %r not found after %ds, stack trace:\n%s",
-                    user_id, failures / 10, traceback.format_stack(),
+                    "Client %r not found after %ds, _debug_info:\n%r",
+                    user_id, failures / 10, _debug_info,
                 )
 
             await asyncio.sleep(0.1)

@@ -38,7 +38,7 @@ Python {
     ) {
         const future = makeFuture()
 
-        callCoro("get_client", [accountId], () => {
+        callCoro("get_client", [accountId, [name, args]], () => {
             const uuid = accountId + "." + name + "." + CppUtils.uuid()
 
             Globals.pendingCoroutines[uuid] = {onSuccess, onError}
