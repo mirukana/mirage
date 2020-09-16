@@ -3,7 +3,7 @@
 """HTML and Markdown processing tools."""
 
 import re
-from typing import DefaultDict, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from urllib.parse import unquote
 
 import html_sanitizer.sanitizer as sanitizer
@@ -208,18 +208,6 @@ class HTMLProcessor:
             if a_tag.text and
                self.link_is_matrix_to_regex.match(unquote(href.strip()))
         ]
-
-
-    def user_id_link_in_html(self, html: str, user_id: str) -> bool:
-        """Return whether html contains a mention link for `user_id`."""
-
-        regex = re.compile(rf"https?://matrix.to/#/{user_id}", re.IGNORECASE)
-
-        for _, href in self.mentions_in_html(html):
-            if regex.match(unquote(href.strip())):
-                return True
-
-        return False
 
 
     def from_markdown(

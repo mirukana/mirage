@@ -211,6 +211,9 @@ class MatrixClient(nio.AsyncClient):
         self.unassigned_event_last_read_by: DefaultDict[str, Dict[str, int]] =\
             DefaultDict(dict)
 
+        self.previous_server_unreads:    Dict[str, int] = {}
+        self.previous_server_highlights: Dict[str, int] = {}
+
         # {room_id: event}
         self.power_level_events: Dict[str, nio.PowerLevelsEvent] = {}
 
@@ -2101,6 +2104,37 @@ class MatrixClient(nio.AsyncClient):
             item.id                             = f"echo-{tx_id}"
             self.event_to_echo_ids[ev.event_id] = item.id
 
+        model[item.id] = item
+        await self.set_room_last_event(room.room_id, item)
+
+        if from_us or await self.event_is_past(ev):
+            return item
+
+        # Alerts & notifications
+
+        room_item = self.models[self.user_id, "rooms"][room.room_id]
+
+        unread = \
+            room_item.unreads and \
+            room_item.unreads != \
+            self.previous_server_unreads.get(room.room_id, 0)
+
+        highlight = \
+            room_item.highlights and \
+            room_item.highlights != \
+            self.previous_server_highlights.get(room.room_id, 0)
+
+        self.previous_server_unreads[room.room_id]    = room_item.unreads
+        self.previous_server_highlights[room.room_id] = room_item.highlights
+
+        if highlight:
+            room_item.set_fields(local_unreads=True, local_highlights=True)
+        else:
+            room_item.local_unreads = True
+
+        if unread or highlight:
+            AlertRequested(high_importance=highlight)
+
             notif_room   = room.display_name
             notif_sender = item.sender_name or item.sender_id
             body_start   = f"{notif_sender}: "
@@ -2117,23 +2151,6 @@ class MatrixClient(nio.AsyncClient):
                 #     item.sender_avatar, 32, 32,
                 # ),
             )
-
-        model[item.id] = item
-        await self.set_room_last_event(room.room_id, item)
-
-        # Alerts
-
-        if from_us or await self.event_is_past(ev):
-            return item
-
-        mentions_us = HTML.user_id_link_in_html(item.content, self.user_id)
-        AlertRequested(high_importance=mentions_us)
-
-        room_item = self.models[self.user_id, "rooms"][room.room_id]
-        room_item.local_unreads = True
-
-        if mentions_us:
-            room_item.local_highlights = True
 
         await self.update_account_unread_counts()
         return item
