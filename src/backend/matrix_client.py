@@ -66,6 +66,8 @@ PathCallable = Union[
     str, Path, Callable[[], Coroutine[None, None, Union[str, Path]]],
 ]
 
+IS_WINDOWS = platform.system() == "Windows"
+
 REPLY_FALLBACK = (
 "<mx-reply>"
     "<blockquote>"
@@ -2028,6 +2030,75 @@ class MatrixClient(nio.AsyncClient):
                 return ("", "", False)
 
 
+    async def get_notification_avatar(self, mxc: str, user_id: str) -> Path:
+        """Get the path to an avatar for desktop notifications."""
+        # TODO: test this function on windows
+
+        if mxc in self.backend.notification_avatar_cache:
+            return self.backend.notification_avatar_cache[mxc]
+
+        avatar_size = (48, 48)
+
+        avatar_path = await self.backend.media_cache.get_thumbnail(
+            client_user_id = self.user_id,
+            mxc            = mxc,
+            title          = f"user_{user_id}.notification",
+            width          = avatar_size[0],
+            height         = avatar_size[1],
+        )
+
+        image_data = None
+        create     = False
+
+        async with aiofiles.open(avatar_path, "rb") as file:
+            if await utils.is_svg(file):
+                await file.seek(0, 0)
+
+                create     = True
+                image_data = cairosvg.svg2png(
+                    bytestring    = await file.read(),
+                    parent_width  = avatar_size[0],
+                    parent_height = avatar_size[1],
+                )
+            else:
+                await file.seek(0, 0)
+                image_data = await file.read()
+
+        pil_image = PILImage.open(io.BytesIO(image_data))
+
+        if pil_image.size != avatar_size:
+            create = True
+            pil_image.thumbnail(avatar_size)
+
+        if IS_WINDOWS and pil_image.format != "ICO":
+            create = True
+
+        if not create:
+            self.backend.notification_avatar_cache[mxc] = avatar_path
+            return avatar_path
+
+        out = io.BytesIO()
+
+        if IS_WINDOWS:
+            pil_image.save(out, "ICO", sizes=[avatar_size])
+        else:
+            pil_image.save(out, "PNG")
+
+        thumb = await Thumbnail.from_bytes(
+            cache          = self.backend.media_cache,
+            client_user_id = self.user_id,
+            mxc            = mxc,
+            filename       = f"user_{user_id}.notification",
+            overwrite      = True,
+            data           = out.getvalue(),
+            wanted_size    = avatar_size,
+        )
+
+        path = await thumb.get()
+        self.backend.notification_avatar_cache[mxc] = path
+        return path
+
+
     async def register_nio_event(
         self,
         room:                   nio.MatrixRoom,
@@ -2152,9 +2223,9 @@ class MatrixClient(nio.AsyncClient):
                 title           = room_name,
                 body            = body,
                 high_importance = highlight,
-                # image = await self.backend.media_cache.get_thumbnail(
-                #     item.sender_avatar, 32, 32,
-                # ),
+                image           = await self.get_notification_avatar(
+                    mxc=item.sender_avatar, user_id=item.sender_id,
+                ) if item.sender_avatar else "",
             )
 
         await self.update_account_unread_counts()

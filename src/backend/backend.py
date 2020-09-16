@@ -134,6 +134,8 @@ class Backend:
 
         self.mxc_events: DefaultDict[str, List[Event]] = DefaultDict(list)
 
+        self.notification_avatar_cache: Dict[str, Path] = {}  # {mxc: path}
+
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(clients={self.clients!r})"
