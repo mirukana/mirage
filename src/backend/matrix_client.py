@@ -2218,6 +2218,12 @@ class MatrixClient(nio.AsyncClient):
 
             if isinstance(ev, nio.RoomMessageEmote):
                 body = f"<i>{sender} {item.inline_content}</i>"
+            elif not isinstance(ev, nio.RoomMessage):
+                body = item.inline_content.replace(
+                    "%1", item.sender_name or item.sender_id,
+                ).replace(
+                    "%2", item.target_name or item.target_id,
+                )
             elif len(members) == 2 and room_name == sender:
                 body = item.inline_content
             else:
