@@ -12,6 +12,8 @@ CheckBox {
     property bool defaultChecked: false
     readonly property bool changed: checked !== defaultChecked
 
+    property bool previousDefaultChecked: false  // private
+
     function reset() { checked = defaultChecked }
 
 
@@ -91,6 +93,16 @@ CheckBox {
             Layout.fillWidth: true
         }
     }
+
+    onDefaultCheckedChanged: {
+        if (checked === previousDefaultChecked)
+            checked = Qt.binding(() => defaultChecked)
+
+        previousDefaultChecked = defaultChecked
+    }
+
+    // Break binding
+    Component.onCompleted: previousDefaultChecked = previousDefaultChecked
 
     Behavior on opacity { HNumberAnimation { factor: 2 } }
 }
