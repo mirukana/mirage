@@ -11,15 +11,17 @@ QtObject {
         Qt.exit(exitCode)
     }
 
-    function onAlertRequested(highImportance) {
+    function onNotificationRequested(title, body, image, highImportance) {
+        if (Qt.application.state === Qt.ApplicationActive) return
+
+        py.callCoro("desktop_notify", [title, body, image])
+
         const msec =
             highImportance ?
             window.settings.alertOnMentionForMsec :
             window.settings.alertOnMessageForMsec
 
-        if (Qt.application.state !== Qt.ApplicationActive && msec !== 0) {
-            window.alert(msec === -1 ? 0 : msec)  // -1 → 0 = no time out
-        }
+        if (msec) window.alert(msec === -1 ? 0 : msec)  // -1 → 0 = no time out
     }
 
     function onCoroutineDone(uuid, result, error, traceback) {
