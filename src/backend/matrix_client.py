@@ -2107,7 +2107,11 @@ class MatrixClient(nio.AsyncClient):
         model[item.id] = item
         await self.set_room_last_event(room.room_id, item)
 
-        if from_us or await self.event_is_past(ev):
+        if from_us:
+            return item
+
+        if await self.event_is_past(ev):
+            await self.update_account_unread_counts()
             return item
 
         # Alerts & notifications
