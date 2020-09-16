@@ -2139,17 +2139,19 @@ class MatrixClient(nio.AsyncClient):
         if unread or highlight:
             AlertRequested(high_importance=highlight)
 
-            notif_room   = room.display_name
-            notif_sender = item.sender_name or item.sender_id
-            body_start   = f"{notif_sender}: "
+            members   = self.models[self.user_id, room.room_id, "members"]
+            room_name = room.display_name
+            sender    = item.sender_name or item.sender_id
 
-            if notif_room == notif_sender:
+            if len(members) == 2 and room_name == sender:
                 body_start = ""
             elif isinstance(ev, nio.RoomMessageEmote):
-                body_start = f"<i>{notif_sender} </i>"
+                body_start = f"<i>{sender} </i>"
+            else:
+                body_start = f"{sender}: "
 
             await self.backend.desktop_notify(
-                title = notif_room,
+                title = room_name,
                 body  = f"{body_start}{item.inline_content}",
                 # await self.backend.media_cache.get_thumbnail(
                 #     item.sender_avatar, 32, 32,
