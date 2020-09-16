@@ -50,7 +50,7 @@ from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
 from .presence import Presence
 from .pyotherside_events import (
-    AlertRequested, InvalidAccessToken, LoopException,
+    InvalidAccessToken, LoopException, NotificationRequested,
 )
 
 if TYPE_CHECKING:
@@ -2137,8 +2137,6 @@ class MatrixClient(nio.AsyncClient):
             room_item.local_unreads = True
 
         if unread or highlight:
-            AlertRequested(high_importance=highlight)
-
             members   = self.models[self.user_id, room.room_id, "members"]
             room_name = room.display_name
             sender    = item.sender_name or item.sender_id
@@ -2150,10 +2148,11 @@ class MatrixClient(nio.AsyncClient):
             else:
                 body_start = f"{sender}: "
 
-            await self.backend.desktop_notify(
-                title = room_name,
-                body  = f"{body_start}{item.inline_content}",
-                # await self.backend.media_cache.get_thumbnail(
+            NotificationRequested(
+                title           = room_name,
+                body            = f"{body_start}{item.inline_content}",
+                high_importance = highlight,
+                # image = await self.backend.media_cache.get_thumbnail(
                 #     item.sender_avatar, 32, 32,
                 # ),
             )

@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Union
 
 import pyotherside
 
@@ -34,14 +35,17 @@ class ExitRequested(PyOtherSideEvent):
 
 
 @dataclass
-class AlertRequested(PyOtherSideEvent):
-    """Request a window manager alert to be shown.
+class NotificationRequested(PyOtherSideEvent):
+    """Request a notification and window manager alert to be shown.
 
-    Sets the urgency hint for compliant X11/Wayland window managers;
-    flashes the taskbar icon on Windows.
+    Alerts set the urgency hint for compliant X11/Wayland window managers or
+    flash the program's taskbar icon on Windows.
     """
 
-    high_importance: bool = False
+    title:           str              = field()
+    body:            str              = ""
+    image:           Union[Path, str] = ""
+    high_importance: bool             = False
 
 
 @dataclass
