@@ -2141,16 +2141,16 @@ class MatrixClient(nio.AsyncClient):
             room_name = room.display_name
             sender    = item.sender_name or item.sender_id
 
-            if len(members) == 2 and room_name == sender:
-                body_start = ""
-            elif isinstance(ev, nio.RoomMessageEmote):
-                body_start = f"<i>{sender} </i>"
+            if isinstance(ev, nio.RoomMessageEmote):
+                body = f"<i>{sender} {item.inline_content}</i>"
+            elif len(members) == 2 and room_name == sender:
+                body = item.inline_content
             else:
-                body_start = f"{sender}: "
+                body = f"{sender}: {item.inline_content}"
 
             NotificationRequested(
                 title           = room_name,
-                body            = f"{body_start}{item.inline_content}",
+                body            = body,
                 high_importance = highlight,
                 # image = await self.backend.media_cache.get_thumbnail(
                 #     item.sender_avatar, 32, 32,
