@@ -9,7 +9,7 @@ import time
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
+from typing import Any, DefaultDict, Dict, List, Optional, Set, Tuple, Union
 from urllib.parse import urlparse
 
 import aiohttp
@@ -134,7 +134,8 @@ class Backend:
 
         self.mxc_events: DefaultDict[str, List[Event]] = DefaultDict(list)
 
-        self.notification_avatar_cache: Dict[str, Path] = {}  # {mxc: path}
+        self.notified_events:           Set[str]        = set()  # {event_id}
+        self.notification_avatar_cache: Dict[str, Path] = {}     # {mxc: path}
 
 
     def __repr__(self) -> str:
