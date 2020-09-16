@@ -25,8 +25,8 @@ and this project adheres to
   have this event as their last seen one in the room.  
   A way to see who read the message and when will be added in the future.
 
-- Themes: add a `chat.message.serverState` property, controls the color of
-  the local echo hourglass and read marker indicator.
+- Themes: add `chat.message.localEcho` and `chat.message.readCounter` color
+  properties
 
 - Add a `zoom` setting, defaults to `1.0`
 

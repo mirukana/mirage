@@ -424,7 +424,8 @@ chat:
 
         color body:        colors.text
         color date:        colors.dimText
-        color serverState: colors.accentText
+        color localEcho:   colors.dimText
+        color readCounter: colors.accentText
 
         color redactedBody: colors.dimText
 

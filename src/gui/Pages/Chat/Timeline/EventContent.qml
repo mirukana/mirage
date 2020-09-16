@@ -36,10 +36,14 @@ HRowLayout {
     readonly property string timeText: utils.formatTime(model.date, false)
 
     readonly property string stateText:
-        `<font size=${theme.fontSize.small}px ` +
-              `color=${theme.chat.message.serverState}>` + (
-            model.is_local_echo ? `&nbsp;⏳` :
-            model.read_by_count ? `&nbsp;⦿&nbsp;${model.read_by_count}` :
+        `<font size=${theme.fontSize.small}px color=` + (
+            model.is_local_echo ?
+            `${theme.chat.message.localEcho}>&nbsp;⧗</font>` :  // U+29D7
+
+            model.read_by_count ?
+            `${theme.chat.message.readCounter}>&nbsp;⦿&nbsp;` +
+            model.read_by_count :  // U+29BF
+
             ""
         ) + "</font>"
 
