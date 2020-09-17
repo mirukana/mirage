@@ -15,11 +15,41 @@ Rectangle {
         HButton {
             backgroundColor: "transparent"
             icon.name: "settings"
-            toolTip.text: qsTr("Open config folder")
-
-            onClicked: py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+            toolTip.text: qsTr("Settings")
+            onClicked: settingsMenu.open()
 
             Layout.fillHeight: true
+
+            HMenu {
+                id: settingsMenu
+                y: parent.height
+
+                HMenuItem {
+                    icon.name: "more-settings"
+                    text: qsTr("Open config folder")
+                    onTriggered:
+                        py.callCoro("get_config_dir", [], Qt.openUrlExternally)
+                }
+
+                HMenuItem {
+                    icon.name: "theme"
+                    text: qsTr("Open theme folder")
+                    onTriggered:
+                        py.callCoro("get_theme_dir", [], Qt.openUrlExternally)
+                }
+
+                HMenuItem {
+                    icon.name: "reload-config-files"
+                    text: qsTr("Reload config & theme")
+                    onTriggered: mainUI.reloadSettings()
+                }
+
+                HMenuItem {
+                    icon.name: "debug"
+                    text: qsTr("Developer console")
+                    onTriggered: mainUI.debugConsole.toggle()
+                }
+            }
         }
 
         HButton {
