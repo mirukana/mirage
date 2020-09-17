@@ -22,7 +22,7 @@ tags
 
 packaging/flatpak/flatpak-env
 packaging/flatpak/requirements.txt
-packaging/flatpak/flatpak-requirements.txt
+packaging/flatpak/flatpak-env-requirements.txt
 packaging/flatpak/flatpak-pip.json
 packaging/flatpak/flatpak-pip-generator
 .flatpak-builder/
