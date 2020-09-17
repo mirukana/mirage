@@ -337,6 +337,7 @@ class HTMLProcessor:
                 self._img_to_a,
                 self._remove_extra_newlines,
                 self._newlines_to_return_symbol if inline else lambda el: el,
+                self._reply_to_inline if inline else lambda el: el,
             ],
             "element_postprocessors": [
                 self._font_color_to_span if outgoing else lambda el: el,
@@ -455,6 +456,16 @@ class HTMLProcessor:
         if el.tail:
             el.tail = re.sub(r"\n", r" ⏎ ", el.tail)
 
+        return el
+
+
+    def _reply_to_inline(self, el: HtmlElement) -> HtmlElement:
+        """Turn <mx-reply> into a plaintext inline form."""
+
+        if el.tag != "mx-reply":
+            return el
+
+        el.tail = f" ⏎⏎ {el.tail or ''}"
         return el
 
 

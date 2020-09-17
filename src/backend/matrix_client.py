@@ -2230,10 +2230,13 @@ class MatrixClient(nio.AsyncClient):
                 body = f"{sender}: {item.inline_content}"
 
             NotificationRequested(
-                title           = room_name,
-                body            = body.replace(" ⏎ ", "<br>"),
                 high_importance = highlight,
-                image           = await self.get_notification_avatar(
+                title           = room_name,
+
+                body = body.replace(" ⏎ ", "<br>")
+                           .replace(" ⏎⏎ ", f"<br>{'─' * 24}<br>"),
+
+                image = await self.get_notification_avatar(
                     mxc=item.sender_avatar, user_id=item.sender_id,
                 ) if item.sender_avatar else "",
             )
