@@ -420,6 +420,12 @@ class Backend:
         return Path(self.appdirs.user_config_dir)
 
 
+    async def get_theme_dir(self) -> Path:
+        path = Path(self.appdirs.user_data_dir) / "themes"
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
+
     async def load_settings(self) -> tuple:
         """Return parsed user config files."""
 
