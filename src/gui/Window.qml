@@ -8,6 +8,8 @@ import "PythonBridge"
 ApplicationWindow {
     id: window
 
+    enum NotificationLevel { None, MentionsKeywords, All }
+
     // FIXME: Qt 5.13.1 bug, this randomly stops updating after the cursor
     // leaves the window until it's clicked again.
 
@@ -16,6 +18,8 @@ ApplicationWindow {
         Qt.application.state === Qt.ApplicationHidden ||
         window.visibility === window.Minimized ||
         window.visibility === window.Hidden
+
+    property int notificationLevel: Window.NotificationLevel.All
 
     property var mainUI: null
     property var settings: ({})
