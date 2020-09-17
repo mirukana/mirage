@@ -1,30 +1,24 @@
-#!/usr/bin/env bash
-
+#!/usr/bin/env sh
 set -e
 
-DIR="$(dirname "$(readlink -f "$0")")"
+dir="$(dirname "$(readlink -f "$0")")"
+pip_generator_url='https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/pip/flatpak-pip-generator'
 
-cd "$DIR"
+cd "$dir"
 
-python3.7 -m venv flatpak-env
-export PATH="$DIR/flatpak-env/bin:$PATH"
+python3 -m venv flatpak-env
+export PATH="$dir/flatpak-env/bin:$PATH"
 
-if [ ! -f flatpak-pip-generator ]; then
-    wget https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/pip/flatpak-pip-generator
-fi
+pip3 install -Ur requirements.flatpak.txt
+pip3 install -Ur ../../requirements.txt
 
-cat requirements.flatpak.txt ../../requirements.txt > requirements.txt
+# Freeze requirements, ignore blacklisted packages
+pip3 freeze | grep -v six= | grep -v matrix-nio > flatpak-env-requirements.txt
 
-flatpak-env/bin/pip install -Ur requirements.txt
+# Generate flatpak requirements
+pip3 install requirements-parser
+[ ! -f flatpak-pip-generator ] && wget "$pip_generator_url"
+python3 flatpak-pip-generator -r flatpak-env-requirements.txt -o flatpak-pip
 
-# freeze requirements and ignore blacklisted packages
-flatpak-env/bin/pip freeze | \
-    grep -v PyYAML | grep -v six= | \
-    grep -v matrix-nio > flatpak-requirements.txt
-
-# generate flatpak requirements
-flatpak-env/bin/python flatpak-pip-generator --output flatpak-pip \
-                       --requirements-file=flatpak-requirements.txt
-
-flatpak-env/bin/pip install PyYAML
+pip3 install PyYAML
 python3 collector.py

@@ -111,6 +111,7 @@ for(file, $$list($$glob_filenames(*.py))) {
 QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
 QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
 QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
-QMAKE_CLEAN *= packaging/flatpak/flatpak-env packaging/flatpak/requirements.txt
-QMAKE_CLEAN *= packaging/flatpak/flatpak-requirements.txt
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env
+QMAKE_CLEAN *= packaging/flatpak/flatpak-pip-generator
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env-requirements.txt
 QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder
