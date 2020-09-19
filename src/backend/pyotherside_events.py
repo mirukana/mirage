@@ -42,6 +42,7 @@ class NotificationRequested(PyOtherSideEvent):
     flash the program's taskbar icon on Windows.
     """
 
+    id:              str              = field()
     title:           str              = field()
     body:            str              = ""
     image:           Union[Path, str] = ""

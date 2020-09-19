@@ -2181,15 +2181,11 @@ class MatrixClient(nio.AsyncClient):
         if from_us:
             return item
 
-        already_notified = item.event_id in self.backend.notified_events
-
-        if already_notified or await self.event_is_past(ev):
+        if await self.event_is_past(ev):
             await self.update_account_unread_counts()
             return item
 
         # Alerts & notifications
-
-        self.backend.notified_events.add(item.event_id)
 
         room_item = self.models[self.user_id, "rooms"][room.room_id]
 
@@ -2230,6 +2226,7 @@ class MatrixClient(nio.AsyncClient):
                 body = f"{sender}: {item.inline_content}"
 
             NotificationRequested(
+                id              = item.id,
                 high_importance = highlight,
                 title           = room_name,
 

@@ -11,12 +11,17 @@ QtObject {
         Qt.exit(exitCode)
     }
 
-    function onNotificationRequested(title, body, image, highImportance) {
+    function onNotificationRequested(id, title, body, image, highImportance) {
         const level = window.notificationLevel
 
-        if (Qt.application.state === Qt.ApplicationActive) return
         if (level === Window.NotificationLevel.None) return
         if (level === Window.MentionsKeywords && ! highImportance) return
+        if (window.notifiedIds.has(id)) return
+
+        window.notifiedIds.add(id)
+        window.notifiedIdsChanged()
+
+        if (Qt.application.state === Qt.ApplicationActive) return
 
         py.callCoro("desktop_notify", [title, body, image])
 

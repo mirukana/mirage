@@ -20,6 +20,7 @@ ApplicationWindow {
         window.visibility === window.Hidden
 
     property int notificationLevel: Window.NotificationLevel.All
+    property var notifiedIds: new Set()
 
     property var mainUI: null
     property var settings: ({})
