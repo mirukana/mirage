@@ -12,15 +12,15 @@ Item {
 
     Item {
         id: clipArea
-        anchors.bottom: parent.bottom
-        width: parent.width
+        anchors.bottom: parent ? parent.bottom : undefined
+        width: parent ? parent.width : 0
         height: 1
         clip: true
 
         Rectangle {
             id: borderRectangle
-            anchors.bottom: parent.bottom
-            width: parent.width
+            anchors.bottom: parent ? parent.bottom : undefined
+            width: parent ? parent.width : 0
             height: root.height
             radius: rectangle.radius
         }

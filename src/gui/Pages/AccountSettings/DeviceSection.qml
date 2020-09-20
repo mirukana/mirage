@@ -19,7 +19,6 @@ HRowLayout {
     HCheckBox {
         id: checkBox
         padding: theme.spacing
-        topPadding: padding * (section === "current" ? 1 : 2)
 
         text:
             section === "current" ? qsTr("Current session") :

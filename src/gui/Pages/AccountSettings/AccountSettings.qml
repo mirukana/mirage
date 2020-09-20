@@ -19,12 +19,10 @@ HPage {
 
         header: HTabBar {
             HTabButton { text: qsTr("Account") }
-            HTabButton { text: qsTr("Encryption") }
-            HTabButton { text: qsTr("Sessions") }
+            HTabButton { text: qsTr("Security") }
         }
 
         Account { userId: page.userId }
-        Encryption { userId: page.userId }
-        Sessions { userId: page.userId }
+        Security { userId: page.userId }
     }
 }

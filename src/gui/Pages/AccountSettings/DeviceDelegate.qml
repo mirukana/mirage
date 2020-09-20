@@ -30,6 +30,7 @@ HTile {
 
         HCheckBox {
             id: checkBox
+            activeFocusOnTab: false
             checked: view.checked[model.id] || false
             onClicked: view.toggleCheck(model.index)
         }
@@ -64,6 +65,7 @@ HTile {
             icon.name: "device-action-menu"
             toolTip.text: qsTr("Rename, verify or sign out")
             backgroundColor: "transparent"
+            activeFocusOnTab: false
             onClicked: deviceTile.openMenu()
 
             Layout.fillHeight: true
