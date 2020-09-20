@@ -21,11 +21,15 @@ HListView {
     readonly property bool currentShouldBeRoom:
         window.uiState.page === "Pages/Chat/Chat.qml"
 
-    readonly property string wantedUserId:
-        (window.uiState.pageProperties.userRoomId || [])[0] || ""
+    readonly property string wantedUserId: (
+        window.uiState.pageProperties.userRoomId ||
+        [window.uiState.pageProperties.userId, ""]
+    )[0] || ""
 
-    readonly property string wantedRoomId:
-        (window.uiState.pageProperties.userRoomId || [])[1] || ""
+    readonly property string wantedRoomId: (
+        window.uiState.pageProperties.userRoomId ||
+        ["", window.uiState.pageProperties.roomId]
+    )[1] || ""
 
     readonly property var accountIndice: {
         const accounts = {}
