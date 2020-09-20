@@ -12,6 +12,7 @@ HTile {
 
     property HListView view
     property string userId
+    property bool offline: false
 
     signal verified()
     signal blacklisted()
@@ -84,6 +85,7 @@ HTile {
             label.horizontalAlignment: Qt.AlignHCenter
 
             HRowLayout {
+                enabled: ! deviceTile.offline
                 width: parent.width
 
                 HTextField {
@@ -166,6 +168,7 @@ HTile {
 
                 NegativeButton {
                     text: qsTr("Sign out")
+                    enabled: ! deviceTile.offline
                     icon.name: "device-delete"
                     onClicked: deviceTile.deleteRequest()
                 }

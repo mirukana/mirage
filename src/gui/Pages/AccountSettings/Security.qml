@@ -19,6 +19,9 @@ HColumnPage {
 
     property Future loadFuture: null
 
+    readonly property QtObject account: ModelStore.get("accounts").find(userId)
+    readonly property bool offline: ! account || account.presence === "offline"
+
     function takeFocus() {
         deviceList.headerItem.exportButton.forceActiveFocus()
     }
@@ -88,8 +91,12 @@ HColumnPage {
         return counts
     }
 
+    function focusListController(top=true) {
+        deviceList.currentIndex = top ? 0 : deviceList.count - 1
+        listController.forceActiveFocus()
+    }
 
-    enabled: ModelStore.get("accounts").find(userId).presence !== "offline"
+
     contentHeight: Math.min(
         window.height,
         Math.max(
@@ -114,6 +121,7 @@ HColumnPage {
 
         header: HColumnLayout {
             readonly property alias exportButton: exportButton
+            readonly property alias importButton: importButton
             readonly property alias signOutCheckedButton: signOutCheckedButton
 
             spacing: theme.spacing
@@ -160,13 +168,11 @@ HColumnPage {
                         }
                     )
 
-                    Keys.onBacktabPressed: {
-                        deviceList.currentIndex = deviceList.count - 1
-                        listController.forceActiveFocus()
-                    }
+                    Keys.onBacktabPressed: page.focusListController(false)
                 }
 
                 GroupButton {
+                    id: importButton
                     text: qsTr("Import")
                     icon.name: "import-keys"
 
@@ -176,6 +182,11 @@ HColumnPage {
                         { userId: page.userId },
                         obj => { obj.dialog.open() }
                     )
+
+                    Keys.onTabPressed:
+                        signOutCheckedButton.enabled ?
+                        refreshButton.forceActiveFocus() :
+                        page.focusListController()
                 }
             }
 
@@ -199,6 +210,8 @@ HColumnPage {
             }
 
             AutoDirectionLayout {
+                enabled: ! page.offline
+
                 GroupButton {
                     id: refreshButton
                     text: qsTr("Refresh")
@@ -222,10 +235,7 @@ HColumnPage {
                             ...utils.range(1, deviceList.count - 1),
                         )
 
-                    Keys.onTabPressed: {
-                        deviceList.currentIndex = 0
-                        listController.forceActiveFocus()
-                    }
+                    Keys.onTabPressed: page.focusListController()
                 }
             }
         }
@@ -234,6 +244,7 @@ HColumnPage {
             width: deviceList.width
             view: deviceList
             userId: page.userId
+            offline: page.offline
             onVerified: page.loadDevices()
             onBlacklisted: page.loadDevices()
             onRenameRequest: name => page.renameDevice(model.index, name)
@@ -257,15 +268,8 @@ HColumnPage {
         Keys.onReturnPressed: Keys.onEnterPressed(event)
         Keys.onMenuPressed: Keys.onEnterPressed(event)
 
-        Keys.onUpPressed: {
-            deviceList.currentIndex = deviceList.count - 1
-            listController.forceActiveFocus()
-        }
-
-        Keys.onDownPressed: {
-            deviceList.currentIndex = 0
-            listController.forceActiveFocus()
-        }
+        Keys.onUpPressed: page.focusListController(false)
+        Keys.onDownPressed: page.focusListController()
 
         Item {
             id: listController
@@ -273,7 +277,11 @@ HColumnPage {
             Keys.onBacktabPressed: {
                 if (parent.currentIndex === 0) {
                     parent.currentIndex = -1
-                    parent.headerItem.signOutCheckedButton.forceActiveFocus()
+
+                    parent.headerItem.signOutCheckedButton.enabled ?
+                    parent.headerItem.signOutCheckedButton.forceActiveFocus() :
+                    parent.headerItem.importButton.forceActiveFocus()
+
                     return
                 }
                 parent.decrementCurrentIndex()

@@ -4,6 +4,12 @@
 - PCN error handling
 - Change docs linking to dev branch back to master 
 
+- Implement fallback QML notifications, usable if dbus isn't available
+- annoying tooltips when menu open
+- profiles missing in notifications
+
+- add http_proxy support
+- Encrypted rooms don't show invites in member list after Mirage restart
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages
 
