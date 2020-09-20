@@ -99,10 +99,7 @@ HColumnPage {
 
     contentHeight: Math.min(
         window.height,
-        Math.max(
-            deviceList.contentHeight + deviceList.bottomMargin,
-            busyIndicatorLoader.height + theme.spacing * 2,
-        )
+        deviceList.contentHeight + deviceList.bottomMargin,
     )
 
     Keys.forwardTo: [deviceList]
@@ -215,6 +212,7 @@ HColumnPage {
                 GroupButton {
                     id: refreshButton
                     text: qsTr("Refresh")
+                    loading: page.loadFuture !== null
                     icon.name: "device-refresh-list"
                     onClicked: page.loadDevices()
                 }
@@ -317,19 +315,6 @@ HColumnPage {
             flickable: deviceList
             active:
                 ! mainUI.debugConsole.visible && page.enableFlickShortcuts
-        }
-
-        HLoader {
-            id: busyIndicatorLoader
-            anchors.centerIn: parent
-            width: 96 * theme.uiScale
-            height: width
-
-            source: "../../Base/HBusyIndicator.qml"
-            active: page.loadFuture
-            opacity: active ? 1 : 0
-
-            Behavior on opacity { HNumberAnimation { factor: 2 } }
         }
     }
 }
