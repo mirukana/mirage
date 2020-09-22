@@ -92,4 +92,6 @@ HTile {
     }
 
     Behavior on contentOpacity { HNumberAnimation {} }
+
+    DelegateTransitionFixer {}
 }

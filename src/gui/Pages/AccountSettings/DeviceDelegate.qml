@@ -173,4 +173,6 @@ HTile {
     }
 
     onLeftClicked: checkBox.clicked()
+
+    DelegateTransitionFixer {}
 }

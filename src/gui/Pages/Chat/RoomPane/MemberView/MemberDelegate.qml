@@ -171,4 +171,6 @@ HTile {
         value: (roomPane.minimumSize - avatar.width) / 2
         when: avatar && roomPane.width < avatar.width + theme.spacing * 2
     }
+
+    DelegateTransitionFixer {}
 }

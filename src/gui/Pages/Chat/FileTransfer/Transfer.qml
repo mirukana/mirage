@@ -33,6 +33,8 @@ HColumnLayout {
 
     Behavior on height { HNumberAnimation {} }
 
+    DelegateTransitionFixer {}
+
     HRowLayout {
         HIcon {
             svgName: "uploading"

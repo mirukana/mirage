@@ -49,4 +49,6 @@ HTile {
             Behavior on color { HColorAnimation {} }
         }
     }
+
+    DelegateTransitionFixer {}
 }
