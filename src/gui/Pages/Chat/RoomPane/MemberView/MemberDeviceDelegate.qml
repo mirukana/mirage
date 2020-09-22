@@ -64,4 +64,6 @@ HTile {
         )
         item.trustSet.connect(deviceTile.trustSet)
     }
+
+    DelegateTransitionFixer {}
 }

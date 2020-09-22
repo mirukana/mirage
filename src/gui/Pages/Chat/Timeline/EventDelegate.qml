@@ -84,6 +84,8 @@ HColumnLayout {
 
     ListView.onRemove: eventList.uncheck(model.id)
 
+    DelegateTransitionFixer {}
+
     Item {
         Layout.fillWidth: true
         visible: model.event_type !== "RoomCreateEvent"

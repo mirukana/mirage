@@ -207,6 +207,8 @@ HTile {
         if (loadEventsFutureId) py.cancelCoro(loadEventsFutureId)
     }
 
+    DelegateTransitionFixer {}
+
     Timer {
         interval: 1000
         triggeredOnStart: true

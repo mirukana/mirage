@@ -243,4 +243,6 @@ HTile {
         sequences: window.settings.keys.togglePresenceOffline
         onActivated: account.togglePresence("offline")
     }
+
+    DelegateTransitionFixer {}
 }
