@@ -402,17 +402,17 @@ class UISettings(JSONDataFile):
                     "panUp":    ["K", "Up", "Alt+K", "Alt+Up"],
                     "panRight": ["L", "Right", "Alt+L", "Alt+Right"],
 
-                    "zoomOut":   ["Z", "-", "Ctrl+-"],
-                    "zoomIn":    ["Shift+Z", "+", "Ctrl++"],
                     "zoomReset": ["Alt+Z", "=", "Ctrl+="],
+                    "zoomOut":   ["Shift+Z", "-", "Ctrl+-"],
+                    "zoomIn":    ["Z", "+", "Ctrl++"],
 
-                    "rotateLeft":  ["R"],
-                    "rotateRight": ["Shift+R"],
                     "rotateReset": ["Alt+R"],
+                    "rotateLeft":  ["Shift+R"],
+                    "rotateRight": ["R"],
 
-                    "previousSpeed": ["S"],
-                    "nextSpeed":     ["Shift+S"],
                     "resetSpeed":    ["Alt+S"],
+                    "previousSpeed": ["Shift+S"],
+                    "nextSpeed":     ["S"],
 
                     "pause":      ["Space"],
                     "expand":     ["E"],
