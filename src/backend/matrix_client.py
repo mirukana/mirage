@@ -34,7 +34,7 @@ import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
 
-from . import __app_name__, __display_name__, utils
+from . import __display_name__, __reverse_dns__, utils
 from .errors import (
     BadMimeType, InvalidUserId, InvalidUserInContext, MatrixBadGateway,
     MatrixError, MatrixForbidden, MatrixInvalidAccessToken, MatrixNotFound,
@@ -612,7 +612,7 @@ class MatrixClient(nio.AsyncClient):
         # to the sender so our other accounts wouldn't be able to replace
         # local echoes by real messages.
         tx_id = uuid4()
-        content[f"{__app_name__}.transaction_id"] = str(tx_id)
+        content[f"{__reverse_dns__}.transaction_id"] = str(tx_id)
 
         mentions = HTML.mentions_in_html(echo_body)
         await self._local_echo(
@@ -781,7 +781,7 @@ class MatrixClient(nio.AsyncClient):
         thumb_info: Optional[MatrixImageInfo] = None
 
         content: dict = {
-            f"{__app_name__}.transaction_id": str(transaction_id),
+            f"{__reverse_dns__}.transaction_id": str(transaction_id),
 
             "body": path.name,
             "info": {
@@ -2168,7 +2168,7 @@ class MatrixClient(nio.AsyncClient):
         model = self.models[self.user_id, room.room_id, "events"]
 
         tx_id = ev.source.get("content", {}).get(
-            f"{__app_name__}.transaction_id",
+            f"{__reverse_dns__}.transaction_id",
         )
         from_us = ev.sender in self.backend.clients
 
