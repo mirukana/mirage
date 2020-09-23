@@ -1,3 +1,4 @@
+# Copyright Mirage authors & contributors <https://github.com/mirukana/mirage>
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 """Various utilities that are used throughout the package."""
