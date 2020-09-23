@@ -20,7 +20,7 @@ fontSize:
     int smaller: 13 * uiScale
     int small:   13 * uiScale
     int normal:  16 * uiScale
-    int big:     22 * uiScale
+    int big:     20 * uiScale
     int bigger:  32 * uiScale
     int biggest: 48 * uiScale
 
