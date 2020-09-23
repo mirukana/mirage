@@ -324,8 +324,19 @@ mainPane:
             int selectedBorderSize:         1
 
             unreadIndicator:
-                color background:        colors.accentBackground
-                color mentionBackground: colors.alertBackground
+                color background: colors.strongBackground
+                color text:       colors.accentText
+                bool bold:        false
+                color border:     Qt.darker(text, 2)
+                int borderWidth:  1
+                int radius:       theme.radius / 2
+
+                color highlightBackground: colors.strongBackground
+                color highlightText:       colors.errorText
+                bool highlightBold:        false
+                color highlightBorder:     Qt.darker(highlightText, 2)
+                int highlightBorderWidth:  1
+                int highlightRadius:       theme.radius / 2
 
     listView:
         color background:    colors.mediumBackground
@@ -354,8 +365,19 @@ mainPane:
             int collapsedAvatarRadius: controls.avatar.radius
 
             unreadIndicator:
-                color background:        colors.accentBackground
-                color mentionBackground: colors.alertBackground
+                color background: colors.strongBackground
+                color text:       colors.accentText
+                bool bold:        false
+                color border:     Qt.darker(text, 2)
+                int borderWidth:  1
+                int radius:       theme.radius / 2
+
+                color highlightBackground: colors.strongBackground
+                color highlightText:       colors.errorText
+                bool highlightBold:        false
+                color highlightBorder:     Qt.darker(highlightText, 2)
+                int highlightBorderWidth:  1
+                int highlightRadius:       theme.radius / 2
 
     bottomBar:
         color background:               "transparent"
