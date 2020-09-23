@@ -1,3 +1,4 @@
+# Copyright Mirage authors & contributors <https://github.com/mirukana/mirage>
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 """QPL (Qt Property Language) theme files to QML converter.
