@@ -204,7 +204,7 @@ HFlickableColumnPage {
 
     HLabel {
         text: qsTr("User ID: %1")
-              .arg(utils.coloredNameHtml(userId, userId, userId))
+              .arg(utils.coloredNameHtml("", userId, userId))
         textFormat: Text.StyledText
         wrapMode: HLabel.Wrap
         lineHeight: 1.1
