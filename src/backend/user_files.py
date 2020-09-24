@@ -286,6 +286,7 @@ class UISettings(JSONDataFile):
             "lexicalRoomSorting": False,
             "markRoomReadMsecDelay": 200,
             "maxMessageCharactersPerLine": 65,
+            "nonKineticScrollingSpeed": 1.0,
             "ownMessagesOnLeftAboveWidth": 895,
             "theme": "Midnight.qpl",
             "writeAliases": {},
