@@ -34,7 +34,10 @@ HMenu {
     }
 
 
-    onClosed: hoveredLink = ""
+    onClosed: {
+        hoveredLink = ""
+        eventIndex  = -1
+    }
 
     HMenuItem {
         icon.name: "toggle-select-message"
