@@ -41,6 +41,10 @@ GridView {
         checkedChanged()
     }
 
+    function uncheckAll() {
+        checked = {}
+    }
+
     function toggleCheck(...indices) {
         const checkedIndices = []
 
@@ -121,7 +125,10 @@ GridView {
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
-    onModelChanged: currentIndex = defaultCurrentIndex
+    onModelChanged: {
+        currentIndex = defaultCurrentIndex
+        uncheckAll()
+    }
 
     HKineticScrollingDisabler {
         id: mouseArea

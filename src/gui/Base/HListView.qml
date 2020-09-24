@@ -140,7 +140,10 @@ ListView {
     }
 
     onSelectedCountChanged: if (! selectedCount) lastCheckedDelegateIndex = 0
-    onModelChanged: currentIndex = defaultCurrentIndex
+    onModelChanged: {
+        currentIndex = defaultCurrentIndex
+        uncheckAll()
+    }
 
     HKineticScrollingDisabler {
         width: enabled ? parent.width : 0
