@@ -13,11 +13,14 @@ MouseArea {
         // Otherwise use wheel.angleDelta, which is available from mouses and
         // low resolution trackpads.
         // When higher pixelDelta, more scroll will be applied
+
+        const speedMultiply =
+            Qt.styleHints.wheelScrollLines *
+            window.settings.nonKineticScrollingSpeed
+
         const pixelDelta = {
-            x: wheel.pixelDelta.x ||
-               wheel.angleDelta.x / 8 * Qt.styleHints.wheelScrollLines,
-            y: wheel.pixelDelta.y ||
-               wheel.angleDelta.y / 8 * Qt.styleHints.wheelScrollLines,
+            x: wheel.pixelDelta.x || wheel.angleDelta.x / 8 * speedMultiply,
+            y: wheel.pixelDelta.y || wheel.angleDelta.y / 8 * speedMultiply,
         }
 
         // Return current position if there was not any movement
