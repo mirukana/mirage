@@ -10,6 +10,7 @@ matrix-nio[e2e] >= 0.15.0, < 0.16
 mistune         >= 0.8.4,  < 0.9
 pymediainfo     >= 4.2.1,  < 5
 plyer           >= 1.4.3,  < 2
+dbus-python
 
 async_generator >= 1.10,  < 2;   python_version < "3.7"
 dataclasses     >= 0.6,   < 0.7; python_version < "3.7"
