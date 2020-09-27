@@ -142,6 +142,8 @@ HDrawer {
 
     HColumnLayout {
         anchors.fill: parent
+        // Fixes inputArea cursor invisible when at cursorPosition 0
+        anchors.leftMargin: 1
 
         HListView {
             id: commandsView
