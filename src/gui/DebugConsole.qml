@@ -132,7 +132,7 @@ HDrawer {
     }
 
     onHistoryEntryChanged:
-        inputField.text =
+        inputArea.text =
             historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
 
     HShortcut {
@@ -163,7 +163,7 @@ HDrawer {
                        commandsView.leftMargin - commandsView.rightMargin
 
                 HLabel {
-                    text: "> " + model.input
+                    text: "> " + model.input.replace(/\n/g, "\n> ")
                     wrapMode: HLabel.Wrap
                     color: theme.chat.message.quote
                     font.family: theme.fontFamily.mono
@@ -173,7 +173,7 @@ HDrawer {
                 }
 
                 HLabel {
-                    text: "" + model.output
+                    text: model.output
                     wrapMode: HLabel.Wrap
                     color: model.error ?
                            theme.colors.errorText : theme.colors.text
@@ -196,20 +196,53 @@ HDrawer {
             }
         }
 
-        HTextField {
-            id: inputField
+        HTextArea {
+            id: inputArea
+
+            readonly property int cursorY:
+                text.substring(0, cursorPosition).split("\n").length - 1
+
+            function accept() {
+                if (! text) return
+                runJS(text)
+                clear()
+                historyEntry = -1
+            }
+
             focus: true
-            onAccepted: if (text) { runJS(text); text = ""; historyEntry = -1 }
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
             placeholderText: qsTr("JavaScript debug console - Try .help")
             font.family: theme.fontFamily.mono
 
-            Keys.onUpPressed:
-                if (historyEntry + 1 < history.length ) historyEntry += 1
+            Keys.onUpPressed: ev => {
+                ev.accepted =
+                    cursorY === 0 && historyEntry + 1 < history.length
 
-            Keys.onDownPressed:
-                if (historyEntry - 1 >= -1) historyEntry -= 1
+                if (ev.accepted) {
+                    historyEntry   += 1
+                    cursorPosition  = length
+                }
+            }
+
+            Keys.onDownPressed: ev => {
+                ev.accepted =
+                    cursorY === lineCount - 1 && historyEntry - 1 >= -1
+
+                if (ev.accepted) historyEntry -= 1
+            }
+
+            Keys.onTabPressed: inputArea.insertAtCursor("    ")
+
+            Keys.onReturnPressed: ev => {
+                ev.modifiers & Qt.ShiftModifier ||
+                ev.modifiers & Qt.ControlModifier ||
+                ev.modifiers & Qt.AltModifier ?
+                inputArea.insertAtCursor("\n") :
+                accept()
+            }
+
+            Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
             Keys.onEscapePressed: debugConsole.close()
 
