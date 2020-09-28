@@ -4,6 +4,7 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
+import Clipboard 0.1
 import "Base"
 import "ShortcutBundles"
 
@@ -20,6 +21,9 @@ HDrawer {
     property int historyEntry: -1
     property int maxHistoryLength: 4096
     property var textBeforeHistoryNavigation: null  // null or string
+
+    property int selectedOutputDelegateIndex: -1
+    property string selectedOutputText: ""
 
     property string help: qsTr(
         `Javascript debugging console
@@ -44,7 +48,7 @@ HDrawer {
     property bool doUselessThing: false
     property real baseGIFSpeed: 1.0
 
-    readonly property alias commandsView: commandsView
+    readonly property alias outputList: outputList
 
     function toggle(targetItem=null, js="", addToHistory=false) {
         if (debugConsole.visible) {
@@ -101,7 +105,7 @@ HDrawer {
             output = err.toString()
         }
 
-        commandsView.model.insert(0, { input, output, error })
+        outputList.model.insert(0, { input, output, error })
     }
 
 
@@ -116,7 +120,7 @@ HDrawer {
     position: 0
 
     onTargetChanged: {
-        commandsView.model.insert(0, {
+        outputList.model.insert(0, {
             input: "t = " + String(target),
             output: "",
             error: false,
@@ -158,7 +162,7 @@ HDrawer {
         anchors.leftMargin: 1
 
         HListView {
-            id: commandsView
+            id: outputList
             spacing: theme.spacing
             topMargin: theme.spacing
             bottomMargin: topMargin
@@ -172,35 +176,86 @@ HDrawer {
 
             model: ListModel {}
 
-            delegate: HColumnLayout {
-                width: commandsView.width -
-                       commandsView.leftMargin - commandsView.rightMargin
+            delegate: HSelectableLabel {
+                id: delegate
+                width: outputList.width -
+                       outputList.leftMargin - outputList.rightMargin
 
-                HLabel {
-                    text: "> " + model.input.replace(/\n/g, "\n> ")
-                    wrapMode: HLabel.Wrap
-                    color: theme.chat.message.quote
-                    font.family: theme.fontFamily.mono
-                    visible: Boolean(model.input)
+                text:
+                    `<div style="white-space: pre-wrap">` +
+                    `<font color="${theme.chat.message.quote}">` +
+                    utils.plain2Html(model.input) +
+                    "</font>" +
+                    (
+                        model.output ?
+                        "<br>" + utils.plain2Html(model.output) :
+                        ""
+                    ) +
+                    "</div>"
 
-                    Layout.fillWidth: true
+                textFormat: HSelectableLabel.RichText
+                wrapMode: HLabel.Wrap
+                color: model.error ? theme.colors.errorText : theme.colors.text
+                font.family: theme.fontFamily.mono
+
+                Layout.fillWidth: true
+
+                onSelectedTextChanged: if (selectedText) {
+                    selectedOutputDelegateIndex = model.index
+                    selectedOutputText          = selectedText
+                } else if (selectedOutputDelegateIndex === model.index) {
+                    selectedOutputDelegateIndex = -1
+                    selectedOutputText          = ""
                 }
 
-                HLabel {
-                    text: model.output
-                    wrapMode: HLabel.Wrap
-                    color: model.error ?
-                           theme.colors.errorText : theme.colors.text
-                    font.family: theme.fontFamily.mono
-                    visible: Boolean(model.output)
+                Connections {
+                    target: debugConsole
+                    onSelectedOutputDelegateIndexChanged: {
+                        if (selectedOutputDelegateIndex !== model.index)
+                            delegate.deselect()
+                    }
+                }
 
-                    Layout.fillWidth: true
+                TapHandler {
+                    acceptedButtons: Qt.RightButton
+                    gesturePolicy: TapHandler.ReleaseWithinBounds
+                    acceptedPointerTypes:
+                        PointerDevice.GenericPointer | PointerDevice.Pen
+
+                    onTapped: menu.popup()
+                }
+
+                TapHandler {
+                    acceptedPointerTypes:
+                        PointerDevice.Finger | PointerDevice.Pen
+
+                    onLongPressed: menu.popup()
+                }
+
+                HMenu {
+                    id: menu
+                    implicitWidth: Math.min(window.width, 150)
+                    z: 10000
+
+                    HMenuItem {
+                        icon.name: "copy-text"
+                        text: qsTr("Copy")
+                        onTriggered: {
+                            if (delegate.selectedText) {
+                                delegate.copy()
+                                return
+                            }
+                            delegate.selectAll()
+                            delegate.copy()
+                            delegate.deselect()
+                        }
+                    }
                 }
             }
 
             FlickShortcuts {
                 active: debugConsole.visible
-                flickable: commandsView
+                flickable: outputList
             }
 
             Rectangle {
@@ -259,6 +314,17 @@ HDrawer {
             Keys.onEnterPressed: ev => Keys.returnPressed(ev)
 
             Keys.onEscapePressed: debugConsole.close()
+
+            Keys.onPressed: ev => {
+                if (
+                    ev.matches(StandardKey.Copy) &&
+                    ! inputArea.selectedText &&
+                    selectedOutputText
+                ) {
+                    ev.accepted = true
+                    Clipboard.text = selectedOutputText
+                }
+            }
 
             Layout.fillWidth: true
 
