@@ -196,6 +196,13 @@ QtObject {
     }
 
 
+    function plain2Html(text) {
+        // Escape html, convert `\n` into `<br>` tags and `\t` into four spaces
+        return escapeHtml(text).replace(/\n/g, "<br>")
+                               .replace(/\t/g, "&nbsp;" * 4)
+    }
+
+
     function htmlColorize(text, color) {
         return `<font color="${color}">${text}</font>`
     }
