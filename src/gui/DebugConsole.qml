@@ -181,20 +181,28 @@ HDrawer {
                 width: outputList.width -
                        outputList.leftMargin - outputList.rightMargin
 
+                readonly property color inputColor:
+                    model.error ? theme.colors.errorText :
+                    model.output ? theme.colors.accentText :
+                    theme.colors.positiveText
+
                 text:
                     `<div style="white-space: pre-wrap">` +
-                    `<font color="${theme.colors.accentText}">` +
+                    `<font color="${inputColor}">` +
                     utils.plain2Html(model.input) +
                     "</font>" +
                     (model.input && model.output ? "<br>" : "") +
                     (model.output ? utils.plain2Html(model.output) : "") +
                     "</div>"
 
+                leftPadding: theme.spacing
                 textFormat: HSelectableLabel.RichText
                 wrapMode: HLabel.Wrap
-                color: model.error ? theme.colors.errorText : theme.colors.text
                 font.family: theme.fontFamily.mono
-                leftPadding: theme.spacing
+                color:
+                    model.error ?
+                    Qt.darker(inputColor, 1.4) :
+                    theme.colors.halfDimText
 
                 Layout.fillWidth: true
 
@@ -256,7 +264,9 @@ HDrawer {
                     color:
                         model.error ?
                         theme.colors.negativeBackground :
-                        theme.colors.accentElement
+                        model.output ?
+                        theme.colors.accentElement :
+                        theme.colors.positiveBackground
                 }
             }
 
