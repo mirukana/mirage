@@ -183,20 +183,18 @@ HDrawer {
 
                 text:
                     `<div style="white-space: pre-wrap">` +
-                    `<font color="${theme.chat.message.quote}">` +
+                    `<font color="${theme.colors.accentText}">` +
                     utils.plain2Html(model.input) +
                     "</font>" +
-                    (
-                        model.output ?
-                        "<br>" + utils.plain2Html(model.output) :
-                        ""
-                    ) +
+                    (model.input && model.output ? "<br>" : "") +
+                    (model.output ? utils.plain2Html(model.output) : "") +
                     "</div>"
 
                 textFormat: HSelectableLabel.RichText
                 wrapMode: HLabel.Wrap
                 color: model.error ? theme.colors.errorText : theme.colors.text
                 font.family: theme.fontFamily.mono
+                leftPadding: theme.spacing
 
                 Layout.fillWidth: true
 
@@ -250,6 +248,15 @@ HDrawer {
                             delegate.deselect()
                         }
                     }
+                }
+
+                Rectangle {
+                    width: 1
+                    height: parent.height
+                    color:
+                        model.error ?
+                        theme.colors.negativeBackground :
+                        theme.colors.accentElement
                 }
             }
 
