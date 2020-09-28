@@ -17,7 +17,6 @@ HDrawer {
     property alias t: debugConsole.target
 
     property var history: window.history.console
-    property alias his: debugConsole.history
     property int historyEntry: -1
     property int maxHistoryLength: 4096
     property var textBeforeHistoryNavigation: null  // null or string
@@ -25,23 +24,26 @@ HDrawer {
     property int selectedOutputDelegateIndex: -1
     property string selectedOutputText: ""
 
+    property string pythonDebugKeybind:
+        window.settings.keys.startPythonDebugger[0]
+
     property string help: qsTr(
-        `Javascript debugging console
+        `Interact with the QML code using JavaScript ES6 syntax.
 
         Useful variables:
-            window, theme, settings, utils, mainPane, mainUI, pageLoader
-            py    Python interpreter
-            this  The console itself
             t     Target item to debug for which this console was opened
-            his   History, list of commands entered
+            this  The console itself
+            py    Python interpreter (${pythonDebugKeybind} to start debugger)
+
+            window, mainUI, theme, settings, utils, mainPane, pageLoader
 
         Special commands:
             .j OBJECT, .json OBJECT  Print OBJECT as human-readable JSON
 
-            .t, .top     Attach the console to the parent window's top
-            .b, .bottom  Attach the console to the parent window's bottom
-            .l, .left    Attach the console to the parent window's left
-            .r, .right   Attach the console to the parent window's right
+            .t, .top     Attach console to the parent window's top
+            .b, .bottom  Attach console to the parent window's bottom
+            .l, .left    Attach console to the parent window's left
+            .r, .right   Attach console to the parent window's right
             .h, .help    Show this help`.replace(/^ {8}/gm, "")
     )
 
@@ -298,7 +300,7 @@ HDrawer {
             focus: true
             backgroundColor: Qt.hsla(0, 0, 0, 0.85)
             bordered: false
-            placeholderText: qsTr("JavaScript debug console - Try .help")
+            placeholderText: qsTr("QML/JavaScript debug console - Type .help")
             font.family: theme.fontFamily.mono
 
             Keys.onUpPressed: ev => {
