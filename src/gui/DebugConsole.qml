@@ -19,6 +19,7 @@ HDrawer {
     property alias his: debugConsole.history
     property int historyEntry: -1
     property int maxHistoryLength: 4096
+    property var textBeforeHistoryNavigation: null  // null or string
 
     property string help: qsTr(
         `Javascript debugging console
@@ -131,9 +132,20 @@ HDrawer {
         }
     }
 
-    onHistoryEntryChanged:
-        inputArea.text =
-            historyEntry === -1 ? "" : history.slice(-historyEntry - 1)[0]
+    onHistoryEntryChanged: {
+        if (historyEntry === -1) {
+            inputArea.clear()
+            inputArea.append(textBeforeHistoryNavigation)
+            textBeforeHistoryNavigation = null
+            return
+        }
+
+        if (textBeforeHistoryNavigation === null)
+            textBeforeHistoryNavigation = inputArea.text
+
+        inputArea.clear()
+        inputArea.append(history.slice(-historyEntry - 1)[0])
+    }
 
     HShortcut {
         sequences: settings.keys.toggleDebugConsole
