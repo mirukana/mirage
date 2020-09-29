@@ -218,8 +218,8 @@ Rectangle {
     HListView {
         id: eventList
 
-        property Future updateMarkerFuture: null
-        property Future loadPastEventsFuture: null
+        property string updateMarkerFutureId: ""
+        property string loadPastEventsFutureId: ""
         property bool moreToLoad: true
 
         property bool ownEventsOnLeft:
@@ -355,13 +355,13 @@ Rectangle {
         }
 
         function loadPastEvents() {
-            loadPastEventsFuture = py.callClientCoro(
+            loadPastEventsFutureId = py.callClientCoro(
                 chat.userId,
                 "load_past_events",
                 [chat.roomId],
                 more => {
-                    moreToLoad           = more
-                    loadPastEventsFuture = null
+                    moreToLoad             = more
+                    loadPastEventsFutureId = ""
                 }
             )
         }
@@ -519,7 +519,7 @@ Rectangle {
         footer: Item {
             width: eventList.width
             height: (button.height + theme.spacing * 2) * opacity
-            opacity: eventList.loadPastEventsFuture ? 1 : 0
+            opacity: eventList.loadPastEventsFutureId ? 1 : 0
             visible: opacity > 0
 
             Behavior on opacity { HNumberAnimation {} }
@@ -554,14 +554,14 @@ Rectangle {
             interval: 200
             running:
                 eventList.shouldLoadPastEvents &&
-                ! eventList.loadPastEventsFuture
+                ! eventList.loadPastEventsFutureId
             triggeredOnStart: true
             onTriggered: eventList.loadPastEvents()
 
         }
 
         Component.onDestruction: {
-            if (loadPastEventsFuture) loadPastEventsFuture.cancel()
+            if (loadPastEventsFutureId) py.cancelCoro(loadPastEventsFutureId)
         }
 
         MouseArea {
@@ -585,7 +585,7 @@ Rectangle {
         interval: Math.max(100, window.settings.markRoomReadMsecDelay)
 
         running:
-            ! eventList.updateMarkerFuture &&
+            ! eventList.updateMarkerFutureId &&
             (
                 chat.roomInfo.unreads ||
                 chat.roomInfo.highlights ||
@@ -600,11 +600,11 @@ Rectangle {
                 const item = eventList.model.get(i)
 
                 if (item.sender !== chat.userId) {
-                    eventList.updateMarkerFuture = py.callCoro(
+                    eventList.updateMarkerFutureId = py.callCoro(
                         "update_room_read_marker",
                         [chat.roomId, item.event_id],
-                        () => { eventList.updateMarkerFuture = null },
-                        () => { eventList.updateMarkerFuture = null },
+                        () => { eventList.updateMarkerFutureId = "" },
+                        () => { eventList.updateMarkerFutureId = "" },
                     )
                     return
                 }

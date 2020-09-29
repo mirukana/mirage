@@ -15,7 +15,7 @@ HColumnPopup {
     property string roomName
     property bool invitingAllowed: true
 
-    property var inviteFuture: null
+    property string inviteFutureId: ""
     property var successfulInvites: []
     property var failedInvites: []
 
@@ -26,12 +26,14 @@ HColumnPopup {
             user => ! successfulInvites.includes(user)
         )
 
-        inviteFuture = py.callClientCoro(
+        inviteFutureId = py.callClientCoro(
             userId,
             "room_mass_invite",
             [roomId, ...inviteesLeft],
 
             ([successes, errors]) => {
+                inviteFutureId = ""
+
                 if (errors.length < 1) {
                     popup.close()
                     return
@@ -61,10 +63,10 @@ HColumnPopup {
     }
 
     onOpened: inviteArea.forceActiveFocus()
-    onClosed: if (inviteFuture) inviteFuture.cancel()
+    onClosed: if (inviteFutureId) py.cancelCoro(inviteFutureId)
 
     onInvitingAllowedChanged:
-        if (! invitingAllowed && inviteFuture) inviteFuture.cancel()
+        if (! invitingAllowed && inviteFutureId) py.cancelCoro(inviteFutureId)
 
     SummaryLabel {
         text: qsTr("Invite members to <i>%1</i>").arg(roomName)

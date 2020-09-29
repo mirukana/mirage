@@ -13,7 +13,7 @@ import "Timeline"
 HColumnPage {
     id: chatPage
 
-    property var loadMembersFuture: null
+    property string loadMembersFutureId: ""
 
     readonly property alias roomHeader: roomHeader
     readonly property alias eventList: eventList
@@ -29,16 +29,17 @@ HColumnPage {
     padding: 0
     column.spacing: 0
 
-    Component.onDestruction: if (loadMembersFuture) loadMembersFuture.cancel()
+    Component.onDestruction:
+        if (loadMembersFutureId) py.cancelCoro(loadMembersFutureId)
 
     Timer {
         interval: 200
         running: ! chat.roomInfo.inviter_id && ! chat.roomInfo.left
-        onTriggered: loadMembersFuture = py.callClientCoro(
+        onTriggered: loadMembersFutureId = py.callClientCoro(
             chat.userId,
             "load_all_room_members",
             [chat.roomId],
-            () => { loadMembersFuture = null },
+            () => { loadMembersFutureId = "" },
         )
     }
 

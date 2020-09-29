@@ -21,26 +21,26 @@ HBox {
     property var saveProperties: ["acceptedUserUrl", "knownHttps"]
     property string loadingIconStep: "server-ping-bad"
 
-    property Future connectFuture: null
-    property Future fetchServersFuture: null
+    property string connectFutureId: ""
+    property string fetchServersFutureId: ""
 
     signal accepted()
 
     function takeFocus() { serverField.item.field.forceActiveFocus() }
 
     function fetchServers() {
-        if (fetchServersFuture) fetchServersFuture.cancel()
+        if (fetchServersFutureId) py.cancelCoro(fetchServersFutureId)
 
-        fetchServersFuture = py.callCoro("fetch_homeservers", [], () => {
-            fetchServersFuture = null
+        fetchServersFutureId = py.callCoro("fetch_homeservers", [], () => {
+            fetchServersFutureId = ""
         }, (type, args, error, traceback) => {
-            fetchServersFuture = null
+            fetchServersFutureId = ""
             print( traceback)  // TODO: display error graphically
         })
     }
 
     function connect() {
-        if (connectFuture) connectFuture.cancel()
+        if (connectFutureId) py.cancelCoro(connectFutureId)
         connectTimeout.restart()
 
         const typedUrl = serverField.item.field.cleanText
@@ -49,10 +49,10 @@ HBox {
         if (box.knownHttps)
             args[0] = args[0].replace(/^(https?:\/\/)?/, "https://")
 
-        connectFuture = py.callCoro("server_info", args, ([url, flows]) => {
+        connectFutureId = py.callCoro("server_info", args, ([url, flows]) => {
             connectTimeout.stop()
             serverField.errorLabel.text = ""
-            connectFuture               = null
+            connectFutureId             = ""
 
             if (! (
                 flows.includes("m.login.password") ||
@@ -75,7 +75,7 @@ HBox {
             console.error(traceback)
 
             connectTimeout.stop()
-            connectFuture = null
+            connectFutureId = ""
 
             let text = qsTr("Unexpected error: %1 [%2]").arg(type).arg(args)
 
@@ -194,7 +194,7 @@ HBox {
                 enabled: field.cleanText && ! field.error
                 icon.name: "server-connect-to-address"
                 icon.color: theme.colors.positiveBackground
-                loading: box.connectFuture !== null
+                loading: box.connectFutureId !== ""
                 disableWhileLoading: false
                 onClicked: box.connect()
 
@@ -209,7 +209,7 @@ HBox {
     onAccepted: window.saveState(this)
 
     Component.onDestruction:
-        if (fetchServersFuture) fetchServersFuture.cancel()
+        if (fetchServersFutureId) py.cancelCoro(fetchServersFutureId)
 
     Timer {
         id: connectTimeout
@@ -230,7 +230,7 @@ HBox {
     Timer {
         interval: 1000
         running:
-            fetchServersFuture === null &&
+            fetchServersFutureId === "" &&
             ModelStore.get("homeservers").count === 0
 
         repeat: true
@@ -292,7 +292,7 @@ HBox {
             height: width
 
             source: "../../Base/HBusyIndicator.qml"
-            active: box.fetchServersFuture && ! serverList.count
+            active: box.fetchServersFutureId && ! serverList.count
             opacity: active ? 1 : 0
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }

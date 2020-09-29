@@ -10,7 +10,7 @@ import "../../../Base/Buttons"
 HFlickableColumnPage {
     id: settingsView
 
-    property var saveFuture: null
+    property string saveFutureId: ""
 
     readonly property bool anyChange:
         nameField.item.changed || topicArea.item.area.changed ||
@@ -20,7 +20,7 @@ HFlickableColumnPage {
     readonly property Item keybindFocusItem: nameField.item
 
     function save() {
-        if (saveFuture) saveFuture.cancel()
+        if (saveFutureId) py.cancelCoro(saveFutureId)
 
         const args = [
             chat.roomId,
@@ -35,17 +35,17 @@ HFlickableColumnPage {
             forbidGuestsCheckBox.checked : undefined,
         ]
 
-        function onDone() { saveFuture = null }
+        function onDone() { saveFutureId = "" }
 
-        saveFuture = py.callClientCoro(
+        saveFutureId = py.callClientCoro(
             chat.userId, "room_set", args, onDone, onDone,
         )
     }
 
     function cancel() {
-        if (saveFuture) {
-            saveFuture.cancel()
-            saveFuture = null
+        if (saveFutureId) {
+            py.cancelCoro(saveFutureId)
+            saveFutureId = ""
         }
 
         nameField.item.reset()
@@ -66,14 +66,14 @@ HFlickableColumnPage {
         ApplyButton {
             id: applyButton
             enabled: anyChange
-            loading: saveFuture !== null
+            loading: saveFutureId !== ""
             disableWhileLoading: false
             onClicked: save()
 
         }
 
         CancelButton {
-            enabled: anyChange || saveFuture !== null
+            enabled: anyChange || saveFutureId !== ""
             onClicked: cancel()
         }
     }

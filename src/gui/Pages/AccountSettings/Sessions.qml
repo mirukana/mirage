@@ -7,7 +7,6 @@ import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
 import "../../Base/Buttons"
-import "../../PythonBridge"
 import "../../ShortcutBundles"
 
 HColumnPage {
@@ -18,19 +17,19 @@ HColumnPage {
     property bool enableFlickShortcuts:
         SwipeView ? SwipeView.isCurrentItem : true
 
-    property Future loadFuture: null
+    property string loadFutureId: ""
 
     function takeFocus() {} // TODO
 
     function loadDevices() {
-        loadFuture = py.callClientCoro(userId, "devices_info", [], devices => {
+        loadFutureId = py.callClientCoro(userId, "devices_info",[],devices => {
             deviceList.uncheckAll()
             deviceList.model.clear()
 
             for (const device of devices)
                 deviceList.model.append(device)
 
-            loadFuture                   = null
+            loadFutureId                 = ""
             deviceList.sectionItemCounts = getSectionItemCounts()
 
             if (page.enabled && ! deviceList.currentItem)
@@ -187,7 +186,7 @@ HColumnPage {
             height: width
 
             source: "../../Base/HBusyIndicator.qml"
-            active: page.loadFuture
+            active: page.loadFutureId
             opacity: active ? 1 : 0
 
             Behavior on opacity { HNumberAnimation { factor: 2 } }

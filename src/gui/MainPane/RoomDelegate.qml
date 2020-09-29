@@ -7,13 +7,12 @@ import Clipboard 0.1
 import ".."
 import "../Base"
 import "../Base/HTile"
-import "../PythonBridge"
 
 HTile {
     id: room
 
-    property Future fetchProfilesFuture: null
-    property Future loadEventsFuture: null
+    property string fetchProfilesFutureId: ""
+    property string loadEventsFutureId: ""
     property bool moreToLoad: true
 
     readonly property bool joined: ! invited && ! parted
@@ -204,8 +203,8 @@ HTile {
     }
 
     Component.onDestruction: {
-        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
-        if (loadEventsFuture) loadEventsFuture.cancel()
+        if (fetchProfilesFutureId) py.cancelCoro(fetchProfilesFutureId)
+        if (loadEventsFutureId) py.cancelCoro(loadEventsFutureId)
     }
 
     Timer {
@@ -217,15 +216,15 @@ HTile {
             ! lastEvent &&
             moreToLoad
 
-        onTriggered: if (! loadEventsFuture) {
-            loadEventsFuture = py.callClientCoro(
+        onTriggered: if (! loadEventsFutureId) {
+            loadEventsFutureId = py.callClientCoro(
                 model.for_account,
                 "load_past_events",
                 [model.id],
                 more => {
                     if (! room) return  // delegate was destroyed
-                    loadEventsFuture = null
-                    moreToLoad       = more
+                    loadEventsFutureId = ""
+                    moreToLoad         = more
                 }
             )
         }
@@ -242,13 +241,13 @@ HTile {
             lastEvent.fetch_profile
 
         onTriggered: {
-            if (fetchProfilesFuture) fetchProfilesFuture.cancel()
+            if (fetchProfilesFutureId) py.cancelCoro(fetchProfilesFutureId)
 
-            fetchProfilesFuture = py.callClientCoro(
+            fetchProfilesFutureId = py.callClientCoro(
                 model.for_account,
                 "get_event_profiles",
                 [model.id, lastEvent.id],
-                () => { if (room) fetchProfilesFuture = null },
+                () => { if (room) fetchProfilesFutureId = "" },
             )
         }
     }

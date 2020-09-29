@@ -14,23 +14,23 @@ SignInBase {
     function startSignIn() {
         errorMessage.text = ""
 
-        page.loginFuture = py.callCoro("start_sso_auth", [serverUrl], url => {
+        page.loginFutureId = py.callCoro("start_sso_auth",[serverUrl], url => {
             urlArea.text           = url
             urlArea.cursorPosition = 0
 
             Qt.openUrlExternally(url)
 
-            page.loginFuture = py.callCoro("continue_sso_auth", [], userId => {
-                page.loginFuture = null
+            page.loginFutureId = py.callCoro("continue_sso_auth",[],userId => {
+                page.loginFutureId = ""
                 page.finishSignIn(userId)
             })
         })
     }
 
     function cancel() {
-        if (loginFuture) {
-            page.loginFuture.cancel()
-            page.loginFuture = null
+        if (loginFutureId) {
+            py.cancelCoro(page.loginFutureId)
+            page.loginFutureId = ""
         }
 
         page.exitRequested()
