@@ -9,10 +9,9 @@ Label {
     font.pixelSize: theme.fontSize.normal
     font.pointSize: -1
     textFormat: Label.PlainText
-
+    horizontalAlignment: Label.AlignLeft
     color: theme.colors.text
     linkColor: theme.colors.link
-
     maximumLineCount: elide === Label.ElideNone ? Number.MAX_VALUE : 1
 
     onLinkActivated: Qt.openUrlExternally(link)
