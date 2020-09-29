@@ -12,17 +12,17 @@ SignInBase {
     function takeFocus() { idField.item.forceActiveFocus() }
 
     function signIn() {
-        if (page.loginFuture) page.loginFuture.cancel()
+        if (page.loginFutureId) page.loginFutureId = ""
 
         errorMessage.text = ""
 
-        page.loginFuture = py.callCoro(
+        page.loginFutureId = py.callCoro(
             "password_auth",
             [idField.item.text.trim(), passField.item.text, page.serverUrl],
             page.finishSignIn,
 
             (type, args, error, traceback, uuid) => {
-                page.loginFuture = null
+                page.loginFutureId = ""
 
                 let txt = qsTr(
                     "Invalid request, login type or unknown error: %1",

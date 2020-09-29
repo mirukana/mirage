@@ -6,7 +6,6 @@ import QtQuick.Layouts 1.12
 import "../../../.."
 import "../../../../Base"
 import "../../../../Base/Buttons"
-import "../../../../PythonBridge"
 
 HListView {
     id: root
@@ -21,8 +20,8 @@ HListView {
 
     property bool powerLevelFieldFocused: false
 
-    property Future setPowerFuture: null
-    property Future getPresenceFuture: null
+    property string setPowerFutureId: ""
+    property string getPresenceFutureId: ""
 
     function loadDevices() {
          py.callClientCoro(userId, "member_devices", [member.id], devices => {
@@ -246,14 +245,14 @@ HListView {
             ApplyButton {
                 id: applyButton
                 enabled: ! powerLevel.item.fieldOverMaximum
-                loading: setPowerFuture !== null
+                loading: setPowerFutureId !== ""
                 text: ""
                 onClicked: {
-                    setPowerFuture = py.callClientCoro(
+                    setPowerFutureId = py.callClientCoro(
                         userId,
                         "room_set_member_power",
                         [roomId, member.id, powerLevel.item.level],
-                        () => { setPowerFuture = null }
+                        () => { setPowerFutureId = "" }
                     )
                 }
 
@@ -264,8 +263,8 @@ HListView {
             CancelButton {
                 text: ""
                 onClicked: {
-                    setPowerFuture.cancel()
-                    setPowerFuture = null
+                    py.cancelCoro(setPowerFutureId)
+                    setPowerFutureId = ""
                     powerLevel.item.reset()
                 }
 
@@ -289,14 +288,18 @@ HListView {
         if (member.presence === "offline" &&
             member.last_active_at < new Date(1))
         {
-            getPresenceFuture =
-                py.callClientCoro(userId, "get_offline_presence", [member.id])
+            getPresenceFutureId = py.callClientCoro(
+                userId,
+                "get_offline_presence",
+                [member.id],
+                () => { getPresenceFutureId = "" }
+            )
         }
     }
 
     Component.onDestruction: {
-        if (setPowerFuture) setPowerFuture.cancel()
-        if (getPresenceFuture) getPresenceFuture.cancel()
+        if (setPowerFutureId) py.cancelCoro(setPowerFutureId)
+        if (getPresenceFutureId) py.cancelCoro(getPresenceFutureId)
     }
 
     Keys.onEnterPressed: Keys.onReturnPressed(event)

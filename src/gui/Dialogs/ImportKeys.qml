@@ -5,11 +5,10 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import Qt.labs.platform 1.1
 import "../Popups"
-import "../PythonBridge"
 
 HFileDialogOpener {
     property string userId: ""
-    property Future importFuture: null
+    property string importFutureId: ""
 
 
     fill: false
@@ -28,13 +27,13 @@ HFileDialogOpener {
             const call = py.callClientCoro
             const path = file.toString().replace(/^file:\/\//, "")
 
-            importFuture = call(userId, "import_keys", [path, pass], () => {
-                importFuture = null
+            importFutureId = call(userId, "import_keys", [path, pass], () => {
+                importFutureId = ""
                 callback(true)
 
             }, (type, args, error, traceback, uuid) => {
-                let unknown  = false
-                importFuture = null
+                let unknown    = false
+                importFutureId = ""
 
                 callback(
                     type === "EncryptionError" ?
@@ -63,17 +62,17 @@ HFileDialogOpener {
         }
 
         summary.text:
-            importFuture ?
+            importFutureId ?
             qsTr("This might take a while...") :
             qsTr("Passphrase used to protect this file:")
         validateButton.text: qsTr("Import")
         validateButton.icon.name: "import-keys"
 
-        onClosed: if (importFuture) importFuture.cancel()
+        onClosed: if (importFutureId) py.cancelCoro(importFutureId)
 
         Binding on closePolicy {
             value: Popup.CloseOnEscape
-            when: importFuture
+            when: importFutureId
         }
     }
 }

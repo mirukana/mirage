@@ -14,7 +14,7 @@ HFlickableColumnPage {
     property string serverUrl
     property string displayUrl: serverUrl
 
-    property var loginFuture: null
+    property string loginFutureId: null
 
     readonly property int security:
         serverUrl.startsWith("https://") ?
@@ -35,8 +35,8 @@ HFlickableColumnPage {
     signal exitRequested()
 
     function finishSignIn(receivedUserId) {
-        errorMessage.text = ""
-        page.loginFuture  = null
+        errorMessage.text  = ""
+        page.loginFutureId = ""
 
         py.callCoro(
             rememberAccount.checked ?
@@ -53,13 +53,13 @@ HFlickableColumnPage {
     }
 
     function cancel() {
-        if (! page.loginFuture) {
+        if (! page.loginFutureId) {
             page.exitRequested()
             return
         }
 
-        page.loginFuture.cancel()
-        page.loginFuture = null
+        py.cancelCoro(page.loginFutureId)
+        page.loginFutureId = ""
     }
 
 
@@ -72,7 +72,7 @@ HFlickableColumnPage {
 
             text: qsTr("Sign in")
             icon.name: "sign-in"
-            loading: page.loginFuture !== null
+            loading: page.loginFutureId !== ""
             disableWhileLoading: false
         }
 
@@ -83,7 +83,7 @@ HFlickableColumnPage {
 
     onKeyboardAccept: if (applyButton.enabled) applyButton.clicked()
     onKeyboardCancel: page.cancel()
-    Component.onDestruction: if (loginFuture) loginFuture.cancel()
+    Component.onDestruction: if (loginFutureId) py.cancelCoro(loginFutureId)
 
     HButton {
         icon.name: "sign-in-" + (

@@ -7,13 +7,12 @@ import "../../../.."
 import "../../../../Base"
 import "../../../../Base/HTile"
 import "../../../../Popups"
-import "../../../../PythonBridge"
 
 HTile {
     id: member
 
     property bool colorName: hovered
-    property Future getPresenceFuture: null
+    property string getPresenceFutureId: ""
 
     backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
@@ -155,11 +154,15 @@ HTile {
 
     Component.onCompleted:
         if (model.presence === "offline" && model.last_active_at < new Date(1))
-            getPresenceFuture = py.callClientCoro(
-                chat.userId, "get_offline_presence", [model.id],
+            getPresenceFutureId = py.callClientCoro(
+                chat.userId,
+                "get_offline_presence",
+                [model.id],
+                () => { getPresenceFutureId = "" }
             )
 
-    Component.onDestruction: if (getPresenceFuture) getPresenceFuture.cancel()
+    Component.onDestruction:
+        if (getPresenceFutureId) py.cancelCoro(getPresenceFutureId)
 
     Behavior on contentOpacity { HNumberAnimation {} }
     Behavior on spacing { HNumberAnimation {} }

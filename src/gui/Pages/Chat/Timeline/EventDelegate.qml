@@ -6,12 +6,11 @@ import QtQuick.Layouts 1.12
 import Clipboard 0.1
 import "../../.."
 import "../../../Base"
-import "../../../PythonBridge"
 
 HColumnLayout {
     id: eventDelegate
 
-    property var fetchProfilesFuture: null
+    property string fetchProfilesFutureId: ""
 
     // Remember timeline goes from newest message at index 0 to oldest
     readonly property var previousModel: eventList.model.get(model.index + 1)
@@ -72,16 +71,16 @@ HColumnLayout {
     onCursorShapeChanged: eventList.cursorShape = cursorShape
 
     Component.onCompleted: if (model.fetch_profile)
-        fetchProfilesFuture = py.callClientCoro(
+        fetchProfilesFutureId = py.callClientCoro(
             chat.userId,
             "get_event_profiles",
             [chat.roomId, model.id],
             // The if avoids segfault if eventDelegate is already destroyed
-            () => { if (eventDelegate) fetchProfilesFuture = null }
+            () => { if (eventDelegate) fetchProfilesFutureId = "" }
         )
 
     Component.onDestruction:
-        if (fetchProfilesFuture) fetchProfilesFuture.cancel()
+        if (fetchProfilesFutureId) py.cancelCoro(fetchProfilesFutureId)
 
     ListView.onRemove: eventList.uncheck(model.id)
 

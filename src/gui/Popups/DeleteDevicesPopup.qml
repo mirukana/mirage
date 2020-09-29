@@ -4,7 +4,6 @@
 import QtQuick 2.12
 import "../Base"
 import "../Base/Buttons"
-import "../PythonBridge"
 
 PasswordPopup {
     id: popup
@@ -13,15 +12,15 @@ PasswordPopup {
     property var deviceIds  // array
     property var deletedCallback: null
 
-    property Future deleteFuture: null
+    property string deleteFutureId: ""
 
     function verifyPassword(pass, callback) {
-        deleteFuture = py.callClientCoro(
+        deleteFutureId = py.callClientCoro(
             userId,
             "delete_devices_with_password",
             [deviceIds, pass],
             () => {
-                deleteFuture = null
+                deleteFutureId = ""
                 callback(true)
             },
             (type, args) => {
@@ -47,9 +46,9 @@ PasswordPopup {
     validateButton.icon.name: "sign-out"
 
     onClosed: {
-        if (deleteFuture) deleteFuture.cancel()
+        if (deleteFutureId) py.cancelCoro(deleteFutureId)
 
-        if (deleteFuture || acceptedPassword && deletedCallback)
+        if (deleteFutureId || acceptedPassword && deletedCallback)
             deletedCallback()
     }
 }

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import "../PythonBridge"
 
 HImage {
     id: image
@@ -18,7 +17,7 @@ HImage {
     property bool canUpdate: true
     property bool show: ! canUpdate
 
-    property Future getFuture: null
+    property string getFutureId: ""
 
     readonly property bool isMxc: mxc.startsWith("mxc://")
 
@@ -45,10 +44,11 @@ HImage {
             [clientUserId, image.mxc, image.title, w, h, cryptDict] :
             [clientUserId, image.mxc, image.title, cryptDict]
 
-        getFuture = py.callCoro("media_cache." + method, args, path => {
+        getFutureId = py.callCoro("media_cache." + method, args, path => {
                 if (! image) return
                 if (image.cachedPath !== path) image.cachedPath = path
 
+                getFutureId  = ""
                 image.broken = Qt.binding(() => image.status === Image.Error)
                 image.show   = image.visible
 
@@ -68,5 +68,5 @@ HImage {
     onHeightChanged: Qt.callLater(reload)
     onVisibleChanged: Qt.callLater(reload)
     onMxcChanged: Qt.callLater(reload)
-    Component.onDestruction: if (getFuture) getFuture.cancel()
+    Component.onDestruction: if (getFutureId) py.cancelCoro(getFutureId)
 }

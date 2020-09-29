@@ -21,7 +21,7 @@ import traceback
 from concurrent.futures import Future
 from operator import attrgetter
 from threading import Thread
-from typing import Coroutine, Sequence
+from typing import Coroutine, Dict, Sequence
 
 import pyotherside
 
@@ -52,6 +52,8 @@ class QMLBridge:
         from .backend import Backend
         self.backend: Backend = Backend()
 
+        self._running_futures: Dict[str, Future] = {}
+
         Thread(target=self._start_asyncio_loop).start()
 
 
@@ -73,7 +75,7 @@ class QMLBridge:
         self._loop.run_forever()
 
 
-    def _call_coro(self, coro: Coroutine, uuid: str) -> Future:
+    def _call_coro(self, coro: Coroutine, uuid: str) -> None:
         """Schedule a coroutine to run in our thread and return a `Future`."""
 
         def on_done(future: Future) -> None:
@@ -87,27 +89,37 @@ class QMLBridge:
                 trace     = traceback.format_exc().rstrip()
 
             CoroutineDone(uuid, result, exception, trace)
+            del self._running_futures[uuid]
 
         future = asyncio.run_coroutine_threadsafe(coro, self._loop)
+        self._running_futures[uuid] = future
         future.add_done_callback(on_done)
-        return future
 
 
     def call_backend_coro(
         self, name: str, uuid: str, args: Sequence[str] = (),
-    ) -> Future:
-        """Schedule a `Backend` coroutine and return a `Future`."""
+    ) -> None:
+        """Schedule a coroutine from the `QMLBridge.backend` object."""
 
-        return self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
+        self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
 
     def call_client_coro(
         self, user_id: str, name: str, uuid: str, args: Sequence[str] = (),
-    ) -> Future:
-        """Schedule a `MatrixClient` coroutine and return a `Future`."""
+    ) -> None:
+        """Schedule a coroutine from a `QMLBridge.backend.clients` client."""
 
         client = self.backend.clients[user_id]
-        return self._call_coro(attrgetter(name)(client)(*args), uuid)
+        self._call_coro(attrgetter(name)(client)(*args), uuid)
+
+
+    def cancel_coro(self, uuid: str) -> None:
+        """Cancel a couroutine scheduled by the `QMLBridge` methods."""
+
+        try:
+            self._running_futures[uuid].cancel()
+        except KeyError:
+            log.warning("Couldn't cancel coroutine %s, future not found", uuid)
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
