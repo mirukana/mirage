@@ -22,14 +22,15 @@ TextEdit {
     font.family: theme.fontFamily.sans
     font.pixelSize: theme.fontSize.normal
     color: theme.colors.text
-
     textFormat: Label.PlainText
     tabStopDistance: 4 * 4  // 4 spaces
+    horizontalAlignment: Label.AlignLeft
 
     readOnly: true
     activeFocusOnPress: false
     focus: false
     selectByMouse: true
+
     onLinkActivated: if (enableLinkActivation) Qt.openUrlExternally(link)
 
     MouseArea {
