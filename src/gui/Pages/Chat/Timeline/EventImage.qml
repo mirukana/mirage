@@ -133,7 +133,8 @@ HMxcImage {
     EventImageTextBubble {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        text: [loader.showDate, loader.showLocalEcho].join(" ").trim()
+        text: loader.showDate + loader.showLocalEcho
+
         textFormat: Text.StyledText
         opacity: hover.hovered ? 0 : 1
         visible: opacity > 0
