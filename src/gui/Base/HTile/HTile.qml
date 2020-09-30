@@ -10,6 +10,7 @@ HButton {
     property bool compact: window.settings.compactMode
     property real contentOpacity: 1
     property Component contextMenu: null
+    property HMenu openedMenu: null
 
     signal leftClicked()
     signal middleClicked()
@@ -18,9 +19,18 @@ HButton {
 
     function openMenu(atCursor=true) {
         if (! contextMenu) return
-        const menu = contextMenu.createObject(tile)
-        menu.closed.connect(() => menu.destroy())
-        atCursor ? menu.popup() : menu.popup(tile.width / 2, tile.height / 2)
+
+        if (openedMenu) {
+            openedMenu.close()
+            return
+        }
+
+        openedMenu = contextMenu.createObject(tile)
+        openedMenu.closed.connect(() => openedMenu.destroy())
+
+        atCursor ?
+        openedMenu.popup() :
+        openedMenu.popup(tile.width / 2, tile.height / 2)
     }
 
     function doRightClick(menuAtCursor=true) {
