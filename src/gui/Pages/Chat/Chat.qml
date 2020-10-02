@@ -74,6 +74,11 @@ Item {
         onTriggered: longLoading = true
     }
 
+    Connections {
+        target: pageLoader
+        onAboutToRecycle: chat.clearReplyTo()
+    }
+
     HLoader {
         id: loader
         anchors.rightMargin:
