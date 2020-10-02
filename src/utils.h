@@ -41,7 +41,13 @@ public slots:
 
     QColor hsluv(qreal hue, qreal sat, qreal luv, qreal alpha = 1.0) const {
         double red, green, blue;
-        hsluv2rgb(hue, sat, luv, &red, &green, &blue);
+
+        hsluv2rgb(
+            hue,
+            qMax(0.0, qMin(100.0, sat)),
+            qMax(0.0, qMin(100.0, luv)),
+            &red, &green, &blue
+        );
 
         return QColor::fromRgbF(
             qMax(0.0, qMin(1.0, red)),
