@@ -117,6 +117,11 @@ Rectangle {
 
             if (! event) return
 
+            if (event.id === chat.replyToEventId) {
+                chat.clearReplyTo()
+                return
+            }
+
             chat.replyToEventId     = event.id
             chat.replyToUserId      = event.sender_id
             chat.replyToDisplayName = event.sender_name
