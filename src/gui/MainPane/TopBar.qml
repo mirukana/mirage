@@ -62,7 +62,7 @@ Rectangle {
             label.color: theme.mainPane.topBar.nameVersionLabel
             toolTip.text: qsTr("Open project repository")
 
-            onClicked:
+            onDoubleClicked:
                 Qt.openUrlExternally("https://github.com/mirukana/mirage")
 
             Layout.fillWidth: true
