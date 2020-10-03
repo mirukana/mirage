@@ -82,7 +82,7 @@ HMenu {
     HMenuItem {
         id: copyMedia
         icon.name: "copy-link"
-        visible: menu.mediaType && ! menu.isEncryptedMedia
+        visible: menu.mediaType !== null && ! menu.isEncryptedMedia
         text:
             ! visible ?  "" :
             menu.mediaType === Utils.Media.File ? qsTr("Copy file address") :
