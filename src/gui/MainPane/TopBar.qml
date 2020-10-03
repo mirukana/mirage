@@ -60,7 +60,7 @@ Rectangle {
             text: qsTr("%1 %2")
                   .arg(Qt.application.displayName).arg(Qt.application.version)
             label.color: theme.mainPane.topBar.nameVersionLabel
-            toolTip.text: qsTr("Open project repository")
+            toolTip.text: qsTr("Double click to open project repository")
 
             onDoubleClicked:
                 Qt.openUrlExternally("https://github.com/mirukana/mirage")
