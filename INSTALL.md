@@ -88,7 +88,7 @@ in this example [yay](https://github.com/Jguer/yay) for the release version:
 
 Available in the [src_prepare overlay](https://gitlab.com/src_prepare/src_prepare-overlay)
 - [releases](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-im/mirage)
-- [git master](https://gitlab.com/src_prepare/src_prepare-overlay/-/blob/master/net-im/mirage/mirage-9999.ebuild)
+- [git dev](https://gitlab.com/src_prepare/src_prepare-overlay/-/blob/master/net-im/mirage/mirage-9999.ebuild)
 
 Installing Mirage
 
