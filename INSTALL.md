@@ -94,10 +94,7 @@ Installing Mirage:
 
 1. [Add the overlay](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay)
 2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
-3. Run:
-
-        emerge net-im/mirage
-
+3. Run `emerge net-im/mirage`
 
 ## Manual Installation
 
