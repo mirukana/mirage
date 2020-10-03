@@ -90,7 +90,7 @@ Available in the [src_prepare overlay](https://gitlab.com/src_prepare/src_prepar
 - [releases](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-im/mirage)
 - [git dev](https://gitlab.com/src_prepare/src_prepare-overlay/-/blob/master/net-im/mirage/mirage-9999.ebuild)
 
-Installing Mirage
+Installing Mirage:
 
 1. [Add the overlay](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay)
 2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
