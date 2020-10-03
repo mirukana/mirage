@@ -8,6 +8,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [AppImage](#appimage)
     - [Flatpak](#flatpak)
     - [Arch Linux](#arch-linux)
+    - [Gentoo](#gentoo)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -82,6 +83,20 @@ Using a AUR helper to install it,
 in this example [yay](https://github.com/Jguer/yay) for the release version:
 
     yay -S matrix-mirage
+
+#### Gentoo
+
+Available in the [src_prepare overlay](https://gitlab.com/src_prepare/src_prepare-overlay)
+- [releases](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-im/mirage)
+- [git master](https://gitlab.com/src_prepare/src_prepare-overlay/-/blob/master/net-im/mirage/mirage-9999.ebuild)
+
+Installing Mirage
+
+1. [Add the overlay](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay)
+2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
+3. Run:
+
+        emerge net-im/mirage
 
 
 ## Manual Installation
