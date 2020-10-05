@@ -285,7 +285,7 @@ class MatrixClient(nio.AsyncClient):
         await super().login(password, self.default_device_name, token)
 
         order          = 0
-        saved_accounts = await self.backend.saved_accounts.read()
+        saved_accounts = self.backend.saved_accounts
 
         if saved_accounts:
             order = max(
@@ -493,7 +493,7 @@ class MatrixClient(nio.AsyncClient):
 
             utils.dict_update_recursive(first, self.low_limit_filter)
 
-            if self.backend.ui_settings["hideUnknownEvents"]:
+            if self.backend.settings["hideUnknownEvents"]:
                 first["room"]["timeline"]["not_types"].extend(
                     self.no_unknown_events_filter
                     ["room"]["timeline"]["not_types"],
@@ -1553,7 +1553,7 @@ class MatrixClient(nio.AsyncClient):
 
         if save:
             account.save_presence = True
-            await self.backend.saved_accounts.update(
+            await self.backend.saved_accounts.set(
                 self.user_id, presence=presence, status_msg=status_msg,
             )
         else:
@@ -1912,7 +1912,7 @@ class MatrixClient(nio.AsyncClient):
             local_unreads    = local_unreads,
             local_highlights = local_highlights,
 
-            lexical_sorting = self.backend.ui_settings["lexicalRoomSorting"],
+            lexical_sorting = self.backend.settings["lexicalRoomSorting"],
             bookmarked = room.room_id in bookmarks.get(self.user_id, {}),
         )
 

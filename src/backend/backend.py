@@ -29,7 +29,7 @@ from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
 from .sso_server import SSOServer
-from .user_files import Accounts, History, Theme, UISettings, UIState
+from .user_files import Accounts, History, Theme, Settings, UIState
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -43,7 +43,7 @@ class Backend:
     Attributes:
         saved_accounts: User config file for saved matrix account.
 
-        ui_settings: User config file for QML interface settings.
+        settings: User config file for general UI and backend settings.
 
         ui_state: User data file for saving/restoring QML UI state.
 
@@ -103,12 +103,13 @@ class Backend:
     def __init__(self) -> None:
         self.appdirs = AppDirs(appname=__app_name__, roaming=True)
 
+        self.models = ModelStore()
+
         self.saved_accounts = Accounts(self)
-        self.ui_settings    = UISettings(self)
+        self.settings       = Settings(self)
         self.ui_state       = UIState(self)
         self.history        = History(self)
-
-        self.models = ModelStore()
+        self.theme          = Theme(self, self.settings["theme"])
 
         self.clients: Dict[str, MatrixClient] = {}
 
@@ -296,8 +297,8 @@ class Backend:
             return user_id
 
         return await asyncio.gather(*(
-            resume(uid, info)
-            for uid, info in (await self.saved_accounts.read()).items()
+            resume(user_id, info)
+            for user_id, info in self.saved_accounts.items()
             if info.get("enabled", True)
         ))
 
@@ -325,7 +326,7 @@ class Backend:
 
             self.models[user_id, "rooms"].clear()
 
-        await self.saved_accounts.delete(user_id)
+        await self.saved_accounts.forget(user_id)
 
 
     async def terminate_clients(self) -> None:
@@ -426,20 +427,14 @@ class Backend:
         return path
 
 
-    async def load_settings(self) -> tuple:
-        """Return parsed user config files."""
-
-        settings = await self.ui_settings.read()
-        ui_state = await self.ui_state.read()
-        history  = await self.history.read()
-        theme    = await Theme(self, settings["theme"]).read()
-
-        state_data = self.ui_state._data
-        if state_data:
-            for user, collapse in state_data["collapseAccounts"].items():
-                self.models["all_rooms"].set_account_collapse(user, collapse)
-
-        return (settings, ui_state, history, theme)
+    async def get_settings(self) -> Tuple[Settings, UIState, History, str]:
+        """Return parsed user config files for QML."""
+        return (
+            self.settings.data,
+            self.ui_state.data,
+            self.history.data,
+            self.theme.data,
+        )
 
 
     async def set_string_filter(self, model_id: SyncId, value: str) -> None:

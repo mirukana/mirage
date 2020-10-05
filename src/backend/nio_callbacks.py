@@ -498,7 +498,7 @@ class NioCallbacks:
 
         # Membership changes
         if not prev or membership != prev_membership:
-            if self.client.backend.ui_settings["hideMembershipEvents"]:
+            if self.client.backend.settings["hideMembershipEvents"]:
                 return None
 
             reason = escape(
@@ -564,7 +564,7 @@ class NioCallbacks:
                         avatar_url      = now.get("avatar_url") or "",
                     )
 
-            if self.client.backend.ui_settings["hideProfileChangeEvents"]:
+            if self.client.backend.settings["hideProfileChangeEvents"]:
                 return None
 
             return (
@@ -682,7 +682,7 @@ class NioCallbacks:
     async def onUnknownEvent(
         self, room: nio.MatrixRoom, ev: nio.UnknownEvent,
     ) -> None:
-        if self.client.backend.ui_settings["hideUnknownEvents"]:
+        if self.client.backend.settings["hideUnknownEvents"]:
             await self.client.register_nio_room(room)
             return
 
@@ -846,7 +846,7 @@ class NioCallbacks:
                     status_msg = account.status_msg
                     state      = Presence.State.invisible
 
-                await self.client.backend.saved_accounts.update(
+                await self.client.backend.saved_accounts.set(
                     user_id    = ev.user_id,
                     status_msg = status_msg,
                     presence   = state.value,

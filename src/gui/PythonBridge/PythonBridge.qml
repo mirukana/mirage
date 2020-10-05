@@ -47,23 +47,9 @@ Python {
         call("BRIDGE.cancel_coro", [uuid])
     }
 
-    function saveConfig(backend_attribute, data, callback=null) {
-        if (! py.ready) { return }  // config not loaded yet
-        return callCoro(backend_attribute + ".write", [data], callback)
-    }
-
-    function loadSettings(callback=null) {
-        const func = "load_settings"
-
-        return callCoro(func, [], ([settings, uiState, history, theme]) => {
-            window.settings = settings
-            window.uiState  = uiState
-            window.history  = history
-            window.theme    = Qt.createQmlObject(theme, window, "theme")
-            utils.theme     = window.theme
-
-            if (callback) { callback(settings, uiState, theme) }
-        })
+    function saveConfig(backend_attribute, data) {
+        if (! py.ready) { return }  // config not done loading yet
+        callCoro(backend_attribute + ".set_data", [data])
     }
 
     function showError(type, traceback, sourceIndication="", message="") {

@@ -7,179 +7,211 @@ import asyncio
 import json
 import os
 import platform
+from collections.abc import MutableMapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Optional, Tuple
 
 import aiofiles
+from watchgod import Change, awatch
 
 import pyotherside
 
+from .pyotherside_events import UserFileChanged
 from .theme_parser import convert_to_qml
 from .utils import atomic_write, dict_update_recursive
 
 if TYPE_CHECKING:
     from .backend import Backend
 
-JsonData = Dict[str, Any]
-
-WRITE_LOCK = asyncio.Lock()
-
 
 @dataclass
-class DataFile:
-    """Base class representing a user data file."""
+class UserFile:
+    """Base class representing a user config or data file."""
 
-    is_config:      ClassVar[bool] = False
     create_missing: ClassVar[bool] = True
 
     backend:  "Backend" = field(repr=False)
     filename: str       = field()
 
-    _to_write: Optional[str] = field(init=False, default=None)
+    data:        Any  = field(init=False, default_factory=dict)
+    _need_write: bool = field(init=False, default=False)
+    _wrote:      bool = field(init=False, default=False)
 
+    _reader:     Optional[asyncio.Future] = field(init=False, default=None)
+    _writer:     Optional[asyncio.Future] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
-        asyncio.ensure_future(self._write_loop())
+        try:
+            self.data, save = self.deserialized(self.path.read_text())
+        except FileNotFoundError:
+            self.data        = self.default_data
+            self._need_write = self.create_missing
+        else:
+            if save:
+                self.save()
 
+        self._reader = asyncio.ensure_future(self._start_reader())
+        self._writer = asyncio.ensure_future(self._start_writer())
 
     @property
     def path(self) -> Path:
-        """Full path of the file, even if it doesn't exist yet."""
+        """Full path of the file, can exist or not exist."""
+        raise NotImplementedError()
 
-        if self.is_config:
-            return Path(
-                os.environ.get("MIRAGE_CONFIG_DIR") or
-                self.backend.appdirs.user_config_dir,
-            ) / self.filename
+    @property
+    def default_data(self) -> Any:
+        """Default deserialized content to use if the file doesn't exist."""
+        raise NotImplementedError()
 
-        return Path(
-            os.environ.get("MIRAGE_DATA_DIR") or
-            self.backend.appdirs.user_data_dir,
-        ) / self.filename
+    def deserialized(self, data: str) -> Tuple[Any, bool]:
+        """Return parsed data from file text and whether to call `save()`."""
+        return (data, False)
+
+    def serialized(self) -> str:
+        """Return text from `UserFile.data` that can be written to disk."""
+        raise NotImplementedError()
+
+    def save(self) -> None:
+        """Inform the disk writer coroutine that the data has changed."""
+        self._need_write = True
+
+    async def set_data(self, data: Any) -> None:
+        """Set `data` and call `save()`, conveniance method for QML."""
+        self.data = data
+        self.save()
+
+    async def _start_reader(self) -> None:
+        """Disk reader coroutine, watches for file changes to update `data`."""
+
+        while not self.path.exists():
+            await asyncio.sleep(1)
+
+        async for changes in awatch(self.path):
+            ignored = 0
+
+            for change in changes:
+                if change[0] in (Change.added, Change.modified):
+                    if self._need_write or self._wrote:
+                        self._wrote = False
+                        ignored    += 1
+                        continue
+
+                    async with aiofiles.open(self.path) as file:
+                        self.data, save = self.deserialized(await file.read())
+
+                        if save:
+                            self.save()
+
+                elif change[0] == Change.deleted:
+                    self._wrote      = False
+                    self.data        = self.default_data
+                    self._need_write = self.create_missing
+
+            if changes and ignored < len(changes):
+                UserFileChanged(type(self), self.data)
 
 
-    async def default_data(self):
-        """Default content if the file doesn't exist."""
-
-        return ""
-
-
-    async def read(self):
-        """Return future, existing or default content for the file on disk."""
-
-        if self._to_write is not None:
-            return self._to_write
-
-        try:
-            return self.path.read_text()
-        except FileNotFoundError:
-            default = await self.default_data()
-
-            if self.create_missing:
-                await self.write(default)
-
-            return default
-
-
-    async def write(self, data) -> None:
-        """Request for the file to be written/updated with data."""
-
-        self._to_write = data
-
-
-    async def _write_loop(self) -> None:
-        """Write/update file on disk with a 1 second cooldown."""
+    async def _start_writer(self) -> None:
+        """Disk writer coroutine, update the file with a 1 second cooldown."""
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
         while True:
             await asyncio.sleep(1)
 
-            if self._to_write is None:
-                continue
+            if self._need_write:
+                async with atomic_write(self.path) as (new, done):
+                    await new.write(self.serialized())
+                    done()
 
-            if not self.create_missing and not self.path.exists():
-                continue
-
-            async with atomic_write(self.path) as (new, done):
-                await new.write(self._to_write)
-                done()
-
-            self._to_write = None
-
+                self._need_write = False
+                self._wrote      = True
 
 
 @dataclass
-class JSONDataFile(DataFile):
-    """Represent a user data file in the JSON format."""
+class ConfigFile(UserFile):
+    """A file that goes in the configuration directory, e.g. ~/.config/app."""
 
-    _data: Optional[Dict[str, Any]] = field(init=False, default=None)
-
-
-    def __getitem__(self, key: str) -> Any:
-        if self._data is None:
-            raise RuntimeError(f"{self}: read() hasn't been called yet")
-
-        return self._data[key]
+    @property
+    def path(self) -> Path:
+        return Path(
+            os.environ.get("MIRAGE_CONFIG_DIR") or
+            self.backend.appdirs.user_config_dir,
+        ) / self.filename
 
 
-    async def default_data(self) -> JsonData:
+@dataclass
+class UserDataFile(UserFile):
+    """A file that goes in the user data directory, e.g. ~/.local/share/app."""
+
+    @property
+    def path(self) -> Path:
+        return Path(
+            os.environ.get("MIRAGE_DATA_DIR") or
+            self.backend.appdirs.user_data_dir,
+        ) / self.filename
+
+
+@dataclass
+class MappingFile(MutableMapping, UserFile):
+    """A file manipulable like a dict. `data` must be a mutable mapping."""
+    def __getitem__(self, key: Any) -> Any:
+        return self.data[key]
+
+    def __setitem__(self, key: Any, value: Any) -> None:
+        self.data[key] = value
+
+    def __delitem__(self, key: Any) -> None:
+        del self.data[key]
+
+    def __iter__(self) -> Iterator:
+        return iter(self.data)
+
+    def __len__(self) -> int:
+        return len(self.data)
+
+
+@dataclass
+class JSONFile(MappingFile):
+    """A file stored on disk in the JSON format."""
+
+    @property
+    def default_data(self) -> dict:
         return {}
 
 
-    async def read(self) -> JsonData:
-        """Return future, existing or default content for the file on disk.
+    def deserialized(self, data: str) -> Tuple[dict, bool]:
+        """Return parsed data from file text and whether to call `save()`.
 
-        If the file has missing keys, the missing data will be merged and
-        written to disk before returning.
-
-        If `create_missing` is `True` and the file doesn't exist, it will be
-        created.
+        If the file has missing keys, the missing data will be merged to the
+        returned dict and the second tuple item will be `True`.
         """
 
-        if self._to_write is not None:
-            return json.loads(self._to_write)
-
         try:
-            data = json.loads(self.path.read_text())
-        except FileNotFoundError:
-            if not self.create_missing:
-                data       = await self.default_data()
-                self._data = data
-                return data
-
-            data = {}
+            loaded = json.loads(data)
         except json.JSONDecodeError:
-            data = {}
+            loaded = {}
 
-        all_data = await self.default_data()
-        dict_update_recursive(all_data, data)
-
-        if data != all_data:
-            await self.write(all_data)
-
-        self._data = all_data
-        return all_data
+        all_data = self.default_data.copy()
+        dict_update_recursive(all_data, loaded)
+        return (all_data, loaded != all_data)
 
 
-    async def write(self, data: JsonData) -> None:
-        js = json.dumps(data, indent=4, ensure_ascii=False, sort_keys=True)
-        await super().write(js)
+    def serialized(self) -> str:
+        data = self.data
+        return json.dumps(data, indent=4, ensure_ascii=False, sort_keys=True)
 
 
 @dataclass
-class Accounts(JSONDataFile):
-    """Config file for saved matrix accounts: user ID, access tokens, etc."""
-
-    is_config = True
+class Accounts(ConfigFile, JSONFile):
+    """Config file for saved matrix accounts: user ID, access tokens, etc"""
 
     filename: str = "accounts.json"
 
-
     async def any_saved(self) -> bool:
-        """Return whether there are any accounts saved on disk."""
-        return bool(await self.read())
+        """Return for QML whether there are any accounts saved on disk."""
+        return bool(self.data)
 
 
     async def add(self, user_id: str) -> None:
@@ -189,12 +221,10 @@ class Accounts(JSONDataFile):
         the corresponding `MatrixClient` in `backend.clients`.
         """
 
-        client   = self.backend.clients[user_id]
-        saved    = await self.read()
-        account  = self.backend.models["accounts"][user_id]
+        client  = self.backend.clients[user_id]
+        account = self.backend.models["accounts"][user_id]
 
-        await self.write({
-            **saved,
+        self.update({
             client.user_id: {
                 "homeserver": client.homeserver,
                 "token":      client.access_token,
@@ -205,9 +235,10 @@ class Accounts(JSONDataFile):
                 "order":      account.order,
             },
         })
+        self.save()
 
 
-    async def update(
+    async def set(
         self,
         user_id:    str,
         enabled:    Optional[str] = None,
@@ -217,45 +248,39 @@ class Accounts(JSONDataFile):
     ) -> None:
         """Update an account if found in the config file and write to disk."""
 
-        saved = await self.read()
-
-        if user_id not in saved:
+        if user_id not in self:
             return
 
         if enabled is not None:
-            saved[user_id]["enabled"] = enabled
+            self[user_id]["enabled"] = enabled
 
         if presence is not None:
-            saved[user_id]["presence"] = presence
+            self[user_id]["presence"] = presence
 
         if order is not None:
-            saved[user_id]["order"] = order
+            self[user_id]["order"] = order
 
         if status_msg is not None:
-            saved[user_id]["status_msg"] = status_msg
+            self[user_id]["status_msg"] = status_msg
 
-        await self.write({**saved})
+        self.save()
 
 
-    async def delete(self, user_id: str) -> None:
+    async def forget(self, user_id: str) -> None:
         """Delete an account from the config and write it on disk."""
 
-        await self.write({
-            uid: info
-            for uid, info in (await self.read()).items() if uid != user_id
-        })
+        self.pop(user_id, None)
+        self.save()
 
 
 @dataclass
-class UISettings(JSONDataFile):
-    """Config file for QML interface settings and keybindings."""
-
-    is_config = True
+class Settings(ConfigFile, JSONFile):
+    """General config file for UI and backend settings"""
 
     filename: str = "settings.json"
 
-
-    async def default_data(self) -> JsonData:
+    @property
+    def default_data(self) -> dict:
         def ctrl_or_osx_ctrl() -> str:
             # Meta in Qt corresponds to Ctrl on OSX
             return "Meta" if platform.system() == "Darwin" else "Ctrl"
@@ -305,7 +330,6 @@ class UISettings(JSONDataFile):
             "keys": {
                 "startPythonDebugger": ["Alt+Shift+D"],
                 "toggleDebugConsole":  ["Alt+Shift+C", "F1"],
-                "reloadConfig":        ["Alt+Shift+R"],
 
                 "zoomIn":             ["Ctrl++"],
                 "zoomOut":            ["Ctrl+-"],
@@ -423,41 +447,57 @@ class UISettings(JSONDataFile):
             },
         }
 
+    def deserialized(self, data: str) -> Tuple[dict, bool]:
+        dict_data, save = super().deserialized(data)
+
+        if "theme" in self and self["theme"] != dict_data["theme"]:
+            self.backend.theme = Theme(self.backend, dict_data["theme"])
+            UserFileChanged(Theme, self.backend.theme.data)
+
+        return (dict_data, save)
+
 
 @dataclass
-class UIState(JSONDataFile):
-    """File to save and restore the state of the QML interface."""
+class UIState(UserDataFile, JSONFile):
+    """File used to save and restore the state of QML components."""
 
     filename: str = "state.json"
 
-
-    async def default_data(self) -> JsonData:
+    @property
+    def default_data(self) -> dict:
         return {
             "collapseAccounts": {},
             "page":             "Pages/Default.qml",
             "pageProperties":   {},
         }
 
+    def deserialized(self, data: str) -> Tuple[dict, bool]:
+        dict_data, save = super().deserialized(data)
+
+        for user_id, do in dict_data["collapseAccounts"].items():
+            self.backend.models["all_rooms"].set_account_collapse(user_id, do)
+
+        return (dict_data, save)
+
 
 @dataclass
-class History(JSONDataFile):
+class History(UserDataFile, JSONFile):
     """File to save and restore lines typed by the user in QML components."""
 
     filename: str = "history.json"
 
-
-    async def default_data(self) -> JsonData:
+    @property
+    def default_data(self) -> dict:
         return {"console": []}
 
 
 @dataclass
-class Theme(DataFile):
+class Theme(UserDataFile):
     """A theme file defining the look of QML components."""
 
     # Since it currently breaks at every update and the file format will be
     # changed later, don't copy the theme to user data dir if it doesn't exist.
     create_missing = False
-
 
     @property
     def path(self) -> Path:
@@ -467,19 +507,17 @@ class Theme(DataFile):
         )
         return data_dir / "themes" / self.filename
 
-
-    async def default_data(self) -> str:
+    @property
+    def default_data(self) -> str:
         path = f"src/themes/{self.filename}"
 
         try:
             byte_content = pyotherside.qrc_get_file_contents(path)
         except ValueError:
             # App was compiled without QRC
-            async with aiofiles.open(path) as file:
-                return await file.read()
+            return convert_to_qml(Path(path).read_text())
         else:
-            return byte_content.decode()
+            return convert_to_qml(byte_content.decode())
 
-
-    async def read(self) -> str:
-        return convert_to_qml(await super().read())
+    def deserialized(self, data: str) -> Tuple[str, bool]:
+        return (convert_to_qml(data), False)

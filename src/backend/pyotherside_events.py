@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Type, Union
 
 import pyotherside
 
@@ -11,6 +11,7 @@ from .utils import serialize_value_for_qml
 
 if TYPE_CHECKING:
     from .models import SyncId
+    from .user_files import UserFile
 
 
 @dataclass
@@ -67,6 +68,14 @@ class LoopException(PyOtherSideEvent):
     message:   str                 = field()
     exception: Optional[Exception] = field()
     traceback: Optional[str]       = None
+
+
+@dataclass
+class UserFileChanged(PyOtherSideEvent):
+    """Indicate that a config or data file changed on disk."""
+
+    type:     Type["UserFile"] = field()
+    new_data: Any              = field()
 
 
 @dataclass

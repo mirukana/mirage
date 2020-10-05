@@ -10,6 +10,7 @@ mistune           >= 0.8.4,  < 0.9
 pymediainfo       >= 4.2.1,  < 5
 plyer             >= 1.4.3,  < 2
 sortedcontainers  >= 2.2.2,  < 3
+watchgod          >= 0.6,    < 0.7
 dbus-python       >= 1.2.16, < 2; platform_system == "Linux"
 
 async_generator   >= 1.10,  < 2;   python_version < "3.7"

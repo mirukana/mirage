@@ -41,12 +41,6 @@ Rectangle {
                 }
 
                 HMenuItem {
-                    icon.name: "reload-config-files"
-                    text: qsTr("Reload config & theme")
-                    onTriggered: mainUI.reloadSettings()
-                }
-
-                HMenuItem {
                     icon.name: "debug"
                     text: qsTr("Developer console")
                     onTriggered: mainUI.debugConsole.toggle()

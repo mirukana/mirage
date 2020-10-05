@@ -28,39 +28,16 @@ Item {
     readonly property alias debugConsole: debugConsole
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
-    readonly property alias pressAnimation: pressAnimation
     readonly property alias fontMetrics: fontMetrics
     readonly property alias idleManager: idleManager
-
-    function reloadSettings() {
-        py.loadSettings(() => {
-            image.reload()
-            mainUI.pressAnimation.start()
-        })
-    }
 
 
     focus: true
     Component.onCompleted: window.mainUI = mainUI
 
-    SequentialAnimation {
-        id: pressAnimation
-        HNumberAnimation {
-            target: mainUI; property: "scale";  from: 1.0; to: 0.9
-        }
-        HNumberAnimation {
-            target: mainUI; property: "scale";  from: 0.9; to: 1.0
-        }
-    }
-
     HShortcut {
         sequences: window.settings.keys.startPythonDebugger
         onActivated: py.call("BRIDGE.pdb")
-    }
-
-    HShortcut {
-        sequences: window.settings.keys.reloadConfig
-        onActivated: reloadSettings()
     }
 
     HShortcut {

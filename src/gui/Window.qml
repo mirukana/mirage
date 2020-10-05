@@ -88,7 +88,7 @@ ApplicationWindow {
 
     // NOTE: For JS object variables, the corresponding method to notify
     // key/value changes must be called manually, e.g. settingsChanged().
-    onSettingsChanged: py.saveConfig("ui_settings", settings)
+    onSettingsChanged: py.saveConfig("settings", settings)
     onUiStateChanged: py.saveConfig("ui_state", uiState)
     onHistoryChanged: py.saveConfig("history", history)
 

@@ -65,6 +65,19 @@ QtObject {
         py.showError(type, traceback, "", message)
     }
 
+    function onUserFileChanged(type, newData) {
+        if (type === "Theme") {
+            window.theme = Qt.createQmlObject(newData, window, "theme")
+            utils.theme  = window.theme
+            return
+        }
+
+        type === "Settings" ? window.settings = newData :
+        type === "UIState" ? window.uiState = newData :
+        type === "History" ? window.history = newData :
+        null
+    }
+
     function onModelItemSet(syncId, indexThen, indexNow, changedFields) {
         const model = ModelStore.get(syncId)
 

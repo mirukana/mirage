@@ -41,7 +41,7 @@ HFlickableColumnPage {
         py.callCoro(
             rememberAccount.checked ?
             "saved_accounts.add":
-            "saved_accounts.delete",
+            "saved_accounts.forget",
 
             [receivedUserId]
         )
