@@ -60,7 +60,7 @@ QtObject {
     function onLoopException(message, error, traceback) {
         // No need to log these here, the asyncio exception handler does it
         const type = py.getattr(py.getattr(error, "__class__"), "__name__")
-        py.showError(type, traceback, message)
+        py.showError(type, traceback, "", message)
     }
 
     function onModelItemSet(syncId, indexThen, indexNow, changedFields) {
