@@ -188,11 +188,7 @@ class JSONFile(MappingFile):
         returned dict and the second tuple item will be `True`.
         """
 
-        try:
-            loaded = json.loads(data)
-        except json.JSONDecodeError:
-            loaded = {}
-
+        loaded   = json.loads(data)
         all_data = self.default_data.copy()
         dict_update_recursive(all_data, loaded)
         return (all_data, loaded != all_data)
