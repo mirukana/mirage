@@ -13,37 +13,37 @@ HQtObject {
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollUp
+        sequences: window.settings.Keys.Scrolling.up
         onActivated: utils.flickPages(flickable, -1 / 10)
     }
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollDown
+        sequences: window.settings.Keys.Scrolling.down
         onActivated: utils.flickPages(flickable, 1 / 10)
     }
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollPageUp
+        sequences: window.settings.Keys.Scrolling.page_up
         onActivated: utils.flickPages(flickable, -1)
     }
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollPageDown
+        sequences: window.settings.Keys.Scrolling.page_down
         onActivated: utils.flickPages(flickable, 1)
     }
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollToTop
+        sequences: window.settings.Keys.Scrolling.top
         onActivated: utils.flickToTop(flickable)
     }
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.scrollToBottom
+        sequences: window.settings.Keys.Scrolling.bottom
         onActivated: utils.flickToBottom(flickable)
     }
 }

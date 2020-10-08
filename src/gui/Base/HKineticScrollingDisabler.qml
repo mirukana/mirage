@@ -16,7 +16,7 @@ MouseArea {
 
         const speedMultiply =
             Qt.styleHints.wheelScrollLines *
-            window.settings.nonKineticScrollingSpeed
+            window.settings.Scrolling.non_kinetic_speed
 
         const pixelDelta = {
             x: wheel.pixelDelta.x || wheel.angleDelta.x / 8 * speedMultiply,
@@ -64,7 +64,7 @@ MouseArea {
     }
 
 
-    enabled: ! window.settings.enableKineticScrolling
+    enabled: ! window.settings.Scrolling.kinetic
     propagateComposedEvents: true
     acceptedButtons: Qt.NoButton
 
@@ -84,7 +84,8 @@ MouseArea {
     Binding {
         target: flickable
         property: "maximumFlickVelocity"
-        value: mouseArea.enabled ? 0 : window.settings.kineticScrollingMaxSpeed
+        value:
+            mouseArea.enabled ? 0 : window.settings.Scrolling.kinetic_max_speed
     }
 
     Binding {
@@ -93,6 +94,6 @@ MouseArea {
         value:
             mouseArea.enabled ?
             0 :
-            window.settings.kineticScrollingDeceleration
+            window.settings.Scrolling.kinetic_deceleration
     }
 }

@@ -26,7 +26,7 @@ HTile {
 
     function setCollapse(collapse) {
         window.uiState.collapseAccounts[model.id] = collapse
-        window.uiStateChanged()
+        window.saveUIState()
 
         py.callCoro("set_account_collapse", [model.id, collapse])
     }
@@ -162,7 +162,7 @@ HTile {
 
             HShortcut {
                 enabled: enableKeybinds
-                sequences: window.settings.keys.addNewChat
+                sequences: window.settings.Keys.Rooms.add
                 onActivated: addChat.clicked()
             }
         }
@@ -210,37 +210,37 @@ HTile {
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.accountSettings
+        sequences: window.settings.Keys.Accounts.settings
         onActivated: leftClicked()
     }
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.toggleCollapseAccount
+        sequences: window.settings.Keys.Accounts.collapse
         onActivated: toggleCollapse()
     }
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.openPresenceMenu
+        sequences: window.settings.Keys.Accounts.menu
         onActivated: account.doRightClick(false)
     }
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.togglePresenceUnavailable
+        sequences: window.settings.Keys.Accounts.unavailable
         onActivated: account.togglePresence("unavailable")
     }
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.togglePresenceInvisible
+        sequences: window.settings.Keys.Accounts.invisible
         onActivated: account.togglePresence("invisible")
     }
 
     HShortcut {
         enabled: enableKeybinds
-        sequences: window.settings.keys.togglePresenceOffline
+        sequences: window.settings.Keys.Accounts.offline
         onActivated: account.togglePresence("offline")
     }
 

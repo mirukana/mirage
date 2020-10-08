@@ -123,7 +123,7 @@ HPopup {
 
         Timer {
             id: autoHideTimer
-            interval: window.settings.media.autoHideOSDAfterMsec
+            interval: window.settings.Chat.Files.autohide_image_controls_after
         }
 
         ViewerInfo {

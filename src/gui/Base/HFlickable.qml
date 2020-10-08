@@ -6,8 +6,8 @@ import QtQuick.Controls 2.12
 
 Flickable {
     id: flickable
-    maximumFlickVelocity: window.settings.kineticScrollingMaxSpeed
-    flickDeceleration: window.settings.kineticScrollingDeceleration
+    maximumFlickVelocity: window.settings.Scrolling.kinetic_max_speed
+    flickDeceleration: window.settings.Scrolling.kinetic_deceleration
 
     ScrollBar.vertical: HScrollBar {
         visible: parent.interactive

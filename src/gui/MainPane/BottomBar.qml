@@ -32,7 +32,7 @@ Rectangle {
             Layout.fillHeight: true
 
             HShortcut {
-                sequences: window.settings.keys.addNewAccount
+                sequences: window.settings.Keys.Accounts.add
                 onActivated: addAccountButton.clicked()
             }
         }
@@ -57,7 +57,7 @@ Rectangle {
             Keys.onEnterPressed: Keys.onReturnPressed(event)
             Keys.onReturnPressed: {
                 roomList.showItemAtIndex()
-                if (window.settings.clearRoomFilterOnEnter) text = ""
+                if (window.settings.RoomList.enter_clears_filter) text = ""
             }
 
             Keys.onMenuPressed:
@@ -66,19 +66,19 @@ Rectangle {
 
             Keys.onEscapePressed: {
                 mainPane.toggleFocus()
-                if (window.settings.clearRoomFilterOnEscape) text = ""
+                if (window.settings.RoomList.escape_clears_filter) text = ""
             }
 
 
             Behavior on opacity { HNumberAnimation {} }
 
             HShortcut {
-                sequences: window.settings.keys.clearRoomFilter
+                sequences: window.settings.Keys.Rooms.clear_filter
                 onActivated: filterField.text = ""
             }
 
             HShortcut {
-                sequences: window.settings.keys.toggleFocusMainPane
+                sequences: window.settings.Keys.Rooms.focus_filter
                 onActivated: mainPane.toggleFocus()
             }
         }

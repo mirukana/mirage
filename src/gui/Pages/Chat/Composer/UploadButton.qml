@@ -21,7 +21,7 @@ HButton {
     onClicked: sendFilePicker.dialog.open()
 
     HShortcut {
-        sequences: window.settings.keys.sendFileFromPathInClipboard
+        sequences: window.settings.Keys.Chat.send_clipboard_path
         onActivated: window.makePopup(
             "Popups/ConfirmUploadPopup.qml",
             {
@@ -43,7 +43,7 @@ HButton {
         onReplied: chat.clearReplyTo()
 
         HShortcut {
-            sequences: window.settings.keys.sendFile
+            sequences: window.settings.Keys.Chat.send_file
             onActivated: sendFilePicker.dialog.open()
         }
     }

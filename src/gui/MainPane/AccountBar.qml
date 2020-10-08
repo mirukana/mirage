@@ -81,7 +81,7 @@ Rectangle {
 
 
         HShortcut {
-            sequences: window.settings.keys.goToPreviousAccount
+            sequences: window.settings.Keys.Accounts.previous
             onActivated: {
                 accountList.moveCurrentIndexLeft()
                 accountList.currentItem.leftClicked()
@@ -89,7 +89,7 @@ Rectangle {
         }
 
         HShortcut {
-            sequences: window.settings.keys.goToNextAccount
+            sequences: window.settings.Keys.Accounts.next
             onActivated: {
                 accountList.moveCurrentIndexRight()
                 accountList.currentItem.leftClicked()

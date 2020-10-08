@@ -7,7 +7,7 @@ import ".."
 HButton {
     id: tile
 
-    property bool compact: window.settings.compactMode
+    property bool compact: window.settings.General.compact
     property real contentOpacity: 1
     property Component contextMenu: null
     property HMenu openedMenu: null

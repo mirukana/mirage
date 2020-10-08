@@ -12,14 +12,16 @@ import json
 import sys
 import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
 from concurrent.futures import ProcessPoolExecutor
-from datetime import datetime, timedelta
+from contextlib import suppress
+from datetime import date, datetime, time, timedelta
 from enum import Enum
 from enum import auto as autostr
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import ModuleType
 from typing import (
-    Any, AsyncIterator, Callable, Dict, Mapping, Sequence, Tuple, Type, Union,
+    Any, AsyncIterator, Callable, Dict, Iterable, Mapping, Sequence, Tuple,
+    Type, Union,
 )
 from uuid import UUID
 
@@ -27,10 +29,9 @@ import aiofiles
 import filetype
 from aiofiles.threadpool.binary import AsyncBufferedReader
 from aiofiles.threadpool.text import AsyncTextIOWrapper
-from PIL import Image as PILImage
-
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
+from PIL import Image as PILImage
 
 if sys.version_info >= (3, 7):
     from contextlib import asynccontextmanager
@@ -145,14 +146,17 @@ def plain2html(text: str) -> str:
                .replace("\t", "&nbsp;" * 4)
 
 
-def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
+def serialize_value_for_qml(
+    value: Any, json_list_dicts: bool = False, reject_unknown: bool = False,
+) -> Any:
     """Convert a value to make it easier to use from QML.
 
     Returns:
 
-    - For `int`, `float`, `bool`, `str` and `datetime`: the unchanged value
+    - For `bool`, `int`, `float`, `bytes`, `str`, `datetime`, `date`, `time`:
+      the unchanged value (PyOtherSide handles these)
 
-    - For `Sequence` and `Mapping` subclasses (includes `list` and `dict`):
+    - For `Iterable` objects (includes `list` and `dict`):
       a JSON dump if `json_list_dicts` is `True`, else the unchanged value
 
     - If the value is an instancied object and has a `serialized` attribute or
@@ -168,10 +172,11 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
 
     - For class types: the class `__name__`
 
-    - For anything else: the unchanged value
+    - For anything else: raise a `TypeError` if `reject_unknown` is `True`,
+      else return the unchanged value.
     """
 
-    if isinstance(value, (int, float, bool, str, datetime)):
+    if isinstance(value, (bool, int, float, bytes, str, datetime, date, time)):
         return value
 
     if json_list_dicts and isinstance(value, (Sequence, Mapping)):
@@ -179,6 +184,9 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
 
     if not inspect.isclass(value) and hasattr(value, "serialized"):
         return value.serialized
+
+    if isinstance(value, Iterable):
+        return value
 
     if hasattr(value, "__class__") and issubclass(value.__class__, Enum):
         return value.value
@@ -195,7 +203,41 @@ def serialize_value_for_qml(value: Any, json_list_dicts: bool = False) -> Any:
     if inspect.isclass(value):
         return value.__name__
 
+    if reject_unknown:
+        raise TypeError("Unknown type reject")
+
     return value
+
+
+def deep_serialize_for_qml(obj: Iterable) -> Union[list, dict]:
+    """Recursively serialize lists and dict values for QML."""
+
+    if isinstance(obj, Mapping):
+        dct = {}
+
+        for key, value in obj.items():
+            if isinstance(value, Iterable) and not isinstance(value, str):
+                # PyOtherSide only accept dicts with string keys
+                dct[str(key)] = deep_serialize_for_qml(value)
+                continue
+
+            with suppress(TypeError):
+                dct[str(key)] = \
+                    serialize_value_for_qml(value, reject_unknown=True)
+
+        return dct
+
+    lst = []
+
+    for value in obj:
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            lst.append(deep_serialize_for_qml(value))
+            continue
+
+        with suppress(TypeError):
+            lst.append(serialize_value_for_qml(value, reject_unknown=True))
+
+    return lst
 
 
 def classes_defined_in(module: ModuleType) -> Dict[str, Type]:

@@ -139,7 +139,9 @@ HColumnLayout {
                         stackView.currentItem.currentIndex = -1
 
                     roomPane.toggleFocus()
-                    if (window.settings.clearMemberFilterOnEscape) text = ""
+
+                    if (window.settings.RoomList.escape_clears_filter)
+                        text = ""
                 }
 
                 Behavior on opacity { HNumberAnimation {} }
@@ -174,7 +176,7 @@ HColumnLayout {
                     Layout.preferredHeight: filterField.implicitHeight
 
                     HShortcut {
-                        sequences: window.settings.keys.inviteToRoom
+                        sequences: window.settings.Keys.Chat.invite
                         onActivated:
                             if (inviteButton.enabled) inviteButton.clicked()
                     }

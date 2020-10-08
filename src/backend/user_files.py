@@ -6,20 +6,23 @@
 import asyncio
 import json
 import os
-import platform
+import traceback
 from collections.abc import MutableMapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Optional, Tuple
+from typing import (
+    TYPE_CHECKING, Any, ClassVar, Dict, Iterator, Optional, Tuple,
+)
 
 import aiofiles
 from watchgod import Change, awatch
 
 import pyotherside
 
-from .pyotherside_events import UserFileChanged
+from .pcn.section import Section
+from .pyotherside_events import LoopException, UserFileChanged
 from .theme_parser import convert_to_qml
-from .utils import atomic_write, dict_update_recursive
+from .utils import atomic_write, deep_serialize_for_qml, dict_update_recursive
 
 if TYPE_CHECKING:
     from .backend import Backend
@@ -34,20 +37,21 @@ class UserFile:
     backend:  "Backend" = field(repr=False)
     filename: str       = field()
 
-    data:        Any  = field(init=False, default_factory=dict)
-    _need_write: bool = field(init=False, default=False)
-    _wrote:      bool = field(init=False, default=False)
+    data:        Any             = field(init=False, default_factory=dict)
+    _need_write: bool            = field(init=False, default=False)
+    _mtime:      Optional[float] = field(init=False, default=None)
 
     _reader:     Optional[asyncio.Future] = field(init=False, default=None)
     _writer:     Optional[asyncio.Future] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
         try:
-            self.data, save = self.deserialized(self.path.read_text())
+            text_data = self.path.read_text()
         except FileNotFoundError:
             self.data        = self.default_data
             self._need_write = self.create_missing
         else:
+            self.data, save = self.deserialized(text_data)
             if save:
                 self.save()
 
@@ -56,13 +60,23 @@ class UserFile:
 
     @property
     def path(self) -> Path:
-        """Full path of the file, can exist or not exist."""
+        """Full path of the file to read, can exist or not exist."""
         raise NotImplementedError()
+
+    @property
+    def write_path(self) -> Path:
+        """Full path of the file to write, can exist or not exist."""
+        return self.path
 
     @property
     def default_data(self) -> Any:
         """Default deserialized content to use if the file doesn't exist."""
         raise NotImplementedError()
+
+    @property
+    def qml_data(self) -> Any:
+        """Data converted for usage in QML."""
+        return self.data
 
     def deserialized(self, data: str) -> Tuple[Any, bool]:
         """Return parsed data from file text and whether to call `save()`."""
@@ -76,6 +90,15 @@ class UserFile:
         """Inform the disk writer coroutine that the data has changed."""
         self._need_write = True
 
+    def stop_watching(self) -> None:
+        """Stop watching the on-disk file for changes."""
+        if self._reader:
+            self._reader.cancel()
+
+        if self._writer:
+            self._writer.cancel()
+
+
     async def set_data(self, data: Any) -> None:
         """Set `data` and call `save()`, conveniance method for QML."""
         self.data = data
@@ -88,45 +111,57 @@ class UserFile:
             await asyncio.sleep(1)
 
         async for changes in awatch(self.path):
-            ignored = 0
+            try:
+                ignored = 0
 
-            for change in changes:
-                if change[0] in (Change.added, Change.modified):
-                    if self._need_write or self._wrote:
-                        self._wrote = False
-                        ignored    += 1
-                        continue
+                for change in changes:
+                    mtime = self.path.stat().st_mtime
 
-                    async with aiofiles.open(self.path) as file:
-                        self.data, save = self.deserialized(await file.read())
+                    if change[0] in (Change.added, Change.modified):
+                        if mtime == self._mtime:
+                            ignored += 1
+                            continue
 
-                        if save:
-                            self.save()
+                        async with aiofiles.open(self.path) as file:
+                            text            = await file.read()
+                            self.data, save = self.deserialized(text)
 
-                elif change[0] == Change.deleted:
-                    self._wrote      = False
-                    self.data        = self.default_data
-                    self._need_write = self.create_missing
+                            if save:
+                                self.save()
 
-            if changes and ignored < len(changes):
-                UserFileChanged(type(self), self.data)
+                    elif change[0] == Change.deleted:
+                        self.data        = self.default_data
+                        self._need_write = self.create_missing
+
+                    self._mtime = mtime
+
+                if changes and ignored < len(changes):
+                    UserFileChanged(type(self), self.qml_data)
+
+            except Exception as err:
+                LoopException(str(err), err, traceback.format_exc().rstrip())
 
 
     async def _start_writer(self) -> None:
         """Disk writer coroutine, update the file with a 1 second cooldown."""
 
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.write_path.parent.mkdir(parents=True, exist_ok=True)
 
         while True:
             await asyncio.sleep(1)
 
-            if self._need_write:
-                async with atomic_write(self.path) as (new, done):
-                    await new.write(self.serialized())
-                    done()
+            try:
+                if self._need_write:
+                    async with atomic_write(self.write_path) as (new, done):
+                        await new.write(self.serialized())
+                        done()
 
+                    self._need_write = False
+                    self._mtime      = self.write_path.stat().st_mtime
+
+            except Exception as err:
                 self._need_write = False
-                self._wrote      = True
+                LoopException(str(err), err, traceback.format_exc().rstrip())
 
 
 @dataclass
@@ -156,6 +191,7 @@ class UserDataFile(UserFile):
 @dataclass
 class MappingFile(MutableMapping, UserFile):
     """A file manipulable like a dict. `data` must be a mutable mapping."""
+
     def __getitem__(self, key: Any) -> Any:
         return self.data[key]
 
@@ -171,6 +207,22 @@ class MappingFile(MutableMapping, UserFile):
     def __len__(self) -> int:
         return len(self.data)
 
+    def __getattr__(self, key: Any) -> Any:
+        try:
+            return self.data[key]
+        except KeyError:
+            return super().__getattribute__(key)
+
+    def __setattr__(self, key: Any, value: Any) -> None:
+        if key in self.__dataclass_fields__:
+            super().__setattr__(key, value)
+            return
+
+        self.data[key] = value
+
+    def __delattr__(self, key: Any) -> None:
+        del self.data[key]
+
 
 @dataclass
 class JSONFile(MappingFile):
@@ -179,7 +231,6 @@ class JSONFile(MappingFile):
     @property
     def default_data(self) -> dict:
         return {}
-
 
     def deserialized(self, data: str) -> Tuple[dict, bool]:
         """Return parsed data from file text and whether to call `save()`.
@@ -193,10 +244,39 @@ class JSONFile(MappingFile):
         dict_update_recursive(all_data, loaded)
         return (all_data, loaded != all_data)
 
-
     def serialized(self) -> str:
         data = self.data
         return json.dumps(data, indent=4, ensure_ascii=False, sort_keys=True)
+
+
+@dataclass
+class PCNFile(MappingFile):
+    """File stored in the PCN format, with machine edits in a separate JSON."""
+
+    create_missing = False
+
+    @property
+    def write_path(self) -> Path:
+        """Full path of file where programatically-done edits are stored."""
+        return self.path.with_suffix(".gui.json")
+
+    @property
+    def qml_data(self) -> Dict[str, Any]:
+        return deep_serialize_for_qml(self.data.as_dict())  # type: ignore
+
+    def deserialized(self, data: str) -> Tuple[Section, bool]:
+        root  = Section.from_source_code(data, self.path)
+        edits = self.write_path.read_text() if self.write_path.exists() else ""
+        root.deep_merge_edits(json.loads(edits))
+        return (root, False)
+
+    def serialized(self) -> str:
+        edits = self.data.edits_as_dict()
+        return json.dumps(edits, indent=4, ensure_ascii=False)
+
+    async def set_data(self, data: Dict[str, Any]) -> None:
+        self.data.deep_merge_edits({"set": data}, has_expressions=False)
+        self.save()
 
 
 @dataclass
@@ -208,7 +288,6 @@ class Accounts(ConfigFile, JSONFile):
     async def any_saved(self) -> bool:
         """Return for QML whether there are any accounts saved on disk."""
         return bool(self.data)
-
 
     async def add(self, user_id: str) -> None:
         """Add an account to the config and write it on disk.
@@ -232,7 +311,6 @@ class Accounts(ConfigFile, JSONFile):
             },
         })
         self.save()
-
 
     async def set(
         self,
@@ -261,7 +339,6 @@ class Accounts(ConfigFile, JSONFile):
 
         self.save()
 
-
     async def forget(self, user_id: str) -> None:
         """Delete an account from the config and write it on disk."""
 
@@ -270,187 +347,33 @@ class Accounts(ConfigFile, JSONFile):
 
 
 @dataclass
-class Settings(ConfigFile, JSONFile):
+class Settings(ConfigFile, PCNFile):
     """General config file for UI and backend settings"""
 
-    filename: str = "settings.json"
+    filename: str = "settings.py"
 
     @property
-    def default_data(self) -> dict:
-        def ctrl_or_osx_ctrl() -> str:
-            # Meta in Qt corresponds to Ctrl on OSX
-            return "Meta" if platform.system() == "Darwin" else "Ctrl"
+    def default_data(self) -> Section:
+        root  = Section.from_file("src/config/settings.py")
+        edits = "{}"
 
-        def alt_or_cmd() -> str:
-            # Ctrl in Qt corresponds to Cmd on OSX
-            return "Ctrl" if platform.system() == "Darwin" else "Alt"
+        if self.write_path.exists():
+            edits = self.write_path.read_text()
 
-        return {
-            "alertOnMentionForMsec": -1,
-            "alertOnMessageForMsec": 0,
-            "alwaysCenterRoomHeader": False,
-            # "autoHideScrollBarsAfterMsec": 2000,
-            "beUnavailableAfterSecondsIdle": 60 * 10,
-            "centerRoomListOnClick": False,
-            "compactMode": False,
-            "clearRoomFilterOnEnter": True,
-            "clearRoomFilterOnEscape": True,
-            "clearMemberFilterOnEscape": True,
-            "closeMinimizesToTray": False,
-            "collapseSidePanesUnderWindowWidth": 450,
-            "enableKineticScrolling": True,
-            "hideProfileChangeEvents": True,
-            "hideMembershipEvents": False,
-            "hideUnknownEvents": True,
-            "kineticScrollingMaxSpeed": 2500,
-            "kineticScrollingDeceleration": 1500,
-            "lexicalRoomSorting": False,
-            "markRoomReadMsecDelay": 200,
-            "maxMessageCharactersPerLine": 65,
-            "nonKineticScrollingSpeed": 1.0,
-            "ownMessagesOnLeftAboveWidth": 895,
-            "theme": "Midnight.qpl",
-            "writeAliases": {},
-            "zoom": 1.0,
-            "roomBookmarkIDs": {},
+        root.deep_merge_edits(json.loads(edits))
+        return root
 
-            "media": {
-                "autoLoad": True,
-                "autoPlay": False,
-                "autoPlayGIF": True,
-                "autoHideOSDAfterMsec": 3000,
-                "defaultVolume": 100,
-                "openExternallyOnClick": False,
-                "startMuted": False,
-            },
-            "keys": {
-                "startPythonDebugger": ["Alt+Shift+D"],
-                "toggleDebugConsole":  ["Alt+Shift+C", "F1"],
+    def deserialized(self, data: str) -> Tuple[Section, bool]:
+        section, save = super().deserialized(data)
 
-                "zoomIn":             ["Ctrl++"],
-                "zoomOut":            ["Ctrl+-"],
-                "zoomReset":          ["Ctrl+="],
-                "toggleCompactMode":  ["Ctrl+Alt+C"],
-                "toggleHideRoomPane": ["Ctrl+Alt+R"],
-
-                "scrollUp":       ["Alt+Up", "Alt+K"],
-                "scrollDown":     ["Alt+Down", "Alt+J"],
-                "scrollPageUp":   ["Alt+Ctrl+Up", "Alt+Ctrl+K", "PgUp"],
-                "scrollPageDown": ["Alt+Ctrl+Down", "Alt+Ctrl+J", "PgDown"],
-                "scrollToTop":
-                    ["Alt+Ctrl+Shift+Up", "Alt+Ctrl+Shift+K", "Home"],
-                "scrollToBottom":
-                    ["Alt+Ctrl+Shift+Down", "Alt+Ctrl+Shift+J", "End"],
-
-                "previousTab": ["Alt+Shift+Left", "Alt+Shift+H"],
-                "nextTab":     ["Alt+Shift+Right", "Alt+Shift+L"],
-
-                "addNewAccount":         ["Alt+Shift+A"],
-                "accountSettings":       ["Alt+A"],
-                "addNewChat":            ["Alt+C"],
-                "toggleFocusMainPane":   ["Alt+F"],
-                "clearRoomFilter":       ["Alt+Shift+F"],
-                "toggleCollapseAccount": ["Alt+O"],
-
-                "openPresenceMenu":          ["Alt+P"],
-                "togglePresenceUnavailable": ["Alt+Ctrl+U", "Alt+Ctrl+A"],
-                "togglePresenceInvisible":   ["Alt+Ctrl+I"],
-                "togglePresenceOffline":     ["Alt+Ctrl+O"],
-
-                "goToLastPage":              ["Ctrl+Tab"],
-                "goToPreviousAccount":       ["Alt+Shift+N"],
-                "goToNextAccount":           ["Alt+N"],
-                "goToPreviousRoom":          ["Alt+Shift+Up", "Alt+Shift+K"],
-                "goToNextRoom":              ["Alt+Shift+Down", "Alt+Shift+J"],
-                "goToPreviousUnreadRoom":    ["Alt+Shift+U"],
-                "goToNextUnreadRoom":        ["Alt+U"],
-                "goToPreviousMentionedRoom": ["Alt+Shift+M"],
-                "goToNextMentionedRoom":     ["Alt+M"],
-
-                "focusAccountAtIndex": {
-                    "01": f"{ctrl_or_osx_ctrl()}+1",
-                    "02": f"{ctrl_or_osx_ctrl()}+2",
-                    "03": f"{ctrl_or_osx_ctrl()}+3",
-                    "04": f"{ctrl_or_osx_ctrl()}+4",
-                    "05": f"{ctrl_or_osx_ctrl()}+5",
-                    "06": f"{ctrl_or_osx_ctrl()}+6",
-                    "07": f"{ctrl_or_osx_ctrl()}+7",
-                    "08": f"{ctrl_or_osx_ctrl()}+8",
-                    "09": f"{ctrl_or_osx_ctrl()}+9",
-                    "10": f"{ctrl_or_osx_ctrl()}+0",
-                },
-                # On OSX, alt+numbers if used for symbols, use cmd instead
-                "focusRoomAtIndex": {
-                    "01": f"{alt_or_cmd()}+1",
-                    "02": f"{alt_or_cmd()}+2",
-                    "03": f"{alt_or_cmd()}+3",
-                    "04": f"{alt_or_cmd()}+4",
-                    "05": f"{alt_or_cmd()}+5",
-                    "06": f"{alt_or_cmd()}+6",
-                    "07": f"{alt_or_cmd()}+7",
-                    "08": f"{alt_or_cmd()}+8",
-                    "09": f"{alt_or_cmd()}+9",
-                    "10": f"{alt_or_cmd()}+0",
-                },
-
-                "unfocusOrDeselectAllMessages":       ["Ctrl+D"],
-                "focusPreviousMessage":               ["Ctrl+Up", "Ctrl+K"],
-                "focusNextMessage":                   ["Ctrl+Down", "Ctrl+J"],
-                "toggleSelectMessage":                ["Ctrl+Space"],
-                "selectMessagesUntilHere":            ["Ctrl+Shift+Space"],
-                "removeFocusedOrSelectedMessages":    ["Ctrl+R", "Alt+Del"],
-                "replyToFocusedOrLastMessage":        ["Ctrl+Q"],  # Q → Quote
-                "debugFocusedMessage":                ["Ctrl+Shift+D"],
-                "openMessagesLinksOrFiles":           ["Ctrl+O"],
-                "openMessagesLinksOrFilesExternally": ["Ctrl+Shift+O"],
-                "copyFilesLocalPath":                 ["Ctrl+Shift+C"],
-                "clearRoomMessages":                  ["Ctrl+L"],
-
-                "sendFile":                    ["Alt+S"],
-                "sendFileFromPathInClipboard": ["Alt+Shift+S"],
-                "inviteToRoom":                ["Alt+I"],
-                "leaveRoom":                   ["Alt+Escape"],
-                "forgetRoom":                  ["Alt+Shift+Escape"],
-
-                "toggleFocusRoomPane": ["Alt+R"],
-
-                "refreshDevices":             ["Alt+R", "F5"],
-                "signOutCheckedOrAllDevices": ["Alt+S", "Delete"],
-
-                "imageViewer": {
-                    "panLeft":  ["H", "Left", "Alt+H", "Alt+Left"],
-                    "panDown":  ["J", "Down", "Alt+J", "Alt+Down"],
-                    "panUp":    ["K", "Up", "Alt+K", "Alt+Up"],
-                    "panRight": ["L", "Right", "Alt+L", "Alt+Right"],
-
-                    "zoomReset": ["Alt+Z", "=", "Ctrl+="],
-                    "zoomOut":   ["Shift+Z", "-", "Ctrl+-"],
-                    "zoomIn":    ["Z", "+", "Ctrl++"],
-
-                    "rotateReset": ["Alt+R"],
-                    "rotateLeft":  ["Shift+R"],
-                    "rotateRight": ["R"],
-
-                    "resetSpeed":    ["Alt+S"],
-                    "previousSpeed": ["Shift+S"],
-                    "nextSpeed":     ["S"],
-
-                    "pause":      ["Space"],
-                    "expand":     ["E"],
-                    "fullScreen": ["F", "F11", "Alt+Return", "Alt+Enter"],
-                    "close":      ["X", "Q"],
-                },
-            },
-        }
-
-    def deserialized(self, data: str) -> Tuple[dict, bool]:
-        dict_data, save = super().deserialized(data)
-
-        if "theme" in self and self["theme"] != dict_data["theme"]:
-            self.backend.theme = Theme(self.backend, dict_data["theme"])
+        if self and self.General.theme != section.General.theme:
+            self.backend.theme.stop_watching()
+            self.backend.theme = Theme(
+                self.backend, section.General.theme,  # type: ignore
+            )
             UserFileChanged(Theme, self.backend.theme.data)
 
-        return (dict_data, save)
+        return (section, save)
 
 
 @dataclass

@@ -55,7 +55,7 @@ HColumnLayout {
 
     Timer {
         id: osdHideTimer
-        interval: window.settings.media.autoHideOSDAfterMsec
+        interval: window.settings.Chat.Files.autohide_image_controls_after
         onTriggered: osd.showup = false
     }
 

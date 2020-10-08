@@ -26,7 +26,7 @@ ToolTip {
     }
 
 
-    delay: instant ? 0 : theme.controls.toolTip.delay
+    delay: instant ? 0 : window.settings.General.tooltips_delay * 1000
     padding: background.border.width
 
     background: Rectangle {

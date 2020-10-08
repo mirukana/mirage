@@ -44,7 +44,7 @@ HLoader {
         }
 
         window.uiState.pageProperties = properties
-        window.uiStateChanged()
+        window.saveUIState()
     }
 
     function showRoom(userId, roomId) {
@@ -92,7 +92,7 @@ HLoader {
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToLastPage
+        sequences: window.settings.Keys.last_page
         onActivated: showPrevious()
     }
 }

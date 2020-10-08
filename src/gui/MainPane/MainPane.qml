@@ -25,8 +25,9 @@ HDrawer {
 
     saveName: "mainPane"
     background: Rectangle { color: theme.mainPane.background }
-    minimumSize: theme.mainPane.minimumSize
     requireDefaultSize: bottomBar.filterField.activeFocus
+    minimumSize:
+        window.settings.RoomList.min_width * window.settings.General.zoom
 
     Behavior on opacity { HNumberAnimation {} }
 

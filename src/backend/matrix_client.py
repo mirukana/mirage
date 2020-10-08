@@ -493,7 +493,7 @@ class MatrixClient(nio.AsyncClient):
 
             utils.dict_update_recursive(first, self.low_limit_filter)
 
-            if self.backend.settings["hideUnknownEvents"]:
+            if not self.backend.settings.Chat.show_unknown_events:
                 first["room"]["timeline"]["not_types"].extend(
                     self.no_unknown_events_filter
                     ["room"]["timeline"]["not_types"],
@@ -1146,14 +1146,22 @@ class MatrixClient(nio.AsyncClient):
         room = self.models[self.user_id, "rooms"][room_id]
         room.bookmarked = not room.bookmarked
 
-        settings = self.backend.ui_settings
-        bookmarks = settings["roomBookmarkIDs"].setdefault(self.user_id, [])
-        if room.bookmarked and room_id not in bookmarks:
-            bookmarks.append(room_id)
-        elif not room.bookmarked and room_id in bookmarks:
-            bookmarks.remove(room_id)
+        settings       = self.backend.settings
+        bookmarks      = settings.RoomList.bookmarks
+        user_bookmarks = bookmarks.setdefault(self.user_id, [])
 
-        await self.backend.ui_settings.write(self.backend.ui_settings._data)
+        if room.bookmarked and room_id not in user_bookmarks:
+            user_bookmarks.append(room_id)
+
+        while not room.bookmarked and room_id in user_bookmarks:
+            user_bookmarks.remove(room_id)
+
+        # Changes inside dicts/lists aren't monitored, need to reassign
+        settings.RoomList.bookmarks = {
+            **bookmarks, self.user_id: user_bookmarks,
+        }
+
+        self.backend.settings.save()
 
     async def room_forget(self, room_id: str) -> None:
         """Leave a joined room (or decline an invite) and forget its history.
@@ -1866,7 +1874,7 @@ class MatrixClient(nio.AsyncClient):
             )
             unverified_devices = registered.unverified_devices
 
-        bookmarks = self.backend.ui_settings["roomBookmarkIDs"]
+        bookmarks = self.backend.settings.RoomList.bookmarks
         room_item = Room(
             id             = room.room_id,
             for_account    = self.user_id,
@@ -1912,7 +1920,7 @@ class MatrixClient(nio.AsyncClient):
             local_unreads    = local_unreads,
             local_highlights = local_highlights,
 
-            lexical_sorting = self.backend.settings["lexicalRoomSorting"],
+            lexical_sorting = self.backend.settings.RoomList.lexical_sort,
             bookmarked = room.room_id in bookmarks.get(self.user_id, {}),
         )
 

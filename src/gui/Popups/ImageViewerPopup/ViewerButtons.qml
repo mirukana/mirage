@@ -29,7 +29,7 @@ HFlow {
         visible: viewer.isAnimated
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.pause
+            sequences: window.settings.Keys.ImageViewer.pause
             onActivated: pause.clicked()
         }
     }
@@ -46,7 +46,7 @@ HFlow {
         visible: viewer.isAnimated
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.previousSpeed
+            sequences: window.settings.Keys.ImageViewer.slow_down
             onActivated: viewer.imagesSpeed = viewer.availableSpeeds[Math.min(
                 viewer.availableSpeeds.indexOf(viewer.imagesSpeed) + 1,
                 viewer.availableSpeeds.length - 1,
@@ -54,14 +54,14 @@ HFlow {
         }
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.nextSpeed
+            sequences: window.settings.Keys.ImageViewer.speed_up
             onActivated: viewer.imagesSpeed = viewer.availableSpeeds[Math.max(
                 viewer.availableSpeeds.indexOf(viewer.imagesSpeed) - 1, 0,
             )]
         }
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.resetSpeed
+            sequences: window.settings.Keys.ImageViewer.reset_speed
             onActivated: viewer.imagesSpeed = 1
         }
     }
@@ -77,7 +77,7 @@ HFlow {
         onPressed: viewer.animatedRotationTarget -= 45
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.rotateLeft
+            sequences: window.settings.Keys.ImageViewer.rotate_left
             onActivated: viewer.animatedRotationTarget -= 45
         }
     }
@@ -93,13 +93,13 @@ HFlow {
         onPressed: viewer.animatedRotationTarget += 45
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.rotateRight
+            sequences: window.settings.Keys.ImageViewer.rotate_right
             onActivated: viewer.animatedRotationTarget += 45
         }
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.rotateReset
+        sequences: window.settings.Keys.ImageViewer.reset_rotation
         onActivated: viewer.animatedRotationTarget = 0
     }
 
@@ -116,7 +116,7 @@ HFlow {
         onClicked: viewer.alternateScaling = ! viewer.alternateScaling
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.expand
+            sequences: window.settings.Keys.ImageViewer.expand
             onActivated: expand.clicked()
         }
     }
@@ -131,7 +131,7 @@ HFlow {
         visible: Qt.application.supportsMultipleWindows
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.fullScreen
+            sequences: window.settings.Keys.ImageViewer.fullscreen
             onActivated: fullScreen.clicked()
         }
     }
@@ -144,7 +144,7 @@ HFlow {
         onClicked: viewer.close()
 
         HPopupShortcut {
-            sequences: window.settings.keys.imageViewer.close
+            sequences: window.settings.Keys.ImageViewer.close
             onActivated: close.clicked()
         }
     }

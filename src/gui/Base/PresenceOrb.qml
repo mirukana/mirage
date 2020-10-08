@@ -8,7 +8,7 @@ Rectangle {
 
 
     implicitWidth:
-        window.settings.compactMode ?
+        window.settings.General.compact ?
         theme.controls.presence.radius * 2 :
         theme.controls.presence.radius * 2.5
 

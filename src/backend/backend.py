@@ -109,7 +109,7 @@ class Backend:
         self.settings       = Settings(self)
         self.ui_state       = UIState(self)
         self.history        = History(self)
-        self.theme          = Theme(self, self.settings["theme"])
+        self.theme          = Theme(self, self.settings.General.theme)
 
         self.clients: Dict[str, MatrixClient] = {}
 
@@ -427,13 +427,13 @@ class Backend:
         return path
 
 
-    async def get_settings(self) -> Tuple[Settings, UIState, History, str]:
+    async def get_settings(self) -> Tuple[dict, UIState, History, str]:
         """Return parsed user config files for QML."""
         return (
-            self.settings.data,
-            self.ui_state.data,
-            self.history.data,
-            self.theme.data,
+            self.settings.qml_data,
+            self.ui_state.qml_data,
+            self.history.qml_data,
+            self.theme.qml_data,
         )
 
 

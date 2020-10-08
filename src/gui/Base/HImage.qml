@@ -18,7 +18,7 @@ Image {
     property alias radius: roundMask.radius
     property alias showProgressBar: progressBarLoader.active
     property bool showPauseButton: true
-    property bool pause: ! window.settings.media.autoPlayGIF
+    property bool pause: ! window.settings.Chat.Files.auto_play_gif
     property bool forcePause: false
     property real speed: 1
 

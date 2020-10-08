@@ -13,7 +13,7 @@ HQtObject {
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.previousTab
+        sequences: window.settings.Keys.previous_tab
         onActivated: container.setCurrentIndex(
             utils.numberWrapAt(container.currentIndex - 1, container.count),
         )
@@ -21,7 +21,7 @@ HQtObject {
 
     HShortcut {
         active: root.active
-        sequences: window.settings.keys.nextTab
+        sequences: window.settings.Keys.next_tab
         onActivated: container.setCurrentIndex(
             utils.numberWrapAt(container.currentIndex + 1, container.count),
         )

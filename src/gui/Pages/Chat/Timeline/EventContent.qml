@@ -75,11 +75,11 @@ HRowLayout {
     readonly property int maxMessageWidth:
         contentText.includes("<pre>") || contentText.includes("<table>") ?
         -1 :
-        window.settings.maxMessageCharactersPerLine < 0 ?
+        window.settings.Chat.max_messages_line_length < 0 ?
         -1 :
         Math.ceil(
             mainUI.fontMetrics.averageCharacterWidth *
-            window.settings.maxMessageCharactersPerLine
+            window.settings.Chat.max_messages_line_length
         )
 
     readonly property alias selectedText: contentLabel.selectedPlainText

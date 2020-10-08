@@ -73,12 +73,12 @@ HListView {
         ) :
         pageLoader.showRoom(item.for_account, item.id)
 
-        if (fromClick && ! window.settings.centerRoomListOnClick)
+        if (fromClick && ! window.settings.RoomList.click_centers)
             keepListCentered = false
 
         currentIndex = index
 
-        if (fromClick && ! window.settings.centerRoomListOnClick)
+        if (fromClick && ! window.settings.RoomList.click_centers)
             keepListCentered = true
     }
 
@@ -245,54 +245,53 @@ HListView {
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToPreviousRoom
+        sequences: window.settings.Keys.Rooms.previous
         onActivated: { decrementCurrentIndex(); showItemLimiter.restart() }
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToNextRoom
+        sequences: window.settings.Keys.Rooms.next
         onActivated: { incrementCurrentIndex(); showItemLimiter.restart() }
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToPreviousUnreadRoom
+        sequences: window.settings.Keys.Rooms.previous_unread
         onActivated: { cycleUnreadRooms(false) && showItemLimiter.restart() }
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToNextUnreadRoom
+        sequences: window.settings.Keys.Rooms.next_unread
         onActivated: { cycleUnreadRooms(true) && showItemLimiter.restart() }
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToPreviousMentionedRoom
+        sequences: window.settings.Keys.Rooms.previous_urgent
         onActivated: cycleUnreadRooms(false, true) && showItemLimiter.restart()
     }
 
     HShortcut {
-        sequences: window.settings.keys.goToNextMentionedRoom
+        sequences: window.settings.Keys.Rooms.next_urgent
         onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
     }
 
     Repeater {
-        model: Object.keys(window.settings.keys.focusAccountAtIndex)
+        model: Object.keys(window.settings.Keys.Accounts.at_index)
 
         Item {
             HShortcut {
-                sequence: window.settings.keys.focusAccountAtIndex[modelData]
-                onActivated: goToAccountNumber(parseInt(modelData - 1, 10))
+                sequence: window.settings.Keys.Accounts.at_index[modelData]
+                onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
             }
         }
     }
 
     Repeater {
-        model: Object.keys(window.settings.keys.focusRoomAtIndex)
+        model: Object.keys(window.settings.Keys.Rooms.at_index)
 
         Item {
             HShortcut {
-                sequence: window.settings.keys.focusRoomAtIndex[modelData]
-                onActivated:
-                    showAccountRoomAtIndex(parseInt(modelData - 1, 10))
+                sequence: window.settings.Keys.Rooms.at_index[modelData]
+                onActivated: showAccountRoomAtIndex(parseInt(modelData,10) - 1)
             }
         }
     }

@@ -14,7 +14,7 @@ Rectangle {
         (chat.roomPane.collapse || chat.roomPane.forceCollapse)
 
     readonly property bool center:
-        showLeftButton || window.settings.alwaysCenterRoomHeader
+        showLeftButton || window.settings.Chat.always_center_header
 
 
     implicitHeight: theme.baseElementsHeight

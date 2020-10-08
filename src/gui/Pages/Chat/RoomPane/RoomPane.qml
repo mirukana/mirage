@@ -105,12 +105,12 @@ MultiviewPane {
     }
 
     HShortcut {
-        sequences: window.settings.keys.toggleFocusRoomPane
+        sequences: window.settings.Keys.Chat.focus_room_pane
         onActivated: roomPane.toggleFocus()
     }
 
     HShortcut {
-        sequences: window.settings.keys.toggleHideRoomPane
+        sequences: window.settings.Keys.Chat.hide_room_pane
         onActivated: roomPane.forceCollapse = ! roomPane.forceCollapse
     }
 }

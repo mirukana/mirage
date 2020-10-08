@@ -28,8 +28,8 @@ QtObject {
 
         const msec =
             highImportance ?
-            window.settings.alertOnMentionForMsec :
-            window.settings.alertOnMessageForMsec
+            window.settings.Notifications.urgent_alert_time * 1000 :
+            window.settings.Notifications.alert_time * 1000
 
         if (msec) window.alert(msec === -1 ? 0 : msec)  // -1 → 0 = no time out
     }

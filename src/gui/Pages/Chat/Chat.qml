@@ -51,7 +51,7 @@ Item {
     onReadyChanged: longLoading = false
 
     HShortcut {
-        sequences: window.settings.keys.leaveRoom
+        sequences: window.settings.Keys.Chat.leave
         active: userInfo && userInfo.presence !== "offline"
         onActivated: window.makePopup(
             "Popups/LeaveRoomPopup.qml",
@@ -60,7 +60,7 @@ Item {
     }
 
     HShortcut {
-        sequences: window.settings.keys.forgetRoom
+        sequences: window.settings.Keys.Chat.forget
         active: userInfo && userInfo.presence !== "offline"
         onActivated: window.makePopup(
             "Popups/ForgetRoomPopup.qml",

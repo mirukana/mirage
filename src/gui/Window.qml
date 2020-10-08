@@ -36,6 +36,20 @@ ApplicationWindow {
     readonly property bool anyPopup: Object.keys(visiblePopups).length > 0
     readonly property bool anyPopupOrMenu: anyMenu || anyPopup
 
+    function saveSettings() {
+        settingsChanged()
+        py.saveConfig("settings", settings)
+    }
+
+    function saveUIState() {
+        uiStateChanged()
+        py.saveConfig("ui_state", uiState)
+    }
+
+    function saveHistory() {
+        historyChanged()
+        py.saveConfig("history", history)
+    }
 
     function saveState(obj) {
         if (! obj.saveName || ! obj.saveProperties ||
@@ -51,7 +65,7 @@ ApplicationWindow {
             [obj.saveName]: { [obj.saveId || "ALL"]: propertyValues },
         })
 
-        uiStateChanged()
+        saveUIState()
     }
 
     function getState(obj, property, defaultValue=undefined) {
@@ -86,15 +100,9 @@ ApplicationWindow {
     visible: true
     color: "transparent"
 
-    // NOTE: For JS object variables, the corresponding method to notify
-    // key/value changes must be called manually, e.g. settingsChanged().
-    onSettingsChanged: py.saveConfig("settings", settings)
-    onUiStateChanged: py.saveConfig("ui_state", uiState)
-    onHistoryChanged: py.saveConfig("history", history)
-
     onClosing: {
-        close.accepted = ! settings.closeMinimizesToTray
-        settings.closeMinimizesToTray ? hide() : Qt.quit()
+        close.accepted = ! settings.General.close_to_tray
+        settings.General.close_to_tray ? hide() : Qt.quit()
     }
 
     PythonRootBridge { id: py }

@@ -2,7 +2,7 @@
 
 // Base variables
 
-real uiScale: window.settings.zoom
+real uiScale: window.settings.General.zoom
 
 int minimumSupportedWidth:  240 * uiScale
 int minimumSupportedHeight: 120 * uiScale
@@ -217,7 +217,6 @@ controls:
         color placeholderText: controls.textField.placeholderText
 
     toolTip:
-        int delay:        500
         color background: colors.strongBackground
         color text:       colors.text
         color border:     "black"
@@ -309,7 +308,6 @@ ui:
 
 
 mainPane:
-    int minimumSize: 144 * uiScale
     color background: "transparent"
 
     topBar:
@@ -473,17 +471,6 @@ chat:
 
         string styleInclude:
             '<style type"text/css">\n' + styleSheet + '\n</style>\n'
-
-        // Prefered minimum width of file messages
-        int fileMinWidth: 256 * uiScale
-
-        // Don't scale down thumbnails below this size in pixels, if
-        // the becomes too small to show it at normal size.
-        size thumbnailMinSize: Qt.size(256 * uiScale, 256 * uiScale)
-
-        // How much of the chat height thumbnails can take at most,
-        // by default 0.4 for 40%.
-        real thumbnailMaxHeightRatio: 0.4 * Math.min(1, uiScale)
 
         real thumbnailCheckedOverlayOpacity: 0.4
 

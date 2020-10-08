@@ -36,39 +36,41 @@ Item {
     Component.onCompleted: window.mainUI = mainUI
 
     HShortcut {
-        sequences: window.settings.keys.startPythonDebugger
+        sequences: window.settings.Keys.python_debugger
         onActivated: py.call("BRIDGE.pdb")
     }
 
     HShortcut {
-        sequences: window.settings.keys.zoomIn
+        sequences: window.settings.Keys.zoom_in
         onActivated: {
-            window.settings.zoom += 0.1
-            window.settingsChanged()
+            window.settings.General.zoom += 0.1
+            window.saveSettings()
         }
     }
 
     HShortcut {
-        sequences: window.settings.keys.zoomOut
+        sequences: window.settings.Keys.zoom_out
         onActivated: {
-            window.settings.zoom = Math.max(0.1, window.settings.zoom - 0.1)
-            window.settingsChanged()
+            window.settings.General.zoom =
+                Math.max(0.1, window.settings.General.zoom - 0.1)
+
+            window.saveSettings()
         }
     }
 
     HShortcut {
-        sequences: window.settings.keys.zoomReset
+        sequences: window.settings.Keys.reset_zoom
         onActivated: {
-            window.settings.zoom = 1
-            window.settingsChanged()
+            window.settings.General.zoom = 1
+            window.saveSettings()
         }
     }
 
     HShortcut {
-        sequences: window.settings.keys.toggleCompactMode
+        sequences: window.settings.Keys.compact
         onActivated: {
-            settings.compactMode = ! settings.compactMode
-            settingsChanged()
+            window.settings.General.compact = ! window.settings.General.compact
+            windowsaveSettings()
         }
     }
 

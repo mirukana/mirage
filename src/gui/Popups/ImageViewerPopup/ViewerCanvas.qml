@@ -53,37 +53,37 @@ HFlickable {
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.panLeft
+        sequences: window.settings.Keys.ImageViewer.pan_left
         onActivated: utils.flickPages(flickable, -0.2, true, 5)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.panRight
+        sequences: window.settings.Keys.ImageViewer.pan_right
         onActivated: utils.flickPages(flickable, 0.2, true, 5)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.panUp
+        sequences: window.settings.Keys.ImageViewer.pan_up
         onActivated: utils.flickPages(flickable, -0.2, false, 5)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.panDown
+        sequences: window.settings.Keys.ImageViewer.pan_down
         onActivated: utils.flickPages(flickable, 0.2, false, 5)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.zoomOut
+        sequences: window.settings.Keys.ImageViewer.zoom_out
         onActivated: thumbnail.scale = Math.max(0.1, thumbnail.scale - 0.2)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.zoomIn
+        sequences: window.settings.Keys.ImageViewer.zoom_in
         onActivated: thumbnail.scale = Math.min(10, thumbnail.scale + 0.2)
     }
 
     HPopupShortcut {
-        sequences: window.settings.keys.imageViewer.zoomReset
+        sequences: window.settings.Keys.ImageViewer.reset_zoom
         onActivated: resetScaleAnimation.start()
     }
 

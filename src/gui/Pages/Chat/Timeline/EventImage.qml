@@ -10,13 +10,16 @@ HMxcImage {
 
     property EventMediaLoader loader
 
+    readonly property real zoom: window.settings.General.zoom
+
     readonly property real maxHeight:
-        eventList.height * theme.chat.message.thumbnailMaxHeightRatio
+        eventList.height *
+        window.settings.Chat.Files.max_thumbnail_height_ratio * zoom
 
     readonly property size fitSize: utils.fitSize(
         // Minimum display size
-        theme.chat.message.thumbnailMinSize.width,
-        theme.chat.message.thumbnailMinSize.height,
+        window.settings.Chat.Files.min_thumbnail_size[0] * zoom,
+        window.settings.Chat.Files.min_thumbnail_size[1] * zoom,
 
         // Real size
         (
@@ -35,12 +38,18 @@ HMxcImage {
 
         // Maximum display size
         Math.min(
-            Math.max(maxHeight, theme.chat.message.thumbnailMinSize.width),
+            Math.max(
+                maxHeight,
+                window.settings.Chat.Files.min_thumbnail_size[0] * zoom,
+            ),
             pureMedia ? Infinity : eventContent.maxMessageWidth,
             eventDelegate.width - eventContent.spacing - avatarWrapper.width -
             eventContent.spacing * 2,  // padding
         ),
-        Math.max(maxHeight, theme.chat.message.thumbnailMinSize.height),
+        Math.max(
+            maxHeight,
+            window.settings.Chat.Files.min_thumbnail_size[1] * zoom,
+        ),
     )
 
     readonly property bool hovered: hover.hovered
@@ -92,7 +101,7 @@ HMxcImage {
                 return
             }
 
-            window.settings.media.openExternallyOnClick ?
+            window.settings.Chat.Files.click_opens_externally ?
             image.openExternally() :
             image.openInternally()
         }
@@ -103,7 +112,7 @@ HMxcImage {
         acceptedModifiers: Qt.NoModifier
         gesturePolicy: TapHandler.ReleaseWithinBounds
         onTapped:
-            window.settings.media.openExternallyOnClick ?
+            window.settings.Chat.Files.click_opens_externally ?
             image.openInternally() :
             image.openExternally()
     }

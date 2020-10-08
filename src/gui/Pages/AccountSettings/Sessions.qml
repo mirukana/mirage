@@ -164,12 +164,12 @@ HColumnPage {
         Keys.onMenuPressed: Keys.onEnterPressed(event)
 
         HShortcut {
-            sequences: window.settings.keys.refreshDevices
+            sequences: window.settings.Keys.Sessions.refresh
             onActivated: refreshButton.clicked()
         }
 
         HShortcut {
-            sequences: window.settings.keys.signOutCheckedOrAllDevices
+            sequences: window.settings.Keys.Sessions.sign_out_checked_or_all
             onActivated: signOutCheckedButton.clicked()
         }
 

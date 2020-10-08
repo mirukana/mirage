@@ -25,7 +25,7 @@ HDrawer {
     property string selectedOutputText: ""
 
     property string pythonDebugKeybind:
-        window.settings.keys.startPythonDebugger[0]
+        window.settings.Keys.python_debugger[0]
 
     property string help: qsTr(
         `Interact with the QML code using JavaScript ES6 syntax.
@@ -71,7 +71,7 @@ HDrawer {
         if (addToHistory && history.slice(-1)[0] !== input) {
             history.push(input)
             while (history.length > maxHistoryLength) history.shift()
-            window.historyChanged()
+            window.saveHistory()
         }
 
         let output = ""
@@ -154,7 +154,7 @@ HDrawer {
     }
 
     HShortcut {
-        sequences: settings.keys.toggleDebugConsole
+        sequences: settings.Keys.qml_console
         onActivated: debugConsole.toggle()
     }
 

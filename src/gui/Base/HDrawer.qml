@@ -37,7 +37,7 @@ Drawer {
 
     property bool collapse:
         (horizontal ? window.width : window.height) <
-        window.settings.collapseSidePanesUnderWindowWidth * theme.uiScale
+        window.settings.General.hide_side_panes_under * theme.uiScale
 
     property int peekSizeWhileCollapsed:
         (horizontal ? referenceSizeParent.width : referenceSizeParent.height) *

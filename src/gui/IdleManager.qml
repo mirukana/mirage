@@ -17,7 +17,7 @@ Timer {
     interval: 1000
     repeat: true
     running:
-        window.settings.beUnavailableAfterSecondsIdle > 0 &&
+        window.settings.Presence.auto_away_after > 0 &&
         CppUtils.idleMilliseconds() !== -1
 
     onTriggered: {
@@ -25,7 +25,7 @@ Timer {
 
         const beUnavailable =
             CppUtils.idleMilliseconds() / 1000 >=
-            window.settings.beUnavailableAfterSecondsIdle
+            window.settings.Presence.auto_away_after
 
         for (let i = 0; i < accounts.count; i++) {
             const account = accounts.get(i)

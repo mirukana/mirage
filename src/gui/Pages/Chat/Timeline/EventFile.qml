@@ -17,7 +17,12 @@ HTile {
     width: Math.min(
         eventDelegate.width,
         eventContent.maxMessageWidth,
-        Math.max(theme.chat.message.fileMinWidth, implicitWidth),
+        Math.max(
+            window.settings.Chat.Files.min_file_width *
+            window.settings.General.zoom,
+
+            implicitWidth,
+        ),
     )
     height: Math.max(theme.chat.message.avatarSize, implicitHeight)
 

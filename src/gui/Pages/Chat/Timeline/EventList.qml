@@ -21,7 +21,7 @@ Rectangle {
     color: theme.chat.eventList.background
 
     HShortcut {
-        sequences: window.settings.keys.unfocusOrDeselectAllMessages
+        sequences: window.settings.Keys.Messages.unfocus_or_deselect
         onActivated: {
             eventList.selectedCount ?
             eventList.checked = {} :
@@ -30,24 +30,24 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.focusPreviousMessage
+        sequences: window.settings.Keys.Messages.previous
         onActivated: eventList.focusPreviousMessage()
     }
 
     HShortcut {
-        sequences: window.settings.keys.focusNextMessage
+        sequences: window.settings.Keys.Messages.next
         onActivated: eventList.focusNextMessage()
     }
 
     HShortcut {
         active: eventList.currentItem
-        sequences: window.settings.keys.toggleSelectMessage
+        sequences: window.settings.Keys.Messages.select
         onActivated: eventList.toggleCheck(eventList.currentIndex)
     }
 
     HShortcut {
         active: eventList.currentItem
-        sequences: window.settings.keys.selectMessagesUntilHere
+        sequences: window.settings.Keys.Messages.select_until_here
         onActivated:
             eventList.checkFromLastToHere(eventList.currentIndex)
     }
@@ -75,7 +75,7 @@ Rectangle {
         }
 
         enabled: (events && events.length > 0) || events === null
-        sequences: window.settings.keys.removeFocusedOrSelectedMessages
+        sequences: window.settings.Keys.Messages.remove
         onActivated: window.makePopup(
             "Popups/RedactPopup.qml",
             {
@@ -98,7 +98,7 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.replyToFocusedOrLastMessage
+        sequences: window.settings.Keys.Messages.reply
         onActivated: {
             let event = eventList.model.get(0)
 
@@ -132,7 +132,7 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.openMessagesLinksOrFiles
+        sequences: window.settings.Keys.Messages.open_links_files
         onActivated: {
             const indice =
                 eventList.getFocusedOrSelectedOrLastMediaEvents(true)
@@ -158,7 +158,7 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.openMessagesLinksOrFilesExternally
+        sequences: window.settings.Keys.Messages.open_links_files_externally
         onActivated: {
             const indice =
                 eventList.getFocusedOrSelectedOrLastMediaEvents(true)
@@ -178,7 +178,7 @@ Rectangle {
     }
 
     HShortcut {
-        sequences: window.settings.keys.copyFilesLocalPath
+        sequences: window.settings.Keys.Messages.copy_files_path
         onActivated: {
             const paths  = []
             const indice =
@@ -199,14 +199,14 @@ Rectangle {
 
     HShortcut {
         active: eventList.currentItem
-        sequences: window.settings.keys.debugFocusedMessage
+        sequences: window.settings.Keys.Messages.debug
         onActivated: mainUI.debugConsole.toggle(
             eventList.currentItem.eventContent, "t.parent.json()",
         )
     }
 
     HShortcut {
-        sequences: window.settings.keys.clearRoomMessages
+        sequences: window.settings.Keys.Messages.clear_all
         onActivated: window.makePopup(
             "Popups/ClearMessagesPopup.qml",
             {
@@ -231,9 +231,10 @@ Rectangle {
         property bool moreToLoad: true
 
         property bool ownEventsOnLeft:
-            window.settings.ownMessagesOnLeftAboveWidth < 0 ?
+            window.settings.Chat.own_messages_on_left_above < 0 ?
             false :
-            width > window.settings.ownMessagesOnLeftAboveWidth * theme.uiScale
+            width >
+            window.settings.Chat.own_messages_on_left_above * theme.uiScale
 
         property string delegateWithSelectedText: ""
         property string selectedText: ""
@@ -616,7 +617,7 @@ Rectangle {
     }
 
     Timer {
-        interval: Math.max(100, window.settings.markRoomReadMsecDelay)
+        interval: Math.max(100, window.settings.Chat.mark_read_delay * 1000)
 
         running:
             ! eventList.updateMarkerFutureId &&

@@ -1,5 +1,6 @@
 # TODO
 
+- login page password spinner
 - Encrypted rooms don't show invites in member list after Mirage restart
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages
