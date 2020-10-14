@@ -63,7 +63,9 @@ HTile {
                 spacing: room.spacing
 
                 TitleLabel {
-                    text: model.display_name || qsTr("Empty room")
+                    text:
+                        (model.bookmarked ? "\u2665 " : "") +
+                        (model.display_name || qsTr("Empty room"))
                     color:
                         model.local_unreads ?
                         theme.mainPane.listView.room.unreadName :
@@ -148,6 +150,14 @@ HTile {
                 roomName: model.display_name,
                 invitingAllowed: Qt.binding(() => model.can_invite)
             })
+        }
+
+        HMenuItem {
+            icon.name: model.bookmarked ? "bookmark-remove": "bookmark-add"
+            text: model.bookmarked ? qsTr("Remove bookmark"): qsTr("Bookmark")
+            onTriggered: py.callClientCoro(
+                model.for_account, "toggle_bookmark", [model.id]
+            )
         }
 
         HMenuItem {
