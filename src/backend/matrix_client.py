@@ -1142,6 +1142,18 @@ class MatrixClient(nio.AsyncClient):
         response = await super().join(string)
         return response.room_id
 
+    async def toggle_bookmark(self, room_id: str) -> None:
+        room = self.models[self.user_id, "rooms"][room_id]
+        room.bookmarked = not room.bookmarked
+
+        settings = self.backend.ui_settings
+        bookmarks = settings["roomBookmarkIDs"].setdefault(self.user_id, [])
+        if room.bookmarked and room_id not in bookmarks:
+            bookmarks.append(room_id)
+        elif not room.bookmarked and room_id in bookmarks:
+            bookmarks.remove(room_id)
+
+        await self.backend.ui_settings.write(self.backend.ui_settings._data)
 
     async def room_forget(self, room_id: str) -> None:
         """Leave a joined room (or decline an invite) and forget its history.
@@ -1854,6 +1866,7 @@ class MatrixClient(nio.AsyncClient):
             )
             unverified_devices = registered.unverified_devices
 
+        bookmarks = self.backend.ui_settings["roomBookmarkIDs"]
         room_item = Room(
             id             = room.room_id,
             for_account    = self.user_id,
@@ -1900,6 +1913,7 @@ class MatrixClient(nio.AsyncClient):
             local_highlights = local_highlights,
 
             lexical_sorting = self.backend.ui_settings["lexicalRoomSorting"],
+            bookmarked = room.room_id in bookmarks.get(self.user_id, {}),
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item
