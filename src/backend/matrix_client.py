@@ -1313,7 +1313,7 @@ class MatrixClient(nio.AsyncClient):
                   "%1's message was removed by %2"
 
         if reason:
-            content = f"{content}, reason: {html.escape(reason)}"
+            content = f"{content}, reason: {reason}"
 
         return content
 
