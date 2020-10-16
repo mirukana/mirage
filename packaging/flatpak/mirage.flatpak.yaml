@@ -233,15 +233,6 @@ modules:
   - type: file
     url: https://files.pythonhosted.org/packages/66/25/ff030e2437265616a1e9b25ccc864e0371a0bc3adb7c5a404fd661c6f4f6/beautifulsoup4-4.9.1-py3-none-any.whl
     sha256: a6237df3c32ccfaee4fd201c8f5f9d9df619b93121d01353a64a73ce8c6ef9a8
-- name: python3-blist
-  buildsystem: simple
-  build-commands:
-  - pip3 install --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-    "blist==1.3.6"
-  sources:
-  - type: file
-    url: https://files.pythonhosted.org/packages/6b/a8/dca5224abe81ccf8db81f8a2ca3d63e7a5fa7a86adc198d4e268c67ce884/blist-1.3.6.tar.gz
-    sha256: 3a12c450b001bdf895b30ae818d4d6d3f1552096b8c995f0fe0c74bef04d1fc3
 - name: python3-cachetools
   buildsystem: simple
   build-commands:
