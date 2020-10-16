@@ -132,6 +132,7 @@ class Room(ModelItem):
     local_highlights: bool = False
 
     lexical_sorting: bool = False
+    bookmarked: bool = False
 
     def __lt__(self, other: "Room") -> bool:
         """Sort by membership, highlights/unread events, last event date, name.
@@ -146,11 +147,13 @@ class Room(ModelItem):
         if self.lexical_sorting:
             return (
                 self.for_account,
+                other.bookmarked,
                 self.left,
                 other.inviter_id,
                 (self.display_name or self.id).lower(),
             ) < (
                 other.for_account,
+                self.bookmarked,
                 other.left,
                 self.inviter_id,
                 (other.display_name or other.id).lower(),
@@ -159,6 +162,7 @@ class Room(ModelItem):
         # Left rooms may still have an inviter_id, so check left first.
         return (
             self.for_account,
+            other.bookmarked,
             self.left,
             other.inviter_id,
             bool(other.highlights),
@@ -170,6 +174,7 @@ class Room(ModelItem):
 
         ) < (
             other.for_account,
+            self.bookmarked,
             other.left,
             self.inviter_id,
             bool(self.highlights),
@@ -192,6 +197,7 @@ class AccountOrRoom(Account, Room):
                 self.account_order,
                 self.id if self.type is Account else self.for_account,
                 other.type is Account,
+                other.bookmarked,
                 self.left,
                 other.inviter_id,
                 (self.display_name or self.id).lower(),
@@ -199,6 +205,7 @@ class AccountOrRoom(Account, Room):
                 other.account_order,
                 other.id if other.type is Account else other.for_account,
                 self.type is Account,
+                self.bookmarked,
                 other.left,
                 self.inviter_id,
                 (other.display_name or other.id).lower(),
@@ -208,6 +215,7 @@ class AccountOrRoom(Account, Room):
             self.account_order,
             self.id if self.type is Account else self.for_account,
             other.type is Account,
+            other.bookmarked,
             self.left,
             other.inviter_id,
             bool(other.highlights),
@@ -221,6 +229,7 @@ class AccountOrRoom(Account, Room):
             other.account_order,
             other.id if other.type is Account else other.for_account,
             self.type is Account,
+            self.bookmarked,
             other.left,
             self.inviter_id,
             bool(self.highlights),

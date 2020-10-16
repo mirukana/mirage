@@ -291,6 +291,7 @@ class UISettings(JSONDataFile):
             "theme": "Midnight.qpl",
             "writeAliases": {},
             "zoom": 1.0,
+            "roomBookmarkIDs": {},
 
             "media": {
                 "autoLoad": True,
