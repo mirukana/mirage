@@ -75,8 +75,9 @@ HFlickableColumnPage {
 
         CancelButton {
             onClicked: {
-                userField.item.text = ""
+                userField.item.reset()
                 errorMessage.text   = ""
+
                 pageLoader.showPrevious()
             }
         }

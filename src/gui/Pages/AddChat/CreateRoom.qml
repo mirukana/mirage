@@ -45,6 +45,7 @@ HFlickableColumnPage {
         publicCheckBox.reset()
         encryptCheckBox.reset()
         blockOtherServersCheckBox.reset()
+        errorMessage.text = ""
 
         pageLoader.showPrevious()
     }

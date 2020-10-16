@@ -49,7 +49,7 @@ HFlickableColumnPage {
 
     function cancel() {
         roomField.item.reset()
-        errorMessage.reset()
+        errorMessage.text = ""
 
         pageLoader.showPrevious()
     }
