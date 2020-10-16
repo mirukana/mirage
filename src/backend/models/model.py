@@ -9,8 +9,6 @@ from typing import (
     TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional, Tuple,
 )
 
-from blist import blist
-
 from ..pyotherside_events import ModelCleared, ModelItemDeleted, ModelItemSet
 from . import SyncId
 
@@ -41,7 +39,7 @@ class Model(MutableMapping):
         self.sync_id:      Optional[SyncId]       = sync_id
         self.write_lock:   RLock                  = RLock()
         self._data:        Dict[Any, "ModelItem"] = {}
-        self._sorted_data: List["ModelItem"]      = blist()
+        self._sorted_data: List["ModelItem"]      = []
 
         self.take_items_ownership: bool = True
 
