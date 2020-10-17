@@ -11,16 +11,19 @@ if TYPE_CHECKING:
     from .model import Model
 
 
-@dataclass
+@dataclass(eq=False)
 class ModelItem:
     """Base class for items stored inside a `Model`.
 
     This class must be subclassed and not used directly.
-    All subclasses must be dataclasses.
+    All subclasses must use the `@dataclass(eq=False)` decorator.
 
     Subclasses are also expected to implement `__lt__()`,
     to provide support for comparisons with the `<`, `>`, `<=`, `=>` operators
     and thus allow a `Model` to keep its data sorted.
+
+    Make sure to respect SortedList requirements when implementing `__lt__()`:
+    http://www.grantjenks.com/docs/sortedcontainers/introduction.html#caveats
     """
 
     id: Any = field()
@@ -32,47 +35,11 @@ class ModelItem:
 
 
     def __setattr__(self, name: str, value) -> None:
-        """If this item is in a `Model`, alert it of attribute changes."""
-
-        if (
-            name == "parent_model" or
-            not self.parent_model or
-            getattr(self, name) == value
-        ):
-            super().__setattr__(name, value)
-            return
-
-        super().__setattr__(name, value)
-        self._notify_parent_model({name: self.serialize_field(name)})
-
-
-    def _notify_parent_model(self, changed_fields: Dict[str, Any]) -> None:
-        parent = self.parent_model
-
-        if not parent or not parent.sync_id or not changed_fields:
-            return
-
-        with parent.write_lock:
-            index_then = parent._sorted_data.index(self)
-            parent._sorted_data.sort()
-            index_now = parent._sorted_data.index(self)
-
-            ModelItemSet(parent.sync_id, index_then, index_now, changed_fields)
-
-        for sync_id, proxy in parent.proxies.items():
-            if sync_id != parent.sync_id:
-                proxy.source_item_set(parent, self.id, self, changed_fields)
+        self.set_fields(**{name: value})
 
 
     def __delattr__(self, name: str) -> None:
         raise NotImplementedError()
-
-
-    def serialize_field(self, field: str) -> Any:
-        return serialize_value_for_qml(
-            getattr(self, field),
-            json_list_dicts=True,
-        )
 
 
     @property
@@ -80,40 +47,80 @@ class ModelItem:
         """Return this item as a dict ready to be passed to QML."""
 
         return {
-            name: self.serialize_field(name) for name in dir(self)
-            if not (
-                name.startswith("_") or name in ("parent_model", "serialized")
-            )
+            name: self.serialized_field(name)
+            for name in self.__dataclass_fields__  # type: ignore
         }
 
 
-    def set_fields(self, **fields: Any) -> None:
-        """Set multiple fields's values at once.
+    def serialized_field(self, field: str) -> Any:
+        """Return a field's value in a form suitable for passing to QML."""
 
-        The parent model will be resorted only once, and one `ModelItemSet`
-        event will be sent informing QML of all the changed fields.
+        value = getattr(self, field)
+        return serialize_value_for_qml(value, json_list_dicts=True)
+
+
+    def set_fields(self, _force: bool = False, **fields: Any) -> None:
+        """Set one or more field's value and call `ModelItem.notify_change`.
+
+        For efficiency, to change multiple fields, this method should be
+        used rather than setting them one after another with `=` or `setattr`.
         """
 
-        for name, value in fields.copy().items():
-            if getattr(self, name) == value:
-                del fields[name]
-            else:
-                super().__setattr__(name, value)
-                fields[name] = self.serialize_field(name)
+        parent = self.parent_model
 
-        self._notify_parent_model(fields)
+        # If we're currently being created or haven't been put in a model yet:
+        if not parent:
+            for name, value in fields.items():
+                super().__setattr__(name, value)
+            return
+
+        with parent.write_lock:
+            qml_changes = {}
+            changes     = {
+                name: value for name, value in fields.items()
+                if _force or getattr(self, name) != value
+            }
+
+            if not changes:
+                return
+
+            # To avoid corrupting the SortedList, we have to take out the item,
+            # apply the field changes, *then* add it back in.
+
+            index_then = parent._sorted_data.index(self)
+            del parent._sorted_data[index_then]
+
+            for name, value in changes.items():
+                super().__setattr__(name, value)
+
+                if name in self.__dataclass_fields__:  # type: ignore
+                    qml_changes[name] = self.serialized_field(name)
+
+            parent._sorted_data.add(self)
+            index_now = parent._sorted_data.index(self)
+
+            # Now, inform QML about changed dataclass fields if any.
+
+            if not parent.sync_id or not qml_changes:
+                return
+
+            ModelItemSet(parent.sync_id, index_then, index_now, qml_changes)
+
+        # Inform any proxy connected to the parent model of the field changes
+
+        for sync_id, proxy in parent.proxies.items():
+            if sync_id != parent.sync_id:
+                proxy.source_item_set(parent, self.id, self, qml_changes)
 
 
     def notify_change(self, *fields: str) -> None:
-        """Manually notify the parent model that a field changed.
+        """Notify the parent model that fields of this item have changed.
 
-        The model cannot automatically detect changes inside object
-        fields, such as list or dicts having their data modified.
-
-        Use this method to manually notify it that such fields were changed,
-        and avoid having to reassign the field itself.
+        The model cannot automatically detect changes inside
+        object fields, such as list or dicts having their data modified.
+        In these cases, this method should be called.
         """
 
-        self._notify_parent_model({
-            name: self.serialize_field(name) for name in fields
-        })
+        kwargs           = {name: getattr(self, name) for name in fields}
+        kwargs["_force"] = True
+        self.set_fields(**kwargs)

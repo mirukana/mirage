@@ -39,7 +39,7 @@ class PingStatus(AutoStrEnum):
     Failed  = auto()
 
 
-@dataclass
+@dataclass(eq=False)
 class Homeserver(ModelItem):
     """A homeserver we can connect to. The `id` field is the server's URL."""
 
@@ -55,7 +55,7 @@ class Homeserver(ModelItem):
         return (self.name.lower(), self.id) < (other.name.lower(), other.id)
 
 
-@dataclass
+@dataclass(eq=False)
 class Account(ModelItem):
     """A logged in matrix account."""
 
@@ -82,10 +82,10 @@ class Account(ModelItem):
 
     def __lt__(self, other: "Account") -> bool:
         """Sort by order, then by user ID."""
-        return (self.order, self.id.lower()) < (other.order, other.id.lower())
+        return (self.order, self.id) < (other.order, other.id)
 
 
-@dataclass
+@dataclass(eq=False)
 class Room(ModelItem):
     """A matrix room we are invited to, are or were member of."""
 
@@ -149,14 +149,16 @@ class Room(ModelItem):
                 self.for_account,
                 other.bookmarked,
                 self.left,
-                other.inviter_id,
+                bool(other.inviter_id),
                 (self.display_name or self.id).lower(),
+                self.id,
             ) < (
                 other.for_account,
                 self.bookmarked,
                 other.left,
-                self.inviter_id,
+                bool(self.inviter_id),
                 (other.display_name or other.id).lower(),
+                other.id,
             )
 
         # Left rooms may still have an inviter_id, so check left first.
@@ -164,29 +166,31 @@ class Room(ModelItem):
             self.for_account,
             other.bookmarked,
             self.left,
-            other.inviter_id,
+            bool(other.inviter_id),
             bool(other.highlights),
             bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
+            self.id,
 
         ) < (
             other.for_account,
             self.bookmarked,
             other.left,
-            self.inviter_id,
+            bool(self.inviter_id),
             bool(self.highlights),
             bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
+            other.id,
         )
 
 
-@dataclass
+@dataclass(eq=False)
 class AccountOrRoom(Account, Room):
     type:          Union[Type[Account], Type[Room]] = Account
     account_order: int                              = -1
@@ -199,16 +203,18 @@ class AccountOrRoom(Account, Room):
                 other.type is Account,
                 other.bookmarked,
                 self.left,
-                other.inviter_id,
+                bool(other.inviter_id),
                 (self.display_name or self.id).lower(),
+                self.id,
             ) < (
                 other.account_order,
                 other.id if other.type is Account else other.for_account,
                 self.type is Account,
                 self.bookmarked,
                 other.left,
-                self.inviter_id,
+                bool(self.inviter_id),
                 (other.display_name or other.id).lower(),
+                other.id,
             )
 
         return (
@@ -217,13 +223,14 @@ class AccountOrRoom(Account, Room):
             other.type is Account,
             other.bookmarked,
             self.left,
-            other.inviter_id,
+            bool(other.inviter_id),
             bool(other.highlights),
             bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
             (self.display_name or self.id).lower(),
+            self.id,
 
         ) < (
             other.account_order,
@@ -231,17 +238,18 @@ class AccountOrRoom(Account, Room):
             self.type is Account,
             self.bookmarked,
             other.left,
-            self.inviter_id,
+            bool(self.inviter_id),
             bool(self.highlights),
             bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,
             (other.display_name or other.id).lower(),
+            other.id,
         )
 
 
-@dataclass
+@dataclass(eq=False)
 class Member(ModelItem):
     """A member in a matrix room."""
 
@@ -262,19 +270,19 @@ class Member(ModelItem):
     def __lt__(self, other: "Member") -> bool:
         """Sort by presence, power level, then by display name/user ID."""
 
-        name       = self.display_name or self.id[1:]
-        other_name = other.display_name or other.id[1:]
 
         return (
             self.invited,
             other.power_level,
             self.presence,
-            name.lower(),
+            (self.display_name or self.id[1:]).lower(),
+            self.id,
         ) < (
             other.invited,
             self.power_level,
             other.presence,
-            other_name.lower(),
+            (other.display_name or other.id[1:]).lower(),
+            other.id,
         )
 
 
@@ -287,7 +295,7 @@ class UploadStatus(AutoStrEnum):
     Error     = auto()
 
 
-@dataclass
+@dataclass(eq=False)
 class Upload(ModelItem):
     """Represent a running or failed file upload operation."""
 
@@ -310,10 +318,10 @@ class Upload(ModelItem):
     def __lt__(self, other: "Upload") -> bool:
         """Sort by the start date, from newest upload to oldest."""
 
-        return self.start_date > other.start_date
+        return (self.start_date, self.id) > (other.start_date, other.id)
 
 
-@dataclass
+@dataclass(eq=False)
 class Event(ModelItem):
     """A matrix state event or message."""
 
@@ -367,7 +375,7 @@ class Event(ModelItem):
     def __lt__(self, other: "Event") -> bool:
         """Sort by date in descending order, from newest to oldest."""
 
-        return self.date > other.date
+        return (self.date, self.id) > (other.date, other.id)
 
     @staticmethod
     def parse_links(text: str) -> List[str]:
@@ -389,9 +397,9 @@ class Event(ModelItem):
             if lxml.etree.tostring(el) not in ignore
         ]
 
-    def serialize_field(self, field: str) -> Any:
+    def serialized_field(self, field: str) -> Any:
         if field == "source":
             source_dict = asdict(self.source) if self.source else {}
             return json.dumps(source_dict)
 
-        return super().serialize_field(field)
+        return super().serialized_field(field)

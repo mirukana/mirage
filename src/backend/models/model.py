@@ -2,12 +2,13 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 import itertools
-from bisect import bisect
 from contextlib import contextmanager
 from threading import RLock
 from typing import (
     TYPE_CHECKING, Any, Dict, Iterator, List, MutableMapping, Optional, Tuple,
 )
+
+from sortedcontainers import SortedList
 
 from ..pyotherside_events import ModelCleared, ModelItemDeleted, ModelItemSet
 from . import SyncId
@@ -36,10 +37,10 @@ class Model(MutableMapping):
 
 
     def __init__(self, sync_id: Optional[SyncId]) -> None:
-        self.sync_id:      Optional[SyncId]       = sync_id
-        self.write_lock:   RLock                  = RLock()
-        self._data:        Dict[Any, "ModelItem"] = {}
-        self._sorted_data: List["ModelItem"]      = []
+        self.sync_id:      Optional[SyncId]        = sync_id
+        self.write_lock:   RLock                   = RLock()
+        self._data:        Dict[Any, "ModelItem"]  = {}
+        self._sorted_data: SortedList["ModelItem"] = SortedList()
 
         self.take_items_ownership: bool = True
 
@@ -95,7 +96,7 @@ class Model(MutableMapping):
                             getattr(new, field) != getattr(existing, field)
 
                     if changed:
-                        changed_fields[field] = new.serialize_field(field)
+                        changed_fields[field] = new.serialized_field(field)
 
             # Set parent model on new item
 
@@ -110,8 +111,8 @@ class Model(MutableMapping):
                 index_then = self._sorted_data.index(existing)
                 del self._sorted_data[index_then]
 
-            index_now = bisect(self._sorted_data, new)
-            self._sorted_data.insert(index_now, new)
+            self._sorted_data.add(new)
+            index_now = self._sorted_data.index(new)
 
             # Insert into dict data
 
