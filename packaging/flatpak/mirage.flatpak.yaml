@@ -605,6 +605,15 @@ modules:
   - type: file
     url: https://files.pythonhosted.org/packages/6f/8f/457f4a5390eeae1cc3aeab89deb7724c965be841ffca6cfca9197482e470/soupsieve-2.0.1-py3-none-any.whl
     sha256: 1634eea42ab371d3d346309b93df7870a88610f0725d47528be902a0d95ecc55
+- name: python3-sortedcontainers
+  buildsystem: simple
+  build-commands:
+  - pip3 install --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+    "sortedcontainers==2.2.2"
+  sources:
+  - type: file
+    url: https://files.pythonhosted.org/packages/23/8c/22a47a4bf8c5289e4ed946d2b0e4df62bca385b9599cc1e46878f2e2529c/sortedcontainers-2.2.2-py2.py3-none-any.whl
+    sha256: c633ebde8580f241f274c1f8994a665c0e54a17724fecd0cae2f079e09c36d3f
 - name: python3-tinycss2
   buildsystem: simple
   build-commands:
