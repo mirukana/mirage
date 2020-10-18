@@ -14,7 +14,7 @@ HFlickableColumnPage {
     property string serverUrl
     property string displayUrl: serverUrl
 
-    property string loginFutureId: null
+    property string loginFutureId: ""
 
     readonly property int security:
         serverUrl.startsWith("https://") ?
