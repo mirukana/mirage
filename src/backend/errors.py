@@ -21,17 +21,19 @@ class MatrixError(Exception):
     def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
         """Return a `MatrixError` subclass from a nio `ErrorResponse`."""
 
-        # Check for the M_CODE first: some errors for an API share the same
-        # http code, but have different M_CODEs (e.g. POST /login 403).
-        for subcls in cls.__subclasses__():
-            if subcls.m_code and subcls.m_code == response.status_code:
-                return subcls()
+        http_code = response.transport_response.status
+        m_code    = response.status_code
 
         for subcls in cls.__subclasses__():
-            if subcls.http_code == response.transport_response.status:
+            if subcls.m_code and subcls.m_code == m_code:
                 return subcls()
 
-        return cls(response.transport_response.status, response.status_code)
+        # If error doesn't have a M_CODE, look for a generic http error class
+        for subcls in cls.__subclasses__():
+            if not subcls.m_code and subcls.http_code == http_code:
+                return subcls()
+
+        return cls(http_code, m_code)
 
 
 @dataclass
@@ -90,8 +92,8 @@ class MatrixTooLarge(MatrixError):
 
 @dataclass
 class MatrixBadGateway(MatrixError):
-    http_code: int = 502
-    m_code:    str = ""
+    http_code: int           = 502
+    m_code:    Optional[str] = None
 
 
 # Client errors
