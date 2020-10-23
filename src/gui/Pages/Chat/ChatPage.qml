@@ -25,6 +25,11 @@ HColumnPage {
     readonly property alias leftBanner: leftBanner
     readonly property alias composer: composer
 
+    readonly property DropArea uploadDropArea: UploadDropArea {
+        parent: window.mainUI
+        anchors.fill: parent
+    }
+
 
     padding: 0
     column.spacing: 0
