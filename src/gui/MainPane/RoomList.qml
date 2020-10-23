@@ -92,9 +92,10 @@ HListView {
     }
 
     function cycleUnreadRooms(forward=true, highlights=false) {
-        const prop  = highlights ? "highlights" : "unreads"
-        const start = currentIndex === -1 ? 0 : currentIndex
-        let index   = start
+        const prop       = highlights ? "highlights" : "unreads"
+        const local_prop = highlights ? "local_highlights" : "local_unreads"
+        const start      = currentIndex === -1 ? 0 : currentIndex
+        let index        = start
 
         while (true) {
             index += forward ? 1 : -1
@@ -109,7 +110,7 @@ HListView {
 
             const item = model.get(index)
 
-            if (item.type === "Room" && item[prop]) {
+            if (item.type === "Room" && (item[prop] || item[local_prop])) {
                 currentIndex = index
                 return true
             }
