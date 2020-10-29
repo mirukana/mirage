@@ -43,6 +43,7 @@ Python {
     }
 
     function cancelCoro(uuid) {
+        delete Globals.pendingCoroutines[uuid]
         call("BRIDGE.cancel_coro", [uuid])
     }
 

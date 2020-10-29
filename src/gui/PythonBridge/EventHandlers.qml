@@ -35,6 +35,8 @@ QtObject {
     }
 
     function onCoroutineDone(uuid, result, error, traceback) {
+        if (! Globals.pendingCoroutines[uuid]) return
+
         const onSuccess = Globals.pendingCoroutines[uuid].onSuccess
         const onError   = Globals.pendingCoroutines[uuid].onError
 

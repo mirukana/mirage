@@ -21,7 +21,7 @@ import traceback
 from concurrent.futures import Future
 from operator import attrgetter
 from threading import Thread
-from typing import Coroutine, Dict, Sequence
+from typing import Coroutine, Dict, Sequence, Set
 
 import pyotherside
 
@@ -53,6 +53,7 @@ class QMLBridge:
         self.backend: Backend = Backend()
 
         self._running_futures: Dict[str, Future] = {}
+        self._cancelled_early: Set[str]          = set()
 
         Thread(target=self._start_asyncio_loop).start()
 
@@ -78,6 +79,10 @@ class QMLBridge:
     def _call_coro(self, coro: Coroutine, uuid: str) -> None:
         """Schedule a coroutine to run in our thread and return a `Future`."""
 
+        if uuid in self._cancelled_early:
+            self._cancelled_early.remove(uuid)
+            return
+
         def on_done(future: Future) -> None:
             """Send a PyOtherSide event with the coro's result/exception."""
             result = exception = trace = None
@@ -101,7 +106,10 @@ class QMLBridge:
     ) -> None:
         """Schedule a coroutine from the `QMLBridge.backend` object."""
 
-        self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
+        if uuid in self._cancelled_early:
+            self._cancelled_early.remove(uuid)
+        else:
+            self._call_coro(attrgetter(name)(self.backend)(*args), uuid)
 
 
     def call_client_coro(
@@ -109,17 +117,20 @@ class QMLBridge:
     ) -> None:
         """Schedule a coroutine from a `QMLBridge.backend.clients` client."""
 
-        client = self.backend.clients[user_id]
-        self._call_coro(attrgetter(name)(client)(*args), uuid)
+        if uuid in self._cancelled_early:
+            self._cancelled_early.remove(uuid)
+        else:
+            client = self.backend.clients[user_id]
+            self._call_coro(attrgetter(name)(client)(*args), uuid)
 
 
     def cancel_coro(self, uuid: str) -> None:
         """Cancel a couroutine scheduled by the `QMLBridge` methods."""
 
-        try:
+        if uuid in self._running_futures:
             self._running_futures[uuid].cancel()
-        except KeyError:
-            log.warning("Couldn't cancel coroutine %s, future not found", uuid)
+        else:
+            self._cancelled_early.add(uuid)
 
 
     def pdb(self, additional_data: Sequence = ()) -> None:
