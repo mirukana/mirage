@@ -17,7 +17,7 @@ HColumnPage {
     property bool enableFlickShortcuts:
         SwipeView ? SwipeView.isCurrentItem : true
 
-    property Future loadFuture: null
+    property string loadFutureId: ""
 
     readonly property QtObject account: ModelStore.get("accounts").find(userId)
     readonly property bool offline: ! account || account.presence === "offline"
@@ -27,14 +27,14 @@ HColumnPage {
     }
 
     function loadDevices() {
-        loadFuture = py.callClientCoro(userId, "devices_info", [], devices => {
+        loadFutureId = py.callClientCoro(userId, "devices_info", [], devs => {
             deviceList.uncheckAll()
             deviceList.model.clear()
 
-            for (const device of devices)
+            for (const device of devs)
                 deviceList.model.append(device)
 
-            loadFuture                   = null
+            loadFutureId                 = ""
             deviceList.sectionItemCounts = getSectionItemCounts()
         })
     }
@@ -212,7 +212,7 @@ HColumnPage {
                 GroupButton {
                     id: refreshButton
                     text: qsTr("Refresh")
-                    loading: page.loadFuture !== null
+                    loading: page.loadFutureId !== ""
                     icon.name: "device-refresh-list"
                     onClicked: page.loadDevices()
                 }
