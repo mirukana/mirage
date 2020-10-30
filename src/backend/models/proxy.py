@@ -1,6 +1,7 @@
 # Copyright Mirage authors & contributors <https://github.com/mirukana/mirage>
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+from copy import copy
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from . import SyncId
@@ -40,7 +41,7 @@ class ModelProxy(Model):
         they should be converted to a same `ModelItem`
         subclass by overriding this function.
         """
-        return item
+        return copy(item)
 
 
     def source_item_set(

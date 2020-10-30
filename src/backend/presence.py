@@ -11,9 +11,13 @@ if TYPE_CHECKING:
     from .models.items import Account, Member
 
 ORDER: Dict[str, int] = {
-    "online":      0,
-    "unavailable": 1,
-    "offline":     2,
+    "online":           0,
+    "echo_online":      1,
+    "unavailable":      2,
+    "echo_unavailable": 3,
+    "invisible":        4,
+    "echo_invisible":   5,
+    "offline":          6,
 }
 
 
@@ -50,7 +54,6 @@ class Presence:
             cleared when client stops (`MatrixClient._start()`).
     """
 
-
     class State(AutoStrEnum):
         offline     = auto()  # can mean offline, invisible or unknwon
         unavailable = auto()
@@ -63,7 +66,6 @@ class Presence:
 
         def __lt__(self, other: "Presence.State") -> bool:
             return ORDER[self.value] < ORDER[other.value]
-
 
     presence:         State    = State.offline
     currently_active: bool     = False
