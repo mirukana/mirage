@@ -18,11 +18,14 @@ HPage {
         height: Math.min(implicitHeight, page.availableHeight)
 
         header: HTabBar {
+            currentIndex: 1  // XXX
             HTabButton { text: qsTr("Account") }
+            HTabButton { text: qsTr("Notifications") }
             HTabButton { text: qsTr("Security") }
         }
 
         Account { userId: page.userId }
+        Notifications { userId: page.userId }
         Security { userId: page.userId }
     }
 }

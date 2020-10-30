@@ -15,7 +15,7 @@ import nio
 
 from .html_markdown import HTML_PROCESSOR
 from .media_cache import Media
-from .models.items import TypeSpecifier
+from .models.items import PushRule, PushRuleKind, TypeSpecifier
 from .presence import Presence
 from .pyotherside_events import DevicesUpdated
 from .utils import classes_defined_in, plain2html
@@ -53,22 +53,23 @@ class NioCallbacks:
             if method:
                 self.client.add_response_callback(method, response_class)
 
-        for name, event_class in classes_defined_in(nio.events).items():
+        for name, ev_class in classes_defined_in(nio.events).items():
             method = getattr(self, f"on{name}", None)
 
             if not method:
                 continue
 
-            if issubclass(event_class, nio.EphemeralEvent):
-                self.client.add_ephemeral_callback(method, event_class)
-            elif issubclass(event_class, nio.ToDeviceEvent):
-                self.client.add_to_device_callback(method, event_class)
-            elif issubclass(event_class, nio.AccountDataEvent):
-                self.client.add_room_account_data_callback(method, event_class)
-            elif issubclass(event_class, nio.PresenceEvent):
-                self.client.add_presence_callback(method, event_class)
+            if issubclass(ev_class, nio.EphemeralEvent):
+                self.client.add_ephemeral_callback(method, ev_class)
+            elif issubclass(ev_class, nio.ToDeviceEvent):
+                self.client.add_to_device_callback(method, ev_class)
+            elif issubclass(ev_class, nio.AccountDataEvent):
+                self.client.add_global_account_data_callback(method, ev_class)
+                self.client.add_room_account_data_callback(method, ev_class)
+            elif issubclass(ev_class, nio.PresenceEvent):
+                self.client.add_presence_callback(method, ev_class)
             else:
-                self.client.add_event_callback(method, event_class)
+                self.client.add_event_callback(method, ev_class)
 
 
     @property
@@ -777,6 +778,54 @@ class NioCallbacks:
 
         for ev in recount_markers:
             ev.read_by_count = len(ev.last_read_by)
+
+
+    # Account data callbacks
+
+    async def onPushRulesEvent(self, ev: nio.PushRulesEvent) -> None:
+        model = self.models[self.user_id, "pushrules"]
+        model.clear()
+
+        kinds: Dict[PushRuleKind, List[nio.PushRule]] = {
+            PushRuleKind.Override:  ev.global_rules.override,
+            PushRuleKind.Content:   ev.global_rules.content,
+            PushRuleKind.Room:      ev.global_rules.room,
+            PushRuleKind.Sender:    ev.global_rules.sender,
+            PushRuleKind.Underride: ev.global_rules.underride,
+        }
+
+        for kind, rules in kinds.items():
+            for order, rule in enumerate(rules):
+                tweaks = {
+                    action.tweak: action.value for action in rule.actions
+                    if isinstance(action, nio.PushSetTweak)
+                }
+
+                # Note: The `dont_notify` action does nothing.
+                # As of now (sept 2020), `coalesce` is just a `notify` synonym.
+                notify = any(
+                    isinstance(action, (nio.PushNotify, nio.PushCoalesce))
+                    for action in rule.actions
+                )
+
+                high   = tweaks.get("highlight", False) is not False
+                bubble = tweaks.get("bubble", notify) is not False
+                sound  = tweaks.get("sound", False) is not False
+                hint   = tweaks.get("urgency_hint", high) is not False
+
+                model[rule.id] = PushRule(
+                    id           = rule.id,
+                    kind         = kind,
+                    order        = order,
+                    default      = rule.default,
+                    enabled      = rule.enabled,
+                    pattern      = rule.pattern,
+                    notify       = notify,
+                    highlight    = high,
+                    bubble       = bubble,
+                    sound        = sound,
+                    urgency_hint = hint,
+                )
 
 
     # Presence event callbacks

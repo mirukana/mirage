@@ -4,15 +4,20 @@
 - PCN error handling
 - Change docs linking to dev branch back to master 
 
+- fix DeviceSection padding
 - Implement fallback QML notifications, usable if dbus isn't available
 - annoying tooltips when menu open
 - profiles missing in notifications
 
 - add http_proxy support
+- image viewer: can't expand image in reduced window layout
 - Encrypted rooms don't show invites in member list after Mirage restart
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages
+- option to use plaintext notifications
+- warn on ambiguously activated shortcut
 
+- SSO device delete?
 - filter > enter > room list is always scrolled to top
 - session list: prevent tab-focusing the delegates
 - refresh server list button

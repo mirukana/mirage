@@ -85,7 +85,51 @@ class Account(ModelItem):
         return (self.order, self.id) < (other.order, other.id)
 
 
+class PushRuleKind(AutoStrEnum):
+    Override  = auto()
+    Content   = auto()
+    Room      = auto()
+    Sender    = auto()
+    Underride = auto()
+
+
 @dataclass(eq=False)
+class PushRule(ModelItem):
+    """A push rule configured for one of our account."""
+
+    id:           str          = field()
+    kind:         PushRuleKind = field()
+    order:        int          = field()
+    default:      bool         = field()
+    enabled:      bool         = True
+    pattern:      str          = ""
+    notify:       bool         = False
+    highlight:    bool         = False
+    bubble:       bool         = False
+    sound:        bool         = False
+    urgency_hint: bool         = False
+
+    def __lt__(self, other: "PushRule") -> bool:
+        """Sort by `kind`, then `order`."""
+
+        return (
+            self.kind is PushRuleKind.Underride,
+            self.kind is PushRuleKind.Sender,
+            self.kind is PushRuleKind.Room,
+            self.kind is PushRuleKind.Content,
+            self.kind is PushRuleKind.Override,
+            self.order,
+        ) < (
+            other.kind is PushRuleKind.Underride,
+            other.kind is PushRuleKind.Sender,
+            other.kind is PushRuleKind.Room,
+            other.kind is PushRuleKind.Content,
+            other.kind is PushRuleKind.Override,
+            other.order,
+        )
+
+
+@dataclass
 class Room(ModelItem):
     """A matrix room we are invited to, are or were member of."""
 

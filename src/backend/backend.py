@@ -66,6 +66,9 @@ class Backend:
 
             - `"accounts"`: logged-in accounts;
 
+            - `("<user_id>", "pushrules")`: push rules configured for our
+              account `user_id`.
+
             - `("<user_id>", "rooms")`: rooms our account `user_id` is part of;
 
             - `("<user_id>", "transfers")`: ongoing or failed file
