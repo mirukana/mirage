@@ -82,7 +82,7 @@ HRowLayout {
             window.settings.maxMessageCharactersPerLine
         )
 
-    readonly property alias selectedText: contentLabel.selectedText
+    readonly property alias selectedText: contentLabel.selectedPlainText
 
 
     spacing: theme.chat.message.horizontalSpacing
@@ -182,9 +182,9 @@ HRowLayout {
             Layout.maximumWidth: eventContent.maxMessageWidth
             Layout.fillWidth: true
 
-            onSelectedTextChanged: if (selectedText) {
+            onSelectedTextChanged: if (selectedPlainText) {
                 eventList.delegateWithSelectedText = model.id
-                eventList.selectedText             = selectedText
+                eventList.selectedText             = selectedPlainText
             } else if (eventList.delegateWithSelectedText === model.id) {
                 eventList.delegateWithSelectedText = ""
                 eventList.selectedText             = ""
@@ -274,7 +274,7 @@ HRowLayout {
                 radius: theme.chat.message.radius
                 z: -100
                 color: eventDelegate.checked &&
-                       ! contentLabel.selectedText &&
+                       ! contentLabel.selectedPlainText &&
                        ! mousePointHandler.active &&
                        ! mouseShiftPointHandler.active ?
                        theme.chat.message.checkedBackground :

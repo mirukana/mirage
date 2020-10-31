@@ -30,6 +30,11 @@ TextField {
 
     property string previousDefaultText: ""  // private
 
+    // For rich text, selectedText returns some weird invisible characters
+    // instead of real newlines
+    readonly property string selectedPlainText:
+        selectedText.replace(/[\u2028\u2029]/g, "\n")
+
     function reset() {
         clear()
         text = Qt.binding(() => defaultText || "")

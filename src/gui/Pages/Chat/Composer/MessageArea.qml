@@ -225,7 +225,7 @@ HTextArea {
         if (ev.text && autoCompletionOpen) acceptAutoCompletion()
 
         if (ev.matches(StandardKey.Copy) &&
-            ! area.selectedText &&
+            ! area.selectedPlainText &&
             eventList &&
             (eventList.selectedCount || eventList.currentIndex !== -1))
         {
@@ -237,7 +237,7 @@ HTextArea {
         // FIXME: buggy
         // if (ev.modifiers === Qt.NoModifier &&
         //     ev.key === Qt.Key_Backspace &&
-        //     ! area.selectedText)
+        //     ! area.selectedPlainText)
         // {
         //     ev.accepted = true
         //     area.remove(

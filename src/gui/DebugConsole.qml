@@ -208,9 +208,9 @@ HDrawer {
 
                 Layout.fillWidth: true
 
-                onSelectedTextChanged: if (selectedText) {
+                onSelectedTextChanged: if (selectedPlainText) {
                     selectedOutputDelegateIndex = model.index
-                    selectedOutputText          = selectedText
+                    selectedOutputText          = selectedPlainText
                 } else if (selectedOutputDelegateIndex === model.index) {
                     selectedOutputDelegateIndex = -1
                     selectedOutputText          = ""
@@ -249,7 +249,7 @@ HDrawer {
                         icon.name: "copy-text"
                         text: qsTr("Copy")
                         onTriggered: {
-                            if (delegate.selectedText) {
+                            if (delegate.selectedPlainText) {
                                 delegate.copy()
                                 return
                             }
@@ -337,7 +337,7 @@ HDrawer {
             Keys.onPressed: ev => {
                 if (
                     ev.matches(StandardKey.Copy) &&
-                    ! inputArea.selectedText &&
+                    ! inputArea.selectedPlainText &&
                     selectedOutputText
                 ) {
                     ev.accepted = true

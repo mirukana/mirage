@@ -50,14 +50,14 @@ HMenu {
     HMenuItem {
         icon.name: "cut-text"
         text: qsTr("Cut")
-        enabled: control.selectedText
+        enabled: control.selectedPlainText
         onTriggered: control.cut()
     }
 
     HMenuItem {
         icon.name: "copy-text"
         text: qsTr("Copy")
-        enabled: control.selectedText
+        enabled: control.selectedPlainText
         onTriggered: control.copy()
     }
 
