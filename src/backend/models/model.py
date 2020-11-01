@@ -11,6 +11,7 @@ from typing import (
 from sortedcontainers import SortedList
 
 from ..pyotherside_events import ModelCleared, ModelItemDeleted, ModelItemSet
+from ..utils import serialize_value_for_qml
 from . import SyncId
 
 if TYPE_CHECKING:
@@ -150,7 +151,8 @@ class Model(MutableMapping):
 
             if self.sync_id:
                 if self._active_batch_removed is None:
-                    ModelItemDeleted(self.sync_id, index, 1, (item.id,))
+                    i = serialize_value_for_qml(item.id, json_list_dicts=True)
+                    ModelItemDeleted(self.sync_id, index, 1, (i,))
                 else:
                     self._active_batch_removed.append((index, item.id))
 
@@ -199,12 +201,15 @@ class Model(MutableMapping):
                     itertools.groupby(batch, key=lambda x: x[0])
                 ]
 
+                def serialize_id(id_):
+                    return serialize_value_for_qml(id_, json_list_dicts=True)
+
                 for group in groups:
                     ModelItemDeleted(
                         self.sync_id,
                         index = group[0][0],
                         count = len(group),
-                        ids   = [item[1] for item in group],
+                        ids   = [serialize_id(item[1]) for item in group],
                     )
 
                 self._active_batch_removed = None
