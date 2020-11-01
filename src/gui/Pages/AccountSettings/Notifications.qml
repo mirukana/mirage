@@ -28,6 +28,8 @@ HListView {
         const args = []
 
         for (const [modelId, kwargs] of Object.entries(pendingEdits)) {
+            if (! model.find(modelId)) continue  // pushrule was deleted
+
             const [kind, rule_id] = JSON.parse(modelId)
             args.push(Object.assign({}, {kind, rule_id}, kwargs))
         }
