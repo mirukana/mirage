@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Set, Tuple, Union
 from urllib.parse import quote
 
 import nio
@@ -784,7 +784,6 @@ class NioCallbacks:
 
     async def onPushRulesEvent(self, ev: nio.PushRulesEvent) -> None:
         model = self.models[self.user_id, "pushrules"]
-        model.clear()  # XXX
 
         kinds: Dict[PushRuleKind, List[nio.PushRule]] = {
             PushRuleKind.Override:  ev.global_rules.override,
@@ -793,6 +792,22 @@ class NioCallbacks:
             PushRuleKind.Sender:    ev.global_rules.sender,
             PushRuleKind.Underride: ev.global_rules.underride,
         }
+
+        # Remove from model rules that are now deleted.
+        # MUST be done first to avoid having rules sharing the same kind+order.
+
+        new_keys: Set[Tuple[str, str]] = set()
+
+        for kind, rules in kinds.items():
+            for rule in rules:
+                new_keys.add((kind.value, rule.id))
+
+        with model.batch_remove():
+            for key in tuple(model):
+                if key not in new_keys:
+                    del model[key]
+
+        # Then, add new rules/modify changed existing ones
 
         for kind, rules in kinds.items():
             for order, rule in enumerate(rules):

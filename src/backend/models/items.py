@@ -120,6 +120,7 @@ class PushRule(ModelItem):
             self.kind is PushRuleKind.Content,
             self.kind is PushRuleKind.Override,
             self.order,
+            self.id,
         ) < (
             other.kind is PushRuleKind.Underride,
             other.kind is PushRuleKind.Sender,
@@ -127,6 +128,7 @@ class PushRule(ModelItem):
             other.kind is PushRuleKind.Content,
             other.kind is PushRuleKind.Override,
             other.order,
+            other.id,
         )
 
 
