@@ -1792,8 +1792,11 @@ class MatrixClient(nio.AsyncClient):
         urgency_hint: Optional[bool] = None,
     ) -> None:
 
-        # XXX: [kind, rule_id]
-        current: PushRule = self.models[self.user_id, "pushrules"][rule_id]
+        kind     = PushRuleKind[kind] if isinstance(kind, str) else kind
+        nio_kind = nio.PushRuleKind[kind.value.lower()]
+
+        current: PushRule = \
+            self.models[self.user_id, "pushrules"][kind.value, rule_id]
 
         actions: List[nio.PushAction] = []
 
@@ -1819,11 +1822,6 @@ class MatrixClient(nio.AsyncClient):
         elif hint is False or (hint is None and not current.urgency_hint):
             actions.append(nio.PushSetTweak("urgency_hint", False))
 
-        nio_kind = nio.PushRuleKind[
-            (kind if isinstance(kind, str) else kind.value).lower()
-        ]
-
-        print(nio_kind, rule_id, actions)
         await self.set_pushrule_actions("global", nio_kind, rule_id, actions)
 
 

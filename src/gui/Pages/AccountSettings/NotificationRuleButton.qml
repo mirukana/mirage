@@ -6,11 +6,10 @@ import "../../Base"
 HButton {
     property string toggles: ""
 
-    readonly property string key: JSON.stringify([model.kind, model.id])
-
     readonly property bool on:
-        toggles && page.pendingEdits[key] && toggles in page.pendingEdits[key]?
-        page.pendingEdits[key][toggles] :
+        toggles && page.pendingEdits[model.id] &&
+        toggles in page.pendingEdits[model.id] ?
+        page.pendingEdits[model.id][toggles] :
 
         toggles ?
         model[toggles] :
@@ -25,15 +24,15 @@ HButton {
     onClicked: {
         if (! toggles) return
 
-        if (! (key in page.pendingEdits)) page.pendingEdits[key] = {}
+        if (! (model.id in page.pendingEdits)) page.pendingEdits[model.id] = {}
 
         if ((! on) === model[toggles])
-            delete page.pendingEdits[key][toggles]
+            delete page.pendingEdits[model.id][toggles]
         else
-            page.pendingEdits[key][toggles] = ! on
+            page.pendingEdits[model.id][toggles] = ! on
 
-        if (! Object.keys(page.pendingEdits[key]).length)
-            delete page.pendingEdits[key]
+        if (! Object.keys(page.pendingEdits[model.id]).length)
+            delete page.pendingEdits[model.id]
 
         page.pendingEditsChanged()
     }

@@ -16,8 +16,7 @@ HListView {
     property bool enableFlickShortcuts:
         SwipeView ? SwipeView.isCurrentItem : true
 
-    // The object's array keys are run through `JSON.stringify(key)`.
-    // {[kind, rule_id]: {notify, highlight, bubble, sound, urgency_hint}}
+    // {model.id: {notify, highlight, bubble, sound, urgency_hint}}
     property var pendingEdits: ({})
     property string saveFutureId: ""
 
@@ -28,8 +27,8 @@ HListView {
     function save() {
         const args = []
 
-        for (const [kindRuleId, kwargs] of Object.entries(pendingEdits)) {
-            const [kind, rule_id] = JSON.parse(kindRuleId)
+        for (const [modelId, kwargs] of Object.entries(pendingEdits)) {
+            const [kind, rule_id] = JSON.parse(modelId)
             args.push(Object.assign({}, {kind, rule_id}, kwargs))
         }
 

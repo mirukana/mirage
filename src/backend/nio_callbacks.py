@@ -813,9 +813,10 @@ class NioCallbacks:
                 sound  = tweaks.get("sound", False) is not False
                 hint   = tweaks.get("urgency_hint", high) is not False
 
-                model[rule.id] = PushRule(
-                    id           = rule.id,
+                model[kind.value, rule.id] = PushRule(
+                    id           = (kind.value, rule.id),
                     kind         = kind,
+                    rule_id      = rule.id,
                     order        = order,
                     default      = rule.default,
                     enabled      = rule.enabled,

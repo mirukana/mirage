@@ -97,17 +97,18 @@ class PushRuleKind(AutoStrEnum):
 class PushRule(ModelItem):
     """A push rule configured for one of our account."""
 
-    id:           str          = field()
-    kind:         PushRuleKind = field()
-    order:        int          = field()
-    default:      bool         = field()
-    enabled:      bool         = True
-    pattern:      str          = ""
-    notify:       bool         = False
-    highlight:    bool         = False
-    bubble:       bool         = False
-    sound:        bool         = False
-    urgency_hint: bool         = False
+    id:           Tuple[str, str] = field()  # (kind.value, rule_id)
+    kind:         PushRuleKind    = field()
+    rule_id:      str             = field()
+    order:        int             = field()
+    default:      bool            = field()
+    enabled:      bool            = True
+    pattern:      str             = ""
+    notify:       bool            = False
+    highlight:    bool            = False
+    bubble:       bool            = False
+    sound:        bool            = False
+    urgency_hint: bool            = False
 
     def __lt__(self, other: "PushRule") -> bool:
         """Sort by `kind`, then `order`."""
