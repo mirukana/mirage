@@ -784,7 +784,7 @@ class NioCallbacks:
 
     async def onPushRulesEvent(self, ev: nio.PushRulesEvent) -> None:
         model = self.models[self.user_id, "pushrules"]
-        model.clear()
+        model.clear()  # XXX
 
         kinds: Dict[PushRuleKind, List[nio.PushRule]] = {
             PushRuleKind.Override:  ev.global_rules.override,

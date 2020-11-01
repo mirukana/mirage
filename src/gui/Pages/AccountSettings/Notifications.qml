@@ -6,7 +6,6 @@ import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
 import "../../Base/Buttons"
-import "../../PythonBridge"
 import "../../ShortcutBundles"
 
 HListView {
@@ -17,14 +16,38 @@ HListView {
     property bool enableFlickShortcuts:
         SwipeView ? SwipeView.isCurrentItem : true
 
+    // The object's array keys are run through `JSON.stringify(key)`.
+    // {[kind, rule_id]: {notify, highlight, bubble, sound, urgency_hint}}
+    property var pendingEdits: ({})
+    property string saveFutureId: ""
+
     function takeFocus() {
-        // deviceList.headerItem.exportButton.forceActiveFocus()
+        // deviceList.headerItem.exportButton.forceActiveFocus() TODO
+    }
+
+    function save() {
+        const args = []
+
+        for (const [kindRuleId, kwargs] of Object.entries(pendingEdits)) {
+            const [kind, rule_id] = JSON.parse(kindRuleId)
+            args.push(Object.assign({}, {kind, rule_id}, kwargs))
+        }
+
+        saveFutureId = py.callClientCoro(
+            userId,
+            "mass_tweak_pushrules",
+            args,
+            () => {
+                if (! root) return
+                saveFutureId = ""
+                pendingEdits = {}
+            }
+        )
     }
 
 
     clip: true
     model: ModelStore.get(userId, "pushrules")
-    bottomMargin: theme.spacing
     implicitHeight: Math.min(window.height, contentHeight + bottomMargin)
 
     section.property: "kind"
@@ -42,8 +65,23 @@ HListView {
     }
 
     delegate: NotificationRuleDelegate {
-        userId: root.userId
+        page: root
         width: root.width
+    }
+
+    footer: AutoDirectionLayout {
+        z: 100
+        width: root.width
+        enabled: Object.keys(root.pendingEdits).length !== 0
+
+        ApplyButton {
+            onClicked: root.save()
+            loading: root.saveFutureId !== ""
+        }
+
+        CancelButton {
+            onClicked: pendingEdits = {}
+        }
     }
 
     Layout.fillWidth: true

@@ -1,24 +1,20 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
-import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import "../.."
 import "../../Base"
-import "../../Base/Buttons"
 import "../../Base/HTile"
 import "../../MainPane"
-import "../../PythonBridge"
-import "../../ShortcutBundles"
 
 HTile {
     id: root
 
-    property string userId
+    property Item page
 
     readonly property QtObject matchingRoom:
         model.kind === "Room" ?
-        ModelStore.get(userId, "rooms").find(model.id) :
+        ModelStore.get(page.userId, "rooms").find(model.id) :
         null
 
 
@@ -69,7 +65,7 @@ HTile {
 
                 model.id === ".m.rule.contains_user_name" ?
                 qsTr("Contains %1").arg(utils.coloredNameHtml(
-                    "", userId, userId.split(":")[0].substring(1),
+                    "", page.userId, page.userId.split(":")[0].substring(1),
                 )):
 
                 model.id === ".m.rule.call" ?
@@ -103,7 +99,7 @@ HTile {
 
         HRowLayout {
             NotificationRuleButton {
-                on: model.notify
+                toggles: "notify"
 
                 contentItem: MessageIndicator {
                     indicatorTheme:
@@ -117,7 +113,7 @@ HTile {
             }
 
             NotificationRuleButton {
-                on: model.highlight
+                toggles: "highlight"
 
                 contentItem: MessageIndicator {
                     indicatorTheme:
@@ -134,17 +130,17 @@ HTile {
 
             NotificationRuleButton {
                 icon.name: "pushrule-action-bubble"
-                on: model.bubble
+                toggles: "bubble"
             }
 
             NotificationRuleButton {
                 icon.name: "pushrule-action-sound"
-                on: model.sound
+                toggles: "sound"
             }
 
             NotificationRuleButton {
                 icon.name: "pushrule-action-urgency-hint"
-                on: model.urgency_hint
+                toggles: "urgency_hint"
             }
 
             HSpacer {}

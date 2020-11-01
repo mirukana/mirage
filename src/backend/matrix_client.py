@@ -41,8 +41,8 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, Room, Transfer, TransferStatus,
-    TypeSpecifier,
+    ZERO_DATE, Account, Event, Member, PushRule, PushRuleKind, Room,
+    Transfer, TransferStatus, TypeSpecifier,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -1779,6 +1779,57 @@ class MatrixClient(nio.AsyncClient):
 
         if isinstance(resp, nio.DeleteDevicesAuthResponse):
             raise MatrixUnauthorized()
+
+
+    async def tweak_pushrule(
+        self,
+        kind:         Union[PushRuleKind, str],
+        rule_id:      str,
+        notify:       Optional[bool] = None,
+        highlight:    Optional[bool] = None,
+        bubble:       Optional[bool] = None,
+        sound:        Optional[bool] = None,
+        urgency_hint: Optional[bool] = None,
+    ) -> None:
+
+        # XXX: [kind, rule_id]
+        current: PushRule = self.models[self.user_id, "pushrules"][rule_id]
+
+        actions: List[nio.PushAction] = []
+
+        if notify or (notify is None and current.notify):
+            actions.append(nio.PushNotify())
+
+        if highlight or (highlight is None and current.highlight):
+            actions.append(nio.PushSetTweak("highlight", True))
+
+        if bubble or (bubble is None and current.bubble):
+            actions.append(nio.PushSetTweak("bubble", True))
+        elif bubble is False or (bubble is None and not current.bubble):
+            actions.append(nio.PushSetTweak("bubble", False))
+
+        # XXX: don't always override with "default"
+        if sound or (sound is None and current.sound):
+            actions.append(nio.PushSetTweak("sound", "default"))
+
+        hint = urgency_hint
+
+        if hint or (hint is None and current.urgency_hint):
+            actions.append(nio.PushSetTweak("urgency_hint", True))
+        elif hint is False or (hint is None and not current.urgency_hint):
+            actions.append(nio.PushSetTweak("urgency_hint", False))
+
+        nio_kind = nio.PushRuleKind[
+            (kind if isinstance(kind, str) else kind.value).lower()
+        ]
+
+        print(nio_kind, rule_id, actions)
+        await self.set_pushrule_actions("global", nio_kind, rule_id, actions)
+
+
+    async def mass_tweak_pushrules(self, *tweaks_kwargs) -> None:
+        coros = [self.tweak_pushrule(**kwargs) for kwargs in tweaks_kwargs]
+        await asyncio.gather(*coros)
 
 
     # Functions to register/modify data into models
