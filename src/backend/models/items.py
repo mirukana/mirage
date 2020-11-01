@@ -107,7 +107,7 @@ class PushRule(ModelItem):
     notify:       bool            = False
     highlight:    bool            = False
     bubble:       bool            = False
-    sound:        bool            = False
+    sound:        str             = ""  # usually "default" when set
     urgency_hint: bool            = False
 
     def __lt__(self, other: "PushRule") -> bool:

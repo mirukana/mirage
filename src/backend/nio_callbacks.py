@@ -825,7 +825,7 @@ class NioCallbacks:
 
                 high   = tweaks.get("highlight", False) is not False
                 bubble = tweaks.get("bubble", notify) is not False
-                sound  = tweaks.get("sound", False) is not False
+                sound  = str(tweaks.get("sound") or "")
                 hint   = tweaks.get("urgency_hint", high) is not False
 
                 model[kind.value, rule.id] = PushRule(

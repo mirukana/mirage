@@ -136,6 +136,11 @@ HTile {
             NotificationRuleButton {
                 icon.name: "pushrule-action-sound"
                 toggles: "sound"
+                nextValue:
+                    on ? "" :
+                    model[toggles] ? model[toggles] :
+                    model.rule_id === ".m.rule.call" ? "ring" :
+                    "default"
             }
 
             NotificationRuleButton {

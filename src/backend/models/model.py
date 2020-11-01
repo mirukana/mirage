@@ -108,7 +108,11 @@ class Model(MutableMapping):
                 del self._sorted_data[index_then]
 
             self._sorted_data.add(new)
-            index_now = self._sorted_data.index(new)
+            try:
+                index_now = self._sorted_data.index(new)
+            except ValueError:
+                import remote_pdb; remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
+                pass
 
             # Insert into dict data
 

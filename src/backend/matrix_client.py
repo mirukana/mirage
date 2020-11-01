@@ -1788,7 +1788,7 @@ class MatrixClient(nio.AsyncClient):
         notify:       Optional[bool] = None,
         highlight:    Optional[bool] = None,
         bubble:       Optional[bool] = None,
-        sound:        Optional[bool] = None,
+        sound:        Optional[str]  = None,
         urgency_hint: Optional[bool] = None,
     ) -> None:
 
@@ -1811,9 +1811,8 @@ class MatrixClient(nio.AsyncClient):
         elif bubble is False or (bubble is None and not current.bubble):
             actions.append(nio.PushSetTweak("bubble", False))
 
-        # XXX: don't always override with "default"
         if sound or (sound is None and current.sound):
-            actions.append(nio.PushSetTweak("sound", "default"))
+            actions.append(nio.PushSetTweak("sound", sound))
 
         hint = urgency_hint
 

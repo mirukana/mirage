@@ -5,14 +5,15 @@ import "../../Base"
 
 HButton {
     property string toggles: ""
+    property var nextValue: ! on
 
     readonly property bool on:
         toggles && page.pendingEdits[model.id] &&
         toggles in page.pendingEdits[model.id] ?
-        page.pendingEdits[model.id][toggles] :
+        Boolean(page.pendingEdits[model.id][toggles]) :
 
         toggles ?
-        model[toggles] :
+        Boolean(model[toggles]) :
 
         true
 
@@ -26,10 +27,10 @@ HButton {
 
         if (! (model.id in page.pendingEdits)) page.pendingEdits[model.id] = {}
 
-        if ((! on) === model[toggles])
+        if ((! on) === Boolean(model[toggles]))
             delete page.pendingEdits[model.id][toggles]
         else
-            page.pendingEdits[model.id][toggles] = ! on
+            page.pendingEdits[model.id][toggles] = nextValue
 
         if (! Object.keys(page.pendingEdits[model.id]).length)
             delete page.pendingEdits[model.id]
