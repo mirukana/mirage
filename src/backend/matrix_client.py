@@ -1833,10 +1833,9 @@ class MatrixClient(nio.AsyncClient):
     async def update_account_unread_counts(self) -> None:
         """Recalculate total unread notifications/highlights for our account"""
 
-        unreads          = 0
-        highlights       = 0
-        local_unreads    = False
-        local_highlights = False
+        unreads       = 0
+        highlights    = 0
+        local_unreads = False
 
         for room in self.models[self.user_id, "rooms"].values():
             unreads    += room.unreads
@@ -1845,15 +1844,11 @@ class MatrixClient(nio.AsyncClient):
             if room.local_unreads:
                 local_unreads = True
 
-            if room.local_highlights:
-                local_highlights = True
-
         account = self.models["accounts"][self.user_id]
         account.set_fields(
             total_unread     = unreads,
             total_highlights = highlights,
             local_unreads    = local_unreads,
-            local_highlights = local_highlights,
         )
 
 
@@ -1903,7 +1898,6 @@ class MatrixClient(nio.AsyncClient):
             last_event_date              = datetime.fromtimestamp(0)
             typing_members               = []
             local_unreads                = False
-            local_highlights             = False
             update_account_unread_counts = True
             unverified_devices           = (
                 False
@@ -1914,7 +1908,6 @@ class MatrixClient(nio.AsyncClient):
             last_event_date              = registered.last_event_date
             typing_members               = registered.typing_members
             local_unreads                = registered.local_unreads
-            local_highlights             = registered.local_highlights
             update_account_unread_counts = (
                 registered.unreads != room.unread_notifications or
                 registered.highlights != room.unread_highlights
@@ -1962,10 +1955,9 @@ class MatrixClient(nio.AsyncClient):
 
             last_event_date = last_event_date,
 
-            unreads          = room.unread_notifications,
-            highlights       = room.unread_highlights,
-            local_unreads    = local_unreads,
-            local_highlights = local_highlights,
+            unreads       = room.unread_notifications,
+            highlights    = room.unread_highlights,
+            local_unreads = local_unreads,
 
             lexical_sorting = self.backend.settings.RoomList.lexical_sort,
             bookmarked      = room.room_id in bookmarks.get(self.user_id, []),
@@ -2272,10 +2264,7 @@ class MatrixClient(nio.AsyncClient):
         self.previous_server_unreads[room.room_id]    = room_item.unreads
         self.previous_server_highlights[room.room_id] = room_item.highlights
 
-        if highlight:
-            room_item.set_fields(local_unreads=True, local_highlights=True)
-        else:
-            room_item.local_unreads = True
+        room_item.local_unreads = True
 
         if unread or highlight:
             members   = self.models[self.user_id, room.room_id, "members"]

@@ -627,8 +627,7 @@ Rectangle {
             (
                 chat.roomInfo.unreads ||
                 chat.roomInfo.highlights ||
-                chat.roomInfo.local_unreads ||
-                chat.roomInfo.local_highlights
+                chat.roomInfo.local_unreads
             ) &&
             Qt.application.state === Qt.ApplicationActive &&
             eventList.visibleEnd.y > eventList.contentHeight - 100

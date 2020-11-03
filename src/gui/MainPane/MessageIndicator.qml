@@ -11,10 +11,6 @@ HLabel {
     property int unreads: 0
     property int highlights: 0
     property bool localUnreads: false
-    property bool localHighlights: false
-
-    readonly property bool useHighlightStyle:
-        highlights || (! unreads && localUnreads && localHighlights)
 
 
     text:
@@ -25,13 +21,13 @@ HLabel {
         ""
 
     color:
-        useHighlightStyle ?
+        highlights ?
         indicatorTheme.highlightText :
         indicatorTheme.text
 
     font.pixelSize: theme.fontSize.small
     font.bold:
-        useHighlightStyle ?
+        highlights ?
         indicatorTheme.highlightBold :
         indicatorTheme.bold
 
@@ -44,22 +40,22 @@ HLabel {
 
     background: Rectangle {
         radius:
-            useHighlightStyle ?
+            highlights ?
             indicatorTheme.highlightRadius :
             indicatorTheme.radius
 
         color:
-            useHighlightStyle ?
+            highlights ?
             indicatorTheme.highlightBackground :
             indicatorTheme.background
 
         border.width:
-            useHighlightStyle ?
+            highlights ?
             indicatorTheme.highlightBorderWidth :
             indicatorTheme.borderWidth
 
         border.color:
-            useHighlightStyle ?
+            highlights ?
             indicatorTheme.highlightBorder :
             indicatorTheme.border
 

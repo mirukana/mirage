@@ -93,7 +93,7 @@ HListView {
 
     function cycleUnreadRooms(forward=true, highlights=false) {
         const prop       = highlights ? "highlights" : "unreads"
-        const local_prop = highlights ? "local_highlights" : "local_unreads"
+        const local_prop = highlights ? "highlights" : "local_unreads"
         const start      = currentIndex === -1 ? 0 : currentIndex
         let index        = start
 

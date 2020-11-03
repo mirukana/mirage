@@ -379,10 +379,9 @@ class Backend:
 
             if room:
                 room.set_fields(
-                    unreads          = 0,
-                    highlights       = 0,
-                    local_unreads    = False,
-                    local_highlights = False,
+                    unreads       = 0,
+                    highlights    = 0,
+                    local_unreads = False,
                 )
                 await client.update_account_unread_counts()
 

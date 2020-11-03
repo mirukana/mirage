@@ -69,7 +69,6 @@ class Account(ModelItem):
     total_unread:     int      = 0
     total_highlights: int      = 0
     local_unreads:    bool     = False
-    local_highlights: bool     = False
 
     # For some reason, Account cannot inherit Presence, because QML keeps
     # complaining type error on unknown file
@@ -165,10 +164,9 @@ class Room(ModelItem):
 
     last_event_date: datetime = ZERO_DATE
 
-    unreads:          int  = 0
-    highlights:       int  = 0
-    local_unreads:    bool = False
-    local_highlights: bool = False
+    unreads:       int  = 0
+    highlights:    int  = 0
+    local_unreads: bool = False
 
     lexical_sorting: bool = False
     bookmarked: bool = False
@@ -207,7 +205,6 @@ class Room(ModelItem):
             self.left,
             bool(other.inviter_id),
             bool(other.highlights),
-            bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
@@ -220,7 +217,6 @@ class Room(ModelItem):
             other.left,
             bool(self.inviter_id),
             bool(self.highlights),
-            bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,
@@ -264,7 +260,6 @@ class AccountOrRoom(Account, Room):
             self.left,
             bool(other.inviter_id),
             bool(other.highlights),
-            bool(other.local_highlights),
             bool(other.unreads),
             bool(other.local_unreads),
             other.last_event_date,
@@ -279,7 +274,6 @@ class AccountOrRoom(Account, Room):
             other.left,
             bool(self.inviter_id),
             bool(self.highlights),
-            bool(self.local_highlights),
             bool(self.unreads),
             bool(self.local_unreads),
             self.last_event_date,

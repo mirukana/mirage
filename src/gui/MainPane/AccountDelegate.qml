@@ -98,7 +98,6 @@ HTile {
                 unreads: model.total_unread
                 highlights: model.total_highlights
                 localUnreads: model.local_unreads
-                localHighlights: model.local_highlights
             }
 
         }
