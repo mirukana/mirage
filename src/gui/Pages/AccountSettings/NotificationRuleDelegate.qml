@@ -20,6 +20,8 @@ HTile {
 
     contentOpacity: model.enabled ? 1 : theme.disabledElementsOpacity
     hoverEnabled: false
+    leftPadding: theme.spacing / 4
+    rightPadding: leftPadding
 
     contentItem: HColumnLayout {
         spacing: root.spacing / 2
@@ -95,10 +97,13 @@ HTile {
                 model.rule_id
 
             Layout.fillWidth: true
+            Layout.leftMargin: theme.spacing
+            Layout.rightMargin: Layout.leftMargin
         }
 
         HRowLayout {
             NotificationRuleButton {
+                id: notifyButton
                 toggles: "notify"
 
                 contentItem: MessageIndicator {
@@ -113,6 +118,7 @@ HTile {
             }
 
             NotificationRuleButton {
+                enabled: notifyButton.on
                 toggles: "highlight"
 
                 contentItem: MessageIndicator {

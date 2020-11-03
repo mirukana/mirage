@@ -54,7 +54,6 @@ HListView {
     section.property: "kind"
     section.delegate: HLabel {
         width: root.width
-        topPadding: padding * (section === "override" ? 1 : 1.5)
         padding: theme.spacing
         font.pixelSize: theme.fontSize.big
         text:
@@ -78,10 +77,14 @@ HListView {
         ApplyButton {
             onClicked: root.save()
             loading: root.saveFutureId !== ""
+
+            Layout.topMargin: theme.spacing
         }
 
         CancelButton {
             onClicked: pendingEdits = {}
+
+            Layout.topMargin: theme.spacing
         }
     }
 
