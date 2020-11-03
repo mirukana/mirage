@@ -13,7 +13,7 @@ HTile {
     property Item page
 
     readonly property QtObject matchingRoom:
-        model.kind === "Room" ?
+        model.kind === "room" ?
         ModelStore.get(page.userId, "rooms").find(model.rule_id) :
         null
 
@@ -32,7 +32,7 @@ HTile {
             textFormat:
                 model.rule_id === ".m.rule.contains_user_name" ||
                 model.rule_id === ".m.rule.roomnotif" ||
-                model.kind === "Sender" ?
+                model.kind === "sender" ?
                 HLabel.StyledText :
                 HLabel.PlainText
 
@@ -83,10 +83,10 @@ HTile {
                 model.rule_id === ".m.rule.encrypted" ?
                 qsTr("Encrypted group messages") :
 
-                model.kind === "Content" ?
+                model.kind === "content" ?
                 qsTr('Contains "%1"').arg(model.pattern) :
 
-                model.kind === "Sender" ?
+                model.kind === "sender" ?
                 utils.coloredNameHtml("", model.rule_id) :
 
                 matchingRoom && matchingRoom.display_name ?

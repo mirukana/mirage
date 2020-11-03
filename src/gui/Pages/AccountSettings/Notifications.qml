@@ -54,14 +54,14 @@ HListView {
     section.property: "kind"
     section.delegate: HLabel {
         width: root.width
-        topPadding: padding * (section === "Override" ? 1 : 1.5)
+        topPadding: padding * (section === "override" ? 1 : 1.5)
         padding: theme.spacing
         font.pixelSize: theme.fontSize.big
         text:
-            section === "Override" ? qsTr("High-priority general rules") :
-            section === "Content" ? qsTr("Message text rules") :
-            section === "Room" ? qsTr("Room rules") :
-            section === "Sender" ? qsTr("Sender rules") :
+            section === "override" ? qsTr("High-priority general rules") :
+            section === "content" ? qsTr("Message text rules") :
+            section === "room" ? qsTr("Room rules") :
+            section === "sender" ? qsTr("Sender rules") :
             qsTr("General rules")
     }
 

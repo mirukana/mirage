@@ -15,7 +15,7 @@ import nio
 
 from .html_markdown import HTML_PROCESSOR
 from .media_cache import Media
-from .models.items import PushRule, PushRuleKind, TypeSpecifier
+from .models.items import PushRule, TypeSpecifier
 from .presence import Presence
 from .pyotherside_events import DevicesUpdated
 from .utils import classes_defined_in, plain2html
@@ -785,12 +785,8 @@ class NioCallbacks:
     async def onPushRulesEvent(self, ev: nio.PushRulesEvent) -> None:
         model = self.models[self.user_id, "pushrules"]
 
-        kinds: Dict[PushRuleKind, List[nio.PushRule]] = {
-            PushRuleKind.Override:  ev.global_rules.override,
-            PushRuleKind.Content:   ev.global_rules.content,
-            PushRuleKind.Room:      ev.global_rules.room,
-            PushRuleKind.Sender:    ev.global_rules.sender,
-            PushRuleKind.Underride: ev.global_rules.underride,
+        kinds: Dict[nio.PushRuleKind, List[nio.PushRule]] = {
+            kind: getattr(ev.global_rules, kind.value) for kind in nio.PushRuleKind
         }
 
         # Remove from model rules that are now deleted.

@@ -85,48 +85,40 @@ class Account(ModelItem):
         return (self.order, self.id) < (other.order, other.id)
 
 
-class PushRuleKind(AutoStrEnum):
-    Override  = auto()
-    Content   = auto()
-    Room      = auto()
-    Sender    = auto()
-    Underride = auto()
-
-
 @dataclass(eq=False)
 class PushRule(ModelItem):
     """A push rule configured for one of our account."""
 
-    id:           Tuple[str, str] = field()  # (kind.value, rule_id)
-    kind:         PushRuleKind    = field()
-    rule_id:      str             = field()
-    order:        int             = field()
-    default:      bool            = field()
-    enabled:      bool            = True
-    pattern:      str             = ""
-    notify:       bool            = False
-    highlight:    bool            = False
-    bubble:       bool            = False
-    sound:        str             = ""  # usually "default" when set
-    urgency_hint: bool            = False
+    id:           Tuple[str, str]  = field()  # (kind.value, rule_id)
+    kind:         nio.PushRuleKind = field()
+    rule_id:      str              = field()
+    order:        int              = field()
+    default:      bool             = field()
+    enabled:      bool             = True
+    pattern:      str              = ""
+    notify:       bool             = False
+    highlight:    bool             = False
+    bubble:       bool             = False
+    sound:        str              = ""       # usually "default" when set
+    urgency_hint: bool             = False
 
     def __lt__(self, other: "PushRule") -> bool:
         """Sort by `kind`, then `order`."""
 
         return (
-            self.kind is PushRuleKind.Underride,
-            self.kind is PushRuleKind.Sender,
-            self.kind is PushRuleKind.Room,
-            self.kind is PushRuleKind.Content,
-            self.kind is PushRuleKind.Override,
+            self.kind is nio.PushRuleKind.underride,
+            self.kind is nio.PushRuleKind.sender,
+            self.kind is nio.PushRuleKind.room,
+            self.kind is nio.PushRuleKind.content,
+            self.kind is nio.PushRuleKind.override,
             self.order,
             self.id,
         ) < (
-            other.kind is PushRuleKind.Underride,
-            other.kind is PushRuleKind.Sender,
-            other.kind is PushRuleKind.Room,
-            other.kind is PushRuleKind.Content,
-            other.kind is PushRuleKind.Override,
+            other.kind is nio.PushRuleKind.underride,
+            other.kind is nio.PushRuleKind.sender,
+            other.kind is nio.PushRuleKind.room,
+            other.kind is nio.PushRuleKind.content,
+            other.kind is nio.PushRuleKind.override,
             other.order,
             other.id,
         )

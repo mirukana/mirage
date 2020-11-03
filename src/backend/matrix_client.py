@@ -41,7 +41,7 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, PushRule, PushRuleKind, Room,
+    ZERO_DATE, Account, Event, Member, PushRule, Room,
     Transfer, TransferStatus, TypeSpecifier,
 )
 from .models.model_store import ModelStore
@@ -1783,7 +1783,7 @@ class MatrixClient(nio.AsyncClient):
 
     async def tweak_pushrule(
         self,
-        kind:         Union[PushRuleKind, str],
+        kind:         Union[nio.PushRuleKind, str],
         rule_id:      str,
         notify:       Optional[bool] = None,
         highlight:    Optional[bool] = None,
@@ -1792,8 +1792,7 @@ class MatrixClient(nio.AsyncClient):
         urgency_hint: Optional[bool] = None,
     ) -> None:
 
-        kind     = PushRuleKind[kind] if isinstance(kind, str) else kind
-        nio_kind = nio.PushRuleKind[kind.value.lower()]
+        kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
 
         current: PushRule = \
             self.models[self.user_id, "pushrules"][kind.value, rule_id]
@@ -1821,7 +1820,7 @@ class MatrixClient(nio.AsyncClient):
         elif hint is False or (hint is None and not current.urgency_hint):
             actions.append(nio.PushSetTweak("urgency_hint", False))
 
-        await self.set_pushrule_actions("global", nio_kind, rule_id, actions)
+        await self.set_pushrule_actions("global", kind, rule_id, actions)
 
 
     async def mass_tweak_pushrules(self, *tweaks_kwargs) -> None:
