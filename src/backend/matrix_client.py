@@ -209,8 +209,7 @@ class MatrixClient(nio.AsyncClient):
         self.unassigned_event_last_read_by: DefaultDict[str, Dict[str, int]] =\
             DefaultDict(dict)
 
-        self.previous_server_unreads:    Dict[str, int] = {}
-        self.previous_server_highlights: Dict[str, int] = {}
+        self.push_rules: nio.PushRulesEvent = nio.PushRulesEvent()
 
         # {room_id: event}
         self.power_level_events: Dict[str, nio.PowerLevelsEvent] = {}
@@ -2247,55 +2246,52 @@ class MatrixClient(nio.AsyncClient):
             await self.update_account_unread_counts()
             return item
 
+        self.models[self.user_id, "rooms"][room.room_id].local_unreads = True
+        await self.update_account_unread_counts()
+
         # Alerts & notifications
 
-        room_item = self.models[self.user_id, "rooms"][room.room_id]
+        name     = self.models["accounts"][self.user_id].display_name
+        nio_rule = self.push_rules.global_rules.matching_rule(ev, room, name)
 
-        unread = \
-            room_item.unreads and \
-            room_item.unreads != \
-            self.previous_server_unreads.get(room.room_id, 0)
+        if not nio_rule:
+            return item
 
-        highlight = \
-            room_item.highlights and \
-            room_item.highlights != \
-            self.previous_server_highlights.get(room.room_id, 0)
+        model = self.models[self.user_id, "pushrules"]
+        rule  = model[nio_rule.kind.value, nio_rule.id]
 
-        self.previous_server_unreads[room.room_id]    = room_item.unreads
-        self.previous_server_highlights[room.room_id] = room_item.highlights
+        if not rule.notify and not rule.highlight:
+            return item
 
-        room_item.local_unreads = True
+        sender = item.sender_name or item.sender_id
 
-        if unread or highlight:
-            members   = self.models[self.user_id, room.room_id, "members"]
-            room_name = room.display_name
-            sender    = item.sender_name or item.sender_id
-
-            if isinstance(ev, nio.RoomMessageEmote):
-                body = f"<i>{sender} {item.inline_content}</i>"
-            elif not isinstance(ev, nio.RoomMessage):
-                body = item.inline_content.replace(
-                    "%1", item.sender_name or item.sender_id,
-                ).replace(
-                    "%2", item.target_name or item.target_id,
-                )
-            elif len(members) == 2 and room_name == sender:
-                body = item.inline_content
-            else:
-                body = f"{sender}: {item.inline_content}"
-
-            NotificationRequested(
-                id              = item.id,
-                high_importance = highlight,
-                title           = room_name,
-
-                body = body.replace(" ⏎ ", "<br>")
-                           .replace(" ⏎⏎ ", f"<br>{'─' * 24}<br>"),
-
-                image = await self.get_notification_avatar(
-                    mxc=item.sender_avatar, user_id=item.sender_id,
-                ) if item.sender_avatar else "",
+        if isinstance(ev, nio.RoomMessageEmote):
+            body = f"<i>{sender} {item.inline_content}</i>"
+        elif not isinstance(ev, nio.RoomMessage):
+            body = item.inline_content.replace(
+                "%1", item.sender_name or item.sender_id,
+            ).replace(
+                "%2", item.target_name or item.target_id,
             )
+        elif room.member_count == 2 and room.display_name == sender:
+            body = item.inline_content
+        else:
+            body = f"{sender}: {item.inline_content}"
 
-        await self.update_account_unread_counts()
+        NotificationRequested(
+            id           = item.id,
+            critical     = rule.highlight,
+            bubble       = rule.bubble,
+            sound        = rule.sound,
+            urgency_hint = rule.urgency_hint,
+
+            title = room.display_name,
+            body  = body.replace(" ⏎ ", "<br>")
+                        .replace(" ⏎⏎ ", f"<br>{'─' * 24}<br>"),
+
+            image = await self.get_notification_avatar(
+                mxc=item.sender_avatar, user_id=item.sender_id,
+            ) if item.sender_avatar else "",
+        )
+
         return item

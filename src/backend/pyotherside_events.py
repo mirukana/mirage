@@ -31,17 +31,22 @@ class PyOtherSideEvent:
 
 @dataclass
 class NotificationRequested(PyOtherSideEvent):
-    """Request a notification and window manager alert to be shown.
+    """Request a notification bubble, sound or window urgency hint.
 
-    Alerts set the urgency hint for compliant X11/Wayland window managers or
-    flash the program's taskbar icon on Windows.
+    Urgency hints usually flash or highlight the program's icon in a taskbar,
+    dock or panel.
     """
 
-    id:              str              = field()
-    title:           str              = field()
-    body:            str              = ""
-    image:           Union[Path, str] = ""
-    high_importance: bool             = False
+    id:           str  = field()
+    critical:     bool = False
+    bubble:       bool = False
+    sound:        bool = False
+    urgency_hint: bool = False
+
+    # Bubble parameters
+    title: str              = ""
+    body:  str              = ""
+    image: Union[Path, str] = ""
 
 
 @dataclass

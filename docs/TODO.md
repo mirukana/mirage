@@ -4,17 +4,22 @@
 - PCN error handling
 - Change docs linking to dev branch back to master 
 
+- Implement fallback QML notifications, usable if dbus isn't available
+- profiles missing in notifications
+- option to use plaintext notifications
+- Notification urgency level (plyer)?
+- Rename the alertOn(Mention/Message)ForMsec options, default Message to non-0
+- Make local unread counter an optional turned off by default
+
 - fix DeviceSection padding
 - Implement fallback QML notifications, usable if dbus isn't available
 - annoying tooltips when menu open
-- profiles missing in notifications
 
 - add http_proxy support
 - image viewer: can't expand image in reduced window layout
 - Encrypted rooms don't show invites in member list after Mirage restart
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages
-- option to use plaintext notifications
 - warn on ambiguously activated shortcut
 
 - SSO device delete?

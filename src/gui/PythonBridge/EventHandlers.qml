@@ -8,26 +8,33 @@ import ".."
 QtObject {
     signal deviceUpdateSignal(string forAccount)
 
-    function onNotificationRequested(id, title, body, image, highImportance) {
+    function onNotificationRequested(
+        id, critical, bubble, sound, urgencyHint, title, body, image,
+    ) {
         const level = window.notificationLevel
 
         if (level === Window.NotificationLevel.None) return
-        if (level === Window.MentionsKeywords && ! highImportance) return
+        if (level === Window.MentionsKeywords && ! critical) return
         if (window.notifiedIds.has(id)) return
 
         window.notifiedIds.add(id)
         window.notifiedIdsChanged()
 
-        if (Qt.application.state === Qt.ApplicationActive) return
+        if (Qt.application.state === Qt.ApplicationActive)
+            return
 
-        py.callCoro("desktop_notify", [title, body, image])
+        if (bubble)
+            py.callCoro("desktop_notify", [title, body, image])
 
-        const msec =
-            highImportance ?
-            window.settings.Notifications.urgent_alert_time * 1000 :
-            window.settings.Notifications.alert_time * 1000
+        if (urgencyHint) {
+            const msec =
+                critical ?
+                window.settings.Notifications.urgent_alert_time * 1000 :
+                window.settings.Notifications.alert_time * 1000
 
-        if (msec) window.alert(msec === -1 ? 0 : msec)  // -1 → 0 = no time out
+                // -1 ? 0 for no time out : msec
+                if (msec !== 0) window.alert(msec === -1 ? 0 : msec)
+        }
     }
 
     function onCoroutineDone(uuid, result, error, traceback) {

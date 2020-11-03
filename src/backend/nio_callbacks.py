@@ -839,6 +839,8 @@ class NioCallbacks:
                     urgency_hint = hint,
                 )
 
+        self.client.push_rules = ev
+
 
     # Presence event callbacks
 
