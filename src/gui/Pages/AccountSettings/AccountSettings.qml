@@ -19,12 +19,12 @@ HPage {
 
         header: HTabBar {
             currentIndex: 1  // XXX
-            HTabButton { text: qsTr("Account") }
+            HTabButton { text: qsTr("General") }
             HTabButton { text: qsTr("Notifications") }
             HTabButton { text: qsTr("Security") }
         }
 
-        Account { userId: page.userId }
+        General { userId: page.userId }
         Notifications { userId: page.userId }
         Security { userId: page.userId }
     }
