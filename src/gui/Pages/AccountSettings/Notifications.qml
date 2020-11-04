@@ -51,6 +51,22 @@ HListView {
     model: ModelStore.get(userId, "pushrules")
     implicitHeight: Math.min(window.height, contentHeight + bottomMargin)
 
+    header: HColumnLayout {
+        width: root.width
+
+        HLoader {
+            source: "../../Base/HBusyIndicator.qml"
+            active: root.model.count === 0
+            opacity: active ? 1 : 0
+            visible: opacity > 0
+
+            Behavior on opacity { HNumberAnimation {} }
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.topMargin: theme.spacing
+        }
+    }
+
     section.property: "kind"
     section.delegate: HLabel {
         width: root.width
@@ -87,9 +103,6 @@ HListView {
             Layout.topMargin: theme.spacing
         }
     }
-
-    Layout.fillWidth: true
-    Layout.fillHeight: true
 
     FlickShortcuts {
         flickable: root
