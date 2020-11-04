@@ -238,6 +238,12 @@ HColumnPage {
             }
         }
 
+        section.property: "type"
+        section.delegate: DeviceSection {
+            width: deviceList.width
+            view: deviceList
+        }
+
         delegate: DeviceDelegate {
             width: deviceList.width
             view: deviceList
@@ -247,12 +253,6 @@ HColumnPage {
             onBlacklisted: page.loadDevices()
             onRenameRequest: name => page.renameDevice(model.index, name)
             onDeleteRequest: page.deleteDevices(model.index)
-        }
-
-        section.property: "type"
-        section.delegate: DeviceSection {
-            width: deviceList.width
-            view: deviceList
         }
 
         Component.onCompleted: page.loadDevices()

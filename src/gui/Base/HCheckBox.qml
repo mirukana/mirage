@@ -23,7 +23,7 @@ CheckBox {
 
     indicator: Rectangle {
         opacity: box.enabled ? 1 : theme.disabledElementsOpacity + 0.2
-        implicitWidth: theme.controls.checkBox.boxSize
+        implicitWidth: 24
         implicitHeight: implicitWidth
         x: box.leftPadding
         y: box.topPadding + box.availableHeight / 2 - height / 2
@@ -40,6 +40,10 @@ CheckBox {
             theme.controls.checkBox.boxBorder
 
         Behavior on border.color { HColorAnimation { factor: 0.5 } }
+
+        // FIXME: workaround for sizing bug in Security.qml ListView sections
+        Component.onCompleted:
+            implicitWidth = Qt.binding(() => theme.controls.checkBox.boxSize)
 
         HIcon {
             anchors.centerIn: parent
