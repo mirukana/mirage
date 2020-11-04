@@ -13,12 +13,12 @@ Rectangle {
     property alias clientUserId: avatarImage.clientUserId
     property alias mxc: avatarImage.mxc
     property alias title: avatarImage.title
-
-    property alias toolTipMxc: avatarToolTipImage.mxc
     property alias sourceOverride: avatarImage.sourceOverride
-    property alias toolTipSourceOverride: avatarToolTipImage.sourceOverride
     property alias fillMode: avatarImage.fillMode
     property alias animate: avatarImage.animate
+
+    property string toolTipMxc: mxc
+    property string toolTipSourceOverride: ""
 
     readonly property alias hovered: hoverHandler.hovered
     readonly property alias circleRadius: avatarImage.circleRadius
@@ -93,18 +93,23 @@ Rectangle {
             delay: 1000
             backgroundColor: theme.controls.avatar.hoveredImage.background
 
-            contentItem: HMxcImage {
-                id: avatarToolTipImage
-                fillMode: Image.PreserveAspectCrop
-                animatedFillMode: AnimatedImage.PreserveAspectCrop
-                clientUserId: avatarImage.clientUserId
-                mxc: avatarImage.mxc
-                title: avatarImage.title
+            contentItem: HLoader {
+                active: avatarToolTip.visible
 
-                sourceSize.width: avatarToolTip.dimension
-                sourceSize.height: avatarToolTip.dimension
-                width: avatarToolTip.dimension
-                height: avatarToolTip.dimension
+                sourceComponent: HMxcImage {
+                    id: avatarToolTipImage
+                    fillMode: Image.PreserveAspectCrop
+                    animatedFillMode: AnimatedImage.PreserveAspectCrop
+                    clientUserId: avatarImage.clientUserId
+                    title: avatarImage.title
+                    mxc: avatar.toolTipMxc
+                    sourceOverride: avatar.toolTipSourceOverride
+
+                    sourceSize.width: avatarToolTip.dimension
+                    sourceSize.height: avatarToolTip.dimension
+                    width: avatarToolTip.dimension
+                    height: avatarToolTip.dimension
+                }
             }
         }
     }
