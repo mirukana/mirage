@@ -21,6 +21,10 @@ ToolTip {
         instant = false
     }
 
+    function instantToggle(timeout=-1) {
+        visible ? hide() : instantShow(timeout)
+    }
+
 
     delay: instant ? 0 : theme.controls.toolTip.delay
     padding: background.border.width

@@ -12,7 +12,7 @@ HButton {
     iconItem.small: true
     toolTip.text: helpText
 
-    onClicked: toolTip.instantShow()
+    onClicked: toolTip.instantToggle()
     onActiveFocusChanged: if (! activeFocus && toolTip.visible) toolTip.hide()
 
     Layout.fillHeight: true

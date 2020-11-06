@@ -159,7 +159,7 @@ Rectangle {
                      "unverified devices") :
                 qsTr("All members in this encrypted room are verified")
 
-            onClicked: toolTip.instantShow()
+            onClicked: toolTip.instantToggle()
 
             Layout.preferredWidth: chat.roomInfo.encrypted ? avatar.width : 0
             Layout.fillHeight: true
