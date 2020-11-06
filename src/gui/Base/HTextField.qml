@@ -52,6 +52,7 @@ TextField {
     text: defaultText || ""
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
+    activeFocusOnPress: ! readOnly
     leftPadding: theme.spacing
     rightPadding: leftPadding
     topPadding: theme.spacing / 1.5
