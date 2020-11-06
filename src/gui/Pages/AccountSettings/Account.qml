@@ -202,21 +202,29 @@ HFlickableColumnPage {
         }
     }
 
-    HSelectableLabel {
-        textFormat: HSelectableLabel.RichText
-        wrapMode: HLabel.Wrap
-        text: qsTr("User ID: %1")
-              .arg(utils.coloredNameHtml("", userId, userId))
+    HLabeledItem {
+        label.text: qsTr("User ID:")
 
         Layout.fillWidth: true
 
-        TapHandler {
-            acceptedButtons: Qt.RightButton
-            onTapped: idMenu.spawn()
-        }
+        HRowLayout {
+            width: parent.width
 
-        HTextContextMenu {
-            id: idMenu
+            HTextArea {
+                id: idArea
+                textFormat: HSelectableLabel.RichText
+                wrapMode: HLabel.Wrap
+                readOnly: true
+                radius: 0
+                text: utils.coloredNameHtml("", userId, userId)
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            FieldCopyButton {
+                textControl: idArea
+            }
         }
     }
 
