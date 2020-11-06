@@ -8,6 +8,6 @@ MenuSeparator {
     id: separator
     padding: 0
     contentItem: Item {
-        implicitHeight: theme.spacing
+        implicitHeight: separator.visible ? theme.spacing : 0
     }
 }

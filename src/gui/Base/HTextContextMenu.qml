@@ -34,6 +34,7 @@ HMenu {
     HMenuItem {
         icon.name: "undo"
         text: qsTr("Undo")
+        visible: ! control.readOnly
         enabled: control.canUndo
         onTriggered: control.undo()
     }
@@ -41,15 +42,19 @@ HMenu {
     HMenuItem {
         icon.name: "redo"
         text: qsTr("Redo")
+        visible: ! control.readOnly
         enabled: control.canRedo
         onTriggered: control.redo()
     }
 
-    HMenuSeparator {}
+    HMenuSeparator {
+        visible: ! control.readOnly
+    }
 
     HMenuItem {
         icon.name: "cut-text"
         text: qsTr("Cut")
+        visible: ! control.readOnly
         enabled: control.selectedPlainText
         onTriggered: control.cut()
     }
@@ -67,11 +72,14 @@ HMenu {
 
         icon.name: "paste-text"
         text: qsTr("Paste")
+        visible: ! control.readOnly
         enabled: control.canPaste || pasteImage
         onTriggered: pasteImage ? menu.customImagePaste() : control.paste()
     }
 
-    HMenuSeparator {}
+    HMenuSeparator {
+        visible: ! control.readOnly
+    }
 
     HMenuItem {
         icon.name: "select-all-text"
