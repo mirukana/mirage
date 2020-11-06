@@ -65,8 +65,13 @@ public slots:
         Display *display = XOpenDisplay(NULL);
         if (! display) return -1;
 
+        int supportedVersion = 0, error = 0;
+        if (! XScreenSaverQueryExtension(display, &supportedVersion, &error))
+            return -1;
+
         XScreenSaverInfo *info = XScreenSaverAllocInfo();
         XScreenSaverQueryInfo(display, DefaultRootWindow(display), info);
+        XFree(info);
         const int idle = info->idle;
 
         XCloseDisplay(display);
@@ -77,6 +82,7 @@ public slots:
 
         #else
         return -1;
+
         #endif
     }
 
