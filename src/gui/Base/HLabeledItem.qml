@@ -13,7 +13,6 @@ HColumnLayout {
     readonly property Item item: itemHolder.children[0]
     readonly property alias label: label
     readonly property alias errorLabel: errorLabel
-    readonly property alias toolTip: toolTip
 
 
     spacing: theme.spacing / 2
@@ -27,32 +26,6 @@ HColumnLayout {
             wrapMode: HLabel.Wrap
 
             Layout.fillWidth: true
-        }
-
-        HIcon {
-            svgName: "field-tooltip-available"
-            opacity: elementsOpacity
-            visible: toolTip.text
-
-            Binding on colorize {
-                value: theme.colors.accentElement
-                when: hoverHandler.hovered || toolTip.visible
-            }
-        }
-
-        HoverHandler {
-            id: hoverHandler
-            enabled: toolTip.text
-        }
-
-        TapHandler {
-            onTapped: toolTip.instantShow()
-            enabled: toolTip.text
-        }
-
-        HToolTip {
-            id: toolTip
-            visible: toolTip.text && hoverHandler.hovered
         }
 
         HLoader {

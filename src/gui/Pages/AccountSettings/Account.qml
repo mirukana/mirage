@@ -33,8 +33,8 @@ HFlickableColumnPage {
             )
         }
 
-        if (aliasField.item.changed) {
-            window.settings.writeAliases[userId] = aliasField.item.text
+        if (aliasFieldItem.changed) {
+            window.settings.writeAliases[userId] = aliasFieldItem.text
             window.settingsChanged()
         }
 
@@ -57,7 +57,7 @@ HFlickableColumnPage {
 
     function cancel() {
         nameField.item.reset()
-        aliasField.item.reset()
+        aliasFieldItem.reset()
         fileDialog.selectedFile = ""
         fileDialog.file         = ""
     }
@@ -75,7 +75,7 @@ HFlickableColumnPage {
             enabled:
                 avatar.changed ||
                 nameField.item.changed ||
-                (aliasField.item.changed && ! aliasField.item.error)
+                (aliasFieldItem.changed && ! aliasFieldItem.error)
 
             onClicked: applyChanges()
         }
@@ -270,25 +270,33 @@ HFlickableColumnPage {
             alreadyTakenBy ? qsTr("Taken by %1").arg(alreadyTakenBy) :
             ""
 
-        toolTip.text: qsTr(
-            "From any chat, start a message with specified alias " +
-            "followed by a space to type and send as this " +
-            "account.\n" +
-            "The account must have permission to talk in the room.\n"+
-            "To ignore the alias when typing, prepend it with a space."
-        )
-
         Layout.fillWidth: true
 
-        HTextField {
+        HRowLayout {
             width: parent.width
-            error: aliasField.hasWhiteSpace || aliasField.alreadyTakenBy
-            defaultText: aliasField.currentAlias
-            placeholderText: qsTr("e.g. %1").arg((
-                nameField.item.text ||
-                (ready && account.display_name) ||
-                userId.substring(1)
-            )[0])
+
+            HTextField {
+                id: aliasFieldItem
+                error: aliasField.hasWhiteSpace || aliasField.alreadyTakenBy
+                defaultText: aliasField.currentAlias
+                placeholderText: qsTr("e.g. %1").arg((
+                    nameField.item.text ||
+                    (ready && account.display_name) ||
+                    userId.substring(1)
+                )[0])
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            FieldHelpButton {
+                helpText: qsTr(
+                    "From any chat, start a message with specified alias " +
+                    "followed by a space to type and send as this account.\n" +
+                    "The account must have permission to talk in the room.\n"+
+                    "To ignore the alias when typing, prepend it with a space."
+                )
+            }
         }
     }
 }
