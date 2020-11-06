@@ -65,25 +65,9 @@ SignInBase {
             Layout.fillHeight: true
         }
 
-        HButton {
+        FieldCopyButton {
             id: copyUrlButton
-            icon.name: "copy-text"
-            iconItem.small: true
-
-            toolTip.text: qsTr("Copy")
-            toolTip.onClosed: toolTip.text = qsTr("Copy")
-            toolTip.label.wrapMode: HLabel.NoWrap
-
-            onClicked: {
-                urlArea.selectAll()
-                urlArea.copy()
-                urlArea.deselect()
-
-                toolTip.text = qsTr("Copied!")
-                toolTip.instantShow(2000)
-            }
-
-            Layout.fillHeight: true
+            textControl: urlArea
         }
     }
 }
