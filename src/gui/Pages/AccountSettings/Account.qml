@@ -202,14 +202,22 @@ HFlickableColumnPage {
         }
     }
 
-    HLabel {
+    HSelectableLabel {
+        textFormat: HSelectableLabel.RichText
+        wrapMode: HLabel.Wrap
         text: qsTr("User ID: %1")
               .arg(utils.coloredNameHtml("", userId, userId))
-        textFormat: Text.StyledText
-        wrapMode: HLabel.Wrap
-        lineHeight: 1.1
 
         Layout.fillWidth: true
+
+        TapHandler {
+            acceptedButtons: Qt.RightButton
+            onTapped: idMenu.spawn()
+        }
+
+        HTextContextMenu {
+            id: idMenu
+        }
     }
 
     HLabeledItem {
