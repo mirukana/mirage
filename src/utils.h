@@ -62,6 +62,8 @@ public slots:
         return -1;
 
         #elif defined(USE_LINUX_AUTOAWAY)
+        if (! this->waylandDisplay.isEmpty()) return -1;
+
         Display *display = XOpenDisplay(NULL);
         if (! display) return -1;
 
@@ -88,6 +90,7 @@ public slots:
 
 private:
     QLocale appLocale;
+    QString waylandDisplay = qEnvironmentVariable("WAYLAND_DISPLAY");
 };
 
 
