@@ -511,10 +511,6 @@ Rectangle {
         bottomMargin: theme.spacing
         verticalLayoutDirection: ListView.BottomToTop
 
-        // Keep x scroll pages cached, to limit images having to be
-        // reloaded from network.
-        cacheBuffer: Screen.desktopAvailableHeight * 2
-
         delegate: EventDelegate {}
 
         highlight: Rectangle {
@@ -560,7 +556,8 @@ Rectangle {
         Connections {
             target: pageLoader
             onRecycled: {
-                eventList.model = null
+                eventList.model       = null
+                eventList.cacheBuffer = 0
                 updateModelTimer.restart()
             }
         }
@@ -569,7 +566,22 @@ Rectangle {
             id: updateModelTimer
             interval: pageLoader.appearAnimation.duration / 2
             running: true
-            onTriggered: eventList.model = ModelStore.get(modelSyncId)
+            onTriggered: {
+                eventList.model = ModelStore.get(modelSyncId)
+                increaseBufferTimer.restart()
+            }
+        }
+
+        Timer {
+            id: increaseBufferTimer
+            interval: 1000
+            running: true
+
+            // Keep x scroll pages cached, to limit the amount of images having
+            // to be reloaded from network. We delay increasing this to reduce
+            // the lag when switching rooms and loading all the delegates.
+            onTriggered:
+                eventList.cacheBuffer = Screen.desktopAvailableHeight * 2
         }
 
         Timer {
