@@ -11,6 +11,9 @@ import "../../../PythonBridge"
 import "../../../ShortcutBundles"
 
 Rectangle {
+    readonly property var modelSyncId:
+        [chat.userRoomId[0], chat.userRoomId[1], "events"]
+
     readonly property alias eventList: eventList
     readonly property alias contextMenu: contextMenu
 
@@ -512,7 +515,6 @@ Rectangle {
         // reloaded from network.
         cacheBuffer: Screen.desktopAvailableHeight * 2
 
-        model: ModelStore.get(chat.userRoomId[0], chat.userRoomId[1], "events")
         delegate: EventDelegate {}
 
         highlight: Rectangle {
@@ -553,6 +555,21 @@ Rectangle {
                 enableRadius: true
                 iconItem.small: true
             }
+        }
+
+        Connections {
+            target: pageLoader
+            onRecycled: {
+                eventList.model = null
+                updateModelTimer.restart()
+            }
+        }
+
+        Timer {
+            id: updateModelTimer
+            interval: pageLoader.appearAnimation.duration / 2
+            running: true
+            onTriggered: eventList.model = ModelStore.get(modelSyncId)
         }
 
         Timer {
