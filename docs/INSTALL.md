@@ -7,9 +7,10 @@ but compiling on Windows and macOS should be possible with the right tools.
   - [Linux](#linux)
     - [AppImage](#appimage)
     - [Flatpak](#flatpak)
-    - [Arch Linux](#arch-linux)
-    - [Gentoo](#gentoo)
     - [Alpine Linux / postmarketOS](#alpine-linux--postmarketOS)
+    - [Arch Linux](#arch-linux)
+    - [Debian](#debian)
+    - [Gentoo](#gentoo)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -80,6 +81,16 @@ If your architecture is not listed on the release page, clone the repository
 and see [packaging/flatpak/README.md](packaging/flatpak/README.md) to build the
 package on your machine.
 
+#### Alpine Linux / postmarketOS
+
+If you are on the Edge channel of Alpine Linux or postmarketOS, Mirage can be
+installed right from the testing repositry:
+
+    apk add mirage
+
+If you are unsure about what Edge is and want to read more about it, you can do
+so on the [Alpine Wiki](https://wiki.alpinelinux.org/wiki/Edge).
+
 #### Arch Linux
 
 Available on the AUR:
@@ -90,6 +101,13 @@ Using a AUR helper to install it,
 in this example [yay](https://github.com/Jguer/yay) for the release version:
 
     yay -S matrix-mirage
+
+#### Debian
+
+Requires [Debian Testing](https://wiki.debian.org/DebianTesting).
+
+    apt update
+    apt install matrix-mirage
 
 #### Gentoo
 
@@ -103,15 +121,6 @@ Installing Mirage:
 2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
 3. Run `emerge net-im/mirage`
 
-#### Alpine Linux / postmarketOS
-
-If you are on the Edge channel of Alpine Linux or postmarketOS, Mirage can be
-installed right from the testing repositry:
-
-    apk add mirage
-
-If you are unsure about what Edge is and want to read more about it, you can do
-so on the [Alpine Wiki](https://wiki.alpinelinux.org/wiki/Edge).
 
 ## Manual Installation
 
