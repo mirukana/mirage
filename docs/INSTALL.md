@@ -11,6 +11,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Arch Linux](#arch-linux)
     - [Debian](#debian)
     - [Gentoo](#gentoo)
+    - [Nix](#nix)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -104,7 +105,8 @@ in this example [yay](https://github.com/Jguer/yay) for the release version:
 
 #### Debian
 
-Requires [Debian Testing](https://wiki.debian.org/DebianTesting).
+Requires [Debian Testing](https://wiki.debian.org/DebianTesting). 
+To install the package:
 
     apt update
     apt install matrix-mirage
@@ -120,6 +122,17 @@ Installing Mirage:
 1. [Add the overlay](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay)
 2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
 3. Run `emerge net-im/mirage`
+
+#### Nix
+
+Requires the unstable channel, to add it:
+
+    nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+    nix-channel --update
+
+To install the package:
+
+    nix-env -iA nixpkgs.mirage-im
 
 
 ## Manual Installation
