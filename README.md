@@ -5,7 +5,7 @@
 [![#mirage-client:matrix.org](https://img.shields.io/matrix/mirage-client:matrix.org?color=blueviolet)](https://matrix.to/#/#mirage-client:matrix.org)
 
 [Features](#currently-implemented-features) ⬥
-[Installation](INSTALL.md) ⬥
+[Installation](docs/INSTALL.md) ⬥
 [Configuration & Theming](#configuration--theming) ⬥
 [Screenshots](#more-screenshots)
 
@@ -75,7 +75,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 
 ## Installation
 
-See [INSTALL.md](INSTALL.md)
+See [INSTALL.md](docs/INSTALL.md)
 
 ## Configuration & Theming
 
