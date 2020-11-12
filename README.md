@@ -13,7 +13,7 @@ A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
 client for encrypted and decentralized communication.  
 Written in Qt/QML and Python, **currently in alpha**.
 
-![Chat screenshot](extra/general/screenshots/01-chat.png?raw=true)
+![Chat screenshot](docs/screenshots/01-chat.png?raw=true)
 
 ## Currently Implemented Features
 
@@ -157,11 +157,11 @@ GUI settings will also be implemented in the future.
 
 ## Screenshots
 
-![Sign-in](extra/general/screenshots/02-sign-in.png)
-![Account settings](extra/general/screenshots/03-account-settings.png)
-![Room creation](extra/general/screenshots/04-create-room.png)
-![Chat](extra/general/screenshots/01-chat.png?raw=true)
-![Main pane in small window](extra/general/screenshots/05-main-pane-small.png)
-![Chat in small window](extra/general/screenshots/06-chat-small.png)
-![Room pane in small window](extra/general/screenshots/07-room-pane-small.png)
+![Sign-in](docs/screenshots/02-sign-in.png)
+![Account settings](docs/screenshots/03-account-settings.png)
+![Room creation](docs/screenshots/04-create-room.png)
+![Chat](docs/screenshots/01-chat.png?raw=true)
+![Main pane in small window](docs/screenshots/05-main-pane-small.png)
+![Chat in small window](docs/screenshots/06-chat-small.png)
+![Room pane in small window](docs/screenshots/07-room-pane-small.png)
 
