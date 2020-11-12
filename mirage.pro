@@ -60,10 +60,10 @@ no-x11 {
     executables.files = $$TARGET
 
     shortcuts.path  = $$PREFIX/share/applications
-    shortcuts.files = extra/linux/mirage.desktop
+    shortcuts.files = packaging/mirage.desktop
 
     icons256.path  = $$PREFIX/share/icons/hicolor/256x256/apps
-    icons256.files = extra/linux/mirage.png
+    icons256.files = packaging/mirage.png
 
     INSTALLS += executables shortcuts icons256
 }
