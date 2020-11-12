@@ -7,6 +7,7 @@
 [Features](#currently-implemented-features) ⬥
 [Installation](docs/INSTALL.md) ⬥
 [Configuration & Theming](#configuration--theming) ⬥
+[Contributing](docs/CONTRIBUTING.md) ⬥
 [Screenshots](#more-screenshots)
 
 A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
@@ -155,6 +156,10 @@ restarting the app.
 
 GUI settings will also be implemented in the future.
 
+## Contributing
+
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+
 ## Screenshots
 
 ![Sign-in](docs/screenshots/02-sign-in.png)
@@ -164,4 +169,3 @@ GUI settings will also be implemented in the future.
 ![Main pane in small window](docs/screenshots/05-main-pane-small.png)
 ![Chat in small window](docs/screenshots/06-chat-small.png)
 ![Room pane in small window](docs/screenshots/07-room-pane-small.png)
-
