@@ -34,7 +34,7 @@ HFlickableColumnPage {
         }
 
         if (aliasFieldItem.changed) {
-            window.settings.Chat.Composer.aliases[userId] =
+            window.settings.Chat.Composer.Aliases[userId] =
                 aliasFieldItem.text
 
             window.saveSettings()
@@ -251,7 +251,7 @@ HFlickableColumnPage {
     HLabeledItem {
         id: aliasField
 
-        readonly property var aliases: window.settings.Chat.Composer.aliases
+        readonly property var aliases: window.settings.Chat.Composer.Aliases
         readonly property string currentAlias: aliases[userId] || ""
 
         readonly property bool hasWhiteSpace: /\s/.test(item.text)

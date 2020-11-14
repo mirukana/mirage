@@ -275,22 +275,22 @@ HListView {
     }
 
     Repeater {
-        model: Object.keys(window.settings.Keys.Accounts.at_index)
+        model: Object.keys(window.settings.Keys.Accounts.AtIndex)
 
         Item {
             HShortcut {
-                sequence: window.settings.Keys.Accounts.at_index[modelData]
+                sequences: window.settings.Keys.Accounts.AtIndex[modelData]
                 onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
             }
         }
     }
 
     Repeater {
-        model: Object.keys(window.settings.Keys.Rooms.at_index)
+        model: Object.keys(window.settings.Keys.Rooms.AtIndex)
 
         Item {
             HShortcut {
-                sequence: window.settings.Keys.Rooms.at_index[modelData]
+                sequences: window.settings.Keys.Rooms.AtIndex[modelData]
                 onActivated: showAccountRoomAtIndex(parseInt(modelData,10) - 1)
             }
         }

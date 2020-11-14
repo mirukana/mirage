@@ -1147,7 +1147,7 @@ class MatrixClient(nio.AsyncClient):
         room.bookmarked = not room.bookmarked
 
         settings       = self.backend.settings
-        bookmarks      = settings.RoomList.bookmarks
+        bookmarks      = settings.RoomList.Bookmarks
         user_bookmarks = bookmarks.setdefault(self.user_id, [])
 
         if room.bookmarked and room_id not in user_bookmarks:
@@ -1157,10 +1157,7 @@ class MatrixClient(nio.AsyncClient):
             user_bookmarks.remove(room_id)
 
         # Changes inside dicts/lists aren't monitored, need to reassign
-        settings.RoomList.bookmarks = {
-            **bookmarks, self.user_id: user_bookmarks,
-        }
-
+        settings.RoomList.Bookmarks[self.user_id] = user_bookmarks
         self.backend.settings.save()
 
     async def room_forget(self, room_id: str) -> None:
@@ -1874,7 +1871,7 @@ class MatrixClient(nio.AsyncClient):
             )
             unverified_devices = registered.unverified_devices
 
-        bookmarks = self.backend.settings.RoomList.bookmarks
+        bookmarks = self.backend.settings.RoomList.Bookmarks
         room_item = Room(
             id             = room.room_id,
             for_account    = self.user_id,
@@ -1921,7 +1918,7 @@ class MatrixClient(nio.AsyncClient):
             local_highlights = local_highlights,
 
             lexical_sorting = self.backend.settings.RoomList.lexical_sort,
-            bookmarked = room.room_id in bookmarks.get(self.user_id, {}),
+            bookmarked      = room.room_id in bookmarks.get(self.user_id, []),
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item

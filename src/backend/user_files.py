@@ -267,8 +267,7 @@ class PCNFile(MappingFile):
     def deserialized(self, data: str) -> Tuple[Section, bool]:
         root  = Section.from_source_code(data, self.path)
         edits = self.write_path.read_text() if self.write_path.exists() else ""
-        root.deep_merge_edits(json.loads(edits))
-        return (root, False)
+        return (root, root.deep_merge_edits(json.loads(edits)))
 
     def serialized(self) -> str:
         edits = self.data.edits_as_dict()

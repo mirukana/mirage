@@ -74,11 +74,6 @@ class RoomList:
     # The application must be restarted to apply changes to this setting.
     lexical_sort: bool = False
 
-    # Mapping of account user ID to list of room ID to always keep on top.
-    # You can copy a room's ID by right clicking on it in the room list.
-    # Example: {"@alice:example.org": ["!aBc@example.org", "!123:example.org"]}
-    bookmarks: Dict[str, List[str]] = {}
-
     # When clicking on a room, recenter the room list on that room.
     click_centers: bool = False
 
@@ -89,6 +84,13 @@ class RoomList:
     # When pressing escape in the room filter field, clear the field's text.
     # in addition to focusing the current page or chat composer.
     escape_clears_filter: bool = True
+
+    class Bookmarks:
+        # Each property in this section is an account user ID, and the
+        # value is a list of room ID to always keep on top.
+        # A room's ID can be copied by right clicking on it in the room list.
+
+        "@account:example.org": List[str] = ["!roomID:a.org", "!other:b.org"]
 
 class Chat:
     # Center the chat header (room avatar, name and topic) even when sidepanes
@@ -120,13 +122,15 @@ class Chat:
     mark_read_delay: float = 0.2
 
     class Composer:
-        # Mapping of account user ID to alias.
-        # From any chat, start a message with an alias followed by a space
-        # to type and send as this associated account.
-        # The account must have permission to talk in the room.
-        # To ignore an alias when typing, prepend it with a space.
-        # Example: {"@alice:example.org": "al", "@bob:example.org": "b"}
-        aliases: Dict[str, str] = {}
+        class Aliases:
+            # Each property is the user ID of an account, value is the alias.
+            # From any chat, start a message with an alias followed by a space
+            # to type and send as the associated account.
+            # The account must have permission to talk in the room.
+            # To ignore an alias when typing, prepend it with a space.
+
+            "!account:example.org":       str = "u"
+            "!other_account:example.org": str = "oa"
 
     class Files:
         # Minimum width of the file name/size box for files without previews.
@@ -153,7 +157,6 @@ class Chat:
         # Hovering on the top/bottom with a mouse or tapping on a touch screen
         # reveals the hidden controls.
         autohide_image_controls_after: float = 2.0
-
 
 class Keys:
     # All keybind settings, unless their comment says otherwise, are list of
@@ -242,21 +245,21 @@ class Keys:
         previous = ["Alt+Shift+N"]
         next     = ["Alt+N"]
 
-        # Switch to the first room of the account number X in the list.
-        # This is a mapping of account number to keybind, e.g.
-        # {1: "Ctrl+1"} would bind Ctrl+1 to the switch to the first account.
-        at_index: Dict[int, str] = {
-            "1": f"{parent.os_ctrl()}+1",
-            "2": f"{parent.os_ctrl()}+2",
-            "3": f"{parent.os_ctrl()}+3",
-            "4": f"{parent.os_ctrl()}+4",
-            "5": f"{parent.os_ctrl()}+5",
-            "6": f"{parent.os_ctrl()}+6",
-            "7": f"{parent.os_ctrl()}+7",
-            "8": f"{parent.os_ctrl()}+8",
-            "9": f"{parent.os_ctrl()}+9",
-            "10": f"{parent.os_ctrl()}+0",
-        }
+        class AtIndex:
+            # Switch to the first room of the account number X in the list.
+            # Each property is a list of keybinds for the account number X.
+            # Numbers beyond the default ones can be added.
+
+            1  = [Keys.os_ctrl() + "+1"]
+            2  = [Keys.os_ctrl() + "+2"]
+            3  = [Keys.os_ctrl() + "+3"]
+            4  = [Keys.os_ctrl() + "+4"]
+            5  = [Keys.os_ctrl() + "+5"]
+            6  = [Keys.os_ctrl() + "+6"]
+            7  = [Keys.os_ctrl() + "+7"]
+            8  = [Keys.os_ctrl() + "+8"]
+            9  = [Keys.os_ctrl() + "+9"]
+            10 = [Keys.os_ctrl() + "+0"]
 
     class Rooms:
         # Add a new room (direct chat, join or create a group).
@@ -282,21 +285,21 @@ class Keys:
         previous_urgent = ["Alt+Shift+M"]
         next_urgent     = ["Alt+M"]
 
-        # Switch to room number X in the current account.
-        # This is a mapping of room number to keybind, e.g.
-        # {1: "Alt+1"} would bind Alt+1 to switch to the first room.
-        at_index: Dict[int, str] = {
-            "1": f"{parent.alt_or_cmd()}+1",
-            "2": f"{parent.alt_or_cmd()}+2",
-            "3": f"{parent.alt_or_cmd()}+3",
-            "4": f"{parent.alt_or_cmd()}+4",
-            "5": f"{parent.alt_or_cmd()}+5",
-            "6": f"{parent.alt_or_cmd()}+6",
-            "7": f"{parent.alt_or_cmd()}+7",
-            "8": f"{parent.alt_or_cmd()}+8",
-            "9": f"{parent.alt_or_cmd()}+9",
-            "10": f"{parent.alt_or_cmd()}+0",
-        }
+        class AtIndex:
+            # Switch to room number X in the current account.
+            # Each property is a list of keybinds for the room number X:
+            # Numbers beyond the default ones can be added.
+
+            1  = [Keys.alt_or_cmd() + "+1"]
+            2  = [Keys.alt_or_cmd() + "+2"]
+            3  = [Keys.alt_or_cmd() + "+3"]
+            4  = [Keys.alt_or_cmd() + "+4"]
+            5  = [Keys.alt_or_cmd() + "+5"]
+            6  = [Keys.alt_or_cmd() + "+6"]
+            7  = [Keys.alt_or_cmd() + "+7"]
+            8  = [Keys.alt_or_cmd() + "+8"]
+            9  = [Keys.alt_or_cmd() + "+9"]
+            10 = [Keys.alt_or_cmd() + "+0"]
 
     class Chat:
         # Keybinds specific to the current chat page.

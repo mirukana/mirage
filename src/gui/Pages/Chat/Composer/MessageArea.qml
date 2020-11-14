@@ -21,7 +21,7 @@ HTextArea {
 
     readonly property var usableAliases: {
         const obj     = {}
-        const aliases = window.settings.Chat.Composer.aliases
+        const aliases = window.settings.Chat.Composer.Aliases
 
         // Get accounts that are members of this room with permission to talk
         for (const [id, alias] of Object.entries(aliases)) {
