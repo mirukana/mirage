@@ -52,7 +52,7 @@ HListView {
     }
 
     function goToAccountNumber(num) {
-        const index = Object.entries(accountIndice).sort()[num][1]
+        const index = Object.entries(accountIndice)[num][1]
 
         model.get(index + 1).type === "Room" ?
         currentIndex = index + 1 :
