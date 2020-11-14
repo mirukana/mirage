@@ -371,8 +371,13 @@ class Section(MutableMapping):
                 ))
 
             elif isinstance(child, red.AssignmentNode):
+                if isinstance(child.target, red.NameNode):
+                    name = child.target.value
+                else:
+                    name = str(child.target.to_python())
+
                 instance._set_property(
-                    child.target.value,
+                    name,
                     child.annotation.dumps() if child.annotation else "",
                     child.value.dumps(),
                 )
