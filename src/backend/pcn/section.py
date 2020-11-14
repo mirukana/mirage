@@ -81,16 +81,15 @@ class Section(MutableMapping):
             self._edited[name]                       = value
             return
 
-        if name in self.properties:
-            return
+        if name in self.sections or isinstance(value, Section):
+            raise NotImplementedError(f"cannot set section {name!r}")
 
-        if name in self.sections:
-            raise NotImplementedError(f"cannot overwrite section {name!r}")
+        if name in self.methods or callable(value):
+            raise NotImplementedError(f"cannot set method {name!r}")
 
-        if name in self.methods:
-            raise NotImplementedError(f"cannot overwrite method {name!r}")
-
-        raise NotImplementedError(f"cannot add new attribute {name!r}")
+        self._set_property(name, "Any", "None")
+        getattr(type(self), name).value_override = value
+        self._edited[name] = value
 
 
     def __delattr__(self, name: str) -> None:
@@ -307,16 +306,17 @@ class Section(MutableMapping):
 
     def deep_merge_edits(
         self, edits: Dict[str, Any], has_expressions: bool = True,
-    ) -> None:
+    ) -> bool:
+
+        changes = False
+
         if not self.parent:  # this is Root
             edits = edits.get("set", {})
 
-        for name, value in edits.items():
-            if name not in self:
-                continue
-
-            if isinstance(self[name], Section) and isinstance(value, dict):
-                self[name].deep_merge_edits(value, has_expressions)
+        for name, value in edits.copy().items():
+            if isinstance(self.get(name), Section) and isinstance(value, dict):
+                if self[name].deep_merge_edits(value, has_expressions):
+                    changes = True
 
             elif not has_expressions:
                 self[name] = value
@@ -324,8 +324,16 @@ class Section(MutableMapping):
             elif isinstance(value, (tuple, list)):
                 user_expression, gui_value = value
 
-                if getattr(type(self), name).expression == user_expression:
+                if not hasattr(type(self), name):
                     self[name] = gui_value
+                elif getattr(type(self), name).expression == user_expression:
+                    self[name] = gui_value
+                else:
+                    # If user changed their config file, discard the GUI edit
+                    del edits[name]
+                    changes = True
+
+        return changes
 
 
     @classmethod
