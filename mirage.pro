@@ -79,7 +79,9 @@ no-x11 {
 
 # Add `make test` command
 
-test.commands = flake8 src/backend && mypy --pretty src/backend
+test.commands  = find src/gui -type f -name '*.qml' -exec qmllint '{}' + &&
+test.commands += flake8 src/backend &&
+test.commands += mypy --pretty src/backend
 
 QMAKE_EXTRA_TARGETS += test
 
