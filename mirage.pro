@@ -79,10 +79,7 @@ no-x11 {
 
 # Add `make test` command
 
-test.commands  = echo &&
-test.commands += flake8 src/backend &&
-test.commands += isort --check-only $$glob_filenames(*.py) &&
-test.commands += mypy --pretty src/backend
+test.commands = flake8 src/backend && mypy --pretty src/backend
 
 QMAKE_EXTRA_TARGETS += test
 
