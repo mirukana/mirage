@@ -1,3 +1,4 @@
+# vim: ft=qmake
 # Custom functions
 
 defineReplace(glob_filenames) {
@@ -51,7 +52,7 @@ no-x11 {
 }
 
 
-# Files to copy for `make install`
+# Files to copy for `make install` command
 
 !dev:unix {
     isEmpty(PREFIX) { PREFIX = /usr/local }
@@ -76,6 +77,36 @@ no-x11 {
 }
 
 
+# Add `make test` command
+
+test.commands  = echo &&
+test.commands += flake8 src/backend &&
+test.commands += isort --check-only $$glob_filenames(*.py) &&
+test.commands += mypy --pretty src/backend
+
+QMAKE_EXTRA_TARGETS += test
+
+
+# Add stuff to `make clean` command
+
+# Allow cleaning folders instead of just files
+win32:QMAKE_DEL_FILE = rmdir /q /s
+!win32:QMAKE_DEL_FILE = rm -rf
+
+for(file, $$list($$glob_filenames(*.py))) {
+    PYCACHE_DIRS *= $$dirname(file)/__pycache__
+    PYCACHE_DIRS *= $$dirname(file)/.mypy_cache
+}
+
+QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
+QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
+QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env
+QMAKE_CLEAN *= packaging/flatpak/flatpak-pip-generator
+QMAKE_CLEAN *= packaging/flatpak/flatpak-env-requirements.txt
+QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder
+
+
 # Generate resource file
 
 RESOURCE_FILES *= $$glob_filenames(qmldir, *.qml, *.qpl, *.js, *.py)
@@ -94,23 +125,3 @@ file_content += '</qresource>'
 file_content += '</RCC>'
 
 write_file($$QRC_FILE, file_content)
-
-
-# Add stuff to `make clean`
-
-# Allow cleaning folders instead of just files
-win32:QMAKE_DEL_FILE = rmdir /q /s
-!win32:QMAKE_DEL_FILE = rm -rf
-
-for(file, $$list($$glob_filenames(*.py))) {
-    PYCACHE_DIRS *= $$dirname(file)/__pycache__
-    PYCACHE_DIRS *= $$dirname(file)/.mypy_cache
-}
-
-QMAKE_CLEAN *= $$MOC_DIR $$OBJECTS_DIR $$RCC_DIR $$PYCACHE_DIRS $$QRC_FILE
-QMAKE_CLEAN *= $$BUILD_DIR $$TARGET Makefile mirage.pro.user .qmake.stash
-QMAKE_CLEAN *= $$glob_filenames(*.pyc, *.qmlc, *.jsc, *.egg-info)
-QMAKE_CLEAN *= packaging/flatpak/flatpak-env
-QMAKE_CLEAN *= packaging/flatpak/flatpak-pip-generator
-QMAKE_CLEAN *= packaging/flatpak/flatpak-env-requirements.txt
-QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder
