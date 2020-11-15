@@ -13,5 +13,3 @@ flake8-logging-format >= 0.6.0,  < 0.7
 flake8-pie            >= 0.6.1,  < 0.7
 flake8-quotes         >= 3.2.0,  < 4
 flake8-colors         >= 0.1.6,  < 0.2
-
-git+http://github.com/mirukana/matrix-nio#egg=matrix-nio[e2e]
