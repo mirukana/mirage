@@ -1,3 +1,4 @@
+import re
 import textwrap
 from collections import OrderedDict
 from collections.abc import MutableMapping
@@ -9,13 +10,16 @@ from typing import (
     Union,
 )
 
+import pyotherside
 import redbaron as red
 
 from .globals_dict import GlobalsDict
 from .property import Property, process_value
 
 # TODO: docstrings, error handling, support @property, non-section classes
-BUILTINS_DIR: Path = Path(__file__).parent.parent.parent.resolve()  # src dir
+BUILTINS_DIR: Path = Path(__file__).parent.parent.parent
+
+assert BUILTINS_DIR.name == "src"
 
 
 @dataclass(repr=False, eq=False)
@@ -404,5 +408,12 @@ class Section(MutableMapping):
     def from_file(
         cls, path: Union[str, Path], builtins: Union[str, Path] = BUILTINS_DIR,
     ) -> "Section":
-        path = Path(path)
-        return Section.from_source_code(path.read_text(), path, Path(builtins))
+
+        path = Path(re.sub(r"^qrc:/", "", str(path)))
+
+        try:
+            content = pyotherside.qrc_get_file_contents(str(path)).decode()
+        except ValueError:  # App was compiled without QRC
+            content = path.read_text()
+
+        return Section.from_source_code(content, path, Path(builtins))
