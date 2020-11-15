@@ -29,7 +29,6 @@ HTile {
     readonly property QtObject lastEvent:
         eventModel.count > 0 ? eventModel.get(0) : null
 
-
     backgroundColor: theme.mainPane.listView.room.background
     leftPadding: theme.spacing * 2
     rightPadding: theme.spacing

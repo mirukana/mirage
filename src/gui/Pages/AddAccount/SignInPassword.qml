@@ -41,7 +41,6 @@ SignInBase {
         )
     }
 
-
     applyButton.enabled: idField.item.text.trim() && passField.item.text
     applyButton.onClicked: page.signIn()
 

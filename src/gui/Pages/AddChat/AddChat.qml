@@ -10,7 +10,6 @@ HPage {
 
     property string userId
 
-
     HTabbedBox {
         anchors.centerIn: parent
         width: Math.min(implicitWidth, page.availableWidth)

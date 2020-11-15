@@ -38,7 +38,6 @@ HButton {
         openMenu(menuAtCursor)
     }
 
-
     topPadding: padded ? spacing / (compact ? 4 : 2) : 0
     bottomPadding: topPadding
 
@@ -46,7 +45,6 @@ HButton {
     Keys.onReturnPressed: leftClicked()
     Keys.onSpacePressed: leftClicked()
     Keys.onMenuPressed: doRightClick(false)
-
 
     Behavior on topPadding { HNumberAnimation {} }
     Behavior on bottomPadding { HNumberAnimation {} }

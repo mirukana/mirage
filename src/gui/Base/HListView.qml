@@ -78,7 +78,6 @@ ListView {
         )
     }
 
-
     currentIndex: defaultCurrentIndex
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration

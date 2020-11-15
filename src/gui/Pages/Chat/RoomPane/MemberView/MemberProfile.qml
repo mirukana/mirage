@@ -37,7 +37,6 @@ HListView {
         focusOnExit.forceActiveFocus()
     }
 
-
     clip: true
     bottomMargin: theme.spacing
     model: ListModel {}

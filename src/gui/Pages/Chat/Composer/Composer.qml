@@ -16,7 +16,6 @@ Rectangle {
 
     function takeFocus() { messageArea.forceActiveFocus() }
 
-
     implicitHeight: Math.max(theme.baseElementsHeight, row.implicitHeight)
     color: theme.chat.composer.background
 

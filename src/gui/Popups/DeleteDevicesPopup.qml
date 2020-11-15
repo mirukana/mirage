@@ -33,10 +33,8 @@ PasswordPopup {
         )
     }
 
-
     summary.text:
         qsTr("Enter your account's password to continue:")
-
 
     validateButton.text:
         deviceIds.length > 1 ?

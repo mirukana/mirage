@@ -4,14 +4,12 @@
 import QtQuick 2.12
 import QtQuick.Shapes 1.12
 
-
 Item {
     property real progress: 0  // 0-1
 
     readonly property alias baseCircle: baseCircle
     readonly property alias progressCircle: progressCircle
     readonly property alias label: label
-
 
     implicitWidth: 96 * (theme ? theme.uiScale : 1)
     implicitHeight: implicitWidth

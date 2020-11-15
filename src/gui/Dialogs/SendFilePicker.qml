@@ -12,7 +12,6 @@ HFileDialogOpener {
 
     signal replied()
 
-
     fill: false
     dialog.title: qsTr("Select a file to send")
     dialog.fileMode: FileDialog.OpenFiles

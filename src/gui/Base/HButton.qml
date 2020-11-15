@@ -29,7 +29,6 @@ Button {
         visible: text && hovered
     }
 
-
     enabled: ! button.loading
     spacing: theme.spacing
     topPadding: padded ? spacing * (circle ? 1 : 0.5) : 0

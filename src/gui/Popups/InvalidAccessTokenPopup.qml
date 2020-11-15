@@ -14,7 +14,6 @@ HFlickableColumnPopup {
         window.mainUI.pageLoader.show("Pages/AddAccount/AddAccount.qml")
     }
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: signBackButton

@@ -36,7 +36,6 @@ SignInBase {
         page.exitRequested()
     }
 
-
     implicitWidth: theme.controls.box.defaultWidth * 1.25
     applyButton.text: qsTr("Waiting")
     applyButton.loading: true

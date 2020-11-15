@@ -8,7 +8,6 @@ import "../../Base"
 InfoBar {
     property var typingMembers: []
 
-
     color: theme.chat.typingMembers.background
     icon.svgName: "typing"  // TODO: animate
     label.textFormat: Text.StyledText

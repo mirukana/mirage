@@ -13,7 +13,6 @@ ToolTip {
     property alias label: label
     property alias backgroundColor: background.color
 
-
     function instantShow(timeout=-1) {
         if (visible) return
         instant = true
@@ -24,7 +23,6 @@ ToolTip {
     function instantToggle(timeout=-1) {
         visible ? hide() : instantShow(timeout)
     }
-
 
     delay: instant ? 0 : window.settings.General.tooltips_delay * 1000
     padding: background.border.width

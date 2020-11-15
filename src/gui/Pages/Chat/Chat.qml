@@ -46,7 +46,6 @@ Item {
         replyToDisplayName = ""
     }
 
-
     onFocusChanged: if (focus && loader.item) loader.item.composer.takeFocus()
     onReadyChanged: longLoading = false
 

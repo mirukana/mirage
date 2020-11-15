@@ -17,7 +17,6 @@ CheckBox {
 
     function reset() { checked = defaultChecked }
 
-
     checked: defaultChecked
     spacing: contentItem.visible ? theme.spacing : 0
     padding: 0

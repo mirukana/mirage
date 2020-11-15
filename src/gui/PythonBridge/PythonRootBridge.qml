@@ -10,7 +10,6 @@ PythonBridge {
 
     readonly property EventHandlers eventHandlers: EventHandlers {}
 
-
     Component.onCompleted: {
         for (var func in eventHandlers) {
             if (! eventHandlers.hasOwnProperty(func)) continue

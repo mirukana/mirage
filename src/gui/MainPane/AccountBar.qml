@@ -11,7 +11,6 @@ Rectangle {
     property RoomList roomList
     readonly property alias accountList: accountList
 
-
     color: theme.mainPane.accountBar.background
     implicitHeight:
         accountList.count >= 2 ?
@@ -78,7 +77,6 @@ Rectangle {
                 color: theme.mainPane.accountBar.account.selectedBorder
             }
         }
-
 
         HShortcut {
             sequences: window.settings.Keys.Accounts.previous

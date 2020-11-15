@@ -110,7 +110,6 @@ HDrawer {
         outputList.model.insert(0, { input, output, error })
     }
 
-
     objectName: "debugConsole"
     edge: Qt.TopEdge
     x: horizontal ? 0 : referenceSizeParent.width / 2 - width / 2

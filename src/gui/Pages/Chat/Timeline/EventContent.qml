@@ -84,7 +84,6 @@ HRowLayout {
 
     readonly property alias selectedText: contentLabel.selectedPlainText
 
-
     spacing: theme.chat.message.horizontalSpacing
     layoutDirection: onRight ? Qt.RightToLeft: Qt.LeftToRight
 

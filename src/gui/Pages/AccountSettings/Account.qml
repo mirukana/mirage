@@ -64,7 +64,6 @@ HFlickableColumnPage {
         fileDialog.file         = ""
     }
 
-
     footer: AutoDirectionLayout {
         ApplyButton {
             id: saveButton

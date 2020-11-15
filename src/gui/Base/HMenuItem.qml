@@ -10,7 +10,6 @@ MenuItem {
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
 
-
     spacing: theme.spacing
     leftPadding: spacing
     rightPadding: leftPadding

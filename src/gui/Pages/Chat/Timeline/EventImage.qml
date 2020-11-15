@@ -67,7 +67,6 @@ HMxcImage {
         Qt.openUrlExternally(loader.mediaUrl)
     }
 
-
     width: fitSize.width
     height: fitSize.height
     horizontalAlignment: Image.AlignLeft
@@ -85,7 +84,6 @@ HMxcImage {
         loader.singleMediaInfo.thumbnail_crypt_dict :
         loader.singleMediaInfo.media_crypt_dict
     )
-
 
     onCachedPathChanged:
         eventList.thumbnailCachedPaths[loader.singleMediaInfo.id] = cachedPath

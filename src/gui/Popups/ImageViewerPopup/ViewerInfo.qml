@@ -15,7 +15,6 @@ Rectangle {
     readonly property alias dimensions: dimensions
     readonly property alias fileSize: fileSize
 
-
     implicitHeight: Math.max(theme.baseElementsHeight, childrenRect.height)
     color: utils.hsluv(0, 0, 0, 0.8)
 

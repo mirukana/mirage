@@ -10,7 +10,6 @@ HGridLayout {
 
     readonly property bool vertical: flow === HGridLayout.TopToBottom
 
-
     flow:
         width >= summedImplicitWidth ?
         HGridLayout.LeftToRight :

@@ -9,7 +9,6 @@ import "../../Base/Buttons"
 HFlickableColumnPage {
     function takeFocus() { registerButton.forceActiveFocus() }
 
-
     footer: AutoDirectionLayout {
         ApplyButton {
             id: registerButton

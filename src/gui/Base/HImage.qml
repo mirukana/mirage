@@ -44,7 +44,6 @@ Image {
         source          = oldSource
     }
 
-
     autoTransform: true
     asynchronous: true
     fillMode: Image.PreserveAspectFit

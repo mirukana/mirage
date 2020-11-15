@@ -10,7 +10,6 @@ HPage {
 
     property alias column: column
 
-
     implicitWidth: theme.controls.box.defaultWidth
     contentHeight: column.childrenRect.height
 

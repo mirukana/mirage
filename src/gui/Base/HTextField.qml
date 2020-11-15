@@ -48,7 +48,6 @@ TextField {
         insert(cursorPosition, text)
     }
 
-
     text: defaultText || ""
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
@@ -117,7 +116,6 @@ TextField {
     Keys.onRightPressed:
         event.accepted = cursorPosition === length && ! selectedText
 
-
     Binding on color {
         value: "transparent"
         when: disabledText !== null && ! field.enabled
@@ -132,7 +130,6 @@ TextField {
         value: disabledTextLabel.implicitHeight
         when: disabledText !== null && ! field.enabled
     }
-
 
     Behavior on opacity { HNumberAnimation {} }
     Behavior on color { HColorAnimation {} }

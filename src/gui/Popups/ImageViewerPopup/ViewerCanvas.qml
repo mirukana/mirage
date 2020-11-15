@@ -15,7 +15,6 @@ HFlickable {
     readonly property alias thumbnail: thumbnail
     readonly property alias full: full
 
-
     contentWidth:
         Math.max(window.width, viewer.paintedWidth * thumbnail.scale)
     contentHeight:

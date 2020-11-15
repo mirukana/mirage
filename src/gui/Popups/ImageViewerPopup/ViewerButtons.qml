@@ -19,7 +19,6 @@ HFlow {
     readonly property real calculatedWidth:
         utils.sumChildrenImplicitWidths(visibleChildren)
 
-
     HButton {
         id: pause
         backgroundColor: root.backgroundsColor

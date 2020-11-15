@@ -18,7 +18,6 @@ HFlickableColumnPopup {
     readonly property string coloredTarget:
         utils.coloredNameHtml(targetDisplayName, targetUserId)
 
-
     function remove() {
         py.callClientCoro(
             userId,
@@ -28,7 +27,6 @@ HFlickableColumnPopup {
 
         popup.close()
     }
-
 
     page.footer: AutoDirectionLayout {
         ApplyButton {

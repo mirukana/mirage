@@ -15,7 +15,6 @@ Slider {
     property alias toolTip: toolTip
     property alias mouseArea: mouseArea
 
-
     leftPadding: 0
     rightPadding: leftPadding
     topPadding: 0

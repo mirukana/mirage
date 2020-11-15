@@ -14,7 +14,6 @@ HColumnLayout {
     readonly property alias label: label
     readonly property alias errorLabel: errorLabel
 
-
     spacing: theme.spacing / 2
 
     HRowLayout {

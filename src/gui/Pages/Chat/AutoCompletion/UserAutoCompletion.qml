@@ -85,7 +85,6 @@ HListView {
         open         = false
     }
 
-
     visible: opacity > 0
     opacity: open && count ? 1 : 0
     bottomMargin: theme.spacing / 2

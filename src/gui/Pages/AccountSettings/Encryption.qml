@@ -13,7 +13,6 @@ HFlickableColumnPage {
 
     function takeFocus() { exportButton.forceActiveFocus() }
 
-
     footer: AutoDirectionLayout {
         GroupButton {
             id: exportButton

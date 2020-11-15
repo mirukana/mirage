@@ -15,7 +15,6 @@ HColumnPopup {
     property string message: ""
     property string traceback: ""
 
-
     page.footer: AutoDirectionLayout {
         PositiveButton {
             text: qsTr("Report")

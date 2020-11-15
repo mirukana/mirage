@@ -31,7 +31,6 @@ Item {
     readonly property alias fontMetrics: fontMetrics
     readonly property alias idleManager: idleManager
 
-
     focus: true
     Component.onCompleted: window.mainUI = mainUI
 

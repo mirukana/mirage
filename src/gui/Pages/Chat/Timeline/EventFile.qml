@@ -13,7 +13,6 @@ HTile {
 
     property EventMediaLoader loader
 
-
     width: Math.min(
         eventDelegate.width,
         eventContent.maxMessageWidth,

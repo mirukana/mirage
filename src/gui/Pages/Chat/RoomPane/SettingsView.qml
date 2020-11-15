@@ -55,7 +55,6 @@ HFlickableColumnPage {
         forbidGuestsCheckBox.reset()
     }
 
-
     enableFlickShortcuts: ! chat.composerHasFocus
 
     background: Rectangle {

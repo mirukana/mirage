@@ -40,7 +40,6 @@ HTile {
         py.callClientCoro(model.id, "set_presence", [presence])
     }
 
-
     backgroundColor: theme.mainPane.listView.account.background
 
     contentItem: ContentRow {

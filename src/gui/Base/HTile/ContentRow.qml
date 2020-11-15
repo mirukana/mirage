@@ -7,7 +7,6 @@ import ".."
 HRowLayout {
     property HTile tile
 
-
     spacing: tile.spacing
     opacity: tile.contentOpacity
 }

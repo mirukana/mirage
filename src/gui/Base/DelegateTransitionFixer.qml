@@ -24,7 +24,6 @@ Timer {
         to: 1
     }
 
-
     interval: theme.animationDuration * 2
     running: true
     onTriggered: {

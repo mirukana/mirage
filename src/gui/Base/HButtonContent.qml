@@ -14,7 +14,6 @@ HRowLayout {
     readonly property alias icon: icon
     readonly property alias label: label
 
-
     spacing: button.spacing
     opacity: button.loading ? theme.loadingElementsOpacity :
              enabled ? 1 : theme.disabledElementsOpacity

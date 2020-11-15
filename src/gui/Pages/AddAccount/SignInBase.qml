@@ -62,7 +62,6 @@ HFlickableColumnPage {
         page.loginFutureId = ""
     }
 
-
     flickable.topMargin: theme.spacing * 1.5
     flickable.bottomMargin: flickable.topMargin
 

@@ -22,7 +22,6 @@ HDrawer {
         bottomBar.filterField.forceActiveFocus()
     }
 
-
     saveName: "mainPane"
     background: Rectangle { color: theme.mainPane.background }
     requireDefaultSize: bottomBar.filterField.activeFocus

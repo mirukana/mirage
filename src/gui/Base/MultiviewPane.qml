@@ -19,7 +19,6 @@ HDrawer {
     readonly property alias buttonRepeater: buttonRepeater
     readonly property alias swipeView: swipeView
 
-
     defaultSize: buttonRepeater.count * buttonWidth
     minimumSize: buttonWidth
 

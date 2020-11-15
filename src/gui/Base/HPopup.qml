@@ -19,7 +19,6 @@ Popup {
 
     readonly property string uuid: CppUtils.uuid()
 
-
     modal: true
     focus: true
     padding: 0

@@ -22,7 +22,6 @@ SwipeView {
     property int lastMove: HSwipeView.Move.ToNext
     property bool changed: currentIndex !== defaultIndex
 
-
     function reset() { setCurrentIndex(defaultIndex) }
 
     function incrementWrapIndex() {
@@ -36,7 +35,6 @@ SwipeView {
         setCurrentIndex(count - 1) :
         decrementCurrentIndex()
     }
-
 
     Component.onCompleted: if (! changed) {
         setCurrentIndex(window.getState(this, "currentIndex", defaultIndex))

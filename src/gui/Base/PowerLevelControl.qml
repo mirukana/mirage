@@ -25,7 +25,6 @@ AutoDirectionLayout {
 
     function reset() { field.reset() }
 
-
     rowSpacing: theme.spacing
     onActiveFocusChanged: if (activeFocus) field.forceActiveFocus()
 

@@ -16,7 +16,6 @@ GridView {
     property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checked).length
 
-
     function check(...indices) {
         for (const i of indices) {
             const model = gridView.model.get(i)
@@ -71,7 +70,6 @@ GridView {
         )
     }
 
-
     currentIndex: defaultCurrentIndex
     keyNavigationWraps: true
     highlightMoveDuration: theme.animationDuration
@@ -83,7 +81,6 @@ GridView {
 
     maximumFlickVelocity: window.settings.Scrolling.kinetic_max_speed
     flickDeceleration: window.settings.Scrolling.kinetic_deceleration
-
 
     highlight: Rectangle {
         color: theme.controls.gridView.highlight

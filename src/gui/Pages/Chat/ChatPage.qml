@@ -30,7 +30,6 @@ HColumnPage {
         anchors.fill: parent
     }
 
-
     padding: 0
     column.spacing: 0
 

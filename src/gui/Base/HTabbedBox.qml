@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.12
 HPage {
     default property alias swipeViewData: swipeView.contentData
 
-
     contentWidth:
         Math.max(swipeView.contentWidth, theme.controls.box.defaultWidth)
 

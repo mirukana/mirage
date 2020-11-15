@@ -54,7 +54,6 @@ HFlickableColumnPage {
         pageLoader.showPrevious()
     }
 
-
     enabled: account && account.presence !== "offline"
 
     footer: AutoDirectionLayout {

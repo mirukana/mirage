@@ -14,7 +14,6 @@ HColumnLayout {
     readonly property alias viewDepth: stackView.depth
     readonly property alias filterField: filterField
 
-
     Connections {
         target: pageLoader
         onAboutToRecycle: {
@@ -129,7 +128,6 @@ HColumnLayout {
                         stackView.currentItem.currentIndex = -1
                     }
                 }
-
 
                 Keys.forwardTo: [stackView.currentItem]
                 Keys.priority: Keys.AfterItem

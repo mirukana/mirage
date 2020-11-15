@@ -12,7 +12,6 @@ HFlickableColumnPopup {
     property string roomId: ""
     property var preClearCallback: null
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: clearButton

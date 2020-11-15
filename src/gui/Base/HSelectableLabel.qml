@@ -23,7 +23,6 @@ TextEdit {
         label.selectAll()
     }
 
-
     font.family: theme.fontFamily.sans
     font.pixelSize: theme.fontSize.normal
     color: theme.colors.text

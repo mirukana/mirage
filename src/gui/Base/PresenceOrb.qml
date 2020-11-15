@@ -6,7 +6,6 @@ import QtQuick 2.12
 Rectangle {
     property string presence
 
-
     implicitWidth:
         window.settings.General.compact ?
         theme.controls.presence.radius * 2 :

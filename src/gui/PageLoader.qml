@@ -66,7 +66,6 @@ HLoader {
         if (mainPane.collapse) mainPane.close()
     }
 
-
     clip: appearAnimation.running
 
     onLoaded: { takeFocus(); appearAnimation.restart() }

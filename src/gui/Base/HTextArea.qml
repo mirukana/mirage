@@ -60,7 +60,6 @@ TextArea {
         return cursorPosition === 0 ? null : getWordAt(cursorPosition - 1)
     }
 
-
     text: defaultText || ""
     opacity: enabled ? 1 : theme.disabledElementsOpacity
     selectByMouse: true
@@ -145,7 +144,6 @@ TextArea {
 
     KeyNavigation.priority: KeyNavigation.BeforeItem
     KeyNavigation.tab: focusItemOnTab
-
 
     Binding on color {
         value: "transparent"

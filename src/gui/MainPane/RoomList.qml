@@ -148,7 +148,6 @@ HListView {
         return false
     }
 
-
     highlightRangeMode:
         keepListCentered ? ListView.ApplyRange : ListView.NoHighlightRange
 

@@ -11,7 +11,6 @@ HLabel {
     property bool localUnreads: false
     property bool localHighlights: false
 
-
     text:
         unreads >= 1000000 ? Math.floor(unreads / 1000000) + "M" :
         unreads >= 1000 ? Math.floor(unreads / 1000) + "K" :

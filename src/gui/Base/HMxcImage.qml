@@ -59,7 +59,6 @@ HImage {
         )
     }
 
-
     source: sourceOverride || (show ? cachedPath : "")
     showProgressBar:
         (isMxc && status === Image.Null) || status === Image.Loading

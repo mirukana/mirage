@@ -13,7 +13,6 @@ Timer {
         py.callClientCoro(userId, "set_presence", [presence, undefined, false])
     }
 
-
     interval: 1000
     repeat: true
     running:

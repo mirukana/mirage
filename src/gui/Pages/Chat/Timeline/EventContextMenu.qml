@@ -33,7 +33,6 @@ HMenu {
         menu.popup()
     }
 
-
     onClosed: {
         hoveredLink = ""
         eventIndex  = -1

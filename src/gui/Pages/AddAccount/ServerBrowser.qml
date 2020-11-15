@@ -91,7 +91,6 @@ HBox {
         })
     }
 
-
     padding: 0
     implicitWidth: theme.controls.box.defaultWidth * 1.25
     contentHeight: window.height

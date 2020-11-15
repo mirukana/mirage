@@ -125,7 +125,6 @@ HTextArea {
         clearReplyTo()
     }
 
-
     saveName: "composer"
     saveId: [chat.roomId, chat.userId]
 

@@ -91,7 +91,6 @@ ApplicationWindow {
         window.requestActivate()
     }
 
-
     flags: Qt.WA_TranslucentBackground
     minimumWidth: theme ? theme.minimumSupportedWidth : 240
     minimumHeight: theme ? theme.minimumSupportedHeight : 120

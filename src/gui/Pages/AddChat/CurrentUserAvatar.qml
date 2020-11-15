@@ -8,7 +8,6 @@ import "../../Base"
 HUserAvatar {
     property QtObject account
 
-
     clientUserId: userId
     displayName: account ? account.display_name : ""
     mxc: account ? account.avatar_url : ""

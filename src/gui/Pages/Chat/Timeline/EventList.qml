@@ -17,7 +17,6 @@ Rectangle {
     readonly property alias eventList: eventList
     readonly property alias contextMenu: contextMenu
 
-
     color: theme.chat.eventList.background
 
     HShortcut {
@@ -221,7 +220,6 @@ Rectangle {
         active: chat.composerHasFocus
         flickable: eventList
     }
-
 
     HListView {
         id: eventList
@@ -500,7 +498,6 @@ Rectangle {
         function openMediaExternally(event) {
             eventList.getLocalOrDownloadMedia(event, Qt.openUrlExternally)
         }
-
 
         anchors.fill: parent
         enabled: ! window.anyPopup

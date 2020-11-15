@@ -67,7 +67,6 @@ Drawer {
 
     readonly property bool vertical: ! horizontal
 
-
     implicitWidth: horizontal ? calculatedSize : parent.width
     implicitHeight: vertical ? calculatedSize : parent.height
 

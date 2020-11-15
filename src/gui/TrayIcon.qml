@@ -27,7 +27,6 @@ SystemTrayIcon {
         }
     }
 
-
     visible: true
     tooltip: Qt.application.displayName
     icon.source: `../icons/${iconPack}/tray-icon.png`

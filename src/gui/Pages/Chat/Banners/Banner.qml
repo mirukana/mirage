@@ -14,7 +14,6 @@ Rectangle {
     property alias buttonModel: bannerRepeater.model
     property var buttonCallbacks: []
 
-
     implicitHeight: childrenRect.height
     color: theme.controls.box.background
 

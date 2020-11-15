@@ -7,7 +7,6 @@ NumberAnimation {
     property real factor: 1.0
     property real overshoot: 0.0
 
-
     duration:
         theme.animationDuration *
         Math.max((1 + Math.abs(overshoot)) / 1.7, 1.0) * factor

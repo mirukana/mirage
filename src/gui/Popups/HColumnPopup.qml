@@ -15,7 +15,6 @@ HPopup {
 
     signal keyboardAccept()
 
-
     HColumnPage {
         id: page
         implicitWidth: Math.min(

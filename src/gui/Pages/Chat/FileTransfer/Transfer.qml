@@ -30,7 +30,6 @@ HColumnLayout {
         )
     }
 
-
     Behavior on height { HNumberAnimation {} }
 
     DelegateTransitionFixer {}

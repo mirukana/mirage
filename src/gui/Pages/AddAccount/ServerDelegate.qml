@@ -11,7 +11,6 @@ HTile {
 
     property string loadingIconStep
 
-
     backgroundColor: "transparent"
     contentOpacity: model.status === "Failed" ? 0.3 : 1  // XXX
     rightPadding: 0

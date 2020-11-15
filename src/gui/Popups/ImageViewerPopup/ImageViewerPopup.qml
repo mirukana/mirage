@@ -87,7 +87,6 @@ HPopup {
         return isFull ? exitFullScreen() : showFullScreen()
     }
 
-
     margins: 0
     background: null
 

@@ -3,12 +3,10 @@
 
 import QtQuick 2.12
 
-
 HRectangleBottomBorder {
     id: line
 
     property bool show: false
-
 
     transform: Scale {
         origin.x: line.width / 2

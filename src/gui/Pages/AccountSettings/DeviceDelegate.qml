@@ -18,7 +18,6 @@ HTile {
     signal renameRequest(string name)
     signal deleteRequest()
 
-
     backgroundColor: "transparent"
     compact: false
 

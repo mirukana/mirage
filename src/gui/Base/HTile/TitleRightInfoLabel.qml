@@ -9,7 +9,6 @@ HLabel {
     property HTile tile
     property int hideUnderWidth: 200
 
-
     font.pixelSize: theme.fontSize.small
     verticalAlignment: Qt.AlignVCenter
     color: theme.colors.halfDimText

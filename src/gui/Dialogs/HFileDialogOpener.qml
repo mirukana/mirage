@@ -26,7 +26,6 @@ Item {
     signal filesPicked(var files)
     signal cancelled()
 
-
     anchors.fill: fill ? parent : undefined
 
     TapHandler { enabled: opener.enabled && fill; onTapped: fileDialog.open() }

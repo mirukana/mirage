@@ -13,7 +13,6 @@ HFlickableColumnPopup {
     property string roomName: ""
     property var leftCallback: null
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: leaveButton

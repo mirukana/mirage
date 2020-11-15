@@ -9,7 +9,6 @@ Rectangle {
     property QtObject buttonTheme
     property bool useFocusLine: true
 
-
     color: buttonTheme.background
     opacity:
         button.loading ? theme.loadingElementsOpacity :

@@ -10,7 +10,6 @@ Rectangle {
     readonly property alias addAccountButton: addAccountButton
     readonly property alias filterField: filterField
 
-
     // Hide filter field overflowing for a sec on size changes
     clip: true
     implicitHeight: theme.baseElementsHeight
@@ -68,7 +67,6 @@ Rectangle {
                 mainPane.toggleFocus()
                 if (window.settings.RoomList.escape_clears_filter) text = ""
             }
-
 
             Behavior on opacity { HNumberAnimation {} }
 

@@ -26,7 +26,6 @@ HMenu {
         )
     }
 
-
     onClosed: control.persistentSelection = hadPersistentSelection
     Component.onDestruction:
         control.persistentSelection = hadPersistentSelection

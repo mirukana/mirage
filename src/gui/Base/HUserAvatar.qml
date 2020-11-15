@@ -16,7 +16,6 @@ HAvatar {
     readonly property bool admin: powerLevel >= 100
     readonly property bool moderator: powerLevel >= 50 && ! admin
 
-
     name: displayName || userId.substring(1)  // no leading @
     title: "user_" + userId + ".avatar"
 

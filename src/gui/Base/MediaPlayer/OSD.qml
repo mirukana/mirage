@@ -32,7 +32,6 @@ HColumnLayout {
         if (media.seekable) media.seek(pos * (savedDuration || boundPosition))
     }
 
-
     visible: osdScaleTransform.yScale > 0
 
     transform: Scale {

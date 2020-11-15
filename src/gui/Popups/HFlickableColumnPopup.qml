@@ -13,7 +13,6 @@ HPopup {
 
     signal keyboardAccept()
 
-
     HFlickableColumnPage {
         id: page
         implicitWidth: Math.min(

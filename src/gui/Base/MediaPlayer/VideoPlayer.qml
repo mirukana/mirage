@@ -14,13 +14,11 @@ Video {
     implicitWidth: fullScreen ? window.width : 640
     implicitHeight: fullScreen ? window.height : (width / osd.savedAspectRatio)
 
-
     property bool hovered: false
     property alias fullScreen: osd.fullScreen
 
     property int oldVisibility: Window.Windowed
     property QtObject oldParent: video.parent
-
 
     onFullScreenChanged: {
         if (fullScreen) {
@@ -39,7 +37,6 @@ Video {
             video.parent = oldParent
         }
     }
-
 
     Connections {
         target: mainUI.fullScreenPopup

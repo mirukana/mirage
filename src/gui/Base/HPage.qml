@@ -19,7 +19,6 @@ Page {
     signal keyboardAccept()
     signal keyboardCancel()
 
-
     padding: currentSpacing < theme.spacing ? 0 : currentSpacing
     background: null
 

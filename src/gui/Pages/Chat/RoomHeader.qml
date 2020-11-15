@@ -16,7 +16,6 @@ Rectangle {
     readonly property bool center:
         showLeftButton || window.settings.Chat.always_center_header
 
-
     implicitHeight: theme.baseElementsHeight
     color: theme.chat.roomHeader.background
 

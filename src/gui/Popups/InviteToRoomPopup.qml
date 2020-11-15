@@ -46,7 +46,6 @@ HColumnPopup {
         )
     }
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: inviteButton

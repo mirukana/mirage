@@ -9,7 +9,6 @@ HMenuItem {
     property bool autoDestruct: true
     property var properties: ({})
 
-
     onTriggered: {
         menu.focusOnClosed = null
 

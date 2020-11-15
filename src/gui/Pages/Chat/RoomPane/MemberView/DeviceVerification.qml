@@ -25,7 +25,6 @@ HFlickableColumnPage {
         stackView.pop()
     }
 
-
     footer: AutoDirectionLayout {
         PositiveButton {
             text: qsTr("They're the same")

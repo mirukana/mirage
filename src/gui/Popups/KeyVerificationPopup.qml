@@ -17,7 +17,6 @@ HFlickableColumnPopup {
     property var verifiedCallback: null
     property var blacklistedCallback: null
 
-
     page.footer: AutoDirectionLayout {
         PositiveButton {
             visible: ! deviceIsCurrent

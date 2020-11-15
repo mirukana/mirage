@@ -17,7 +17,6 @@ Menu {
 
     readonly property string uuid: CppUtils.uuid()
 
-
     modal: true
     dim: false
     padding: theme.controls.menu.borderWidth

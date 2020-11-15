@@ -20,7 +20,6 @@ HMenu {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
-
     onOpened: statusText.forceActiveFocus()
 
     HLabeledItem {

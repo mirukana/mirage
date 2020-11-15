@@ -10,7 +10,6 @@ HQtObject {
     property Item container: parent
     property bool active: container.count > 1
 
-
     HShortcut {
         active: root.active
         sequences: window.settings.Keys.previous_tab

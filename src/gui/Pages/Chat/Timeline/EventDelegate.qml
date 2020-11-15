@@ -45,7 +45,6 @@ HColumnLayout {
 
     readonly property alias eventContent: eventContent
 
-
     function dict() {
         let event    = eventList.model.get(model.index)
         event        = JSON.parse(JSON.stringify(event))
@@ -62,7 +61,6 @@ HColumnLayout {
     function toggleChecked() {
         eventList.toggleCheck(model.index)
     }
-
 
     width: eventList.width - eventList.leftMargin - eventList.rightMargin
 

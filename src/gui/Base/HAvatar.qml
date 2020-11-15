@@ -23,7 +23,6 @@ Rectangle {
     readonly property alias hovered: hoverHandler.hovered
     readonly property alias circleRadius: avatarImage.circleRadius
 
-
     implicitWidth: implicitHeight
     implicitHeight:
         compact ?

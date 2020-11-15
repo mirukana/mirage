@@ -27,7 +27,6 @@ TabButton {
         visible: text && hovered
     }
 
-
     spacing: theme.spacing
     topPadding: spacing / 1.5
     bottomPadding: topPadding

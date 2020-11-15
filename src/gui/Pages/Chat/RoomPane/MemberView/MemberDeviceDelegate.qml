@@ -10,14 +10,12 @@ import "../../../../Base/HTile"
 HTile {
     id: deviceTile
 
-
     property string userId
     property string deviceOwner
     property string deviceOwnerDisplayName
     property HStackView stackView
 
     signal trustSet(bool trust)
-
 
     backgroundColor: "transparent"
     rightPadding: theme.spacing / 2

@@ -24,7 +24,6 @@ HFileDialogOpener {
         })
     }
 
-
     fill: false
     dialog.title: qsTr("Save decryption keys file as...")
     dialog.fileMode: FileDialog.SaveFile

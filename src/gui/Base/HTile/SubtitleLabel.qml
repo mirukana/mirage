@@ -8,7 +8,6 @@ import ".."
 HLabel {
     property HTile tile
 
-
     textFormat: Text.StyledText
     font.pixelSize: theme.fontSize.small
     verticalAlignment: Qt.AlignVCenter

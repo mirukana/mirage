@@ -21,7 +21,6 @@ HColumnPopup {
 
     signal replied()
 
-
     contentWidthLimit: theme.controls.popup.defaultWidth * 1.25
 
     page.footer: AutoDirectionLayout {

@@ -38,7 +38,6 @@ QtObject {
             py.callCoro("models.ensure_exists_from_qml", [modelId])
     }
 
-
     function get(...modelId) {
         if (modelId.length === 1) modelId = modelId[0]
 

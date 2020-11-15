@@ -33,7 +33,6 @@ HLoader {
 
     readonly property bool hovered: item ? item.hovered : false
 
-
     visible: Boolean(item)
     x: eventContent.spacing
 

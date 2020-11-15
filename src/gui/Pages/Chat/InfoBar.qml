@@ -11,7 +11,6 @@ Rectangle {
     readonly property alias icon: icon
     readonly property alias label: label
 
-
     implicitHeight: label.text ? rowLayout.height : 0
     opacity: implicitHeight ? 1 : 0
 

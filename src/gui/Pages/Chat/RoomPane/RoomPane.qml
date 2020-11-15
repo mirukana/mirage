@@ -24,7 +24,6 @@ MultiviewPane {
         swipeView.currentItem.keybindFocusItem.forceActiveFocus()
     }
 
-
     saveName: "roomPane"
     edge: Qt.RightEdge
 
@@ -41,7 +40,6 @@ MultiviewPane {
 
     buttonsBackgroundColor: theme.chat.roomPane.topBar.background
     background: Rectangle { color: theme.chat.roomPane.background }
-
 
     buttonRepeater.model: [
         "back", "members", "files", "notifications", "history", "settings"

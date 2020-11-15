@@ -89,7 +89,6 @@ HColumnPage {
         return counts
     }
 
-
     enabled: ModelStore.get("accounts").find(userId).presence !== "offline"
     contentHeight: Math.min(
         window.height,

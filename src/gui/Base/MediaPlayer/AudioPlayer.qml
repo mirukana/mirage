@@ -9,7 +9,6 @@ OSD {
 
     property alias source: audioPlayer.source
 
-
     audioOnly: true
     media: audioPlayer
 

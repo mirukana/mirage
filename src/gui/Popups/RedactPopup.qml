@@ -36,7 +36,6 @@ HFlickableColumnPopup {
         popup.close()
     }
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             text: qsTr("Remove")

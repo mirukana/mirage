@@ -10,7 +10,6 @@ HQtObject {
     property Item flickable: parent
     property bool active: true
 
-
     HShortcut {
         active: root.active
         sequences: window.settings.Keys.Scrolling.up

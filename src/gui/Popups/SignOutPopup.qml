@@ -11,7 +11,6 @@ HFlickableColumnPopup {
 
     property string userId: ""
 
-
     page.footer: AutoDirectionLayout {
         PositiveButton {
             id: exportButton

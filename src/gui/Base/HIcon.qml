@@ -18,7 +18,6 @@ Image {
     property color colorize: theme.icons.colorize
     property string iconPack: theme ? theme.icons.preferredPack : "thin"
 
-
     cache: true
     asynchronous: true
     fillMode: Image.PreserveAspectFit

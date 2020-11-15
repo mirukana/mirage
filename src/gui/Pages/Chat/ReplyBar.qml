@@ -12,7 +12,6 @@ InfoBar {
 
     signal cancel()
 
-
     color: theme.chat.replyBar.background
     icon.svgName: "reply-to"
     label.textFormat: Text.StyledText

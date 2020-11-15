@@ -8,7 +8,6 @@ import ".."
 HButton {
     property Item textControl  // HTextField or HTextArea
 
-
     icon.name: "copy-text"
     iconItem.small: true
 

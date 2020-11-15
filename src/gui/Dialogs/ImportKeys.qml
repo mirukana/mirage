@@ -10,7 +10,6 @@ HFileDialogOpener {
     property string userId: ""
     property string importFutureId: ""
 
-
     fill: false
     dialog.title: qsTr("Select a decryption keys file to import")
     onFilePicked: {

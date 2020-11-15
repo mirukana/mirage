@@ -7,7 +7,6 @@ Shortcut {
     // TODO: use enabled + a Binding with restoreValue when switch to Qt 5.15
     property bool active: true
 
-
     enabled: ! window.anyPopupOrMenu && active
     context: Qt.ApplicationShortcut
 }

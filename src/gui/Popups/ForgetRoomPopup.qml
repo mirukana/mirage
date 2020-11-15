@@ -28,7 +28,6 @@ HFlickableColumnPopup {
         })
     }
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: forgetButton

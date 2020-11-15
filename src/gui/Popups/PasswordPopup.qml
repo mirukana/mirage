@@ -49,7 +49,6 @@ HFlickableColumnPopup {
         })
     }
 
-
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: validateButton
