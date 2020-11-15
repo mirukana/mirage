@@ -40,7 +40,7 @@ class AllRooms(FieldSubstringFilter):
         return source.sync_id == "accounts" or (
             isinstance(source.sync_id, tuple) and
             len(source.sync_id) == 2 and
-            source.sync_id[1] == "rooms"  # type: ignore
+            source.sync_id[1] == "rooms"
         )
 
 

@@ -364,7 +364,7 @@ class Section(MutableMapping):
                 for name in child.inherit_from.dumps().split(","):
                     name = name.strip()
 
-                    if root_arg is not None and name:
+                    if name:
                         child_inherit.append(type(attrgetter(name)(root_arg)))
 
                 instance._set_section(section.from_source_code(

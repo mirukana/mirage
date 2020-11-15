@@ -14,9 +14,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, DefaultDict, Dict, Optional
 from urllib.parse import urlparse
 
-from PIL import Image as PILImage
-
 import nio
+from PIL import Image as PILImage
 
 from .utils import Size, atomic_write
 

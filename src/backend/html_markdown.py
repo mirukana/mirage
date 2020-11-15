@@ -10,10 +10,9 @@ from urllib.parse import unquote
 import html_sanitizer.sanitizer as sanitizer
 import lxml.html  # nosec
 import mistune
+import nio
 from html_sanitizer.sanitizer import Sanitizer
 from lxml.html import HtmlElement, etree  # nosec
-
-import nio
 
 from .svg_colors import SVG_COLORS
 
@@ -113,7 +112,7 @@ class HTMLProcessor:
     }
 
     block_tags = {
-        "h1", "h2", "h3", "h4", "h5", "h6","blockquote",
+        "h1", "h2", "h3", "h4", "h5", "h6", "blockquote",
         "p", "ul", "ol", "li", "hr", "br", "img",
         "table", "thead", "tbody", "tr", "th", "td", "pre",
         "mx-reply",

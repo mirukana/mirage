@@ -89,7 +89,7 @@ class QMLBridge:
 
             try:
                 result = future.result()
-            except Exception as err:
+            except Exception as err:  # noqa
                 exception = err
                 trace     = traceback.format_exc().rstrip()
 
@@ -173,7 +173,7 @@ class QMLBridge:
             asyncio.run_coroutine_threadsafe(
                 self.backend.terminate_clients(), self._loop,
             ).result()
-        except Exception as e:
+        except Exception as e:  # noqa
             print(e)
 
 

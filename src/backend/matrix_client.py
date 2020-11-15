@@ -25,14 +25,12 @@ from typing import (
 from urllib.parse import urlparse
 from uuid import UUID, uuid4
 
-import aiofiles
 import cairosvg
-from PIL import Image as PILImage
-from pymediainfo import MediaInfo
-
 import nio
 from nio.crypto import AsyncDataT as UploadData
 from nio.crypto import async_generator_from_data
+from PIL import Image as PILImage
+from pymediainfo import MediaInfo
 
 from . import __display_name__, __reverse_dns__, utils
 from .errors import (
@@ -69,16 +67,18 @@ PathCallable = Union[
 
 IS_WINDOWS = platform.system() == "Windows"
 
+MATRIX_TO = "https://matrix.to/#"
+
 REPLY_FALLBACK = (
-"<mx-reply>"
-    "<blockquote>"
-        '<a href="https://matrix.to/#/{room_id}/{event_id}">In reply to</a> '
-        '<a href="https://matrix.to/#/{user_id}">{user_id}</a>'
-        "<br>"
-        "{content}"
-    "</blockquote>"
-"</mx-reply>"
-"{reply_content}"
+    "<mx-reply>"
+        "<blockquote>"
+            '<a href="{matrix_to}/{room_id}/{event_id}">In reply to</a> '
+            '<a href="{matrix_to}/{user_id}">{user_id}</a>'
+            "<br>"
+            "{content}"
+        "</blockquote>"
+    "</mx-reply>"
+    "{reply_content}"
 )
 
 
@@ -87,6 +87,7 @@ class SyncFilterIds(NamedTuple):
 
     first:  str
     others: str
+
 
 class UploadReturn(NamedTuple):
     """Details for an uploaded file."""
@@ -161,10 +162,10 @@ class MatrixClient(nio.AsyncClient):
 
     def __init__(
         self,
-         backend,
-         user:       str           = "",
-         homeserver: str           = "https://matrix.org",
-         device_id:  Optional[str] = None,
+        backend,
+        user:       str           = "",
+        homeserver: str           = "https://matrix.org",
+        device_id:  Optional[str] = None,
     ) -> None:
 
         store = Path(backend.appdirs.user_data_dir) / "encryption"
@@ -364,7 +365,7 @@ class MatrixClient(nio.AsyncClient):
 
             try:
                 account.max_upload_size = future.result() or 0
-            except Exception:
+            except MatrixError:
                 trace = traceback.format_exc().rstrip()
                 log.warn(
                     "On %s server config retrieval: %s", self.user_id, trace,
@@ -403,8 +404,9 @@ class MatrixClient(nio.AsyncClient):
                     sync_filter       = sync_filter_ids.others,
                 ))
                 await self.sync_task
+                self.last_sync_error = None
                 break  # task cancelled
-            except Exception as err:
+            except Exception as err:  # noqa
                 self.last_sync_error = err
 
                 trace = traceback.format_exc().rstrip()
@@ -417,8 +419,6 @@ class MatrixClient(nio.AsyncClient):
                     )
                 else:
                     LoopException(str(err), err, trace)
-            else:
-                self.last_sync_error = None
 
             await asyncio.sleep(5)
 
@@ -562,7 +562,7 @@ class MatrixClient(nio.AsyncClient):
 
         if text.startswith("/me ") and not escape:
             event_type = nio.RoomMessageEmote
-            text       = text[len("/me "): ]
+            text       = text[len("/me "):]
             content    = {"body": text, "msgtype": "m.emote"}
             to_html    = from_md(text, inline=True, outgoing=True)
             echo_body  = from_md(text, inline=True)
@@ -586,14 +586,15 @@ class MatrixClient(nio.AsyncClient):
             plain_source_body = "\n".join(
                 f"> <{to.sender_id}> {line}" if i == 0 else f"> {line}"
                 for i, line in enumerate(source_body.splitlines())
-        )
+            )
             content["body"]   = f"{plain_source_body}\n\n{text}"
 
             to_html = REPLY_FALLBACK.format(
-                room_id  = room_id,
-                event_id = to.event_id,
-                user_id  = to.sender_id,
-                content  =
+                matrix_to = MATRIX_TO,
+                room_id   = room_id,
+                event_id  = to.event_id,
+                user_id   = to.sender_id,
+                content   =
                     getattr(to.source, "formatted_body", "") or
                     source_body or
                     html.escape(to.source.source["type"] if to.source else ""),
@@ -605,7 +606,7 @@ class MatrixClient(nio.AsyncClient):
             content["formatted_body"] = HTML.filter(to_html, outgoing=True)
 
             content["m.relates_to"] = {
-                "m.in_reply_to": { "event_id": to.event_id },
+                "m.in_reply_to": {"event_id": to.event_id},
             }
 
         # Can't use the standard Matrix transaction IDs; they're only visible
@@ -662,7 +663,7 @@ class MatrixClient(nio.AsyncClient):
                 # optimize is too slow for large images
                 compressed = await utils.compress_image(image, optimize=False)
 
-                async with aiofiles.open(temp.name, "wb") as file:
+                async with utils.aiopen(temp.name, "wb") as file:
                     await file.write(compressed)
 
                 return Path(temp.name)
@@ -814,7 +815,7 @@ class MatrixClient(nio.AsyncClient):
                 )
             except UneededThumbnail:
                 pass
-            except Exception:
+            except Exception:  # noqa
                 trace = traceback.format_exc().rstrip()
                 log.warning("Failed thumbnailing %s:\n%s", path, trace)
             else:
@@ -1366,7 +1367,8 @@ class MatrixClient(nio.AsyncClient):
 
                 event.set_fields(
                     content = await self.get_redacted_event_content(
-                        event.event_type, self.user_id, event.sender_id,reason,
+                        event.event_type, self.user_id, event.sender_id,
+                        reason,
                     ),
 
                     event_type       = nio.RedactedEvent,
@@ -1568,7 +1570,7 @@ class MatrixClient(nio.AsyncClient):
             account.status_msg = status_msg
 
             await super().set_presence(
-                "offline"  if presence == "invisible" else presence,
+                "offline" if presence == "invisible" else presence,
                 status_msg,
             )
 
@@ -2070,7 +2072,7 @@ class MatrixClient(nio.AsyncClient):
         image_data = None
         create     = False
 
-        async with aiofiles.open(avatar_path, "rb") as file:
+        async with utils.aiopen(avatar_path, "rb") as file:
             if await utils.is_svg(file):
                 await file.seek(0, 0)
 

@@ -366,9 +366,9 @@ class NioCallbacks:
 
         def lvl(level: int) -> str:
             return (
-                f"Admin ({level})"     if level == 100 else
+                f"Admin ({level})" if level == 100 else
                 f"Moderator ({level})" if level >= 50 else
-                f"User ({level})"      if level >= 0 else
+                f"User ({level})" if level >= 0 else
                 f"Muted ({level})"
             )
 
@@ -788,8 +788,9 @@ class NioCallbacks:
             datetime.now() - timedelta(milliseconds=ev.last_active_ago)
         ) if ev.last_active_ago else datetime.fromtimestamp(0)
 
-        presence.presence = Presence.State(ev.presence) if ev.presence\
-                                    else Presence.State.offline
+        presence.presence = \
+            Presence.State(ev.presence) if ev.presence else \
+            Presence.State.offline
 
         # Add all existing members related to this presence
         for room_id in self.models[self.user_id, "rooms"]:
@@ -818,9 +819,9 @@ class NioCallbacks:
 
             # Set status_msg if none is set on the server and we have one
             if (
-                not presence.status_msg                           and
-                account.status_msg                                and
-                ev.user_id in self.client.backend.clients         and
+                not presence.status_msg and
+                account.status_msg and
+                ev.user_id in self.client.backend.clients and
                 account.presence != Presence.State.echo_invisible and
                 presence.presence == Presence.State.offline
             ):

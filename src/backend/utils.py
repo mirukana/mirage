@@ -10,7 +10,7 @@ import inspect
 import io
 import json
 import sys
-import xml.etree.cElementTree as xml_etree  # FIXME: bandit warning
+import xml.etree.cElementTree as xml_etree
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import suppress
 from datetime import date, datetime, time, timedelta
@@ -27,8 +27,7 @@ from uuid import UUID
 
 import aiofiles
 import filetype
-from aiofiles.threadpool.binary import AsyncBufferedReader
-from aiofiles.threadpool.text import AsyncTextIOWrapper
+from aiofiles.threadpool.binary import AsyncBufferedIOBase
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
 from PIL import Image as PILImage
@@ -38,10 +37,9 @@ if sys.version_info >= (3, 7):
 else:
     from async_generator import asynccontextmanager
 
-AsyncOpenFile = Union[AsyncTextIOWrapper, AsyncBufferedReader]
-Size          = Tuple[int, int]
-BytesOrPIL    = Union[bytes, PILImage.Image]
-auto          = autostr
+Size       = Tuple[int, int]
+BytesOrPIL = Union[bytes, PILImage.Image]
+auto       = autostr
 
 COMPRESSION_POOL = ProcessPoolExecutor()
 
@@ -114,8 +112,8 @@ async def guess_mime(file: File) -> str:
 
     if isinstance(file, io.IOBase):
         file.seek(0, 0)
-    elif isinstance(file, AsyncBufferedReader):
-        await file.seek(0, 0)
+    elif isinstance(file, AsyncBufferedIOBase):
+        await file.seek(0, 0)  # type: ignore
 
     try:
         first_chunk: bytes
@@ -134,8 +132,8 @@ async def guess_mime(file: File) -> str:
     finally:
         if isinstance(file, io.IOBase):
             file.seek(0, 0)
-        elif isinstance(file, AsyncBufferedReader):
-            await file.seek(0, 0)
+        elif isinstance(file, AsyncBufferedIOBase):
+            await file.seek(0, 0)  # type: ignore
 
 
 def plain2html(text: str) -> str:
@@ -251,9 +249,16 @@ def classes_defined_in(module: ModuleType) -> Dict[str, Type]:
 
 
 @asynccontextmanager
+async def aiopen(*args, **kwargs) -> AsyncIterator[Any]:
+    """Wrapper for `aiofiles.open()` that doesn't break mypy"""
+    async with aiofiles.open(*args, **kwargs) as file:
+        yield file
+
+
+@asynccontextmanager
 async def atomic_write(
     path: Union[Path, str], binary: bool = False, **kwargs,
-) -> AsyncIterator[Tuple[AsyncOpenFile, Callable[[], None]]]:
+) -> AsyncIterator[Tuple[Any, Callable[[], None]]]:
     """Write a file asynchronously (using aiofiles) and atomically.
 
     Yields a `(open_temporary_file, done_function)` tuple.
@@ -279,7 +284,7 @@ async def atomic_write(
         can_replace = True
 
     try:
-        async with aiofiles.open(temp_path, mode, **kwargs) as out:
+        async with aiopen(temp_path, mode, **kwargs) as out:
             yield (out, done)
     finally:
         if can_replace:

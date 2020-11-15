@@ -13,10 +13,9 @@ from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import aiohttp
+import nio
 import plyer
 from appdirs import AppDirs
-
-import nio
 
 from . import __app_name__
 from .errors import MatrixError, MatrixInvalidAccessToken
@@ -29,7 +28,7 @@ from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
 from .sso_server import SSOServer
-from .user_files import Accounts, History, Theme, Settings, UIState
+from .user_files import Accounts, History, Settings, Theme, UIState
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -195,7 +194,7 @@ class Backend:
 
     async def password_auth(
         self, user: str, password: str, homeserver: str,
-   ) -> str:
+    ) -> str:
         """Create & register a `MatrixClient`, login using the password
         and return the user ID we get.
         """
@@ -437,7 +436,9 @@ class Backend:
         )
 
 
-    async def set_string_filter(self, model_id: SyncId, value: str) -> None:
+    async def set_string_filter(
+        self, model_id: Union[SyncId, List[str]], value: str,
+    ) -> None:
         """Set a FieldStringFilter (or derived class) model's filter property.
 
         This should only be called from QML.
@@ -475,7 +476,7 @@ class Backend:
 
             try:
                 await session.get(f"{homeserver_url}/_matrix/client/versions")
-            except Exception as err:
+            except aiohttp.ClientError as err:
                 log.warning("Failed pinging %s: %r", homeserver_url, err)
                 item.status = PingStatus.Failed
                 return

@@ -3,7 +3,7 @@
 
 from collections import UserDict
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, List, Union
 
 from . import SyncId
 from .model import Model
@@ -47,7 +47,7 @@ class ModelStore(UserDict):
         elif is_tuple and len(key) == 3 and key[2] == "autocompleted_members":
             model = AutoCompletedMembers(user_id=key[0], room_id=key[1])
         else:
-            model = Model(sync_id=key)  # type: ignore
+            model = Model(sync_id=key)
 
         self.data[key] = model
         return model
@@ -62,7 +62,9 @@ class ModelStore(UserDict):
         )
 
 
-    async def ensure_exists_from_qml(self, sync_id: SyncId) -> None:
+    async def ensure_exists_from_qml(
+        self, sync_id: Union[SyncId, List[str]],
+    ) -> None:
         """Create model if it doesn't exist. Should only be called by QML."""
 
         if isinstance(sync_id, list):  # QML can't pass tuples

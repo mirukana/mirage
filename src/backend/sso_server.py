@@ -4,6 +4,7 @@
 import asyncio
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, quote, urlparse
+
 from . import __display_name__
 
 _SUCCESS_HTML_PAGE = """<!DOCTYPE html>

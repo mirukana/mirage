@@ -14,15 +14,15 @@ from typing import (
     TYPE_CHECKING, Any, ClassVar, Dict, Iterator, Optional, Tuple,
 )
 
-import aiofiles
-from watchgod import Change, awatch
-
 import pyotherside
+from watchgod import Change, awatch
 
 from .pcn.section import Section
 from .pyotherside_events import LoopException, UserFileChanged
 from .theme_parser import convert_to_qml
-from .utils import atomic_write, deep_serialize_for_qml, dict_update_recursive
+from .utils import (
+    aiopen, atomic_write, deep_serialize_for_qml, dict_update_recursive,
+)
 
 if TYPE_CHECKING:
     from .backend import Backend
@@ -122,7 +122,7 @@ class UserFile:
                             ignored += 1
                             continue
 
-                        async with aiofiles.open(self.path) as file:
+                        async with aiopen(self.path) as file:
                             text            = await file.read()
                             self.data, save = self.deserialized(text)
 
@@ -138,7 +138,7 @@ class UserFile:
                 if changes and ignored < len(changes):
                     UserFileChanged(type(self), self.qml_data)
 
-            except Exception as err:
+            except Exception as err:  # noqa
                 LoopException(str(err), err, traceback.format_exc().rstrip())
 
 
@@ -159,7 +159,7 @@ class UserFile:
                     self._need_write = False
                     self._mtime      = self.write_path.stat().st_mtime
 
-            except Exception as err:
+            except Exception as err:  # noqa
                 self._need_write = False
                 LoopException(str(err), err, traceback.format_exc().rstrip())
 

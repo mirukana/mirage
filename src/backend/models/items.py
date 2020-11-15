@@ -11,7 +11,6 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import UUID
 
 import lxml  # nosec
-
 import nio
 
 from ..presence import Presence
