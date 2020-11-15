@@ -36,7 +36,9 @@ but compiling on Windows and macOS should be possible with the right tools.
 ### Linux
 
 For developement, or if none of the package options are satisfying, 
-see [manual installation](#manual-installation).
+see [manual installation](#manual-installation).  
+Packages other than the AppImage and Flatpak are not maintained by the Mirage 
+authors, and thus might be outdated.
 
 #### AppImage
 
