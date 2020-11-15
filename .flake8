@@ -1,0 +1,16 @@
+# vim: ft=dosini
+# https://flake8.pycqa.org/en/latest/user/configuration.html
+
+[flake8]
+# E131: continuation line unaligned for hanging indent
+# E301: when method is after a commented line + one blank line
+# E302: expected 2 blank lines, found 1 when using @dataclass
+# E303: more than one blank line between methods
+# W504: when line breaks occur after a binary operator
+# A003: when class attribute name is the same as a builtin
+# E402: when a module import isn't at the start of the file
+ignore = E131, E221, E241, E251, E301, E302, E303, W504, A003, E402
+
+max-complexity = 99
+inline-quotes  = "
+format = ${cyan}%(path)s${reset}:${yellow_bold}%(row)d${reset}:${green_bold}%(col)d${reset}: ${red_bold}%(code)s${reset} %(text)s
