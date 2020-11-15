@@ -12,6 +12,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Debian](#debian)
     - [Gentoo](#gentoo)
     - [Nix](#nix)
+    - [OpenMandriva Lx](#openmandriva-lx)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -134,6 +135,13 @@ To install the package:
 
     nix-env -iA nixpkgs.mirage-im
 
+#### OpenMandriva Lx
+
+Requires [Unstable or Rolling][1]. To install the package:
+
+    sudo dnf install matrix-mirage
+
+[1]: https://openmandriva.net/wiki/en/index.php?title=OpenMandriva_Release_Plan_and_Repositories#Release_Plan
 
 ## Manual Installation
 
