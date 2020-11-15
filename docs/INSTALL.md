@@ -95,12 +95,13 @@ so on the [Alpine Wiki](https://wiki.alpinelinux.org/wiki/Edge).
 
 #### Arch Linux
 
-Available on the AUR:
-- [release](https://aur.archlinux.org/packages/matrix-mirage/)
-- [git master](https://aur.archlinux.org/packages/matrix-mirage-git/)
+AUR packages for the
+[latest stable release](https://aur.archlinux.org/packages/matrix-mirage/) and
+[git `dev` branch](https://aur.archlinux.org/packages/matrix-mirage-git/) are
+available.
 
-Using a AUR helper to install it,
-in this example [yay](https://github.com/Jguer/yay) for the release version:
+Installing the release version with a AUR helper, e.g. 
+[yay](https://github.com/Jguer/yay):
 
     yay -S matrix-mirage
 
