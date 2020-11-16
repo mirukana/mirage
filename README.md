@@ -62,7 +62,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Send **markdown** formatted messages
   - Additional syntax for **coloring text**, e.g. `<red>(Some text...)` - 
     [SVG/CSS color names](https://www.december.com/html/spec/colorsvg.html),
-    and `#hex` codes can be used
+    `#RGB`, `#RRGGBB` and `#AARRGGBB` hex codes can be used
 
 - Send and receive normal or **E2E encrypted files**
 - Client-side Matrix & HTTP URL **image previews**, including animated GIF 
