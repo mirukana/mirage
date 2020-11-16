@@ -7,13 +7,10 @@ import builtins
 import colorsys
 from copy import copy
 from dataclasses import InitVar, dataclass, field
+from enum import Enum
 from typing import Optional, Tuple, Union
 
 from hsluv import hex_to_hsluv, hsluv_to_hex, hsluv_to_rgb, rgb_to_hsluv
-
-from .svg_colors import SVG_COLORS
-
-HEX_TO_SVG = {v: k for k, v in SVG_COLORS.items()}
 
 ColorTuple = Tuple[float, float, float, float]
 
@@ -23,12 +20,10 @@ class Color:
     """A color manipulable in HSLuv, HSL, RGB, hexadecimal and by SVG name.
 
     The `Color` object constructor accepts hexadecimal string
-    ("#RGB", "#RRGGBB" or "#RRGGBBAA"),
-    [CSS/SVG named colors](https://www.december.com/html/spec/colorsvg.html),
-    or another `Color` to copy.
+    ("#RGB", "#RRGGBB" or "#RRGGBBAA") or another `Color` to copy.
 
-    Attributes representing the color in HSLuv, HSL, RGB and hexadecimal
-    formats can be accessed and modified on these `Color` objects.
+    Attributes representing the color in HSLuv, HSL, RGB, hexadecimal and
+    SVG name formats can be accessed and modified on these `Color` objects.
 
     The `hsluv()`/`hsluva()`, `hsl()`/`hsla()` and `rgb()`/`rgba()`
     functions in this module are provided to create an object by specifying
@@ -46,20 +41,18 @@ class Color:
     # capping the value between 0-100, as hsluv handles numbers outside
     # this range incorrectly.
 
-    color_hex_or_name: InitVar[str] = "black"
-    hue:               float        = field(init=False, default=0)
-    _saturation:       float        = field(init=False, default=0)
-    _luv:              float        = field(init=False, default=0)
-    alpha:             float        = field(init=False, default=1)
+    color_or_hex: InitVar[str] = "#00000000"
+    hue:          float        = field(init=False, default=0)
+    _saturation:  float        = field(init=False, default=0)
+    _luv:         float        = field(init=False, default=0)
+    alpha:        float        = field(init=False, default=1)
 
-    def __post_init__(self, color_hex_or_name: Union["Color", str]) -> None:
-        if isinstance(color_hex_or_name, Color):
-            hsluva = color_hex_or_name.hsluva
+    def __post_init__(self, color_or_hex: Union["Color", str]) -> None:
+        if isinstance(color_or_hex, Color):
+            hsluva = color_or_hex.hsluva
             self.hue, self.saturation, self.luv, self.alpha = hsluva
-        elif color_hex_or_name.startswith("#"):
-            self.hex = color_hex_or_name
         else:
-            self.name = color_hex_or_name
+            self.hex = color_or_hex
 
     # HSLuv
 
@@ -151,7 +144,8 @@ class Color:
     def hex(self) -> str:
         rgb   = hsluv_to_hex(self.hsluva)
         alpha = builtins.hex(int(self.alpha * 255))[2:]
-        return f"{rgb}{alpha if self.alpha < 1 else ''}".lower()
+        alpha = f"0{alpha}" if len(alpha) == 1 else alpha
+        return f"{alpha if self.alpha < 1 else ''}{rgb}".lower()
 
     @hex.setter
     def hex(self, value: str) -> None:
@@ -167,11 +161,14 @@ class Color:
 
     @property
     def name(self) -> Optional[str]:
-        return HEX_TO_SVG.get(self.hex)
+        try:
+            return SVGColor(self.hex).name
+        except ValueError:
+            return None
 
     @name.setter
     def name(self, value: str) -> None:
-        self.hex = SVG_COLORS[value.lower()]
+        self.hex = SVGColor[value.lower()].value.hex
 
     # Other methods
 
@@ -283,6 +280,160 @@ class Color:
         return new
 
 
+class SVGColor(Enum):
+    """Standard SVG/HTML/CSS colors, with the addition of `transparent`."""
+
+    aliceblue            = Color("#f0f8ff")
+    antiquewhite         = Color("#faebd7")
+    aqua                 = Color("#00ffff")
+    aquamarine           = Color("#7fffd4")
+    azure                = Color("#f0ffff")
+    beige                = Color("#f5f5dc")
+    bisque               = Color("#ffe4c4")
+    black                = Color("#000000")
+    blanchedalmond       = Color("#ffebcd")
+    blue                 = Color("#0000ff")
+    blueviolet           = Color("#8a2be2")
+    brown                = Color("#a52a2a")
+    burlywood            = Color("#deb887")
+    cadetblue            = Color("#5f9ea0")
+    chartreuse           = Color("#7fff00")
+    chocolate            = Color("#d2691e")
+    coral                = Color("#ff7f50")
+    cornflowerblue       = Color("#6495ed")
+    cornsilk             = Color("#fff8dc")
+    crimson              = Color("#dc143c")
+    cyan                 = Color("#00ffff")
+    darkblue             = Color("#00008b")
+    darkcyan             = Color("#008b8b")
+    darkgoldenrod        = Color("#b8860b")
+    darkgray             = Color("#a9a9a9")
+    darkgreen            = Color("#006400")
+    darkgrey             = Color("#a9a9a9")
+    darkkhaki            = Color("#bdb76b")
+    darkmagenta          = Color("#8b008b")
+    darkolivegreen       = Color("#556b2f")
+    darkorange           = Color("#ff8c00")
+    darkorchid           = Color("#9932cc")
+    darkred              = Color("#8b0000")
+    darksalmon           = Color("#e9967a")
+    darkseagreen         = Color("#8fbc8f")
+    darkslateblue        = Color("#483d8b")
+    darkslategray        = Color("#2f4f4f")
+    darkslategrey        = Color("#2f4f4f")
+    darkturquoise        = Color("#00ced1")
+    darkviolet           = Color("#9400d3")
+    deeppink             = Color("#ff1493")
+    deepskyblue          = Color("#00bfff")
+    dimgray              = Color("#696969")
+    dimgrey              = Color("#696969")
+    dodgerblue           = Color("#1e90ff")
+    firebrick            = Color("#b22222")
+    floralwhite          = Color("#fffaf0")
+    forestgreen          = Color("#228b22")
+    fuchsia              = Color("#ff00ff")
+    gainsboro            = Color("#dcdcdc")
+    ghostwhite           = Color("#f8f8ff")
+    gold                 = Color("#ffd700")
+    goldenrod            = Color("#daa520")
+    gray                 = Color("#808080")
+    green                = Color("#008000")
+    greenyellow          = Color("#adff2f")
+    grey                 = Color("#808080")
+    honeydew             = Color("#f0fff0")
+    hotpink              = Color("#ff69b4")
+    indianred            = Color("#cd5c5c")
+    indigo               = Color("#4b0082")
+    ivory                = Color("#fffff0")
+    khaki                = Color("#f0e68c")
+    lavender             = Color("#e6e6fa")
+    lavenderblush        = Color("#fff0f5")
+    lawngreen            = Color("#7cfc00")
+    lemonchiffon         = Color("#fffacd")
+    lightblue            = Color("#add8e6")
+    lightcoral           = Color("#f08080")
+    lightcyan            = Color("#e0ffff")
+    lightgoldenrodyellow = Color("#fafad2")
+    lightgray            = Color("#d3d3d3")
+    lightgreen           = Color("#90ee90")
+    lightgrey            = Color("#d3d3d3")
+    lightpink            = Color("#ffb6c1")
+    lightsalmon          = Color("#ffa07a")
+    lightseagreen        = Color("#20b2aa")
+    lightskyblue         = Color("#87cefa")
+    lightslategray       = Color("#778899")
+    lightslategrey       = Color("#778899")
+    lightsteelblue       = Color("#b0c4de")
+    lightyellow          = Color("#ffffe0")
+    lime                 = Color("#00ff00")
+    limegreen            = Color("#32cd32")
+    linen                = Color("#faf0e6")
+    magenta              = Color("#ff00ff")
+    maroon               = Color("#800000")
+    mediumaquamarine     = Color("#66cdaa")
+    mediumblue           = Color("#0000cd")
+    mediumorchid         = Color("#ba55d3")
+    mediumpurple         = Color("#9370db")
+    mediumseagreen       = Color("#3cb371")
+    mediumslateblue      = Color("#7b68ee")
+    mediumspringgreen    = Color("#00fa9a")
+    mediumturquoise      = Color("#48d1cc")
+    mediumvioletred      = Color("#c71585")
+    midnightblue         = Color("#191970")
+    mintcream            = Color("#f5fffa")
+    mistyrose            = Color("#ffe4e1")
+    moccasin             = Color("#ffe4b5")
+    navajowhite          = Color("#ffdead")
+    navy                 = Color("#000080")
+    oldlace              = Color("#fdf5e6")
+    olive                = Color("#808000")
+    olivedrab            = Color("#6b8e23")
+    orange               = Color("#ffa500")
+    orangered            = Color("#ff4500")
+    orchid               = Color("#da70d6")
+    palegoldenrod        = Color("#eee8aa")
+    palegreen            = Color("#98fb98")
+    paleturquoise        = Color("#afeeee")
+    palevioletred        = Color("#db7093")
+    papayawhip           = Color("#ffefd5")
+    peachpuff            = Color("#ffdab9")
+    peru                 = Color("#cd853f")
+    pink                 = Color("#ffc0cb")
+    plum                 = Color("#dda0dd")
+    powderblue           = Color("#b0e0e6")
+    purple               = Color("#800080")
+    rebeccapurple        = Color("#663399")
+    red                  = Color("#ff0000")
+    rosybrown            = Color("#bc8f8f")
+    royalblue            = Color("#4169e1")
+    saddlebrown          = Color("#8b4513")
+    salmon               = Color("#fa8072")
+    sandybrown           = Color("#f4a460")
+    seagreen             = Color("#2e8b57")
+    seashell             = Color("#fff5ee")
+    sienna               = Color("#a0522d")
+    silver               = Color("#c0c0c0")
+    skyblue              = Color("#87ceeb")
+    slateblue            = Color("#6a5acd")
+    slategray            = Color("#708090")
+    slategrey            = Color("#708090")
+    snow                 = Color("#fffafa")
+    springgreen          = Color("#00ff7f")
+    steelblue            = Color("#4682b4")
+    tan                  = Color("#d2b48c")
+    teal                 = Color("#008080")
+    thistle              = Color("#d8bfd8")
+    tomato               = Color("#ff6347")
+    transparent          = Color("#00000000")  # not standard but exists in QML
+    turquoise            = Color("#40e0d0")
+    violet               = Color("#ee82ee")
+    wheat                = Color("#f5deb3")
+    white                = Color("#ffffff")
+    whitesmoke           = Color("#f5f5f5")
+    yellow               = Color("#ffff00")
+    yellowgreen          = Color("#9acd32")
+
+
 def hsluva(
     hue: float = 0, saturation: float = 0, luv: float = 0, alpha: float = 1,
 ) -> Color:
@@ -304,6 +455,7 @@ def rgba(
     return Color().but(red=red, green=green, blue=blue, alpha=alpha)
 
 
+# Aliases
 color = Color
 hsluv = hsluva
 hsl   = hsla

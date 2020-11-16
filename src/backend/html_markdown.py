@@ -4,6 +4,7 @@
 """HTML and Markdown processing tools."""
 
 import re
+from contextlib import suppress
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import unquote
 
@@ -14,7 +15,7 @@ import nio
 from html_sanitizer.sanitizer import Sanitizer
 from lxml.html import HtmlElement, etree  # nosec
 
-from .svg_colors import SVG_COLORS
+from .color import SVGColor
 
 
 class MarkdownInlineGrammar(mistune.InlineGrammar):
@@ -74,11 +75,12 @@ class MarkdownInlineLexer(mistune.InlineLexer):
 
 
 class MarkdownRenderer(mistune.Renderer):
-    def color(self, color: str, text: str):
+    def color(self, color: str, text: str) -> str:
         """Render given text with a color using `<span data-mx-color=#hex>`."""
 
-        # This may be a color name, try to get a #hex code for it.
-        color = SVG_COLORS.get(re.sub(r"\s", "", color.lower()), color)
+        # This may be a SVG color name, try to get a #hex code from it:
+        with suppress(KeyError):
+            color = SVGColor[color.lower().replace(" ", "")].value.hex
 
         return f'<span data-mx-color="{color}">{text}</span>'
 
