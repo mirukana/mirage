@@ -115,9 +115,9 @@ class UserFile:
                 ignored = 0
 
                 for change in changes:
-                    mtime = self.path.stat().st_mtime
-
                     if change[0] in (Change.added, Change.modified):
+                        mtime = self.path.stat().st_mtime
+
                         if mtime == self._mtime:
                             ignored += 1
                             continue
@@ -129,14 +129,19 @@ class UserFile:
                             if save:
                                 self.save()
 
+                        self._mtime = mtime
+
                     elif change[0] == Change.deleted:
+                        self._mtime      = None
                         self.data        = self.default_data
                         self._need_write = self.create_missing
 
-                    self._mtime = mtime
-
                 if changes and ignored < len(changes):
                     UserFileChanged(type(self), self.qml_data)
+
+                while not self.path.exists():
+                    # Prevent error spam after file gets deleted
+                    await asyncio.sleep(0.5)
 
             except Exception as err:  # noqa
                 LoopException(str(err), err, traceback.format_exc().rstrip())
