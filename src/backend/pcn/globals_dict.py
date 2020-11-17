@@ -4,7 +4,17 @@ from typing import TYPE_CHECKING, Any, Dict, Iterator
 if TYPE_CHECKING:
     from .section import Section
 
-PCN_GLOBALS: Dict[str, Any] = {}
+from .. import color
+
+PCN_GLOBALS: Dict[str, Any] = {
+    "color":  color.Color,
+    "hsluv":  color.hsluv,
+    "hsluva": color.hsluva,
+    "hsl":    color.hsl,
+    "hsla":   color.hsla,
+    "rgb":    color.rgb,
+    "rgba":   color.rgba,
+}
 
 
 class GlobalsDict(UserDict):
