@@ -8,6 +8,13 @@ import "../../../Base"
 import "../AutoCompletion"
 
 Rectangle {
+    id: composer
+
+    property Theme ntheme: Theme {
+        target: composer
+        classes: Class { name: "Composer" }
+    }
+
     property UserAutoCompletion userCompletion
     property alias eventList: messageArea.eventList
 

@@ -22,6 +22,7 @@ from .pyotherside_events import LoopException, UserFileChanged
 from .theme_parser import convert_to_qml
 from .utils import (
     aiopen, atomic_write, deep_serialize_for_qml, dict_update_recursive,
+    flatten_dict_keys,
 )
 
 if TYPE_CHECKING:
@@ -269,6 +270,10 @@ class PCNFile(MappingFile):
     def qml_data(self) -> Dict[str, Any]:
         return deep_serialize_for_qml(self.data.as_dict())  # type: ignore
 
+    @property
+    def default_data(self) -> Section:
+        return Section()
+
     def deserialized(self, data: str) -> Tuple[Section, bool]:
         root  = Section.from_source_code(data, self.path)
         edits = "{}"
@@ -379,9 +384,35 @@ class Settings(ConfigFile, PCNFile):
             self.backend.theme = Theme(
                 self.backend, section.General.theme,  # type: ignore
             )
-            UserFileChanged(Theme, self.backend.theme.data)
+            UserFileChanged(Theme, self.backend.theme.qml_data)
+
+        if self and self.General.new_theme != section.General.new_theme:
+            self.backend.new_theme.stop_watching()
+            self.backend.new_theme = NewTheme(
+                self.backend, section.General.new_theme,  # type: ignore
+            )
+            UserFileChanged(Theme, self.backend.new_theme.qml_data)
 
         return (section, save)
+
+
+@dataclass
+class NewTheme(UserDataFile, PCNFile):
+    """A theme file defining the look of QML components."""
+
+    create_missing = False
+
+    @property
+    def path(self) -> Path:
+        data_dir = Path(
+            os.environ.get("MIRAGE_DATA_DIR") or
+            self.backend.appdirs.user_data_dir,
+        )
+        return data_dir / "themes" / self.filename
+
+    @property
+    def qml_data(self) -> Dict[str, Any]:
+        return flatten_dict_keys(super().qml_data, last_level=False)
 
 
 @dataclass

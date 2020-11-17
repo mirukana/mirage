@@ -519,4 +519,27 @@ QtObject {
 
         return {word, start, end: seen}
     }
+
+    function getClassPathRegex(obj) {
+        const regexParts = []
+        let parent       = obj
+
+        while (parent) {
+            if (! parent.ntheme || ! parent.ntheme.classes.length) {
+                parent = parent.parent
+                continue
+            }
+
+            const names = []
+            const end   = regexParts.length ? "\\.)?" : ")"
+
+            for (let i = 0; i < parent.ntheme.classes.length; i++)
+                names.push(parent.ntheme.classes[i].name)
+
+            regexParts.push("(" + names.join("|") + end)
+            parent = parent.parent
+        }
+
+        return new RegExp("^" + regexParts.reverse().join("") + "$")
+    }
 }

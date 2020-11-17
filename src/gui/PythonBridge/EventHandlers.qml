@@ -73,6 +73,7 @@ QtObject {
         }
 
         type === "Settings" ? window.settings = newData :
+        type === "NewTheme" ? window.themeRules = newData :
         type === "UIState" ? window.uiState = newData :
         type === "History" ? window.history = newData :
         null

@@ -28,6 +28,7 @@ ApplicationWindow {
     property var uiState: ({})
     property var history: ({})
     property var theme: null
+    property var themeRules: null
     property string settingsFolder
 
     readonly property var visibleMenus: ({})

@@ -21,12 +21,13 @@ PythonBridge {
         addImportPath("qrc:/src")
 
         importNames("backend.qml_bridge", ["BRIDGE"], () => {
-            callCoro("get_settings", [], ([settings, state, hist, theme]) => {
-                window.settings = settings
-                window.uiState  = state
-                window.history  = hist
-                window.theme    = Qt.createQmlObject(theme, window, "theme")
-                utils.theme     = window.theme
+            callCoro("get_settings", [], ([settings, state, hist, theme, themeRules]) => {
+                window.settings   = settings
+                window.uiState    = state
+                window.history    = hist
+                window.theme      = Qt.createQmlObject(theme, window, "theme")
+                utils.theme       = window.theme
+                window.themeRules = themeRules
 
                 callCoro("saved_accounts.any_saved", [], any => {
                     if (any) { callCoro("load_saved_accounts", []) }

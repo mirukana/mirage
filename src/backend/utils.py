@@ -20,8 +20,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import ModuleType
 from typing import (
-    Any, AsyncIterator, Callable, Dict, Iterable, Mapping, Sequence, Tuple,
-    Type, Union,
+    Any, AsyncIterator, Callable, Dict, Iterable, Mapping, Optional, Sequence,
+    Tuple, Type, Union,
 )
 from uuid import UUID
 
@@ -31,6 +31,8 @@ from aiofiles.threadpool.binary import AsyncBufferedIOBase
 from nio.crypto import AsyncDataT as File
 from nio.crypto import async_generator_from_data
 from PIL import Image as PILImage
+
+from .color import Color
 
 if sys.version_info >= (3, 7):
     from contextlib import asynccontextmanager
@@ -68,6 +70,39 @@ def dict_update_recursive(dict1: dict, dict2: dict) -> None:
             dict_update_recursive(dict1[k], dict2[k])
         else:
             dict1[k] = dict2[k]
+
+
+def flatten_dict_keys(
+    source:     Optional[Dict[str, Any]] = None,
+    separator:  str                      = ".",
+    last_level: bool                     = True,
+    _flat:      Optional[Dict[str, Any]] = None,
+    _prefix:    str                      = "",
+) -> Dict[str, Any]:
+    """Return a flattened version of the ``source`` dict.
+
+    Example:
+        >>> dct
+        {"content": {"body": "foo"}, "m.test": {"key": {"bar": 1}}}
+        >>> flatten_dict_keys(dct)
+        {"content.body": "foo", "m.test.key.bar": 1}
+        >>> flatten_dict_keys(dct, last_level=False)
+        {"content": {"body": "foo"}, "m.test.key": {bar": 1}}
+    """
+
+    flat = {} if _flat is None else _flat
+
+    for key, value in (source or {}).items():
+        if isinstance(value, dict):
+            prefix = f"{_prefix}{key}{separator}"
+            flatten_dict_keys(value, separator, last_level, flat, prefix)
+        elif last_level:
+            flat[f"{_prefix}{key}"] = value
+        else:
+            prefix = _prefix[:-len(separator)]  # remove trailing separator
+            flat.setdefault(prefix, {})[key] = value
+
+    return flat
 
 
 async def is_svg(file: File) -> bool:
@@ -168,6 +203,8 @@ def serialize_value_for_qml(
 
     - For `timedelta` objects: the delta as a number of milliseconds `int`
 
+    - For `Color` objects: the color's hexadecimal value
+
     - For class types: the class `__name__`
 
     - For anything else: raise a `TypeError` if `reject_unknown` is `True`,
@@ -197,6 +234,9 @@ def serialize_value_for_qml(
 
     if isinstance(value, timedelta):
         return value.total_seconds() * 1000
+
+    if isinstance(value, Color):
+        return value.hex
 
     if inspect.isclass(value):
         return value.__name__

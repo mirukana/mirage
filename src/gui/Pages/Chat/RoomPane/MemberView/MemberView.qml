@@ -149,8 +149,6 @@ HColumnLayout {
                 HButton {
                     id: inviteButton
                     icon.name: "room-send-invite"
-                    backgroundColor:
-                        theme.chat.roomPane.bottomBar.inviteButton.background
                     enabled:
                         chat.userInfo.presence !== "offline" &&
                         chat.roomInfo.can_invite

@@ -28,7 +28,7 @@ from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
 from .sso_server import SSOServer
-from .user_files import Accounts, History, Settings, Theme, UIState
+from .user_files import Accounts, History, NewTheme, Settings, Theme, UIState
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -109,6 +109,7 @@ class Backend:
         self.ui_state       = UIState(self)
         self.history        = History(self)
         self.theme          = Theme(self, self.settings.General.theme)
+        self.new_theme      = NewTheme(self, self.settings.General.new_theme)
 
         self.clients: Dict[str, MatrixClient] = {}
 
@@ -426,13 +427,14 @@ class Backend:
         return path
 
 
-    async def get_settings(self) -> Tuple[dict, UIState, History, str]:
+    async def get_settings(self) -> Tuple[dict, UIState, History, str, dict]:
         """Return parsed user config files for QML."""
         return (
             self.settings.qml_data,
             self.ui_state.qml_data,
             self.history.qml_data,
             self.theme.qml_data,
+            self.new_theme.qml_data,
         )
 
 
