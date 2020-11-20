@@ -455,9 +455,8 @@ QtObject {
         if (! flickable.interactive) return
         if (flickable.visibleArea.yPosition < 0) return
 
-        flickable.contentY -= flickable.contentHeight
-        flickable.returnToBounds()
-        flickable.flick(0, -100)  // Force the delegates to load
+        flickable.contentY = flickable.originY
+        flickable.flick(0, 1000)  // Force the delegates to load and bounce
     }
 
 
@@ -465,9 +464,10 @@ QtObject {
         if (! flickable.interactive) return
         if (flickable.visibleArea.yPosition < 0) return
 
-        flickable.contentY = flickable.contentHeight - flickable.height
-        flickable.returnToBounds()
-        flickable.flick(0, 100)
+        flickable.contentY =
+            flickable.originY + flickable.contentHeight - flickable.height
+
+        flickable.flick(0, -1000)
     }
 
 
