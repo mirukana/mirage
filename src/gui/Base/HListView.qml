@@ -16,6 +16,13 @@ ListView {
     property int lastCheckedDelegateIndex: 0
     property int selectedCount: Object.keys(checked).length
 
+    readonly property point visibleStart:
+        Qt.point(contentX - originX, contentY - originY)
+
+    readonly property point visibleEnd:
+        Qt.point(visibleStart.x + width, visibleStart.y + height)
+
+
     function check(...indices) {
         for (const i of indices) {
             const model       = listView.model.get(i)

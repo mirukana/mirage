@@ -260,13 +260,13 @@ Rectangle {
         }
 
         function focusPreviousMessage() {
-            currentIndex === -1 && contentY < -height - bottomMargin * 2 ?
+            currentIndex === -1 && visibleEnd.y < contentHeight - height / 4 ?
             focusCenterMessage() :
             incrementCurrentIndex()
         }
 
         function focusNextMessage() {
-            currentIndex === -1 && contentY <= -height - bottomMargin * 2 ?
+            currentIndex === -1 && visibleEnd.y < contentHeight - height / 4 ?
             focusCenterMessage() :
 
             eventList.currentIndex === 0 ?
@@ -625,7 +625,7 @@ Rectangle {
                 chat.roomInfo.local_highlights
             ) &&
             Qt.application.state === Qt.ApplicationActive &&
-            (eventList.contentY + eventList.height) > -50
+            eventList.visibleEnd.y > eventList.contentHeight - 100
 
         onTriggered: {
             for (let i = 0; i < eventList.model.count; i++) {
