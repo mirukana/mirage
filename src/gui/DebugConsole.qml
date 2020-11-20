@@ -286,9 +286,6 @@ HDrawer {
         HTextArea {
             id: inputArea
 
-            readonly property int cursorY:
-                text.substring(0, cursorPosition).split("\n").length - 1
-
             function accept() {
                 if (! text) return
                 runJS(text)
@@ -304,7 +301,8 @@ HDrawer {
 
             Keys.onUpPressed: ev => {
                 ev.accepted =
-                    cursorY === 0 && historyEntry + 1 < history.length
+                    cursorRectangle.top < topPadding + font.pixelSize &&
+                    historyEntry + 1 < history.length
 
                 if (ev.accepted) {
                     historyEntry   += 1
@@ -314,7 +312,9 @@ HDrawer {
 
             Keys.onDownPressed: ev => {
                 ev.accepted =
-                    cursorY === lineCount - 1 && historyEntry - 1 >= -1
+                    cursorRectangle.bottom >=
+                    height - bottomPadding - font.pixelSize &&
+                    historyEntry - 1 >= -1
 
                 if (ev.accepted) historyEntry -= 1
             }
