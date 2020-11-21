@@ -9,6 +9,7 @@ but compiling on Windows and macOS should be possible with the right tools.
     - [Flatpak](#flatpak)
     - [Arch Linux](#arch-linux)
     - [Gentoo](#gentoo)
+    - [Alpine Linux / postmarketOS](#alpine-linux--postmarketOS)
 - [Manual installation](#manual-installation)
   - [Environment variables](#environment-variables)
   - [Package manager dependencies](#package-manager-dependencies)
@@ -101,6 +102,16 @@ Installing Mirage:
 1. [Add the overlay](https://gitlab.com/src_prepare/src_prepare-overlay#adding-the-overlay)
 2. [Unmask](https://wiki.gentoo.org/wiki/Knowledge_Base:Unmasking_a_package) `net-im/mirage`
 3. Run `emerge net-im/mirage`
+
+#### Alpine Linux / postmarketOS
+
+If you are on the Edge channel of Alpine Linux or postmarketOS, Mirage can be
+installed right from the testing repositry:
+
+    apk add mirage
+
+If you are unsure about what Edge is and want to read more about it, you can do
+so on the [Alpine Wiki](https://wiki.alpinelinux.org/wiki/Edge).
 
 ## Manual Installation
 
