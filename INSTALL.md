@@ -49,24 +49,30 @@ released in April 2016 or later.
 
 #### Flatpak
 
-Mirage is also available as a Flatpak
-on the [release page](https://github.com/mirukana/mirage/releases).  
-Follow [these instructions](https://flatpak.org/setup/) to install the flatpak
-command on your system.
+Mirage is also available as a Flatpak.
 
-To then install and run the downloaded `.flatpak` file:
+1. Download the Mirage Flatpak from the
+[release page](https://github.com/mirukana/mirage/releases).
+
+2. If your operating system doesn't already have built-in support for Flatpaks,
+follow [these instructions](https://flatpak.org/setup/) to install Flatpak
+support on your system.
+
+3. To actually install and run Mirage, it should be enough to double-click the 
+downloaded `.flatpak` file, which will open your software manager.
+Alternatively, you can issue the following commands in a terminal:
 
 ```sh
     flatpak remote-add --user --if-not-exists \
         flathub https://flathub.org/repo/flathub.flatpakrepo
 
     flatpak install --user flathub org.kde.Platform//5.14
-    flatpak install --user mirage-*.flatpak
+    flatpak install --user /path/to/downloaded/mirage-*.flatpak
 
     flatpak run io.github.mirukana.mirage
 ```
 
-If downloading the dependencies fail due to e.g. connection error,
+If downloading the dependencies fail due to e.g. a connection error,
 run `flatpak repair` before retrying.
 
 If your architecture is not listed on the release page, clone the repository
