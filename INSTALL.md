@@ -51,11 +51,15 @@ released in April 2016 or later.
 
 Mirage is also available as a Flatpak.
 
-First, download the Mirage Flatpak from the [release page](https://github.com/mirukana/mirage/releases).  
+1. Download the Mirage Flatpak from the
+[release page](https://github.com/mirukana/mirage/releases).
 
-Second, if your operating system doesn't already have built-in support for Flatpaks, follow [these instructions](https://flatpak.org/setup/) to install Flatpak support on your system.
+2. If your operating system doesn't already have built-in support for Flatpaks,
+follow [these instructions](https://flatpak.org/setup/) to install Flatpak
+support on your system.
 
-Finally, to actually install and run Mirage, it should be enough to double-click the the downloaded `.flatpak` file, which will open your software manager.  
+3. To actually install and run Mirage, it should be enough to double-click the 
+downloaded `.flatpak` file, which will open your software manager.
 Alternatively, you can issue the following commands in a terminal:
 
 ```sh
