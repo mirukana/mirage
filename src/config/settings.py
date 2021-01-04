@@ -28,7 +28,6 @@ class General:
     # For Flatpak, it is
     # "~/.var/app/io.github.mirukana.mirage/data/mirage/themes".
     theme: str = "Midnight.qpl"
-    new_theme: str = "test.py"
 
     # Interface scale multiplier, e.g. 0.5 makes everything half-size.
     zoom: float = 1.0

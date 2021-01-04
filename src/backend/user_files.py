@@ -386,12 +386,12 @@ class Settings(ConfigFile, PCNFile):
             )
             UserFileChanged(Theme, self.backend.theme.qml_data)
 
-        if self and self.General.new_theme != section.General.new_theme:
-            self.backend.new_theme.stop_watching()
-            self.backend.new_theme = NewTheme(
-                self.backend, section.General.new_theme,  # type: ignore
-            )
-            UserFileChanged(Theme, self.backend.new_theme.qml_data)
+        # if self and self.General.new_theme != section.General.new_theme:
+        #     self.backend.new_theme.stop_watching()
+        #     self.backend.new_theme = NewTheme(
+        #         self.backend, section.General.new_theme,  # type: ignore
+        #     )
+        #     UserFileChanged(Theme, self.backend.new_theme.qml_data)
 
         return (section, save)
 

@@ -8,15 +8,10 @@ import QtQuick.Layouts 1.12
 Button {
     id: button
 
-    property Theme ntheme: Theme {
-        target: button
-        classes: Class { name: "Button" }
-    }
-
     readonly property alias iconItem: contentItem.icon
     readonly property alias label: contentItem.label
 
-    property color backgroundColor: ntheme.data.background
+    property color backgroundColor: theme.controls.button.background
     property color focusLineColor:
         Qt.colorEqual(icon.color, theme.icons.colorize) ?
         theme.controls.button.focusedBorder :

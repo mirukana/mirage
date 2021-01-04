@@ -109,7 +109,8 @@ class Backend:
         self.ui_state       = UIState(self)
         self.history        = History(self)
         self.theme          = Theme(self, self.settings.General.theme)
-        self.new_theme      = NewTheme(self, self.settings.General.new_theme)
+        # self.new_theme      = NewTheme(self, self.settings.General.new_theme)
+        self.new_theme      = NewTheme(self, ".new.py")  # TODO
 
         self.clients: Dict[str, MatrixClient] = {}
 

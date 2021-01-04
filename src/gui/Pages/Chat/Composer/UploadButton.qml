@@ -8,8 +8,6 @@ import "../../../Base"
 import "../../../Dialogs"
 
 HButton {
-    ntheme.classes: Class { name: "UploadButton" }
-
     enabled: chat.roomInfo.can_send_messages
     icon.name: "upload-file"
     toolTip.text:
