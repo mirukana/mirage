@@ -1,8 +1,8 @@
 # PCN File Format
 
-Config and theme files are written in the PCN (Python Config Notation) format,
-which are organized in a hierarchy of sections and properties.
-PCN files can also contain usual Python code, such as imports and
+This document explains in details the PCN (Python Config Notation) format.
+PCN files are organized in a hierarchy of sections and properties.
+PCN files can also contain normal Python code, such as imports and
 custom functions.
 
 - [Overview](#overview)
