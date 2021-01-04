@@ -48,8 +48,8 @@ the possible options and can be found at:
 Rather than copying the entire default file, it is recommended to 
 [`include`](PCN.md#including-built-in-files) it and only add the settings 
 you want to override.
-For example, a user settings file that only changes the theme and some keybinds
-could look like this:
+For example, a user settings file that disables kinetic scrolling, 
+sets a different theme, and changes some keybinds could look like this:
 
 ```python3
 self.include_builtin("config/settings.py")
@@ -57,7 +57,11 @@ self.include_builtin("config/settings.py")
 class General:
     theme: str = "Glass.qpl"
 
+class Scrolling:
+    kinetic: bool = False  # Has issues on trackpad
+
 class Keys:
+    # The default ctrl+= doesn't work on some keyboard layouts
     reset_zoom = ["Ctrl+Backspace"]
 
     class Messages:
