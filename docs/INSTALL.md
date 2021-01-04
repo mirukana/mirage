@@ -69,13 +69,13 @@ downloaded `.flatpak` file, which will open your software manager.
 Alternatively, you can issue the following commands in a terminal:
 
 ```sh
-    flatpak remote-add --user --if-not-exists \
-        flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --user --if-not-exists \
+    flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    flatpak install --user flathub org.kde.Platform//5.14
-    flatpak install --user /path/to/downloaded/mirage-*.flatpak
+flatpak install --user flathub org.kde.Platform//5.14
+flatpak install --user /path/to/downloaded/mirage-*.flatpak
 
-    flatpak run io.github.mirukana.mirage
+flatpak run io.github.mirukana.mirage
 ```
 
 If downloading the dependencies fail due to e.g. a connection error,
@@ -90,7 +90,9 @@ package on your machine.
 If you are on the Edge channel of Alpine Linux or postmarketOS, Mirage can be
 installed right from the testing repositry:
 
-    apk add mirage
+```sh
+apk add mirage
+```
 
 If you are unsure about what Edge is and want to read more about it, you can do
 so on the [Alpine Wiki](https://wiki.alpinelinux.org/wiki/Edge).
@@ -105,15 +107,19 @@ available.
 Installing the release version with a AUR helper, e.g. 
 [yay](https://github.com/Jguer/yay):
 
-    yay -S matrix-mirage
+```sh
+yay -S matrix-mirage
+```
 
 #### Debian
 
 Requires [Debian Testing](https://wiki.debian.org/DebianTesting). 
 To install the package:
 
-    apt update
-    apt install matrix-mirage
+```sh
+apt update
+apt install matrix-mirage
+```
 
 #### Gentoo
 
@@ -131,18 +137,24 @@ Installing Mirage:
 
 Requires the unstable channel, to add it:
 
-    nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-    nix-channel --update
+```sh
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+nix-channel --update
+```
 
 To install the package:
 
-    nix-env -iA nixpkgs.mirage-im
+```sh
+nix-env -iA nixpkgs.mirage-im
+```
 
 #### OpenMandriva Lx
 
 Requires [Unstable or Rolling][1]. To install the package:
 
-    sudo dnf install matrix-mirage
+```sh
+sudo dnf install matrix-mirage
+```
 
 [1]: https://openmandriva.net/wiki/en/index.php?title=OpenMandriva_Release_Plan_and_Repositories#Release_Plan
 
