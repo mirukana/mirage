@@ -126,27 +126,25 @@ implementation or side-effects.
 - Use four space indentations, no tabs
 
 - Use double quotes for strings, unless single quotes would avoid having to 
-  escape quotes in the text
+  escape double quotes in the text
 
 - Keep lines under 80 columns, the only exception for this is long URL links
   that can't be broken in multiple parts
 
 - Keep lines free from any trailing whitespace
 
-- For function definitions, calls and list/dict/etc not fitting in
-  one line, keep a trailing comma on the last element:
+- Function definitions, calls, list/dict/etc not fitting in
+  one line follow this format (notice the trailing comma on the last element):
 
   ```python3
-  short_function(1, 2, 3)
-
-  long_function(
-      long_argument_1, long_argument_1, long_argument_3, long_argument_4,  # 🡐
+  long_function_call(
+      long_argument_1, long_argument_1, long_argument_3, long_argument_4,
   )
 
-  large_list = [
-      "some long piece of text here number 1",
-      "some long piece of text here number 2",
-      "some long piece of text here number 3",  # 🡐
+  very_long_list_def = [
+      "Lorem ipsum dolor sit amet, consectetuer adipiscing elit",
+      "Aenean massa. Cum sociis natoque penatibus",
+      "Mus donec quam felis, ultricies nec, pellentesque",
   ]
   ```
 
@@ -161,13 +159,13 @@ implementation or side-effects.
   For classes with many long methods, separate those methodes by two blank 
   lines too.
 
-- Readability is important. Vertically align consecutive lines of assignments, 
+- Readability is important. Vertically-align consecutive lines of assignments, 
   function definition arguments, dictionaries and inline comments:
 
   ```python3
   # Bad:
 
-  num:  int       = 1           # A comment
+  num: int = 1  # A comment
   args: List[str] = ["a", "b"]  # Another comment
 
   def func(
@@ -175,8 +173,6 @@ implementation or side-effects.
       example_argument: int = 300,  # Comment
       other: str = "Sample text",  # Other comment
       some_floats: Tuple[float, float, float] = (4.2, 1.1, 9.8),
-      xyz: bool = False,
-      things_set: Optional[Set[str]] = None,
   ) -> None:
       pass
 
@@ -190,8 +186,6 @@ implementation or side-effects.
       example_arg: int                 = 300,            # Comment
       other:       str                 = "Sample text",  # Other comment
       some_floats: Tuple[float, float] = (4.2, 9.8),
-      xyz:         bool                = False,
-      things_set:  Optional[Set[str]]  = None,
   ) -> None:
       pass
   ```
@@ -224,8 +218,14 @@ implementation or side-effects.
   }
   ```
 
-- Don't use [States](https://doc.qt.io/qt-5/qml-qtquick-state.html).
-  The Rectangle in the description's example could simply be written like this:
+- When creating new files, the `id` for the root component should always 
+  be `root`
+
+- When writing new code, refer to parent object properties explicitely, e.g.
+  `parent.prop_name` or `someId.prop_name` instead of just `<prop_name>`
+
+- Don't use [States](https://doc.qt.io/qt-5/qml-qtquick-state.html),
+  the Rectangle in the description's example could simply be written like this:
 
   ```qml
   Rectangle {
@@ -251,12 +251,11 @@ implementation or side-effects.
   exposed with some wrapper code
   ([example](https://github.com/mirukana/mirage/blob/v0.6.4/src/utils.h#L31)).
 
-- Always use `this->` to refer to methods and class attributes, explicit is 
-  better than implicit
+- Be explicit, always use `this->` to refer to methods and class attributes
 
 - Don't split modules between `.h` and `.cpp` files, this creates unnecessary
-  code repetition and is detrimental to performance when most functions will 
-  contain very few lines and will only get included once before 
+  code repetition and has no benefits when most methods will 
+  contain very few lines and the module is only included once before 
   starting the GUI.
 
 
