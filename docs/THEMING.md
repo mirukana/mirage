@@ -45,6 +45,13 @@ text editor.
 When an in-use theme file is saved while the application is running, it 
 will automatically be reloaded and changes will be seen immediatly.
 
+You can manually trigger a reload by updating the file's last change timestamp,
+e.g. with the `touch` command: 
+
+```sh
+touch ~/.config/mirage/settings.py
+```
+
 **Warnings**: 
 
 - API currently unstable: theme properties are often renamed, added or deleted.

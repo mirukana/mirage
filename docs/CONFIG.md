@@ -69,6 +69,13 @@ When this file is saved while the application is running, the settings will
 automatically be reloaded, except for some options which require a restart.
 The default `settings.py` indicates which options require a restart.
 
+You can manually trigger a reload by updating the file's last change timestamp,
+e.g. with the `touch` command:
+
+```sh
+touch ~/.config/mirage/settings.py
+```
+
 [1]: https://github.com/mirukana/mirage/tree/master/src/config/settings.py
 
 
