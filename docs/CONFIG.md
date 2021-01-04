@@ -39,8 +39,9 @@ the application's behavior.
 The default `settings.py`, used when no user-written file exists, documents all 
 the possible options and can be found at:
 
-- [`src/config/settings.py`][1] in the repository
-- `/usr/share/examples/mirage/settings.py` on Linux installations
+- [`src/config/settings.py`][1] in this repository
+- `/usr/local/share/examples/mirage/settings.py` or 
+  `/usr/share/examples/mirage/settings.py` on Linux installations
 - `~/.local/share/flatpak/app/io.github.mirukana.mirage/current/active/files/share/examples/mirage/settings.py` for per-user Flatpak installations
 - `/var/lib/flatpak/app/io.github.mirukana.mirage/current/active/files/share/examples/mirage/settings.py` for system-wide Flatpak installations
 

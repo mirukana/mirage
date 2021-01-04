@@ -66,7 +66,10 @@ no-x11 {
     icons256.path  = $$PREFIX/share/icons/hicolor/256x256/apps
     icons256.files = packaging/mirage.png
 
-    INSTALLS += executables shortcuts icons256
+    examples.path  = $$PREFIX/share/examples/mirage
+    examples.files = src/config/settings.py
+
+    INSTALLS += executables shortcuts icons256 examples
 }
 
 !dev:win32 {
