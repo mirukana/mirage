@@ -6,7 +6,8 @@
 
 [Features](#currently-implemented-features) ⬥
 [Installation](docs/INSTALL.md) ⬥
-[Configuration & Theming](#configuration--theming) ⬥
+[Configuration](docs/CONFIG.md) ⬥
+[Theming](docs/THEMING.md) ⬥
 [Contributing](docs/CONTRIBUTING.md) ⬥
 [Screenshots](#more-screenshots)
 
@@ -74,91 +75,12 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Individual and mass **message removal**
 - Sending **rich replies**
 
-## Installation
+## Documentation
 
-See [INSTALL.md](docs/INSTALL.md)
-
-## Configuration & Theming
-
-The config file can be found at *$XDG_CONFIG_HOME/mirage/settings.json*, 
-or *~/.config/mirage/settings.json*.
-
-For Flatpak users, this will be
-*~/.var/app/io.github.mirukana.mirage/config/mirage* instead.
-
-The config folder where *accounts.json* and  *settings.json* is located can be
-overriden by setting the `MIRAGE_CONFIG_DIR` environment variable.  
-
-The user data folder where *themes*, encryption data and interface states
-are saved can be overriden with `MIRAGE_DATA_DIR`.
-
-The cache folder where downloaded files and thumbnails are saved can be
-overriden with `MIRAGE_CACHE_DIR`.
-
-The `theme` setting can be:
-
-- The filename of a built-in theme (`Midnight.qpl` or `Glass.qpl`)
-- The filename of a custom theme at 
-  *$XDG_DATA_HOME/mirage/themes*, *~/.local/share/mirage/themes*,
-  or *~/.var/app/io.github.mirukana.mirage/data/mirage/themes* (Flatpak)
-
-A default theme from this repository can be copied to use as a base and edit,
-for example:
-
-```sh
-    cp mirage/src/themes/Midnight.qpl \
-       "${XDG_DATA_HOME:-$HOME/.local/share}/mirage/themes/MyTheme.qpl"
-```
-
-Or for Flatpak users:
-
-```sh
-    cp mirage/src/themes/Midnight.qpl \
-       ~/.var/app/io.github.mirukana.mirage/data/mirage/themes/MyTheme.qpl
-```
-
-The config setting `theme` would need to be set to `MyTheme.qpl` in this case.
-
-Theme files are nested-by-indentations sections of properties and values.  
-Properties are declared as `<type> <name>: <value>`.  
-Values can be any JavaScript (ECMAScript 7) expressions.
-
-Most of the properties are of type `color`.
-Their values, if not just refering to another property,
-can be expressed with a:
-- [SVG/CSS color name](https://www.december.com/html/spec/colorsvg.html)
-  string, e.g. `"blue"`
-- Hexadecimal code string, e.g. `"#fff"` or `"#cc0000"`
-- RGBA value, using the `Qt.rgba(0-1, 0-1, 0-1, 0-1)` function
-- HSLA value, using the `Qt.hsla(0-1, 0-1, 0-1, 0-1)` function
-- HSVA value, using the `Qt.hsva(0-1, 0-1, 0-1, 0-1)` function
-- [HSLUV](https://www.hsluv.org/) value, using the
-  `hsluv(0-360, 0-100, 0-100, 0-1)` function. This is the prefered method 
-  used throughout the default theme files
-  (why? see [this](https://www.hsluv.org/comparison/#rainbow-hsluv) and
-  [that](https://www.boronine.com/2012/03/26/Color-Spaces-for-Human-Beings/#hsl-is-a-lemon))
-
-If you just want to change the background picture,
-or use a gradient/simple color instead, search for the `ui:` section in your
-text editor.
-
-
-With `Alt+Shift+R` by default, the config and theme can be reloaded without 
-restarting the app.
-
-**Warnings**: 
-
-- API currently unstable: theme properties are often renamed, added or deleted.
-- The file format for both config and themes will soon change
-- The current file format forces all theme to have all properties
-  defined, instead of being able to only specify the ones to override from the
-  default theme.
-
-GUI settings will also be implemented in the future.
-
-## Contributing
-
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+- [Installation](docs/INSTALL.md)
+- [Configuration](docs/CONFIG.md)
+- [Theming](docs/THEMING.md)
+- [Contributing](docs/CONTRIBUTING.md)
 
 ## Screenshots
 
