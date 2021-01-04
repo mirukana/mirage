@@ -1,10 +1,7 @@
 # TODO
 
-- Fix MatrixForbidden when switching rooms with Alt+numbers
-- Verify PCN include_builtin works under QRC
 - PCN docstrings 
 - PCN error handling
-- PCN documentation
 
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages

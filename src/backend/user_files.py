@@ -35,8 +35,10 @@ class UserFile:
 
     create_missing: ClassVar[bool] = True
 
-    backend:  "Backend" = field(repr=False)
-    filename: str       = field()
+    backend:  "Backend"              = field(repr=False)
+    filename: str                    = field()
+    parent:   Optional["UserFile"]   = None
+    children: Dict[Path, "UserFile"] = field(default_factory=dict)
 
     data:        Any             = field(init=False, default_factory=dict)
     _need_write: bool            = field(init=False, default=False)
@@ -46,15 +48,12 @@ class UserFile:
     _writer:     Optional[asyncio.Future] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
-        try:
-            text_data = self.path.read_text()
-        except FileNotFoundError:
+        if self.path.exists():
+            text                        = self.path.read_text()
+            self.data, self._need_write = self.deserialized(text)
+        else:
             self.data        = self.default_data
             self._need_write = self.create_missing
-        else:
-            self.data, save = self.deserialized(text_data)
-            if save:
-                self.save()
 
         self._reader = asyncio.ensure_future(self._start_reader())
         self._writer = asyncio.ensure_future(self._start_writer())
@@ -99,11 +98,25 @@ class UserFile:
         if self._writer:
             self._writer.cancel()
 
+        for child in self.children.values():
+            child.stop_watching()
+
 
     async def set_data(self, data: Any) -> None:
         """Set `data` and call `save()`, conveniance method for QML."""
         self.data = data
         self.save()
+
+    async def update_from_file(self) -> None:
+        """Read file at `path`, update `data` and call `save()` if needed."""
+
+        if not self.path.exists():
+            self.data        = self.default_data
+            self._need_write = self.create_missing
+            return
+
+        async with aiopen(self.path) as file:
+            self.data, self._need_write = self.deserialized(await file.read())
 
     async def _start_reader(self) -> None:
         """Disk reader coroutine, watches for file changes to update `data`."""
@@ -123,13 +136,7 @@ class UserFile:
                             ignored += 1
                             continue
 
-                        async with aiopen(self.path) as file:
-                            text            = await file.read()
-                            self.data, save = self.deserialized(text)
-
-                            if save:
-                                self.save()
-
+                        await self.update_from_file()
                         self._mtime = mtime
 
                     elif change[0] == Change.deleted:
@@ -140,13 +147,18 @@ class UserFile:
                 if changes and ignored < len(changes):
                     UserFileChanged(type(self), self.qml_data)
 
+                    parent = self.parent
+                    while parent:
+                        await parent.update_from_file()
+                        UserFileChanged(type(parent), parent.qml_data)
+                        parent = parent.parent
+
                 while not self.path.exists():
                     # Prevent error spam after file gets deleted
                     await asyncio.sleep(0.5)
 
             except Exception as err:  # noqa
                 LoopException(str(err), err, traceback.format_exc().rstrip())
-
 
     async def _start_writer(self) -> None:
         """Disk writer coroutine, update the file with a 1 second cooldown."""
@@ -261,6 +273,12 @@ class PCNFile(MappingFile):
 
     create_missing = False
 
+    path_override: Optional[Path]        = None
+
+    @property
+    def path(self) -> Path:
+        return self.path_override or super().path
+
     @property
     def write_path(self) -> Path:
         """Full path of file where programatically-done edits are stored."""
@@ -280,6 +298,22 @@ class PCNFile(MappingFile):
 
         if self.write_path.exists():
             edits = self.write_path.read_text()
+
+        includes_now = list(root.all_includes)
+
+        for path, pcn in self.children.copy().items():
+            if path not in includes_now:
+                pcn.stop_watching()
+                del self.children[path]
+
+        for path in includes_now:
+            if path not in self.children:
+                self.children[path] = PCNFile(
+                    self.backend,
+                    filename      = path.name,
+                    parent        = self,
+                    path_override = path,
+                )
 
         return (root, root.deep_merge_edits(json.loads(edits)))
 

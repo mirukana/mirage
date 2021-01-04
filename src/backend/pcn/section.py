@@ -2,6 +2,7 @@ import re
 import textwrap
 from collections import OrderedDict
 from collections.abc import MutableMapping
+from contextlib import suppress
 from dataclasses import dataclass, field
 from operator import attrgetter
 from pathlib import Path
@@ -33,6 +34,7 @@ class Section(MutableMapping):
     root:          Optional["Section"] = None
     parent:        Optional["Section"] = None
     builtins_path: Path                = BUILTINS_DIR
+    included:      List[Path]          = field(default_factory=list)
     globals:       GlobalsDict         = field(init=False)
 
     _edited: Dict[str, Any] = field(init=False, default_factory=dict)
@@ -223,6 +225,8 @@ class Section(MutableMapping):
 
 
     def deep_merge(self, section2: "Section") -> None:
+        self.included += section2.included
+
         for key in section2:
             if key in self.sections and key in section2.sections:
                 self.globals.data.update(section2.globals.data)
@@ -249,14 +253,26 @@ class Section(MutableMapping):
 
 
     def include_file(self, path: Union[Path, str]) -> None:
-        if not Path(path).is_absolute() and self.source_path:
+        path = Path(path)
+
+        if not path.is_absolute() and self.source_path:
             path = self.source_path.parent / path
 
+        with suppress(ValueError):
+            self.included.remove(path)
+
+        self.included.append(path)
         self.deep_merge(Section.from_file(path))
 
 
     def include_builtin(self, relative_path: Union[Path, str]) -> None:
-        self.deep_merge(Section.from_file(self.builtins_path / relative_path))
+        path = self.builtins_path / relative_path
+
+        with suppress(ValueError):
+            self.included.remove(path)
+
+        self.included.append(path)
+        self.deep_merge(Section.from_file(path))
 
 
     def as_dict(self, _section: Optional["Section"] = None) -> Dict[str, Any]:
@@ -339,6 +355,13 @@ class Section(MutableMapping):
 
         return changes
 
+    @property
+    def all_includes(self) -> Generator[Path, None, None]:
+
+        yield from self.included
+
+        for sub in self.sections:
+            yield from self[sub].all_includes
 
     @classmethod
     def from_source_code(
