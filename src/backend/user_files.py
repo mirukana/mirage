@@ -48,12 +48,15 @@ class UserFile:
     _writer:     Optional[asyncio.Future] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
+        self.data        = self.default_data
+        self._need_write = self.create_missing
+
         if self.path.exists():
-            text                        = self.path.read_text()
-            self.data, self._need_write = self.deserialized(text)
-        else:
-            self.data        = self.default_data
-            self._need_write = self.create_missing
+            try:
+                text                        = self.path.read_text()
+                self.data, self._need_write = self.deserialized(text)
+            except Exception as err:  # noqa
+                LoopException(str(err), err, traceback.format_exc().rstrip())
 
         self._reader = asyncio.ensure_future(self._start_reader())
         self._writer = asyncio.ensure_future(self._start_writer())
@@ -414,7 +417,9 @@ class Settings(ConfigFile, PCNFile):
         section, save = super().deserialized(data)
 
         if self and self.General.theme != section.General.theme:
-            self.backend.theme.stop_watching()
+            if hasattr(self.backend, "theme"):
+                self.backend.theme.stop_watching()
+
             self.backend.theme = Theme(
                 self.backend, section.General.theme,  # type: ignore
             )
