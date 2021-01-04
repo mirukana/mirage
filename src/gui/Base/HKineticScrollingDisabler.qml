@@ -63,7 +63,7 @@ MouseArea {
         }
     }
 
-    enabled: ! window.settings.Scrolling.kinetic
+    enabled: ! window.settings.Scrolling.kinetic && ! utils.keyboardFlicking
     propagateComposedEvents: true
     acceptedButtons: Qt.NoButton
 

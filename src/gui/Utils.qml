@@ -8,6 +8,7 @@ QtObject {
     enum Media { Page, File, Image, Video, Audio }
 
     property QtObject theme: null
+    property bool keyboardFlicking: false
 
     readonly property var imageExtensions: [
 		"bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm",
@@ -415,6 +416,8 @@ QtObject {
         // If this is a repeated flicking, flick faster than a single flick.
         if (! flickable.interactive) return
 
+        keyboardFlicking = true
+
         const futureVelocity  =
             (horizontal ? -flickable.width : -flickable.height) * pages
 
@@ -448,6 +451,8 @@ QtObject {
 
         flickable.maximumFlickVelocity = normalMaxSpeed
         flickable.flickDeceleration    = normalDecel
+
+        keyboardFlicking = false
     }
 
 
