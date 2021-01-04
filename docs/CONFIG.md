@@ -62,7 +62,7 @@ class Scrolling:
 
 class Keys:
     # The default ctrl+= doesn't work on some keyboard layouts
-    reset_zoom = ["Ctrl+Backspace"]
+    reset_zoom = ["Ctrl+Backspace", "Ctrl+="]
 
     class Messages:
         open_links_files            = ["Ctrl+Shift+O"]
