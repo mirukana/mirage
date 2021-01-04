@@ -17,9 +17,13 @@ make clean
 qmake mirage.pro CONFIG+=dev && make
 
 while true; do
-    find src mirage.pro -type f |
+    # app already handles reloading config and theme files
+    find src mirage.pro \
+        -type f -not -path 'src/themes/*' -not -path 'src/config/*' |
+
     # -name affects the first part of the WM_CLASS returned by xprop on Linux
     entr -cdnr sh -c \
         "qmake mirage.pro CONFIG+=dev && make && ./mirage -name dev $*"
+
     sleep 0.2
 done
