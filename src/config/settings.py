@@ -40,16 +40,18 @@ class Presence:
     auto_away_after: int = 60 * 10
 
 class Notifications:
-    # How long in seconds window alerts will last when a new message
-    # is posted in a room. On most desktops, this highlights or flashes the
-    # application in the taskbar or dock.
-    # Can be set to 0 for no alerts.
+    # How long in seconds the window will flash in your dock or taskbar when
+    # a new message, which matches a notification push rule with a
+    # flash (lightbulb) action, is posted in a room.
+    # The effect may differ depending on your OS/desktop.
+    # or dock to be highlighted or to flash.
     # Can be set to -1 for alerts that last until the window is focused.
-    alert_time: float = 0
+    flash_time: float = 5
 
-    # Same as alert_time for urgent messages, e.g. when you are mentioned,
-    # replied to, or the message contains a keyword.
-    urgent_alert_time: float = -1
+    # Same as flash_time, but for messages that match a push rule with a
+    # highlight (red [+1]) action. By default this includes when your
+    # name is mentioned, replied to, or messages containing keywords.
+    highlight_flash_time: float = -1
 
 class Scrolling:
     # Use velocity-based kinetic scrolling.

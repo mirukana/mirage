@@ -8,7 +8,6 @@
 - profiles missing in notifications
 - option to use plaintext notifications
 - Notification urgency level (plyer)?
-- Rename the alertOn(Mention/Message)ForMsec options, default Message to non-0
 - Make local unread counter an optional turned off by default
 
 - Implement fallback QML notifications, usable if dbus isn't available

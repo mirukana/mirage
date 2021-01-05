@@ -29,8 +29,8 @@ QtObject {
         if (urgencyHint) {
             const msec =
                 critical ?
-                window.settings.Notifications.urgent_alert_time * 1000 :
-                window.settings.Notifications.alert_time * 1000
+                window.settings.Notifications.highlight_flash_time * 1000 :
+                window.settings.Notifications.flash_time * 1000
 
                 // -1 ? 0 for no time out : msec
                 if (msec !== 0) window.alert(msec === -1 ? 0 : msec)
