@@ -264,12 +264,12 @@ HListView {
     }
 
     HShortcut {
-        sequences: window.settings.Keys.Rooms.previous_urgent
+        sequences: window.settings.Keys.Rooms.previous_highlight
         onActivated: cycleUnreadRooms(false, true) && showItemLimiter.restart()
     }
 
     HShortcut {
-        sequences: window.settings.Keys.Rooms.next_urgent
+        sequences: window.settings.Keys.Rooms.next_highlight
         onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
     }
 
