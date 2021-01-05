@@ -119,7 +119,8 @@ HColumnPage {
         header: HColumnLayout {
             readonly property alias exportButton: exportButton
             readonly property alias importButton: importButton
-            readonly property alias signOutCheckedButton: signOutCheckedButton
+            readonly property alias signOutButton: signOutButton
+            readonly property alias refreshButton: refreshButton
 
             spacing: theme.spacing
             x: spacing
@@ -181,7 +182,7 @@ HColumnPage {
                     )
 
                     Keys.onTabPressed:
-                        signOutCheckedButton.enabled ?
+                        signOutButton.enabled ?
                         refreshButton.forceActiveFocus() :
                         page.focusListController()
                 }
@@ -218,7 +219,7 @@ HColumnPage {
                 }
 
                 NegativeButton {
-                    id: signOutCheckedButton
+                    id: signOutButton
                     enabled: deviceList.model.count > 0
                     text:
                         deviceList.selectedCount === 0 ?
@@ -276,8 +277,8 @@ HColumnPage {
                 if (parent.currentIndex === 0) {
                     parent.currentIndex = -1
 
-                    parent.headerItem.signOutCheckedButton.enabled ?
-                    parent.headerItem.signOutCheckedButton.forceActiveFocus() :
+                    parent.headerItem.signOutButton.enabled ?
+                    parent.headerItem.signOutButton.forceActiveFocus() :
                     parent.headerItem.importButton.forceActiveFocus()
 
                     return
@@ -302,13 +303,13 @@ HColumnPage {
         }
 
         HShortcut {
-            sequences: window.settings.keys.refreshDevices
-            onActivated: refreshButton.clicked()
+            sequences: window.settings.Keys.Security.refresh
+            onActivated: deviceList.headerItem.refreshButton.clicked()
         }
 
         HShortcut {
-            sequences: window.settings.keys.signOutCheckedOrAllDevices
-            onActivated: signOutCheckedButton.clicked()
+            sequences: window.settings.Keys.Security.sign_out
+            onActivated: deviceList.headerItem.signOutButton.clicked()
         }
 
         FlickShortcuts {

@@ -447,16 +447,16 @@ class Keys:
         # Toggle pausing for animated GIF images.
         pause = ["Space"]
 
-    class Sessions:
-        # These keybinds affect the session list in your account settings.
+    class Security:
+        # These keybinds affect the Security tab in your account settings.
         #
         # Currently unchangable keys:
-        # Tab/Shift+Tab or the arrow keys to navigate the list,
-        # Space to check/uncheck focused session,
-        # Menu to open the focused session's context menu.
+        # - Tab/Shift+Tab to navigate the interface
+        # - Space to check/uncheck a focused session
+        # - Menu to open the focused session's context menu
 
         # Refresh the list of sessions.
         refresh = ["Alt+R", "F5"]
 
         # Sign out checked sessions if any, else sign out all sessions.
-        sign_out_checked_or_all = ["Alt+S", "Delete"]
+        sign_out = ["Alt+S", "Delete"]
