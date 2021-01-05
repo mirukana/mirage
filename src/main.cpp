@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
     QObject::connect(&engine, &QQmlEngine::quit, &QApplication::quit);
 
     // Set the debugMode properties depending of if we're running in debug mode
-    // or not (`qmake CONFIG+=dev ...`, default in live-reload.sh)
+    // or not (`qmake CONFIG+=dev ...`, default in autoreload.py)
 #ifdef QT_DEBUG
     objectContext->setContextProperty("debugMode", true);
 #else
