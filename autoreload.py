@@ -5,6 +5,7 @@ Automatically rebuild and restart the application when source files change.
 CONFIG+=dev will be passed to qmake, see mirage.pro.
 The application will be launched with `-name dev`, which sets the first
 part of the WM_CLASS as returned by xprop on Linux.
+Any other arguments will be passed to the app, see `mirage --help`.
 
 Use `pip3 install --user -U requirements-dev.txt` before running this."""
 

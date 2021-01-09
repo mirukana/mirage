@@ -186,7 +186,9 @@ int main(int argc, char *argv[]) {
     QQmlContext *objectContext = new QQmlContext(engine.rootContext());
 
     // To able to use Qt.quit() from QML side
-    QObject::connect(&engine, &QQmlEngine::quit, &QApplication::quit);
+    QObject::connect(
+        &engine, &QQmlEngine::quit, &app, &QApplication::quit, Qt::QueuedConnection
+    );
 
     // Set the debugMode properties depending of if we're running in debug mode
     // or not (`qmake CONFIG+=dev ...`, default in autoreload.py)

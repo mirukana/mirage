@@ -3,6 +3,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import "."
 import "Base"
 import "PythonBridge"
 
@@ -97,7 +98,7 @@ ApplicationWindow {
     minimumHeight: theme ? theme.minimumSupportedHeight : 120
     width: Math.min(screen.width, 1152)
     height: Math.min(screen.height, 768)
-    visible: true
+    visible: ArgumentParser.ready && ! ArgumentParser.startInTray
     color: "transparent"
 
     onClosing: {
@@ -121,7 +122,10 @@ ApplicationWindow {
         anchors.fill: parent
         focus: true
         scale: py.ready ? 1 : 0.5
-        source: py.ready ? (Qt.application.arguments[1] || "UI.qml") : ""
+        source:
+            ArgumentParser.ready && py.ready ?
+            (ArgumentParser.loadQml || "UI.qml") :
+            ""
 
         Behavior on scale { HNumberAnimation { overshoot: 3; factor: 1.2 } }
     }

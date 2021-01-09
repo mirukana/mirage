@@ -1,1 +1,2 @@
 singleton ModelStore 0.1 ModelStore.qml
+singleton ArgumentParser 0.1 ArgumentParser.qml
