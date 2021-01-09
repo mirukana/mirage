@@ -30,13 +30,6 @@ class PyOtherSideEvent:
 
 
 @dataclass
-class ExitRequested(PyOtherSideEvent):
-    """Request for the application to exit."""
-
-    exit_code: int = 0
-
-
-@dataclass
 class NotificationRequested(PyOtherSideEvent):
     """Request a notification and window manager alert to be shown.
 

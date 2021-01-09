@@ -8,10 +8,6 @@ import ".."
 QtObject {
     signal deviceUpdateSignal(string forAccount)
 
-    function onExitRequested(exitCode) {
-        Qt.exit(exitCode)
-    }
-
     function onNotificationRequested(id, title, body, image, highImportance) {
         const level = window.notificationLevel
 
