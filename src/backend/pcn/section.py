@@ -179,6 +179,11 @@ class Section(MutableMapping):
         return f"{name}({content})"
 
 
+    def children(self) -> Tuple[Tuple[str, Union["Section", Any]], ...]:
+        """Return pairs of (name, value) for child sections and properties."""
+        return tuple((name, getattr(self, name)) for name in self)
+
+
     @classmethod
     def _register_set_attr(cls, name: str, add_to_set_name: str) -> None:
         cls.methods.discard(name)

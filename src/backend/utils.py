@@ -9,6 +9,7 @@ import html
 import inspect
 import io
 import json
+import re
 import sys
 import xml.etree.cElementTree as xml_etree
 from concurrent.futures import ProcessPoolExecutor
@@ -33,6 +34,7 @@ from nio.crypto import async_generator_from_data
 from PIL import Image as PILImage
 
 from .color import Color
+from .pcn.section import Section
 
 if sys.version_info >= (3, 7):
     from contextlib import asynccontextmanager
@@ -103,6 +105,20 @@ def flatten_dict_keys(
             flat.setdefault(prefix, {})[key] = value
 
     return flat
+
+
+def config_get_account_room_rule(
+    rules: Section, user_id: str, room_id: str,
+) -> Any:
+    """Return best matching rule value for an account/room PCN free Section."""
+
+    for name, value in reversed(rules.children()):
+        name = re.sub(r"\s+", " ", name.strip())
+
+        if name in (user_id, room_id, f"{user_id} {room_id}"):
+            return value
+
+    return rules.default
 
 
 async def is_svg(file: File) -> bool:

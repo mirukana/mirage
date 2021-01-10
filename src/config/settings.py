@@ -98,7 +98,7 @@ class Chat:
     always_center_header: bool = False
 
     # When the chat timeline is larger than this pixel number,
-    # Align your own messages to the left of the timeline instead of right.
+    # align your own messages to the left of the timeline instead of right.
     # Can be 0 to always show your messages on the left.
     own_messages_on_left_above: int = 895
 
@@ -122,6 +122,21 @@ class Chat:
     mark_read_delay: float = 0.2
 
     class Composer:
+        class TypingNotifications:
+            # Rules controlling whether "<user> is typing..." notifications
+            # should be sent to other users in rooms.
+            # The `default` property is required. Other properties can be
+            # added: user IDs, room IDs, or space-separated user + room IDs.
+
+            # Send typing notifications everywhere by default:
+            default: bool = True
+            # But don't send them for rooms under this account:
+            "@account_1:example.org": bool = False
+            # Neither send them in this room, regardless of the account used:
+            "!room:example.org": bool = False
+            # Except if it's this account and this room, then send them:
+            "@account_2:example.org !room:example.org": bool = True
+
         class Aliases:
             # Each property is the user ID of an account, value is the alias.
             # From any chat, start a message with an alias followed by a space

@@ -1312,6 +1312,13 @@ class MatrixClient(nio.AsyncClient):
     ):
         """Set typing notice to the server."""
 
+        if not utils.config_get_account_room_rule(
+            rules   = self.backend.settings.Chat.Composer.TypingNotifications,
+            user_id = self.user_id,
+            room_id = room_id,
+        ):
+            return
+
         presence = self.models["accounts"][self.user_id].presence
 
         if presence not in [Presence.State.invisible, Presence.State.offline]:
