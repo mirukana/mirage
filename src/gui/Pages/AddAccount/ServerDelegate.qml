@@ -79,6 +79,25 @@ HTile {
                 model.stability >= 95 ? theme.colors.positiveText :
                 model.stability >= 85 ? theme.colors.warningText :
                 theme.colors.errorText
+
+            HoverHandler { id: rightInfoHover }
+
+            HToolTip {
+                readonly property var times: JSON.parse(model.downtimes_ms)
+                readonly property real total: utils.sum(times)
+
+                visible: model.stability !== -1 && rightInfoHover.hovered
+                text:
+                    total === 0 ?
+                    qsTr("No downtimes in the last 30 days") :
+                    qsTr(
+                        "Last 30 days downtimes: %1, average: %2, " +
+                        "longest: %3, total: %4"
+                    ).arg(times.length)
+                     .arg(utils.formatRelativeTime(total / times.length))
+                     .arg(utils.formatRelativeTime(Math.max.apply(Math,times)))
+                     .arg(utils.formatRelativeTime(total))
+            }
         }
 
         HButton {

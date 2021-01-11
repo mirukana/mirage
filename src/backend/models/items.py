@@ -42,13 +42,14 @@ class PingStatus(AutoStrEnum):
 class Homeserver(ModelItem):
     """A homeserver we can connect to. The `id` field is the server's URL."""
 
-    id:        str        = field()
-    name:      str        = field()
-    site_url:  str        = field()
-    country:   str        = field()
-    ping:      int        = -1
-    status:    PingStatus = PingStatus.Pinging
-    stability: float      = -1
+    id:             str         = field()
+    name:           str         = field()
+    site_url:       str         = field()
+    country:        str         = field()
+    ping:           int         = -1
+    status:         PingStatus  = PingStatus.Pinging
+    stability:      float       = -1
+    downtimes_ms:   List[float] = field(default_factory=list)
 
     def __lt__(self, other: "Homeserver") -> bool:
         return (self.name.lower(), self.id) < (other.name.lower(), other.id)

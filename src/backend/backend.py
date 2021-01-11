@@ -7,7 +7,7 @@ import os
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
@@ -492,8 +492,13 @@ class Backend:
                 )
 
 
-    def _get_homeserver_stability(self, logs: List[Dict[str, Any]]) -> float:
+    def _get_homeserver_stability(
+        self, logs: List[Dict[str, Any]],
+    ) -> Tuple[float, List[timedelta]]:
+        """Return server stability % and a list of downtime durations."""
+
         stability = 100.0
+        durations = []
 
         for period in logs:
             started_at     = datetime.fromtimestamp(period["datetime"])
@@ -502,14 +507,15 @@ class Backend:
             if time_since_now.days > 30 or period["type"] != 1:  # 1 = downtime
                 continue
 
-            lasted_minutes = period["duration"] / 60
+            lasted_minutes  = period["duration"] / 60
+            durations.append(timedelta(seconds=period["duration"]))
 
             stability -= (
                 (lasted_minutes * stability / 1000) /
                 max(1, time_since_now.days / 3)
             )
 
-        return stability
+        return (stability, durations)
 
 
     async def fetch_homeservers(self) -> None:
@@ -533,13 +539,16 @@ class Backend:
             if server["country"] == "USA":
                 server["country"] = "United States"
 
+            stability, durations = \
+                self._get_homeserver_stability(server["monitor"]["logs"])
+
             self.models["homeservers"][homeserver_url] = Homeserver(
-                id        = homeserver_url,
-                name      = server["name"],
-                site_url  = server["url"],
-                country   = server["country"],
-                stability =
-                    self._get_homeserver_stability(server["monitor"]["logs"]),
+                id           = homeserver_url,
+                name         = server["name"],
+                site_url     = server["url"],
+                country      = server["country"],
+                stability    = stability,
+                downtimes_ms = [d.total_seconds() * 1000 for d in durations],
             )
 
             coros.append(self._ping_homeserver(session, homeserver_url))
