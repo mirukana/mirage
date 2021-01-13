@@ -7,6 +7,7 @@ import os
 import re
 import sys
 import time
+import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
@@ -136,7 +137,8 @@ class Backend:
 
         self.mxc_events: DefaultDict[str, List[Event]] = DefaultDict(list)
 
-        self.notification_avatar_cache: Dict[str, Path] = {}     # {mxc: path}
+        self.notification_avatar_cache: Dict[str, Path] = {}  # {mxc: path}
+        self.notifications_working:     bool            = True
 
 
     def __repr__(self) -> str:
@@ -561,11 +563,19 @@ class Backend:
         self, title: str, body: str = "", image: Union[Path, str] = "",
     ) -> None:
         # XXX: images on windows must be .ICO
-        plyer.notification.notify(
-            title    = title,
-            message  = body,
-            app_name = __app_name__,
-            app_icon = str(image),
-            timeout  = 10,
-            toast    = False,
-        )
+
+        try:
+            plyer.notification.notify(
+                title    = title,
+                message  = body,
+                app_name = __app_name__,
+                app_icon = str(image),
+                timeout  = 10,
+                toast    = False,
+            )
+            self.notifications_working = True
+        except Exception:  # noqa
+            if self.notifications_working:
+                trace = traceback.format_exc().rstrip()
+                log.error("Sending desktop notification failed\n%s", trace)
+                self.notifications_working = False
