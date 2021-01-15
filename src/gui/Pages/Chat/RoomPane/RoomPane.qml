@@ -96,7 +96,12 @@ MultiviewPane {
         onAboutToRecycle: roomPane.swipeView.currentIndex = 0
     }
 
-    MemberView {}
+    MemberView {
+        HDrawerSwipeHandler {
+            drawer: roomPane
+            onCloseRequest: roomPane.toggleFocus()
+        }
+    }
 
     SettingsView {
         enabled: accountModel.presence !== "offline"

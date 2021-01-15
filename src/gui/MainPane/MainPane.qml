@@ -35,6 +35,11 @@ HDrawer {
         when: ! mainUI.accountsPresent
     }
 
+    HDrawerSwipeHandler {
+        drawer: mainPane
+        onCloseRequest: mainPane.toggleFocus()
+    }
+
     HColumnLayout {
         anchors.fill: parent
 
