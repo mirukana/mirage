@@ -1,5 +1,5 @@
-Pillow            >= 7.0.0,  < 8
-aiofiles          >= 0.4.0,  < 0.5
+Pillow            >= 7.0.0,  < 9
+aiofiles          >= 0.4.0,  < 0.7
 appdirs           >= 1.4.4,  < 2
 cairosvg          >= 2.4.2,  < 3
 filetype          >= 1.0.7,  < 2
