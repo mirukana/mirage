@@ -22,13 +22,6 @@ Rectangle {
     HRowLayout {
         id: row
         anchors.fill: parent
-        visible: opacity > 0
-
-        // The layout overflows somehow when focusing the room pane and
-        // is visible behind it (with a transparent theme)
-        opacity: showRightButton && chat.roomPane.visible ? 0 : 1
-
-        Behavior on opacity { HNumberAnimation {} }
 
         HButton {
             id: goToMainPaneButton

@@ -81,8 +81,10 @@ Drawer {
 
     // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
     // dragMargin: parent.width / 2
+    // interactive: collapse || forceCollapse
+    dragMargin: 0
+    interactive: false
 
-    interactive: collapse || forceCollapse
     position: 1
     visible: ! collapse && ! forceCollapse
     modal: false
