@@ -48,6 +48,7 @@ install_apt_packages() {
         libjpeg-turbo8-dev zlib1g-dev \
         libtiff5-dev liblcms2-dev libwebp-dev  libopenjp2-7-dev \
         libx11-dev libxss-dev \
+        pkg-config libdbus-1-dev libglib2.0-dev \
         desktop-file-utils  # for appimage-lint.sh
 
     /usr/sbin/update-ccache-symlinks
