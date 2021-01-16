@@ -55,13 +55,8 @@ class Model(MutableMapping):
     def __repr__(self) -> str:
         """Provide a full representation of the model and its content."""
 
-        try:
-            from pprintpp import pformat
-        except ImportError:
-            from pprint import pformat  # type: ignore
-
         return "%s(sync_id=%s, %s)" % (
-            type(self).__name__, self.sync_id, pformat(self._data),
+            type(self).__name__, self.sync_id, self._data,
         )
 
 

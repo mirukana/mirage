@@ -1,6 +1,6 @@
 remote_pdb >= 2.0.0,  < 3
 pdbpp      >= 0.10.2, < 0.11
-pprintpp   >= 0.4.0,  < 0.5
+devtools   >= 0.4.0,  < 0.5
 
 mypy                  >= 0.790,  < 0.800
 flake8                >= 3.8.4,  < 4

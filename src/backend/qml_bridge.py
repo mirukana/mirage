@@ -134,7 +134,7 @@ class QMLBridge:
 
 
     def pdb(self, extra_data: Sequence = (), remote: bool = False) -> None:
-        """Call the RemotePdb debugger; define some conveniance variables."""
+        """Call the python debugger, defining some conveniance variables."""
 
         ad  = extra_data                   # noqa
         ba  = self.backend                 # noqa
@@ -144,12 +144,11 @@ class QMLBridge:
 
         rc = lambda c: asyncio.run_coroutine_threadsafe(c, self._loop)  # noqa
 
-        p = print  # pdb's `p` doesn't print a class's __str__  # noqa
         try:
-            log.warning("\nThe pprintpp python package is not installed.")
-            from pprintpp import pprint as pp  # noqa
+            from devtools import debug # noqa
+            d = debug  # noqa
         except ModuleNotFoundError:
-            pass
+            log.warning("Module python-devtools not found, can't use debug()")
 
         if remote:
             # Run `socat readline tcp:127.0.0.1:4444` in a terminal to connect
