@@ -7,27 +7,22 @@
 
 ## Folders
 
-On Linux, the folders are:
+On Linux:
 
 - `$XDG_CONFIG_HOME/mirage` or `~/.config/mirage` for config files
 - `$XDG_DATA_HOME/mirage` or `~/.local/share/mirage` for user data
 - `$XDG_CACHE_HOME/mirage` or `~/.cache/mirage` for cache data
 
-For Flatpak installations, the folders are:
+For Flatpak installations:
 
 - `~/.var/app/io.github.mirukana.mirage/config/mirage` for config files
 - `~/.var/app/io.github.mirukana.mirage/data/mirage` for user data
 - `~/.var/app/io.github.mirukana.mirage/cache/mirage` for cache data
 
-The folder locations can also be overriden by these environment variables:
-
-- `$MIRAGE_CONFIG_DIR` for config files
-- `$MIRAGE_DATA_DIR` for user data
-- `$MIRAGE_CACHE_DIR` for cache data
-
+These locations can be overriden with environment variables, see 
+`mirage --help`.  
 The user data folder contains saved encryption data, interface states and
-[themes](THEMING.md).  
-The cache data folder contains downloaded files and thumbnails.
+[themes](THEMING.md), while the cache contains downloaded files and thumbnails.
 
 
 ## settings.py
@@ -73,8 +68,8 @@ When this file is saved while the application is running, the settings will
 automatically be reloaded, except for some options which require a restart.
 The default `settings.py` indicates which options require a restart.
 
-You can manually trigger a reload by updating the file's last change timestamp,
-e.g. with the `touch` command:
+You can also manually trigger a reload by updating the file's last change 
+timestamp, e.g. with the `touch` command:
 
 ```sh
 touch ~/.config/mirage/settings.py
