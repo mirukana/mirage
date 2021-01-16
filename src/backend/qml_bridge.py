@@ -133,10 +133,10 @@ class QMLBridge:
             self._cancelled_early.add(uuid)
 
 
-    def pdb(self, additional_data: Sequence = ()) -> None:
+    def pdb(self, extra_data: Sequence = (), remote: bool = False) -> None:
         """Call the RemotePdb debugger; define some conveniance variables."""
 
-        ad  = additional_data              # noqa
+        ad  = extra_data                   # noqa
         ba  = self.backend                 # noqa
         mo  = self.backend.models          # noqa
         cl  = self.backend.clients
@@ -151,21 +151,13 @@ class QMLBridge:
         except ModuleNotFoundError:
             pass
 
-        try:
+        if remote:
+            # Run `socat readline tcp:127.0.0.1:4444` in a terminal to connect
             import remote_pdb
-        except ModuleNotFoundError:
-            log.warning(
-                "\nThe remote_pdb python package is not installed, falling "
-                "back to pdb.",
-            )
+            remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
+        else:
             import pdb
             pdb.set_trace()
-        else:
-            log.info(
-                "\n=> Run `socat readline tcp:127.0.0.1:4444` in a terminal "
-                "to connect to the debugger.",
-            )
-            remote_pdb.RemotePdb("127.0.0.1", 4444).set_trace()
 
 
     def exit(self) -> None:

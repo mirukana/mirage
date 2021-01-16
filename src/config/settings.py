@@ -219,12 +219,17 @@ class Keys:
     # Switch to the last opened page/chat, similar to Alt+Tab on most desktops.
     last_page = ["Ctrl+Tab"]
 
-    # Toggle the QML developer console. Type ". help" in it for more info.
+    # Toggle the QML developer console. Type ". help" inside it for more info.
     qml_console = ["F1"]
 
-    # Start the Python backend debugger. Unless the "remote-pdb" pip package is
-    # installed, Mirage must be started from a terminal for this to work.
+    # Start the Python backend debugger.
+    # Mirage must be connected to a terminal for this to work.
     python_debugger = ["Shift+F1"]
+
+    # Start the Python backend debugger in remote access mode.
+    # The remote-pdb Python package must be installed.
+    # From any terminal, run `socat readline tcp:127.0.0.1:4444` to connect.
+    python_remote_debugger = ["Alt+F1"]
 
     class Scrolling:
         # Pages and chat timeline scrolling

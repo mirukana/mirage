@@ -40,6 +40,11 @@ Item {
     }
 
     HShortcut {
+        sequences: window.settings.Keys.python_remote_debugger
+        onActivated: py.call("BRIDGE.pdb", [[], true])
+    }
+
+    HShortcut {
         sequences: window.settings.Keys.zoom_in
         onActivated: {
             window.settings.General.zoom += 0.1
