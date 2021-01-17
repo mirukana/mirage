@@ -200,7 +200,7 @@ Rectangle {
         active: eventList.currentItem
         sequences: window.settings.Keys.Messages.debug
         onActivated: mainUI.debugConsole.toggle(
-            eventList.currentItem.eventContent, "t.parent.json()",
+            eventList.currentItem, ".j t.dict()",
         )
     }
 
