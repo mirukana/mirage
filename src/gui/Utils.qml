@@ -411,6 +411,16 @@ QtObject {
     }
 
 
+    function commaAndJoin(array) {
+        if (array.length === 0) return ""
+        if (array.length === 1) return array[0]
+
+        return qsTr("%1 and %2")
+               .arg(array.slice(0, -1).join(qsTr(", ")))
+               .arg(array.slice(-1)[0])
+    }
+
+
     function flickPages(flickable, pages, horizontal=false, multiplier=8) {
         // Adapt velocity and deceleration for the number of pages to flick.
         // If this is a repeated flicking, flick faster than a single flick.
