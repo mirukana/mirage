@@ -262,7 +262,15 @@ HRowLayout {
             }
 
             HToolTip {
-                visible: eventContent.hoveredLink === "#state-text"
+                readonly property bool keyboardShow:
+                    eventList.showFocusedSeenTooltips &&
+                    eventList.currentIndex === model.index &&
+                    model.read_by_count > 0
+
+                instant: keyboardShow
+                visible:
+                    eventContent.hoveredLink === "#state-text" || keyboardShow
+
                 label.textFormat: HLabel.StyledText
                 text: {
                     if (! visible) return ""

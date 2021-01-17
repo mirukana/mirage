@@ -371,6 +371,14 @@ class Keys:
         # If no message is focused but some are selected, clear the selection.
         unfocus_or_deselect = ["Ctrl+D"]
 
+        # Toggle display of the focused message's seen counter tooltip,
+        # which shows which user have this message as their last seen and when
+        # did they send that information.
+        # When this mode is active, you can move the focus to other messages
+        # and the tooltip will update itself.
+        # If a message doesn't have a counter, it won't have a tooltip.
+        seen_tooltips = ["Ctrl+S"]
+
         # Remove the selected messages if any, else the focused message if any,
         # else the last message you posted.
         remove = ["Ctrl+R", "Alt+Del"]

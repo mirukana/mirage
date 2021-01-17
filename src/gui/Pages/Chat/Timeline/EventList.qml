@@ -52,6 +52,13 @@ Rectangle {
     }
 
     HShortcut {
+        sequences: window.settings.Keys.Messages.seen_tooltips
+        onActivated:
+            eventList.showFocusedSeenTooltips =
+            ! eventList.showFocusedSeenTooltips
+    }
+
+    HShortcut {
         readonly property var events:
             eventList.selectedCount ?
             eventList.redactableCheckedEvents :
@@ -236,6 +243,8 @@ Rectangle {
 
         property string delegateWithSelectedText: ""
         property string selectedText: ""
+
+        property bool showFocusedSeenTooltips: false
 
         property alias cursorShape: cursorShapeArea.cursorShape
 
