@@ -37,7 +37,8 @@ HRowLayout {
     readonly property string timeText: utils.formatTime(model.date, false)
 
     readonly property string stateText:
-        `<font size=${theme.fontSize.small}px><font ` + (
+    `<a href="#state-text" style="text-decoration: none">` +
+    `<font size=${theme.fontSize.small}px><font ` + (
             model.is_local_echo ?
             `color="${theme.chat.message.localEcho}">&nbsp;⧗` :  // U+29D7
 
@@ -46,7 +47,7 @@ HRowLayout {
             model.read_by_count :  // U+29BF
 
             ">"
-        ) + "</font></font>"
+        ) + "</font></font></a>"
 
     readonly property bool pureMedia: ! contentText && linksRepeater.count
 
@@ -258,6 +259,37 @@ HRowLayout {
             TapHandler {
                 id: textSelectionBlocker
                 acceptedPointerTypes: PointerDevice.Finger | PointerDevice.Pen
+            }
+
+            HToolTip {
+                visible: eventContent.hoveredLink === "#state-text"
+                label.textFormat: HLabel.StyledText
+                text: {
+                    if (! visible) return ""
+
+                    const members =
+                        ModelStore.get(chat.userId, chat.roomId, "members")
+
+                    const readBy = Object.entries(
+                        JSON.parse(model.last_read_by)
+                    ).sort((a, b) => a[1] - b[1])  // sort by values (dates)
+
+                    const lines  = []
+
+                    for (const [userId, epoch] of readBy) {
+                        const member = members.find(userId)
+
+                        const by  = utils.coloredNameHtml(
+                            member ? member.display_name: userId, userId,
+                        )
+                        const at = utils.formatRelativeTime(
+                            new Date(epoch) - model.date,
+                        )
+                        lines.push(qsTr("Seen by %1 %2 after").arg(by).arg(at))
+                    }
+
+                    return lines.join("<br>")
+                }
             }
 
             Rectangle {
