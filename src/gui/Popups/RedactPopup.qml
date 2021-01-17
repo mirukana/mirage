@@ -66,7 +66,8 @@ HFlickableColumnPopup {
         color: theme.colors.warningText
         text:
             onlyOwnMessageWarning ?
-            qsTr("Only your messages can be removed") :
+            qsTr("Only your messages will be removed due this " +
+                 "room's permissions") :
             ""
     }
 
