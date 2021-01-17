@@ -190,7 +190,6 @@
     - Option to export-logout-login-import to fix one-time key problems
   - Cross-signing
 
-- Display read receipts on events (who/how many people have read an event)
 - Fully read markers
 
 - Methods of signing in that aren't handled yet:

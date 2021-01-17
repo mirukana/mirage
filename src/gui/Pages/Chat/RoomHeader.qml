@@ -6,15 +6,16 @@ import QtQuick.Layouts 1.12
 import "../../Base"
 
 Rectangle {
-    readonly property bool showLeftButton:
-        mainUI.mainPane.collapse || mainUI.mainPane.forceCollapse
-
-    readonly property bool showRightButton:
-        chat.roomPane &&
-        (chat.roomPane.collapse || chat.roomPane.forceCollapse)
+    id: root
 
     readonly property bool center:
-        showLeftButton || window.settings.Chat.always_center_header
+        goToMainPaneButton.show || window.settings.Chat.always_center_header
+
+    readonly property HListView eventList: chatPage.eventList.eventList
+    readonly property int selected:
+        eventList.selectedCount === 1 && eventList.selectedText ?
+        0 :
+        eventList.selectedCount
 
     implicitHeight: theme.baseElementsHeight
     color: theme.chat.roomHeader.background
@@ -23,24 +24,20 @@ Rectangle {
         id: row
         anchors.fill: parent
 
-        HButton {
+        RoomHeaderButton {
             id: goToMainPaneButton
+            show: mainUI.mainPane.collapse || mainUI.mainPane.forceCollapse
             padded: false
-            visible: Layout.preferredWidth > 0
             backgroundColor: "transparent"
             icon.name: "go-back-to-main-pane"
             toolTip.text: qsTr("Go back to main pane")
-
             onClicked: mainUI.mainPane.toggleFocus()
 
-            Layout.preferredWidth: showLeftButton ? avatar.width : 0
-            Layout.fillHeight: true
-
-            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+            Layout.preferredWidth: show ? avatar.width : 0
         }
 
         HSpacer {
-            visible: center
+            visible: root.center
         }
 
         HRoomAvatar {
@@ -55,26 +52,34 @@ Rectangle {
         }
 
         HLabel {
-            id: nameLabel
-            text: chat.roomInfo.display_name || qsTr("Empty room")
-            color: theme.chat.roomHeader.name
+            id: mainLabel
 
+            text:
+                root.selected === 0 ?
+                chat.roomInfo.display_name || qsTr("Empty room") :
+                root.selected === 1 ?
+                qsTr("%1 selected message").arg(root.selected) :
+                qsTr("%1 selected messages").arg(root.selected)
+
+            color: theme.chat.roomHeader.name
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
             leftPadding: theme.spacing
             rightPadding: leftPadding
 
+            // FIXME: these dirty manual calculations
             Layout.preferredWidth: Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing -
-                (showLeftButton ? row.spacing : 0) -
-                (showRightButton ? row.spacing : 0) -
                 goToMainPaneButton.width -
                 avatar.width -
                 encryptionStatusButton.width -
+                copyButton.width -
+                removeButton.width -
+                deselectButton.width -
                 goToRoomPaneButton.width
             )
+            Layout.fillWidth: ! topicLabel.text
             Layout.fillHeight: true
 
             HoverHandler { id: nameHover }
@@ -82,28 +87,29 @@ Rectangle {
 
         HLabel {
             id: topicLabel
-            text: chat.roomInfo.topic
+            text: root.selected ? "" : chat.roomInfo.topic
             textFormat: Text.StyledText
             font.pixelSize: theme.fontSize.small
             color: theme.chat.roomHeader.topic
 
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
-            rightPadding: nameLabel.rightPadding
+            rightPadding: mainLabel.rightPadding
 
-            Layout.preferredWidth: Math.min(
+            Layout.preferredWidth: ! text ? 0 : Math.min(
                 implicitWidth,
                 row.width -
-                row.spacing -
-                (showLeftButton ? row.spacing : 0) -
-                (showRightButton ? row.spacing : 0) -
                 goToMainPaneButton.width -
                 avatar.width -
-                nameLabel.width -
+                mainLabel.width -
                 encryptionStatusButton.width -
+                copyButton.width -
+                removeButton.width -
+                deselectButton.width -
                 goToRoomPaneButton.width
             )
-            Layout.fillWidth: ! center
+
+            Layout.fillWidth: text && ! root.center
             Layout.fillHeight: true
 
             HoverHandler { id: topicHover }
@@ -118,7 +124,7 @@ Rectangle {
 
         HToolTip {
             readonly property string name:
-                nameLabel.truncated ?
+                mainLabel.truncated ?
                 (`<b>${chat.roomInfo.display_name}</b>`) : ""
 
             readonly property string topic:
@@ -129,10 +135,10 @@ Rectangle {
             text: name && topic ? (`${name}<br>${topic}`) : (name || topic)
         }
 
-        HButton {
+        RoomHeaderButton {
             id: encryptionStatusButton
+            show: chat.roomInfo.encrypted && ! root.selected
             padded: false
-            visible: Layout.preferredWidth > 0
             backgroundColor: "transparent"
 
             icon.name:
@@ -153,28 +159,74 @@ Rectangle {
 
             onClicked: toolTip.instantToggle()
 
-            Layout.preferredWidth: chat.roomInfo.encrypted ? avatar.width : 0
+            Layout.preferredWidth: show ? avatar.width : 0
             Layout.fillHeight: true
+        }
 
-            Behavior on Layout.preferredWidth { HNumberAnimation {} }
+        RoomHeaderButton {
+            id: copyButton
+            show: root.selected
+            icon.name: "room-header-copy"
+            toolTip.text: qsTr("Copy messages")
+            toolTip.onClosed: toolTip.text = qsTr("Copy messages")
+
+            onClicked: {
+                root.eventList.copySelectedDelegates()
+                toolTip.text = qsTr("Copied messages")
+                toolTip.instantShow(2000)
+            }
+        }
+
+        RoomHeaderButton {
+            id: removeButton
+
+            readonly property var events:
+                root.eventList.redactableCheckedEvents
+
+            show: root.selected
+            enabled: events.length > 0
+            icon.name: "room-header-remove"
+            toolTip.text: qsTr("Remove messages")
+
+            onClicked: utils.makePopup(
+                "Popups/RedactPopup.qml",
+                window,
+                {
+                    preferUserId: chat.userId,
+                    roomId: chat.roomId,
+                    eventSenderAndIds: events.map(ev => [ev.sender_id, ev.id]),
+                    onlyOwnMessageWarning:
+                        ! chat.roomInfo.can_redact_all &&
+                        events.length < root.selected
+                },
+            )
+        }
+
+        RoomHeaderButton {
+            id: deselectButton
+            show: root.selected
+            icon.name: "room-header-deselect"
+            toolTip.text: qsTr("Deselect messages")
+            onClicked: root.eventList.checked = []
         }
 
         HSpacer {
-            visible: center
+            visible: root.center
         }
 
-        HButton {
+        RoomHeaderButton {
             id: goToRoomPaneButton
+            show:
+                chat.roomPane &&
+                (chat.roomPane.collapse || chat.roomPane.forceCollapse)
+
             padded: false
-            visible: Layout.preferredWidth > 0
             backgroundColor: "transparent"
             icon.name: "go-to-room-pane"
             toolTip.text: qsTr("Go to room pane")
-
             onClicked: chat.roomPane.toggleFocus()
 
-            Layout.preferredWidth: showRightButton ? avatar.width : 0
-            Layout.fillHeight: true
+            Layout.preferredWidth: show ? avatar.width : 0
         }
     }
 }
