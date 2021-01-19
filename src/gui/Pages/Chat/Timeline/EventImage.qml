@@ -142,7 +142,7 @@ HMxcImage {
         anchors.bottom: parent.bottom
         text: loader.showDate + loader.showLocalEcho
 
-        textFormat: Text.StyledText
+        textFormat: Text.RichText
         opacity: hover.hovered ? 0 : 1
         visible: opacity > 0
 
