@@ -18,7 +18,9 @@ import pyotherside
 from watchgod import Change, awatch
 
 from .pcn.section import Section
-from .pyotherside_events import LoopException, UserFileChanged
+from .pyotherside_events import (
+    LoopException, Pre070SettingsDetected, UserFileChanged,
+)
 from .theme_parser import convert_to_qml
 from .utils import (
     aiopen, atomic_write, deep_serialize_for_qml, dict_update_recursive,
@@ -394,6 +396,17 @@ class Accounts(ConfigFile, JSONFile):
 
         self.pop(user_id, None)
         self.save()
+
+
+@dataclass
+class Pre070Settings(ConfigFile):
+    """Detect and warn about the presence of a pre-0.7.0 settings.json file."""
+
+    filename: str = "settings.json"
+
+    def __post_init__(self) -> None:
+        if self.path.exists():
+            Pre070SettingsDetected(self.path)
 
 
 @dataclass

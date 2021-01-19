@@ -64,6 +64,12 @@ class LoopException(PyOtherSideEvent):
 
 
 @dataclass
+class Pre070SettingsDetected(PyOtherSideEvent):
+    """Warn that a pre-0.7.0 settings.json file exists."""
+    path: Path = field()
+
+
+@dataclass
 class UserFileChanged(PyOtherSideEvent):
     """Indicate that a config or data file changed on disk."""
 

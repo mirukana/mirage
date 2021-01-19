@@ -61,6 +61,10 @@ QtObject {
         py.showError(type, traceback, "", message)
     }
 
+    function onPre070SettingsDetected(path) {
+        window.makePopup("Popups/Pre070SettingsDetectedPopup.qml", {path})
+    }
+
     function onUserFileChanged(type, newData) {
         if (type === "Theme") {
             window.theme = Qt.createQmlObject(newData, window, "theme")

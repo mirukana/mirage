@@ -145,7 +145,7 @@ class QMLBridge:
         rc = lambda c: asyncio.run_coroutine_threadsafe(c, self._loop)  # noqa
 
         try:
-            from devtools import debug # noqa
+            from devtools import debug  # noqa
             d = debug  # noqa
         except ModuleNotFoundError:
             log.warning("Module python-devtools not found, can't use debug()")

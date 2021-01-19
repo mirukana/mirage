@@ -29,7 +29,9 @@ from .models.model import Model
 from .models.model_store import ModelStore
 from .presence import Presence
 from .sso_server import SSOServer
-from .user_files import Accounts, History, NewTheme, Settings, Theme, UIState
+from .user_files import (
+    Accounts, History, NewTheme, Pre070Settings, Settings, Theme, UIState,
+)
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
@@ -112,6 +114,7 @@ class Backend:
         self.theme          = Theme(self, self.settings.General.theme)
         # self.new_theme      = NewTheme(self, self.settings.General.new_theme)
         self.new_theme      = NewTheme(self, ".new.py")  # TODO
+        Pre070Settings(self)
 
         self.clients: Dict[str, MatrixClient] = {}
 
