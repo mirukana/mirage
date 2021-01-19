@@ -9,9 +9,12 @@
 
 On Linux:
 
-- `$XDG_CONFIG_HOME/mirage` or `~/.config/mirage` for config files
-- `$XDG_DATA_HOME/mirage` or `~/.local/share/mirage` for user data
-- `$XDG_CACHE_HOME/mirage` or `~/.cache/mirage` for cache data
+- `$XDG_CONFIG_HOME/mirage` if the `XDG_CONFIG_HOME` environment variable is 
+  set, else `~/.config/mirage` for config files
+- `$XDG_DATA_HOME/mirage` if that variable is set, else `~/.local/share/mirage`
+  for user data
+- `$XDG_CACHE_HOME/mirage` if that variable is set, else `~/.cache/mirage` 
+  for cache data
 
 For Flatpak installations:
 

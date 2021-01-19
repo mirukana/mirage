@@ -24,7 +24,8 @@ class General:
     # Application theme to use.
     # Can be the name of a built-in theme (Mirage.qpl or Glass.qpl), or
     # the name (including extension) of a file in the user theme folder, which
-    # is "$XDG_DATA_HOME/mirage/themes" or "~/.local/share/mirage/themes".
+    # is "$XDG_DATA_HOME/mirage/themes" if that environment variable is set,
+    # else "~/.local/share/mirage/themes".
     # For Flatpak, it is
     # "~/.var/app/io.github.mirukana.mirage/data/mirage/themes".
     theme: str = "Midnight.qpl"
