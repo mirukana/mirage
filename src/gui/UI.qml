@@ -74,7 +74,7 @@ Item {
         sequences: window.settings.Keys.compact
         onActivated: {
             window.settings.General.compact = ! window.settings.General.compact
-            windowsaveSettings()
+            window.saveSettings()
         }
     }
 
