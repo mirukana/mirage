@@ -25,7 +25,7 @@ Rectangle {
         id: transferList
         anchors.fill: parent
 
-        model: ModelStore.get(chat.roomId, "uploads")
+        model: ModelStore.get(chat.roomId, "transfers")
         delegate: Transfer { width: transferList.width }
     }
 }

@@ -13,19 +13,20 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, DefaultDict, Dict, Optional
 from urllib.parse import urlparse
+from uuid import uuid4
 
 import nio
 from PIL import Image as PILImage
 
-from .utils import Size, atomic_write
+from .models.items import Transfer, TransferStatus
+from .models.model import Model
+from .utils import Size, atomic_write, current_task
 
 if TYPE_CHECKING:
     from .backend import Backend
 
 if sys.version_info < (3, 8):
     import pyfastcopy  # noqa
-
-CryptDict = Optional[Dict[str, Any]]
 
 CONCURRENT_DOWNLOADS_LIMIT                   = asyncio.BoundedSemaphore(8)
 ACCESS_LOCKS: DefaultDict[str, asyncio.Lock] = DefaultDict(asyncio.Lock)
@@ -47,45 +48,35 @@ class MediaCache:
         self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
 
-    async def get_media(
-        self,
-        client_user_id: str,
-        mxc:            str,
-        title:          str,
-        crypt_dict:     CryptDict = None,
-    ) -> Path:
-        """Return `Media.get()`'s result. Intended for QML."""
-
-        return await Media(self, client_user_id,  mxc, title, crypt_dict).get()
+    async def get_media(self, *args) -> Path:
+        """Return `Media(self, ...).get()`'s result. Intended for QML."""
+        return await Media(self, *args).get()
 
 
-    async def get_thumbnail(
-        self,
-        client_user_id: str,
-        mxc:            str,
-        title:          str,
-        width:          int,
-        height:         int,
-        crypt_dict:     CryptDict = None,
-    ) -> Path:
-        """Return `Thumbnail.get()`'s result. Intended for QML."""
-
+    async def get_thumbnail(self, width: float, height: float, *args) -> Path:
+        """Return `Thumbnail(self, ...).get()`'s result. Intended for QML."""
         # QML sometimes pass float sizes, which matrix API doesn't like.
         size = (round(width), round(height))
-
-        thumb = Thumbnail(self, client_user_id, mxc, title, crypt_dict, size)
-        return await thumb.get()
+        return await Thumbnail(
+            self, *args, wanted_size=size,  # type: ignore
+        ).get()
 
 
 @dataclass
 class Media:
-    """A matrix media file."""
+    """A matrix media file that is downloaded or has yet to be.
 
-    cache:          "MediaCache" = field()
-    client_user_id: str          = field()
-    mxc:            str          = field()
-    title:          str          = field()
-    crypt_dict:     CryptDict    = field(repr=False)
+    If the `room_id` is not set, no `Transfer` model item will be registered
+    while this media is being downloaded.
+    """
+
+    cache:          "MediaCache"             = field()
+    client_user_id: str                      = field()
+    mxc:            str                      = field()
+    title:          str                      = field()
+    room_id:        Optional[str]            = None
+    filesize:       Optional[int]            = None
+    crypt_dict:     Optional[Dict[str, Any]] = field(default=None, repr=False)
 
 
     def __post_init__(self) -> None:
@@ -155,12 +146,39 @@ class Media:
     async def _get_remote_data(self) -> bytes:
         """Return the file's data from the matrix server, decrypt if needed."""
 
-        parsed = urlparse(self.mxc)
+        client = self.cache.backend.clients[self.client_user_id]
 
-        resp = await self.cache.backend.clients[self.client_user_id].download(
-            server_name = parsed.netloc,
-            media_id    = parsed.path.lstrip("/"),
-        )
+        transfer: Optional[Transfer] = None
+        model:    Optional[Model]    = None
+
+        if self.room_id:
+            model    = self.cache.backend.models[self.room_id, "transfers"]
+            transfer = Transfer(
+                id         = uuid4(),
+                is_upload  = False,
+                filepath   = self.local_path,
+                total_size = self.filesize or 0,
+                status     = TransferStatus.Transfering,
+            )
+            assert model is not None
+            client.transfer_tasks[transfer.id] = current_task()  # type: ignore
+            model[str(transfer.id)]            = transfer
+
+        try:
+            parsed = urlparse(self.mxc)
+            resp   = await client.download(
+                server_name = parsed.netloc,
+                media_id    = parsed.path.lstrip("/"),
+            )
+        except (nio.TransferCancelledError, asyncio.CancelledError):
+            if transfer and model:
+                del model[str(transfer.id)]
+                del client.transfer_tasks[transfer.id]
+            raise
+
+        if transfer and model:
+            del model[str(transfer.id)]
+            del client.transfer_tasks[transfer.id]
 
         return await self._decrypt(resp.body)
 
@@ -196,8 +214,13 @@ class Media:
         """Copy an existing file to cache and return a `Media` for it."""
 
         media = cls(
-            cache, client_user_id, mxc, existing.name, {}, **kwargs,
-        )  # type: ignore
+            cache          = cache,
+            client_user_id = client_user_id,
+            mxc            = mxc,
+            title          = existing.name,
+            filesize       = existing.stat().st_size,
+            **kwargs,
+        )
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
@@ -221,8 +244,8 @@ class Media:
         """Create a cached file from bytes data and return a `Media` for it."""
 
         media = cls(
-            cache, client_user_id, mxc, filename, {}, **kwargs,
-        )  # type: ignore
+            cache, client_user_id, mxc, filename, filesize=len(data), **kwargs,
+        )
         media.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not media.local_path.exists() or overwrite:
@@ -237,14 +260,9 @@ class Media:
 
 @dataclass
 class Thumbnail(Media):
-    """The thumbnail of a matrix media, which is a media itself."""
+    """A matrix media's thumbnail, which is downloaded or has yet to be."""
 
-    cache:          "MediaCache" = field()
-    client_user_id: str          = field()
-    mxc:            str          = field()
-    title:          str          = field()
-    crypt_dict:     CryptDict    = field(repr=False)
-    wanted_size:    Size         = field()
+    wanted_size: Size = (800, 600)
 
     server_size: Optional[Size] = field(init=False, repr=False, default=None)
 

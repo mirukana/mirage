@@ -9,7 +9,6 @@ import io
 import logging as log
 import platform
 import re
-import sys
 import textwrap
 import traceback
 from contextlib import suppress
@@ -42,8 +41,8 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, Room, TypeSpecifier, Upload,
-    UploadStatus,
+    ZERO_DATE, Account, Event, Member, Room, Transfer, TransferStatus,
+    TypeSpecifier,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -54,11 +53,6 @@ from .pyotherside_events import (
 
 if TYPE_CHECKING:
     from .backend import Backend
-
-if sys.version_info >= (3, 7):
-    current_task = asyncio.current_task
-else:
-    current_task = asyncio.Task.current_task
 
 CryptDict    = Dict[str, Any]
 PathCallable = Union[
@@ -190,8 +184,8 @@ class MatrixClient(nio.AsyncClient):
         self.sync_task:          Optional[asyncio.Future] = None
         self.start_task:         Optional[asyncio.Future] = None
 
-        self.upload_monitors:    Dict[UUID, nio.TransferMonitor] = {}
-        self.upload_tasks:       Dict[UUID, asyncio.Task]        = {}
+        self.transfer_monitors:  Dict[UUID, nio.TransferMonitor] = {}
+        self.transfer_tasks:     Dict[UUID, asyncio.Task]        = {}
         self.send_message_tasks: Dict[UUID, asyncio.Task]        = {}
 
         self._presence:             str                     = ""
@@ -628,23 +622,23 @@ class MatrixClient(nio.AsyncClient):
         await self._send_message(room_id, content, tx_id)
 
 
-    async def toggle_pause_upload(
+    async def toggle_pause_transfer(
         self, room_id: str, uuid: Union[str, UUID],
     ) -> None:
         if isinstance(uuid, str):
             uuid = UUID(uuid)
 
-        pause = not self.upload_monitors[uuid].pause
+        pause = not self.transfer_monitors[uuid].pause
 
-        self.upload_monitors[uuid].pause                  = pause
-        self.models[room_id, "uploads"][str(uuid)].paused = pause
+        self.transfer_monitors[uuid].pause                  = pause
+        self.models[room_id, "transfers"][str(uuid)].paused = pause
 
 
-    async def cancel_upload(self, uuid: Union[str, UUID]) -> None:
+    async def cancel_transfer(self, uuid: Union[str, UUID]) -> None:
         if isinstance(uuid, str):
             uuid = UUID(uuid)
 
-        self.upload_tasks[uuid].cancel()
+        self.transfer_tasks[uuid].cancel()
 
 
     async def send_clipboard_image(
@@ -691,9 +685,9 @@ class MatrixClient(nio.AsyncClient):
         try:
             await self._send_file(item_uuid, room_id, path, reply_to_event_id)
         except (nio.TransferCancelledError, asyncio.CancelledError):
-            self.upload_monitors.pop(item_uuid, None)
-            self.upload_tasks.pop(item_uuid, None)
-            self.models[room_id, "uploads"].pop(str(item_uuid), None)
+            self.transfer_monitors.pop(item_uuid, None)
+            self.transfer_tasks.pop(item_uuid, None)
+            self.models[room_id, "transfers"].pop(str(item_uuid), None)
 
 
     async def _send_file(
@@ -708,10 +702,10 @@ class MatrixClient(nio.AsyncClient):
         # TODO: this function is way too complex, and most of it should be
         # refactored into nio.
 
-        self.upload_tasks[item_uuid]    = current_task()  # type: ignore
+        self.transfer_tasks[item_uuid] = utils.current_task()  # type: ignore
 
-        upload_item = Upload(item_uuid)
-        self.models[room_id, "uploads"][str(item_uuid)] = upload_item
+        transfer = Transfer(item_uuid, is_upload=True)
+        self.models[room_id, "transfers"][str(item_uuid)] = transfer
 
         transaction_id   = uuid4()
         path             = Path(await path() if callable(path) else path)
@@ -726,18 +720,18 @@ class MatrixClient(nio.AsyncClient):
             # This error will be caught again by the try block later below
             size = 0
 
-        upload_item.set_fields(
-            status=UploadStatus.Uploading, filepath=path, total_size=size,
+        transfer.set_fields(
+            status=TransferStatus.Transfering, filepath=path, total_size=size,
         )
 
         monitor = nio.TransferMonitor(size)
-        self.upload_monitors[item_uuid] = monitor
+        self.transfer_monitors[item_uuid] = monitor
 
         def on_transferred(transferred: int) -> None:
-            upload_item.uploaded  = transferred
+            transfer.transferred = transferred
 
         def on_speed_changed(speed: float) -> None:
-            upload_item.set_fields(
+            transfer.set_fields(
                 speed     = speed,
                 time_left = monitor.remaining_time or timedelta(0),
             )
@@ -761,8 +755,8 @@ class MatrixClient(nio.AsyncClient):
                 raise nio.TransferCancelledError()
 
         except (MatrixError, OSError) as err:
-            upload_item.set_fields(
-                status     = UploadStatus.Error,
+            transfer.set_fields(
+                status     = TransferStatus.Error,
                 error      = type(err),
                 error_args = err.args,
             )
@@ -771,8 +765,8 @@ class MatrixClient(nio.AsyncClient):
             while True:
                 await asyncio.sleep(0.1)
 
-        upload_item.status = UploadStatus.Caching
-        local_media        = await Media.from_existing_file(
+        transfer.status = TransferStatus.Caching
+        local_media     = await Media.from_existing_file(
             self.backend.media_cache, self.user_id, url, path,
         )
 
@@ -787,7 +781,7 @@ class MatrixClient(nio.AsyncClient):
             "body": path.name,
             "info": {
                 "mimetype": mime,
-                "size":     upload_item.total_size,
+                "size":     transfer.total_size,
             },
         }
 
@@ -822,20 +816,20 @@ class MatrixClient(nio.AsyncClient):
                 thumb_ext  = "png" if thumb_info.mime == "image/png" else "jpg"
                 thumb_name = f"{path.stem}_thumbnail.{thumb_ext}"
 
-                upload_item.set_fields(
-                    status     = UploadStatus.Uploading,
+                transfer.set_fields(
+                    status     = TransferStatus.Transfering,
                     filepath   = Path(thumb_name),
                     total_size = len(thumb_data),
                 )
 
                 try:
-                    upload_item.total_size = thumb_info.size
+                    transfer.total_size = thumb_info.size
 
                     monitor = nio.TransferMonitor(thumb_info.size)
                     monitor.on_transferred = on_transferred
                     monitor.on_speed_changed = on_speed_changed
 
-                    self.upload_monitors[item_uuid] = monitor
+                    self.transfer_monitors[item_uuid] = monitor
 
                     thumb_url, _, thumb_crypt_dict = await self.upload(
                         lambda *_: thumb_data,
@@ -851,7 +845,7 @@ class MatrixClient(nio.AsyncClient):
                 except MatrixError as err:
                     log.warning(f"Failed uploading thumbnail {path}: {err}")
                 else:
-                    upload_item.status = UploadStatus.Caching
+                    transfer.status = TransferStatus.Caching
 
                     await Thumbnail.from_bytes(
                         self.backend.media_cache,
@@ -907,9 +901,9 @@ class MatrixClient(nio.AsyncClient):
             content["msgtype"]  = "m.file"
             content["filename"] = path.name
 
-        del self.upload_monitors[item_uuid]
-        del self.upload_tasks[item_uuid]
-        del self.models[room_id, "uploads"][str(upload_item.id)]
+        del self.transfer_monitors[item_uuid]
+        del self.transfer_tasks[item_uuid]
+        del self.models[room_id, "transfers"][str(transfer.id)]
 
         if reply_to_event_id:
             await self.send_text(
@@ -1004,7 +998,7 @@ class MatrixClient(nio.AsyncClient):
         """Send a message event with `content` dict to a room."""
 
         self.send_message_tasks[transaction_id] = \
-            current_task()  # type: ignore
+            utils.current_task()  # type: ignore
 
         async with self.backend.send_locks[room_id]:
             await self.room_send(
@@ -2068,13 +2062,13 @@ class MatrixClient(nio.AsyncClient):
 
         avatar_size = (48, 48)
 
-        avatar_path = await self.backend.media_cache.get_thumbnail(
+        avatar_path = await Thumbnail(
+            cache          = self.backend.media_cache,
             client_user_id = self.user_id,
             mxc            = mxc,
             title          = f"user_{user_id}.notification",
-            width          = avatar_size[0],
-            height         = avatar_size[1],
-        )
+            wanted_size    = avatar_size,
+        ).get()
 
         image_data = None
         create     = False

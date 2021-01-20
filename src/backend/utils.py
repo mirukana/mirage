@@ -38,8 +38,10 @@ from .pcn.section import Section
 
 if sys.version_info >= (3, 7):
     from contextlib import asynccontextmanager
+    current_task = asyncio.current_task
 else:
     from async_generator import asynccontextmanager
+    current_task = asyncio.Task.current_task
 
 Size       = Tuple[int, int]
 BytesOrPIL = Union[bytes, PILImage.Image]

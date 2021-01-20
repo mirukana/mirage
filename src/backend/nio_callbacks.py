@@ -197,6 +197,8 @@ class NioCallbacks:
                 client_user_id = self.user_id,
                 mxc            = ev.url,
                 title          = ev.body,
+                room_id        = room.room_id,
+                filesize       = info.get("size") or 0,
                 crypt_dict     = media_crypt_dict,
             ).get_local()
         except FileNotFoundError:

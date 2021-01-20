@@ -9,6 +9,9 @@ HImage {
     property string clientUserId
     property string mxc
     property string title
+    property var roomId: undefined  // undefined or string
+    property var fileSize: undefined  // undefined or int (bytes)
+
     property string sourceOverride: ""
     property bool thumbnail: true
     property var cryptDict: ({})
@@ -39,10 +42,10 @@ HImage {
         }
 
         const method = image.thumbnail ? "get_thumbnail" : "get_media"
-        const args   =
-            image.thumbnail ?
-            [clientUserId, image.mxc, image.title, w, h, cryptDict] :
-            [clientUserId, image.mxc, image.title, cryptDict]
+        let   args   = [
+            clientUserId, image.mxc, image.title, roomId, fileSize, cryptDict,
+        ]
+        if (image.thumbnail) args = [w, h, ...args]
 
         getFutureId = py.callCoro("media_cache." + method, args, path => {
                 if (! image) return

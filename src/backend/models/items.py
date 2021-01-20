@@ -286,37 +286,38 @@ class Member(ModelItem):
         )
 
 
-class UploadStatus(AutoStrEnum):
+class TransferStatus(AutoStrEnum):
     """Enum describing the status of an upload operation."""
 
-    Preparing = auto()
-    Uploading = auto()
-    Caching   = auto()
-    Error     = auto()
+    Preparing   = auto()
+    Transfering = auto()
+    Caching     = auto()
+    Error       = auto()
 
 
 @dataclass(eq=False)
-class Upload(ModelItem):
-    """Represent a running or failed file upload operation."""
+class Transfer(ModelItem):
+    """Represent a running or failed file upload/download operation."""
 
-    id:       UUID = field()
-    filepath: Path = Path("-")
+    id:        UUID = field()
+    is_upload: bool = field()
+    filepath:  Path = Path("-")
 
-    total_size: int       = 0
-    uploaded:   int       = 0
-    speed:      float     = 0
-    time_left:  timedelta = timedelta(0)
-    paused:     bool      = False
+    total_size:  int       = 0
+    transferred: int       = 0
+    speed:       float     = 0
+    time_left:   timedelta = timedelta(0)
+    paused:      bool      = False
 
-    status:     UploadStatus          = UploadStatus.Preparing
+    status:     TransferStatus        = TransferStatus.Preparing
     error:      OptionalExceptionType = type(None)
     error_args: Tuple[Any, ...]       = ()
 
     start_date: datetime = field(init=False, default_factory=datetime.now)
 
 
-    def __lt__(self, other: "Upload") -> bool:
-        """Sort by the start date, from newest upload to oldest."""
+    def __lt__(self, other: "Transfer") -> bool:
+        """Sort by the start date, from newest transfer to oldest."""
 
         return (self.start_date, self.id) > (other.start_date, other.id)
 

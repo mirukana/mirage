@@ -489,19 +489,16 @@ Rectangle {
                 return
             }
 
-            print("Downloading " + event.media_url + " ...")
-
             const args = [
                 chat.userId,
                 event.media_url,
                 event.media_title,
+                chat.roomId,
+                event.media_size,
                 JSON.parse(event.media_crypt_dict),
             ]
 
-            py.callCoro("media_cache.get_media", args, path => {
-                print("Done: " + path)
-                callback(path)
-            })
+            py.callCoro("media_cache.get_media", args, callback)
         }
 
         function openMediaExternally(event) {

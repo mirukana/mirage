@@ -68,8 +68,8 @@ class Backend:
 
             - `("<user_id>", "rooms")`: rooms our account `user_id` is part of;
 
-            - `("<user_id>", "uploads")`: ongoing or failed file uploads for
-              our account `user_id`;
+            - `("<user_id>", "transfers")`: ongoing or failed file
+              uploads/downloads for our account `user_id`;
 
             - `("<user_id>", "<room_id>", "members")`: members in the room
               `room_id` that our account `user_id` is part of;
@@ -322,7 +322,7 @@ class Backend:
 
             self.models["accounts"].pop(user_id, None)
             self.models["matching_accounts"].pop(user_id, None)
-            self.models[user_id, "uploads"].clear()
+            self.models[user_id, "transfers"].clear()
 
             for room_id in self.models[user_id, "rooms"]:
                 self.models["all_rooms"].pop(room_id, None)

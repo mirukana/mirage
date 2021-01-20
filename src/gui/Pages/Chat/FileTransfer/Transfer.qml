@@ -12,7 +12,7 @@ HColumnLayout {
     property bool cancelPending: false
 
     property int msLeft: model.time_left
-    property int uploaded: model.uploaded
+    property int transferred: model.transferred
     readonly property int speed: model.speed
     readonly property int totalSize: model.total_size
     readonly property string status: model.status
@@ -21,12 +21,12 @@ HColumnLayout {
     function cancel() {
         cancelPending = true
         // Python will delete this model item on cancel
-        py.callClientCoro(chat.userId, "cancel_upload", [model.id])
+        py.callClientCoro(chat.userId, "cancel_transfer", [model.id])
     }
 
     function toggle_pause() {
         py.callClientCoro(
-            chat.userId, "toggle_pause_upload", [chat.roomId, model.id],
+            chat.userId, "toggle_pause_transfer", [chat.roomId, model.id],
         )
     }
 
@@ -36,7 +36,7 @@ HColumnLayout {
 
     HRowLayout {
         HIcon {
-            svgName: "uploading"
+            svgName: model.is_upload ? "uploading" : "downloading"
             colorize:
                 cancelPending || transfer.status === "Error" ?
                 theme.colors.negativeBackground :
@@ -70,7 +70,7 @@ HColumnLayout {
                 status === "Preparing" ?
                 qsTr("Preparing file...") :
 
-                status === "Uploading" ?
+                status === "Transfering" ?
                 fileName :
 
                 status === "Caching" ?
@@ -120,8 +120,12 @@ HColumnLayout {
 
                 speed ? qsTr("%1/s").arg(CppUtils.formattedBytes(speed)) : "",
 
-                qsTr("%1/%2").arg(CppUtils.formattedBytes(uploaded))
-                             .arg(CppUtils.formattedBytes(totalSize)),
+                transferred && totalSize ?
+                qsTr("%1/%2").arg(CppUtils.formattedBytes(transferred))
+                             .arg(CppUtils.formattedBytes(totalSize)) :
+                transferred || totalSize ?
+                CppUtils.formattedBytes(transferred || totalSize) :
+                "",
             ]
 
             HLabel {
@@ -131,7 +135,7 @@ HColumnLayout {
                 rightPadding: leftPadding
 
                 Layout.preferredWidth:
-                    status === "Uploading" ? implicitWidth : 0
+                    status === "Transfering" ? implicitWidth : 0
 
                 Behavior on Layout.preferredWidth { HNumberAnimation {} }
             }
@@ -142,7 +146,7 @@ HColumnLayout {
             padded: false
 
             icon.name: transfer.paused ?
-                       "upload-resume" : "upload-pause"
+                       "transfer-resume" : "transfer-pause"
 
             icon.color: transfer.paused ?
                         theme.colors.positiveBackground :
@@ -153,8 +157,9 @@ HColumnLayout {
 
             onClicked: transfer.toggle_pause()
 
+            // TODO: pausing downloads
             Layout.preferredWidth:
-                status === "Uploading" ?
+                status === "Transfering" && model.is_upload ?
                 theme.baseElementsHeight : 0
 
             Layout.fillHeight: true
@@ -163,7 +168,7 @@ HColumnLayout {
         }
 
         HButton {
-            icon.name: "upload-cancel"
+            icon.name: "transfer-cancel"
             icon.color: theme.colors.negativeBackground
             onClicked: transfer.cancel()
             padded: false
@@ -183,8 +188,8 @@ HColumnLayout {
     HProgressBar {
         id: progressBar
         visible: Layout.maximumHeight !== 0
-        indeterminate: status !== "Uploading"
-        value: uploaded
+        indeterminate: status !== "Transfering" || ! totalSize || ! transferred
+        value: transferred
         to: totalSize
 
         // TODO: bake this in hprogressbar
