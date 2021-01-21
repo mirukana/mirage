@@ -83,8 +83,8 @@ package on your machine.
 #### Arch Linux
 
 Available on the AUR:
-- [release](https://aur.archlinux.org/packages/matrix-mirage-git/)
-- [git master](https://aur.archlinux.org/packages/matrix-mirage/)
+- [release](https://aur.archlinux.org/packages/matrix-mirage/)
+- [git master](https://aur.archlinux.org/packages/matrix-mirage-git/)
 
 Using a AUR helper to install it,
 in this example [yay](https://github.com/Jguer/yay) for the release version:
