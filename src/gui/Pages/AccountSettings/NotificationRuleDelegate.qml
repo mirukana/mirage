@@ -118,7 +118,7 @@ HTile {
             }
 
             NotificationRuleButton {
-                enabled: notifyButton.on
+                requiresOn: notifyButton
                 toggles: "highlight"
 
                 contentItem: MessageIndicator {
@@ -135,11 +135,13 @@ HTile {
             }
 
             NotificationRuleButton {
+                requiresOn: notifyButton
                 icon.name: "pushrule-action-bubble"
                 toggles: "bubble"
             }
 
             NotificationRuleButton {
+                requiresOn: notifyButton
                 icon.name: "pushrule-action-sound"
                 toggles: "sound"
                 nextValue:
@@ -150,6 +152,7 @@ HTile {
             }
 
             NotificationRuleButton {
+                requiresOn: notifyButton
                 icon.name: "pushrule-action-urgency-hint"
                 toggles: "urgency_hint"
             }

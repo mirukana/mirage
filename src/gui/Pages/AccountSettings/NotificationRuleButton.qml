@@ -6,8 +6,9 @@ import "../../Base"
 HButton {
     property string toggles: ""
     property var nextValue: ! on
+    property HButton requiresOn: null
 
-    readonly property bool on:
+    readonly property bool on: (requiresOn === null || requiresOn.on) && (
         toggles && page.pendingEdits[model.id] &&
         toggles in page.pendingEdits[model.id] ?
         Boolean(page.pendingEdits[model.id][toggles]) :
@@ -16,13 +17,20 @@ HButton {
         Boolean(model[toggles]) :
 
         true
-
+    )
 
     opacity: on ? 1 : theme.disabledElementsOpacity
     hoverEnabled: true
     backgroundColor: "transparent"
 
     onClicked: {
+        if (requiresOn !== null && ! requiresOn.on) {
+            requiresOn.clicked()
+            print(on, clicked)
+            if (! on) clicked()
+            return
+        }
+
         if (! toggles) return
 
         if (! (model.id in page.pendingEdits)) page.pendingEdits[model.id] = {}
