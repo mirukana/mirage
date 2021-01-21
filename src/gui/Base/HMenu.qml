@@ -37,6 +37,7 @@ Menu {
         color: theme.controls.menu.background
         border.color: theme.controls.menu.border
         border.width: theme.controls.menu.borderWidth
+        radius: theme.radius
 
         // Workaround for this: when opening menu at mouse position,
         // cursor will be in menu's border which doesn't handle clicks
