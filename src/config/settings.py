@@ -74,8 +74,13 @@ class RoomList:
     min_width: int = 144
 
     # Sort rooms in alphabetical order instead of recent activity.
-    # The application must be restarted to apply changes to this setting.
+    # The application must be restarted to apply changes for this setting.
     lexical_sort: bool = False
+
+    # When any event is received in a room, mark the room as unread with a [!],
+    # regardless of notification push rules. This does not take into account
+    # anything received while the client is not running.
+    local_unread_markers: bool = False
 
     # When clicking on a room, recenter the room list on that room.
     click_centers: bool = False

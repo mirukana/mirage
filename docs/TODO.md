@@ -8,9 +8,6 @@
 - profiles missing in notifications
 - option to use plaintext notifications
 - Notification urgency level (plyer)?
-- Make local unread counter an optional turned off by default
-
-- Implement fallback QML notifications, usable if dbus isn't available
 - annoying tooltips when menu open
 
 - add http_proxy support

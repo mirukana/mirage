@@ -66,7 +66,7 @@ HTile {
                         (model.bookmarked ? "\u2665 " : "") +
                         (model.display_name || qsTr("Empty room"))
                     color:
-                        model.local_unreads ?
+                        model.unreads || model.local_unreads ?
                         theme.mainPane.listView.room.unreadName :
                         theme.mainPane.listView.room.name
                 }

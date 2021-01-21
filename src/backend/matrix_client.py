@@ -2246,8 +2246,10 @@ class MatrixClient(nio.AsyncClient):
             await self.update_account_unread_counts()
             return item
 
-        self.models[self.user_id, "rooms"][room.room_id].local_unreads = True
-        await self.update_account_unread_counts()
+        if self.backend.settings.RoomList.local_unread_markers:
+            room_item = self.models[self.user_id, "rooms"][room.room_id]
+            room_item.local_unreads = True
+            await self.update_account_unread_counts()
 
         # Alerts & notifications
 
