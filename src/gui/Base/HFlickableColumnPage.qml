@@ -29,6 +29,7 @@ HPage {
         anchors.fill: parent
         contentWidth: parent.width
         contentHeight: column.implicitHeight
+        flickableDirection: Flickable.VerticalFlick
         clip: true
 
         topMargin: theme.spacing
