@@ -233,7 +233,7 @@ sudo apt install qt5-default qt5-qmake qt5-image-formats-plugins \
                  qtquickcontrols2-5-dev \
                  libx11-dev libxss-dev \
                  python3-dev python3-pip \
-                 qml-module:io-thp-pyotherside \
+                 qml-module-io-thp-pyotherside \
                  build-essential git cmake \
                  libjpeg-turbo8-dev zlib1g-dev libtiff5-dev libwebp-dev \
                  libopenjp2-7-dev libmediainfo-dev
