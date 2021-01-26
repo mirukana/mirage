@@ -3,7 +3,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
-import "../Layouts"
 
 RadioButton {
     id: button
@@ -69,6 +68,7 @@ RadioButton {
 
             // Set a width on RadioButton for wrapping to work,
             // e.g. by using Layout.fillWidth
+            wrapMode: HLabel.Wrap
             leftPadding: button.indicator.width + button.spacing
             verticalAlignment: Text.AlignVCenter
 
@@ -81,6 +81,7 @@ RadioButton {
             color: theme.controls.checkBox.subtitle
             font.pixelSize: theme.fontSize.small
 
+            wrapMode: mainText.wrapMode
             leftPadding: mainText.leftPadding
             verticalAlignment: mainText.verticalAlignment
 
