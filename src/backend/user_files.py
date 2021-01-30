@@ -519,7 +519,10 @@ class Theme(UserDataFile):
 
     @property
     def default_data(self) -> str:
-        path = f"src/themes/{self.filename}"
+        if self.filename in ("Midnight.qpl", "Glass.qpl"):
+            path = f"src/themes/{self.filename}"
+        else:
+            path = "src/themes/Midnight.qpl"
 
         try:
             byte_content = pyotherside.qrc_get_file_contents(path)
