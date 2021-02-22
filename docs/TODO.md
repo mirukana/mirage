@@ -8,7 +8,6 @@
 - config & keybind for global rule disabling
 - quick settings
 - import/export/json edit rules?
-- add missing license headers to qml files
 - fix flickable popups can't be flicked by keyboard
 - room selector for room rules
 - validate json for unknown action/condition
