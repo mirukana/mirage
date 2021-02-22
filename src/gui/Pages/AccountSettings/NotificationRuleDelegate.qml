@@ -95,11 +95,13 @@ HTile {
 
             NotificationRuleButton {
                 icon.name: "pushrule-edit"
-                onClicked: window.makePopup(
-                    "Popups/PushRuleSettingsPopup/PushRuleSettingsPopup.qml",
-                    {userId: page.userId, rule: model},
-                )
+                onClicked: root.clicked()
             }
         }
     }
+
+    onClicked: window.makePopup(
+        "Popups/PushRuleSettingsPopup/PushRuleSettingsPopup.qml",
+        {userId: page.userId, rule: model},
+    )
 }

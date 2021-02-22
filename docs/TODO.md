@@ -1,6 +1,5 @@
 # TODO
 
-- right click on rule
 - combo box custom item
 - explain pattern
 - fix spinbox buttons
