@@ -1903,6 +1903,15 @@ class MatrixClient(nio.AsyncClient):
         await asyncio.gather(*coros)
 
 
+    async def remove_pushrule(
+        self, kind: Union[str, nio.PushRuleKind], rule_id: str,
+    ) -> None:
+        """Remove an existing non-builtin pushrule."""
+
+        kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
+        await self.delete_pushrule("global", kind, rule_id)
+
+
     # Functions to register/modify data into models
 
     async def update_account_unread_counts(self) -> None:

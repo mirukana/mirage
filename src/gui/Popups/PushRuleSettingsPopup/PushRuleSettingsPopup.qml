@@ -49,6 +49,11 @@ HFlickableColumnPopup {
         py.callClientCoro(userId, "edit_pushrule", args, root.close)
     }
 
+    function remove() {
+        const args = [rule.kind, rule.rule_id]
+        py.callClientCoro(userId, "remove_pushrule", args, root.close)
+    }
+
     page.implicitWidth: Math.min(maximumPreferredWidth, 550 * theme.uiScale)
 
     page.footer: AutoDirectionLayout {
@@ -67,6 +72,7 @@ HFlickableColumnPopup {
             icon.name: "pushrule-remove"
             text: qsTr("Remove rule")
             enabled: ! root.rule.default
+            onClicked: root.remove()
         }
     }
 

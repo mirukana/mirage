@@ -1,6 +1,5 @@
 # TODO
 
-- push popup cancel & remove
 - right click on rule
 - combo box custom item
 - explain pattern
