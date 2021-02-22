@@ -41,8 +41,8 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, PushRule, Room,
-    Transfer, TransferStatus, TypeSpecifier,
+    ZERO_DATE, Account, Event, Member, PushRule, Room, Transfer,
+    TransferStatus, TypeSpecifier,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -54,8 +54,10 @@ from .pyotherside_events import (
 if TYPE_CHECKING:
     from .backend import Backend
 
-CryptDict    = Dict[str, Any]
-PathCallable = Union[
+PushAction    = Union[Dict[str, Any], nio.PushAction]
+PushCondition = Union[Dict[str, Any], nio.PushCondition]
+CryptDict     = Dict[str, Any]
+PathCallable  = Union[
     str, Path, Callable[[], Coroutine[None, None, Union[str, Path]]],
 ]
 
@@ -1780,6 +1782,79 @@ class MatrixClient(nio.AsyncClient):
             raise MatrixUnauthorized()
 
 
+    async def edit_pushrule(
+        self,
+        kind:                Union[nio.PushRuleKind, str],
+        rule_id:             str,
+        old_kind:            Union[None, nio.PushRuleKind, str] = None,
+        old_rule_id:         Optional[str]                      = None,
+        move_before_rule_id: Optional[str]                      = None,
+        move_after_rule_id:  Optional[str]                      = None,
+        enable:              Optional[bool]                     = None,
+        conditions:          Optional[List[PushCondition]]      = None,
+        pattern:             Optional[str]                      = None,
+        actions:             Optional[List[PushAction]]         = None,
+    ) -> None:
+        """Create or edit an existing non-builtin pushrule."""
+
+        # Convert arguments that were passed as basic types (usually from QML)
+
+        if isinstance(old_kind, str):
+            old_kind = nio.PushRuleKind[old_kind]
+
+        kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
+
+        conditions = [
+            nio.PushCondition.from_dict(c) if isinstance(c, dict) else c
+            for c in conditions
+        ] if isinstance(conditions, list) else None
+
+        actions = [
+            nio.PushAction.from_dict(a) if isinstance(a, dict) else a
+            for a in actions
+        ] if isinstance(actions, list) else None
+
+        # Now edit the rule
+
+        old: Optional[PushRule] = None
+        key                     = (old_kind.value, old_rule_id)
+
+        if None not in key:
+            old = self.models[self.user_id, "pushrules"].get(key)
+
+        kind_change    = old_kind is not None and old_kind != kind
+        rule_id_change = old_rule_id is not None and old_rule_id != rule_id
+        explicit_move  = move_before_rule_id or move_after_rule_id
+
+        if old and not kind_change and not explicit_move:
+            # If user edits a rule without specifying a new position,
+            # the server would move it to the first position
+            move_after_rule_id = old.rule_id
+
+        if old and actions is None:
+            # Matrix API forces us to always pass a non-null actions paramater
+            actions = [nio.PushAction.from_dict(a) for a in old.actions]
+
+        await self.set_pushrule(
+            scope      = "global",
+            kind       = kind,
+            rule_id    = rule_id,
+            before     = move_before_rule_id,
+            after      = move_after_rule_id,
+            actions    = actions,
+            conditions = conditions,
+            pattern    = pattern,
+        )
+
+        # If we're editing an existing rule but its kind or ID is changed,
+        # set_pushrule creates a new rule, thus we must delete the old one
+        if kind_change or rule_id_change:
+            await self.delete_pushrule("global", old_kind, old_rule_id)
+
+        if enable is not None and (old.enabled if old else True) != enable:
+            await self.enable_pushrule("global", kind, rule_id, enable)
+
+
     async def tweak_pushrule(
         self,
         kind:         Union[nio.PushRuleKind, str],
@@ -1790,6 +1865,7 @@ class MatrixClient(nio.AsyncClient):
         sound:        Optional[str]  = None,
         urgency_hint: Optional[bool] = None,
     ) -> None:
+        """Set an existing pushrule's actions. Works for builtin rules."""
 
         kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
 

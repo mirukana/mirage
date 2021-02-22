@@ -1,5 +1,21 @@
 # TODO
 
+- push popup cancel & remove
+- right click on rule
+- combo box custom item
+- explain pattern
+- fix spinbox buttons
+- way to add new rule 
+- quick room & sender rule changes
+- config & keybind for global rule disabling
+- quick settings
+- import/export/json edit rules?
+- add missing license headers to qml files
+- fix flickable popups can't be flicked by keyboard
+- room selector for room rules
+- validate json for unknown action/condition
+- seen tooltips can't be shown on image hover
+
 - PCN docstrings 
 - PCN error handling
 - Change docs linking to dev branch back to master 

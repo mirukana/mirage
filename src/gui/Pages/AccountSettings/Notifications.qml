@@ -73,11 +73,11 @@ HListView {
         padding: theme.spacing
         font.pixelSize: theme.fontSize.big
         text:
-            section === "override" ? qsTr("High-priority general rules") :
-            section === "content" ? qsTr("Message text rules") :
+            section === "override" ? qsTr("High priority general rules") :
+            section === "content" ? qsTr("Message content rules") :
             section === "room" ? qsTr("Room rules") :
             section === "sender" ? qsTr("Sender rules") :
-            qsTr("General rules")
+            qsTr("Low priority general rules")
     }
 
     delegate: NotificationRuleDelegate {

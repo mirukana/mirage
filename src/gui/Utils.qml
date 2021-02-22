@@ -535,6 +535,7 @@ QtObject {
         return {word, start, end: seen}
     }
 
+
     function getClassPathRegex(obj) {
         const regexParts = []
         let parent       = obj
@@ -556,5 +557,80 @@ QtObject {
         }
 
         return new RegExp("^" + regexParts.reverse().join("") + "$")
+    }
+
+
+    function formatPushRuleName(userId, rule) {
+        // rule: item from ModelStore.get(<userId>, "pushrules")
+
+        const roomColor = theme.colors.accentText
+        const room      = ModelStore.get(userId, "rooms").find(rule.rule_id)
+
+        return (
+            rule.rule_id === ".m.rule.master" ?
+            qsTr("Any message") :
+
+            rule.rule_id === ".m.rule.suppress_notices" ?
+            qsTr("Messages sent by bots") :
+
+            rule.rule_id === ".m.rule.invite_for_me" ?
+            qsTr("Received room invites") :
+
+            rule.rule_id === ".m.rule.member_event" ?
+            qsTr("Membership, name & avatar changes") :
+
+            rule.rule_id === ".m.rule.contains_display_name" ?
+            qsTr("Messages containing my display name") :
+
+            rule.rule_id === ".m.rule.tombstone" ?
+            qsTr("Room migration alerts") :
+
+            rule.rule_id === ".m.rule.reaction" ?
+            qsTr("Emoji reactions") :
+
+            rule.rule_id === ".m.rule.roomnotif" ?
+            qsTr("Messages containing %1").arg(
+                htmlColorize("@room", roomColor),
+            ) :
+
+            rule.rule_id === ".m.rule.contains_user_name" ?
+            qsTr("Contains %1").arg(coloredNameHtml(
+                "", userId, userId.split(":")[0].substring(1),
+            )):
+
+            rule.rule_id === ".m.rule.call" ?
+            qsTr("Incoming audio calls") :
+
+            rule.rule_id === ".m.rule.encrypted_room_one_to_one" ?
+            qsTr("Encrypted 1-to-1 messages") :
+
+            rule.rule_id === ".m.rule.room_one_to_one" ?
+            qsTr("Unencrypted 1-to-1 messages") :
+
+            rule.rule_id === ".m.rule.message" ?
+            qsTr("Unencrypted group messages") :
+
+            rule.rule_id === ".m.rule.encrypted" ?
+            qsTr("Encrypted group messages") :
+
+            rule.rule_id === ".im.vector.jitsi" ?
+            qsTr("Incoming Jitsi calls") :
+
+            rule.kind === "content" ?
+            qsTr('Contains "%1"').arg(rule.pattern) :
+
+            rule.kind === "sender" ?
+            coloredNameHtml("", rule.rule_id) :
+
+            room && room.display_name && rule.kind !== "room" ?
+            qsTr("Messages in room %1").arg(
+                htmlColorize(escapeHtml(room.display_name), roomColor)
+            ) :
+
+            room && room.display_name ?
+            escapeHtml(room.display_name) :
+
+            escapeHtml(rule.rule_id)
+        )
     }
 }

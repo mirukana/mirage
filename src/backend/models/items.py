@@ -88,18 +88,20 @@ class Account(ModelItem):
 class PushRule(ModelItem):
     """A push rule configured for one of our account."""
 
-    id:           Tuple[str, str]  = field()  # (kind.value, rule_id)
-    kind:         nio.PushRuleKind = field()
-    rule_id:      str              = field()
-    order:        int              = field()
-    default:      bool             = field()
-    enabled:      bool             = True
-    pattern:      str              = ""
-    notify:       bool             = False
-    highlight:    bool             = False
-    bubble:       bool             = False
-    sound:        str              = ""       # usually "default" when set
-    urgency_hint: bool             = False
+    id:           Tuple[str, str]      = field()  # (kind.value, rule_id)
+    kind:         nio.PushRuleKind     = field()
+    rule_id:      str                  = field()
+    order:        int                  = field()
+    default:      bool                 = field()
+    enabled:      bool                 = True
+    conditions:   List[Dict[str, Any]] = field(default_factory=list)
+    pattern:      str                  = ""
+    actions:      List[Dict[str, Any]] = field(default_factory=list)
+    notify:       bool                 = False
+    highlight:    bool                 = False
+    bubble:       bool                 = False
+    sound:        str                  = ""  # usually "default" when set
+    urgency_hint: bool                 = False
 
     def __lt__(self, other: "PushRule") -> bool:
         """Sort by `kind`, then `order`."""

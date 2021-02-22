@@ -4,7 +4,7 @@
 import asyncio
 import json
 import logging as log
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from html import escape
 from pathlib import Path
@@ -786,7 +786,8 @@ class NioCallbacks:
         model = self.models[self.user_id, "pushrules"]
 
         kinds: Dict[nio.PushRuleKind, List[nio.PushRule]] = {
-            kind: getattr(ev.global_rules, kind.value) for kind in nio.PushRuleKind
+            kind: getattr(ev.global_rules, kind.value)
+            for kind in nio.PushRuleKind
         }
 
         # Remove from model rules that are now deleted.
@@ -831,7 +832,9 @@ class NioCallbacks:
                     order        = order,
                     default      = rule.default,
                     enabled      = rule.enabled,
+                    conditions   = [c.as_value for c in rule.conditions],
                     pattern      = rule.pattern,
+                    actions      = [a.as_value for a in rule.actions],
                     notify       = notify,
                     highlight    = high,
                     bubble       = bubble,
