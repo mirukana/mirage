@@ -15,6 +15,7 @@ HFlickableColumnPopup {
     property string userId
     // A rule item from ModelStore.get(userId, "pushrules")
     property var rule
+    property bool ruleExists: true
 
     readonly property bool generalChecked:
         overrideRadio.checked || underrideRadio.checked
@@ -184,6 +185,7 @@ HFlickableColumnPopup {
                 )
 
             readonly property bool isCurrent:
+                root.ruleExists &&
                 model.length &&
                 currentIndex === currentPosition &&
                 root.rule.kind === root.checkedKind
@@ -226,6 +228,7 @@ HFlickableColumnPopup {
 
                 label.textFormat: HLabel.StyledText
                 text:
+                    root.ruleExists &&
                     model.index === positionCombo.currentPosition &&
                     root.rule.kind === root.checkedKind ?
                     qsTr("Current") :

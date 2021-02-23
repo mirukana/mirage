@@ -68,16 +68,50 @@ HListView {
     }
 
     section.property: "kind"
-    section.delegate: HLabel {
+    section.delegate: HRowLayout {
         width: root.width
-        padding: theme.spacing
-        font.pixelSize: theme.fontSize.big
-        text:
-            section === "override" ? qsTr("High priority general rules") :
-            section === "content" ? qsTr("Message content rules") :
-            section === "room" ? qsTr("Room rules") :
-            section === "sender" ? qsTr("Sender rules") :
-            qsTr("Low priority general rules")
+
+        HLabel {
+            padding: theme.spacing
+            font.pixelSize: theme.fontSize.big
+            text:
+                section === "override" ? qsTr("High priority general rules") :
+                section === "content" ? qsTr("Message content rules") :
+                section === "room" ? qsTr("Room rules") :
+                section === "sender" ? qsTr("Sender rules") :
+                qsTr("Low priority general rules")
+
+            Layout.fillWidth: true
+        }
+
+        PositiveButton {
+            readonly property var newRule: ({
+                id: '[section, ""]',
+                kind: section,
+                rule_id: "",
+                order: 0,
+                default: false,
+                enabled: true,
+                conditions: "[]",
+                pattern: "",
+                actions: "[]",
+                notify: false,
+                highlight: false,
+                bubble: false,
+                sound: false,
+                urgency_hint: false,
+            })
+
+            backgroundColor: "transparent"
+            icon.name: "pushrule-add"
+            iconItem.small: true
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+            onClicked: window.makePopup(
+                "Popups/PushRuleSettingsPopup/PushRuleSettingsPopup.qml",
+                {userId: root.userId, rule: newRule, ruleExists: false},
+            )
+        }
     }
 
     delegate: NotificationRuleDelegate {

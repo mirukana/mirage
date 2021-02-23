@@ -1822,8 +1822,8 @@ class MatrixClient(nio.AsyncClient):
         if None not in key:
             old = self.models[self.user_id, "pushrules"].get(key)
 
-        kind_change    = old_kind is not None and old_kind != kind
-        rule_id_change = old_rule_id is not None and old_rule_id != rule_id
+        kind_change    = old and old_kind and old_kind != kind
+        rule_id_change = old and old_rule_id and old_rule_id != rule_id
         explicit_move  = move_before_rule_id or move_after_rule_id
 
         if old and not kind_change and not explicit_move:
@@ -1841,7 +1841,7 @@ class MatrixClient(nio.AsyncClient):
             rule_id    = rule_id,
             before     = move_before_rule_id,
             after      = move_after_rule_id,
-            actions    = actions,
+            actions    = actions or [],
             conditions = conditions,
             pattern    = pattern,
         )

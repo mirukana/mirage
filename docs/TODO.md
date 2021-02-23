@@ -3,7 +3,6 @@
 - combo box custom item
 - explain pattern
 - fix spinbox buttons
-- way to add new rule 
 - quick room & sender rule changes
 - config & keybind for global rule disabling
 - quick settings
