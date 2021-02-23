@@ -8,7 +8,7 @@ import "../../../Base"
 
 CustomFlow {
     readonly property var matrixObject: ({
-        kind: "room_member_count",
+        kind: model.kind,
         is: operatorCombo.operators[operatorCombo.currentIndex]
                 .replace("==", "") + countSpin.value,
     })

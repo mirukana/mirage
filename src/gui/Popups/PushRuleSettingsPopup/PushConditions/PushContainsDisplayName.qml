@@ -6,7 +6,7 @@ import ".."
 import "../../../Base"
 
 CustomLabel {
-    readonly property var matrixObject: ({kind: "contains_display_name"})
+    readonly property var matrixObject: ({kind: model.kind})
 
     text: qsTr("Message contains my display name")
 }

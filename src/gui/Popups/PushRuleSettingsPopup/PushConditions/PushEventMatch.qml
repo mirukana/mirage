@@ -8,7 +8,7 @@ import "../../../Base"
 
 CustomFlow {
     readonly property var matrixObject: ({
-        kind: "event_match",
+        kind: model.kind,
         key: keyCombo.editText,
         pattern: patternField.text,
     })

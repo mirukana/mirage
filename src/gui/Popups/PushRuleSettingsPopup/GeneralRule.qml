@@ -7,14 +7,15 @@ import "../../Base"
 import "../../Base/Buttons"
 
 HColumnLayout {
+    id: root
+
     readonly property alias idField: idField
 
     readonly property var matrixConditions: {
         const results = []
 
-        for (let i = 0; i < conditionRepeater.count; i++) {
+        for (let i = 0; i < conditionRepeater.count; i++)
             results.push(conditionRepeater.itemAt(i).control.matrixObject)
-        }
 
         return results
     }
@@ -54,20 +55,39 @@ HColumnLayout {
 
                 HMenuItem {
                     text: qsTr("Room has a certain number of members")
+                    onTriggered: conditionRepeater.model.append({
+                        kind: "room_member_count",
+                        is: "2",
+                    })
                 }
                 HMenuItem {
                     text: qsTr("Message property matches value")
+                    onTriggered: conditionRepeater.model.append({
+                        kind: "event_match",
+                        key: "content.body",
+                        pattern: "",
+                    })
                 }
                 HMenuItem {
                     text: qsTr("Message contains my display name")
+                    onTriggered: conditionRepeater.model.append({
+                        kind: "contains_display_name",
+                    })
                 }
                 HMenuItem {
                     text: qsTr(
                         "Sender has permission to trigger special notification"
                     )
+                    onTriggered: conditionRepeater.model.append({
+                        kind: "sender_notification_permission",
+                        key: "room",
+                    })
                 }
                 HMenuItem {
                     text: qsTr("Custom JSON condition")
+                    onTriggered: conditionRepeater.model.append({
+                        condition: ({kind: "example"}),
+                    })
                 }
             }
         }
@@ -84,7 +104,16 @@ HColumnLayout {
 
     Repeater {
         id: conditionRepeater
-        model: JSON.parse(rule.conditions)
+        model: ListModel {}
+
+        Component.onCompleted: {
+            // Dummy item to setup all the possible roles for this model
+            model.append({
+                kind: "", key: "", pattern: "", condition: {}, is: ""
+            })
+            for (const c of JSON.parse(rule.conditions)) model.append(c)
+            model.remove(0)
+        }
 
         HRowLayout {
             readonly property Item control: loader.item
@@ -94,15 +123,15 @@ HColumnLayout {
             HLoader {
                 id: loader
 
-                readonly property var condition: modelData
+                readonly property var condition: model
                 readonly property string filename:
-                    modelData.kind === "event_match" ?
+                    model.kind === "event_match" ?
                     "PushEventMatch" :
-                    modelData.kind === "contains_display_name" ?
+                    model.kind === "contains_display_name" ?
                     "PushContainsDisplayName" :
-                    modelData.kind === "room_member_count" ?
+                    model.kind === "room_member_count" ?
                     "PushRoomMemberCount" :
-                    modelData.kind === "sender_notification_permission" ?
+                    model.kind === "sender_notification_permission" ?
                     "PushSenderNotificationPermission" :
                     "PushUnknownCondition"
 
@@ -116,6 +145,7 @@ HColumnLayout {
                 iconItem.small: true
                 Layout.fillHeight: true
                 Layout.fillWidth: false
+                onClicked: conditionRepeater.model.remove(model.index)
             }
         }
     }

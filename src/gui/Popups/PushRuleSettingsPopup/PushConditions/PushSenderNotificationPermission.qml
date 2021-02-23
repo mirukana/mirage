@@ -8,7 +8,7 @@ import "../../../Base"
 
 CustomFlow {
     readonly property var matrixObject: ({
-        kind: "sender_notification_permission",
+        kind: model.kind,
         key: keyCombo.editText,
     })
 
