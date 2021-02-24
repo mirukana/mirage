@@ -38,7 +38,7 @@ HColumnLayout {
         Layout.topMargin: theme.spacing / 2
 
         CustomLabel {
-            text: qsTr("Conditions for a message to trigger this rule:")
+            text: qsTr("Conditions for messages to trigger this rule:")
         }
 
         PositiveButton {

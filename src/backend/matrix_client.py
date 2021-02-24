@@ -1795,7 +1795,9 @@ class MatrixClient(nio.AsyncClient):
         pattern:             Optional[str]                      = None,
         actions:             Optional[List[PushAction]]         = None,
     ) -> None:
-        """Create or edit an existing non-builtin pushrule."""
+        """Create or edit an existing non-builtin pushrule.
+        For builtin server ("default") rules, only actions can be edited.
+        """
 
         # Convert arguments that were passed as basic types (usually from QML)
 
@@ -1810,7 +1812,7 @@ class MatrixClient(nio.AsyncClient):
         ] if isinstance(conditions, list) else None
 
         actions = [
-            nio.PushAction.from_dict(a) if isinstance(a, dict) else a
+            nio.PushAction.from_dict(a) if isinstance(a, (str, dict)) else a
             for a in actions
         ] if isinstance(actions, list) else None
 
@@ -1835,16 +1837,19 @@ class MatrixClient(nio.AsyncClient):
             # Matrix API forces us to always pass a non-null actions paramater
             actions = [nio.PushAction.from_dict(a) for a in old.actions]
 
-        await self.set_pushrule(
-            scope      = "global",
-            kind       = kind,
-            rule_id    = rule_id,
-            before     = move_before_rule_id,
-            after      = move_after_rule_id,
-            actions    = actions or [],
-            conditions = conditions,
-            pattern    = pattern,
-        )
+        if old and old.default:
+            await self.set_pushrule_actions("global", kind, rule_id, actions)
+        else:
+            await self.set_pushrule(
+                scope      = "global",
+                kind       = kind,
+                rule_id    = rule_id,
+                before     = move_before_rule_id,
+                after      = move_after_rule_id,
+                actions    = actions or [],
+                conditions = conditions,
+                pattern    = pattern,
+            )
 
         # If we're editing an existing rule but its kind or ID is changed,
         # set_pushrule creates a new rule, thus we must delete the old one

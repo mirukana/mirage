@@ -35,6 +35,14 @@ HFlickableColumnPopup {
             positionCombo.model[positionCombo.currentIndex].rule_id :
             undefined
 
+        const actions = []
+        const sfx     = soundCheck.checked ? "default": false
+        notifyCheck.checked && actions.push("notify")
+        actions.push({set_tweak: "highlight", value: highlightCheck.checked})
+        actions.push({set_tweak: "bubble", value: bubbleCheck.checked})
+        actions.push({set_tweak: "sound", value: sfx})
+        actions.push({set_tweak: "urgency_hint", value: urgencyCheck.checked})
+
         const args = [
             checkedKind,
             details.idField.text,
@@ -45,6 +53,7 @@ HFlickableColumnPopup {
             enableCheck.checked,
             generalChecked ? details.matrixConditions : undefined,
             contentRadio.checked ? details.idField.text : undefined,
+            actions,
         ]
 
         py.callClientCoro(userId, "edit_pushrule", args, root.close)
@@ -169,9 +178,72 @@ HFlickableColumnPopup {
         GeneralRule { enabled: SwipeView.isCurrentItem }
     }
 
+    HColumnLayout {
+        spacing: theme.spacing / 2
+
+        HRowLayout {
+            CustomLabel {
+                text: qsTr("Actions for messages that trigger this rule:")
+            }
+
+            PositiveButton {
+                icon.name: "pushrule-action-add"
+                iconItem.small: true
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                // onClicked: addConditionMenu.open()
+            }
+        }
+
+        HCheckBox {
+            id: notifyCheck
+            text: qsTr("Mark as unread")
+            defaultChecked: root.rule.notify
+            Layout.fillWidth: true
+        }
+
+        HCheckBox {
+            id: highlightCheck
+            text: qsTr("Mark as important")
+            enabled: notifyCheck.checked
+            defaultChecked: root.rule.highlight
+            Layout.fillWidth: true
+        }
+
+        HCheckBox {
+            id: bubbleCheck
+            text: qsTr("Show notification bubble")
+            enabled: notifyCheck.checked
+            defaultChecked: root.rule.bubble
+            Layout.fillWidth: true
+        }
+
+        HCheckBox {
+            id: soundCheck
+            text: qsTr("Play sound")
+            enabled: notifyCheck.checked
+            defaultChecked: root.rule.sound
+            Layout.fillWidth: true
+        }
+
+        HCheckBox {
+            id: urgencyCheck
+            text:
+                Qt.platform === "windows" ?
+                qsTr("Make taskbar application icon flash") :
+                Qt.platform === "osx" ?
+                qsTr("Make dock application icon flash") :
+                qsTr("Highlight the application window")
+
+            enabled: notifyCheck.checked
+            defaultChecked: root.rule.urgency_hint
+            Layout.fillWidth: true
+        }
+    }
+
     HLabeledItem {
         visible: ! rule.default && positionCombo.model.length > 1
-        label.text: qsTr("Position:")
+        label.text: qsTr("Rule position:")
         Layout.fillWidth: true
 
         HComboBox {

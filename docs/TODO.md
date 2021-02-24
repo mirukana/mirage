@@ -1,5 +1,7 @@
 # TODO
 
+- custom action
+- sfx selection
 - combo box custom item
 - explain pattern
 - fix spinbox buttons
