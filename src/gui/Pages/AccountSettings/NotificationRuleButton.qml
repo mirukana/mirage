@@ -26,7 +26,6 @@ HButton {
     onClicked: {
         if (requiresOn !== null && ! requiresOn.on) {
             requiresOn.clicked()
-            print(on, clicked)
             if (! on) clicked()
             return
         }

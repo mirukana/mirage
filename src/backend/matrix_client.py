@@ -1860,7 +1860,7 @@ class MatrixClient(nio.AsyncClient):
             await self.enable_pushrule("global", kind, rule_id, enable)
 
 
-    async def tweak_pushrule(
+    async def tweak_pushrule_actions(
         self,
         kind:         Union[nio.PushRuleKind, str],
         rule_id:      str,
@@ -1870,7 +1870,7 @@ class MatrixClient(nio.AsyncClient):
         sound:        Optional[str]  = None,
         urgency_hint: Optional[bool] = None,
     ) -> None:
-        """Set an existing pushrule's actions. Works for builtin rules."""
+        """Edit individual actions for any existing push rule."""
 
         kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
 
@@ -1903,8 +1903,8 @@ class MatrixClient(nio.AsyncClient):
         await self.set_pushrule_actions("global", kind, rule_id, actions)
 
 
-    async def mass_tweak_pushrules(self, *tweaks_kwargs) -> None:
-        coros = [self.tweak_pushrule(**kwargs) for kwargs in tweaks_kwargs]
+    async def mass_tweak_pushrules_actions(self, *tweaks_kwargs) -> None:
+        coros = [self.tweak_pushrule_actions(**kws) for kws in tweaks_kwargs]
         await asyncio.gather(*coros)
 
 

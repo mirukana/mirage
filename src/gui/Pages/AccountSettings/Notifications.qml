@@ -36,7 +36,7 @@ HListView {
 
         saveFutureId = py.callClientCoro(
             userId,
-            "mass_tweak_pushrules",
+            "mass_tweak_pushrules_actions",
             args,
             () => {
                 if (! root) return
@@ -119,23 +119,17 @@ HListView {
         width: root.width
     }
 
-    footer: AutoDirectionLayout {
-        z: 100
-        width: root.width
-        enabled: Object.keys(root.pendingEdits).length !== 0
+    onPendingEditsChanged:
+        utils.isEmptyObject(pendingEdits) ?
+        autoSaveTimer.stop() :
+        autoSaveTimer.restart()
 
-        ApplyButton {
-            onClicked: root.save()
-            loading: root.saveFutureId !== ""
+    Component.onDestruction: ! utils.isEmptyObject(pendingEdits) && save()
 
-            Layout.topMargin: theme.spacing
-        }
-
-        CancelButton {
-            onClicked: pendingEdits = {}
-
-            Layout.topMargin: theme.spacing
-        }
+    Timer {
+        id: autoSaveTimer
+        interval: 10000
+        onTriggered: root.save()
     }
 
     FlickShortcuts {
