@@ -275,6 +275,8 @@ HRowLayout {
                 text: {
                     if (! visible) return ""
 
+                    if (model.is_local_echo) return qsTr("Sending message...")
+
                     const members =
                         ModelStore.get(chat.userId, chat.roomId, "members")
 
