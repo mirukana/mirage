@@ -48,7 +48,9 @@ HFlickableColumnPopup {
     onClosed: if (canDestroy) Qt.callLater(popup.destroy)
 
     SummaryLabel {
-        text: qsTr("Leave <i>%1</i> and lose the history?").arg(roomName)
+        text: qsTr("Leave %1 and lose the history?").arg(
+            utils.htmlColorize(roomName, theme.colors.accentText),
+        )
         textFormat: Text.StyledText
     }
 

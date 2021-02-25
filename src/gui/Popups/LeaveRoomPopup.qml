@@ -33,7 +33,9 @@ HFlickableColumnPopup {
     onOpened: leaveButton.forceActiveFocus()
 
     SummaryLabel {
-        text: qsTr("Leave <i>%1</i>?").arg(roomName)
+        text: qsTr("Leave %1?").arg(
+            utils.htmlColorize(roomName, theme.colors.accentText),
+        )
         textFormat: Text.StyledText
     }
 

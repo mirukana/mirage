@@ -68,7 +68,9 @@ HColumnPopup {
         if (! invitingAllowed && inviteFutureId) py.cancelCoro(inviteFutureId)
 
     SummaryLabel {
-        text: qsTr("Invite users to <i>%1</i>").arg(roomName)
+        text: qsTr("Invite users to %1").arg(
+            utils.htmlColorize(roomName, theme.colors.accentText),
+        )
         textFormat: Text.StyledText
     }
 

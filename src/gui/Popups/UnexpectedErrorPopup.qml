@@ -32,7 +32,9 @@ HColumnPopup {
     onOpened: cancelButton.forceActiveFocus()
 
     SummaryLabel {
-        text: qsTr("Unexpected error occured: <i>%1</i>").arg(errorType)
+        text: qsTr("Unexpected error occured: %1").arg(
+            utils.htmlColorize(errorType, theme.colors.accentText),
+        )
         textFormat: Text.StyledText
     }
 
