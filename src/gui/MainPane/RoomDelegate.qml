@@ -139,7 +139,7 @@ HTile {
             visible: joined
             enabled: model.can_invite && accountModel.presence !== "offline"
             icon.name: "room-send-invite"
-            text: qsTr("Invite members")
+            text: qsTr("Invite users")
 
             popup: "Popups/InviteToRoomPopup.qml"
             properties: ({

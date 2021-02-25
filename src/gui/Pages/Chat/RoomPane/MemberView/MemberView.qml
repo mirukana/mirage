@@ -155,8 +155,8 @@ HColumnLayout {
 
                     toolTip.text:
                         enabled ?
-                        qsTr("Invite members to this room") :
-                        qsTr("No permission to invite members to this room")
+                        qsTr("Invite users to this room") :
+                        qsTr("No permission to invite users to this room")
 
                     onClicked: window.makePopup(
                         "Popups/InviteToRoomPopup.qml",

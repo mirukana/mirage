@@ -68,7 +68,7 @@ HColumnPopup {
         if (! invitingAllowed && inviteFutureId) py.cancelCoro(inviteFutureId)
 
     SummaryLabel {
-        text: qsTr("Invite members to <i>%1</i>").arg(roomName)
+        text: qsTr("Invite users to <i>%1</i>").arg(roomName)
         textFormat: Text.StyledText
     }
 
@@ -137,7 +137,7 @@ HColumnPopup {
         text:
             invitingAllowed ?
             allErrors :
-            qsTr("You do not have permission to invite members to this room")
+            qsTr("You do not have permission to invite users to this room")
 
         Layout.maximumHeight: text ? implicitHeight : 0
         Layout.fillWidth: true
