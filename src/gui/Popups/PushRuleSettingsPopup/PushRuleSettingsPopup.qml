@@ -36,7 +36,12 @@ HFlickableColumnPopup {
             undefined
 
         const actions = []
-        const sfx     = soundCheck.checked ? "default": false
+        const sfx     =
+            soundCheck.checked && rule.sound ? rule.sound :
+            soundCheck.checked && rule.rule_id === ".m.rule.call" ? "ring" :
+            soundCheck.checked ? "default":
+            false
+
         notifyCheck.checked && actions.push("notify")
         actions.push({set_tweak: "highlight", value: highlightCheck.checked})
         actions.push({set_tweak: "bubble", value: bubbleCheck.checked})
