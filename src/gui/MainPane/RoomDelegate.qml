@@ -63,7 +63,8 @@ HTile {
 
                 TitleLabel {
                     text:
-                        (model.bookmarked ? "\u2665 " : "") +
+                        // U+1f4cc pushpin + force black-and-white variant
+                        (model.pinned ? "📌\ufe0e " : "") +
                         (model.display_name || qsTr("Empty room"))
                     color:
                         model.unreads || model.local_unreads ?
@@ -135,6 +136,14 @@ HTile {
     }
 
     contextMenu: HMenu {
+        HMenuItem {
+            icon.name: model.pinned ? "room-unpin": "room-pin"
+            text: model.pinned ? qsTr("Unpin"): qsTr("Pin to top")
+            onTriggered: py.callClientCoro(
+                model.for_account, "toggle_room_pin", [model.id]
+            )
+        }
+
         HMenuItemPopupSpawner {
             visible: joined
             enabled: model.can_invite && accountModel.presence !== "offline"
@@ -148,14 +157,6 @@ HTile {
                 roomName: model.display_name,
                 invitingAllowed: Qt.binding(() => model.can_invite)
             })
-        }
-
-        HMenuItem {
-            icon.name: model.bookmarked ? "bookmark-remove": "bookmark-add"
-            text: model.bookmarked ? qsTr("Remove bookmark"): qsTr("Bookmark")
-            onTriggered: py.callClientCoro(
-                model.for_account, "toggle_bookmark", [model.id]
-            )
         }
 
         HMenuItem {

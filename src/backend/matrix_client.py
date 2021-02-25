@@ -1138,22 +1138,22 @@ class MatrixClient(nio.AsyncClient):
         response = await super().join(string)
         return response.room_id
 
-    async def toggle_bookmark(self, room_id: str) -> None:
-        room = self.models[self.user_id, "rooms"][room_id]
-        room.bookmarked = not room.bookmarked
+    async def toggle_room_pin(self, room_id: str) -> None:
+        room        = self.models[self.user_id, "rooms"][room_id]
+        room.pinned = not room.pinned
 
-        settings       = self.backend.settings
-        bookmarks      = settings.RoomList.Bookmarks
-        user_bookmarks = bookmarks.setdefault(self.user_id, [])
+        settings    = self.backend.settings
+        pinned      = settings.RoomList.Pinned
+        user_pinned = pinned.setdefault(self.user_id, [])
 
-        if room.bookmarked and room_id not in user_bookmarks:
-            user_bookmarks.append(room_id)
+        if room.pinned and room_id not in user_pinned:
+            user_pinned.append(room_id)
 
-        while not room.bookmarked and room_id in user_bookmarks:
-            user_bookmarks.remove(room_id)
+        while not room.pinned and room_id in user_pinned:
+            user_pinned.remove(room_id)
 
         # Changes inside dicts/lists aren't monitored, need to reassign
-        settings.RoomList.Bookmarks[self.user_id] = user_bookmarks
+        settings.RoomList.Pinned[self.user_id] = user_pinned
         self.backend.settings.save()
 
     async def room_forget(self, room_id: str) -> None:
@@ -2003,7 +2003,7 @@ class MatrixClient(nio.AsyncClient):
             )
             unverified_devices = registered.unverified_devices
 
-        bookmarks = self.backend.settings.RoomList.Bookmarks
+        pinned = self.backend.settings.RoomList.Pinned
         room_item = Room(
             id             = room.room_id,
             for_account    = self.user_id,
@@ -2049,7 +2049,7 @@ class MatrixClient(nio.AsyncClient):
             local_unreads = local_unreads,
 
             lexical_sorting = self.backend.settings.RoomList.lexical_sort,
-            bookmarked      = room.room_id in bookmarks.get(self.user_id, []),
+            pinned          = room.room_id in pinned.get(self.user_id, []),
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item

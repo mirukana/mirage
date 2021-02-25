@@ -93,7 +93,7 @@ class RoomList:
     # in addition to focusing the current page or chat composer.
     escape_clears_filter: bool = True
 
-    class Bookmarks:
+    class Pinned:
         # Each property in this section is an account user ID, and the
         # value is a list of room ID to always keep on top.
         # A room's ID can be copied by right clicking on it in the room list.
