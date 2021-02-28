@@ -131,7 +131,7 @@ HMxcImage {
         anchors.top: parent.top
         text: loader.showSender
         textFormat: Text.StyledText
-        opacity: hover.hovered ? 0 : 1
+        opacity: hover.hovered || eventDelegate.isFocused ? 0 : 1
         visible: opacity > 0
 
         Behavior on opacity { HNumberAnimation {} }
@@ -143,7 +143,7 @@ HMxcImage {
         text: loader.showDate + loader.showLocalEcho
 
         textFormat: Text.RichText
-        opacity: hover.hovered ? 0 : 1
+        opacity: hover.hovered || eventDelegate.isFocused ? 0 : 1
         visible: opacity > 0
 
         Behavior on opacity { HNumberAnimation {} }

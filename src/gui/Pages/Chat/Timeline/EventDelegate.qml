@@ -17,6 +17,8 @@ HColumnLayout {
     readonly property var nextModel: eventList.model.get(model.index - 1)
     readonly property QtObject currentModel: model
 
+    readonly property bool isFocused: model.index === eventList.currentIndex
+
     readonly property bool compact: window.settings.General.compact
     readonly property bool checked: model.id in eventList.checked
     readonly property bool isOwn: chat.userId === model.sender_id

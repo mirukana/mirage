@@ -1,13 +1,12 @@
 # TODO
 
-- custom action
-
 - seen tooltips can't be shown on image hover
 
 - quick settings
 - import/export/json edit rules?
 - room selector for room rules
 - validate json for unknown action/condition
+- custom action
 
 - PCN docstrings 
 - PCN error handling
