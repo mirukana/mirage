@@ -93,6 +93,7 @@ Rectangle {
                 y: parent.height
 
                 HMenuItem {
+                    icon.name: "notifications-all"
                     text: qsTr("Enable notifications")
                     checkable: true
                     checked:
@@ -104,6 +105,8 @@ Rectangle {
                 }
 
                 HMenuItem {
+                    icon.name: "notifications-mentions-keywords"
+                    icon.color: theme.colors.middleBackground
                     text: qsTr("Highlights only (replies, keywords...)")
                     checkable: true
                     checked:
@@ -115,6 +118,8 @@ Rectangle {
                 }
 
                 HMenuItem {
+                    icon.name: "notifications-none"
+                    icon.color: theme.colors.negativeBackground
                     text: qsTr("Mute all notifications")
                     checkable: true
                     checked:
