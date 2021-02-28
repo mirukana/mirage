@@ -202,6 +202,7 @@ export CFLAGS="-march=native -O2 -pipe"
 
 ```sh
 sudo apk add qt5-qtquickcontrols2-dev qt5-qtsvg-dev qt5-qtimageformats \
+             qt5-qtmultimedia-dev \
              libx11-dev libxscrnsaver-dev \
              python3-dev py3-setuptools \
              build-base git cmake \
@@ -220,7 +221,7 @@ Alternatively, you can just use `pacman` and
 
 ```sh
 yay -Syu qt5-base qt5-declarative qt5-quickcontrols2 qt5-svg \
-         qt5-graphicaleffects qt5-imageformats \
+         qt5-graphicaleffects qt5-imageformats qt5-multimedia \
          libx11 libxss \
          python python-pip \
          python-pyotherside \
@@ -236,6 +237,7 @@ sudo dnf groupinstall 'Development Tools'
 sudo dnf install qt5-devel qt5-qtbase-devel qt5-qtdeclarative-devel \
                  qt5-qtquickcontrols2-devel qt5-qtsvg-devel \
                  qt5-qtgraphicaleffects qt5-qtimageformats \
+                 qt5-qtmultimedia-devel \
                  python3-devel python3-pip pyotherside \
                  libX11-devel libXScrnSaver-devel \
                  git cmake \
@@ -255,7 +257,7 @@ if `emerge` says so.
 
 ```sh
 sudo emerge -av qtcore qtdeclarative qtquickcontrols2 \
-                qtsvg qtgraphicaleffects qtimageformats \
+                qtsvg qtgraphicaleffects qtimageformats qtmultimedia \
                 libX11 libXScrnSaver \
                 dev-python/pip pyotherside \
                 dev-vcs/git cmake \
@@ -274,6 +276,7 @@ sudo apt install qt5-default qt5-qmake qt5-image-formats-plugins \
                  qml-module-qtquick-layouts qml-module-qtquick-dialogs \
                  qml-module-qt-labs-platform \
                  qml-module-qtquick-shapes \
+                 qml-module-qtmultimedia \
                  qtdeclarative5-dev \
                  qtquickcontrols2-5-dev \
                  libx11-dev libxss-dev \
@@ -301,6 +304,7 @@ sudo apt install libolm-dev
 sudo xbps-install -Su qt5-devel qt5-declarative-devel \
                       qt5-quickcontrols2-devel \
                       qt5-svg-devel qt5-graphicaleffects qt5-imageformats \
+                      qt5-multimedia-devel \
                       libx11-devel libXScrnSaver-devel \
                       python3-devel python3-pip \
                       olm-devel \

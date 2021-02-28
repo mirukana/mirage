@@ -39,7 +39,7 @@ install_apt_packages() {
 
     apt install -y \
         qt512base qt512declarative qt512graphicaleffects \
-        qt512imageformats qt512quickcontrols2 qt512svg \
+        qt512imageformats qt512quickcontrols2 qt512svg qt512multimedia \
         zip git wget cmake ccache \
         build-essential mesa-common-dev libglu1-mesa-dev freeglut3-dev \
         libglfw3-dev libgles2-mesa-dev libssl-dev \
