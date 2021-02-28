@@ -192,18 +192,8 @@ HFlickableColumnPopup {
     HColumnLayout {
         spacing: theme.spacing / 2
 
-        HRowLayout {
-            CustomLabel {
-                text: qsTr("Actions for messages that trigger this rule:")
-            }
-
-            PositiveButton {
-                icon.name: "pushrule-action-add"
-                iconItem.small: true
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                // onClicked: addConditionMenu.open()
-            }
+        CustomLabel {
+            text: qsTr("Actions for messages that trigger this rule:")
         }
 
         HCheckBox {
