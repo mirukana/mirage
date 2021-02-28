@@ -2437,20 +2437,25 @@ class MatrixClient(nio.AsyncClient):
                 sender_name=sender_name, sender_avatar=sender_avatar,
             )
 
-        sender = item.sender_name or item.sender_id
+        sender   = item.sender_name or item.sender_id
+        is_linux = platform.system() == "Linux"
+        use_html = is_linux and self.backend.settings.Notifications.use_html
+        content  = item.inline_content if use_html else item.plain_content
 
-        if isinstance(ev, nio.RoomMessageEmote):
-            body = f"<i>{sender} {item.inline_content}</i>"
+        if isinstance(ev, nio.RoomMessageEmote) and use_html:
+            body = f"<i>{sender} {content}</i>"
+        elif isinstance(ev, nio.RoomMessageEmote):
+            body = f"{sender} {content}"
         elif not isinstance(ev, nio.RoomMessage):
-            body = item.inline_content.replace(
+            body = content.replace(
                 "%1", item.sender_name or item.sender_id,
             ).replace(
                 "%2", item.target_name or item.target_id,
             )
         elif room.member_count == 2 and room.display_name == sender:
-            body = item.inline_content
+            body = content
         else:
-            body = f"{sender}: {item.inline_content}"
+            body = f"{sender}: {content}"
 
         NotificationRequested(
             id           = item.id,

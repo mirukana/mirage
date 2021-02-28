@@ -197,6 +197,11 @@ def plain2html(text: str) -> str:
                .replace("\t", "&nbsp;" * 4)
 
 
+def strip_html_tags(text: str) -> str:
+    """Remove HTML tags from text."""
+    return re.sub(r"<\/?[^>]+(>|$)", "", text)
+
+
 def serialize_value_for_qml(
     value: Any, json_list_dicts: bool = False, reject_unknown: bool = False,
 ) -> Any:

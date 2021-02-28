@@ -49,6 +49,13 @@ class Notifications:
     # - "mute" (don't notify for anything)
     start_level: str = "enable"
 
+    # Use HTML formatting in notification bubbles.
+    # This option has no effect on Windows and OSX.
+    # Rendering is only supported by notification servers which follow the
+    # GNOME Desktop Notification Specification, set this to `False` if you
+    # keep seeing raw <tags> in notifications.
+    use_html: bool = True
+
     # How long in seconds the window will flash in your dock or taskbar when
     # a new message, which matches a notification push rule with a
     # flash (lightbulb) action, is posted in a room.

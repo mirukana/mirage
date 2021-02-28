@@ -14,7 +14,7 @@ import lxml  # nosec
 import nio
 
 from ..presence import Presence
-from ..utils import AutoStrEnum, auto
+from ..utils import AutoStrEnum, auto, strip_html_tags
 from .model_item import ModelItem
 
 OptionalExceptionType = Union[Type[None], Type[Exception]]
@@ -389,11 +389,11 @@ class Event(ModelItem):
     sender_avatar: str                 = field()
     fetch_profile: bool                = False
 
-    content:        str                   = ""
-    inline_content: str                   = ""
-    reason:         str                   = ""
-    links:          List[str]             = field(default_factory=list)
-    mentions:       List[Tuple[str, str]] = field(default_factory=list)
+    content:           str                   = ""
+    inline_content:    str                   = ""
+    reason:            str                   = ""
+    links:             List[str]             = field(default_factory=list)
+    mentions:          List[Tuple[str, str]] = field(default_factory=list)
 
     type_specifier: TypeSpecifier = TypeSpecifier.Unset
 
@@ -431,6 +431,15 @@ class Event(ModelItem):
         """Sort by date in descending order, from newest to oldest."""
 
         return (self.date, self.id) > (other.date, other.id)
+
+    @property
+    def plain_content(self) -> str:
+        """Plaintext version of the event's content."""
+
+        if isinstance(self.source, nio.RoomMessageText):
+            return self.source.body
+
+        return strip_html_tags(self.content)
 
     @staticmethod
     def parse_links(text: str) -> List[str]:
