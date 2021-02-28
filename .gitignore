@@ -27,3 +27,5 @@ packaging/flatpak/flatpak-pip.json
 packaging/flatpak/flatpak-pip-generator
 .flatpak-builder/
 flatpak-build/
+
+docs/TODO.md
