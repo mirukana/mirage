@@ -128,7 +128,7 @@ HListView {
 
     Timer {
         id: autoSaveTimer
-        interval: 10000
+        interval: 30000
         onTriggered: root.save()
     }
 
