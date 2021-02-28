@@ -78,7 +78,7 @@ timestamp, e.g. with the `touch` command:
 touch ~/.config/mirage/settings.py
 ```
 
-[1]: https://github.com/mirukana/mirage/tree/dev/src/config/settings.py
+[1]: https://github.com/mirukana/mirage/tree/master/src/config/settings.py
 
 
 ## accounts.json

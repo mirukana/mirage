@@ -102,7 +102,7 @@ for example `self.include_builtin("config/settings.py")` refers to
 The sections and properties from the included file will be recursively merged,
 see [Including User Files](#including-user-files) for an example.
 
-[1]: https://github.com/mirukana/mirage/tree/dev/src/config/settings.py
+[1]: https://github.com/mirukana/mirage/tree/master/src/config/settings.py
 
 ### Including User Files
 
