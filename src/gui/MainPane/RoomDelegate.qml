@@ -136,12 +136,49 @@ HTile {
     }
 
     contextMenu: HMenu {
+        // This delegate is only used for nested menus
+        delegate: HMenuItem { icon.name: "room-menu-notifications" }
+
         HMenuItem {
             icon.name: model.pinned ? "room-unpin": "room-pin"
             text: model.pinned ? qsTr("Unpin"): qsTr("Pin to top")
             onTriggered: py.callClientCoro(
                 model.for_account, "toggle_room_pin", [model.id]
             )
+        }
+
+        HMenu {
+            title: qsTr("Notifications")
+
+            HMenuItem {
+                text: qsTr("Use default account settings")
+                onTriggered: py.callClientCoro(
+                    model.for_account, "room_pushrule_use_default", [model.id],
+                )
+            }
+
+            HMenuItem {
+                text: qsTr("All new messages")
+                onTriggered: py.callClientCoro(
+                    model.for_account, "room_pushrule_all_events", [model.id],
+                )
+            }
+
+            HMenuItem {
+                text: qsTr("Highlights only (replies, keywords...)")
+                onTriggered: py.callClientCoro(
+                    model.for_account,
+                    "room_pushrule_highlights_only",
+                    [model.id],
+                )
+            }
+
+            HMenuItem {
+                text: qsTr("Ignore new messages")
+                onTriggered: py.callClientCoro(
+                    model.for_account, "room_pushrule_ignore_all", [model.id],
+                )
+            }
         }
 
         HMenuItemPopupSpawner {

@@ -1819,7 +1819,7 @@ class MatrixClient(nio.AsyncClient):
         # Now edit the rule
 
         old: Optional[PushRule] = None
-        key                     = (old_kind.value, old_rule_id)
+        key = (old_kind.value if old_kind else None, old_rule_id)
 
         if None not in key:
             old = self.models[self.user_id, "pushrules"].get(key)
@@ -1914,7 +1914,48 @@ class MatrixClient(nio.AsyncClient):
         """Remove an existing non-builtin pushrule."""
 
         kind = nio.PushRuleKind[kind] if isinstance(kind, str) else kind
-        await self.delete_pushrule("global", kind, rule_id)
+
+        if (kind.value, rule_id) in self.models[self.user_id, "pushrules"]:
+            await self.delete_pushrule("global", kind, rule_id)
+
+
+    async def _remove_room_override_rule(self, room_id: str) -> None:
+        for rule in self.models[self.user_id, "pushrules"].values():
+            override_kind = rule.kind is nio.PushRuleKind.override
+            this_room_cnd = nio.PushEventMatch("room_id", room_id).as_value
+
+            if (override_kind and rule.conditions == [this_room_cnd]):
+                print(rule)
+                await self.remove_pushrule(rule.kind, rule.rule_id)
+
+
+    async def room_pushrule_use_default(self, room_id: str) -> None:
+        await self._remove_room_override_rule(room_id)
+        await self.remove_pushrule(nio.PushRuleKind.room, room_id)
+
+
+    async def room_pushrule_all_events(self, room_id: str) -> None:
+        await self._remove_room_override_rule(room_id)
+        await self.edit_pushrule(
+            kind    = nio.PushRuleKind.room,
+            rule_id = room_id,
+            actions = [nio.PushNotify(), nio.PushSetTweak("sound", "default")],
+        )
+
+
+    async def room_pushrule_highlights_only(self, room_id: str) -> None:
+        await self._remove_room_override_rule(room_id)
+        await self.edit_pushrule(nio.PushRuleKind.room, room_id, actions=[])
+
+
+    async def room_pushrule_ignore_all(self, room_id: str) -> None:
+        await self._remove_room_override_rule(room_id)
+        await self.remove_pushrule(nio.PushRuleKind.room, room_id)
+
+        cnd = nio.PushEventMatch("room_id", room_id)
+        await self.edit_pushrule(
+            nio.PushRuleKind.override, room_id, conditions=[cnd], actions=[],
+        )
 
 
     # Functions to register/modify data into models
