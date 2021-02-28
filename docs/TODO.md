@@ -17,9 +17,7 @@
 - Change docs linking to dev branch back to master 
 
 - Implement fallback QML notifications, usable if dbus isn't available
-- profiles missing in notifications
-- option to use plaintext notifications
-- Notification urgency level (plyer)?
+- Option to use plaintext notifications
 
 - add http_proxy support
 - image viewer: can't expand image in reduced window layout

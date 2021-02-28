@@ -2429,6 +2429,14 @@ class MatrixClient(nio.AsyncClient):
         if not rule.notify and not rule.highlight:
             return item
 
+        if must_fetch_sender:
+            sender_name, sender_avatar, _ = await self.get_member_profile(
+                room.room_id, ev.sender, can_fetch_from_network=True,
+            )
+            item.set_fields(
+                sender_name=sender_name, sender_avatar=sender_avatar,
+            )
+
         sender = item.sender_name or item.sender_id
 
         if isinstance(ev, nio.RoomMessageEmote):
