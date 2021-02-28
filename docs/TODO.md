@@ -1,9 +1,9 @@
 # TODO
 
+- enter in field
 - sfx selection
 - custom action
 
-- fix flickable popups can't be flicked by keyboard
 - seen tooltips can't be shown on image hover
 
 - quick settings
