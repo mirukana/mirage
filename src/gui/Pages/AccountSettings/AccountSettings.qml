@@ -18,7 +18,6 @@ HPage {
         height: Math.min(implicitHeight, page.availableHeight)
 
         header: HTabBar {
-            currentIndex: 1  // XXX
             HTabButton { text: qsTr("General") }
             HTabButton { text: qsTr("Notifications") }
             HTabButton { text: qsTr("Security") }
