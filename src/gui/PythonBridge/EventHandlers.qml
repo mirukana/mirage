@@ -11,10 +11,10 @@ QtObject {
     function onNotificationRequested(
         id, critical, bubble, sound, urgencyHint, title, body, image,
     ) {
-        const level = window.notificationLevel
+        const level = window.mainUI.notificationLevel
 
-        if (level === Window.NotificationLevel.Mute) return
-        if (level === Window.HighlightsOnly && ! critical) return
+        if (level === UI.NotificationLevel.Mute) return
+        if (level === UI.NotificationLevel.HighlightsOnly && ! critical) return
         if (window.notifiedIds.has(id)) return
 
         window.notifiedIds.add(id)

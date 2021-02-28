@@ -67,19 +67,19 @@ Rectangle {
             backgroundColor: "transparent"
 
             icon.name:
-                window.notificationLevel === Window.NotificationLevel.Enable ?
+                mainUI.notificationLevel === UI.NotificationLevel.Enable ?
                 "notifications-all" :
 
-                window.notificationLevel === Window.NotificationLevel.Mute ?
+                mainUI.notificationLevel === UI.NotificationLevel.Mute ?
                 "notifications-none" :
 
                 "notifications-mentions-keywords"
 
             icon.color:
-                window.notificationLevel === Window.NotificationLevel.Enable ?
+                mainUI.notificationLevel === UI.NotificationLevel.Enable ?
                 theme.icons.colorize :
 
-                window.notificationLevel === Window.NotificationLevel.Mute ?
+                mainUI.notificationLevel === UI.NotificationLevel.Mute ?
                 theme.colors.negativeBackground :
 
                 theme.colors.middleBackground
@@ -95,31 +95,29 @@ Rectangle {
                 HMenuItem {
                     text: qsTr("Enable notifications")
                     checked:
-                        window.notificationLevel ===
-                            Window.NotificationLevel.Enable
+                        mainUI.notificationLevel ===
+                            UI.NotificationLevel.Enable
                     onTriggered:
-                        window.notificationLevel =
-                            Window.NotificationLevel.Enable
+                        mainUI.notificationLevel =
+                            UI.NotificationLevel.Enable
                 }
 
                 HMenuItem {
                     text: qsTr("Highlights only (replies, keywords...)")
                     checked:
-                        window.notificationLevel ===
-                            Window.NotificationLevel.HighlightsOnly
+                        mainUI.notificationLevel ===
+                            UI.NotificationLevel.HighlightsOnly
                     onTriggered:
-                        window.notificationLevel =
-                            Window.NotificationLevel.HighlightsOnly
+                        mainUI.notificationLevel =
+                            UI.NotificationLevel.HighlightsOnly
                 }
 
                 HMenuItem {
                     text: qsTr("Mute all notifications")
                     checked:
-                        window.notificationLevel ===
-                            Window.NotificationLevel.Mute
+                        mainUI.notificationLevel === UI.NotificationLevel.Mute
                     onTriggered:
-                        window.notificationLevel =
-                            Window.NotificationLevel.Mute
+                        mainUI.notificationLevel = UI.NotificationLevel.Mute
                 }
             }
         }

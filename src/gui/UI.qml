@@ -6,11 +6,21 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
 import QtGraphicalEffects 1.12
+import "."
 import "Base"
 import "MainPane"
 
 Item {
     id: mainUI
+
+    enum NotificationLevel { Mute, HighlightsOnly, Enable }
+
+    property int notificationLevel:
+        settings.Notifications.start_level === "highlights_only" ?
+        UI.NotificationLevel.HighlightsOnly :
+        settings.Notifications.start_level === "mute" ?
+        UI.NotificationLevel.Mute :
+        UI.NotificationLevel.Enable
 
     property bool accountsPresent:
         ModelStore.get("accounts").count > 0 || py.startupAnyAccountsSaved
@@ -76,6 +86,25 @@ Item {
             window.settings.General.compact = ! window.settings.General.compact
             window.saveSettings()
         }
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.notifications_highlights_only
+        onActivated:
+            mainUI.notificationLevel =
+                mainUI.notificationLevel ===
+                UI.NotificationLevel.HighlightsOnly ?
+                UI.NotificationLevel.Enable :
+                UI.NotificationLevel.HighlightsOnly
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.notifications_mute
+        onActivated:
+            mainUI.notificationLevel =
+                mainUI.notificationLevel === UI.NotificationLevel.Mute ?
+                UI.NotificationLevel.Enable :
+                UI.NotificationLevel.Mute
     }
 
     FontMetrics {

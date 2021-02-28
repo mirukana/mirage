@@ -236,6 +236,13 @@ class Keys:
     # Switch to the last opened page/chat, similar to Alt+Tab on most desktops.
     last_page = ["Ctrl+Tab"]
 
+    # Toggle muting all notifications in the running client,
+    # except highlights (e.g. replies or keywords)
+    notifications_highlights_only = ["Alt+M"]
+
+    # Toggle muting all notifications in the running client
+    notifications_mute = ["Alt+Shift+M"]
+
     # Toggle the QML developer console. Type ". help" inside it for more info.
     qml_console = ["F1"]
 
@@ -321,8 +328,8 @@ class Keys:
         # list. What causes a highlight is controlled by push rules
         # (editable in GUI account settings): by default, this includes
         # when your name is mentioned, replied to, or messages with keywords.
-        previous_highlight = ["Alt+Shift+M"]
-        next_highlight     = ["Alt+M"]
+        previous_highlight = ["Alt+Shift+H"]
+        next_highlight     = ["Alt+H"]
 
         class AtIndex:
             # Switch to room number X in the current account.

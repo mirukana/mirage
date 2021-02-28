@@ -6,7 +6,6 @@
 - explain pattern
 - fix spinbox buttons
 - HMenuItem checkbox styling
-- config & keybind for global rule disabling
 - quick settings
 - import/export/json edit rules?
 - fix flickable popups can't be flicked by keyboard
