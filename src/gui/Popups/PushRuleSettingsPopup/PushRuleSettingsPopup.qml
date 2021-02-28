@@ -209,7 +209,7 @@ HFlickableColumnPopup {
 
         HCheckBox {
             id: highlightCheck
-            text: qsTr("Mark as important")
+            text: qsTr("Highlight, mark as important")
             enabled: notifyCheck.checked
             defaultChecked: root.rule.highlight
             Layout.fillWidth: true
