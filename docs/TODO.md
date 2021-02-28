@@ -1,6 +1,5 @@
 # TODO
 
-- enter in field
 - sfx selection
 - custom action
 

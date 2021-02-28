@@ -78,6 +78,7 @@ HFlickableColumnPopup {
 
     page.footer: AutoDirectionLayout {
         ApplyButton {
+            id: applyButton
             text: qsTr("Save changes")
             enabled: swipeView.currentItem.idField.text.trim() !== ""
             loading: saveFutureId !== ""
@@ -97,6 +98,8 @@ HFlickableColumnPopup {
             onClicked: root.remove()
         }
     }
+
+    onKeyboardAccept: applyButton.clicked()
 
     CustomLabel {
         visible: root.rule.default
