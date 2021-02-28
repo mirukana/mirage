@@ -34,7 +34,7 @@ setup_dns() {
 
 install_apt_packages() {
     apt install -y software-properties-common
-    add-apt-repository -y ppa:beineri/opt-qt-5.12.7-xenial
+    add-apt-repository -y ppa:beineri/opt-qt-5.12.9-xenial
     apt update -y
 
     apt install -y \
