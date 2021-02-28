@@ -68,12 +68,12 @@ Rectangle {
 
             icon.name:
                 mainUI.notificationLevel === UI.NotificationLevel.Enable ?
-                "notifications-all" :
+                "notifications-enable" :
 
                 mainUI.notificationLevel === UI.NotificationLevel.Mute ?
-                "notifications-none" :
+                "notifications-mute" :
 
-                "notifications-mentions-keywords"
+                "notifications-highlights-only"
 
             icon.color:
                 mainUI.notificationLevel === UI.NotificationLevel.Enable ?
@@ -93,7 +93,7 @@ Rectangle {
                 y: parent.height
 
                 HMenuItem {
-                    icon.name: "notifications-all"
+                    icon.name: "notifications-enable"
                     text: qsTr("Enable notifications")
                     checkable: true
                     checked:
@@ -105,7 +105,7 @@ Rectangle {
                 }
 
                 HMenuItem {
-                    icon.name: "notifications-mentions-keywords"
+                    icon.name: "notifications-highlights-only"
                     icon.color: theme.colors.middleBackground
                     text: qsTr("Highlights only (replies, keywords...)")
                     checkable: true
@@ -118,7 +118,7 @@ Rectangle {
                 }
 
                 HMenuItem {
-                    icon.name: "notifications-none"
+                    icon.name: "notifications-mute"
                     icon.color: theme.colors.negativeBackground
                     text: qsTr("Mute all notifications")
                     checkable: true
