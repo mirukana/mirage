@@ -15,4 +15,4 @@ documentation in the following modules first:
 __app_name__     = "mirage"
 __display_name__ = "Mirage"
 __reverse_dns__  = "io.github.mirukana.mirage"
-__version__      = "0.6.4"
+__version__      = "0.7.0"
