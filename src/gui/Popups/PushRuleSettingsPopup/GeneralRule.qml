@@ -30,7 +30,6 @@ HColumnLayout {
             id: idField
             width: parent.width
             defaultText: rule.rule_id
-            // TODO: minimum length, check no dupe
         }
     }
 

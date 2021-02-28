@@ -79,7 +79,7 @@ HFlickableColumnPopup {
     page.footer: AutoDirectionLayout {
         ApplyButton {
             text: qsTr("Save changes")
-            enabled: true  // TODO
+            enabled: swipeView.currentItem.idField.text.trim() !== ""
             loading: saveFutureId !== ""
             onClicked: root.save()
         }
