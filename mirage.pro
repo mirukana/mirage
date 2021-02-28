@@ -112,7 +112,7 @@ QMAKE_CLEAN *= packaging/flatpak/flatpak-pip.json .flatpak-builder
 # Generate resource file
 
 RESOURCE_FILES *= $$glob_filenames(qmldir, *.qml, *.qpl, *.js, *.py)
-RESOURCE_FILES *= $$glob_filenames( *.jpg, *.jpeg, *.png, *.svg)
+RESOURCE_FILES *= $$glob_filenames( *.jpg, *.jpeg, *.png, *.svg, *.wav)
 
 file_content += '<!-- vim: set ft=xml : -->'
 file_content += '<!DOCTYPE RCC>'

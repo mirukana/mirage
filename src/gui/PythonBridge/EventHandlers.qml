@@ -26,6 +26,11 @@ QtObject {
         if (bubble)
             py.callCoro("desktop_notify", [title, body, image])
 
+        if (sound) {
+            window.mainUI.defaultNotificationSound.seek(0)
+            window.mainUI.defaultNotificationSound.play()
+        }
+
         if (urgencyHint) {
             const msec =
                 critical ?

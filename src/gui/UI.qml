@@ -6,6 +6,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
 import QtGraphicalEffects 1.12
+import QtMultimedia 5.12
 import "."
 import "Base"
 import "MainPane"
@@ -35,6 +36,7 @@ Item {
         return ids
     }
 
+    readonly property alias defaultNotificationSound: defaultNotificationSound
     readonly property alias debugConsole: debugConsole
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
@@ -114,14 +116,25 @@ Item {
         font.pointSize: -1
     }
 
-    DebugConsole {
-        id: debugConsole
-        target: mainUI
-        visible: false
+    Audio {
+        id: defaultNotificationSound
+
+        readonly property string sfx:
+            window.settings.Notifications.default_sound
+
+        audioRole: Audio.NotificationRole
+        volume: window.settings.Notifications.volume / 100
+        source: sfx.trim() === "default.wav" ? "../sounds/default.wav" : sfx
     }
 
     IdleManager {
         id: idleManager
+    }
+
+    DebugConsole {
+        id: debugConsole
+        target: mainUI
+        visible: false
     }
 
     LinearGradient {

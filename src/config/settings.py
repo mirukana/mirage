@@ -56,6 +56,14 @@ class Notifications:
     # keep seeing raw <tags> in notifications.
     use_html: bool = True
 
+    # Default sound to play for notifications. Can be the filename
+    # of a builtin sound (only "default.wav" currently exists), or the
+    # absolute path to an audio file, preferably in the WAV format.
+    default_sound: str = "default.wav"
+
+    # Volume at which the notification sound will be played, 0-100.
+    volume: int = 75
+
     # How long in seconds the window will flash in your dock or taskbar when
     # a new message, which matches a notification push rule with a
     # flash (lightbulb) action, is posted in a room.

@@ -1,16 +1,18 @@
 # TODO
 
-- custom action
 - sfx selection
+- custom action
+
+- fix spinbox buttons
 - combo box custom item
 - explain pattern
-- fix spinbox buttons
+- fix flickable popups can't be flicked by keyboard
+- seen tooltips can't be shown on image hover
+
 - quick settings
 - import/export/json edit rules?
-- fix flickable popups can't be flicked by keyboard
 - room selector for room rules
 - validate json for unknown action/condition
-- seen tooltips can't be shown on image hover
 
 - PCN docstrings 
 - PCN error handling
@@ -19,8 +21,6 @@
 - Implement fallback QML notifications, usable if dbus isn't available
 
 - add http_proxy support
-- image viewer: can't expand image in reduced window layout
-- Encrypted rooms don't show invites in member list after Mirage restart
 - Room display name not updated when someone removes theirs
 - Fix right margin of own `<image url>\n<image url>` messages
 - warn on ambiguously activated shortcut
