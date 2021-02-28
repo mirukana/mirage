@@ -566,7 +566,7 @@ QtObject {
         const roomColor = theme.colors.accentText
         const room      = ModelStore.get(userId, "rooms").find(rule.rule_id)
 
-        return (
+        const text =
             rule.rule_id === ".m.rule.master" ?
             qsTr("Any message") :
 
@@ -631,6 +631,7 @@ QtObject {
             escapeHtml(room.display_name) :
 
             escapeHtml(rule.rule_id)
-        )
+
+        return rule.enabled ? text : qsTr("%1 (disabled rule)").arg(text)
     }
 }

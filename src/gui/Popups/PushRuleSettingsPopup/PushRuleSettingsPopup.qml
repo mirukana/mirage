@@ -55,7 +55,7 @@ HFlickableColumnPopup {
             rule.rule_id,
             isBefore && position ? position : undefined,
             ! isBefore && position ? position : undefined,
-            enableCheck.checked,
+            ! disableCheck.checked,
             generalChecked ? details.matrixConditions : undefined,
             contentRadio.checked ? details.idField.text : undefined,
             actions,
@@ -321,9 +321,9 @@ HFlickableColumnPopup {
     }
 
     HCheckBox {
-        id: enableCheck
-        text: qsTr("Enable this rule")
-        defaultChecked: root.rule.enabled
+        id: disableCheck
+        text: qsTr("Disable this rule")
+        defaultChecked: ! root.rule.enabled
         Layout.fillWidth: true
     }
 }
