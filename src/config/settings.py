@@ -40,6 +40,15 @@ class Presence:
     auto_away_after: int = 60 * 10
 
 class Notifications:
+    # Default global notification level when starting the application.
+    # Allows muting (i.e. preventing desktop bubbles, sounds and flashes)
+    # all notifications in the running client, overriding account settings.
+    # Can be either:
+    # - "enable" (notifications will work normally)
+    # - "highlights_only" (notify only for highlights, e.g. replies, keywords)
+    # - "mute" (don't notify for anything)
+    start_level: str = "enable"
+
     # How long in seconds the window will flash in your dock or taskbar when
     # a new message, which matches a notification push rule with a
     # flash (lightbulb) action, is posted in a room.

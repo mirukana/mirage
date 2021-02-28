@@ -21,7 +21,13 @@ ApplicationWindow {
         window.visibility === window.Minimized ||
         window.visibility === window.Hidden
 
-    property int notificationLevel: Window.NotificationLevel.Enable
+    property int notificationLevel:
+        py.ready && settings.Notifications.start_level === "highlights_only" ?
+        Window.NotificationLevel.HighlightsOnly :
+        py.ready && settings.Notifications.start_level === "mute" ?
+        Window.NotificationLevel.Mute :
+        Window.NotificationLevel.Enable
+
     property var notifiedIds: new Set()
 
     property var mainUI: null
