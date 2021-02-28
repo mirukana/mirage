@@ -3,7 +3,6 @@
 - sfx selection
 - custom action
 
-- fix spinbox buttons
 - combo box custom item
 - fix flickable popups can't be flicked by keyboard
 - seen tooltips can't be shown on image hover
