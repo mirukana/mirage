@@ -4,7 +4,7 @@
 import asyncio
 import json
 import logging as log
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from html import escape
 from pathlib import Path
@@ -783,6 +783,18 @@ class NioCallbacks:
     # Account data callbacks
 
     async def onPushRulesEvent(self, ev: nio.PushRulesEvent) -> None:
+        async def update_affected_room(rule: PushRule) -> None:
+            affects_room: Optional[str]
+
+            if rule.kind == nio.PushRuleKind.room:
+                affects_room = rule.rule_id
+            else:
+                affects_room = self.client._rule_overrides_room(rule)
+
+            if affects_room in self.client.rooms:
+                nio_room = self.client.rooms[affects_room]
+                await self.client.register_nio_room(nio_room)
+
         model = self.models[self.user_id, "pushrules"]
 
         kinds: Dict[nio.PushRuleKind, List[nio.PushRule]] = {
@@ -800,9 +812,10 @@ class NioCallbacks:
                 new_keys.add((kind.value, rule.id))
 
         with model.batch_remove():
-            for key in tuple(model):
+            for key, rule in list(model.items()):
                 if key not in new_keys:
                     del model[key]
+                    await update_affected_room(rule)
 
         # Then, add new rules/modify changed existing ones
 
@@ -825,7 +838,7 @@ class NioCallbacks:
                 sound  = str(tweaks.get("sound") or "")
                 hint   = tweaks.get("urgency_hint", bool(sound)) is not False
 
-                model[kind.value, rule.id] = PushRule(
+                rule_item = PushRule(
                     id           = (kind.value, rule.id),
                     kind         = kind,
                     rule_id      = rule.id,
@@ -841,6 +854,8 @@ class NioCallbacks:
                     sound        = sound,
                     urgency_hint = hint,
                 )
+                model[kind.value, rule.id] = rule_item
+                await update_affected_room(rule_item)
 
         self.client.push_rules = ev
 

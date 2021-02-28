@@ -41,8 +41,8 @@ from .errors import (
 from .html_markdown import HTML_PROCESSOR as HTML
 from .media_cache import Media, Thumbnail
 from .models.items import (
-    ZERO_DATE, Account, Event, Member, PushRule, Room, Transfer,
-    TransferStatus, TypeSpecifier,
+    ZERO_DATE, Account, Event, Member, PushRule, Room,
+    RoomNotificationOverride, Transfer, TransferStatus, TypeSpecifier,
 )
 from .models.model_store import ModelStore
 from .nio_callbacks import NioCallbacks
@@ -1919,13 +1919,25 @@ class MatrixClient(nio.AsyncClient):
             await self.delete_pushrule("global", kind, rule_id)
 
 
+    def _rule_overrides_room(self, rule: PushRule) -> Optional[str]:
+        override = rule.kind is nio.PushRuleKind.override
+        one_cnd  = len(rule.conditions) == 1
+
+        if not one_cnd:
+            return None
+
+        cnd      = nio.PushCondition.from_dict(rule.conditions[0])
+        ev_match = isinstance(cnd, nio.PushEventMatch)
+
+        if override and ev_match and cnd.key == "room_id":
+            return cnd.pattern
+
+        return None
+
+
     async def _remove_room_override_rule(self, room_id: str) -> None:
         for rule in self.models[self.user_id, "pushrules"].values():
-            override_kind = rule.kind is nio.PushRuleKind.override
-            this_room_cnd = nio.PushEventMatch("room_id", room_id).as_value
-
-            if (override_kind and rule.conditions == [this_room_cnd]):
-                print(rule)
+            if self._rule_overrides_room(rule) == room_id:
                 await self.remove_pushrule(rule.kind, rule.rule_id)
 
 
@@ -2015,7 +2027,6 @@ class MatrixClient(nio.AsyncClient):
     ) -> None:
         """Register/update a `nio.MatrixRoom` as a `models.items.Room`."""
 
-        # Add room
         inviter        = getattr(room, "inviter", "") or ""
         levels         = room.power_levels
         can_send_state = partial(levels.can_user_send_state, self.user_id)
@@ -2044,7 +2055,28 @@ class MatrixClient(nio.AsyncClient):
             )
             unverified_devices = registered.unverified_devices
 
+        notification_setting = RoomNotificationOverride.UseDefaultSettings
+
+        for rule in self.models[self.user_id, "pushrules"].values():
+            overrides       = self._rule_overrides_room(rule) == room.room_id
+            is_room_kind    = rule.kind is nio.PushRuleKind.room
+            room_kind_match = is_room_kind and rule.rule_id == room.room_id
+
+            if overrides and not rule.actions:
+                notification_setting = RoomNotificationOverride.IgnoreEvents
+                break
+            elif overrides:
+                notification_setting = RoomNotificationOverride.AllEvents
+                break
+            elif room_kind_match and not rule.actions:
+                notification_setting = RoomNotificationOverride.HighlightsOnly
+                break
+            elif room_kind_match:
+                notification_setting = RoomNotificationOverride.AllEvents
+                break
+
         pinned = self.backend.settings.RoomList.Pinned
+
         room_item = Room(
             id             = room.room_id,
             for_account    = self.user_id,
@@ -2085,9 +2117,10 @@ class MatrixClient(nio.AsyncClient):
 
             last_event_date = last_event_date,
 
-            unreads       = room.unread_notifications,
-            highlights    = room.unread_highlights,
-            local_unreads = local_unreads,
+            unreads              = room.unread_notifications,
+            highlights           = room.unread_highlights,
+            local_unreads        = local_unreads,
+            notification_setting = notification_setting,
 
             lexical_sorting = self.backend.settings.RoomList.lexical_sort,
             pinned          = room.room_id in pinned.get(self.user_id, []),

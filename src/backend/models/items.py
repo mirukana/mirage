@@ -38,6 +38,16 @@ class PingStatus(AutoStrEnum):
     Failed  = auto()
 
 
+class RoomNotificationOverride(AutoStrEnum):
+    """Possible per-room notification override settings, as displayed in the
+    left sidepane's context menu when right-clicking a room.
+    """
+    UseDefaultSettings = auto()
+    AllEvents          = auto()
+    HighlightsOnly     = auto()
+    IgnoreEvents       = auto()
+
+
 @dataclass(eq=False)
 class Homeserver(ModelItem):
     """A homeserver we can connect to. The `id` field is the server's URL."""
@@ -170,6 +180,9 @@ class Room(ModelItem):
     highlights:    int  = 0
     local_unreads: bool = False
 
+    notification_setting: RoomNotificationOverride = \
+        RoomNotificationOverride.UseDefaultSettings
+
     lexical_sorting: bool = False
     pinned:          bool = False
 
@@ -229,6 +242,12 @@ class Room(ModelItem):
 
 @dataclass(eq=False)
 class AccountOrRoom(Account, Room):
+    """The left sidepane in the GUI lists a mixture of accounts and rooms
+    giving a tree view illusion. Since all items in a QML ListView must have
+    the same available properties, this class inherits both
+    `Account` and `Room` to fulfill that purpose.
+    """
+
     type:          Union[Type[Account], Type[Room]] = Account
     account_order: int                              = -1
 
