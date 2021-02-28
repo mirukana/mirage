@@ -17,6 +17,9 @@ HFlickableColumnPopup {
     property var rule
     property bool ruleExists: true
 
+    property string saveFutureId: ""
+    property string removeFutureId: ""
+
     readonly property bool generalChecked:
         overrideRadio.checked || underrideRadio.checked
 
@@ -61,12 +64,14 @@ HFlickableColumnPopup {
             actions,
         ]
 
-        py.callClientCoro(userId, "edit_pushrule", args, root.close)
+        saveFutureId =
+            py.callClientCoro(userId, "edit_pushrule", args, root.close)
     }
 
     function remove() {
         const args = [rule.kind, rule.rule_id]
-        py.callClientCoro(userId, "remove_pushrule", args, root.close)
+        removeFutureId =
+            py.callClientCoro(userId, "remove_pushrule", args, root.close)
     }
 
     page.implicitWidth: Math.min(maximumPreferredWidth, 550 * theme.uiScale)
@@ -75,6 +80,7 @@ HFlickableColumnPopup {
         ApplyButton {
             text: qsTr("Save changes")
             enabled: true  // TODO
+            loading: saveFutureId !== ""
             onClicked: root.save()
         }
 
@@ -87,6 +93,7 @@ HFlickableColumnPopup {
             icon.name: "pushrule-remove"
             text: qsTr("Remove rule")
             enabled: ! root.rule.default
+            loading: removeFutureId !== ""
             onClicked: root.remove()
         }
     }
