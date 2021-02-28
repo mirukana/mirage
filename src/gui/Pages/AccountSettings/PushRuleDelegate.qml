@@ -36,7 +36,7 @@ HTile {
         }
 
         HRowLayout {
-            NotificationRuleButton {
+            PushRuleButton {
                 id: notifyButton
                 toggles: "notify"
 
@@ -51,7 +51,7 @@ HTile {
                 }
             }
 
-            NotificationRuleButton {
+            PushRuleButton {
                 requiresOn: notifyButton
                 toggles: "highlight"
 
@@ -68,13 +68,13 @@ HTile {
                 }
             }
 
-            NotificationRuleButton {
+            PushRuleButton {
                 requiresOn: notifyButton
                 icon.name: "pushrule-action-bubble"
                 toggles: "bubble"
             }
 
-            NotificationRuleButton {
+            PushRuleButton {
                 requiresOn: notifyButton
                 icon.name: "pushrule-action-sound"
                 toggles: "sound"
@@ -85,7 +85,7 @@ HTile {
                     "default"
             }
 
-            NotificationRuleButton {
+            PushRuleButton {
                 requiresOn: notifyButton
                 icon.name: "pushrule-action-urgency-hint"
                 toggles: "urgency_hint"
@@ -93,7 +93,7 @@ HTile {
 
             HSpacer {}
 
-            NotificationRuleButton {
+            PushRuleButton {
                 icon.name: "pushrule-edit"
                 onClicked: root.clicked()
             }

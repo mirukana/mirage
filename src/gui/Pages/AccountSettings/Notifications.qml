@@ -114,7 +114,7 @@ HListView {
         }
     }
 
-    delegate: NotificationRuleDelegate {
+    delegate: PushRuleDelegate {
         page: root
         width: root.width
     }
