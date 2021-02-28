@@ -10,8 +10,7 @@ HColumnLayout {
     readonly property alias idField: idField
 
     HLabeledItem {
-        // TODO: globbing explanation & do space works?
-        label.text: qsTr("Word:")
+        label.text: qsTr("Word or glob pattern to match:")
         Layout.fillWidth: true
 
         HTextField {

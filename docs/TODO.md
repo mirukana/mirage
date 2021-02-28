@@ -5,7 +5,6 @@
 
 - fix spinbox buttons
 - combo box custom item
-- explain pattern
 - fix flickable popups can't be flicked by keyboard
 - seen tooltips can't be shown on image hover
 
