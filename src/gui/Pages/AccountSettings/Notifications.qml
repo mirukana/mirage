@@ -64,6 +64,7 @@ HListView {
 
             Layout.alignment: Qt.AlignCenter
             Layout.topMargin: theme.spacing
+            Layout.bottomMargin: Layout.topMargin
         }
     }
 
