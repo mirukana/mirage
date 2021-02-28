@@ -1858,6 +1858,8 @@ class MatrixClient(nio.AsyncClient):
 
         if enable is not None and (old.enabled if old else True) != enable:
             await self.enable_pushrule("global", kind, rule_id, enable)
+        elif kind_change or rule_id_change and not old.enabled:
+            await self.enable_pushrule("global", kind, rule_id, False)
 
 
     async def tweak_pushrule_actions(
