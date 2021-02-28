@@ -34,10 +34,19 @@ MenuItem {
         label.horizontalAlignment: Label.AlignLeft
 
         HIcon {
+            visible: menuItem.checkable
+            opacity: menuItem.checked ? 1 : 0
+            svgName: "menu-item-check-mark"
+
+            Behavior on opacity { HNumberAnimation {} }
+        }
+
+        HIcon {
             visible: menuItem.subMenu
             svgName: "submenu-arrow"
         }
     }
 
     arrow: null
+    indicator: null
 }

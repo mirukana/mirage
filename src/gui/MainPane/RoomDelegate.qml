@@ -152,6 +152,7 @@ HTile {
 
             HMenuItem {
                 text: qsTr("Use default account settings")
+                checkable: true
                 checked: model.notification_setting === "UseDefaultSettings"
                 onTriggered: py.callClientCoro(
                     model.for_account, "room_pushrule_use_default", [model.id],
@@ -160,6 +161,7 @@ HTile {
 
             HMenuItem {
                 text: qsTr("All new messages")
+                checkable: true
                 checked: model.notification_setting === "AllEvents"
                 onTriggered: py.callClientCoro(
                     model.for_account, "room_pushrule_all_events", [model.id],
@@ -168,6 +170,7 @@ HTile {
 
             HMenuItem {
                 text: qsTr("Highlights only (replies, keywords...)")
+                checkable: true
                 checked: model.notification_setting === "HighlightsOnly"
                 onTriggered: py.callClientCoro(
                     model.for_account,
@@ -178,6 +181,7 @@ HTile {
 
             HMenuItem {
                 text: qsTr("Ignore new messages")
+                checkable: true
                 checked: model.notification_setting === "IgnoreEvents"
                 onTriggered: py.callClientCoro(
                     model.for_account, "room_pushrule_ignore_all", [model.id],

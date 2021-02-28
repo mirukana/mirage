@@ -94,6 +94,7 @@ Rectangle {
 
                 HMenuItem {
                     text: qsTr("Enable notifications")
+                    checkable: true
                     checked:
                         mainUI.notificationLevel ===
                             UI.NotificationLevel.Enable
@@ -104,6 +105,7 @@ Rectangle {
 
                 HMenuItem {
                     text: qsTr("Highlights only (replies, keywords...)")
+                    checkable: true
                     checked:
                         mainUI.notificationLevel ===
                             UI.NotificationLevel.HighlightsOnly
@@ -114,6 +116,7 @@ Rectangle {
 
                 HMenuItem {
                     text: qsTr("Mute all notifications")
+                    checkable: true
                     checked:
                         mainUI.notificationLevel === UI.NotificationLevel.Mute
                     onTriggered:

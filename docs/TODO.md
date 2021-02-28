@@ -5,7 +5,6 @@
 - combo box custom item
 - explain pattern
 - fix spinbox buttons
-- HMenuItem checkbox styling
 - quick settings
 - import/export/json edit rules?
 - fix flickable popups can't be flicked by keyboard
