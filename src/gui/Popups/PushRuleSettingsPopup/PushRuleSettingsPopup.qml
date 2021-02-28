@@ -194,6 +194,7 @@ HFlickableColumnPopup {
 
         CustomLabel {
             text: qsTr("Actions for messages that trigger this rule:")
+            bottomPadding: theme.spacing / 2
         }
 
         HCheckBox {
