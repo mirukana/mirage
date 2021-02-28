@@ -39,11 +39,7 @@ HFlickableColumnPopup {
             undefined
 
         const actions = []
-        const sfx     =
-            soundCheck.checked && rule.sound ? rule.sound :
-            soundCheck.checked && rule.rule_id === ".m.rule.call" ? "ring" :
-            soundCheck.checked ? "default":
-            false
+        const sfx     = soundCheck.checked ? soundCombo.editText : false
 
         notifyCheck.checked && actions.push("notify")
         actions.push({set_tweak: "highlight", value: highlightCheck.checked})
@@ -233,12 +229,28 @@ HFlickableColumnPopup {
             Layout.fillWidth: true
         }
 
-        HCheckBox {
-            id: soundCheck
-            text: qsTr("Play sound")
+        HFlow {
             enabled: notifyCheck.checked
-            defaultChecked: root.rule.sound
+            spacing: theme.spacing / 2
             Layout.fillWidth: true
+
+            HCheckBox {
+                id: soundCheck
+                text: qsTr("Play sound: ")
+                defaultChecked: root.rule.sound
+                height: soundCombo.height
+            }
+
+            HComboBox {
+                id: soundCombo
+
+                readonly property string current: root.rule.sound || "default"
+
+                model: [...new Set(["default", "ring", current])]
+                editText: current
+                currentIndex: model.indexOf(current)
+                editable: true
+            }
         }
 
         HCheckBox {

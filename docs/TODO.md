@@ -1,6 +1,5 @@
 # TODO
 
-- sfx selection
 - custom action
 
 - seen tooltips can't be shown on image hover
