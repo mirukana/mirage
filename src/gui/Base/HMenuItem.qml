@@ -3,6 +3,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
 MenuItem {
     id: menuItem
@@ -31,5 +32,12 @@ MenuItem {
         button: menuItem
         buttonTheme: theme.controls.menuItem
         label.horizontalAlignment: Label.AlignLeft
+
+        HIcon {
+            visible: menuItem.subMenu
+            svgName: "submenu-arrow"
+        }
     }
+
+    arrow: null
 }
