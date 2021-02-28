@@ -9,9 +9,11 @@ HQtObject {
 
     property Item container: parent
     property bool active: container.count > 1
+    property bool disableIfAnyPopupOrMenu: true
 
     HShortcut {
         active: root.active
+        disableIfAnyPopupOrMenu: root.disableIfAnyPopupOrMenu
         sequences: window.settings.Keys.previous_tab
         onActivated: container.setCurrentIndex(
             utils.numberWrapAt(container.currentIndex - 1, container.count),
@@ -20,6 +22,7 @@ HQtObject {
 
     HShortcut {
         active: root.active
+        disableIfAnyPopupOrMenu: root.disableIfAnyPopupOrMenu
         sequences: window.settings.Keys.next_tab
         onActivated: container.setCurrentIndex(
             utils.numberWrapAt(container.currentIndex + 1, container.count),

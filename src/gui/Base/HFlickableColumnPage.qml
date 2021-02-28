@@ -15,7 +15,7 @@ HPage {
     property alias flickShortcuts: flickShortcuts
 
     property bool enableFlickShortcuts:
-        SwipeView ? SwipeView.isCurrentItem : true
+        SwipeView && SwipeView.view ? SwipeView.isCurrentItem : true
 
     implicitWidth: theme.controls.box.defaultWidth
     implicitHeight: contentHeight + implicitHeaderHeight + implicitFooterHeight

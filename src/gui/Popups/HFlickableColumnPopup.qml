@@ -23,6 +23,7 @@ HPopup {
             popup.maximumPreferredHeight,
             implicitHeaderHeight + implicitFooterHeight + contentHeight,
         )
+        flickShortcuts.disableIfAnyPopupOrMenu: false
 
         Keys.onReturnPressed: popup.keyboardAccept()
         Keys.onEnterPressed: popup.keyboardAccept()
