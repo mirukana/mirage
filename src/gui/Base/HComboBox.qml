@@ -76,6 +76,19 @@ ComboBox {
             }
         }
 
+        HLabel {
+            visible: root.editable
+            height: visible ? implicitHeight : 0
+            text: qsTr("Custom input accepted")
+            color: theme.colors.dimText
+            leftPadding: theme.spacing
+            rightPadding: leftPadding
+            topPadding: theme.spacing / 1.75
+            bottomPadding: topPadding
+            width: menu.width
+            wrapMode: HLabel.Wrap
+        }
+
         Repeater {
             model: root.popup.visible ? root.model : null
             delegate: root.delegate
