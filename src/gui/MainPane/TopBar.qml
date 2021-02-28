@@ -67,24 +67,23 @@ Rectangle {
             backgroundColor: "transparent"
 
             icon.name:
-                window.notificationLevel === Window.NotificationLevel.All ?
+                window.notificationLevel === Window.NotificationLevel.Enable ?
                 "notifications-all" :
 
-                window.notificationLevel === Window.NotificationLevel.None ?
+                window.notificationLevel === Window.NotificationLevel.Mute ?
                 "notifications-none" :
 
                 "notifications-mentions-keywords"
 
             icon.color:
-                window.notificationLevel === Window.NotificationLevel.All ?
+                window.notificationLevel === Window.NotificationLevel.Enable ?
                 theme.icons.colorize :
 
-                window.notificationLevel === Window.NotificationLevel.None ?
+                window.notificationLevel === Window.NotificationLevel.Mute ?
                 theme.colors.negativeBackground :
 
                 theme.colors.middleBackground
 
-            toolTip.text: qsTr("Control global notifications")
             onClicked: notificationsMenu.open()
 
             Layout.fillHeight: true
@@ -94,29 +93,33 @@ Rectangle {
                 y: parent.height
 
                 HMenuItem {
-                    icon.name: "notifications-all"
-                    text: qsTr("Normal notifications")
+                    text: qsTr("Enable notifications")
+                    checked:
+                        window.notificationLevel ===
+                            Window.NotificationLevel.Enable
                     onTriggered:
                         window.notificationLevel =
-                            Window.NotificationLevel.All
+                            Window.NotificationLevel.Enable
                 }
 
                 HMenuItem {
-                    icon.name: "notifications-mentions-keywords"
-                    icon.color: theme.colors.middleBackground
-                    text: qsTr("Mentions & keywords")
+                    text: qsTr("Highlights only (replies, keywords...)")
+                    checked:
+                        window.notificationLevel ===
+                            Window.NotificationLevel.HighlightsOnly
                     onTriggered:
                         window.notificationLevel =
-                            Window.NotificationLevel.MentionsKeywords
+                            Window.NotificationLevel.HighlightsOnly
                 }
 
                 HMenuItem {
-                    icon.name: "notifications-none"
-                    icon.color: theme.colors.negativeBackground
-                    text: qsTr("Nothing")
+                    text: qsTr("Mute all notifications")
+                    checked:
+                        window.notificationLevel ===
+                            Window.NotificationLevel.Mute
                     onTriggered:
                         window.notificationLevel =
-                            Window.NotificationLevel.None
+                            Window.NotificationLevel.Mute
                 }
             }
         }

@@ -5,7 +5,7 @@
 - combo box custom item
 - explain pattern
 - fix spinbox buttons
-- quick room & sender rule changes
+- HMenuItem checkbox styling
 - config & keybind for global rule disabling
 - quick settings
 - import/export/json edit rules?
@@ -22,7 +22,6 @@
 - profiles missing in notifications
 - option to use plaintext notifications
 - Notification urgency level (plyer)?
-- annoying tooltips when menu open
 
 - add http_proxy support
 - image viewer: can't expand image in reduced window layout

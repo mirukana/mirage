@@ -13,8 +13,8 @@ QtObject {
     ) {
         const level = window.notificationLevel
 
-        if (level === Window.NotificationLevel.None) return
-        if (level === Window.MentionsKeywords && ! critical) return
+        if (level === Window.NotificationLevel.Mute) return
+        if (level === Window.HighlightsOnly && ! critical) return
         if (window.notifiedIds.has(id)) return
 
         window.notifiedIds.add(id)
