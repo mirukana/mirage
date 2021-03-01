@@ -54,8 +54,9 @@ touch ~/.config/mirage/settings.py
 
 **Warnings**: 
 
-- API currently unstable: theme properties are often renamed, added or deleted.
-- The file format for themes will soon change
 - The current file format forces all theme to have all properties
   defined, instead of being able to only specify the ones to override from the
-  default theme.
+  default theme. Keep this in mind when updating Mirage.
+
+- Themes will soon be moved to the PCN format, that was introduced in 0.7.0 
+  for user config files.
