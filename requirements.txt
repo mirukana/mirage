@@ -13,6 +13,7 @@ sortedcontainers  >= 2.2.2,  < 3
 watchgod          >= 0.6,    < 0.7
 redbaron          >= 0.9.2,  < 1
 hsluv             >= 5.0.0,  < 6
+simpleaudio       >= 1.0.4,  < 2
 dbus-python       >= 1.2.16, < 2; platform_system == "Linux"
 
 async_generator   >= 1.10,  < 2;   python_version < "3.7"

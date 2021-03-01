@@ -23,13 +23,8 @@ QtObject {
         if (Qt.application.state === Qt.ApplicationActive)
             return
 
-        if (bubble)
-            py.callCoro("desktop_notify", [title, body, image])
-
-        if (sound) {
-            window.mainUI.defaultNotificationSound.seek(0)
-            window.mainUI.defaultNotificationSound.play()
-        }
+        if (bubble) py.callCoro("desktop_notify", [title, body, image])
+        if (sound) py.callCoro("sound_notify")
 
         if (urgencyHint) {
             const msec =

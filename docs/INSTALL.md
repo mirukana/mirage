@@ -202,8 +202,7 @@ export CFLAGS="-march=native -O2 -pipe"
 
 ```sh
 sudo apk add qt5-qtquickcontrols2-dev qt5-qtsvg-dev qt5-qtimageformats \
-             qt5-qtmultimedia-dev \
-             libx11-dev libxscrnsaver-dev \
+             libx11-dev libxscrnsaver-dev alsa-lib-dev \
              python3-dev py3-setuptools \
              build-base git cmake \
              libjpeg-turbo-dev zlib-dev tiff-dev libwebp-dev openjpeg-dev \
@@ -221,8 +220,8 @@ Alternatively, you can just use `pacman` and
 
 ```sh
 yay -Syu qt5-base qt5-declarative qt5-quickcontrols2 qt5-svg \
-         qt5-graphicaleffects qt5-imageformats qt5-multimedia \
-         libx11 libxss \
+         qt5-graphicaleffects qt5-imageformats \
+         libx11 libxss alsa-lib \
          python python-pip \
          python-pyotherside \
          libolm \
@@ -237,9 +236,8 @@ sudo dnf groupinstall 'Development Tools'
 sudo dnf install qt5-devel qt5-qtbase-devel qt5-qtdeclarative-devel \
                  qt5-qtquickcontrols2-devel qt5-qtsvg-devel \
                  qt5-qtgraphicaleffects qt5-qtimageformats \
-                 qt5-qtmultimedia-devel \
                  python3-devel python3-pip pyotherside \
-                 libX11-devel libXScrnSaver-devel \
+                 libX11-devel libXScrnSaver-devel alsa-lib-devel \
                  git cmake \
                  libolm-devel \
                  libjpeg-turbo-devel zlib-devel libtiff-devel libwebp-devel \
@@ -257,8 +255,8 @@ if `emerge` says so.
 
 ```sh
 sudo emerge -av qtcore qtdeclarative qtquickcontrols2 \
-                qtsvg qtgraphicaleffects qtimageformats qtmultimedia \
-                libX11 libXScrnSaver \
+                qtsvg qtgraphicaleffects qtimageformats \
+                libX11 libXScrnSaver alsa-lib \
                 dev-python/pip pyotherside \
                 dev-vcs/git cmake \
                 libjpeg-turbo zlib tiff libwebp openjpeg libmediainfo
@@ -276,10 +274,9 @@ sudo apt install qt5-default qt5-qmake qt5-image-formats-plugins \
                  qml-module-qtquick-layouts qml-module-qtquick-dialogs \
                  qml-module-qt-labs-platform \
                  qml-module-qtquick-shapes \
-                 qml-module-qtmultimedia \
                  qtdeclarative5-dev \
                  qtquickcontrols2-5-dev \
-                 libx11-dev libxss-dev \
+                 libx11-dev libxss-dev libasound2-dev \
                  python3-dev python3-pip \
                  qml-module-io-thp-pyotherside \
                  build-essential git cmake \
@@ -304,8 +301,7 @@ sudo apt install libolm-dev
 sudo xbps-install -Su qt5-devel qt5-declarative-devel \
                       qt5-quickcontrols2-devel \
                       qt5-svg-devel qt5-graphicaleffects qt5-imageformats \
-                      qt5-multimedia-devel \
-                      libx11-devel libXScrnSaver-devel \
+                      libx11-devel libXScrnSaver-devel alsa-lib-devel \
                       python3-devel python3-pip \
                       olm-devel \
                       base-devel git cmake \

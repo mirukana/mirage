@@ -58,11 +58,8 @@ class Notifications:
 
     # Default sound to play for notifications. Can be the filename
     # of a builtin sound (only "default.wav" currently exists), or the
-    # absolute path to an audio file, preferably in the WAV format.
+    # absolute path to a WAV file.
     default_sound: str = "default.wav"
-
-    # Volume at which the notification sound will be played, 0-100.
-    volume: int = 75
 
     # How long in seconds the window will flash in your dock or taskbar when
     # a new message, which matches a notification push rule with a

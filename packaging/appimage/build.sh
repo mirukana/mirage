@@ -39,7 +39,7 @@ install_apt_packages() {
 
     apt install -y \
         qt512base qt512declarative qt512graphicaleffects \
-        qt512imageformats qt512quickcontrols2 qt512svg qt512multimedia \
+        qt512imageformats qt512quickcontrols2 qt512svg \
         zip git wget cmake ccache \
         build-essential mesa-common-dev libglu1-mesa-dev freeglut3-dev \
         libglfw3-dev libgles2-mesa-dev libssl-dev \
@@ -47,7 +47,7 @@ install_apt_packages() {
         libsqlite3-dev libffi-dev openssl libreadline-dev \
         libjpeg-turbo8-dev zlib1g-dev \
         libtiff5-dev liblcms2-dev libwebp-dev  libopenjp2-7-dev \
-        libx11-dev libxss-dev \
+        libx11-dev libxss-dev libasound2-dev \
         pkg-config libdbus-1-dev libglib2.0-dev \
         desktop-file-utils  # for appimage-lint.sh
 

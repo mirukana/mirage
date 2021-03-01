@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 import asyncio
+import io
 import logging as log
 import os
 import re
 import sys
 import time
 import traceback
+import wave
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
@@ -16,6 +18,8 @@ from urllib.parse import urlparse
 import aiohttp
 import nio
 import plyer
+import pyotherside
+import simpleaudio
 from appdirs import AppDirs
 
 from . import __app_name__
@@ -584,3 +588,18 @@ class Backend:
                 trace = traceback.format_exc().rstrip()
                 log.error("Sending desktop notification failed\n%s", trace)
                 self.notifications_working = False
+
+
+    async def sound_notify(self) -> None:
+        path = self.settings.Notifications.default_sound
+
+        if path == "default.wav":
+            path = "src/sounds/default.wav"
+
+        try:
+            content = pyotherside.qrc_get_file_contents(path)
+        except ValueError:
+            simpleaudio.WaveObject.from_wave_file(path).play()
+        else:
+            wave_read = wave.open(io.BytesIO(content))
+            simpleaudio.WaveObject.from_wave_read(wave_read).play()
