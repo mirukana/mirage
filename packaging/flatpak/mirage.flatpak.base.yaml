@@ -9,6 +9,7 @@ finish-args:
   - --share=network
   - --socket=x11
   - --socket=wayland
+  - --socket=pulseaudio
   - --device=dri
   - --filesystem=host
   - --talk-name=org.freedesktop.Notifications
@@ -26,6 +27,7 @@ cleanup:
   - /app/bin/jsonschema
   - /app/bin/pasteurize
   - /app/bin/pwiz.py
+  - /app/bin/watchgod
 
 modules:
   - name: pyotherside
@@ -45,8 +47,8 @@ modules:
     sources:
       - type: git
         url: https://gitlab.matrix.org/matrix-org/olm.git
-        tag: 3.1.4
-        commit: 6753595300767dd70150831dbbe6f92d64e75038
+        tag: 3.2.2
+        commit: 3745ea57bbce319ac2f190e02062e45a46d23471
     disable-shallow-clone: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -89,12 +91,15 @@ modules:
   - name: python3-matrix-nio
     buildsystem: simple
     build-commands:
-      - rm pyproject.toml
       - pip3 install --prefix=${FLATPAK_DEST} .
+    # network access required for poetry
+    build-options:
+      build-args:
+        - --share=network
     sources:
       - type: git
         url: https://github.com/mirukana/matrix-nio.git
-        commit: 7cf488492d4f70632605f302e1ff75cef4973f02
+        commit: cd95f409ea2d4c20c619225e44245c178074da68
 
   - name: mirage
     buildsystem: qmake
