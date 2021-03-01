@@ -184,6 +184,10 @@ and this project adheres to
 
 - Fix scrolling keybinds not working to scroll popups 
 
+- Revert 0.6.2's message combining fix, which caused message bubble movements
+  to randomly stop in the middle of their animations and be left at odd 
+  positions or overlap with other bubbles
+
 
 ## 0.6.4 (2020-09-16)
 
