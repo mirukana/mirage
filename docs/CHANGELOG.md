@@ -6,6 +6,7 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- [0.7.0 (2021-02-28)](#070-2021-02-28)
 - [0.6.4 (2020-09-16)](#064-2020-09-16)
 - [0.6.3 (2020-09-16)](#063-2020-09-16)
 - [0.6.2 (2020-08-28)](#062-2020-08-28)
@@ -18,6 +19,170 @@ and this project adheres to
 - [0.4.2 (2020-03-27)](#042-2020-03-27)
 - [0.4.1 (2020-03-23)](#041-2020-03-23)
 - [0.4.0 (2020-03-21)](#040-2020-03-21)
+
+
+## 0.7.0 (2021-02-28)
+
+### Added
+
+- **Push rules and notifications support**: 
+  - Add native desktop notifications support
+  - Add sound effect playback support 
+  - Add button and keybinds to mute all notifications in the running client
+  - Add notification context menu options to rooms in the left pane 
+  - Add a push rule editor to account settings:
+    - Control for any rule whether matching messages are 
+      marked as unread, highlighted, trigger a desktop notification, 
+      sound, window alert, or any combination of those actions
+
+    - Create custom rules targeting a particular room, message sender,
+      messages containing certain words or messages matching
+      advanced conditions
+
+- **New configuration system** replacing the previous `settings.json`,
+  see the 
+  [documentation](https://github.com/mirukana/mirage/blob/master/docs/CONFIG.md) 
+  for more info
+
+- Rooms in the left pane can now be pinned to the top of the list, using the
+  added context menu option or config file setting
+
+- Support drag-and-dropping text and files to upload in chats
+
+- Add tooltips to the message read counters, listing who has read a message and
+  when. Tooltips can also be shown for the keyboard-focused message using a
+  keybind.
+
+- The chat header now indicates when messages are selected in the timeline,
+  and offers copy/redact/clear selection buttons 
+
+- Add a visible indicator when downloading files 
+
+- Add command-line arguments parsing and a `--start-in-tray` option, see 
+  `mirage --help`
+
+- Hovering on stability percentages in the sign-in page's homeserver list 
+  now shows more detailed tooltips about the server's recent downtimes
+
+### Changed
+
+- Config files and theme (with the exception of `accounts.json`) are now 
+  automatically reloaded when changed on disk 
+
+- The top-left settings button now opens a menu giving access to the 
+  settings folder, theme folder and developer console
+
+- Clicking on the "Mirage x.y.z" text in the top left no longer opens the 
+  github page 
+
+- Merge the "Encryption" and "Sessions" account settings tabs into a new 
+  "Security" tab
+
+- Developer console improvements:
+  - Improve default colors and provide clearer separation of different 
+    commands's outputs
+  - Support multi-line input, use shift+return to insert a newline
+  - The output text can now be selected and copied
+
+- Improve room page loading speed 
+
+- When replying to a message, pressing the reply keybind again while focusing
+  on that message will now cancel the reply
+
+- Make user ID in account settings a copiable read-only text field
+
+- Hide useless context menu entries for read-only text fields (undo/paste/etc)
+
+- Make the scroll to top/bottom keybinds work faster for long timelines and 
+  be more accurate 
+
+- Better explain why not all selected messages can be removed in the 
+  message removal confirmation popup
+
+- When clicking on an account in the top left account bar or using the 
+  previous/next account keybinds, focus the account settings instead of 
+  the account's first room
+
+- While keyboard-focusing an image message, hide its sender and time bubbles
+  as if it was hovered by mouse
+
+- Color key words in invite/leave/forget/error popups instead of using italic
+
+- Apply theme radius on context menus
+
+- Theming:
+  - Reduce default `fontSize.big` from `22` to `20`
+  - Change the default style of room unread indicators
+  - Add new properties to the `mainPane.accountBar.account.unreadIndicator`
+    and `mainPane.listView.room.unreadIndicator` sections, see
+    [620b5815](https://github.com/mirukana/mirage/commit/620b58151d7d9d15e242402da34ef55a05549ca5#diff-fdb828d814eca61316a31204666263a410da6dd9c1cf0099dbf54da9e82e33e1)
+
+
+### Fixed
+
+- Fix build failing on Python 3.9 due to incompatible `blist` dependency
+
+- Fix event context menu "Reply" option targetting the wrong message
+
+- Fix read counter on image events lacking color and having extra padding
+
+- Prevent opening multiple instances of the same context menu by right clicking
+  or using keybinds 
+
+- Fix current page not being highlighted in the left pane when Mirage starts 
+  and the initial page to load is an account settings page
+
+- Fix list delegates (especially left pane rooms) occasionally appearing as 
+  invisible items 
+
+- Fix incorrect user ID text hue in account settings
+
+- Close the reply bar when switching to another room while composing a reply
+
+- Fix "Copy link address" entry in message context menu not being visible 
+
+- Fix some characters being rendered incorrectly in redacted messages reasons
+  (e.g. `<test>` was shown as `&lt;test&gt;`)
+
+- Fix cancel button in the "Join Room" page not returning to previous page 
+
+- Fix Matrix server errors lacking a `M_CODE` triggering an account logout 
+
+- Fix "Go to previous/next unread/highlighted room" keybinds ignoring rooms 
+  with a local unread counter ([!] markers)
+
+- Fix copying multi-line mouse-selected rich text, newlines were not preserved
+
+- Prevent warnings spam when the XScreenSaver protocol is available but not 
+  supported, e.g. when running in XWayland
+
+- Fix message timeline occasionally breaking and mixing messages from multiple 
+  rooms when switching room
+
+- Show an error when loading a JSON config file fails instead of silently 
+  failing and using a default configuration, which can potentially overwrite
+  user files
+
+- Fix "focus previous/next message" keybinds sometimes skipping messages and 
+  focusing the middle of the screen while the timeline scrolling 
+  was at the bottom 
+
+- Fix read marker updates sometimes getting stuck and never clearing the unread
+  message counts for a room
+
+- Fix scroll keybinds not working when kinetic scrolling is disabled
+
+- Fix chat right pane having an invisible 10px edge when hidden/collapsed, 
+  interfering with any button in the way
+
+- Fix the "expand right pane" button failing to bring back the pane and
+  turning the chat room header invisible 
+
+- Fix "open debug console for this message" keybind erroring
+
+- Prevent horizontal dragging of flickable column layout pages
+
+- Fix scrolling keybinds not working to scroll popups 
 
 
 ## 0.6.4 (2020-09-16)
