@@ -17,7 +17,6 @@ Rectangle {
         HButton {
             backgroundColor: "transparent"
             icon.name: "settings"
-            toolTip.text: qsTr("Settings")
             onClicked: settingsMenu.open()
 
             Layout.fillHeight: true
@@ -28,7 +27,7 @@ Rectangle {
 
                 HMenuItem {
                     icon.name: "more-settings"
-                    text: qsTr("Open config folder")
+                    text: qsTr("Open configuration folder")
                     onTriggered:
                         py.callCoro("get_config_dir", [], Qt.openUrlExternally)
                 }
@@ -41,6 +40,14 @@ Rectangle {
                 }
 
                 HMenuItem {
+                    icon.name: "documentation"
+                    text: qsTr("Online documentation")
+                    onTriggered: Qt.openUrlExternally(
+                        "https://github.com/mirukana/mirage/tree/master/docs"
+                    )
+                }
+
+                HMenuItem {
                     icon.name: "debug"
                     text: qsTr("Developer console")
                     onTriggered: mainUI.debugConsole.toggle()
@@ -48,16 +55,12 @@ Rectangle {
             }
         }
 
-        HButton {
-            backgroundColor: "transparent"
-
+        HLabel {
+            horizontalAlignment: HLabel.AlignHCenter
+            verticalAlignment: HLabel.AlignVCenter
+            color: theme.mainPane.topBar.nameVersionLabel
             text: qsTr("%1 %2")
                   .arg(Qt.application.displayName).arg(Qt.application.version)
-            label.color: theme.mainPane.topBar.nameVersionLabel
-            toolTip.text: qsTr("Double click to open project repository")
-
-            onDoubleClicked:
-                Qt.openUrlExternally("https://github.com/mirukana/mirage")
 
             Layout.fillWidth: true
             Layout.fillHeight: true
