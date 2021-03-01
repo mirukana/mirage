@@ -11,7 +11,7 @@ HFlickableColumnPopup {
     property string path
 
     readonly property string docs:
-        "https://github.com/mirukana/mirage/tree/dev/docs"
+        "https://github.com/mirukana/mirage/tree/master/docs"
 
     page.footer: AutoDirectionLayout {
         CancelButton {
@@ -37,13 +37,13 @@ HFlickableColumnPopup {
         rightPadding: leftPadding
         textFormat: DetailsLabel.StyledText
         text: qsTr(
-            "The configuration format has changed and <i>settings.json</i> " +
+            "The configuration format has changed and settings.json " +
             "is no longer supported. " +
             `Visit the <a href='${docs}'>new config documentation</a> for ` +
             "more info.<br><br>" +
             "This warning will stop appearing if the file " +
             `<a href='${path}'>${path.replace(/^file:\/\//, "")}</a> is ` +
-            "renamed, removed or moved away."
+            "renamed, deleted or moved away."
         )
 
         MouseArea {
