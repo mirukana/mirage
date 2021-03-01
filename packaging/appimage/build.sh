@@ -89,18 +89,16 @@ install_python() {
     export PYTHON_CONFIGURE_OPTS='--enable-shared  --enable-optimizations --with-lto'
 
     pyenv update
-    pyenv install --verbose --skip-existing 3.8.2
-    pyenv global 3.8.2
+    pyenv install --verbose --skip-existing 3.9.1
+    pyenv global 3.9.1
 }
 
 
 install_olm() {
     cd ~
 
-    if ! [ -f olm-master.tar.gz ]; then
-        wget 'https://gitlab.matrix.org/matrix-org/olm/-/archive/master/olm-master.tar.gz'
-    fi
-
+    rm -rf olm-master.tar.gz olm-master
+    wget 'https://gitlab.matrix.org/matrix-org/olm/-/archive/master/olm-master.tar.gz'
     tar xf olm-master.tar.gz
 
     cd olm-master
