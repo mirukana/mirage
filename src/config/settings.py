@@ -58,7 +58,7 @@ class Notifications:
 
     # Default sound to play for notifications. Can be the filename
     # of a builtin sound (only "default.wav" currently exists), or the
-    # absolute path to a WAV file.
+    # absolute path to a WAV file (supports ~ user expansion).
     default_sound: str = "default.wav"
 
     # How long in seconds the window will flash in your dock or taskbar when

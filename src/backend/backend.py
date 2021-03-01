@@ -592,6 +592,7 @@ class Backend:
 
     async def sound_notify(self) -> None:
         path = self.settings.Notifications.default_sound
+        path = str(Path(path).expanduser())
 
         if path == "default.wav":
             path = "src/sounds/default.wav"
