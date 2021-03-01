@@ -149,6 +149,7 @@ class Backend:
 
         self.notification_avatar_cache: Dict[str, Path] = {}  # {mxc: path}
         self.notifications_working:     bool            = True
+        self.audio_working:             bool            = True
 
 
     def __repr__(self) -> str:
@@ -600,7 +601,16 @@ class Backend:
         try:
             content = pyotherside.qrc_get_file_contents(path)
         except ValueError:
-            simpleaudio.WaveObject.from_wave_file(path).play()
+            sa = simpleaudio.WaveObject.from_wave_file(path)
         else:
             wave_read = wave.open(io.BytesIO(content))
-            simpleaudio.WaveObject.from_wave_read(wave_read).play()
+            sa        = simpleaudio.WaveObject.from_wave_read(wave_read)
+
+        try:
+            sa.play()
+            self.audio_working = True
+        except Exception as e:  # noqa
+            if self.audio_working:
+                trace = traceback.format_exc().rstrip()
+                log.error("Playing audio failed\n%s", trace)
+                self.audio_working = False
