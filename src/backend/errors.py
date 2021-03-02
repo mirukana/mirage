@@ -95,11 +95,6 @@ class MatrixBadGateway(MatrixError):
     http_code: int           = 502
     m_code:    Optional[str] = None
 
-@dataclass
-class MatrixBadGateway(MatrixError):
-    http_code: int           = 502
-    m_code:    Optional[str] = None
-
 
 # Client errors
 
