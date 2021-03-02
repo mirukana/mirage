@@ -49,6 +49,7 @@ class ModelItem:
         return {
             name: self.serialized_field(name)
             for name in self.__dataclass_fields__  # type: ignore
+            if not name.startswith("_")
         }
 
 
@@ -92,16 +93,18 @@ class ModelItem:
 
             for name, value in changes.items():
                 super().__setattr__(name, value)
+                is_field = name in self.__dataclass_fields__  # type: ignore
 
-                if name in self.__dataclass_fields__:  # type: ignore
+                if is_field and not name.startswith("_"):
                     qml_changes[name] = self.serialized_field(name)
 
             parent._sorted_data.add(self)
-            index_now = parent._sorted_data.index(self)
+            index_now    = parent._sorted_data.index(self)
+            index_change = index_then != index_now
 
             # Now, inform QML about changed dataclass fields if any.
 
-            if not parent.sync_id or not qml_changes:
+            if not parent.sync_id or (not qml_changes and not index_change):
                 return
 
             ModelItemSet(parent.sync_id, index_then, index_now, qml_changes)

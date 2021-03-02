@@ -85,6 +85,9 @@ class Model(MutableMapping):
 
             if not changed_fields:
                 for field in new.__dataclass_fields__:  # type: ignore
+                    if field.startswith("_"):
+                        continue
+
                     changed = True
 
                     if existing:
