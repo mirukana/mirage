@@ -90,7 +90,6 @@ class Account(ModelItem):
     status_msg:       str            = ""
 
     def __lt__(self, other: "Account") -> bool:
-        """Sort by order, then by user ID."""
         return (self.order, self.id) < (other.order, other.id)
 
 
@@ -114,8 +113,6 @@ class PushRule(ModelItem):
     urgency_hint: bool                 = False
 
     def __lt__(self, other: "PushRule") -> bool:
-        """Sort by `kind`, then `order`."""
-
         return (
             self.kind is nio.PushRuleKind.underride,
             self.kind is nio.PushRuleKind.sender,
@@ -187,15 +184,6 @@ class Room(ModelItem):
     pinned:          bool = False
 
     def __lt__(self, other: "Room") -> bool:
-        """Sort by membership, highlights/unread events, last event date, name.
-
-        Invited rooms are first, then joined rooms, then left rooms.
-        Within these categories, sort by unread highlighted messages, then
-        unread messages, then by whether the room hasn't been read locally,
-        then last event date (room with recent messages are first),
-        then by display names or ID.
-        """
-
         by_activity = not self.lexical_sorting
 
         return (
@@ -287,9 +275,6 @@ class Member(ModelItem):
     status_msg:       str            = ""
 
     def __lt__(self, other: "Member") -> bool:
-        """Sort by presence, power level, then by display name/user ID."""
-
-
         return (
             self.invited,
             other.power_level,
@@ -336,8 +321,6 @@ class Transfer(ModelItem):
 
 
     def __lt__(self, other: "Transfer") -> bool:
-        """Sort by the start date, from newest transfer to oldest."""
-
         return (self.start_date, self.id) > (other.start_date, other.id)
 
 
@@ -393,8 +376,6 @@ class Event(ModelItem):
     thumbnail_crypt_dict: Dict[str, Any] = field(default_factory=dict)
 
     def __lt__(self, other: "Event") -> bool:
-        """Sort by date in descending order, from newest to oldest."""
-
         return (self.date, self.id) > (other.date, other.id)
 
     @property
