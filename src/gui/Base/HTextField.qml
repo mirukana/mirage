@@ -68,7 +68,7 @@ TextField {
 
     background: Rectangle {
         id: textFieldBackground
-        radius: theme.radius
+        radius: bordered ? theme.radius : 0
         color: field.activeFocus ? focusedBackgroundColor : backgroundColor
 
         border.width: bordered ? theme.controls.textField.borderWidth : 0

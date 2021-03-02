@@ -80,7 +80,7 @@ TextArea {
 
     background: Rectangle {
         id: textAreaBackground
-        radius: theme.radius
+        radius: bordered ? theme.radius : 0
         color: theme.controls.textArea.background
         opacity: textArea.opacity
 
