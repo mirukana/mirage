@@ -8,6 +8,7 @@ import CppUtils 0.1
 Menu {
     id: menu
 
+    property bool isSubMenu: false
     property var previouslyFocused: null
 
     // MenuItems that open popups (or other elements taking focus when opened)
@@ -57,6 +58,7 @@ Menu {
     }
 
     onAboutToShow: {
+        if (isSubMenu) return
         previouslyFocused = window.activeFocusItem
         focusOnClosed     = Qt.binding(() => previouslyFocused)
     }

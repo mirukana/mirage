@@ -149,6 +149,7 @@ HTile {
 
         HMenu {
             title: qsTr("Notifications")
+            isSubMenu: true
 
             HMenuItem {
                 text: qsTr("Use default account settings")
