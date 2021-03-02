@@ -167,11 +167,18 @@ class MatrixClient(nio.AsyncClient):
         store = Path(backend.appdirs.user_data_dir) / "encryption"
         store.mkdir(parents=True, exist_ok=True)
 
+        proxy = backend.settings.General.proxy
+        host  = re.sub(r":\d+$", "", urlparse(homeserver).netloc)
+
+        if host in ("127.0.0.1", "localhost", "::1"):
+            proxy = None
+
         super().__init__(
             homeserver = homeserver,
             user       = user,
             device_id  = device_id,
             store_path = store,
+            proxy      = proxy,
             config     = nio.AsyncClientConfig(
                 max_timeout_retry_wait_time = 10,
                 # TODO: pass a custom encryption DB pickle key?

@@ -540,7 +540,8 @@ class Backend:
 
         # We just want that client's aiohttp session, that way we don't have
         # to depend ourselves on aiohttp + aiohttp-socks
-        client = nio.AsyncClient(homeserver="")
+        proxy  = self.settings.General.proxy
+        client = nio.AsyncClient(homeserver="", proxy=proxy)
         await have_session_be_created(client)
 
         session = type(client.client_session)(

@@ -11,6 +11,9 @@
 #include <QLocale>
 #include <QObject>
 #include <QUuid>
+#include <QNetworkProxy>
+#include <QDebug>
+#include <QDebug>
 
 #ifdef Q_OS_LINUX
     #ifndef NO_X11
@@ -86,6 +89,29 @@ public slots:
         return -1;
 
         #endif
+    }
+
+    void setProxy(QUrl url) const {
+        if (url.isEmpty()) return;
+
+        const QString scheme = url.scheme();
+
+        if (scheme != "socks5" && scheme != "http") {
+            qCritical() << "Unsupported proxy type on the Qt side:" << scheme;
+            return;
+        }
+
+        QNetworkProxy proxy;
+        proxy.setType(
+            scheme == "socks5" ?
+            QNetworkProxy::Socks5Proxy :
+            QNetworkProxy::HttpProxy
+        );
+        proxy.setHostName(url.host());
+        proxy.setPort(url.port() == -1 ? 0 : url.port());
+        proxy.setUser(url.userName());
+        proxy.setPassword(url.password());
+        QNetworkProxy::setApplicationProxy(proxy);
     }
 
 private:

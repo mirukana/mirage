@@ -33,6 +33,12 @@ class General:
     # Interface scale multiplier, e.g. 0.5 makes everything half-size.
     zoom: float = 1.0
 
+    # Adress of an HTTP or SOCKS5 proxy to pass network traffic through.
+    # Example adresses: "socks5://localhost:9050" (TOR with default port),
+    # "http://username:password@123.456.7.8:80" (HTTP with authentication).
+    # The application must be restarted to apply changes for this setting.
+    proxy: Optional[str] = None
+
 class Presence:
     # Automatically set your presence to unavailable after this number of
     # seconds without any mouse or keyboard activity.

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import QtQuick 2.12
+import CppUtils 0.1
 import "."
 
 PythonBridge {
@@ -22,6 +23,8 @@ PythonBridge {
 
         importNames("backend.qml_bridge", ["BRIDGE"], () => {
             callCoro("get_settings", [], ([settings, state, hist, theme, themeRules]) => {
+                CppUtils.setProxy(settings.General.proxy || "")
+
                 window.settings   = settings
                 window.uiState    = state
                 window.history    = hist
