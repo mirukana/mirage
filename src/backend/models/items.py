@@ -196,33 +196,17 @@ class Room(ModelItem):
         then by display names or ID.
         """
 
-        if self.lexical_sorting:
-            return (
-                self.for_account,
-                other.pinned,
-                self.left,
-                bool(other.inviter_id),
-                (self.display_name or self.id).lower(),
-                self.id,
-            ) < (
-                other.for_account,
-                self.pinned,
-                other.left,
-                bool(self.inviter_id),
-                (other.display_name or other.id).lower(),
-                other.id,
-            )
+        by_activity = not self.lexical_sorting
 
-        # Left rooms may still have an inviter_id, so check left first.
         return (
             self.for_account,
             other.pinned,
-            self.left,
+            self.left,  # Left rooms may have an inviter_id, check them first
             bool(other.inviter_id),
-            bool(other.highlights),
-            bool(other.unreads),
-            bool(other.local_unreads),
-            other.last_event_date,
+            bool(by_activity and other.highlights),
+            bool(by_activity and other.unreads),
+            bool(by_activity and other.local_unreads),
+            other.last_event_date if by_activity else ZERO_DATE,
             (self.display_name or self.id).lower(),
             self.id,
 
@@ -231,10 +215,10 @@ class Room(ModelItem):
             self.pinned,
             other.left,
             bool(self.inviter_id),
-            bool(self.highlights),
-            bool(self.unreads),
-            bool(self.local_unreads),
-            self.last_event_date,
+            bool(by_activity and self.highlights),
+            bool(by_activity and self.unreads),
+            bool(by_activity and self.local_unreads),
+            self.last_event_date if by_activity else ZERO_DATE,
             (other.display_name or other.id).lower(),
             other.id,
         )
@@ -252,26 +236,7 @@ class AccountOrRoom(Account, Room):
     account_order: int                              = -1
 
     def __lt__(self, other: "AccountOrRoom") -> bool:  # type: ignore
-        if self.lexical_sorting:
-            return (
-                self.account_order,
-                self.id if self.type is Account else self.for_account,
-                other.type is Account,
-                other.pinned,
-                self.left,
-                bool(other.inviter_id),
-                (self.display_name or self.id).lower(),
-                self.id,
-            ) < (
-                other.account_order,
-                other.id if other.type is Account else other.for_account,
-                self.type is Account,
-                self.pinned,
-                other.left,
-                bool(self.inviter_id),
-                (other.display_name or other.id).lower(),
-                other.id,
-            )
+        by_activity = not self.lexical_sorting
 
         return (
             self.account_order,
@@ -280,10 +245,10 @@ class AccountOrRoom(Account, Room):
             other.pinned,
             self.left,
             bool(other.inviter_id),
-            bool(other.highlights),
-            bool(other.unreads),
-            bool(other.local_unreads),
-            other.last_event_date,
+            bool(by_activity and other.highlights),
+            bool(by_activity and other.unreads),
+            bool(by_activity and other.local_unreads),
+            other.last_event_date if by_activity else ZERO_DATE,
             (self.display_name or self.id).lower(),
             self.id,
 
@@ -294,10 +259,10 @@ class AccountOrRoom(Account, Room):
             self.pinned,
             other.left,
             bool(self.inviter_id),
-            bool(self.highlights),
-            bool(self.unreads),
-            bool(self.local_unreads),
-            self.last_event_date,
+            bool(by_activity and self.highlights),
+            bool(by_activity and self.unreads),
+            bool(by_activity and self.local_unreads),
+            self.last_event_date if by_activity else ZERO_DATE,
             (other.display_name or other.id).lower(),
             other.id,
         )
