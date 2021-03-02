@@ -21,6 +21,7 @@ import plyer
 import pyotherside
 import simpleaudio
 from appdirs import AppDirs
+from nio.client.async_client import client_session
 
 from . import __app_name__
 from .errors import MatrixError, MatrixInvalidAccessToken
@@ -533,9 +534,22 @@ class Backend:
     async def fetch_homeservers(self) -> None:
         """Retrieve a list of public homeservers and add them to our model."""
 
+        @client_session  # need to trigger this decorator for creation
+        async def have_session_be_created(*_):
+            pass
+
+        # We just want that client's aiohttp session, that way we don't have
+        # to depend ourselves on aiohttp + aiohttp-socks
+        client = nio.AsyncClient(homeserver="")
+        await have_session_be_created(client)
+
+        session = type(client.client_session)(
+            raise_for_status = True,
+            timeout          = type(client.client_session.timeout)(total=20),
+            connector        = client.client_session.connector,
+        )
+
         api_list = "https://publiclist.anchel.nl/publiclist.json"
-        tmout    = aiohttp.ClientTimeout(total=20)
-        session  = aiohttp.ClientSession(raise_for_status=True, timeout=tmout)
         response = await session.get(api_list)
         coros    = []
 
