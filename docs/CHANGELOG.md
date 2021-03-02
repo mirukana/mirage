@@ -86,6 +86,11 @@ and this project adheres to
 
 - Improve room page loading speed 
 
+- In the left pane, lock the position of the room corresponding to the 
+  currently visible chat page if any.  
+  This fixes annoyances like clicking on a room with unread messages only to 
+  see it immediatly fly down the list, potentially outside of scrolling view.
+
 - When replying to a message, pressing the reply keybind again while focusing
   on that message will now cancel the reply
 

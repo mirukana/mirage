@@ -14,7 +14,9 @@ HColumnPage {
     id: chatPage
 
     property string loadMembersFutureId: ""
+    property var lockedRoom: null  // null or [userId, roomId]
 
+    readonly property var userRoomId: chat.userRoomId
     readonly property alias roomHeader: roomHeader
     readonly property alias eventList: eventList
     readonly property alias typingMembers: typingMembers
@@ -30,11 +32,26 @@ HColumnPage {
         anchors.fill: parent
     }
 
+    function lockRoomPosition(lock) {
+        if (lock && lockedRoom) py.callClientCoro(
+            lockedRoom[0], "lock_room_position", [lockedRoom[1], false],
+        )
+
+        lockedRoom = lock ? [chat.userId, chat.roomId] : null
+        py.callClientCoro(
+            chat.userId, "lock_room_position", [chat.roomId, lock],
+        )
+    }
+
+
     padding: 0
     column.spacing: 0
 
-    Component.onDestruction:
+    onUserRoomIdChanged: lockRoomPosition(true)
+    Component.onDestruction: {
+        lockRoomPosition(false)
         if (loadMembersFutureId) py.cancelCoro(loadMembersFutureId)
+    }
 
     Timer {
         interval: 200

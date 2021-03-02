@@ -183,6 +183,15 @@ class Room(ModelItem):
     lexical_sorting: bool = False
     pinned:          bool = False
 
+    # Allowed keys: "last_event_date", "unreads", "highlights", "local_unreads"
+    # Keys in this dict will override their corresponding item fields for the
+    # __lt__ method. This is used when we want to lock a room's position,
+    # e.g. to avoid having the room move around when it is focused in the GUI
+    _sort_overrides: Dict[str, Any] = field(default_factory=dict)
+
+    def _sorting(self, key: str) -> Any:
+        return self._sort_overrides.get(key, getattr(self, key))
+
     def __lt__(self, other: "Room") -> bool:
         by_activity = not self.lexical_sorting
 
@@ -191,10 +200,10 @@ class Room(ModelItem):
             other.pinned,
             self.left,  # Left rooms may have an inviter_id, check them first
             bool(other.inviter_id),
-            bool(by_activity and other.highlights),
-            bool(by_activity and other.unreads),
-            bool(by_activity and other.local_unreads),
-            other.last_event_date if by_activity else ZERO_DATE,
+            bool(by_activity and other._sorting("highlights")),
+            bool(by_activity and other._sorting("unreads")),
+            bool(by_activity and other._sorting("local_unreads")),
+            other._sorting("last_event_date") if by_activity else ZERO_DATE,
             (self.display_name or self.id).lower(),
             self.id,
 
@@ -203,10 +212,10 @@ class Room(ModelItem):
             self.pinned,
             other.left,
             bool(self.inviter_id),
-            bool(by_activity and self.highlights),
-            bool(by_activity and self.unreads),
-            bool(by_activity and self.local_unreads),
-            self.last_event_date if by_activity else ZERO_DATE,
+            bool(by_activity and self._sorting("highlights")),
+            bool(by_activity and self._sorting("unreads")),
+            bool(by_activity and self._sorting("local_unreads")),
+            self._sorting("last_event_date") if by_activity else ZERO_DATE,
             (other.display_name or other.id).lower(),
             other.id,
         )
@@ -233,10 +242,10 @@ class AccountOrRoom(Account, Room):
             other.pinned,
             self.left,
             bool(other.inviter_id),
-            bool(by_activity and other.highlights),
-            bool(by_activity and other.unreads),
-            bool(by_activity and other.local_unreads),
-            other.last_event_date if by_activity else ZERO_DATE,
+            bool(by_activity and other._sorting("highlights")),
+            bool(by_activity and other._sorting("unreads")),
+            bool(by_activity and other._sorting("local_unreads")),
+            other._sorting("last_event_date") if by_activity else ZERO_DATE,
             (self.display_name or self.id).lower(),
             self.id,
 
@@ -247,10 +256,10 @@ class AccountOrRoom(Account, Room):
             self.pinned,
             other.left,
             bool(self.inviter_id),
-            bool(by_activity and self.highlights),
-            bool(by_activity and self.unreads),
-            bool(by_activity and self.local_unreads),
-            self.last_event_date if by_activity else ZERO_DATE,
+            bool(by_activity and self._sorting("highlights")),
+            bool(by_activity and self._sorting("unreads")),
+            bool(by_activity and self._sorting("local_unreads")),
+            self._sorting("last_event_date") if by_activity else ZERO_DATE,
             (other.display_name or other.id).lower(),
             other.id,
         )

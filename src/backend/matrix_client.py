@@ -2021,6 +2021,21 @@ class MatrixClient(nio.AsyncClient):
             room.last_event_date = item.date
 
 
+    async def lock_room_position(self, room_id: str, lock: bool) -> None:
+        """Set wheter a room should try to hold its current sort position."""
+
+        room = self.models[self.user_id, "rooms"][room_id]
+
+        if not lock:
+            room._sort_overrides = {}
+            return
+
+        for k in ("last_event_date", "unreads", "highlights", "local_unreads"):
+            room._sort_overrides[k] = getattr(room, k)
+
+        room.notify_change("_sort_overrides")
+
+
     async def register_nio_room(
         self,
         room:                   nio.MatrixRoom,
@@ -2038,6 +2053,7 @@ class MatrixClient(nio.AsyncClient):
             registered = self.models[self.user_id, "rooms"][room.room_id]
         except KeyError:
             registered                   = None
+            sort_overrides               = {}
             last_event_date              = datetime.fromtimestamp(0)
             typing_members               = []
             local_unreads                = False
@@ -2048,6 +2064,7 @@ class MatrixClient(nio.AsyncClient):
                 self.room_contains_unverified(room.room_id)
             )
         else:
+            sort_overrides               = registered._sort_overrides
             last_event_date              = registered.last_event_date
             typing_members               = registered.typing_members
             local_unreads                = registered.local_unreads
@@ -2126,6 +2143,8 @@ class MatrixClient(nio.AsyncClient):
 
             lexical_sorting = self.backend.settings.RoomList.lexical_sort,
             pinned          = room.room_id in pinned.get(self.user_id, []),
+
+            _sort_overrides = sort_overrides,
         )
 
         self.models[self.user_id, "rooms"][room.room_id] = room_item
