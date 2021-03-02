@@ -21,6 +21,7 @@ QtObject {
         MIRAGE_CONFIG_DIR  Override the default configuration folder
         MIRAGE_DATA_DIR    Override the default application data folder
         MIRAGE_CACHE_DIR   Override the default cache and downloads folder
+        http_proxy         Override the General.proxy setting, see settings.py
     `
 
     readonly property bool ready: {

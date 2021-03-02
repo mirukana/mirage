@@ -7,6 +7,7 @@ import asyncio
 import html
 import io
 import logging as log
+import os
 import platform
 import re
 import textwrap
@@ -167,7 +168,8 @@ class MatrixClient(nio.AsyncClient):
         store = Path(backend.appdirs.user_data_dir) / "encryption"
         store.mkdir(parents=True, exist_ok=True)
 
-        proxy = backend.settings.General.proxy
+        proxy: Optional[str]
+        proxy = os.environ.get("http_proxy", backend.settings.General.proxy)
         host  = re.sub(r":\d+$", "", urlparse(homeserver).netloc)
 
         if host in ("127.0.0.1", "localhost", "::1"):

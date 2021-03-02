@@ -61,6 +61,9 @@ and this project adheres to
 - Add command-line arguments parsing and a `--start-in-tray` option, see 
   `mirage --help`
 
+- Support for HTTP and SOCKS5 proxies, can be set in config file or using the
+  `http_proxy` environment variable
+
 - Hovering on stability percentages in the sign-in page's homeserver list 
   now shows more detailed tooltips about the server's recent downtimes
 

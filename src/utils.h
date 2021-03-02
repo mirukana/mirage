@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QUuid>
 #include <QNetworkProxy>
-#include <QDebug>
+#include <QUrl>
 #include <QDebug>
 
 #ifdef Q_OS_LINUX
@@ -92,6 +92,8 @@ public slots:
     }
 
     void setProxy(QUrl url) const {
+        const QUrl envProxy = QUrl(qEnvironmentVariable("http_proxy"));
+        if (! envProxy.isEmpty()) url = envProxy;
         if (url.isEmpty()) return;
 
         const QString scheme = url.scheme();
