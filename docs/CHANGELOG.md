@@ -196,6 +196,16 @@ and this project adheres to
   to randomly stop in the middle of their animations and be left at odd 
   positions or overlap with other bubbles
 
+### Known Issues
+
+- Flatpak does not seem to support direct ALSA access, sound notifications 
+  might not work within it
+
+- Desktop notifications within Flatpak might not work out of the box when 
+  Xorg is launched without a display manager, try running 
+  `export $(dbus-launch --autolaunch "$(cat /var/lib/dbus/machine-id)")`
+  before launching Mirage in a terminal.
+
 
 ## 0.6.4 (2020-09-16)
 
