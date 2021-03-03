@@ -19,7 +19,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 
 ## Currently Implemented Features
 
-### Interface
+### General
 
 - **Fluid, responsive interface** that adapts to any window size
 - Toggleable **compact mode**
@@ -28,11 +28,13 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Versatile **theming system**, properties can refer to each other and have 
   any valid ECMAScript 7 expression as values
   - Comes by default with **dark** and **transparent themes**
+- Desktop **notifications**, sounds and window alerts
+- Support for HTTP and SOCKS5 proxies including TOR 
 
 ### Accounts
 
-- **Multiple accounts** in one client
 - Built-in public homeservers list
+- **Multiple accounts** in one client
 - **SSO** and password authentication
 - Set your display name and profile picture
 - Import/export **E2E** key files
@@ -41,6 +43,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Set your account's **presence** to online, unavailable, invisible or offline
 - Set custom **status messages**
 - Automatically set your status to unavailable after a period of inactivity
+- Advanced **push rules** editor
 
 ### Rooms
 
@@ -49,8 +52,10 @@ Written in Qt/QML and Python, **currently in alpha**.
 - Edit the room's name, topic, invite requirement, guest access and enable E2E
 - Kick, ban and set the power level of users
 
+- Pin rooms to the top of the list 
 - Unread message and highlight counters
-- Sending **read receipts** to mark rooms as read 
+- Sending **read receipts** to mark rooms as read
+- Seeing who has read a message and when
 - Inspect and manually **verify** other users's **E2E sessions**
 - See other users's **presence, status message and last seen time**
 - **Typing notifications**
@@ -67,7 +72,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 
 - Send and receive normal or **E2E encrypted files**
 - Client-side Matrix & HTTP URL **image previews**, including animated GIF 
-- Upload images by pasting
+- Upload images by pasting or drag-and-drop
 - Full-size image viewer 
 
 - User ID, display names, room ID and room aliases **mentions**
