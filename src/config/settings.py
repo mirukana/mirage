@@ -96,7 +96,7 @@ class Scrolling:
     non_kinetic_speed: float = 1.0
 
 class RoomList:
-    # Prevent resizing the pane below this width in pixels.
+    # Prevent resizing the pane below this pixel width.
     min_width: int = 144
 
     # Sort rooms in alphabetical order instead of recent activity.
@@ -131,7 +131,7 @@ class Chat:
     # aren't hidden (see comment for the hide_sidepanes_under setting).
     always_center_header: bool = False
 
-    # When the chat timeline is larger than this pixel number,
+    # When the chat timeline is larger than this pixel width,
     # align your own messages to the left of the timeline instead of right.
     # Can be 0 to always show your messages on the left.
     own_messages_on_left_above: int = 895
@@ -147,7 +147,7 @@ class Chat:
     # Show room member display name and avatar change events in the timeline.
     show_profile_changes: bool = False
 
-    # Show a notice in the timeline for events types that aren't recognized.
+    # Show a notice in the timeline for types of events that aren't recognized.
     show_unknown_events: bool = False
 
     # In a chat with unread messages, the messages will be marked as read
@@ -178,11 +178,11 @@ class Chat:
             # The account must have permission to talk in the room.
             # To ignore an alias when typing, prepend it with a space.
 
-            "!account:example.org":       str = "u"
+            "!account:example.org":       str = "a"
             "!other_account:example.org": str = "oa"
 
     class Files:
-        # Minimum width of the file name/size box for files without previews.
+        # Minimum pixel width of the file name box for files without previews.
         min_file_width: int = 256
 
         # Minimum (width, height) for image thumbnails.
@@ -196,8 +196,8 @@ class Chat:
         auto_play_gif: bool = True
 
         # When clicking on a file in the timeline, open it in an external
-        # programing instead of displaying it using Mirage's interface.
-        # On Linux, the xdg-open command is used.
+        # program instead of displaying it using Mirage's interface.
+        # On Linux, the xdg-open command is called.
         click_opens_externally: bool = False
 
         # In the full image viewer, if the image is large enough to cover the
@@ -378,7 +378,6 @@ class Keys:
         # Can also be done by clicking on current tab button at the top right.
         hide_room_pane = ["Alt+Ctrl+R"]
 
-
         # Invite new members, leave or forget the current chat.
         invite = ["Alt+I"]
         leave  = ["Alt+Escape"]
@@ -444,7 +443,7 @@ class Keys:
         # On Linux, this uses the xdg-open command.
         open_links_files_externally = ["Ctrl+Shift+O"]
 
-        # Copy the downloaded files path in selected messages if any,
+        # Copy the paths of the downloaded files in selected messages if any,
         # else the file path for the focused message if any, else the
         # path for the last downloaded file in the timeline.
         copy_files_path = ["Ctrl+Shift+C"]
@@ -454,12 +453,13 @@ class Keys:
         clear_all = ["Ctrl+L"]
 
     class ImageViewer:
-        # Close the image viewer
+        # Close the image viewer. Escape can also be used.
         close = ["X", "Q"]
 
         # Toggle alternate image scaling mode: if the original image size is
         # smaller than the window, upscale it to fit the window.
-        # If it is bigger than the window, show it as its real size.
+        # If the original size is bigger than the window, expand the image
+        # to show it as its real size.
         expand = ["E"]
 
         # Toggle fullscreen mode.
@@ -471,7 +471,7 @@ class Keys:
         pan_up    = ["K", "Up", "Alt+K", "Alt+Up"]
         pan_right = ["L", "Right", "Alt+L", "Alt+Right"]
 
-        # Control the image's zoom. Ctrl+wheel can also be used.
+        # Control the image zoom. Ctrl+wheel can also be used.
         zoom_in    = ["Z", "+", "Ctrl++"]
         zoom_out   = ["Shift+Z", "-", "Ctrl+-"]
         reset_zoom = ["Alt+Z", "=", "Ctrl+="]
@@ -481,12 +481,12 @@ class Keys:
         rotate_left    = ["Shift+R"]
         reset_rotation = ["Alt+R"]
 
-        # Control the speed for animated GIF images.
+        # Control the playback speed of animated GIF images.
         speed_up    = ["S"]
         slow_down   = ["Shift+S"]
         reset_speed = ["Alt+S"]
 
-        # Toggle pausing for animated GIF images.
+        # Toggle pausing of animated GIF images.
         pause = ["Space"]
 
     class Security:
