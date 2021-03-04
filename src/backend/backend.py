@@ -544,10 +544,14 @@ class Backend:
         client = nio.AsyncClient(homeserver="", proxy=proxy)
         await have_session_be_created(client)
 
-        session = type(client.client_session)(
+
+        session = client.client_session
+        # aiohttp only has "timeout" in 3.7.0+
+        timeout = getattr(session, "timeout", session._timeout)
+        session = type(session)(
             raise_for_status = True,
-            timeout          = type(client.client_session.timeout)(total=20),
-            connector        = client.client_session.connector,
+            timeout          = type(timeout)(total=20),
+            connector        = session.connector,
         )
 
         api_list = "https://publiclist.anchel.nl/publiclist.json"
