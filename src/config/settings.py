@@ -69,9 +69,8 @@ class Notifications:
 
     # How long in seconds the window will flash in your dock or taskbar when
     # a new message, which matches a notification push rule with a
-    # flash (lightbulb) action, is posted in a room.
+    # window alert/flash/lightbulb action, is posted in a room.
     # The effect may differ depending on your OS/desktop.
-    # or dock to be highlighted or to flash.
     # Can be set to -1 for alerts that last until the window is focused.
     flash_time: float = 5
 
