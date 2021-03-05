@@ -6,6 +6,7 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- [0.7.1 (2021-03-04)](#071-2021-03-04)
 - [0.7.0 (2021-02-28)](#070-2021-02-28)
 - [0.6.4 (2020-09-16)](#064-2020-09-16)
 - [0.6.3 (2020-09-16)](#063-2020-09-16)
@@ -19,6 +20,15 @@ and this project adheres to
 - [0.4.2 (2020-03-27)](#042-2020-03-27)
 - [0.4.1 (2020-03-23)](#041-2020-03-23)
 - [0.4.0 (2020-03-21)](#040-2020-03-21)
+
+
+## 0.7.1 (2021-03-04)
+
+### Fixed
+
+- Fix loading custom themes when compiled in release mode 
+- Fix homeserver list errors with aiohttp 3.6.x and less, used in Flatpak
+- Various corrections to default config file comments
 
 
 ## 0.7.0 (2021-02-28)
