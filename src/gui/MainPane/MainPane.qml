@@ -44,6 +44,7 @@ HDrawer {
         anchors.fill: parent
 
         TopBar {
+            roomList: roomList
             Layout.fillWidth: true
         }
 

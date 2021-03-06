@@ -7,6 +7,8 @@ import ".."
 import "../Base"
 
 Rectangle {
+    property RoomList roomList
+
     clip: true
     implicitHeight: theme.baseElementsHeight
     color: theme.mainPane.topBar.background
@@ -24,6 +26,15 @@ Rectangle {
             HMenu {
                 id: settingsMenu
                 y: parent.height
+
+                HMenuItem {
+                    icon.name: "add-account"
+                    text: qsTr("Add another account")
+                    onTriggered: {
+                        pageLoader.show("Pages/AddAccount/AddAccount.qml")
+                        roomList.startCorrectItemSearch()
+                    }
+                }
 
                 HMenuItem {
                     icon.name: "more-settings"
