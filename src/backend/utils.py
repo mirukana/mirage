@@ -166,7 +166,7 @@ async def guess_mime(file: File) -> str:
     if isinstance(file, io.IOBase):
         file.seek(0, 0)
     elif isinstance(file, AsyncBufferedIOBase):
-        await file.seek(0, 0)  # type: ignore
+        await file.seek(0, 0)
 
     try:
         first_chunk: bytes
@@ -186,7 +186,7 @@ async def guess_mime(file: File) -> str:
         if isinstance(file, io.IOBase):
             file.seek(0, 0)
         elif isinstance(file, AsyncBufferedIOBase):
-            await file.seek(0, 0)  # type: ignore
+            await file.seek(0, 0)
 
 
 def plain2html(text: str) -> str:
