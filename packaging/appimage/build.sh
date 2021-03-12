@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+HERE="$(dirname "$(readlink -f "$0")")"
 MIRAGE_REPO_URL='https://github.com/mirukana/mirage'
+PY_XYZ=3.9.1
+PY_XY="$(cut -d . -f 1-2 <<< "$PY_XYZ")"
 
 
 check_distro() {
@@ -62,7 +65,7 @@ setup_env() {
     set -euo pipefail
 
     export PATH="/usr/lib/ccache:$PATH"
-    export LD_LIBRARY_PATH="$HOME/.local/lib/python3.8/site-packages/PIL/.libs/:$HOME/.local/lib/python3.8/site-packages/.libs_cffi_backend/:/usr/lib/x86_64-linux-gnu/:/usr/lib:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$HOME/.local/lib/python$PY_XY/site-packages/PIL/.libs/:$HOME/.local/lib/python$PY_XY/site-packages/.libs_cffi_backend/:/usr/lib/x86_64-linux-gnu/:/usr/lib:$LD_LIBRARY_PATH"
     export PREFIX=/usr
 
     export CFLAGS="-march=x86-64 -O2 -pipe -fPIC"
@@ -89,8 +92,8 @@ install_python() {
     export PYTHON_CONFIGURE_OPTS='--enable-shared  --enable-optimizations --with-lto'
 
     pyenv update
-    pyenv install --verbose --skip-existing 3.9.1
-    pyenv global 3.9.1
+    pyenv install --verbose --skip-existing $PY_XYZ
+    pyenv global $PY_XYZ
 }
 
 
@@ -102,6 +105,7 @@ install_olm() {
     tar xf olm-master.tar.gz
 
     cd olm-master
+    make clean
     cmake . -Bbuild
     cmake --build build
     make install
@@ -118,6 +122,8 @@ install_pyotherside() {
     tar xf 1.5.9.tar.gz
 
     cd pyotherside-1.5.9
+    make clean
+    find . -name Makefile -delete
     qmake
     make install
 }
@@ -150,12 +156,12 @@ initialize_appdir() {
 complete_appdir() {
     cd ~/mirage/build
 
-    cp -r ~/.pyenv/versions/3.8.2/* appdir/usr
-    cp -r ~/.local/lib/python3.8/site-packages/* \
-          appdir/usr/lib/python3.8/site-packages
+    cp -r ~/.pyenv/versions/$PY_XYZ/* appdir/usr
+    cp -r "$HOME/.local/lib/python$PY_XY/site-packages/"* \
+          "appdir/usr/lib/python$PY_XY/site-packages"
 
     cd ~/mirage/build/appdir/usr/lib
-    ln -s python3.8/site-packages/Pillow.libs/* .
+    ln -s "python$PY_XY/site-packages/Pillow.libs/"* .
     cd ~/mirage/build
 
     if ! [ -f ~/linuxdeployqt.AppImage ]; then
@@ -167,11 +173,12 @@ complete_appdir() {
     ~/linuxdeployqt.AppImage appdir/usr/share/applications/mirage.desktop \
                              -bundle-non-qt-libs -qmldir=../src/gui
 
-    cp /opt/qt512/qml/io/thp/pyotherside/qmldir appdir/usr/qml/io/thp/pyotherside
+    cp /opt/qt512/qml/io/thp/pyotherside/qmldir \
+       appdir/usr/qml/io/thp/pyotherside
 
     # Remove useless heavy test data
-    rm -rf appdir/usr/lib/python3.8/test
-    rm -rf appdir/usr/lib/python3.8/site-packages/Crypto/SelfTest/
+    rm -rf "appdir/usr/lib/python$PY_XY/test"
+    rm -rf "appdir/usr/lib/python$PY_XY/site-packages/Crypto/SelfTest/"
 
     # Remove python cache files
     find appdir -name '*.pyc' -delete
@@ -180,27 +187,8 @@ complete_appdir() {
 
 fix_apprun_launcher() {
     cd ~/mirage/build/appdir
-    rm -f AppRun
-
-    cat << 'EOF' > AppRun
-#!/usr/bin/env sh
-set -e
-
-here="$(dirname "$(readlink -f "$0")")"
-
-export RESTORE_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
-export RESTORE_PYTHONHOME="$PYTHONHOME"
-export RESTORE_PYTHONUSERBASE="$PYTHONUSERBASE"
-
-export SSL_CERT_FILE="$here/usr/lib/python3.8/site-packages/certifi/cacert.pem"
-export LD_LIBRARY_PATH="$here/usr/lib:$LD_LIBRARY_PATH"
-export PYTHONHOME="$here/usr"
-export PYTHONUSERBASE="$here/usr"
-
-cd "$here"
-exec "$here/usr/bin/mirage" "$@"
-EOF
-
+    rm -f AppRun  # because it's a symlink
+    sed "s/\\\$PY_XY/$PY_XY/" "$HERE/AppRun.sh" > AppRun
     chmod +x AppRun
 }
 
