@@ -2357,7 +2357,7 @@ class MatrixClient(nio.AsyncClient):
     async def register_nio_event(
         self,
         room:                   nio.MatrixRoom,
-        ev:                     nio.Event,
+        ev:                     Union[nio.Event, nio.BadEvent],
         event_id:               str            = "",
         override_fetch_profile: Optional[bool] = None,
         **fields,

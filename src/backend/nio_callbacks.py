@@ -675,13 +675,6 @@ class NioCallbacks:
         await self.client.register_nio_event(room, ev, content=co)
 
 
-    async def onUnknownBadEvent(
-        self, room: nio.MatrixRoom, ev: nio.UnknownBadEvent,
-    ) -> None:
-        co = "%1 sent a malformed event lacking a minimal structure"
-        await self.client.register_nio_event(room, ev, content=co)
-
-
     async def onUnknownEvent(
         self, room: nio.MatrixRoom, ev: nio.UnknownEvent,
     ) -> None:
