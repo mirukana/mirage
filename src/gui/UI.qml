@@ -89,6 +89,13 @@ Item {
     }
 
     HShortcut {
+        sequences: window.settings.Keys.quit
+        onActivated: {
+            Qt.quit()
+        }
+    }
+
+    HShortcut {
         sequences: window.settings.Keys.notifications_highlights_only
         onActivated:
             mainUI.notificationLevel =
