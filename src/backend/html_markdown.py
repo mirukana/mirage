@@ -149,8 +149,8 @@ class HTMLProcessor:
     link_regexes = [re.compile(r, re.IGNORECASE)
                     if isinstance(r, str) else r for r in [
         # Normal :// URLs
-        (r"(?P<body>[a-zA-Z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
-         r"(?:/[/\-_.,a-z\d#%&?;=~]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
+        (r"(?P<body>[a-z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
+         r"(?:/[/\-.,\w#%&?:;=~!$*+^@]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
 
         # mailto: and tel:
         r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.:-]*[a-z\d]))",
