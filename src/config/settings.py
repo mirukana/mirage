@@ -267,13 +267,13 @@ class Keys:
     # Mirage must be connected to a terminal for this to work.
     python_debugger = ["Shift+F1"]
 
-    # Quit Mirage
-    # quit = ["Ctrl+Q"]
-
     # Start the Python backend debugger in remote access mode.
     # The remote-pdb Python package must be installed.
     # From any terminal, run `socat readline tcp:127.0.0.1:4444` to connect.
     python_remote_debugger = ["Alt+F1"]
+
+    # Quit Mirage
+    quit = []
 
     class Scrolling:
         # Pages and chat timeline scrolling
