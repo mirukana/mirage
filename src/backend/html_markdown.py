@@ -162,6 +162,8 @@ class HTMLProcessor:
         user_id_regex, room_id_regex, room_alias_regex,
     ]]
 
+    matrix_to_regex = re.compile(r"^https?://matrix.to/#/", re.IGNORECASE)
+
     link_is_matrix_to_regex = re.compile(
         r"https?://matrix.to/#/\S+", re.IGNORECASE,
     )
@@ -525,6 +527,9 @@ class HTMLProcessor:
 
         if not href or not el.text:
             return el
+
+
+        el.text = self.matrix_to_regex.sub("", el.text or "")
 
         # This must be first, or link will be mistaken by room ID/alias regex
         if self.link_is_message_id_regex.match(href):
