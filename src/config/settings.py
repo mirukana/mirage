@@ -272,6 +272,9 @@ class Keys:
     # From any terminal, run `socat readline tcp:127.0.0.1:4444` to connect.
     python_remote_debugger = ["Alt+F1"]
 
+    # Quit Mirage
+    quit = []
+
     class Scrolling:
         # Pages and chat timeline scrolling
         up        = ["Alt+Up", "Alt+K"]
