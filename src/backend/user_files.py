@@ -168,7 +168,8 @@ class UserFile:
     async def _start_writer(self) -> None:
         """Disk writer coroutine, update the file with a 1 second cooldown."""
 
-        self.write_path.parent.mkdir(parents=True, exist_ok=True)
+        if self.write_path.parts[0] == "qrc:":
+            return
 
         while True:
             await asyncio.sleep(1)
