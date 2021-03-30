@@ -90,9 +90,7 @@ Item {
 
     HShortcut {
         sequences: window.settings.Keys.quit
-        onActivated: {
-            Qt.quit()
-        }
+        onActivated: Qt.quit()
     }
 
     HShortcut {
