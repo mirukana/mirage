@@ -21,8 +21,6 @@ from .color import SVGColor
 class MarkdownInlineGrammar(mistune.InlineGrammar):
     """Markdown inline elements syntax modifications for the Mistune parser.
 
-    Modifications:
-
     - Disable underscores for bold/italics (e.g. `__bold__`)
 
     - Add syntax for coloring text: `<color>(text)`,
@@ -40,6 +38,15 @@ class MarkdownInlineGrammar(mistune.InlineGrammar):
         r"(?<!\\)(?:\\\\)*"  # ignore the next `)` if it's \escaped
         r"\)",               # finish on a `)`
     )
+
+
+class MarkdownBlockGrammar(mistune.BlockGrammar):
+    """Markdown block elements syntax modifications for the Mistune parser.
+
+    - Require a space after # for titles
+    """
+
+    heading = re.compile(r"^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)")
 
 
 class MarkdownInlineLexer(mistune.InlineLexer):
@@ -72,6 +79,12 @@ class MarkdownInlineLexer(mistune.InlineLexer):
         color = m.group(1)
         text  = self.output(m.group(2))
         return self.renderer.color(color, text)
+
+
+class MarkdownBlockLexer(mistune.BlockLexer):
+    """Apply the changes from `MarkdownBlockGrammar` for Mistune."""
+
+    grammar_class = MarkdownBlockGrammar
 
 
 class MarkdownRenderer(mistune.Renderer):
@@ -186,10 +199,11 @@ class HTMLProcessor:
         # hard_wrap: convert all \n to <br> without required two spaces
         # escape: escape HTML characters in the input string, e.g. tags
         self._markdown_to_html = mistune.Markdown(
-            hard_wrap=True,
-            escape=True,
-            inline=MarkdownInlineLexer,
-            renderer=MarkdownRenderer(),
+            hard_wrap = True,
+            escape    = True,
+            inline    = MarkdownInlineLexer,
+            block     = MarkdownBlockLexer,
+            renderer  = MarkdownRenderer(),
         )
 
         self._markdown_to_html.block.default_rules = [
