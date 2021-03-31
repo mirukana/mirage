@@ -15,6 +15,7 @@ HLoader {
     // List of previously loaded [componentUrl, {properties}]
     property var history: []
     property int historyLength: 20
+    property int historyPosition: 0
 
     readonly property alias appearAnimation: appearAnimation
 
@@ -22,9 +23,18 @@ HLoader {
     signal recycled()
     signal previousShown(string componentUrl, var properties)
 
-    function show(componentUrl, properties={}) {
-        history.unshift([componentUrl, properties])
-        if (history.length > historyLength) history.pop()
+    function show(componentUrl, properties={}, alterHistory=true) {
+        if (alterHistory) {
+            // A new branch of history will be added.
+            // The new branch replaces everything after the current point.
+            while (historyPosition > 0) {
+                history.shift()
+                historyPosition--
+            }
+            // Add entry to history
+            history.unshift([componentUrl, properties])
+            if (history.length > historyLength) history.pop()
+        }
 
         const recycle =
             window.uiState.page === componentUrl &&
@@ -61,6 +71,22 @@ HLoader {
         return true
     }
 
+    function moveThroughVisitHistory(relativeMovement=1) {
+
+        // not allowed to go beyond oldest entry in history
+        if (historyPosition + relativeMovement >= history.length) return false
+
+        // not allowed to go beyond newest entry in history
+        if (historyPosition + relativeMovement < 0) return false
+
+        historyPosition += relativeMovement
+
+        const [componentUrl, properties] = history[historyPosition]
+        show(componentUrl, properties, false)
+        previousShown(componentUrl, properties)
+        return true
+    }
+
     function takeFocus() {
         pageLoader.item.forceActiveFocus()
         if (mainPane.collapse) mainPane.close()
@@ -93,5 +119,15 @@ HLoader {
     HShortcut {
         sequences: window.settings.Keys.last_page
         onActivated: showPrevious()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.visit_history_back
+        onActivated: moveThroughVisitHistory(1)
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.visit_history_forward
+        onActivated: moveThroughVisitHistory(-1)
     }
 }
