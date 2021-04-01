@@ -71,7 +71,7 @@ HLoader {
         return true
     }
 
-    function moveThroughVisitHistory(relativeMovement=1) {
+    function moveThroughHistory(relativeMovement=1) {
 
         // not allowed to go beyond oldest entry in history
         if (historyPosition + relativeMovement >= history.length) return false
@@ -122,12 +122,12 @@ HLoader {
     }
 
     HShortcut {
-        sequences: window.settings.Keys.visit_history_back
-        onActivated: moveThroughVisitHistory(1)
+        sequences: window.settings.Keys.earlier_page
+        onActivated: moveThroughHistory(1)
     }
 
     HShortcut {
-        sequences: window.settings.Keys.visit_history_forward
-        onActivated: moveThroughVisitHistory(-1)
+        sequences: window.settings.Keys.later_page
+        onActivated: moveThroughHistory(-1)
     }
 }
