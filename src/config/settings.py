@@ -256,7 +256,7 @@ class Keys:
     # Go throgh history of opened chats,
     # similar to the "page back" and "page forward" keys in web browsers
     visit_history_back = ["Ctrl+H"]
-    visit_history_forward = ["Ctrl+Y"]
+    visit_history_forward = ["Ctrl+Shift+H"]
 
     # Toggle muting all notifications in the running client,
     # except highlights (e.g. replies or keywords)
