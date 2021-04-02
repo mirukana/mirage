@@ -73,11 +73,19 @@ HLoader {
 
     function moveThroughHistory(relativeMovement=1) {
 
-        // not allowed to go beyond oldest entry in history
-        if (historyPosition + relativeMovement >= history.length) return false
+        if (history.length === 0) return false
 
-        // not allowed to go beyond newest entry in history
-        if (historyPosition + relativeMovement < 0) return false
+        // going beyond oldest entry in history
+        if (historyPosition + relativeMovement >= history.length) {
+            if (!window.settings.Keys.wrap_history) return false
+            relativeMovement -= history.length
+        }
+
+        // going beyond newest entry in history
+        else if (historyPosition + relativeMovement < 0){
+            if (!window.settings.Keys.wrap_history) return false
+            relativeMovement += history.length
+        }
 
         historyPosition += relativeMovement
 

@@ -258,6 +258,9 @@ class Keys:
     earlier_page = ["Ctrl+H"]
     later_page = ["Ctrl+Shift+H"]
 
+    # Whether to wrap around when using earlier_page and later_page
+    wrap_history: bool = True
+
     # Toggle muting all notifications in the running client,
     # except highlights (e.g. replies or keywords)
     notifications_highlights_only = ["Ctrl+Alt+H"]
