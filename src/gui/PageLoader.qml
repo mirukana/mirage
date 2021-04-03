@@ -61,13 +61,17 @@ HLoader {
         show("Pages/Chat/Chat.qml", {userRoomId: [userId, roomId]})
     }
 
+    function showNthFromHistory(n, alterHistory=true) {
+        const [componentUrl, properties] = history[n]
+        show(componentUrl, properties, alterHistory)
+        previousShown(componentUrl, properties)
+    }
+
     function showPrevious(timesBack=1) {
         timesBack = Math.min(timesBack, history.length - 1)
         if (timesBack < 1) return false
 
-        const [componentUrl, properties] = history[timesBack]
-        show(componentUrl, properties)
-        previousShown(componentUrl, properties)
+        showNthFromHistory(timesBack)
         return true
     }
 
@@ -89,9 +93,7 @@ HLoader {
 
         historyPosition += relativeMovement
 
-        const [componentUrl, properties] = history[historyPosition]
-        show(componentUrl, properties, false)
-        previousShown(componentUrl, properties)
+        showNthFromHistory(historyPosition, false)
         return true
     }
 
