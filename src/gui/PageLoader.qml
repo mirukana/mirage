@@ -15,6 +15,7 @@ HLoader {
     // List of previously loaded [componentUrl, {properties}]
     property var history: []
     property int historyLength: 20
+    property int historyPosition: 0
 
     readonly property alias appearAnimation: appearAnimation
 
@@ -22,9 +23,18 @@ HLoader {
     signal recycled()
     signal previousShown(string componentUrl, var properties)
 
-    function show(componentUrl, properties={}) {
-        history.unshift([componentUrl, properties])
-        if (history.length > historyLength) history.pop()
+    function show(componentUrl, properties={}, alterHistory=true) {
+        if (alterHistory) {
+            // A new branch of history will be added.
+            // The new branch replaces everything after the current point.
+            while (historyPosition > 0) {
+                history.shift()
+                historyPosition--
+            }
+            // Add entry to history
+            history.unshift([componentUrl, properties])
+            if (history.length > historyLength) history.pop()
+        }
 
         const recycle =
             window.uiState.page === componentUrl &&
@@ -51,13 +61,37 @@ HLoader {
         show("Pages/Chat/Chat.qml", {userRoomId: [userId, roomId]})
     }
 
+    function showNthFromHistory(n, alterHistory=true) {
+        const [componentUrl, properties] = history[n]
+        show(componentUrl, properties, alterHistory)
+        previousShown(componentUrl, properties)
+    }
+
     function showPrevious(timesBack=1) {
         timesBack = Math.min(timesBack, history.length - 1)
         if (timesBack < 1) return false
 
-        const [componentUrl, properties] = history[timesBack]
-        show(componentUrl, properties)
-        previousShown(componentUrl, properties)
+        showNthFromHistory(timesBack)
+        return true
+    }
+
+    function moveThroughHistory(relativeMovement=1) {
+        if (history.length === 0) return false
+
+        // Going beyond oldest entry in history
+        if (historyPosition + relativeMovement >= history.length) {
+            if (! window.settings.General.wrap_history) return false
+            relativeMovement -= history.length
+
+        // Going beyond newest entry in history
+        } else if (historyPosition + relativeMovement < 0){
+            if (! window.settings.General.wrap_history) return false
+            relativeMovement += history.length
+        }
+
+        historyPosition += relativeMovement
+
+        showNthFromHistory(historyPosition, false)
         return true
     }
 
@@ -93,5 +127,15 @@ HLoader {
     HShortcut {
         sequences: window.settings.Keys.last_page
         onActivated: showPrevious()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.earlier_page
+        onActivated: moveThroughHistory(1)
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.later_page
+        onActivated: moveThroughHistory(-1)
     }
 }

@@ -17,6 +17,10 @@ class General:
     # right room pane is visible at a time.
     hide_side_panes_under: int = 450
 
+    # Whether to wrap around or do nothing when using the earlier_page or
+    # later_page keybinds and reaching the start or end of the history.
+    wrap_history: bool = True
+
     # How many seconds the cursor must hover on buttons and other elements
     # to show tooltips.
     tooltips_delay: float = 0.5
@@ -253,6 +257,11 @@ class Keys:
     # Switch to the last opened page/chat, similar to Alt+Tab on most desktops.
     last_page = ["Ctrl+Tab"]
 
+    # Go throgh history of opened chats,
+    # similar to the "page back" and "page forward" keys in web browsers
+    earlier_page = ["Ctrl+H"]
+    later_page   = ["Ctrl+L"]
+
     # Toggle muting all notifications in the running client,
     # except highlights (e.g. replies or keywords)
     notifications_highlights_only = ["Ctrl+Alt+H"]
@@ -453,7 +462,7 @@ class Keys:
 
         # Clear all messages from the chat.
         # This does not remove anything for other users.
-        clear_all = ["Ctrl+L"]
+        clear_all = ["Ctrl+Shift+L"]
 
     class ImageViewer:
         # Close the image viewer. Escape can also be used.
