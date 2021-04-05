@@ -260,7 +260,7 @@ class Keys:
     # Go throgh history of opened chats,
     # similar to the "page back" and "page forward" keys in web browsers
     earlier_page = ["Ctrl+H"]
-    later_page   = ["Ctrl+Shift+H"]
+    later_page   = ["Ctrl+L"]
 
     # Toggle muting all notifications in the running client,
     # except highlights (e.g. replies or keywords)
@@ -462,7 +462,7 @@ class Keys:
 
         # Clear all messages from the chat.
         # This does not remove anything for other users.
-        clear_all = ["Ctrl+L"]
+        clear_all = ["Ctrl+Shift+L"]
 
     class ImageViewer:
         # Close the image viewer. Escape can also be used.
