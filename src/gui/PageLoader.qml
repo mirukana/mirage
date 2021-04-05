@@ -80,12 +80,12 @@ HLoader {
 
         // Going beyond oldest entry in history
         if (historyPosition + relativeMovement >= history.length) {
-            if (! window.settings.Keys.wrap_history) return false
+            if (! window.settings.General.wrap_history) return false
             relativeMovement -= history.length
 
         // Going beyond newest entry in history
         } else if (historyPosition + relativeMovement < 0){
-            if (! window.settings.Keys.wrap_history) return false
+            if (! window.settings.General.wrap_history) return false
             relativeMovement += history.length
         }
 

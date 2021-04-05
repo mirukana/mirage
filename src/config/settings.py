@@ -17,6 +17,10 @@ class General:
     # right room pane is visible at a time.
     hide_side_panes_under: int = 450
 
+    # Whether to wrap around or do nothing when using the earlier_page or
+    # later_page keybinds and reaching the start or end of the history.
+    wrap_history: bool = True
+
     # How many seconds the cursor must hover on buttons and other elements
     # to show tooltips.
     tooltips_delay: float = 0.5
@@ -257,9 +261,6 @@ class Keys:
     # similar to the "page back" and "page forward" keys in web browsers
     earlier_page = ["Ctrl+H"]
     later_page   = ["Ctrl+Shift+H"]
-
-    # Whether to wrap around when using earlier_page and later_page
-    wrap_history: bool = True
 
     # Toggle muting all notifications in the running client,
     # except highlights (e.g. replies or keywords)
