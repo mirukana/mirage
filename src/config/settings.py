@@ -256,7 +256,7 @@ class Keys:
     # Go throgh history of opened chats,
     # similar to the "page back" and "page forward" keys in web browsers
     earlier_page = ["Ctrl+H"]
-    later_page = ["Ctrl+Shift+H"]
+    later_page   = ["Ctrl+Shift+H"]
 
     # Whether to wrap around when using earlier_page and later_page
     wrap_history: bool = True

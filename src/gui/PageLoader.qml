@@ -76,18 +76,16 @@ HLoader {
     }
 
     function moveThroughHistory(relativeMovement=1) {
-
         if (history.length === 0) return false
 
-        // going beyond oldest entry in history
+        // Going beyond oldest entry in history
         if (historyPosition + relativeMovement >= history.length) {
-            if (!window.settings.Keys.wrap_history) return false
+            if (! window.settings.Keys.wrap_history) return false
             relativeMovement -= history.length
-        }
 
-        // going beyond newest entry in history
-        else if (historyPosition + relativeMovement < 0){
-            if (!window.settings.Keys.wrap_history) return false
+        // Going beyond newest entry in history
+        } else if (historyPosition + relativeMovement < 0){
+            if (! window.settings.Keys.wrap_history) return false
             relativeMovement += history.length
         }
 
