@@ -16,9 +16,11 @@ HButton {
     toolTip.label.wrapMode: HLabel.NoWrap
 
     onClicked: {
+        const oldPosition = textControl.cursorPosition
         textControl.selectAll()
         textControl.copy()
         textControl.deselect()
+        textControl.cursorPosition = oldPosition
 
         toolTip.text = qsTr("Copied!")
         toolTip.instantShow(2000)
