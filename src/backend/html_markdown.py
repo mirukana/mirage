@@ -180,7 +180,7 @@ class HTMLProcessor:
         r"https?://matrix.to/#/[!#]\S+/\$\S+", re.IGNORECASE,
     )
 
-    inline_quote_regex = re.compile(r"(^|⏎)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
+    inline_quote_regex = re.compile(r"(^|⏎|>)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
 
     quote_regex = re.compile(
         r"(^|<span/?>|<p/?>|<br/?>|<h\d/?>)"
