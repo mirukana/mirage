@@ -76,7 +76,7 @@ HLoader {
     }
 
     function moveThroughHistory(relativeMovement=1) {
-        if (history.length === 0) return false
+        if (history.length < 2) return false
 
         // Going beyond oldest entry in history
         if (historyPosition + relativeMovement >= history.length) {
