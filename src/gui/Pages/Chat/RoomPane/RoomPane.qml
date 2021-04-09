@@ -12,6 +12,13 @@ MultiviewPane {
     readonly property QtObject accountModel:
         ModelStore.get("accounts").find(chat.roomInfo.for_account)
 
+    // Using a property for this item because MultiviewPane sends its children
+    // inside its SwipeView by default, while GTH must always cover the pane
+    readonly property GlobalTapHandlers globalTapHandlers: GlobalTapHandlers {
+        parent: roomPane.contentItem
+        pageLoader: pageLoader
+    }
+
     function toggleFocus() {
         if (roomPane.activeFocus) {
             if (roomPane.collapse) roomPane.close()

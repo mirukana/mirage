@@ -157,6 +157,11 @@ Item {
     MainPane {
         id: mainPane
         maximumSize: parent.width - theme.minimumSupportedWidth * 1.5
+
+        // Drawers (side panes) are actually Popups, which are considered to be
+        // different "layer". Input handlers will only get events occuring
+        // in the layer they were declared in.
+        GlobalTapHandlers { pageLoader: pageLoader }
     }
 
     PageLoader {
@@ -169,5 +174,7 @@ Item {
             mainPane.visibleSize
 
         visible: mainPane.visibleSize < mainUI.width
+
+        GlobalTapHandlers { pageLoader: parent }
     }
 }
