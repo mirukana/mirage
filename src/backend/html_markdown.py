@@ -183,9 +183,9 @@ class HTMLProcessor:
     inline_quote_regex = re.compile(r"(^|⏎|>)(\s*&gt;[^⏎\n]*)", re.MULTILINE)
 
     quote_regex = re.compile(
-        r"(^|<span/?>|<p/?>|<br/?>|<h\d/?>)"
+        r"(^|<span/?>|<p/?>|<br/?>|<h\d/?>|<mx-reply/?>)"
         r"(\s*&gt;.*?)"
-        r"(<span/?>|</?p>|<br/?>|</?h\d>|$)",
+        r"(<span/?>|</?p>|<br/?>|</?h\d>|</mx-reply/?>|$)",
         re.MULTILINE,
     )
 
