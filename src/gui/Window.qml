@@ -98,9 +98,9 @@ ApplicationWindow {
     visible: ArgumentParser.ready && ! ArgumentParser.startInTray
     color: "transparent"
 
-    onClosing: {
-        close.accepted = ! settings.General.close_to_tray
-        settings.General.close_to_tray ? hide() : Qt.quit()
+    onClosing: if (py.ready && settings.General.close_to_tray) {
+        close.accepted = false
+        hide()
     }
 
     PythonRootBridge { id: py }
