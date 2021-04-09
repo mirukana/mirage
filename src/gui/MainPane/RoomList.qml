@@ -269,25 +269,19 @@ HListView {
         onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
     }
 
-    Repeater {
+    Instantiator {
         model: Object.keys(window.settings.Keys.Accounts.AtIndex)
-
-        Item {
-            HShortcut {
-                sequences: window.settings.Keys.Accounts.AtIndex[modelData]
-                onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
-            }
+        delegate: HShortcut {
+            sequences: window.settings.Keys.Accounts.AtIndex[modelData]
+            onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
         }
     }
 
-    Repeater {
+    Instantiator {
         model: Object.keys(window.settings.Keys.Rooms.AtIndex)
-
-        Item {
-            HShortcut {
-                sequences: window.settings.Keys.Rooms.AtIndex[modelData]
-                onActivated: showAccountRoomAtIndex(parseInt(modelData,10) - 1)
-            }
+        delegate: HShortcut {
+            sequences: window.settings.Keys.Rooms.AtIndex[modelData]
+            onActivated: showAccountRoomAtIndex(parseInt(modelData, 10) - 1)
         }
     }
 
