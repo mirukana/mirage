@@ -17,7 +17,8 @@ HFlickableColumnPage {
         encryptCheckBox.changed || requireInviteCheckbox.changed ||
         forbidGuestsCheckBox.changed
 
-    readonly property Item keybindFocusItem: nameField.item
+    readonly property Item keybindFocusItem:
+        nameField.item.enabled ? nameField.item : copyIdButton
 
     function save() {
         if (saveFutureId) py.cancelCoro(saveFutureId)
@@ -97,6 +98,31 @@ HFlickableColumnPage {
         Layout.preferredHeight: width
         Layout.maximumWidth: 256 * theme.uiScale
         Layout.alignment: Qt.AlignCenter
+    }
+
+    HLabeledItem {
+        label.text: qsTr("Room ID:")
+        Layout.fillWidth: true
+
+        HRowLayout {
+            width: parent.width
+
+            HTextArea {
+                id: idAreaItem
+                wrapMode: HLabel.WrapAnywhere
+                readOnly: true
+                radius: 0
+                text: chat.roomId
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            FieldCopyButton {
+                id: copyIdButton
+                textControl: idAreaItem
+            }
+        }
     }
 
     HLabeledItem {
