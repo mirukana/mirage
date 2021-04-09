@@ -232,9 +232,9 @@ QtObject {
             let content = qsTr(escapeHtml(ev.content)).arg(sender)
 
             if (ev.content.includes("%2"))
-            content = content.arg(coloredNameHtml(
-                ev.redacter_name, ev.redacter_id, "", true,
-            ))
+                content = content.arg(coloredNameHtml(
+                    ev.redacter_name, ev.redacter_id, "", true,
+                ))
 
             return qsTr(
                 `<font color="${theme.chat.message.redactedBody}">` +
