@@ -171,6 +171,8 @@ class UserFile:
         if self.write_path.parts[0] == "qrc:":
             return
 
+        self.write_path.parent.mkdir(parents=True, exist_ok=True)
+
         while True:
             await asyncio.sleep(1)
 
