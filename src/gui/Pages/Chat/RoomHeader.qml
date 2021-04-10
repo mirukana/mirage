@@ -26,7 +26,7 @@ Rectangle {
 
         RoomHeaderButton {
             id: goToMainPaneButton
-            show: mainUI.mainPane.collapse || mainUI.mainPane.forceCollapse
+            show: mainUI.mainPane.normalOrForceCollapse
             padded: false
             backgroundColor: "transparent"
             icon.name: "go-back-to-main-pane"
@@ -216,9 +216,7 @@ Rectangle {
 
         RoomHeaderButton {
             id: goToRoomPaneButton
-            show:
-                chat.roomPane &&
-                (chat.roomPane.collapse || chat.roomPane.forceCollapse)
+            show: chat.roomPane && chat.roomPane.normalOrForceCollapse
 
             padded: false
             backgroundColor: "transparent"

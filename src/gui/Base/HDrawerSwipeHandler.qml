@@ -27,10 +27,7 @@ DragHandler {
     signal closeRequest()
 
     target: null
-
-    enabled:
-        (drawer.collapse || drawer.forceCollapse) &&
-        drawer.visible
+    enabled: drawer.normalOrForceCollapse && drawer.visible
 
     onTranslationChanged: {
         if (hide.running || cancel.running) return
