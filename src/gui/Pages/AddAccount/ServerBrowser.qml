@@ -24,6 +24,9 @@ HBox {
     property string connectFutureId: ""
     property string fetchServersFutureId: ""
 
+    readonly property bool canFocusMainPane:
+        mainUI.mainPane.normalOrForceCollapse && mainUI.accountsPresent
+
     signal accepted()
 
     function takeFocus() { serverField.item.field.forceActiveFocus() }
@@ -162,11 +165,7 @@ HBox {
                 visible: Layout.preferredWidth > 0
 
                 Layout.fillHeight: true
-                Layout.preferredWidth:
-                    mainUI.mainPane.normalOrForceCollapse &&
-                    mainUI.accountsPresent ?
-                    implicitWidth :
-                    0
+                Layout.preferredWidth: box.canFocusMainPane ? implicitWidth : 0
 
                 Behavior on Layout.preferredWidth { HNumberAnimation {} }
             }
@@ -220,6 +219,8 @@ HBox {
 
     onKeyboardAccept:
         if (serverField.item.apply.enabled) serverField.item.apply.clicked()
+
+    onKeyboardCancel: if (box.canFocusMainPane) mainUI.mainPane.toggleFocus()
 
     onAccepted: window.saveState(this)
 
