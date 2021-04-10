@@ -359,6 +359,7 @@ class HTMLProcessor:
             ],
             "element_postprocessors": [
                 self._font_color_to_span if outgoing else lambda el: el,
+                self._hr_to_dashes if not outgoing else lambda el: el,
             ],
             "is_mergeable": lambda e1, e2: e1.attrib == e2.attrib,
         }
@@ -552,6 +553,16 @@ class HTMLProcessor:
             el.attrib["class"]        = "mention room-alias-mention"
             el.attrib["data-mention"] = el.text.strip()
 
+        return el
+
+
+    def _hr_to_dashes(self, el: HtmlElement) -> HtmlElement:
+        if el.tag != "hr":
+            return el
+
+        el.tag             = "p"
+        el.attrib["class"] = "ruler"
+        el.text            = "─" * 19
         return el
 
 
