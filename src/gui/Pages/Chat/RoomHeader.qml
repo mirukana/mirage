@@ -30,7 +30,7 @@ Rectangle {
             padded: false
             backgroundColor: "transparent"
             icon.name: "go-back-to-main-pane"
-            toolTip.text: qsTr("Go back to main pane")
+            toolTip.text: qsTr("Back to main pane")
             onClicked: mainUI.mainPane.toggleFocus()
 
             Layout.preferredWidth: show ? avatar.width : 0

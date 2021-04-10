@@ -148,7 +148,7 @@ Rectangle {
             visible: Layout.preferredWidth > 0
             backgroundColor: "transparent"
             icon.name: "go-back-to-chat-from-main-pane"
-            toolTip.text: qsTr("Go back to room")
+            toolTip.text: qsTr("Go to chat")
 
             onClicked: mainPane.toggleFocus()
 

@@ -64,7 +64,7 @@ MultiviewPane {
 
         toolTip.text:
             modelData === "back" ?
-            qsTr("Go back to chat") :
+            qsTr("Back to chat") :
             qsTr(modelData.charAt(0).toUpperCase() + modelData.slice(1))
 
         autoExclusive: true
