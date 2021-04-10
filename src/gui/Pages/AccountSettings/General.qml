@@ -58,6 +58,16 @@ HFlickableColumnPage {
     }
 
     function cancel() {
+        if (
+            ! nameField.item.changed &&
+            ! aliasFieldItem.changed &&
+            ! fileDialog.selectedFile &&
+            ! fileDialog.file
+        ) {
+            pageLoader.showPrevious() || mainUI.mainPane.toggleFocus()
+            return
+        }
+
         nameField.item.reset()
         aliasFieldItem.reset()
         fileDialog.selectedFile = ""
@@ -82,7 +92,7 @@ HFlickableColumnPage {
         }
 
         CancelButton {
-            enabled: saveButton.enabled && ! saveButton.loading
+            enabled: ! saveButton.loading
             onClicked: cancel()
         }
     }

@@ -47,7 +47,7 @@ HFlickableColumnPage {
         blockOtherServersCheckBox.reset()
         errorMessage.text = ""
 
-        pageLoader.showPrevious()
+        pageLoader.showPrevious() || mainUI.mainPane.toggleFocus()
     }
 
     enabled: account && account.presence !== "offline"

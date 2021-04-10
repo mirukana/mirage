@@ -58,7 +58,7 @@ HFlickableColumnPage {
         userField.item.reset()
         errorMessage.text = ""
 
-        pageLoader.showPrevious()
+        pageLoader.showPrevious() || mainUI.mainPane.toggleFocus()
     }
 
     enabled: account && account.presence !== "offline"
@@ -73,12 +73,8 @@ HFlickableColumnPage {
         }
 
         CancelButton {
-            onClicked: {
-                userField.item.reset()
-                errorMessage.text   = ""
-
-                pageLoader.showPrevious()
-            }
+            enabled: main
+            onClicked: page.cancel()
         }
     }
 
