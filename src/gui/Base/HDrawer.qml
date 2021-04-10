@@ -49,16 +49,18 @@ Drawer {
         requireDefaultSize ? defaultSize : minimumSize
 
     readonly property int calculatedSizeNoRequiredMinimum:
-        collapse || forceCollapse ?
+        normalOrForceCollapse ?
         peekSizeWhileCollapsed :
         Math.max(minimumSize, Math.min(preferredSize, maximumSize))
 
     readonly property int calculatedSize:
-        collapse || forceCollapse ?
+        normalOrForceCollapse ?
         peekSizeWhileCollapsed :
         Math.max(calculatedMinimumSize, Math.min(preferredSize, maximumSize))
 
     //
+
+    readonly property bool normalOrForceCollapse: collapse || forceCollapse
 
     readonly property int visibleSize: visible ? width * position : 0
 
@@ -81,7 +83,7 @@ Drawer {
 
     // FIXME: https://bugreports.qt.io/browse/QTBUG-59141
     // dragMargin: parent.width / 2
-    // interactive: collapse || forceCollapse
+    // interactive: normalOrForceCollapse
     dragMargin: 0
     interactive: false
 
