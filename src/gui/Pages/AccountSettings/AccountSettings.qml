@@ -17,7 +17,12 @@ HPage {
         width: Math.min(implicitWidth, page.availableWidth)
         height: Math.min(implicitHeight, page.availableHeight)
 
-        header: HTabBar {
+        showBackButton: mainUI.mainPane.normalOrForceCollapse
+        backButton.icon.name: "go-back-to-main-pane"
+        backButton.toolTip.text: qsTr("Back to main pane")
+        backButton.onClicked: mainUI.mainPane.toggleFocus()
+
+        tabBar: HTabBar {
             HTabButton { text: qsTr("General") }
             HTabButton { text: qsTr("Notifications") }
             HTabButton { text: qsTr("Security") }
