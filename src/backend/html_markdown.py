@@ -484,7 +484,15 @@ class HTMLProcessor:
         if el.tag != "mx-reply":
             return el
 
-        el.tail = f" ⏎⏎ {el.tail or ''}"
+        try:
+            user_id = el.find("blockquote").findall("a")[1].text
+            text    = f"↩ {user_id[1:].split(':')[0]}: "  # U+21A9 arrow
+        except (AttributeError, IndexError):
+            text = "↩ "  # U+21A9 arrow
+
+        el.clear()
+        el.tag  = "span"
+        el.text = text
         return el
 
 
