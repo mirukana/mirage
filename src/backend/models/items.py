@@ -398,15 +398,24 @@ class Event(ModelItem):
 
     @staticmethod
     def parse_links(text: str) -> List[str]:
-        """Return list of URLs (`<a href=...>` tags) present in the text."""
+        """Return list of URLs (`<a href=...>` tags) present in the content."""
 
         ignore = []
 
-        if "<mx-reply>" in text:
+        if "<mx-reply>" in text or "mention" in text:
             parser = lxml.html.etree.HTMLParser()
-            tree   = lxml.etree.fromstring(text, parser)  # nosec
-            xpath  = "//mx-reply/blockquote/a[count(preceding-sibling::*)<=1]"
-            ignore = [lxml.etree.tostring(el) for el in tree.xpath(xpath)]
+            tree   = lxml.etree.fromstring(text, parser)
+            ignore = [
+                lxml.etree.tostring(matching_element)
+                for ugly_disgusting_xpath in [
+                    # Match mx-reply > blockquote > second a (user ID link)
+                    "//mx-reply/blockquote/a[count(preceding-sibling::*)<=1]",
+                    # Match <a> tags with a mention class
+                    '//a[contains(concat(" ",normalize-space(@class)," ")'
+                    '," mention ")]',
+                ]
+                for matching_element in tree.xpath(ugly_disgusting_xpath)
+            ]
 
         if not text.strip():
             return []
