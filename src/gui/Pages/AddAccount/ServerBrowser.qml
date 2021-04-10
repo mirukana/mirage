@@ -155,6 +155,22 @@ HBox {
 
             width: parent.width
 
+            HButton {
+                icon.name: "go-back-to-main-pane"
+                icon.color: theme.colors.negativeBackground
+                onClicked: mainUI.mainPane.toggleFocus()
+                visible: Layout.preferredWidth > 0
+
+                Layout.fillHeight: true
+                Layout.preferredWidth:
+                    mainUI.mainPane.normalOrForceCollapse &&
+                    mainUI.accountsPresent ?
+                    implicitWidth :
+                    0
+
+                Behavior on Layout.preferredWidth { HNumberAnimation {} }
+            }
+
             HTextField {
                 id: field
 

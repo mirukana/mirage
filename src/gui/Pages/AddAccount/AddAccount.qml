@@ -39,7 +39,7 @@ SwipeView {
             width: Math.min(implicitWidth, tabPage.availableWidth)
             height: Math.min(implicitHeight, tabPage.availableHeight)
 
-            header: HTabBar {
+            tabBar: HTabBar {
                 shortcutsEnabled: visible && tabPage.enabled
                 visible:
                     signInLoader.sourceComponent !== signInLoader.signInSso
