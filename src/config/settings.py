@@ -382,7 +382,7 @@ class Keys:
             # Optionally, the account can be specified
             # by using a space separator (see example).
             # Unlimited entries can be added.
-            "!uxYVyZEASzrDCXMnNO:matrix.org" = ["Ctrl+G,Ctrl+M"]
+            "!uxYVyZEASzrDCXMnNO:matrix.org" = []
             "@account:example.org !roomID:a.org" = []
 
     class Chat:
