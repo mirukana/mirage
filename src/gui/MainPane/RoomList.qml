@@ -94,12 +94,12 @@ HListView {
     // or space-separated account id and room id.
     // If only room id, the first account with this room is used.
     function showRoomByDescription(description) {
-        var spaceIndex = description.indexOf(" ")
+        const spaceIndex = description.indexOf(" ")
         if (spaceIndex < 0) {
             // Description is just room id
-            var roomId = description
-            var accountId = findFirstAccountWithRoomId(roomId)
             if (accountId === false) {
+            const roomId = description
+            const roomIndex = indexOfRoomId(roomId)
                 console.warn("No account with such room id: "+roomId)
             }
             else {
@@ -109,8 +109,8 @@ HListView {
         }
         else {
             // Description is account id and room id
-            var accountId = description.substring(0, spaceIndex)
-            var roomId = description.substring(spaceIndex+1)
+            const accountId = description.substring(0, spaceIndex)
+            const roomId = description.substring(spaceIndex+1)
             // Validate account id
             if (accountIndice[accountId] === undefined) {
                 console.warn("No such account: "+accountId)
