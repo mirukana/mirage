@@ -73,21 +73,15 @@ HListView {
             keepListCentered = true
     }
 
-    function findFirstAccountWithRoomId(roomId) {
-        var currentAccount = ""
+    function indexOfRoomId(roomId) {
         for (let i = 0; i < model.count; i++) {
-            var item = model.get(i)
-            if (item.type === "Account") {
-                currentAccount = item.id
-            }
-            else if (item.type === "Room") {
-                if (item.id === roomId) {
-                    return currentAccount
-                }
+            const item = model.get(i)
+            if (item.type === "Room" && item.id === roomId) {
+                return i
             }
         }
-        // failed
-        return false
+        return -1
+
     }
 
     // Description can be either room id
@@ -97,14 +91,13 @@ HListView {
         const spaceIndex = description.indexOf(" ")
         if (spaceIndex < 0) {
             // Description is just room id
-            if (accountId === false) {
             const roomId = description
             const roomIndex = indexOfRoomId(roomId)
+            if (roomIndex < 0) {
                 console.warn("No account with such room id: "+roomId)
             }
             else {
-                pageLoader.showRoom(accountId, roomId)
-                startCorrectItemSearch()
+                showItemAtIndex(roomIndex)
             }
         }
         else {
