@@ -73,6 +73,55 @@ HListView {
             keepListCentered = true
     }
 
+    function findFirstAccountWithRoomId(roomId) {
+        var currentAccount = ""
+        for (let i = 0; i < model.count; i++) {
+            var item = model.get(i)
+            if (item.type === "Account") {
+                currentAccount = item.id
+            }
+            else if (item.type === "Room") {
+                if (item.id === roomId) {
+                    return currentAccount
+                }
+            }
+        }
+        // failed
+        return false
+    }
+
+    // Description can be either room id
+    // or space-separated account id and room id.
+    // If only room id, the first account with this room is used.
+    function showRoomByDescription(description) {
+        var spaceIndex = description.indexOf(" ")
+        if (spaceIndex < 0) {
+            // Description is just room id
+            var roomId = description
+            var accountId = findFirstAccountWithRoomId(roomId)
+            if (accountId === false) {
+                console.warn("No account with such room id: "+roomId)
+            }
+            else {
+                pageLoader.showRoom(accountId, roomId)
+                startCorrectItemSearch()
+            }
+        }
+        else {
+            // Description is account id and room id
+            var accountId = description.substring(0, spaceIndex)
+            var roomId = description.substring(spaceIndex+1)
+            // Validate account id
+            if (accountIndice[accountId] === undefined) {
+                console.warn("No such account: "+accountId)
+            }
+            else {
+                pageLoader.showRoom(accountId, roomId)
+                startCorrectItemSearch()
+            }
+        }
+    }
+
     function showAccountRoomAtIndex(index) {
         const item = model.get(currentIndex === -1 ?  0 : currentIndex)
 
@@ -277,6 +326,14 @@ HListView {
         delegate: HShortcut {
             sequences: window.settings.Keys.Rooms.AtIndex[modelData]
             onActivated: showAccountRoomAtIndex(parseInt(modelData, 10) - 1)
+        }
+    }
+
+    Instantiator {
+        model: Object.keys(window.settings.Keys.Rooms.Direct)
+        delegate: HShortcut {
+            sequences: window.settings.Keys.Rooms.Direct[modelData]
+            onActivated: showRoomByDescription(modelData)
         }
     }
 

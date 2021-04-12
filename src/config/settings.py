@@ -376,6 +376,15 @@ class Keys:
             9  = [Keys.alt_or_cmd() + "+9"]
             10 = [Keys.alt_or_cmd() + "+0"]
 
+        class Direct:
+            # Switch to a specific room with a keybinding.
+            # Each property is a list of keybinds for some room ID.
+            # Optionally, the account can be specified
+            # by using a space separator (see example).
+            # Unlimited entries can be added.
+            "!uxYVyZEASzrDCXMnNO:matrix.org" = ["Ctrl+G,Ctrl+M"]
+            "@account:example.org !roomID:a.org" = []
+
     class Chat:
         # Keybinds specific to the current chat page.
 
