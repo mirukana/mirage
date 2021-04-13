@@ -59,16 +59,8 @@ Item {
                 roomId,
                 roomName: roomInfo.display_name,
                 inviterId: roomInfo.inviter_id,
+                left: roomInfo.left,
             },
-        )
-    }
-
-    HShortcut {
-        sequences: window.settings.Keys.Chat.forget
-        active: userInfo && userInfo.presence !== "offline"
-        onActivated: window.makePopup(
-            "Popups/ForgetRoomPopup.qml",
-            {userId, roomId, roomName: roomInfo.display_name},
         )
     }
 

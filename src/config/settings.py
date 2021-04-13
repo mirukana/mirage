@@ -390,10 +390,9 @@ class Keys:
         # Can also be done by clicking on current tab button at the top right.
         hide_room_pane = ["Alt+Ctrl+R"]
 
-        # Invite new members, leave or forget the current chat.
+        # Invite new members or leave the current chat.
         invite = ["Alt+I"]
         leave  = ["Alt+Escape"]
-        forget = ["Alt+Shift+Escape"]
 
         # Open the file picker to upload files in the current chat.
         send_file = ["Alt+S"]

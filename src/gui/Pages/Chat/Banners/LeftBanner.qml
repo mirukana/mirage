@@ -25,11 +25,13 @@ Banner {
     buttonCallbacks: ({
         forget: button => {
             window.makePopup(
-                "Popups/ForgetRoomPopup.qml",
+                "Popups/LeaveRoomPopup.qml",
                 {
-                    userId:   chat.userId,
-                    roomId:   chat.roomId,
-                    roomName: chat.roomInfo.display_name,
+                    userId:    chat.userId,
+                    roomId:    chat.roomId,
+                    roomName:  chat.roomInfo.display_name,
+                    inviterId: chat.roomInfo.inviter_id,
+                    left:      true,
                 },
                 obj => {
                     obj.onOk.connect(() => { button.loading = true })  // FIXME
