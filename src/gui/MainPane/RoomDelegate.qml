@@ -227,11 +227,17 @@ HTile {
         }
 
         HMenuItemPopupSpawner {
-            visible: invited || joined
-            icon.name: invited ? "invite-decline" : "room-leave"
-            icon.color: theme.colors.negativeBackground
-            text: invited ? qsTr("Decline invite") : qsTr("Leave")
             enabled: accountModel.presence !== "offline"
+            icon.color: theme.colors.negativeBackground
+            icon.name:
+                parted ? "room-forget" :
+                invited ? "invite-decline" :
+                "room-leave"
+
+            text:
+                parted ? qsTr("Forget history") :
+                invited ? qsTr("Decline invite") :
+                qsTr("Leave")
 
             popup: "Popups/LeaveRoomPopup.qml"
             properties: ({
@@ -239,21 +245,7 @@ HTile {
                 roomId: model.id,
                 roomName: model.display_name,
                 inviterId: model.inviter_id,
-            })
-        }
-
-        HMenuItemPopupSpawner {
-            icon.name: "room-forget"
-            icon.color: theme.colors.negativeBackground
-            text: qsTr("Forget")
-            enabled: accountModel.presence !== "offline"
-
-            popup: "Popups/ForgetRoomPopup.qml"
-            autoDestruct: false
-            properties: ({
-                userId: model.for_account,
-                roomId: model.id,
-                roomName: model.display_name,
+                left: model.left,
             })
         }
     }
