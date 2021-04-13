@@ -238,6 +238,7 @@ HTile {
                 userId: model.for_account,
                 roomId: model.id,
                 roomName: model.display_name,
+                inviterId: model.inviter_id,
             })
         }
 

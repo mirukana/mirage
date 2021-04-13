@@ -11,13 +11,14 @@ HFlickableColumnPopup {
     property string userId: ""
     property string roomId: ""
     property string roomName: ""
+    property string inviterId: ""
     property var leftCallback: null
 
     page.footer: AutoDirectionLayout {
         ApplyButton {
             id: leaveButton
             icon.name: "room-leave"
-            text: qsTr("Leave")
+            text: inviterId ? qsTr("Decline") : qsTr("Leave")
 
             onClicked: {
                 py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
@@ -33,13 +34,18 @@ HFlickableColumnPopup {
     onOpened: leaveButton.forceActiveFocus()
 
     SummaryLabel {
-        text: qsTr("Leave %1?").arg(
-            utils.htmlColorize(roomName, theme.colors.accentText),
-        )
+        readonly property string roomText:
+            utils.htmlColorize(roomName, theme.colors.accentText)
+
         textFormat: Text.StyledText
+        text:
+            inviterId ?
+            qsTr("Decline invite to %1?").arg(roomText) :
+            qsTr("Leave %1?").arg(roomText)
     }
 
     DetailsLabel {
+        visible: inviterId === ""
         text: qsTr(
             "If this room is private, you will not be able to rejoin it."
         )
