@@ -1180,8 +1180,9 @@ class MatrixClient(nio.AsyncClient):
 
         try:
             await super().room_leave(room_id)
-        except MatrixNotFound:  # already left
-            pass
+        except MatrixError as e:  # room was already left
+            if e.http_code != 404:
+                raise
 
         await super().room_forget(room_id)
 
