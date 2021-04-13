@@ -54,7 +54,12 @@ Item {
         active: userInfo && userInfo.presence !== "offline"
         onActivated: window.makePopup(
             "Popups/LeaveRoomPopup.qml",
-            {userId, roomId, roomName: roomInfo.display_name},
+            {
+                userId,
+                roomId,
+                roomName: roomInfo.display_name,
+                inviterId: roomInfo.inviter_id,
+            },
         )
     }
 
