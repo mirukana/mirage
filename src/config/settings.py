@@ -379,6 +379,7 @@ class Keys:
         class Direct:
             # Switch to a specific room with a keybinding.
             # Each property is a list of keybinds for some room ID.
+            # A room's ID can be copied by right clicking on it in the room list.
             # Optionally, the account can be specified
             # by using a space separator (see example).
             # Unlimited entries can be added.
