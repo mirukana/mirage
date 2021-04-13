@@ -73,7 +73,6 @@ HFlickableColumnPage {
         }
 
         CancelButton {
-            enabled: main
             onClicked: page.cancel()
         }
     }
