@@ -5,6 +5,8 @@ import QtQuick 2.12
 import "../../../Base"
 
 Banner {
+    id: root
+
     property string inviterId: chat.roomInfo.inviter
     property string inviterName: chat.roomInfo.inviter_name
     property string inviterAvatar: chat.roomInfo.inviter_avatar
@@ -44,11 +46,17 @@ Banner {
         },
 
         decline: button => {
-            button.loading = true
-            py.callClientCoro(
-                chat.userId, "room_leave", [chat.roomId], () => {
-                    button.loading = false
-            })
+            window.makePopup(
+                "Popups/LeaveRoomPopup.qml",
+                {
+                    userId: chat.userId,
+                    roomId: chat.roomId,
+                    roomName: chat.roomInfo.display_name,
+                    inviterId: root.inviterId,
+                    left: chat.roomInfo.left,
+                    leftCallback: () => { button.loading = true },
+                },
+            )
         }
     })
 }

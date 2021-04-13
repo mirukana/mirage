@@ -14,6 +14,7 @@ HFlickableColumnPopup {
     property string roomName: ""
     property string inviterId: ""
     property bool left: false
+    property var leftCallback: null
 
     function forget() {
         py.callClientCoro(userId, "room_forget", [roomId], () => {
@@ -30,7 +31,7 @@ HFlickableColumnPopup {
     }
 
     function leave() {
-        py.callClientCoro(userId, "room_leave", [roomId])
+        py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
         popup.close()
     }
 
