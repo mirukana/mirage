@@ -73,17 +73,6 @@ HListView {
             keepListCentered = true
     }
 
-    function indexOfRoomId(roomId) {
-        for (let i = 0; i < model.count; i++) {
-            const item = model.get(i)
-            if (item.type === "Room" && item.id === roomId) {
-                return i
-            }
-        }
-        return -1
-
-    }
-
     // Description can be either room id
     // or space-separated account id and room id.
     // If only room id, the first account with this room is used.
@@ -92,8 +81,8 @@ HListView {
         if (spaceIndex < 0) {
             // Description is just room id
             const roomId = description
-            const roomIndex = indexOfRoomId(roomId)
-            if (roomIndex < 0) {
+            const roomIndex = model.findIndex(roomId)
+            if (roomIndex === null) {
                 console.warn("No account with such room id: "+roomId)
             }
             else {
