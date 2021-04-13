@@ -2033,7 +2033,10 @@ class MatrixClient(nio.AsyncClient):
     async def lock_room_position(self, room_id: str, lock: bool) -> None:
         """Set wheter a room should try to hold its current sort position."""
 
-        room = self.models[self.user_id, "rooms"][room_id]
+        room = self.models[self.user_id, "rooms"].get(room_id)
+
+        if not room:
+            return
 
         if not lock:
             room._sort_overrides = {}
