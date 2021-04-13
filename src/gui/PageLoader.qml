@@ -68,10 +68,8 @@ HLoader {
     }
 
     function showPrevious(timesBack=1) {
-        timesBack = Math.min(timesBack, history.length - 1)
-        if (timesBack < 1) return false
-
-        showNthFromHistory(timesBack)
+        if (history.length < 2) return false
+        showNthFromHistory(Math.min(timesBack, history.length - 1))
         return true
     }
 
