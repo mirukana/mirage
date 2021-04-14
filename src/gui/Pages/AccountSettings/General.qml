@@ -58,7 +58,7 @@ HFlickableColumnPage {
 
         if (ignoredUsersAreaItem.changed) {
             saveButton.ignoredUsersChangeRunning = true
-            const users                          = ignoredUsersAreaItem.userIds
+            const users                          = ignoredUsers.userIds
 
             py.callClientCoro(userId, "set_ignored_users", users, () => {
                 saveButton.ignoredUsersChangeRunning = false
