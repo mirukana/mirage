@@ -302,9 +302,13 @@ HFlickableColumnPage {
 
             FieldHelpButton {
                 helpText: qsTr(
-                    "From any chat, start a message with specified alias " +
-                    "followed by a space to type and send as this account.\n" +
-                    "The account must have permission to talk in the room.\n"+
+                    "From any chat, start a message with the specified " +
+                    "alias, followed by a space, to type and send as " +
+                    "this account.\n\n" +
+
+                    "The account must be a member of the room and have " +
+                    "permission to talk.\n\n"+
+
                     "To ignore the alias when typing, prepend it with a space."
                 )
             }
