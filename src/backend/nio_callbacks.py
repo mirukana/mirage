@@ -65,7 +65,6 @@ class NioCallbacks:
                 self.client.add_to_device_callback(method, ev_class)
             elif issubclass(ev_class, nio.AccountDataEvent):
                 self.client.add_global_account_data_callback(method, ev_class)
-                self.client.add_room_account_data_callback(method, ev_class)
             elif issubclass(ev_class, nio.PresenceEvent):
                 self.client.add_presence_callback(method, ev_class)
             else:
@@ -99,6 +98,10 @@ class NioCallbacks:
 
         # TODO: way of knowing if a nio.MatrixRoom is left
         for room_id, info in resp.rooms.leave.items():
+            # We forgot this room or rejected an invite and ignored the sender
+            if room_id in self.client.ignored_rooms:
+                continue
+
             # TODO: handle in nio, these are rooms that were left before
             # starting the client.
             if room_id not in self.client.all_rooms:
@@ -851,6 +854,15 @@ class NioCallbacks:
                 await update_affected_room(rule_item)
 
         self.client.push_rules = ev
+
+
+    async def onUnknownAccountDataEvent(
+        self, ev: nio.UnknownAccountDataEvent,
+    ) -> None:
+
+        if ev.type == "m.ignored_user_list":
+            user_ids = set(ev.content.get("ignored_users", {}))
+            self.client.ignored_user_ids = user_ids
 
 
     # Presence event callbacks
