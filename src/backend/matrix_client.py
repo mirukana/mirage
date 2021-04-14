@@ -525,13 +525,10 @@ class MatrixClient(nio.AsyncClient):
             await asyncio.sleep(0.2)
 
 
-    async def ignore_user(self, user_id: str, ignore: bool) -> None:
-        ignored = self.ignored_user_ids.copy()
-
-        if ignore:
-            ignored.add(user_id)
-        else:
-            ignored.discard(user_id)
+    async def set_ignored_users(self, *user_ids: str) -> None:
+        previous_ignored  = self.ignored_user_ids
+        now_ignored       = set(user_ids)
+        no_longer_ignored = previous_ignored - now_ignored
 
         path   = ["user", self.user_id, "account_data", "m.ignored_user_list"]
         params = {"access_token": self.access_token}
@@ -540,18 +537,18 @@ class MatrixClient(nio.AsyncClient):
             nio.responses.EmptyResponse,
             "PUT",
             nio.Api._build_path(path, params),
-            nio.Api.to_json({"ignored_users": {u: {} for u in ignored}}),
+            nio.Api.to_json({"ignored_users": {u: {} for u in now_ignored}}),
         )
 
         # Invites and messages from ignored users won't be returned anymore on
-        # syncs, thus will be absent on client restart. Clean up immediatly,
-        # and also update Member.ignored fields:
+        # syncs, thus will be absent on client restart.
+        # Clean up immediatly, and also update Member.ignored fields:
 
         room_model = self.models[self.user_id, "rooms"]
 
         with room_model.batch_remove():
             for room_id, room in room_model.copy().items():
-                if ignore and room.inviter_id == user_id:
+                if room.inviter_id in now_ignored:
                     self.ignored_rooms.add(room_id)
                     del room_model[room_id]
                     self.models.pop((self.user_id, room_id, "events"), None)
@@ -561,16 +558,26 @@ class MatrixClient(nio.AsyncClient):
                 event_model  = self.models[self.user_id, room_id, "events"]
                 member_model = self.models[self.user_id, room_id, "members"]
 
-                if user_id in member_model:
-                    member_model[user_id].ignored = ignore
+                for user_id in now_ignored:
+                    if user_id in member_model:
+                        member_model[user_id].ignored = True
 
-                if ignore:
-                    with event_model.batch_remove():
-                        for event_id, event in event_model.copy().items():
-                            if event.sender_id == user_id:
-                                del event_model[event_id]
+                for user_id in no_longer_ignored:
+                    if user_id in member_model:
+                        member_model[user_id].ignored = False
+
+                with event_model.batch_remove():
+                    for event_id, event in event_model.copy().items():
+                        if event.sender_id in now_ignored:
+                            del event_model[event_id]
 
         await self.update_account_unread_counts()
+
+
+    async def ignore_user(self, user_id: str, ignore: bool) -> None:
+        current = self.ignored_user_ids
+        new     = current | {user_id} if ignore else current - {user_id}
+        await self.set_ignored_users(*new)
 
 
     async def can_kick(self, room_id: str, target_user_id: str) -> bool:

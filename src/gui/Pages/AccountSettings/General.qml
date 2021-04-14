@@ -21,25 +21,6 @@ HFlickableColumnPage {
     }
 
     function applyChanges() {
-        if (nameField.item.changed) {
-            saveButton.nameChangeRunning = true
-
-            py.callClientCoro(
-                userId, "set_displayname", [nameField.item.text], () => {
-                    py.callClientCoro(userId, "update_own_profile", [], () => {
-                        saveButton.nameChangeRunning = false
-                    })
-                }
-            )
-        }
-
-        if (aliasFieldItem.changed) {
-            window.settings.Chat.Composer.Aliases[userId] =
-                aliasFieldItem.text
-
-            window.saveSettings()
-        }
-
         if (avatar.changed) {
             saveButton.avatarChangeRunning = true
 
@@ -50,9 +31,37 @@ HFlickableColumnPage {
                 py.callClientCoro(userId, "update_own_profile", [], () => {
                     saveButton.avatarChangeRunning = false
                 })
+
             }, (errType, [httpCode]) => {
                 console.error("Avatar upload failed:", httpCode, errType)
                 saveButton.avatarChangeRunning = false
+            })
+        }
+
+        if (nameField.item.changed) {
+            saveButton.nameChangeRunning = true
+            const name                   = [nameField.item.text]
+
+            py.callClientCoro(userId, "set_displayname", [name] , () => {
+                py.callClientCoro(userId, "update_own_profile", [], () => {
+                    saveButton.nameChangeRunning = false
+                })
+            })
+        }
+
+        if (aliasFieldItem.changed) {
+            window.settings.Chat.Composer.Aliases[userId] =
+                aliasFieldItem.text
+
+            window.saveSettings()
+        }
+
+        if (ignoredUsersAreaItem.changed) {
+            saveButton.ignoredUsersChangeRunning = true
+            const users                          = ignoredUsersAreaItem.userIds
+
+            py.callClientCoro(userId, "set_ignored_users", users, () => {
+                saveButton.ignoredUsersChangeRunning = false
             })
         }
     }
@@ -80,13 +89,19 @@ HFlickableColumnPage {
 
             property bool nameChangeRunning: false
             property bool avatarChangeRunning: false
+            property bool ignoredUsersChangeRunning: false
 
             disableWhileLoading: false
-            loading: nameChangeRunning || avatarChangeRunning
+            loading:
+                nameChangeRunning ||
+                avatarChangeRunning ||
+                ignoredUsersChangeRunning
+
             enabled:
                 avatar.changed ||
                 nameField.item.changed ||
-                (aliasFieldItem.changed && ! aliasFieldItem.error)
+                (aliasFieldItem.changed && ! aliasFieldItem.error) ||
+                (ignoredUsersAreaItem.changed && ! ignoredUsersAreaItem.error)
 
             onClicked: applyChanges()
         }
@@ -311,6 +326,67 @@ HFlickableColumnPage {
 
                     "To ignore the alias when typing, prepend it with a space."
                 )
+            }
+        }
+    }
+
+    HLabeledItem {
+        id: ignoredUsers
+
+        readonly property var userIds:
+            ! ignoredUsersAreaItem.text.trim() ?
+            [] :
+            ignoredUsersAreaItem.text.trim().split(/\s+/)
+
+        readonly property var invalidUserIds: {
+            const result = []
+
+            for (const user of userIds)
+                if (! /@.+:.+/.test(user))
+                    result.push(user)
+
+            return result
+        }
+
+        loading: ! ready
+        label.text: qsTr("Ignored users:")
+        errorLabel.text:
+            invalidUserIds.length ?
+            qsTr("Incomplete user ID: %1").arg(invalidUserIds.join(", ")) :
+            ""
+
+        Layout.fillWidth: true
+
+        HRowLayout {
+            width: parent.width
+
+            HTextArea {
+                id: ignoredUsersAreaItem
+                error: ignoredUsers.invalidUserIds.length > 0
+                focusItemOnTab: ignoredUsersHelpButton
+                placeholderText: qsTr("@user1:example.org @user2:ex.org")
+                defaultText:
+                    ready ?
+                    JSON.parse(account.ignored_users).sort().join(" ") :
+                    ""
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            FieldHelpButton {
+                id: ignoredUsersHelpButton
+                helpText: qsTr(
+                    "List of user IDs, separated by a space, from which you " +
+                    "will not receive messages or room invites.\n\n" +
+
+                    "Their display name, avatar and online status will also " +
+                    "be hidden from room member lists.\n\n" +
+
+                    "When removing an user from the ignore list, restarting " +
+                    "%1 is needed to receive anything they might have sent " +
+                    "while being ignored."
+                ).arg(Qt.application.displayName)
             }
         }
     }
