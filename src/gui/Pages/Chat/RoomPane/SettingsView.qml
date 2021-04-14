@@ -172,8 +172,7 @@ HFlickableColumnPage {
         id: encryptCheckBox
         text: qsTr("Encrypt messages")
         subtitle.text:
-            qsTr("Only you and those you trust will be able to read the " +
-                 "conversation") +
+            qsTr("Only users you trust can decrypt the conversation") +
             `<br><font color="${theme.colors.warningText}">` +
             (
                 chat.roomInfo.encrypted ?
@@ -191,7 +190,7 @@ HFlickableColumnPage {
     HCheckBox {
         id: requireInviteCheckbox
         text: qsTr("Require being invited")
-        subtitle.text: qsTr("Users will need an invite to join the room")
+        subtitle.text: qsTr("Users need an invite from a member to join")
         defaultChecked: chat.roomInfo.invite_required
         enabled: chat.roomInfo.can_set_join_rules
 
@@ -201,7 +200,7 @@ HFlickableColumnPage {
     HCheckBox {
         id: forbidGuestsCheckBox
         text: qsTr("Forbid guests")
-        subtitle.text: qsTr("Users without an account won't be able to join")
+        subtitle.text: qsTr("Users without accounts can't get invited or join")
         defaultChecked: ! chat.roomInfo.guests_allowed
         enabled: chat.roomInfo.can_set_guest_access
 
