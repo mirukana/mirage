@@ -16,7 +16,9 @@ HTile {
 
     backgroundColor: theme.chat.roomPane.listView.member.background
     contentOpacity:
-        model.invited ? theme.chat.roomPane.listView.member.invitedOpacity : 1
+        model.invited || model.ignored ?
+        theme.chat.roomPane.listView.member.invitedOpacity :
+        1
 
     contentItem: ContentRow {
         tile: member
@@ -25,12 +27,12 @@ HTile {
             id: avatar
             clientUserId: chat.userId
             userId: model.id
-            displayName: model.display_name
-            mxc: model.avatar_url
+            displayName: model.ignored ? "" : model.display_name
+            mxc: model.ignored ? "" : model.avatar_url
             powerLevel: model.power_level
             invited: model.invited
             compact: member.compact
-            presence: model.presence
+            presence: model.ignored ? "offline" : model.presence
             shiftMembershipIconPositionBy:
                 roomPane.width >= width + 8 * 3 ? -8 : -4
         }
@@ -40,11 +42,17 @@ HTile {
                 spacing: theme.spacing
 
                 TitleLabel {
-                    text: model.display_name || model.id
+                    text:
+                        model.ignored ?
+                        model.id :
+                        (model.display_name || model.id)
+
                     color:
                         member.colorName ?
                         utils.nameColor(
-                            model.display_name || model.id.substring(1)
+                            model.ignored ?
+                            model.id :
+                            (model.display_name || model.id.substring(1))
                         ) :
                         theme.chat.roomPane.listView.member.name
 
@@ -54,7 +62,7 @@ HTile {
                 TitleRightInfoLabel {
                     id: lastActiveAt
                     tile: member
-                    visible: presenceTimer.running
+                    visible: ! model.ignored && presenceTimer.running
                     hideUnderWidth: 130
                 }
             }
@@ -62,7 +70,10 @@ HTile {
             SubtitleLabel {
                 tile: member
                 color: theme.chat.roomPane.listView.member.subtitle
-                text: utils.escapeHtml(model.status_msg.trim()) || model.id
+                text:
+                    model.ignored ?
+                    qsTr("Ignored") :
+                    (utils.escapeHtml(model.status_msg.trim()) || model.id)
             }
 
             HoverHandler { id: nameHover }
@@ -72,7 +83,7 @@ HTile {
                 text:
                     model.id +
                     (
-                        model.status_msg.trim() ?
+                        ! model.ignored && model.status_msg.trim() ?
                         " - " + model.status_msg.trim() :
                         ""
                     )
@@ -80,12 +91,15 @@ HTile {
 
             Timer {
                 id: presenceTimer
+                repeat: true
                 running:
+                    ! model.ignored &&
                     ! model.currently_active &&
                     model.last_active_at > new Date(1)
-                repeat: true
+
                 interval:
                     new Date() - model.last_active_at < 60000 ? 10000 : 60000
+
                 triggeredOnStart: true
                 onTriggered: lastActiveAt.text = Qt.binding(() =>
                     utils.formatRelativeTime(new Date() - model.last_active_at)
@@ -99,6 +113,24 @@ HTile {
             icon.name: "copy-user-id"
             text: qsTr("Copy user ID")
             onTriggered: Clipboard.text = model.id
+        }
+
+        HMenuItemPopupSpawner {
+            icon.name: model.ignored ? "stop-ignore-user" : "ignore-user"
+            icon.color:
+                model.ignored ?
+                theme.colors.positiveBackground :
+                theme.colors.negativeBackground
+
+            text: model.ignored ? qsTr("Stop ignoring") : qsTr("Ignore")
+
+            popup: "Popups/IgnoreUserPopup.qml"
+            properties: ({
+                userId: chat.userId,
+                targetUserId: model.id,
+                targetDisplayName: model.display_name,
+                ignore: ! model.ignored
+            })
         }
 
         HMenuItemPopupSpawner {
