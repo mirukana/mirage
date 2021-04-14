@@ -21,8 +21,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import ModuleType
 from typing import (
-    Any, AsyncIterator, Callable, Dict, Iterable, Mapping, Optional, Sequence,
-    Tuple, Type, Union,
+    Any, AsyncIterator, Callable, Collection, Dict, Iterable, Mapping,
+    Optional, Tuple, Type, Union,
 )
 from uuid import UUID
 
@@ -212,7 +212,7 @@ def serialize_value_for_qml(
     - For `bool`, `int`, `float`, `bytes`, `str`, `datetime`, `date`, `time`:
       the unchanged value (PyOtherSide handles these)
 
-    - For `Iterable` objects (includes `list` and `dict`):
+    - For `Collection` objects (includes `list` and `dict`):
       a JSON dump if `json_list_dicts` is `True`, else the unchanged value
 
     - If the value is an instancied object and has a `serialized` attribute or
@@ -237,7 +237,9 @@ def serialize_value_for_qml(
     if isinstance(value, (bool, int, float, bytes, str, datetime, date, time)):
         return value
 
-    if json_list_dicts and isinstance(value, (Sequence, Mapping)):
+    if json_list_dicts and isinstance(value, Collection):
+        if isinstance(value, set):
+            value = list(value)
         return json.dumps(value)
 
     if not inspect.isclass(value) and hasattr(value, "serialized"):
