@@ -8,8 +8,7 @@ HCheckBox {
     text: qsTr("Encrypt messages")
     subtitle.textFormat: Text.StyledText
     subtitle.text:
-        qsTr("Only you and those you trust will be able to read the " +
-             "conversation") +
+        qsTr("Only users you trust can decrypt the conversation") +
         `<br><font color="${theme.colors.warningText}">` +
         qsTr("Cannot be disabled later!") +
         "</font>"
