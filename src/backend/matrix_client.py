@@ -543,29 +543,32 @@ class MatrixClient(nio.AsyncClient):
             nio.Api.to_json({"ignored_users": {u: {} for u in ignored}}),
         )
 
-        if not ignore:
-            return
-
         # Invites and messages from ignored users won't be returned anymore on
-        # syncs, thus will be absent on client restart. Clean up immediatly:
+        # syncs, thus will be absent on client restart. Clean up immediatly,
+        # and also update Member.ignored fields:
 
         room_model = self.models[self.user_id, "rooms"]
 
         with room_model.batch_remove():
             for room_id, room in room_model.copy().items():
-                if room.inviter_id == user_id:
+                if ignore and room.inviter_id == user_id:
                     self.ignored_rooms.add(room_id)
                     del room_model[room_id]
                     self.models.pop((self.user_id, room_id, "events"), None)
                     self.models.pop((self.user_id, room_id, "members"), None)
                     continue
 
-                event_model = self.models[self.user_id, room_id, "events"]
+                event_model  = self.models[self.user_id, room_id, "events"]
+                member_model = self.models[self.user_id, room_id, "members"]
 
-                with event_model.batch_remove():
-                    for event_id, event in event_model.copy().items():
-                        if event.sender_id == user_id:
-                            del event_model[event_id]
+                if user_id in member_model:
+                    member_model[user_id].ignored = ignore
+
+                if ignore:
+                    with event_model.batch_remove():
+                        for event_id, event in event_model.copy().items():
+                            if event.sender_id == user_id:
+                                del event_model[event_id]
 
         await self.update_account_unread_counts()
 
@@ -2251,6 +2254,7 @@ class MatrixClient(nio.AsyncClient):
                               if member.display_name else "",
             avatar_url      = member.avatar_url or "",
             typing          = user_id in room.typing_users,
+            ignored         = user_id in self.ignored_user_ids,
             power_level     = member.power_level,
             invited         = member.invited,
             last_read_event = last_read_event,

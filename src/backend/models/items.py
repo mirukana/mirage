@@ -275,6 +275,7 @@ class Member(ModelItem):
     typing:          bool     = False
     power_level:     int      = 0
     invited:         bool     = False
+    ignored:         bool     = False
     profile_updated: datetime = ZERO_DATE
     last_read_event: str      = ""
 
@@ -287,13 +288,15 @@ class Member(ModelItem):
         return (
             self.invited,
             other.power_level,
-            self.presence,
+            self.ignored,
+            Presence.State.offline if self.ignored else self.presence,
             (self.display_name or self.id[1:]).lower(),
             self.id,
         ) < (
             other.invited,
             self.power_level,
-            other.presence,
+            other.ignored,
+            Presence.State.offline if other.ignored else other.presence,
             (other.display_name or other.id[1:]).lower(),
             other.id,
         )
