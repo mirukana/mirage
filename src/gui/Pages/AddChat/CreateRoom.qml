@@ -120,7 +120,7 @@ HFlickableColumnPage {
         id: publicCheckBox
         text: qsTr("Make this room public")
         subtitle.text:
-            qsTr("Anyone will be able to join with no invite required")
+            qsTr("Anyone can join without being invited")
 
         Layout.fillWidth: true
     }

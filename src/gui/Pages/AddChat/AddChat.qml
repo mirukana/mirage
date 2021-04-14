@@ -22,8 +22,8 @@ HPage {
 
         tabBar: HTabBar {
             HTabButton { text: qsTr("Direct chat") }
-            HTabButton { text: qsTr("Join room") }
-            HTabButton { text: qsTr("Create room") }
+            HTabButton { text: qsTr("Join group") }
+            HTabButton { text: qsTr("Create group") }
         }
 
         DirectChat { userId: page.userId }
