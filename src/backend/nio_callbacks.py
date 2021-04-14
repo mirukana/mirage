@@ -861,8 +861,9 @@ class NioCallbacks:
     ) -> None:
 
         if ev.type == "m.ignored_user_list":
-            user_ids = set(ev.content.get("ignored_users", {}))
-            self.client.ignored_user_ids = user_ids
+            users = set(ev.content.get("ignored_users", {}))
+            self.client.ignored_user_ids = users
+            self.models["accounts"][self.client.user_id].ignored_users = users
 
 
     # Presence event callbacks

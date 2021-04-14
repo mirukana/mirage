@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Type, Union
 from uuid import UUID
 
 import lxml  # nosec
@@ -79,6 +79,7 @@ class Account(ModelItem):
     total_unread:     int      = 0
     total_highlights: int      = 0
     local_unreads:    bool     = False
+    ignored_users:    Set[str] = field(default_factory=set)
 
     # For some reason, Account cannot inherit Presence, because QML keeps
     # complaining type error on unknown file
