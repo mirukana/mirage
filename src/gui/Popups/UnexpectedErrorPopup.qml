@@ -9,11 +9,12 @@ import "../Base/Buttons"
 import "../PythonBridge" as PythonBridge
 
 HColumnPopup {
-    id: popup
+    id: root
 
-    property string errorType
-    property string message: ""
-    property string traceback: ""
+    property var errors: []  // [{type, message, traceback}]
+
+
+    contentWidthLimit: Math.min(window.width / 1.5, 864 * theme.uiScale)
 
     page.footer: AutoDirectionLayout {
         PositiveButton {
@@ -28,17 +29,37 @@ HColumnPopup {
 
         CancelButton {
             text: qsTr("Ignore")
-            onClicked: popup.close()
+            onClicked: root.close()
         }
     }
 
+    onErrorsChanged: if (errors.length) open()
     onOpened: reportButton.forceActiveFocus()
+    onClosed: {
+        errors = []
+        errorsChanged()
+    }
+
+    Behavior on implicitHeight { HNumberAnimation {} }
 
     SummaryLabel {
-        text: qsTr("Unexpected error occured: %1").arg(
-            utils.htmlColorize(errorType, theme.colors.accentText),
-        )
+        readonly property string types: {
+            const colored = []
+            const color   = theme.colors.accentText
+
+            for (const error of root.errors) {
+                const coloredType = utils.htmlColorize(error.type, color)
+                if (! colored.includes(coloredType)) colored.push(coloredType)
+            }
+
+            return colored.join(", ")
+        }
+
         textFormat: Text.StyledText
+        text:
+            root.errors.length > 1 ?
+            qsTr("Unexpected errors occured: %1").arg(types) :
+            qsTr("Unexpected error occured: %1").arg(types)
     }
 
     HScrollView {
@@ -48,20 +69,37 @@ HColumnPopup {
         Layout.fillHeight: true
 
         HTextArea {
-            text: [message, traceback].join("\n\n") || qsTr("No info available")
+            id: detailsArea
             readOnly: true
             font.family: theme.fontFamily.mono
             focusItemOnTab: hideCheckBox
+            text: {
+                const parts = []
+
+                for (const error of root.errors) {
+                    parts.push(error.type + ": " + (error.message || "..."))
+                    parts.push(error.traceback || qsTr("Traceback missing"))
+                    parts.push("─".repeat(30))
+                }
+
+                return parts.slice(0, -1).join("\n\n")  // Leave out last ────
+            }
         }
     }
 
     HCheckBox {
         id: hideCheckBox
-        text: qsTr("Hide this type of error until restart")
-        onCheckedChanged:
-            checked ?
-            PythonBridge.Globals.hideErrorTypes.add(errorType) :
-            PythonBridge.Globals.hideErrorTypes.delete(errorType)
+        text:
+            root.errors.length > 1 ?
+            qsTr("Hide these types of error until restart") :
+            qsTr("Hide this type of error until restart")
+
+        onCheckedChanged: {
+            for (const error of errors)
+                checked ?
+                PythonBridge.Globals.hideErrorTypes.add(error.type) :
+                PythonBridge.Globals.hideErrorTypes.delete(error.type)
+        }
 
         Layout.fillWidth: true
     }
