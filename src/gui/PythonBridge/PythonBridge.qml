@@ -60,9 +60,8 @@ Python {
             return
         }
 
-        window.makePopup(
-            "Popups/UnexpectedErrorPopup.qml",
-            { errorType: type, message, traceback },
-        )
+        const popup = window.mainUI.unexpectedErrorPopup
+        popup.errors.unshift({type, message, traceback})
+        popup.errorsChanged()
     }
 }

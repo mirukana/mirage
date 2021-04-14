@@ -9,6 +9,7 @@ import QtGraphicalEffects 1.12
 import "."
 import "Base"
 import "MainPane"
+import "Popups"
 
 Item {
     id: mainUI
@@ -38,6 +39,7 @@ Item {
     readonly property alias debugConsole: debugConsole
     readonly property alias mainPane: mainPane
     readonly property alias pageLoader: pageLoader
+    readonly property alias unexpectedErrorPopup: unexpectedErrorPopup
     readonly property alias fontMetrics: fontMetrics
     readonly property alias idleManager: idleManager
 
@@ -176,5 +178,9 @@ Item {
         visible: mainPane.visibleSize < mainUI.width
 
         GlobalTapHandlers { pageLoader: parent }
+    }
+
+    UnexpectedErrorPopup {
+        id: unexpectedErrorPopup
     }
 }
