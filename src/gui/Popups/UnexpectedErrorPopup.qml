@@ -17,19 +17,22 @@ HColumnPopup {
 
     page.footer: AutoDirectionLayout {
         PositiveButton {
+            id: reportButton
             text: qsTr("Report")
             icon.name: "report-error"
-            enabled: false  // TODO
+            onClicked: Qt.openUrlExternally(
+                "https://github.com/mirukana/mirage/blob/master/docs/" +
+                "CONTRIBUTING.md#issues"
+            )
         }
 
         CancelButton {
-            id: cancelButton
             text: qsTr("Ignore")
             onClicked: popup.close()
         }
     }
 
-    onOpened: cancelButton.forceActiveFocus()
+    onOpened: reportButton.forceActiveFocus()
 
     SummaryLabel {
         text: qsTr("Unexpected error occured: %1").arg(
