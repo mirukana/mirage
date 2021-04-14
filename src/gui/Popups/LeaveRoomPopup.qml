@@ -16,7 +16,21 @@ HFlickableColumnPopup {
     property bool left: false
     property var leftCallback: null
 
+    function ignoreInviter() {
+        if (! inviterId) return
+        py.callClientCoro(userId, "ignore_user", [inviterId, true])
+    }
+
+    function leave() {
+        leaveButton.loading = true
+        py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
+        if (ignoreInviterCheck.checked) popup.ignoreInviter()
+        popup.close()
+    }
+
     function forget() {
+        leaveButton.loading = true
+
         py.callClientCoro(userId, "room_forget", [roomId], () => {
             if (window.uiState.page === "Pages/Chat/Chat.qml" &&
                 window.uiState.pageProperties.userRoomId[0] === userId &&
@@ -24,15 +38,12 @@ HFlickableColumnPopup {
             {
                 window.mainUI.pageLoader.showPrevious() ||
                 window.mainUI.pageLoader.show("Pages/Default.qml")
-
-                Qt.callLater(popup.destroy)
             }
-        })
-    }
 
-    function leave() {
-        py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
-        popup.close()
+            Qt.callLater(popup.destroy)
+        })
+
+        if (ignoreInviterCheck.checked) popup.ignoreInviter()
     }
 
     page.footer: AutoDirectionLayout {
@@ -79,14 +90,31 @@ HFlickableColumnPopup {
     }
 
     HCheckBox {
+        id: ignoreInviterCheck
+        visible: Boolean(popup.inviterId)
+        mainText.textFormat: HLabel.StyledText
+
+        // We purposely display inviter's user ID instead of display name here.
+        // Someone could take the name of one of our contact, which would
+        // not be disambiguated and lead to confusion.
+        text: qsTr("Ignore sender %1").arg(
+            utils.coloredNameHtml("", popup.inviterId),
+        )
+        subtitle.text: qsTr("Automatically hide their invites and messages")
+
+        Layout.fillWidth: true
+    }
+
+    HCheckBox {
         id: forgetCheck
         visible: ! popup.left
         text: qsTr("Forget this room's history")
         subtitle.text: qsTr(
-            "You will lose access to any previously received messages.\n" +
+            "Access to previously received messages will be lost.\n" +
             "If all members forget a room, servers will erase it."
         )
 
         Layout.fillWidth: true
     }
+
 }
