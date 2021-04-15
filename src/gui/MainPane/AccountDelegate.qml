@@ -122,8 +122,9 @@ HTile {
             SubtitleLabel {
                 id: statusMsg
                 tile: account
-                text: utils.escapeHtml(model.status_msg.trim())
-                visible: model.status_msg.trim()
+                textFormat: SubtitleLabel.PlainText
+                text: model.status_msg.trim()
+                visible: Boolean(text)
                 font.strikeout:
                     ! model.presence_support ||
                     model.presence.includes("offline") ||
