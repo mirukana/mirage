@@ -266,17 +266,21 @@ HListView {
 
     Instantiator {
         model: Object.keys(window.settings.Keys.Accounts.AtIndex)
-        delegate: HShortcut {
-            sequences: window.settings.Keys.Accounts.AtIndex[modelData]
-            onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
+        delegate: Loader {
+            sourceComponent: HShortcut {
+                sequences: window.settings.Keys.Accounts.AtIndex[modelData]
+                onActivated: goToAccountNumber(parseInt(modelData, 10) - 1)
+            }
         }
     }
 
     Instantiator {
         model: Object.keys(window.settings.Keys.Rooms.AtIndex)
-        delegate: HShortcut {
-            sequences: window.settings.Keys.Rooms.AtIndex[modelData]
-            onActivated: showAccountRoomAtIndex(parseInt(modelData, 10) - 1)
+        delegate: Loader {
+            sourceComponent: HShortcut {
+                sequences: window.settings.Keys.Rooms.AtIndex[modelData]
+                onActivated: showAccountRoomAtIndex(parseInt(modelData, 10) - 1)
+            }
         }
     }
 
