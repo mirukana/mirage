@@ -73,32 +73,25 @@ HListView {
             keepListCentered = true
     }
 
-    // Description can be either room id
-    // or space-separated account id and room id.
-    // If only room id, the first account with this room is used.
-    function showRoomByDescription(description) {
-        const [roomId, accountId] = description.split(" ").reverse()
-        if (accountId === undefined) {
-            // Description is just room id
+    function showById(roomId, accountId=null) {
+        // If only a room ID is passed, first account with this room is used
+        if (accountId === null) {
             const roomIndex = model.findIndex(roomId)
-            if (roomIndex === null) {
-                console.warn("No account with such room id: "+roomId)
-            }
-            else {
-                showItemAtIndex(roomIndex)
-            }
+
+            roomIndex === null ?
+            console.warn("No account with such room ID:", roomId) :
+            showItemAtIndex(roomIndex)
+
+            return
         }
-        else {
-            // Description is account id and room id
-            // Validate account id
-            if (accountIndice[accountId] === undefined) {
-                console.warn("No such account: "+accountId)
-            }
-            else {
-                pageLoader.showRoom(accountId, roomId)
-                startCorrectItemSearch()
-            }
+
+        if (! (accountId in accountIndice)) {
+            console.warn("No such account:", accountId)
+            return
         }
+
+        pageLoader.showRoom(accountId, roomId)
+        startCorrectItemSearch()
     }
 
     function showAccountRoomAtIndex(index) {
@@ -317,7 +310,7 @@ HListView {
         delegate: Loader {
             sourceComponent: HShortcut {
                 sequences: window.settings.Keys.Rooms.Direct[modelData]
-                onActivated: showRoomByDescription(modelData)
+                onActivated: showById(...modelData.split(/\s+/).reverse())
             }
         }
     }
