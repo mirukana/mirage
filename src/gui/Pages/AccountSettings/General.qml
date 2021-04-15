@@ -40,7 +40,7 @@ HFlickableColumnPage {
 
         if (nameField.item.changed) {
             saveButton.nameChangeRunning = true
-            const name                   = [nameField.item.text]
+            const name                   = nameField.item.text
 
             py.callClientCoro(userId, "set_displayname", [name] , () => {
                 py.callClientCoro(userId, "update_own_profile", [], () => {
