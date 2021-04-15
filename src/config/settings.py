@@ -357,12 +357,21 @@ class Keys:
         previous_unread = ["Alt+Shift+U"]
         next_unread     = ["Alt+U"]
 
+        # Switch to the room with the oldest/latest unread message.
+        oldest_unread = ["Ctrl+Shift+U"]
+        latest_unread = ["Ctrl+U"]
+
         # Switch to the previous/next room with highlighted messages in the
         # list. What causes a highlight is controlled by push rules
         # (editable in GUI account settings): by default, this includes
         # when your name is mentioned, replied to, or messages with keywords.
         previous_highlight = ["Alt+Shift+M"]
         next_highlight     = ["Alt+M"]
+
+        # Switch to the room with the oldest/latest unread message,
+        # but only rooms with highlights are considered.
+        oldest_highlight = ["Ctrl+Shift+M"]
+        latest_highlight = ["Ctrl+M"]
 
         class AtIndex:
             # Switch to room number X in the current account.
