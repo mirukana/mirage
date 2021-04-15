@@ -69,11 +69,12 @@ HTile {
 
             SubtitleLabel {
                 tile: member
+                textFormat: SubtitleLabel.PlainText
                 color: theme.chat.roomPane.listView.member.subtitle
                 text:
                     model.ignored ?
                     qsTr("Ignored") :
-                    (utils.escapeHtml(model.status_msg.trim()) || model.id)
+                    (model.status_msg.trim() || model.id)
             }
 
             HoverHandler { id: nameHover }
