@@ -314,9 +314,11 @@ HListView {
 
     Instantiator {
         model: Object.keys(window.settings.Keys.Rooms.Direct)
-        delegate: HShortcut {
-            sequences: window.settings.Keys.Rooms.Direct[modelData]
-            onActivated: showRoomByDescription(modelData)
+        delegate: Loader {
+            sourceComponent: HShortcut {
+                sequences: window.settings.Keys.Rooms.Direct[modelData]
+                onActivated: showRoomByDescription(modelData)
+            }
         }
     }
 
