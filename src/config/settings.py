@@ -377,14 +377,15 @@ class Keys:
             10 = [Keys.alt_or_cmd() + "+0"]
 
         class Direct:
-            # Switch to a specific room with a keybinding.
-            # Each property is a list of keybinds for some room ID.
+            # Switch to specific rooms with keybindings.
+            # An unlimited number of properties can be added, where each
+            # property maps a room to a list of keybind.
             # A room's ID can be copied by right clicking on it in the room list.
-            # Optionally, the account can be specified
-            # by using a space separator (see example).
-            # Unlimited entries can be added.
             "!roomID:example.org" = []
-            "@account:example.org !roomID:a.org" = []
+
+            # If you have multiple accounts in the same room, you can also set
+            # which account should be targeted as "<userId> <roomId>":
+            "@account:example.org !roomID:example.org" = []
 
     class Chat:
         # Keybinds specific to the current chat page.
