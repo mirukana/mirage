@@ -124,6 +124,7 @@ class HTMLProcessor:
 
     inline_tags = {
         "span", "font", "a", "sup", "sub", "b", "i", "s", "u", "code",
+        "mx-reply",
     }
 
     block_tags = {
@@ -479,7 +480,7 @@ class HTMLProcessor:
 
 
     def _reply_to_inline(self, el: HtmlElement) -> HtmlElement:
-        """Turn <mx-reply> into a plaintext inline form."""
+        """Shorten <mx-reply> to only include the replied to event's sender."""
 
         if el.tag != "mx-reply":
             return el
@@ -487,11 +488,10 @@ class HTMLProcessor:
         try:
             user_id = el.find("blockquote").findall("a")[1].text
             text    = f"↩ {user_id[1:].split(':')[0]}: "  # U+21A9 arrow
-        except (AttributeError, IndexError):
-            text = "↩ "  # U+21A9 arrow
+        except (AttributeError, IndexError) as e:
+            return el
 
         el.clear()
-        el.tag  = "span"
         el.text = text
         return el
 

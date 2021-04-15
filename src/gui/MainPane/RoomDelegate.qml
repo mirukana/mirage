@@ -127,8 +127,10 @@ HTile {
 
                     return text.replace(
                         /< *span +class=['"]?quote['"]? *>(.+?)<\/ *span *>/g,
-                        `<font color="${subColor}">` +
-                        `$1</font>`,
+                        `<font color="${subColor}">$1</font>`,
+                    ).replace(
+                        /< *mx-reply *>(.+?)<\/ *mx-reply *>/g,
+                        `<font color="${theme.colors.accentText}">$1</font>`,
                     )
                 }
             }
