@@ -384,15 +384,14 @@ class Backend:
             account = self.models["accounts"][client.user_id]
 
             if room:
-                room.set_fields(
-                    unreads       = 0,
-                    highlights    = 0,
-                    local_unreads = False,
-                )
+                room.set_fields(unreads=0, highlights=0, local_unreads=False)
                 await client.update_account_unread_counts()
 
-                # Only update server markers if the account is not invisible
-                if account.presence != Presence.State.invisible:
+                if account.presence not in [
+                    Presence.State.echo_invisible,
+                    Presence.State.invisible,
+                    Presence.State.offline,
+                ]:
                     await client.update_receipt_marker(room_id, event_id)
 
         await asyncio.gather(*[update(c) for c in self.clients.values()])

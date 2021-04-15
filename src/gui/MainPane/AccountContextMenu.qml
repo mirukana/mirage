@@ -87,7 +87,6 @@ HMenu {
     }
 
     HMenuItem {
-        enabled: presence
         icon.name: "presence-invisible"
         icon.color: theme.controls.presence.offline
         text: qsTr("Invisible")

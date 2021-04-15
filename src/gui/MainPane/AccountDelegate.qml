@@ -120,10 +120,14 @@ HTile {
             }
 
             SubtitleLabel {
-                id:      statusMsg
-                tile:    account
-                text:    utils.escapeHtml(model.status_msg.trim())
+                id: statusMsg
+                tile: account
+                text: utils.escapeHtml(model.status_msg.trim())
                 visible: model.status_msg.trim()
+                font.strikeout:
+                    ! model.presence_support ||
+                    model.presence.includes("offline") ||
+                    model.presence.includes("invisible")
 
                 Layout.leftMargin: theme.spacing
             }
