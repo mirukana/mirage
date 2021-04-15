@@ -23,7 +23,7 @@ class General:
 
     # How many seconds the cursor must hover on buttons and other elements
     # to show tooltips.
-    tooltips_delay: float = 0.5
+    tooltips_delay: float = 0.7
 
     # Application theme to use.
     # Can be the name of a built-in theme (Mirage.qpl or Glass.qpl), or
