@@ -869,63 +869,60 @@ class NioCallbacks:
     # Presence event callbacks
 
     async def onPresenceEvent(self, ev: nio.PresenceEvent) -> None:
+        # Servers that send presence events support presence
+        self.models["accounts"][self.client.user_id].presence_support = True
+
+        account  = self.models["accounts"].get(ev.user_id)
         presence = self.client.backend.presences.get(ev.user_id, Presence())
 
         presence.currently_active = ev.currently_active or False
         presence.status_msg       = ev.status_msg or ""
-        presence.last_active_at   = (
-            datetime.now() - timedelta(milliseconds=ev.last_active_ago)
-        ) if ev.last_active_ago else datetime.fromtimestamp(0)
 
-        presence.presence = \
-            Presence.State(ev.presence) if ev.presence else \
-            Presence.State.offline
+        if ev.last_active_ago:
+            presence.last_active_at = datetime.now() - timedelta(
+                milliseconds=ev.last_active_ago,
+            )
+        else:
+            presence.last_active_at = datetime.fromtimestamp(0)
+
+        if ev.presence:
+            presence.presence = Presence.State(ev.presence)
+        else:
+            presence.presence = Presence.State.offline
 
         # Add all existing members related to this presence
         for room_id in self.models[self.user_id, "rooms"]:
-            member = self.models[self.user_id, room_id, "members"].get(
-                ev.user_id,
-            )
+            members = self.models[self.user_id, room_id, "members"]
 
-            if member:
-                presence.members[room_id] = member
+            if ev.user_id in members:
+                presence.members[room_id] = members[ev.user_id]
 
-        # Update members and accounts
         presence.update_members()
 
-        # Check if presence event is ours
-        if (
-            ev.user_id in self.models["accounts"] and
-            self.models["accounts"][ev.user_id].presence !=
-            Presence.State.offline and
-            not (
-                presence.presence == Presence.State.offline and
-                self.models["accounts"][ev.user_id].presence !=
-                Presence.State.echo_invisible
-            )
-        ):
-            account = self.models["accounts"][ev.user_id]
-
-            # Set status_msg if none is set on the server and we have one
+        # If presence event represents a change for one of our account
+        if account and account.presence != Presence.State.offline:
+            # Ignore cases where we send a new presence to the server, but it
+            # returns an older state that doesn't match due to lag
             if (
-                not presence.status_msg and
-                account.status_msg and
-                ev.user_id in self.client.backend.clients and
-                account.presence != Presence.State.echo_invisible and
-                presence.presence == Presence.State.offline
+                account.presence == Presence.State.echo_invisible and
+                ev.presence != Presence.State.offline.value
+            ) or (
+                account.presence == Presence.State.echo_unavailable and
+                ev.presence != Presence.State.unavailable.value
+            ) or (
+                account.presence == Presence.State.echo_online and
+                ev.presence != Presence.State.online.value
             ):
-                asyncio.ensure_future(
-                    self.client.backend.clients[ev.user_id].set_presence(
-                        presence.presence.value,
-                        account.status_msg,
-                    ),
-                )
+                return
 
             # Do not fight back presence from other clients
             self.client.backend.clients[ev.user_id]._presence = ev.presence
 
-            # Servers that send presence events support presence
-            account.presence_support = True
+            # Restore status msg lost from server due to e.g. getting offline
+            if not ev.status_msg and account.status_msg:
+                await self.client.backend.clients[ev.user_id].set_presence(
+                    ev.presence, account.status_msg,
+                )
 
             # Save the presence for the next resume
             if account.save_presence:
@@ -943,5 +940,5 @@ class NioCallbacks:
                 )
 
             presence.update_account()
-
-        self.client.backend.presences[ev.user_id] = presence
+        else:
+            self.client.backend.presences[ev.user_id] = presence

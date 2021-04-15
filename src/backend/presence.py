@@ -77,7 +77,7 @@ class Presence:
 
 
     def update_members(self) -> None:
-        """Update presence fields of every `M̀ember` in `members`.
+        """Update presence fields of every `Member` in `members`.
 
         Currently it is only called when receiving a `PresenceEvent` and when
         registering room members.

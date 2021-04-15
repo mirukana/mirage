@@ -35,10 +35,11 @@ Rectangle {
 
     HToolTip {
         visible: presenceHover.hovered
-        text:
+        text: qsTr("%1 (%2)").arg(
             presence.includes("online") ? qsTr("Online") :
             presence.includes("unavailable") ? qsTr("Unavailable") :
             presence.includes("invisible") ? qsTr("Invisible") :
             qsTr("Offline")
+        ).arg("unknown to server")
     }
 }
