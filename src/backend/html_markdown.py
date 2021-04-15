@@ -487,12 +487,14 @@ class HTMLProcessor:
 
         try:
             user_id = el.find("blockquote").findall("a")[1].text
-            text    = f"↩ {user_id[1:].split(':')[0]}: "  # U+21A9 arrow
-        except (AttributeError, IndexError) as e:
+            text    = f"↩ {user_id[1: ].split(':')[0]}: "  # U+21A9 arrow
+            tail    = el.tail.rstrip().rstrip("⏎")
+        except (AttributeError, IndexError):
             return el
 
         el.clear()
         el.text = text
+        el.tail = tail
         return el
 
 
