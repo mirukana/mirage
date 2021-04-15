@@ -73,6 +73,27 @@ HListView {
             keepListCentered = true
     }
 
+    function showById(roomId, accountId=null) {
+        // If only a room ID is passed, first account with this room is used
+        if (accountId === null) {
+            const roomIndex = model.findIndex(roomId)
+
+            roomIndex === null ?
+            console.warn("No account with such room ID:", roomId) :
+            showItemAtIndex(roomIndex)
+
+            return
+        }
+
+        if (! (accountId in accountIndice)) {
+            console.warn("No such account:", accountId)
+            return
+        }
+
+        pageLoader.showRoom(accountId, roomId)
+        startCorrectItemSearch()
+    }
+
     function showAccountRoomAtIndex(index) {
         const item = model.get(currentIndex === -1 ?  0 : currentIndex)
 
@@ -280,6 +301,16 @@ HListView {
             sourceComponent: HShortcut {
                 sequences: window.settings.Keys.Rooms.AtIndex[modelData]
                 onActivated: showAccountRoomAtIndex(parseInt(modelData, 10) - 1)
+            }
+        }
+    }
+
+    Instantiator {
+        model: Object.keys(window.settings.Keys.Rooms.Direct)
+        delegate: Loader {
+            sourceComponent: HShortcut {
+                sequences: window.settings.Keys.Rooms.Direct[modelData]
+                onActivated: showById(...modelData.split(/\s+/).reverse())
             }
         }
     }
