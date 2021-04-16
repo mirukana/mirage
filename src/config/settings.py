@@ -49,6 +49,10 @@ class Presence:
     # This currently only works on Linux X11.
     auto_away_after: int = 60 * 10
 
+    # Number of previously set status messages to keep saved. Available for
+    # quick access in the context menu when right-clicking an account.
+    saved_status: int = 5
+
 class Notifications:
     # Default global notification level when starting the application.
     # Allows muting (i.e. preventing desktop bubbles, sounds and flashes)
