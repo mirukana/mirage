@@ -5,7 +5,6 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 import "AutoCompletion"
-import "Banners"
 import "Composer"
 import "FileTransfer"
 import "Timeline"

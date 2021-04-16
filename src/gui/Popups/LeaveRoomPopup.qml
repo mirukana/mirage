@@ -14,7 +14,7 @@ HFlickableColumnPopup {
     property string roomName: ""
     property string inviterId: ""
     property bool left: false
-    property var leftCallback: null
+    property var doneCallback: null
 
     function ignoreInviter() {
         if (! inviterId) return
@@ -23,7 +23,7 @@ HFlickableColumnPopup {
 
     function leave() {
         leaveButton.loading = true
-        py.callClientCoro(userId, "room_leave", [roomId], leftCallback)
+        py.callClientCoro(userId, "room_leave", [roomId], doneCallback)
         if (ignoreInviterCheck.checked) popup.ignoreInviter()
         popup.close()
     }
@@ -67,6 +67,7 @@ HFlickableColumnPopup {
     }
 
     onOpened: leaveButton.forceActiveFocus()
+    onClosed: if (doneCallback) doneCallback()
 
     SummaryLabel {
         readonly property string roomText:

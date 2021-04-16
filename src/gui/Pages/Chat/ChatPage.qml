@@ -5,7 +5,6 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import "../../Base"
 import "AutoCompletion"
-import "Banners"
 import "Composer"
 import "FileTransfer"
 import "Timeline"
@@ -23,8 +22,6 @@ HColumnPage {
     readonly property alias reply: reply
     readonly property alias transfers: transfers
     readonly property alias userCompletion: userCompletion
-    readonly property alias inviteBanner: inviteBanner
-    readonly property alias leftBanner: leftBanner
     readonly property alias composer: composer
 
     readonly property DropArea uploadDropArea: UploadDropArea {
@@ -118,26 +115,10 @@ HColumnPage {
         Layout.maximumHeight: chatPage.height / 4
     }
 
-    InviteBanner {
-        id: inviteBanner
-        visible: ! chat.roomInfo.left && inviterId
-        inviterId: chat.roomInfo.inviter_id
-
-        Layout.fillWidth: true
-    }
-
-    LeftBanner {
-        id: leftBanner
-        visible: chat.roomInfo.left
-
-        Layout.fillWidth: true
-    }
-
     Composer {
         id: composer
         userCompletion: userCompletion
         eventList: eventList.eventList
-        visible: ! chat.roomInfo.left && ! chat.roomInfo.inviter_id
 
         Layout.fillWidth: true
         Layout.maximumHeight: parent.height / 2
