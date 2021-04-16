@@ -229,7 +229,7 @@ QtObject {
             // FIXME: this can generate an "argument missing" warning because
             // QML first gets notified of the event type change, *then* of the
             // content change.
-            let content = qsTr(escapeHtml(ev.content)).arg(sender)
+            let content = qsTr(ev.content).arg(sender)
 
             if (ev.content.includes("%2"))
                 content = content.arg(coloredNameHtml(
