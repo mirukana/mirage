@@ -326,7 +326,7 @@ class MatrixClient(nio.AsyncClient):
         account        = self.models["accounts"][user_id]
         self._presence = "offline" if state == "invisible" else state
 
-        if state != "offline":
+        if state in ("online", "unavailable"):
             state = f"echo_{state}"
 
         account.set_fields(
