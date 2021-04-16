@@ -902,7 +902,7 @@ class NioCallbacks:
         # If presence event represents a change for one of our account
         if account and account.presence != Presence.State.offline:
             # Ignore cases where we send a new presence to the server, but it
-            # returns an older state that doesn't match due to lag
+            # returns an older state that doesn't match due to lag:
             if (
                 account.presence == Presence.State.echo_invisible and
                 ev.presence != Presence.State.offline.value
@@ -915,8 +915,13 @@ class NioCallbacks:
             ):
                 return
 
-            # Do not fight back presence from other clients
-            self.client.backend.clients[ev.user_id]._presence = ev.presence
+            # Do not fight back presence from other clients, unless server says
+            # we're offline, which happens if another client disconnected or we
+            # had a long connection issue. Note that this makes invisibility
+            # only possible if we're the only client using the account, or the
+            # other clients are invisible/offline themselves.
+            if ev.presence != Presence.State.offline.value:
+                self.client.backend.clients[ev.user_id]._presence = ev.presence
 
             # Restore status msg lost from server due to e.g. getting offline
             if not ev.status_msg and account.status_msg:
@@ -924,7 +929,7 @@ class NioCallbacks:
                     ev.presence, account.status_msg,
                 )
 
-            # Save the presence for the next resume
+            # Save the presence to be restored next time we restart application
             if account.save_presence:
                 status_msg = presence.status_msg
                 state      = presence.presence
