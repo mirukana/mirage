@@ -8,7 +8,7 @@ import Clipboard 0.1
 import "../Base"
 
 HMenu {
-    id: accountMenu
+    id: root
 
     property string userId
     property string presence
@@ -20,32 +20,69 @@ HMenu {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
-    onOpened: statusText.forceActiveFocus()
+    function statusFieldApply(newStatus=null) {
+        if (newStatus === null) newStatus = statusField.editText.trim()
+
+        if (newStatus) {
+            const existing = statusRepeater.items.indexOf(newStatus)
+            if (existing !== -1) statusRepeater.items.splice(existing, 1)
+
+            statusRepeater.items.unshift(newStatus)
+            statusRepeater.items.length = Math.min(statusRepeater.count, 5)
+            statusRepeater.itemsChanged()
+            window.saveState(statusRepeater)
+        }
+
+        setPresence(presence, newStatus)
+        close()
+    }
+
+    onOpened: statusField.forceActiveFocus()
 
     HLabeledItem {
         id: statusMsgLabel
         enabled: presence && presence !== "offline"
         width: parent.width
         height: visible ? implicitHeight : 0
+
         label.text: qsTr("Status message:")
         label.horizontalAlignment: Qt.AlignHCenter
-
-        Keys.onDownPressed: onlineButton.forceActiveFocus()
+        label.leftPadding: theme.spacing
+        label.rightPadding: label.leftPadding
+        label.topPadding: theme.spacing / 2
+        label.bottomPadding: label.topPadding
 
         HRowLayout {
             width: parent.width
 
-            HTextField {
-                id: statusText
-                maximumLength: 255
-                horizontalAlignment: Qt.AlignHCenter
-                onAccepted: {
-                    setPresence(presence, statusText.text)
-                    accountMenu.close()
-                }
+            HComboBox {
+                // We use a ComboBox disguised as a field for the
+                // autosuggestion-as-we-type feature
 
-                defaultText: statusMsg
-                placeholderText: presence ? "" : "Unsupported server"
+                id: statusField
+                editable: true
+                indicator: null
+                popup: null
+                model: statusRepeater.model
+                currentIndex: statusRepeater.items.indexOf(
+                    root.currentIndex !== -1 &&
+                    root.itemAt(root.currentIndex).isStatus ?
+                    root.itemAt(root.currentIndex).text :
+                    root.statusMsg
+                )
+
+                field.placeholderText: presence ? "" : "Unsupported server"
+                field.maximumLength: 255
+
+                onAccepted: root.statusFieldApply()
+                onActiveFocusChanged: if (activeFocus) field.selectAll()
+
+                Keys.onBacktabPressed: event => Keys.upPressed(event)
+                Keys.onTabPressed: event => Keys.downPressed(event)
+
+                Keys.onUpPressed: signOutItem.forceActiveFocus()
+                Keys.onDownPressed:
+                    (statusRepeater.itemAt(0) || onlineItem).forceActiveFocus()
 
                 Layout.fillWidth: true
             }
@@ -56,26 +93,52 @@ HMenu {
 
                 icon.name: "apply"
                 icon.color: theme.colors.positiveBackground
-                onClicked: {
-                    setPresence(presence, statusText.text)
-                    accountMenu.close()
-                }
+                onClicked: root.statusFieldApply()
 
                 Layout.fillHeight: true
             }
         }
     }
 
-    HMenuSeparator { }
+    HMenuSeparator {}
+
+    Repeater {
+        id: statusRepeater
+
+        // Separate property instead of setting model directly so that we can
+        // manipulate this as a JS list, not a QQmlModel
+        property var items: window.getState(this, "items", [])
+
+        readonly property string saveName: "lastStatus"
+        readonly property string saveId: "ALL"
+        readonly property var saveProperties: ["items"]
+
+        model: items
+
+        delegate: HMenuItem {
+            readonly property bool isStatus: true
+
+            icon.name: "previously-set-status"
+            text: modelData
+            onTriggered: root.statusFieldApply(text)
+
+            Keys.onBacktabPressed: event => Keys.upPressed(event)
+
+            Keys.onUpPressed: event => {
+                event.accepted = index === 0
+                if (event.accepted) statusField.forceActiveFocus()
+            }
+        }
+    }
+
+    HMenuSeparator { visible: statusRepeater.count > 0 }
 
     HMenuItem {
-        id: onlineButton
+        id: onlineItem
         icon.name: "presence-online"
         icon.color: theme.controls.presence.online
         text: qsTr("Online")
         onTriggered: setPresence("online")
-
-        Keys.onUpPressed: statusText.forceActiveFocus()
     }
 
     HMenuItem {
@@ -133,11 +196,14 @@ HMenu {
     }
 
     HMenuItemPopupSpawner {
+        id: signOutItem
         icon.name: "sign-out"
         icon.color: theme.colors.negativeBackground
         text: qsTr("Sign out")
 
         popup: "Popups/SignOutPopup.qml"
         properties: { "userId": userId }
+
+        Keys.onDownPressed: statusField.forceActiveFocus()
     }
 }

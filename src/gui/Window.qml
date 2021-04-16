@@ -51,6 +51,9 @@ ApplicationWindow {
     }
 
     function saveState(obj) {
+        // obj should have these properties: saveName (str),
+        // saveId (str, default "ALL"), and saveProperties (array of str)
+
         if (! obj.saveName || ! obj.saveProperties ||
             obj.saveProperties.length < 1) return
 
