@@ -13,6 +13,10 @@ ComboBox {
     property color focusedBackgroundColor:
         theme.controls.textField.focusedBackground
 
+    readonly property bool popupVisible: popup && popup.visible
+
+    readonly property alias field: field
+
     spacing: 0
 
     background: Rectangle {
@@ -34,12 +38,13 @@ ComboBox {
         background: null
         text: root.displayText
         readOnly: ! root.editable
-        rightPadding: root.indicator.width + theme.spacing
+        rightPadding:
+            (root.indicator ? root.indicator.width : 0) + theme.spacing
 
         TapHandler {
             enabled: field.readOnly
             onTapped:
-                root.popup.visible ? root.popup.close() : root.popup.open()
+                root.popupVisible ? root.popup.close() : root.popup.open()
         }
     }
 
@@ -47,9 +52,10 @@ ComboBox {
         x: root.width - root.rightPadding
         height: root.availableHeight
         backgroundColor: "transparent"
-        icon.name: "combo-box-" + (root.popup.visible ? "close" : "open")
+        icon.name: "combo-box-" + (root.popupVisible ? "close" : "open")
+
         iconItem.small: true
-        onClicked: root.popup.visible ? root.popup.close() : root.popup.open()
+        onClicked: root.popupVisible ? root.popup.close() : root.popup.open()
     }
 
     popup: HMenu {
@@ -90,7 +96,7 @@ ComboBox {
         }
 
         Repeater {
-            model: root.popup.visible ? root.model : null
+            model: root.popupVisible ? root.model : null
             delegate: root.delegate
         }
     }
