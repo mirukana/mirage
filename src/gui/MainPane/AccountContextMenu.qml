@@ -20,6 +20,14 @@ HMenu {
         py.callClientCoro(userId, "set_presence", [presence, statusMsg])
     }
 
+    function resizeStatusList() {
+        if (statusRepeater.count <= window.settings.Presence.saved_status)
+            return
+
+        statusRepeater.items.length = window.settings.Presence.saved_status
+        statusRepeater.itemsChanged()
+    }
+
     function statusFieldApply(newStatus=null) {
         if (newStatus === null) newStatus = statusField.editText.trim()
 
@@ -28,7 +36,7 @@ HMenu {
             if (existing !== -1) statusRepeater.items.splice(existing, 1)
 
             statusRepeater.items.unshift(newStatus)
-            statusRepeater.items.length = Math.min(statusRepeater.count, 5)
+            resizeStatusList()
             statusRepeater.itemsChanged()
             window.saveState(statusRepeater)
         }
@@ -38,6 +46,7 @@ HMenu {
     }
 
     onOpened: statusField.forceActiveFocus()
+    Component.onCompleted: resizeStatusList()
 
     HLabeledItem {
         id: statusMsgLabel
