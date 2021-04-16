@@ -80,17 +80,6 @@ HTile {
                     localUnreads: model.local_unreads
                 }
 
-                HIcon {
-                    svgName: "invite-received"
-                    colorize: theme.colors.alertBackground
-                    small: room.compact
-                    visible: invited
-
-                    Layout.maximumWidth: invited ? implicitWidth : 0
-
-                    Behavior on Layout.maximumWidth { HNumberAnimation {} }
-                }
-
                 TitleRightInfoLabel {
                     tile: room
                     color: theme.mainPane.listView.room.lastEventDate
@@ -106,6 +95,18 @@ HTile {
                     lastEvent && lastEvent.event_type === "RoomMessageEmote"
 
                 text: {
+                    // If this is a room invite with no last event to show,
+                    // and the room name isn't just the inviter's name
+                    if (
+                        ! lastEvent && model.inviter_id && (
+                            ! model.display_name ||
+                            model.inviter_name !== model.display_name
+                        )
+                    )
+                        return utils.coloredNameHtml(
+                            model.inviter_name, model.inviter_id,
+                        )
+
                     if (! lastEvent) return ""
 
                     const ev_type      = lastEvent.event_type
@@ -134,6 +135,17 @@ HTile {
                     )
                 }
             }
+        }
+
+        HIcon {
+            svgName: "invite-received"
+            colorize: theme.colors.alertBackground
+            small: room.compact
+            visible: invited
+
+            Layout.maximumWidth: invited ? implicitWidth : 0
+
+            Behavior on Layout.maximumWidth { HNumberAnimation {} }
         }
     }
 
