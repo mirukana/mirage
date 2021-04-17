@@ -115,8 +115,10 @@ HMenu {
         id: statusRepeater
 
         // Separate property instead of setting model directly so that we can
-        // manipulate this as a JS list, not a QQmlModel
-        property var items: window.getState(this, "items", [])
+        // manipulate this as a JS list, not a QQmlModel.
+        // If server doesn't support presence, don't show status.
+        property var items:
+            presence ? window.getState(this, "items", []) : []
 
         readonly property string saveName: "lastStatus"
         readonly property string saveId: "ALL"
