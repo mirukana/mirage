@@ -94,26 +94,10 @@ class Presence:
     def update_account(self) -> None:
         """Update presence fields of `Account` related to this `Presence`."""
 
-        # Do not update if account is changing to invisible.
-        # When setting presence to invisible, the server will give us a
-        # presence event telling us we are offline, but we do not want to set
-        # account presence to offline.
-        if (
-            not self.account or
-            self.presence         == self.State.offline and
-            self.account.presence != self.State.echo_invisible
-        ):
-            return
-
-        fields: Dict[str, Any] = {}
-
-        if self.account.presence == self.State.echo_invisible:
-            fields["presence"] = self.State.invisible
-        else:
-            fields["presence"]   = self.presence
-            fields["status_msg"] = self.status_msg
-
-        fields["last_active_at"]   = self.last_active_at
-        fields["currently_active"] = self.currently_active
-
-        self.account.set_fields(**fields)
+        if self.account:
+            self.account.set_fields(
+                presence         = self.presence,
+                status_msg       = self.status_msg,
+                last_active_at   = self.last_active_at,
+                currently_active = self.currently_active,
+            )
