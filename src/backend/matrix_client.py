@@ -205,6 +205,7 @@ class MatrixClient(nio.AsyncClient):
         self.first_sync_done:       asyncio.Event           = asyncio.Event()
         self.first_sync_date:       Optional[datetime]      = None
         self.last_sync_error:       Optional[Exception]     = None
+        self.last_set_presence:     datetime                = datetime.now()
 
         self.past_tokens:          Dict[str, str] = {}     # {room_id: token}
         self.fully_loaded_rooms:   Set[str]       = set()  # {room_id}
