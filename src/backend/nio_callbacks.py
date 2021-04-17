@@ -884,6 +884,13 @@ class NioCallbacks:
             # Let's hope they didn't screw up the get_presence API too:
             ev = await client.get_presence(ev.user_id)
 
+        invisible = account and "invisible" in account.presence.value
+
+        if invisible and ev.presence == "offline":
+            presence.presence = Presence.State.invisible
+        else:
+            presence.presence = Presence.State(ev.presence)
+
         presence.currently_active = ev.currently_active or False
         presence.status_msg       = ev.status_msg or ""
 
@@ -893,8 +900,6 @@ class NioCallbacks:
             )
         else:
             presence.last_active_at = datetime.fromtimestamp(0)
-
-        presence.presence = Presence.State(ev.presence)
 
         # Add all existing members related to this presence
         for room_id in self.models[self.user_id, "rooms"]:
@@ -933,7 +938,10 @@ class NioCallbacks:
 
             # Restore status msg lost from server due to e.g. getting offline
             if not ev.status_msg and account.status_msg:
-                await client.set_presence(ev.presence, account.status_msg)
+                if invisible:
+                    presence.status_msg = account.status_msg
+                else:
+                    await client.set_presence(ev.presence, account.status_msg)
 
             # Save the presence to be restored next time we restart application
             if account.save_presence:
