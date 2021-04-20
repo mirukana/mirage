@@ -360,7 +360,7 @@ class Accounts(ConfigFile, JSONFile):
                 "token":      client.access_token,
                 "device_id":  client.device_id,
                 "enabled":    True,
-                "presence":   account.presence.value,
+                "presence":   account.presence.value.replace("echo_", ""),
                 "status_msg": account.status_msg,
                 "order":      account.order,
             },
