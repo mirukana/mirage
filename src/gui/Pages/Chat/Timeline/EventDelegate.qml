@@ -100,7 +100,7 @@ HColumnLayout {
         Layout.preferredHeight: separationSpacing
     }
 
-    Daybreak {
+    DayBreak {
         visible: dayBreak
 
         Layout.fillWidth: true
