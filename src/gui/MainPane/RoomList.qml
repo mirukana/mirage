@@ -104,10 +104,10 @@ HListView {
     }
 
     function cycleUnreadRooms(forward=true, highlights=false) {
-        const prop       = highlights ? "highlights" : "unreads"
-        const local_prop = highlights ? "highlights" : "local_unreads"
-        const start      = currentIndex === -1 ? 0 : currentIndex
-        let index        = start
+        const prop      = highlights ? "highlights": "unreads"
+        const localProp = highlights ? "highlights":  "local_unreads"
+        const start     = currentIndex === -1 ? 0:   currentIndex
+        let index       = start
 
         while (true) {
             index += forward ? 1 : -1
@@ -122,11 +122,41 @@ HListView {
 
             const item = model.get(index)
 
-            if (item.type === "Room" && (item[prop] || item[local_prop])) {
+            if (item.type === "Room" && (item[prop] || item[localProp])) {
                 currentIndex = index
                 return true
             }
         }
+    }
+
+    // Find latest highlight or unread. If oldest=true, find oldest instead.
+    function latestUnreadRoom(oldest=false, highlights=false) {
+        const prop      = highlights ? "highlights": "unreads"
+        const localProp = highlights ? "highlights":  "local_unreads"
+
+        // When highlights=true, we don't actually find the latest highlight,
+        // but instead, the latest unread among all the highlighted rooms.
+
+        let max = null
+        let maxEvent = null
+
+        for (let i = 0; i < model.count; i++) {
+            const item = model.get(i)
+
+            if (
+                item.type === "Room" &&
+                (item[prop] || item[localProp]) &&
+                (max === null || item.last_event_date < maxEvent === oldest)
+            ) {
+                max = i
+                maxEvent = item.last_event_date
+            }
+        }
+
+        if (max === null) return false // No unreads found
+
+        currentIndex = max
+        return true
     }
 
     function startCorrectItemSearch() {
@@ -283,6 +313,26 @@ HListView {
     HShortcut {
         sequences: window.settings.Keys.Rooms.next_highlight
         onActivated: cycleUnreadRooms(true, true) && showItemLimiter.restart()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.Rooms.latest_unread
+        onActivated: latestUnreadRoom(false) && showItemLimiter.restart()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.Rooms.oldest_unread
+        onActivated: latestUnreadRoom(true) && showItemLimiter.restart()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.Rooms.latest_highlight
+        onActivated: latestUnreadRoom(false, true) && showItemLimiter.restart()
+    }
+
+    HShortcut {
+        sequences: window.settings.Keys.Rooms.oldest_highlight
+        onActivated: latestUnreadRoom(true, true) && showItemLimiter.restart()
     }
 
     Instantiator {
