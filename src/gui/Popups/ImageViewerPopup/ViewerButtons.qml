@@ -72,7 +72,7 @@ HFlow {
         toolTip.text: qsTr("Rotate left")
         autoRepeat: true
         autoRepeatDelay: 20
-        autoRepeatInterval: theme.animationDuration * 3
+        autoRepeatInterval: 300
         onPressed: viewer.animatedRotationTarget -= 45
 
         HPopupShortcut {
@@ -88,7 +88,7 @@ HFlow {
         toolTip.text: qsTr("Rotate right")
         autoRepeat: true
         autoRepeatDelay: 20
-        autoRepeatInterval: theme.animationDuration * 3
+        autoRepeatInterval: 300
         onPressed: viewer.animatedRotationTarget += 45
 
         HPopupShortcut {

@@ -14,6 +14,6 @@ HCircleProgressBar {
         from: 0
         to: 360
         loops: Animation.Infinite
-        duration: theme ? (theme.animationDuration * 6) : 600
+        duration: 600
     }
 }

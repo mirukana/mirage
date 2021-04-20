@@ -255,7 +255,7 @@ HBox {
     }
 
     Timer {
-        interval: theme.animationDuration * 2
+        interval: 200
         running: true
         repeat: true
         onTriggered:
