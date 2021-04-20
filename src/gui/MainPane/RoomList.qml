@@ -137,13 +137,15 @@ HListView {
         // When highlights=true, we don't actually find the latest highlight,
         // but instead, the latest unread among all the highlighted rooms.
 
-        var max = null
-        var maxevent = null
+        let max = null
+        let maxevent = null
         for (let i = 0; i < model.count; i++) {
             const item = model.get(i)
-            if (item.type === "Room"
-            && (item[prop] || item[local_prop])
-            && (max === null || item.last_event_date < maxevent === oldest)) {
+            if (
+                item.type === "Room" &&
+                (item[prop] || item[local_prop]) &&
+                (max === null || item.last_event_date < maxevent === oldest)
+            ) {
                 max = i
                 maxevent = item.last_event_date
             }
