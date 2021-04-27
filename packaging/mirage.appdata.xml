@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.mirakuna.mirage</id>
+  <name>Mirage</name>
+  <summary>Customizable and keyboard-operable Matrix client</summary>
+  <description>
+    <p>A fancy, customizable, keyboard-operable Qt/QML and Python Matrix chat client for encrypted and decentralized communication.</p>
+  </description>
+  <categories>
+    <category>Network</category>
+    <category>Chat</category>
+    <category>InstantMessaging</category>
+    <category>Qt</category>
+  </categories>
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-audio">intense</content_attribute>
+  </content_rating>
+  <url type="homepage">https://github.com/mirukana/mirage</url>
+  <url type="bugtracker">https://github.com/mirukana/mirage/issues</url>
+  <launchable type="desktop-id">io.github.mirukana.mirage</launchable>
+  <provides>
+    <binary>mirage</binary>
+  </provides>
+  <project_license>LGPL-3.0-or-later</project_license>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Chatting with Mirage</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/01-chat.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Login screen</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/02-sign-in.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Account settings</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/03-account-settings.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Creating a room</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/04-create-room.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Conversation list on a narrow screen</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/05-main-pane-small.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Chatting on a narrow screen</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/06-chat-small.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Viewing the list of rooms on a narrow screen</caption>
+      <image>https://raw.githubusercontent.com/mirukana/mirage/master/docs/screenshots/07-room-pane-small.png</image>
+    </screenshot>
+  </screenshots>
+  <metadata_license>FSFAP</metadata_license>
+  <releases>
+    <release version="0.7.1" date="2021-03-04" />
+    <release version="0.7.0" date="2021-02-28" />
+    <release version="0.6.4" date="2020-09-16" />
+    <release version="0.6.3" date="2020-09-16" />
+    <release version="0.6.2" date="2020-08-28" />
+    <release version="0.6.1" date="2020-08-21" />
+    <release version="0.6.0" date="2020-07-1" />
+    <release version="0.5.2" date="2020-06-26" />
+    <release version="0.5.1" date="2020-06-05" />
+    <release version="0.5.0" date="2020-05-22" />
+    <release version="0.4.3" date="2020-04-03" />
+    <release version="0.4.2" date="2020-03-27" />
+    <release version="0.4.1" date="2020-03-23" />
+    <release version="0.4.0" date="2020-03-21" />
+  </releases>
+  <custom>
+    <value key="Purism::form_factor">workstation</value>
+    <value key="Purism::form_factor">mobile</value>
+  </custom>
+</component>
