@@ -151,7 +151,7 @@ class HTMLProcessor:
                     if isinstance(r, str) else r for r in [
         # Normal :// URLs
         (r"(?P<body>[a-z\d]+://(?P<host>[a-z\d._-]+(?:\:\d+)?)"
-         r"(?:/[/\-.,\w#%&?:;=~!$*+^@]*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
+         r"(?:/[/\-.,\w#%&?:;=~!$*+^@']*)?(?:\([/\-_.,a-z\d#%&?;=~]*\))?)"),
 
         # mailto: and tel:
         r"mailto:(?P<body>[a-z0-9._-]+@(?P<host>[a-z0-9.:-]*[a-z\d]))",
