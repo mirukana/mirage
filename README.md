@@ -9,7 +9,7 @@
 [Configuration](docs/CONFIG.md) ⬥
 [Theming](docs/THEMING.md) ⬥
 [Contributing](docs/CONTRIBUTING.md) ⬥
-[Screenshots](#more-screenshots)
+[Screenshots](#screenshots)
 
 A fancy, customizable, keyboard-operable [Matrix](https://matrix.org/) chat
 client for encrypted and decentralized communication.  
