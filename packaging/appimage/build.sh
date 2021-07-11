@@ -38,6 +38,7 @@ setup_dns() {
 install_apt_packages() {
     apt install -y software-properties-common
     add-apt-repository -y ppa:beineri/opt-qt-5.12.9-xenial
+    add-apt-repository -y ppa:beineri/opt-qt-5.12.9-xenial
     apt update -y
 
     apt install -y \
@@ -52,7 +53,7 @@ install_apt_packages() {
         libtiff5-dev liblcms2-dev libwebp-dev  libopenjp2-7-dev \
         libx11-dev libxss-dev libasound2-dev \
         pkg-config libdbus-1-dev libglib2.0-dev \
-        desktop-file-utils  # for appimage-lint.sh
+        appstream-util desktop-file-utils  # for appimage-lint.sh
 
     /usr/sbin/update-ccache-symlinks
 }
@@ -172,6 +173,9 @@ complete_appdir() {
 
     ~/linuxdeployqt.AppImage appdir/usr/share/applications/mirage.desktop \
                              -bundle-non-qt-libs -qmldir=../src/gui
+
+    mkdir -p appdir/usr/share/metainfo
+    cp ~/mirage/packaging/mirage.appdata.xml appdir/usr/share/metainfo
 
     cp /opt/qt512/qml/io/thp/pyotherside/qmldir \
        appdir/usr/qml/io/thp/pyotherside
