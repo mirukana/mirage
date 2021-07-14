@@ -266,7 +266,7 @@ class MatrixClient(nio.AsyncClient):
 
         if isinstance(response, nio.ErrorResponse):
             try:
-                raise MatrixError.from_nio(response)
+                raise await MatrixError.from_nio(response)
             except MatrixInvalidAccessToken:
                 if not self.invalid_disconnecting:
                     self.invalid_disconnecting = True
@@ -1292,7 +1292,7 @@ class MatrixClient(nio.AsyncClient):
 
         for user_id, response in zip(user_ids, responses):
             if isinstance(response, nio.RoomInviteError):
-                errors.append((user_id, MatrixError.from_nio(response)))
+                errors.append((user_id, await MatrixError.from_nio(response)))
 
             elif isinstance(response, Exception):
                 errors.append((user_id, response))

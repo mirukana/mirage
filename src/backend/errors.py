@@ -17,25 +17,27 @@ class MatrixError(Exception):
     http_code: int           = 400
     m_code:    Optional[str] = None
     message:   Optional[str] = None
+    content:   str           = ""
 
     @classmethod
-    def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
+    async def from_nio(cls, response: nio.ErrorResponse) -> "MatrixError":
         """Return a `MatrixError` subclass from a nio `ErrorResponse`."""
 
         http_code = response.transport_response.status
         m_code    = response.status_code
         message   = response.message
+        content   = await response.transport_response.text()
 
         for subcls in cls.__subclasses__():
             if subcls.m_code and subcls.m_code == m_code:
-                return subcls(http_code, m_code, message)
+                return subcls(http_code, m_code, message, content)
 
         # If error doesn't have a M_CODE, look for a generic http error class
         for subcls in cls.__subclasses__():
             if not subcls.m_code and subcls.http_code == http_code:
-                return subcls(http_code, m_code, message)
+                return subcls(http_code, m_code, message, content)
 
-        return cls(http_code, m_code, message)
+        return cls(http_code, m_code, message, content)
 
 
 @dataclass
