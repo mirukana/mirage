@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from .utils import AutoStrEnum, auto
 
