@@ -40,7 +40,7 @@ from .user_files import (
 
 # Logging configuration
 log.getLogger().setLevel(log.INFO)
-nio.logger_group.level = nio.log.logbook.ERROR
+nio.logger_group.level = nio.log.logbook.WARNING
 nio.log.logbook.StreamHandler(sys.stderr).push_application()
 
 
