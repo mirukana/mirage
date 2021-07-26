@@ -3,7 +3,7 @@ set -eo pipefail
 
 HERE="$(dirname "$(readlink -f "$0")")"
 MIRAGE_REPO_URL='https://github.com/mirukana/mirage'
-PY_XYZ=3.9.1
+PY_XYZ=3.9.6
 PY_XY="$(cut -d . -f 1-2 <<< "$PY_XYZ")"
 
 
@@ -82,11 +82,11 @@ install_python() {
         wget -O - https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
     fi
 
-    export PATH="$HOME/.pyenv/bin:$PATH"
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
 
     set +euo pipefail
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
+    eval "$(pyenv init --path)"
     set -euo pipefail
 
     export PYTHON_CFLAGS="$CFLAGS"
@@ -138,7 +138,7 @@ get_app_and_pip_dependencies() {
     fi
 
     cd mirage
-    pip3 uninstall Pillow --yes
+    if pip3 show Pillow; then pip3 uninstall Pillow --yes; fi
     pip3 install Pillow --no-binary :all:
     pip3 install --user -Ur requirements.txt
     pip3 install --user -U certifi
@@ -206,7 +206,7 @@ generate_appimage() {
     fi
 
     chmod +x ~/appimagetool.AppImage
-    ~/appimagetool.AppImage appdir
+    ~/appimagetool.AppImage --no-appstream appdir
 }
 
 
