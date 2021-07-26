@@ -13,8 +13,7 @@ Rectangle {
 
     implicitHeight: width
     radius: width / 2
-    opacity:
-        theme.controls.presence.opacity * (presence.includes("echo") ? 0.5 : 1)
+    opacity: theme.controls.presence.opacity
 
     color:
         presence.includes("online") ?

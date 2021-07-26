@@ -12,12 +12,9 @@ if TYPE_CHECKING:
 
 ORDER: Dict[str, int] = {
     "online":           0,
-    "echo_online":      1,
-    "unavailable":      2,
-    "echo_unavailable": 3,
-    "invisible":        4,
-    "echo_invisible":   5,
-    "offline":          6,
+    "unavailable":      1,
+    "invisible":        2,
+    "offline":          3,
 }
 
 
@@ -59,10 +56,6 @@ class Presence:
         unavailable = auto()
         online      = auto()
         invisible   = auto()
-
-        echo_unavailable = auto()
-        echo_online      = auto()
-        echo_invisible   = auto()
 
         def __lt__(self, other: "Presence.State") -> bool:
             return ORDER[self.value] < ORDER[other.value]

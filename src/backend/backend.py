@@ -388,9 +388,7 @@ class Backend:
                 await client.update_account_unread_counts()
 
                 if account.presence not in [
-                    Presence.State.echo_invisible,
-                    Presence.State.invisible,
-                    Presence.State.offline,
+                    Presence.State.invisible, Presence.State.offline,
                 ]:
                     await client.update_receipt_marker(room_id, event_id)
 

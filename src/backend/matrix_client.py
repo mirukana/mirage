@@ -307,7 +307,7 @@ class MatrixClient(nio.AsyncClient):
         )
 
         # TODO: be able to set presence before logging in
-        item.set_fields(presence=Presence.State.echo_online, connecting=True)
+        item.set_fields(presence=Presence.State.online, connecting=True)
         self._presence  = "online"
         self.start_task = asyncio.ensure_future(self._start())
 
@@ -326,9 +326,6 @@ class MatrixClient(nio.AsyncClient):
 
         account        = self.models["accounts"][user_id]
         self._presence = "offline" if state == "invisible" else state
-
-        if state in ("online", "unavailable"):
-            state = f"echo_{state}"
 
         account.set_fields(
             presence=Presence.State(state), status_msg=status_msg,
@@ -1386,7 +1383,6 @@ class MatrixClient(nio.AsyncClient):
             return
 
         if self.models["accounts"][self.user_id].presence not in [
-            Presence.State.echo_invisible,
             Presence.State.invisible,
             Presence.State.offline,
         ]:
@@ -1596,15 +1592,14 @@ class MatrixClient(nio.AsyncClient):
 
         account           = self.models["accounts"][self.user_id]
         call_presence_api = True
-        new_presence      = presence
-        for_server        = "offline" if presence == "invisible" else presence
+        self._presence    = "offline" if presence == "invisible" else presence
 
         if status_msg is None:
             status_msg = account.status_msg
 
         # Starting/stopping client if current/new presence is offline
 
-        if new_presence == "offline":
+        if presence == "offline":
             if account.presence == Presence.State.offline:
                 return
 
@@ -1620,7 +1615,6 @@ class MatrixClient(nio.AsyncClient):
             # We might receive a recent status_msg set from another client on
             # startup, so don't try to set a new one immediatly.
             # Presence though will be sent on first sync.
-            self._presence     = for_server
             call_presence_api  = False
             account.connecting = True
             self.start_task    = asyncio.ensure_future(self._start())
@@ -1629,9 +1623,9 @@ class MatrixClient(nio.AsyncClient):
 
         if (
             Presence.State(presence) != account.presence and
-            new_presence             != "offline"
+            presence != "offline"
         ):
-            account.presence = Presence.State("echo_" + new_presence)
+            account.presence = Presence.State(presence)
 
         # Saving new details in accounts.json
 
@@ -1639,7 +1633,7 @@ class MatrixClient(nio.AsyncClient):
             account.save_presence = True
 
             await self.backend.saved_accounts.set(
-                self.user_id, presence=new_presence, status_msg=status_msg,
+                self.user_id, presence=presence, status_msg=status_msg,
             )
         else:
             account.save_presence = False
@@ -1648,7 +1642,7 @@ class MatrixClient(nio.AsyncClient):
 
         if call_presence_api:
             account.status_msg = status_msg
-            await super().set_presence(for_server, status_msg)
+            await super().set_presence(self._presence, status_msg)
 
 
     async def import_keys(self, infile: str, passphrase: str) -> None:

@@ -870,20 +870,29 @@ class NioCallbacks:
     async def onPresenceEvent(
         self, ev: Union[nio.PresenceEvent, nio.PresenceGetResponse],
     ) -> None:
+
         # Servers that send presence events support presence
         self.models["accounts"][self.client.user_id].presence_support = True
 
         account  = self.models["accounts"].get(ev.user_id)
         presence = self.client.backend.presences.get(ev.user_id, Presence())
+        invisible = False
 
         if account:
-            client = self.client.backend.clients[ev.user_id]
+            invisible = account.presence == Presence.State.invisible
+            client    = self.client.backend.clients[ev.user_id]
+
             # Synapse is stupid enough to return an older presence state on
             # sync, which then causes a never-ending loop of presence cycling.
             # Let's hope they didn't screw up the get_presence API too:
             ev = await client.get_presence(ev.user_id)
 
-        invisible = account and "invisible" in account.presence.value
+            if ev.presence == "offline" and not invisible:
+                to_set = account.presence.value
+                await client.set_presence(to_set, account.status_msg)
+                return
+            elif not (invisible and ev.presence != "offline"):
+                client._presence = ev.presence
 
         if invisible and ev.presence == "offline":
             presence.presence = Presence.State.invisible
@@ -891,7 +900,15 @@ class NioCallbacks:
             presence.presence = Presence.State(ev.presence)
 
         presence.currently_active = ev.currently_active or False
-        presence.status_msg       = ev.status_msg or ""
+
+        # Restore status msg lost from server due to e.g. getting offline
+        if account and account.status_msg and not ev.status_msg:
+            if invisible:
+                presence.status_msg = account.status_msg
+            else:
+                await client.set_presence(ev.presence, account.status_msg)
+        else:
+            presence.status_msg = ev.status_msg or ""
 
         if ev.last_active_ago:
             presence.last_active_at = datetime.now() - timedelta(
@@ -909,58 +926,21 @@ class NioCallbacks:
 
         presence.update_members()
 
-        # If presence event represents a change for one of our account
-        if account and account.presence != Presence.State.offline:
-            client = self.client.backend.clients[ev.user_id]
-
-            # Ignore cases where we send a new presence to the server, but it
-            # returns an older state that doesn't match due to lag:
-            if (
-                account.presence == Presence.State.echo_invisible and
-                ev.presence != Presence.State.offline.value
-            ) or (
-                account.presence == Presence.State.echo_unavailable and
-                ev.presence != Presence.State.unavailable.value
-            ) or (
-                account.presence == Presence.State.echo_online and
-                ev.presence != Presence.State.online.value
-            ):
-                return
-
-            # Do not fight back presence from other clients, unless server says
-            # we're offline, which happens if another client disconnected or we
-            # had a long connection issue. Note that this makes invisibility
-            # only possible if we're the only client using the account, or the
-            # other clients are invisible/offline themselves.
-            if ev.presence != Presence.State.offline.value:
-                client._presence = ev.presence
-
-            # Restore status msg lost from server due to e.g. getting offline
-            if not ev.status_msg and account.status_msg:
-                if invisible:
-                    presence.status_msg = account.status_msg
-                else:
-                    await client.set_presence(ev.presence, account.status_msg)
-
-            # Save the presence to be restored next time we restart application
-            if account.save_presence:
-                status_msg = presence.status_msg
-                state      = presence.presence
-
-                if account.presence == Presence.State.echo_invisible:
-                    status_msg = account.status_msg
-                    state      = Presence.State.invisible
-                elif state == Presence.State.echo_online:
-                    state = Presence.State.online
-                elif state == Presence.State.echo_unavailable:
-                    state = Presence.State.unavailable
-
-                await self.client.backend.saved_accounts.set(
-                    user_id    = ev.user_id,
-                    status_msg = status_msg,
-                    presence   = state.value,
-                )
-
-            presence.update_account()
-        else:
+        if not account:
             self.client.backend.presences[ev.user_id] = presence
+            return
+
+        client = self.client.backend.clients[ev.user_id]
+
+        # Save the presence to be restored next time we restart application
+        if account.save_presence:
+            status_msg = presence.status_msg
+            state      = presence.presence
+
+            await self.client.backend.saved_accounts.set(
+                user_id    = ev.user_id,
+                status_msg = status_msg,
+                presence   = state.value,
+            )
+
+        presence.update_account()
