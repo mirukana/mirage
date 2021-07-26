@@ -778,7 +778,7 @@ modules:
     sha256: ee0ed4164440eeab27d1b01bc7b9b3afdc3124f68d4ea28d0821a402a9c7c044
   - type: git
     url: https://github.com/mirukana/matrix-nio.git
-    commit: eb7d192cfa15214940bc28c74de4988f8e68283a
+    commit: f36ae4902e6b3773256fbe438a189e064436d0b5
 - name: mirage
   buildsystem: qmake
   sources:
