@@ -6,6 +6,7 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- [0.7.2 (2021-07-26)](#072-2021-07-26)
 - [0.7.1 (2021-03-04)](#071-2021-03-04)
 - [0.7.0 (2021-02-28)](#070-2021-02-28)
 - [0.6.4 (2020-09-16)](#064-2020-09-16)
@@ -20,6 +21,129 @@ and this project adheres to
 - [0.4.2 (2020-03-27)](#042-2020-03-27)
 - [0.4.1 (2020-03-23)](#041-2020-03-23)
 - [0.4.0 (2020-03-21)](#040-2020-03-21)
+
+
+## 0.7.2 (2021-07-26)
+
+### Added
+
+- Navigation keybinds:
+  - `Keys.quit` keybind to exit the application, unbound by default
+
+  - `Keys.earlier_page` and `Keys.later_page` keybinds to navigate the 
+    pages/chats history, Ctrl+H/Left and Ctrl+L/Right by default 
+
+  - Mouse button 4/5 can now be used to navigate the history 
+
+  - `General.wrap_history` setting, affects the behavior of history navigation
+
+  - `Keys.Rooms.Direct` section, allowing keybinds to jump to specific rooms
+
+  - `Keys.Rooms.oldest_unread`/`latest_unread` to jump to the room with the 
+    oldest or newest unread message, by default Ctrl(+Shift)+U
+
+  - `Keys.Rooms.oldest_highlight`/`latest_highlight`, same as above but only 
+    considers rooms where you've been mentioned/replied to/etc, by default
+    Ctrl(+Shift)+H
+
+- Ignoring users:
+  - Ignore option in the context menu for room members 
+
+  - Ignore option when rejecting invites
+
+  - Editable ignored users list in account settings
+
+  - Invites and messages from ignored users are silently discarded.  
+    Their display name, avatar and presence are removed.   
+    They will also always be placed at the bottom of the room member list.
+
+- Status messages history in the left pane account context menu, and 
+  auto-suggestion for the status field.  
+  The number of saved entries can be controlled with `Presence.saved_status`.
+
+- "Add another account" entry in the top left settings menu 
+
+- Copiable room ID field in the room settings pane
+
+- Back button in account settings and server browser when the window is
+  too narrow to show the side panes
+
+- Escape key handling in the account settings, server browser and 
+  add chat pages
+
+- Support for rendering HTML `<hr>` lines (markdown `---`) in messages 
+
+### Changed
+
+- Keybinds: 
+  - `Keys.messages.clear_all` default keybind is now Ctrl+Shift+L
+
+  - `Keys.Account.AtIndex` keybinds will consistently move to the corresponding 
+    account settings, instead of skipping to the first room if the account is
+    expanded in the left pane 
+
+  - `Keys.messages.open_links_files`(`_externally`): ignore matrix.to 
+    user and room mention links
+
+- Presence:
+  - Allow using the invisible mode on servers not supporting presence, which 
+    will still prevent sending typing notifications and read marker updates
+
+  - Restore any previously set status message when reconnecting after being 
+    offline, unless another one has been set from a different client
+
+  - Render set status message striked out while invisible/offline to indicate 
+    that it isn't being broadcasted
+
+- Error popup:
+  - Multiple unexpected errors will be combined into a single popup, instead
+    of opening a new one for every error 
+
+  - Report button now links to Github issues 
+
+  - More details shown for matrix errors
+
+- Messages: 
+  - Require a space after the `#` for markdown titles
+
+  - Render matrix.to URL in messages as shorter hyperlinks
+
+- Left pane rooms:
+  - Last message display: shorten long "In reply to..." prefixes  for the
+    message to be shown as "↩ <name>: <reply>"
+
+  - Show the inviter for invites where the room has an explicit name/alias set 
+
+- Leave, decline invite and forget room options are merged into an unified 
+  popup
+
+- Raise default `General.tooltips_delay` from 0.5 to 0.7s
+
+- Updated headers UI navigation arrow icons 
+
+- Misc UI text changes for shortness and consistency 
+
+### Fixed
+
+- Fix error popup appearing when invalid room events appear in syncs
+
+- Fix parsing of URL in messages containing some special characters
+
+- Left pane rooms last message display: fix `> quote` right after another quote 
+  not getting colored 
+
+- Fix the forgetting rooms feature
+
+- Fix rendering status messages containing HTML-unsafe characters
+
+- Fix chat bottom bar for invited/left rooms glitching at certain sizes or not
+  properly updating when the room's state changes
+
+- Prevent theme `animationDuration` property from affecting the speed of 
+  loading spinners, progress bars, server ping indicators and image rotation 
+  button cooldown
+
+- Hopefully fix account presence stuck flickering between two states
 
 
 ## 0.7.1 (2021-03-04)
