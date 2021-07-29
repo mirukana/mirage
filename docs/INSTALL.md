@@ -1,7 +1,7 @@
 # Installation
 
 Instructions and releases are currently only available for Linux,
-but compiling on Windows and macOS should be possible with the right tools.
+but compiling on Windows and macOS [should be possible](https://github.com/mirukana/mirage/issues/24) with the right tools.
 
 - [Packages](#packages)
   - [Linux](#linux)
