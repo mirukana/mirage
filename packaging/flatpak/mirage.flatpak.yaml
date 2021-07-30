@@ -10,7 +10,6 @@ finish-args:
 - --socket=wayland
 - --socket=pulseaudio
 - --device=dri
-- --filesystem=host
 - --talk-name=org.freedesktop.Notifications
 rename-icon: mirage
 rename-desktop-file: mirage.desktop
