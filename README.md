@@ -29,7 +29,7 @@ Written in Qt/QML and Python, **currently in alpha**.
   any valid ECMAScript 7 expression as values
   - Comes by default with **dark** and **transparent themes**
 - Desktop **notifications**, sounds and window alerts
-- Support for HTTP and SOCKS5 proxies including TOR 
+- Support for HTTP and SOCKS5 proxies including Tor
 
 ### Accounts
 
