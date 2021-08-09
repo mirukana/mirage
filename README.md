@@ -83,6 +83,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 ## Documentation
 
 - [Installation](docs/INSTALL.md)
+- [Keybindings](src/config/settings.py#L218)
 - [Configuration](docs/CONFIG.md)
 - [Theming](docs/THEMING.md)
 - [Contributing](docs/CONTRIBUTING.md)
