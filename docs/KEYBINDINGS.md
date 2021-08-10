@@ -6,7 +6,7 @@ Keybindings as defined in [the default configuration file](src/config/settings.p
 
 Key | Function
 ------ | ------
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>C</kbd> | Toggle compact interface
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd> | Toggle compact interface
 <kbd>Ctrl</kbd> + <kbd>+</kbd> | Zoom in
 <kbd>Ctrl</kbd> + <kbd>-</kbd> | Zoom out
 <kbd>Ctrl</kbd> + <kbd>=</kbd> | Reset zoom
@@ -28,10 +28,10 @@ Key | Function
 ------ | ------
 <kbd>Alt</kbd> + <kbd>Up</kbd> <br> <kbd>Alt</kbd> + <kbd>K</kbd> | Scroll up
 <kbd>Alt</kbd> + <kbd>Down</kbd> <br> <kbd>Alt</kbd> + <kbd>J</kbd> | Scroll down
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Up</kbd> <br> <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>K</kbd> <br> <kbd>PgUp</kbd> | Page up
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Down</kbd> <br> <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>J</kbd> <br> <kbd>PgDown</kbd> | Page down
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Up</kbd> <br> <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd> <br> <kbd>Home</kbd> | Scroll to top
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Down</kbd> <br> <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> <br> <kbd>End</kbd> | Scroll to bottom
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Up</kbd> <br> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>K</kbd> <br> <kbd>PgUp</kbd> | Page up
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Down</kbd> <br> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>J</kbd> <br> <kbd>PgDown</kbd> | Page down
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Up</kbd> <br> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd> <br> <kbd>Home</kbd> | Scroll to top
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Down</kbd> <br> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> <br> <kbd>End</kbd> | Scroll to bottom
 
 ## Account bindings
 
@@ -41,9 +41,9 @@ Key | Function
 <kbd>Alt</kbd> + <kbd>O</kbd> | Collapse current account
 <kbd>Alt</kbd> + <kbd>A</kbd> | Current account settings
 <kbd>Alt</kbd> + <kbd>P</kbd> | Current account context menu
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>U</kbd> <br> <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>A</kbd> | Unavailable status
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>I</kbd> | Invisible status
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>O</kbd> | Offline status
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>U</kbd> <br> <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>A</kbd> | Unavailable status
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>I</kbd> | Invisible status
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd> | Offline status
 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd> | Previous account
 <kbd>Alt</kbd> + <kbd>N</kbd> | Next account
 <kbd>Ctrl</kbd> + <kbd>1</kbd> | Switch to account 1
@@ -91,7 +91,7 @@ Key | Function
 Key | Function
 ------ | ------
 <kbd>Alt</kbd> + <kbd>R</kbd> | Focus room pane
-<kbd>Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>R</kbd> | Hide room pane
+<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> | Hide room pane
 <kbd>Alt</kbd> + <kbd>I</kbd> | Invite members
 <kbd>Alt</kbd> + <kbd>Escape</kbd> | Leave current chat
 <kbd>Alt</kbd> + <kbd>S</kbd> | Upload file
