@@ -61,7 +61,7 @@ Key | Function
 
 Key | Function
 ------ | ------
-<kbd>Alt</kbd> + <kbd>C</kbd> | Create a new room
+<kbd>Alt</kbd> + <kbd>C</kbd> | Create a new room (start chat)
 <kbd>Alt</kbd> + <kbd>F</kbd> | Focus filter
 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> | Clear filter
 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Up</kbd> <br> <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd> | Previous room
