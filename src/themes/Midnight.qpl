@@ -27,6 +27,10 @@ fontSize:
 fontFamily:
     string sans: "Roboto"
     string mono: "Hack"
+    // Fonts are comma-separated.
+    // For example, if you want colorful emoji, you could do:
+    // string sans: "Roboto,Joypixels"
+    // string mono: "Hack,Joypixels"
 
 colors:
     int hue: 240
