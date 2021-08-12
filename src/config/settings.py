@@ -232,6 +232,9 @@ class Keys:
     # Key chords can be defined by having up to four shortcuts
     # separated by commas in a string, e.g. for ["Ctrl+A,B"], Ctrl+A then B
     # would need to be pressed.
+    #
+    # A list of default bindings can be found at:
+    # https://github.com/mirukana/mirage/blob/master/docs/KEYBINDINGS.md
 
     # Helper functions
 

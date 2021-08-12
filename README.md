@@ -6,6 +6,7 @@
 
 [Features](#currently-implemented-features) ⬥
 [Installation](docs/INSTALL.md) ⬥
+[Keybindings](docs/KEYBINDINGS.md) ⬥
 [Configuration](docs/CONFIG.md) ⬥
 [Theming](docs/THEMING.md) ⬥
 [Contributing](docs/CONTRIBUTING.md) ⬥
@@ -83,6 +84,7 @@ Written in Qt/QML and Python, **currently in alpha**.
 ## Documentation
 
 - [Installation](docs/INSTALL.md)
+- [Keybindings](docs/KEYBINDINGS.md)
 - [Configuration](docs/CONFIG.md)
 - [Theming](docs/THEMING.md)
 - [Contributing](docs/CONTRIBUTING.md)
