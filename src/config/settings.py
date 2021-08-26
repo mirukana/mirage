@@ -288,7 +288,7 @@ class Keys:
     # Quit Mirage
     quit = []
 
-    class Scrolling:
+    class Scrolling: # Keys.Scrolling
         # Pages and chat timeline scrolling
         up        = ["Alt+Up", "Alt+K"]
         down      = ["Alt+Down", "Alt+J"]
@@ -322,7 +322,7 @@ class Keys:
         previous = ["Alt+Shift+N"]
         next     = ["Alt+N"]
 
-        class AtIndex:
+        class AtIndex: # Accounts.AtIndex
             # Switch to the first room of the account number X in the list.
             # Each property is a list of keybinds for the account number X.
             # Numbers beyond the default ones can be added.
@@ -373,7 +373,7 @@ class Keys:
         oldest_highlight = ["Ctrl+Shift+M"]
         latest_highlight = ["Ctrl+M"]
 
-        class AtIndex:
+        class AtIndex: # Rooms.AtIndex
             # Switch to room number X in the current account.
             # Each property is a list of keybinds for the room number X:
             # Numbers beyond the default ones can be added.
@@ -400,7 +400,7 @@ class Keys:
             # which account should be targeted as "<userId> <roomId>":
             "@account:example.org !roomID:example.org" = []
 
-    class Chat:
+    class Chat: # Keys.Chat
         # Keybinds specific to the current chat page.
 
         # Focus the right room pane. If the pane is currently showing the
