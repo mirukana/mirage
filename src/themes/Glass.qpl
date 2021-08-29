@@ -116,6 +116,12 @@ controls:
     popup:
         int defaultWidth:    minimumSupportedWidth * 1.75
         color background:    colors.mediumBackground
+        color opaqueBackground: hsluv(
+            colors.hue,
+            colors.bgSaturation,
+            colors.intensity * 7,
+            1
+        )
         color windowOverlay: hsluv(0, 0, 0, 0.7)
 
     header:
