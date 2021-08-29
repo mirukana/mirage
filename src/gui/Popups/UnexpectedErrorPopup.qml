@@ -13,6 +13,11 @@ HColumnPopup {
 
     property var errors: []  // [{type, message, traceback}]
 
+    background: Rectangle {
+        color: theme.controls.popup.opaqueBackground
+            ? theme.controls.popup.opaqueBackground
+            : theme.controls.popup.background // fallback
+    }
 
     contentWidthLimit: Math.min(window.width / 1.5, 864 * theme.uiScale)
 
