@@ -35,7 +35,8 @@ TextEdit {
     focus: false
     selectByMouse: true
 
-    onLinkActivated: if (enableLinkActivation) Qt.openUrlExternally(link)
+    onLinkActivated: if (enableLinkActivation && link !== '#state-text')
+        Qt.openUrlExternally(link)
 
     MouseArea {
         anchors.fill: label
