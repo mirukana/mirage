@@ -16,11 +16,13 @@ Item {
     implicitHeight: parent ? parent.height : 0
 
     TapHandler {
+        acceptedPointerTypes: PointerDevice.GenericPointer
         acceptedButtons: Qt.BackButton
         onTapped: root.pageLoader.moveThroughHistory(1)
     }
 
     TapHandler {
+        acceptedPointerTypes: PointerDevice.GenericPointer
         acceptedButtons: Qt.ForwardButton
         onTapped: root.pageLoader.moveThroughHistory(-1)
     }
