@@ -4,7 +4,6 @@
 """Various utilities that are used throughout the package."""
 
 import asyncio
-import collections
 import html
 import inspect
 import io
@@ -42,6 +41,11 @@ if sys.version_info >= (3, 7):
 else:
     from async_generator import asynccontextmanager
     current_task = asyncio.Task.current_task
+
+if sys.version_info >= (3, 10):
+    import collections.abc as collections
+else:
+    import collections
 
 Size       = Tuple[int, int]
 BytesOrPIL = Union[bytes, PILImage.Image]
