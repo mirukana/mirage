@@ -70,7 +70,7 @@ def dict_update_recursive(dict1: dict, dict2: dict) -> None:
 
     for k in dict2:
         if (k in dict1 and isinstance(dict1[k], dict) and
-                isinstance(dict2[k], collections.Mapping)):
+                isinstance(dict2[k], collections.abc.Mapping)):
             dict_update_recursive(dict1[k], dict2[k])
         else:
             dict1[k] = dict2[k]
