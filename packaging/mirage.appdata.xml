@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.mirakuna.mirage</id>
+  <id>io.github.mirukana.mirage</id>
   <name>Mirage</name>
   <summary>Customizable and keyboard-operable Matrix client</summary>
   <description>
